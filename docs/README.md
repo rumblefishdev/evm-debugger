@@ -1043,6 +1043,13 @@ Indexes goes like:
 - `STATICCALL_0_0` <- staticcall done from inside of call above
 - `STATICCALL_1` <- static call done after exiting nested function (so from root level)
 
+Use key names compatible with this view: https://etherscan.io/vmtrace?txhash=0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682&type=parity
+
 
 2. Provide to your script a Dictionary of address -> abi. Make it so that if ABI is known the structure
 above is enriched with `methodSignature`, `arguments`, `parsedReturnData`.
+
+
+### Links
+
+* Explanation of EVM opcodes: https://github.com/djrtwo/evm-opcode-gas-costs/blob/master/opcode-gas-costs_EIP-150_revision-1e18248_2017-04-12.csv
