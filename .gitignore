@@ -1,1 +1,14 @@
 docs/README.html
+
+node_modules
+.env
+
+#Hardhat files
+cache
+artifacts
+
+#yarn
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
