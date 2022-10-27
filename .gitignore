@@ -2,7 +2,7 @@ docs/README.html
 
 node_modules
 .env
-
+build
 #Hardhat files
 cache
 artifacts
