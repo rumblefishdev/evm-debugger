@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
+import { safeJsonParse } from './helpers'
 
 export class AbiReader {
     private savedAbis: { [key: string]: ethers.utils.Interface } = {}
@@ -10,9 +11,9 @@ export class AbiReader {
         )
         const text = await response.text()
 
-        const abi = JSON.parse(text)
+        const abi = safeJsonParse(text)
 
-        if (abi.result === 'Contract source code not verified') {
+        if (abi.result === 'Contract source code not verified' || abi === null) {
             return null
         }
 

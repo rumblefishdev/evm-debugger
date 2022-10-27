@@ -39,3 +39,11 @@ export const chceckIfOfCallType = (type: TReturnedTraceLogs): type is ICallTypeT
         (type as ICallTypeTraceLogs).type === 'STATICCALL'
     )
 }
+
+export const safeJsonParse = (text: string): any | null => {
+    try {
+        return JSON.parse(text)
+    } catch {
+        return null
+    }
+}
