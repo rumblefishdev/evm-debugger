@@ -1,5 +1,5 @@
 import { AbiReader } from './abiReader'
-import { Counter } from './counter'
+import { StackCounter } from './stackCounter'
 import { readMemory } from './helpers'
 import {
     TCallArgs,
@@ -21,7 +21,7 @@ import {
 } from './types'
 
 export class TraceLogsParserHelper {
-    private readonly stackCounter = new Counter()
+    private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader()
 
     public extractDefaultData(item: IStructLogWithIndex) {
@@ -61,7 +61,7 @@ export class TraceLogsParserHelper {
     }
 
     public createStackTrace(depth: number): number[] {
-        return this.stackCounter.getCount(depth)
+        return this.stackCounter.visitDepth(depth)
     }
 
     public getLastItemInCallContext(traceLogs: TReturnedTraceLogs[], currentIndex: number, depth) {
