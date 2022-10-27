@@ -1,6 +1,13 @@
 import { chceckIfOfCallType, filterForBaseLogs } from './helpers'
-import { OpCodesArgs, OpCodesArgsArray } from './opcodes'
-import { CallTypeTraceLogs, CreateTypeTraceLogs, ParsedTraceLogs, ReturnedTraceLogs, ReturnTypeTraceLogs, StopTypeTraceLogs } from './types'
+import { TOpCodesArgs, OpCodesArgsArray } from './opcodes'
+import {
+    ICallTypeTraceLogs,
+    ICreateTypeTraceLogs,
+    IParsedTraceLogs,
+    TReturnedTraceLogs,
+    IReturnTypeTraceLogs,
+    IStopTypeTraceLogs,
+} from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
 import { getTransactionTrace } from './blockchainGetters'
 
@@ -17,12 +24,12 @@ async function main() {
 
         // STOP
         if (op === 'STOP') {
-            return { ...defaultExtractedData } as StopTypeTraceLogs
+            return { ...defaultExtractedData } as IStopTypeTraceLogs
         }
 
         const opCodeArgumentsNames = OpCodesArgsArray[op]
 
-        const opCodeArguments = {} as OpCodesArgs[typeof op]
+        const opCodeArguments = {} as TOpCodesArgs[typeof op]
 
         opCodeArgumentsNames.forEach((arg: string, index: number) => {
             opCodeArguments[arg] = stack[stack.length - index - 1]
@@ -35,7 +42,7 @@ async function main() {
                 ...defaultExtractedData,
                 startIndex: index + 1,
                 stackTrace: traceLogsParserHelper.createStackTrace(depth),
-            } as CallTypeTraceLogs
+            } as ICallTypeTraceLogs
         }
 
         // REVERT AND RETURN
@@ -43,7 +50,7 @@ async function main() {
             return {
                 ...traceLogsParserHelper.extractReturnTypeArgsData(opCodeArguments, memory),
                 ...defaultExtractedData,
-            } as ReturnTypeTraceLogs
+            } as IReturnTypeTraceLogs
         }
 
         // CREATE | CREATE2
@@ -51,9 +58,9 @@ async function main() {
             return {
                 ...traceLogsParserHelper.extractCreateTypeArgsData(opCodeArguments, memory),
                 ...defaultExtractedData,
-            } as CreateTypeTraceLogs
+            } as ICreateTypeTraceLogs
         }
-    }) as ReturnedTraceLogs[]
+    }) as TReturnedTraceLogs[]
 
     const enrichedDataWithCallContextReturn = extractedDataFromTraceLogs.map((item, index) => {
         const { depth } = item
@@ -63,7 +70,7 @@ async function main() {
 
             if (lastItemInCallContext.type === 'RETURN') {
                 const { output, index } = lastItemInCallContext
-                return { ...item, output, returnIndex: index } as CallTypeTraceLogs
+                return { ...item, output, returnIndex: index } as ICallTypeTraceLogs
             }
         }
 
@@ -78,7 +85,7 @@ async function main() {
         }
     }
 
-    const onlyCallType = enrichedDataWithCallContextReturn.filter((item) => chceckIfOfCallType(item)) as CallTypeTraceLogs[]
+    const onlyCallType = enrichedDataWithCallContextReturn.filter((item) => chceckIfOfCallType(item)) as ICallTypeTraceLogs[]
 
     console.log(onlyCallType)
 }

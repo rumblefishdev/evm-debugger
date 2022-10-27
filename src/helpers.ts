@@ -1,7 +1,7 @@
 import { OpcodesNamesArray } from './opcodes'
-import { CallTypeTraceLogs, ReturnedTraceLogs, StructLog, StructLogWithIndex } from './types'
+import { ICallTypeTraceLogs, TReturnedTraceLogs, IStructLog, IStructLogWithIndex } from './types'
 
-export const filterForBaseLogs = async (structLogs: StructLog[]) => {
+export const filterForBaseLogs = async (structLogs: IStructLog[]) => {
     const indexes: number[] = []
 
     const filteredLogs = structLogs.filter((e, index) => {
@@ -16,7 +16,7 @@ export const filterForBaseLogs = async (structLogs: StructLog[]) => {
         return isBaseLog
     })
 
-    return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as StructLogWithIndex[]
+    return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IStructLogWithIndex[]
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {
@@ -31,11 +31,11 @@ export const readMemory = (memory: string[], rawStart: string, rawLength: string
     return memoryString.slice(readStartIndex, readEndIndex)
 }
 
-export const chceckIfOfCallType = (type: ReturnedTraceLogs): type is CallTypeTraceLogs => {
+export const chceckIfOfCallType = (type: TReturnedTraceLogs): type is ICallTypeTraceLogs => {
     return (
-        (type as CallTypeTraceLogs).type === 'CALL' ||
-        (type as CallTypeTraceLogs).type === 'CALLCODE' ||
-        (type as CallTypeTraceLogs).type === 'DELEGATECALL' ||
-        (type as CallTypeTraceLogs).type === 'STATICCALL'
+        (type as ICallTypeTraceLogs).type === 'CALL' ||
+        (type as ICallTypeTraceLogs).type === 'CALLCODE' ||
+        (type as ICallTypeTraceLogs).type === 'DELEGATECALL' ||
+        (type as ICallTypeTraceLogs).type === 'STATICCALL'
     )
 }

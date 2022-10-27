@@ -1,21 +1,37 @@
 import { AbiReader } from './abiReader'
 import { Counter } from './counter'
 import { readMemory } from './helpers'
-import { CallArgs, CallCodeArgs, Create2Args, CreateArgs, DelegateCallArgs, ReturnArgs, RevertArgs, StaticCallArgs } from './opcodes'
-import { CallTypeTraceLogs, ParsedTraceLogs, ReturnedTraceLogs, ReturnTypeTraceLogs, StopTypeTraceLogs, StructLogWithIndex } from './types'
+import {
+    TCallArgs,
+    TCallCodeArgs,
+    TCreate2Args,
+    TCreateArgs,
+    TDelegateCallArgs,
+    TReturnArgs,
+    TRevertArgs,
+    TStaticCallArgs,
+} from './opcodes'
+import {
+    ICallTypeTraceLogs,
+    IParsedTraceLogs,
+    TReturnedTraceLogs,
+    IReturnTypeTraceLogs,
+    IStopTypeTraceLogs,
+    IStructLogWithIndex,
+} from './types'
 
 export class TraceLogsParserHelper {
     private readonly stackCounter = new Counter()
     private readonly abiReader = new AbiReader()
 
-    public extractDefaultData(item: StructLogWithIndex) {
+    public extractDefaultData(item: IStructLogWithIndex) {
         const { depth, gas, gasCost, op, pc, index } = item
 
-        return { type: op, depth, passedGas: gas, gasCost, pc, index } as ParsedTraceLogs
+        return { type: op, depth, passedGas: gas, gasCost, pc, index } as IParsedTraceLogs
     }
 
     public extractCallTypeArgsData(
-        item: CallArgs | CallCodeArgs | DelegateCallArgs | StaticCallArgs,
+        item: TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs,
 
         memory: string[]
     ) {
@@ -33,14 +49,14 @@ export class TraceLogsParserHelper {
         return { address: parsedAddress, value, input, output }
     }
 
-    public extractReturnTypeArgsData(item: ReturnArgs | RevertArgs, memory: string[]) {
+    public extractReturnTypeArgsData(item: TReturnArgs | TRevertArgs, memory: string[]) {
         const { length, position } = item
         const output = readMemory(memory, position, length)
 
         return { output }
     }
 
-    public extractCreateTypeArgsData(item: CreateArgs | Create2Args, memory: string[]) {
+    public extractCreateTypeArgsData(item: TCreateArgs | TCreate2Args, memory: string[]) {
         return {}
     }
 
@@ -48,17 +64,17 @@ export class TraceLogsParserHelper {
         return this.stackCounter.getCount(depth)
     }
 
-    public getLastItemInCallContext(traceLogs: ReturnedTraceLogs[], currentIndex: number, depth) {
+    public getLastItemInCallContext(traceLogs: TReturnedTraceLogs[], currentIndex: number, depth) {
         return traceLogs
             .slice(currentIndex)
             .find(
                 (iteratedItem) =>
                     iteratedItem.depth === depth + 1 &&
                     (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
-            ) as ReturnTypeTraceLogs | StopTypeTraceLogs
+            ) as IReturnTypeTraceLogs | IStopTypeTraceLogs
     }
 
-    public async extendCallDataWithDecodedInputOutput(item: CallTypeTraceLogs) {
+    public async extendCallDataWithDecodedInputOutput(item: ICallTypeTraceLogs) {
         const { address, input, output } = item
         const iFace = await this.abiReader.getAbi(address)
 

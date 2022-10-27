@@ -1,22 +1,22 @@
 import { ethers } from 'ethers'
-import { CallTypeOpcodes, CreateTypeOpcodes, OpCodes, ReturnTypeOpcodes } from './opcodes'
+import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
 
-export interface TransactionTrace {
+export type TTransactionTrace = {
     jsonrpc: string
     id: number
-    result: TransactionTraceResult
+    result: TTransactionTraceResult
 }
 
-export interface TransactionTraceResult {
+export type TTransactionTraceResult = {
     gas: number
     failed: boolean
     returnValue: string
-    structLogs: StructLog[]
+    structLogs: IStructLog[]
 }
 
-export interface StructLog {
+export interface IStructLog {
     pc: number
-    op: OpCodes
+    op: TOpCodes
     gas: number
     gasCost: number
     depth: number
@@ -25,20 +25,20 @@ export interface StructLog {
     storage: string[]
 }
 
-export interface StructLogWithIndex extends StructLog {
+export interface IStructLogWithIndex extends IStructLog {
     index: number
 }
 
-export interface ParsedTraceLogs {
-    type: OpCodes
+export interface IParsedTraceLogs {
+    type: TOpCodes
     depth: number
     passedGas: number
     gasCost: number
     pc: number
     index: number
 }
-export interface CallTypeTraceLogs extends ParsedTraceLogs {
-    type: CallTypeOpcodes
+export interface ICallTypeTraceLogs extends IParsedTraceLogs {
+    type: TCallTypeOpcodes
     input: string
     output: string
     address: string
@@ -48,21 +48,22 @@ export interface CallTypeTraceLogs extends ParsedTraceLogs {
     startIndex?: number
     returnIndex?: number
     stackTrace?: number[]
+    value?: string
 
     contractOpCodes?: any
 }
 
-export interface ReturnTypeTraceLogs extends ParsedTraceLogs {
-    type: ReturnTypeOpcodes
+export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
+    type: TReturnTypeOpcodes
     output: string
 }
 
-export interface CreateTypeTraceLogs extends ParsedTraceLogs {
-    type: CreateTypeOpcodes
+export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
+    type: TCreateTypeOpcodes
 }
 
-export interface StopTypeTraceLogs extends ParsedTraceLogs {
+export interface IStopTypeTraceLogs extends IParsedTraceLogs {
     type: 'STOP'
 }
 
-export type ReturnedTraceLogs = CallTypeTraceLogs | ReturnTypeTraceLogs | CreateTypeTraceLogs | StopTypeTraceLogs
+export type TReturnedTraceLogs = ICallTypeTraceLogs | IReturnTypeTraceLogs | ICreateTypeTraceLogs | IStopTypeTraceLogs
