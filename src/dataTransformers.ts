@@ -19,6 +19,7 @@ import {
     IStopTypeTraceLogs,
     IStructLogWithIndex,
 } from './types'
+import { ethers } from 'ethers'
 
 export class TraceLogsParserHelper {
     private readonly stackCounter = new StackCounter()
@@ -36,7 +37,8 @@ export class TraceLogsParserHelper {
         memory: string[]
     ) {
         // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
-        const value = 'value' in item ? `0x${item['value']}` : '0x0'
+        const rawValue = 'value' in item ? `0x${item['value']}` : '0x0'
+        const value = ethers.utils.formatEther(rawValue)
 
         const { address, inputLength, inputOffset, returnLength, returnOffset } = item
 
