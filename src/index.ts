@@ -1,13 +1,6 @@
 import { chceckIfOfCallType, filterForBaseLogs } from './helpers'
 import { TOpCodesArgs, OpCodesArgsArray } from './opcodes'
-import {
-    ICallTypeTraceLogs,
-    ICreateTypeTraceLogs,
-    IParsedTraceLogs,
-    TReturnedTraceLogs,
-    IReturnTypeTraceLogs,
-    IStopTypeTraceLogs,
-} from './types'
+import { ICallTypeTraceLogs, ICreateTypeTraceLogs, TReturnedTraceLogs, IReturnTypeTraceLogs, IStopTypeTraceLogs } from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
 import { getTransactionTrace } from './blockchainGetters'
 
