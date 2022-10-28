@@ -19,6 +19,7 @@ import {
     IStopTypeTraceLogs,
     IStructLogWithIndex,
     TTransactionRootLog,
+    IStructLog,
 } from './types'
 import { ethers } from 'ethers'
 
@@ -26,7 +27,7 @@ export class TraceLogsParserHelper {
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader()
 
-    public convertRootLogsToTraceLogs(rootLogs: TTransactionRootLog) {
+    public convertRootLogsToTraceLogs(firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) {
         const { to, input, value } = rootLogs
 
         return {
@@ -36,7 +37,7 @@ export class TraceLogsParserHelper {
             index: 0,
             startIndex: 1,
             stackTrace: [] as number[],
-            passedGas: 0,
+            passedGas: firstNestedItem.gas,
             value: ethers.utils.formatEther(value),
             input: input.slice(2),
         } as ICallTypeTraceLogs

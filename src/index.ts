@@ -36,6 +36,7 @@ async function main() {
                 ...traceLogsParserHelper.extractCallTypeArgsData(opCodeArguments, memory),
                 ...defaultExtractedData,
                 startIndex: index + 1,
+                passedGas: trace.structLogs[index + 1].gas,
                 stackTrace: traceLogsParserHelper.createStackTrace(depth),
             } as ICallTypeTraceLogs
         }
@@ -58,18 +59,21 @@ async function main() {
     }) as TReturnedTraceLogs[]
 
     // Add root transaction log to list of trace logs
-    extractedDataFromTraceLogs.unshift(traceLogsParserHelper.convertRootLogsToTraceLogs(rootTransactionLog))
+    extractedDataFromTraceLogs.unshift(traceLogsParserHelper.convertRootLogsToTraceLogs(trace.structLogs[0], rootTransactionLog))
 
-    const enrichedDataWithCallContextReturn = extractedDataFromTraceLogs.map((item, index) => {
+    const enrichedDataWithCallContextReturn = extractedDataFromTraceLogs.map((item, rootIndex) => {
         const { depth } = item
 
         if (chceckIfOfCallType(item)) {
-            const lastItemInCallContext = traceLogsParserHelper.getLastItemInCallContext(extractedDataFromTraceLogs, index, depth)
+            const lastItemInCallContext = traceLogsParserHelper.getLastItemInCallContext(extractedDataFromTraceLogs, rootIndex, depth)
+            const { index, passedGas } = lastItemInCallContext
 
             if (lastItemInCallContext.type === 'RETURN') {
-                const { output, index } = lastItemInCallContext
-                return { ...item, output, returnIndex: index } as ICallTypeTraceLogs
+                const { output } = lastItemInCallContext
+                return { ...item, output, returnIndex: index, gasCost: item.passedGas - passedGas } as ICallTypeTraceLogs
             }
+
+            return { ...item, returnIndex: index, gasCost: item.passedGas - passedGas } as ICallTypeTraceLogs
         }
 
         return item
@@ -85,7 +89,7 @@ async function main() {
 
     const onlyCallType = enrichedDataWithCallContextReturn.filter((item) => chceckIfOfCallType(item)) as ICallTypeTraceLogs[]
 
-    console.log(onlyCallType)
+    console.log(onlyCallType.map((item) => ({ stackTrace: item.stackTrace, passedGas: item.passedGas, gasCost: item.gasCost })))
 }
 
 main()
