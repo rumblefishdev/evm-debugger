@@ -2,9 +2,11 @@ import { chceckIfOfCallType, filterForBaseLogs } from './helpers'
 import { TOpCodesArgs, OpCodesArgsArray } from './opcodes'
 import { ICallTypeTraceLogs, ICreateTypeTraceLogs, TReturnedTraceLogs, IReturnTypeTraceLogs, IStopTypeTraceLogs } from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
-import { getTransactionTrace } from './blockchainGetters'
+import { getTransactionByHash, getTransactionTrace } from './blockchainGetters'
 
 async function main() {
+    const rootTransactionLog = await getTransactionByHash('0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682')
+
     const trace = await getTransactionTrace('0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682')
 
     const filteredTrace = await filterForBaseLogs(trace.structLogs)
@@ -54,6 +56,9 @@ async function main() {
             } as ICreateTypeTraceLogs
         }
     }) as TReturnedTraceLogs[]
+
+    // Add root transaction log to list of trace logs
+    extractedDataFromTraceLogs.unshift(traceLogsParserHelper.convertRootLogsToTraceLogs(rootTransactionLog))
 
     const enrichedDataWithCallContextReturn = extractedDataFromTraceLogs.map((item, index) => {
         const { depth } = item

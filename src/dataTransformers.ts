@@ -18,12 +18,29 @@ import {
     IReturnTypeTraceLogs,
     IStopTypeTraceLogs,
     IStructLogWithIndex,
+    TTransactionRootLog,
 } from './types'
 import { ethers } from 'ethers'
 
 export class TraceLogsParserHelper {
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader()
+
+    public convertRootLogsToTraceLogs(rootLogs: TTransactionRootLog) {
+        const { to, input, value } = rootLogs
+
+        return {
+            type: 'CALL',
+            depth: 0,
+            address: to,
+            index: 0,
+            startIndex: 1,
+            stackTrace: [] as number[],
+            passedGas: 0,
+            value: ethers.utils.formatEther(value),
+            input: input.slice(2),
+        } as ICallTypeTraceLogs
+    }
 
     public extractDefaultData(item: IStructLogWithIndex) {
         const { depth, gas, gasCost, op, pc, index } = item

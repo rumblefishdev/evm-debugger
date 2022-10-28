@@ -1,6 +1,28 @@
 import { ethers } from 'ethers'
 import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
 
+export type TTransactionRootLog = {
+    blockHash: string
+    blockNumber: string
+    from: string
+    gas: string
+    hash: string
+    input: string
+    nonce: string
+    to: string
+    transactionIndex: string
+    value: string
+    v: string
+    r: string
+    s: string
+    type: string
+    accessList: string
+    chainId: string
+    gasPrice: string
+    maxFeePerGas: string
+    maxPriorityFeePerGas: string
+}
+
 export type TTransactionTrace = {
     jsonrpc: string
     id: number
