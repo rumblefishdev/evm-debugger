@@ -64,15 +64,14 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     input: string
     output: string
     address: string
+
+    startIndex: number
+    stackTrace: number[]
+    value: string
+
     decodedInput?: ethers.utils.TransactionDescription
     decodedOutput?: ethers.utils.Result
-
-    startIndex?: number
     returnIndex?: number
-    stackTrace?: number[]
-    value?: string
-
-    contractOpCodes?: any
 }
 
 export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
@@ -82,6 +81,11 @@ export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
 
 export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
     type: TCreateTypeOpcodes
+    startIndex: number
+    stackTrace: number[]
+    value: string
+    input: string
+    salt?: string
 }
 
 export interface IStopTypeTraceLogs extends IParsedTraceLogs {
