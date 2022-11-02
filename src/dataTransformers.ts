@@ -1,6 +1,6 @@
 import { AbiReader } from './abiReader'
 import { StackCounter } from './stackCounter'
-import { readMemory } from './helpers'
+import { decodeErrorResult, readMemory } from './helpers'
 import {
     TCallArgs,
     TCallCodeArgs,
@@ -20,6 +20,7 @@ import {
     IStructLogWithIndex,
     TTransactionRootLog,
     IStructLog,
+    ICreateTypeTraceLogs,
 } from './types'
 import { ethers } from 'ethers'
 
@@ -30,17 +31,24 @@ export class TraceLogsParserHelper {
     public convertRootLogsToTraceLogs(firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) {
         const { to, input, value } = rootLogs
 
-        return {
+        const defaultFields = {
             type: 'CALL',
             depth: 0,
-            address: to,
             index: 0,
             startIndex: 1,
             stackTrace: [] as number[],
+            input: input.slice(2),
             passedGas: firstNestedItem.gas,
             value: ethers.utils.formatEther(value),
-            input: input.slice(2),
-        } as ICallTypeTraceLogs
+            pc: 0,
+            gasCost: 0,
+        } as ICallTypeTraceLogs | ICreateTypeTraceLogs
+
+        if (to) {
+            return { ...defaultFields, address: to } as ICallTypeTraceLogs
+        }
+
+        return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLogs
     }
 
     public extractDefaultData(item: IStructLogWithIndex) {
@@ -77,7 +85,17 @@ export class TraceLogsParserHelper {
     }
 
     public extractCreateTypeArgsData(item: TCreateArgs | TCreate2Args, memory: string[]) {
-        return {}
+        const { value, byteCodeSize, byteCodePosition } = item
+
+        const input = readMemory(memory, byteCodePosition, byteCodeSize)
+
+        const defaultReturn = { value: ethers.utils.formatEther(value), input }
+
+        if ('salt' in item) {
+            return { ...defaultReturn, salt: item.salt }
+        }
+
+        return defaultReturn
     }
 
     public createStackTrace(depth: number): number[] {
@@ -101,6 +119,35 @@ export class TraceLogsParserHelper {
         if (iFace) {
             const decodedInput = iFace.parseTransaction({ data: `0x${input}` })
             const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, `0x${output}`)
+
+            return { ...item, decodedInput, decodedOutput }
+        }
+
+        return item
+    }
+
+    public async extendCallDataWithDecodedErrorOutput(item: ICallTypeTraceLogs) {
+        const { address, output, input } = item
+        const iFace = await this.abiReader.getAbi(address)
+
+        if (iFace) {
+            const decodedInput = iFace.parseTransaction({ data: `0x${input}` })
+            // const decodedOutput = iFace.decodeErrorResult('createProxyWithNonce', `0x${output}`)
+            // const decodedOutput = iFace.parseError(`0x${output}`)
+
+            const decodedOutput = decodeErrorResult(iFace, `0x${output}`)
+
+            // try {
+            //     const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, `0x${output}`)
+            //     console.log('decodedOutput', decodedOutput)
+            // } catch (err) {
+            //     const error = err as ethers.utils.Result
+
+            //     console.log('test', ethers.utils.checkResultErrors(error))
+            //     console.log('error', error)
+
+            //     return { ...item, decodedInput }
+            // }
 
             return { ...item, decodedInput, decodedOutput }
         }
