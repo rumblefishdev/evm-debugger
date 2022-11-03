@@ -73,6 +73,7 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     decodedOutput?: ethers.utils.Result
     returnIndex?: number
     success?: boolean
+    isContract?: boolean
 }
 
 export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
