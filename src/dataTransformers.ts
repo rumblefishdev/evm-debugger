@@ -1,6 +1,6 @@
 import { AbiReader } from './abiReader'
 import { StackCounter } from './stackCounter'
-import { decodeErrorResult, readMemory } from './helpers'
+import { decodeErrorResult, getSafeHex, readMemory } from './helpers'
 import {
     TCallArgs,
     TCallCodeArgs,
@@ -117,10 +117,10 @@ export class TraceLogsParserHelper {
         const iFace = await this.abiReader.getAbi(address)
 
         if (iFace) {
-            const decodedInput = iFace.parseTransaction({ data: `0x${input}` })
-            const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, `0x${output}`)
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
+            const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, getSafeHex(output))
 
-            return { ...item, decodedInput, decodedOutput }
+            return { ...item, decodedInput, decodedOutput, success: true }
         }
 
         return item
@@ -131,25 +131,11 @@ export class TraceLogsParserHelper {
         const iFace = await this.abiReader.getAbi(address)
 
         if (iFace) {
-            const decodedInput = iFace.parseTransaction({ data: `0x${input}` })
-            // const decodedOutput = iFace.decodeErrorResult('createProxyWithNonce', `0x${output}`)
-            // const decodedOutput = iFace.parseError(`0x${output}`)
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
 
-            const decodedOutput = decodeErrorResult(iFace, `0x${output}`)
+            const decodedOutput = decodeErrorResult(iFace, getSafeHex(output))
 
-            // try {
-            //     const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, `0x${output}`)
-            //     console.log('decodedOutput', decodedOutput)
-            // } catch (err) {
-            //     const error = err as ethers.utils.Result
-
-            //     console.log('test', ethers.utils.checkResultErrors(error))
-            //     console.log('error', error)
-
-            //     return { ...item, decodedInput }
-            // }
-
-            return { ...item, decodedInput, decodedOutput }
+            return { ...item, decodedInput, decodedOutput, success: false }
         }
 
         return item

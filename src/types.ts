@@ -72,6 +72,7 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     decodedInput?: ethers.utils.TransactionDescription
     decodedOutput?: ethers.utils.Result
     returnIndex?: number
+    success?: boolean
 }
 
 export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
@@ -86,6 +87,7 @@ export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
     value: string
     input: string
     salt?: string
+    success?: boolean
 }
 
 export interface IStopTypeTraceLogs extends IParsedTraceLogs {

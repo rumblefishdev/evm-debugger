@@ -54,6 +54,8 @@ export const safeJsonParse = (text: string): any | null => {
     }
 }
 
+export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x0`)
+
 const BuiltinErrors: Record<string, { signature: string; inputs: Array<string>; name: string; reason?: boolean }> = {
     '0x08c379a0': { signature: 'Error(string)', name: 'Error', inputs: ['string'], reason: true },
     '0x4e487b71': { signature: 'Panic(uint256)', name: 'Panic', inputs: ['uint256'] },
