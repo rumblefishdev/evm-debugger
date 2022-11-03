@@ -54,7 +54,7 @@ export const safeJsonParse = (text: string): any | null => {
     }
 }
 
-export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x0`)
+export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x`)
 
 const BuiltinErrors: Record<string, { signature: string; inputs: Array<string>; name: string; reason?: boolean }> = {
     '0x08c379a0': { signature: 'Error(string)', name: 'Error', inputs: ['string'], reason: true },

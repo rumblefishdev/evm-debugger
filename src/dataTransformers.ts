@@ -23,10 +23,17 @@ import {
     ICreateTypeTraceLogs,
 } from './types'
 import { ethers } from 'ethers'
+import { getContractCode } from './blockchainGetters'
 
 export class TraceLogsParserHelper {
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader()
+
+    public async checkIfAddressIsContract(address: string) {
+        const byteCode = await getContractCode(address)
+
+        return byteCode !== '0x'
+    }
 
     public convertRootLogsToTraceLogs(firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) {
         const { to, input, value } = rootLogs
