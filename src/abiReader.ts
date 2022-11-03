@@ -1,17 +1,16 @@
 import { ethers } from 'ethers'
-import fetch from 'node-fetch'
 import { safeJsonParse } from './helpers'
+import { IDataProvider } from './types'
 
 export class AbiReader {
+    constructor(private readonly dataProvider: IDataProvider) {}
+
     private savedAbis: { [key: string]: ethers.utils.Interface } = {}
 
     private async fetchAbi(address: string): Promise<ethers.utils.Interface | null> {
-        const response = await fetch(
-            `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=Y8XNE3W519FITZJRPRGYY4ZEII2IV3W73F`
-        )
-        const text = await response.text()
+        const response = await this.dataProvider.fetchAbiCode(address)
 
-        const abi = safeJsonParse(text)
+        const abi = safeJsonParse(response)
 
         if (abi.result === 'Contract source code not verified' || abi === null) {
             return null
