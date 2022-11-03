@@ -21,16 +21,18 @@ import {
     TTransactionRootLog,
     IStructLog,
     ICreateTypeTraceLogs,
+    IDataProvider,
 } from './types'
 import { ethers } from 'ethers'
-import { getContractCode } from './blockchainGetters'
 
 export class TraceLogsParserHelper {
+    constructor(private readonly dataProvider: IDataProvider) {}
+
     private readonly stackCounter = new StackCounter()
-    private readonly abiReader = new AbiReader()
+    private readonly abiReader = new AbiReader(this.dataProvider)
 
     public async checkIfAddressIsContract(address: string) {
-        const byteCode = await getContractCode(address)
+        const byteCode = await this.dataProvider.getContractCode(address)
 
         return byteCode !== '0x'
     }

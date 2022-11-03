@@ -96,3 +96,10 @@ export interface IStopTypeTraceLogs extends IParsedTraceLogs {
 }
 
 export type TReturnedTraceLogs = ICallTypeTraceLogs | IReturnTypeTraceLogs | ICreateTypeTraceLogs | IStopTypeTraceLogs
+
+export interface IDataProvider {
+    getTransactionTrace(transactionHash: string): Promise<TTransactionTraceResult>
+    getTransactionByHash(transactionHash: string): Promise<TTransactionRootLog>
+    getContractCode(address: string): Promise<string>
+    fetchAbiCode(address: string): Promise<string>
+}
