@@ -1,4 +1,4 @@
-import { chceckIfOfCallType, checkIfOfCreateType, filterForBaseLogs } from './helpers'
+import { chceckIfOfCallType, checkIfOfCreateType, dumpResultsToJson, filterForBaseLogs } from './helpers'
 import { TOpCodesArgs, OpCodesArgsArray } from './opcodes'
 import { ICallTypeTraceLogs, ICreateTypeTraceLogs, TReturnedTraceLogs, IReturnTypeTraceLogs, IStopTypeTraceLogs } from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
@@ -124,9 +124,9 @@ async function main() {
 
     const onlyCallAndCreateType = enrichedDataWithCallContextReturn.filter(
         (item) => chceckIfOfCallType(item) || checkIfOfCreateType(item)
-    ) as ICallTypeTraceLogs[]
+    ) as Array<ICallTypeTraceLogs | ICreateTypeTraceLogs>
 
-    console.log(onlyCallAndCreateType)
+    dumpResultsToJson(transactionHash, trace.structLogs, onlyCallAndCreateType)
 }
 
 main()

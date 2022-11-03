@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { OpcodesNamesArray } from './opcodes'
 import { ICallTypeTraceLogs, TReturnedTraceLogs, IStructLog, IStructLogWithIndex, ICreateTypeTraceLogs } from './types'
+import { writeFileSync, mkdirSync } from 'fs'
 
 export const filterForBaseLogs = async (structLogs: IStructLog[]) => {
     const indexes: number[] = []
@@ -73,4 +74,14 @@ export const decodeErrorResult = (iFace: ethers.utils.Interface, data: ethers.ut
 
         return test
     }
+}
+
+export const dumpResultsToJson = (
+    transactionHash: string,
+    trace: IStructLog[],
+    parsedTrace: Array<ICallTypeTraceLogs | ICreateTypeTraceLogs>
+) => {
+    mkdirSync(`results/${transactionHash}`, { recursive: true })
+    writeFileSync(`results//${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
+    writeFileSync(`results//${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
 }
