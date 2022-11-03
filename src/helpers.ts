@@ -1,14 +1,7 @@
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { OpcodesNamesArray } from './opcodes'
-import {
-    ICallTypeTraceLogs,
-    TReturnedTraceLogs,
-    IStructLog,
-    IStructLogWithIndex,
-    ICreateTypeTraceLogs,
-    IReturnTypeTraceLogs,
-} from './types'
+import { ICallTypeTraceLogs, TReturnedTraceLogs, IStructLog, IStructLogWithIndex, ICreateTypeTraceLogs } from './types'
 import { writeFileSync, mkdirSync } from 'fs'
 
 export const filterForBaseLogs = (structLogs: IStructLog[]) => {
