@@ -1,8 +1,8 @@
 import { network } from 'hardhat'
-import { TTransactionTraceResult } from './types'
+import { TTransactionRootLog, TTransactionTraceResult } from './types'
 
 export const getTransactionByHash = async (transactionHash: string) => {
-    return await network.provider.send('eth_getTransactionByHash', [transactionHash])
+    return (await network.provider.send('eth_getTransactionByHash', [transactionHash])) as TTransactionRootLog
 }
 
 export const getTransactionTrace = async (transactionHash: string): Promise<TTransactionTraceResult> => {

@@ -1,6 +1,28 @@
 import { ethers } from 'ethers'
 import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
 
+export type TTransactionRootLog = {
+    blockHash: string
+    blockNumber: string
+    from: string
+    gas: string
+    hash: string
+    input: string
+    nonce: string
+    to: string
+    transactionIndex: string
+    value: string
+    v: string
+    r: string
+    s: string
+    type: string
+    accessList: string
+    chainId: string
+    gasPrice: string
+    maxFeePerGas: string
+    maxPriorityFeePerGas: string
+}
+
 export type TTransactionTrace = {
     jsonrpc: string
     id: number
@@ -42,15 +64,15 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     input: string
     output: string
     address: string
+
+    startIndex: number
+    stackTrace: number[]
+    value: string
+
     decodedInput?: ethers.utils.TransactionDescription
     decodedOutput?: ethers.utils.Result
-
-    startIndex?: number
     returnIndex?: number
-    stackTrace?: number[]
-    value?: string
-
-    contractOpCodes?: any
+    success?: boolean
 }
 
 export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
@@ -60,6 +82,12 @@ export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
 
 export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
     type: TCreateTypeOpcodes
+    startIndex: number
+    stackTrace: number[]
+    value: string
+    input: string
+    salt?: string
+    success?: boolean
 }
 
 export interface IStopTypeTraceLogs extends IParsedTraceLogs {

@@ -1,6 +1,6 @@
 import { AbiReader } from './abiReader'
 import { StackCounter } from './stackCounter'
-import { readMemory } from './helpers'
+import { decodeErrorResult, getSafeHex, readMemory } from './helpers'
 import {
     TCallArgs,
     TCallCodeArgs,
@@ -18,12 +18,38 @@ import {
     IReturnTypeTraceLogs,
     IStopTypeTraceLogs,
     IStructLogWithIndex,
+    TTransactionRootLog,
+    IStructLog,
+    ICreateTypeTraceLogs,
 } from './types'
 import { ethers } from 'ethers'
 
 export class TraceLogsParserHelper {
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader()
+
+    public convertRootLogsToTraceLogs(firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) {
+        const { to, input, value } = rootLogs
+
+        const defaultFields = {
+            type: 'CALL',
+            depth: 0,
+            index: 0,
+            startIndex: 1,
+            stackTrace: [] as number[],
+            input: input.slice(2),
+            passedGas: firstNestedItem.gas,
+            value: ethers.utils.formatEther(value),
+            pc: 0,
+            gasCost: 0,
+        } as ICallTypeTraceLogs | ICreateTypeTraceLogs
+
+        if (to) {
+            return { ...defaultFields, address: to } as ICallTypeTraceLogs
+        }
+
+        return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLogs
+    }
 
     public extractDefaultData(item: IStructLogWithIndex) {
         const { depth, gas, gasCost, op, pc, index } = item
@@ -59,7 +85,17 @@ export class TraceLogsParserHelper {
     }
 
     public extractCreateTypeArgsData(item: TCreateArgs | TCreate2Args, memory: string[]) {
-        return {}
+        const { value, byteCodeSize, byteCodePosition } = item
+
+        const input = readMemory(memory, byteCodePosition, byteCodeSize)
+
+        const defaultReturn = { value: ethers.utils.formatEther(value), input }
+
+        if ('salt' in item) {
+            return { ...defaultReturn, salt: item.salt }
+        }
+
+        return defaultReturn
     }
 
     public createStackTrace(depth: number): number[] {
@@ -81,10 +117,25 @@ export class TraceLogsParserHelper {
         const iFace = await this.abiReader.getAbi(address)
 
         if (iFace) {
-            const decodedInput = iFace.parseTransaction({ data: `0x${input}` })
-            const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, `0x${output}`)
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
+            const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, getSafeHex(output))
 
-            return { ...item, decodedInput, decodedOutput }
+            return { ...item, decodedInput, decodedOutput, success: true }
+        }
+
+        return item
+    }
+
+    public async extendCallDataWithDecodedErrorOutput(item: ICallTypeTraceLogs) {
+        const { address, output, input } = item
+        const iFace = await this.abiReader.getAbi(address)
+
+        if (iFace) {
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
+
+            const decodedOutput = decodeErrorResult(iFace, getSafeHex(output))
+
+            return { ...item, decodedInput, decodedOutput, success: false }
         }
 
         return item
