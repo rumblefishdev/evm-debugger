@@ -24,6 +24,7 @@ import {
     IDataProvider,
 } from './types'
 import { ethers } from 'ethers'
+import { getContractCode } from './blockchainGetters'
 
 export class TraceLogsParserHelper {
     constructor(private readonly dataProvider: IDataProvider) {}
@@ -33,6 +34,35 @@ export class TraceLogsParserHelper {
 
     public async checkIfAddressIsContract(address: string) {
         const byteCode = await this.dataProvider.getContractCode(address)
+
+        return byteCode !== '0x'
+    }
+
+    public convertRootLogsToTraceLogs(firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) {
+        const { to, input, value } = rootLogs
+
+        const defaultFields = {
+            type: 'CALL',
+            depth: 0,
+            index: 0,
+            startIndex: 1,
+            stackTrace: [] as number[],
+            input: input.slice(2),
+            passedGas: firstNestedItem.gas,
+            value: ethers.utils.formatEther(value),
+            pc: 0,
+            gasCost: 0,
+        } as ICallTypeTraceLogs | ICreateTypeTraceLogs
+
+        if (to) {
+            return { ...defaultFields, address: to } as ICallTypeTraceLogs
+        }
+
+        return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLogs
+    }
+
+    public async checkIfAddressIsContract(address: string) {
+        const byteCode = await getContractCode(address)
 
         return byteCode !== '0x'
     }
