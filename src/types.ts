@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
-import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
+import { StorageOpCodes as TStorageOpCodes, TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
+
+export type TStorage = Array<{ [key: string]: string }>
 
 export type TTransactionRootLog = {
     blockHash: string
@@ -38,17 +40,23 @@ export type TTransactionTraceResult = {
 
 export interface IStructLog {
     pc: number
-    op: TOpCodes
+    op: TOpCodes | TStorageOpCodes
     gas: number
     gasCost: number
     depth: number
     stack: string[]
     memory: string[]
-    storage: string[]
+    storage: TStorage
 }
 
 export interface IStructLogWithIndex extends IStructLog {
     index: number
+    op: TOpCodes
+}
+
+export interface IStorageStructLogs extends IStructLog {
+    index: number
+    op: TStorageOpCodes
 }
 
 export interface IParsedTraceLogs {
@@ -74,6 +82,12 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     returnIndex?: number
     success?: boolean
     isContract?: boolean
+
+    storageLogs?: {
+        loadedStorage: Array<{ key: string; value: string; index: number }>
+        returnedStorage: Array<{ key: string; value: string }>
+        changedStorage: Array<{ key: string; initailValue: string; updatedValue: string; index: number }>
+    }
 }
 
 export interface IReturnTypeTraceLogs extends IParsedTraceLogs {
@@ -89,6 +103,13 @@ export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
     input: string
     salt?: string
     success?: boolean
+    returnIndex?: number
+
+    storageLogs?: {
+        loadedStorage: Array<{ key: string; value: string; index: number }>
+        returnedStorage: Array<{ key: string; value: string }>
+        changedStorage: Array<{ key: string; initailValue: string; updatedValue: string; index: number }>
+    }
 }
 
 export interface IStopTypeTraceLogs extends IParsedTraceLogs {
