@@ -3,6 +3,10 @@ import { StorageOpCodes as TStorageOpCodes, TCallTypeOpcodes, TCreateTypeOpcodes
 
 export type TStorage = Array<{ [key: string]: string }>
 
+export type TLoadedStorage = Array<{ key: string; value: string; index: number }>
+export type TChangedStorage = Array<{ key: string; initialValue: string; updatedValue: string; index: number }>
+export type TReturnedStorage = Array<{ key: string; value: string }>
+
 export type TTransactionRootLog = {
     blockHash: string
     blockNumber: string
@@ -84,9 +88,9 @@ export interface ICallTypeTraceLogs extends IParsedTraceLogs {
     isContract?: boolean
 
     storageLogs?: {
-        loadedStorage: Array<{ key: string; value: string; index: number }>
-        returnedStorage: Array<{ key: string; value: string }>
-        changedStorage: Array<{ key: string; initailValue: string; updatedValue: string; index: number }>
+        loadedStorage: TLoadedStorage
+        returnedStorage: TReturnedStorage
+        changedStorage: TChangedStorage
     }
 }
 
@@ -106,9 +110,9 @@ export interface ICreateTypeTraceLogs extends IParsedTraceLogs {
     returnIndex?: number
 
     storageLogs?: {
-        loadedStorage: Array<{ key: string; value: string; index: number }>
-        returnedStorage: Array<{ key: string; value: string }>
-        changedStorage: Array<{ key: string; initailValue: string; updatedValue: string; index: number }>
+        loadedStorage: TLoadedStorage
+        returnedStorage: TReturnedStorage
+        changedStorage: TChangedStorage
     }
 }
 

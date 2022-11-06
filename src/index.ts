@@ -10,6 +10,8 @@ import {
     TTransactionRootLog,
     IStructLog,
     IStructLogWithIndex,
+    TLoadedStorage,
+    TChangedStorage,
 } from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
 import { defaultDataProvider } from './blockchainGetters'
@@ -165,8 +167,8 @@ class TraceAnalyzer {
         return this.parsedTransactionList.map((item) => {
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
                 const { index, returnIndex } = item
-                const loadedStorage: Array<{ key: string; value: string; index: number }> = []
-                const changedStorage: Array<{ key: string; initailValue: string; updatedValue: string; index: number }> = []
+                const loadedStorage: TLoadedStorage = []
+                const changedStorage: TChangedStorage = []
 
                 const executionContextLogs = this.traceLogsParserHelper.getCallExecutionTraceLogs(this.traceLogs, item)
                 const storageTraceLogs = this.traceLogsParserHelper.extractStorageTraceLogs(executionContextLogs, index)
@@ -184,9 +186,9 @@ class TraceAnalyzer {
                         const key = stack[stack.length - 1]
                         const value = stack[stack.length - 2]
 
-                        const initailValue = storageTraceLogs[rootIndex - 1].storage[key]
+                        const initialValue = storageTraceLogs[rootIndex - 1].storage[key]
 
-                        changedStorage.push({ key, updatedValue: value, initailValue, index })
+                        changedStorage.push({ key, updatedValue: value, initialValue, index })
                     }
                 })
 

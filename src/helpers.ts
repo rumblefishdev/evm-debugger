@@ -62,7 +62,7 @@ const BuiltinErrors: Record<string, { signature: string; inputs: Array<string>; 
     '0x4e487b71': { signature: 'Panic(uint256)', name: 'Panic', inputs: ['uint256'] },
 }
 
-export const decodeErrorResult = (iFace: ethers.utils.Interface, data: ethers.utils.BytesLike) => {
+export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
     const bytes = ethers.utils.arrayify(data)
 
     const selectorSignature = hexlify(bytes.slice(0, 4))
@@ -70,9 +70,7 @@ export const decodeErrorResult = (iFace: ethers.utils.Interface, data: ethers.ut
     const builtin = BuiltinErrors[selectorSignature]
 
     if (builtin) {
-        const test = new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
-
-        return test
+        return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
     }
 }
 

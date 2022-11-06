@@ -143,7 +143,7 @@ export class TraceLogsParserHelper {
         if (iFace) {
             const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
 
-            const decodedOutput = decodeErrorResult(iFace, getSafeHex(output))
+            const decodedOutput = decodeErrorResult(getSafeHex(output))
 
             return { ...item, decodedInput, decodedOutput, success: false }
         }
