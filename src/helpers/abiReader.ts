@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { safeJsonParse } from './helpers'
-import { IDataProvider } from './types'
+import { IDataProvider } from '../typings/types'
 
 export class AbiReader {
     constructor(private readonly dataProvider: IDataProvider) {}

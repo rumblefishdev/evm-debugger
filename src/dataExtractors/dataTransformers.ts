@@ -1,6 +1,6 @@
-import { AbiReader } from './abiReader'
-import { StackCounter } from './stackCounter'
-import { decodeErrorResult, getSafeHex, readMemory } from './helpers'
+import { AbiReader } from '../helpers/abiReader'
+import { StackCounter } from '../helpers/stackCounter'
+import { decodeErrorResult, getSafeHex, readMemory } from '../helpers/helpers'
 import {
     TCallArgs,
     TCallCodeArgs,
@@ -10,7 +10,7 @@ import {
     TReturnArgs,
     TRevertArgs,
     TStaticCallArgs,
-} from './opcodes'
+} from '../typings/opcodes'
 import {
     ICallTypeTraceLogs,
     IParsedTraceLogs,
@@ -23,7 +23,7 @@ import {
     ICreateTypeTraceLogs,
     IDataProvider,
     IStorageStructLogs,
-} from './types'
+} from '../typings/types'
 import { ethers } from 'ethers'
 
 export class TraceLogsParserHelper {

@@ -1,5 +1,5 @@
 import { network } from 'hardhat'
-import { IDataProvider, TTransactionRootLog, TTransactionTraceResult } from './types'
+import { IDataProvider, TTransactionRootLog, TTransactionTraceResult } from '../typings/types'
 import fetch from 'node-fetch'
 
 export const getTransactionByHash = async (transactionHash: string): Promise<TTransactionRootLog> => {
