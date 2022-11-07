@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
-import { safeJsonParse } from './helpers'
-import { IDataProvider } from '../typings/types'
+import { decodeErrorResult, getSafeHex, safeJsonParse } from './helpers'
+import { ICallTypeTraceLogs, IDataProvider } from '../typings/types'
 
 export class AbiReader {
     constructor(private readonly dataProvider: IDataProvider) {}
@@ -19,7 +19,7 @@ export class AbiReader {
         return new ethers.utils.Interface(abi.result)
     }
 
-    public async getAbi(address: string): Promise<ethers.utils.Interface | null> {
+    private async getAbi(address: string): Promise<ethers.utils.Interface | null> {
         if (this.savedAbis[address]) {
             return this.savedAbis[address]
         }
@@ -31,5 +31,33 @@ export class AbiReader {
         }
 
         return abi
+    }
+    public async extendCallDataWithDecodedInputOutput(item: ICallTypeTraceLogs) {
+        const { address, input, output } = item
+        const iFace = await this.getAbi(address)
+
+        if (iFace) {
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
+            const decodedOutput = iFace.decodeFunctionResult(decodedInput.functionFragment, getSafeHex(output))
+
+            return { ...item, decodedInput, decodedOutput }
+        }
+
+        return item
+    }
+
+    public async extendCallDataWithDecodedErrorOutput(item: ICallTypeTraceLogs) {
+        const { address, output, input } = item
+        const iFace = await this.getAbi(address)
+
+        if (iFace) {
+            const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
+
+            const decodedOutput = decodeErrorResult(getSafeHex(output))
+
+            return { ...item, decodedInput, decodedOutput }
+        }
+
+        return item
     }
 }

@@ -12,6 +12,7 @@ async function main() {
     const analyzer = new TxAnalyzer(defaultDataProvider, transactionHash)
 
     console.log(await analyzer.analyze())
+    // await analyzer.analyze()
 }
 
 main()
