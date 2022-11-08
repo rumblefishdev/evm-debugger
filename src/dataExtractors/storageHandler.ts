@@ -1,9 +1,13 @@
 import { ICallTypeTraceLog, ICreateTypeTraceLog } from '../typings/parsedLogs'
 import { IStorageTypeStructLogs, IStructLog } from '../typings/structLogs'
-import { TChangedStorage, TLoadedStorage, TReturnedStorage } from '../typings/types'
+import { TChangedStorage, TDataProvider, TLoadedStorage, TReturnedStorage } from '../typings/types'
 
 export class StorageHandler {
-    constructor(private readonly structLogs: IStructLog[], private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {}
+    constructor(
+        private readonly structLogs: IStructLog[],
+        private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
+        private readonly dataProvider: TDataProvider
+    ) {}
 
     private callContextStructLogs: IStructLog[]
     private storageStructLogs: IStorageTypeStructLogs[]
@@ -11,6 +15,7 @@ export class StorageHandler {
     private loadedStorage: TLoadedStorage = []
     private changedStorage: TChangedStorage = []
     private returnedStorage: TReturnedStorage = []
+    private isReverted: boolean | null = null
 
     private getCallContextStructLogs() {
         const { startIndex, returnIndex, depth } = this.traceLog
@@ -69,8 +74,14 @@ export class StorageHandler {
         })
     }
 
-    private returnStorageLogs() {
-        return { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
+    public returnStorageLogs() {
+        const storage = { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
+
+        if (this.isReverted === null) {
+            return storage
+        }
+
+        return { ...storage, isReverted: this.isReverted }
     }
 
     public parseStorageData() {
@@ -89,7 +100,22 @@ export class StorageHandler {
         }
 
         this.mapStorageData(returnIndex)
+    }
 
-        return { ...this.traceLog, storageLogs: this.returnStorageLogs() }
+    public async validateRevertedStorage() {
+        if (this.loadedStorage.length > 0 && this.changedStorage.length > 0) {
+            const { address, blockNumber } = this.traceLog as ICallTypeTraceLog
+            for (const item of this.changedStorage) {
+                const { key, initialValue } = item
+                const blockchainStorageValue = await this.dataProvider.getStorageAt(address, key, blockNumber!)
+
+                if (blockchainStorageValue !== `0x${initialValue}`) {
+                    this.isReverted = false
+                    break
+                }
+            }
+
+            this.isReverted = true
+        }
     }
 }

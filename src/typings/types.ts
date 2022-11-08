@@ -10,6 +10,7 @@ export type TStorageLogs = {
     loadedStorage: TLoadedStorage
     returnedStorage: TReturnedStorage
     changedStorage: TChangedStorage
+    isReverted?: boolean
 }
 
 export type TTransactionInfo = {
@@ -52,4 +53,5 @@ export interface TDataProvider {
     getTransactionByHash(transactionHash: string): Promise<TTransactionInfo>
     getContractCode(address: string): Promise<string>
     fetchAbiCode(address: string): Promise<string>
+    getStorageAt(contractAddress: string, key: string, blockNumber: string): Promise<any>
 }
