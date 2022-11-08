@@ -136,12 +136,12 @@ export class TxAnalyzer {
             const item = this.parsedTransactionList[i]
 
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-                const storageHandler = new StorageHandler(this.traceLogs, item, this.dataProvider)
+                const storageHandler = new StorageHandler(this.traceLogs, item)
 
                 storageHandler.parseStorageData()
 
                 if (!item.success) {
-                    await storageHandler.validateRevertedStorage()
+                    storageHandler.returnExpectedStorage()
                 }
 
                 this.parsedTransactionList[i] = { ...item, storageLogs: storageHandler.returnStorageLogs() }

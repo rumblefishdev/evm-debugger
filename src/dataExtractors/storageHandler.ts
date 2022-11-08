@@ -3,11 +3,7 @@ import { IStorageTypeStructLogs, IStructLog } from '../typings/structLogs'
 import { TChangedStorage, TDataProvider, TLoadedStorage, TReturnedStorage } from '../typings/types'
 
 export class StorageHandler {
-    constructor(
-        private readonly structLogs: IStructLog[],
-        private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
-        private readonly dataProvider: TDataProvider
-    ) {}
+    constructor(private readonly structLogs: IStructLog[], private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {}
 
     private callContextStructLogs: IStructLog[]
     private storageStructLogs: IStorageTypeStructLogs[]
@@ -15,7 +11,6 @@ export class StorageHandler {
     private loadedStorage: TLoadedStorage = []
     private changedStorage: TChangedStorage = []
     private returnedStorage: TReturnedStorage = []
-    private isReverted: boolean | null = null
 
     private getCallContextStructLogs() {
         const { startIndex, returnIndex, depth } = this.traceLog
@@ -75,13 +70,7 @@ export class StorageHandler {
     }
 
     public returnStorageLogs() {
-        const storage = { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
-
-        if (this.isReverted === null) {
-            return storage
-        }
-
-        return { ...storage, isReverted: this.isReverted }
+        return { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
     }
 
     public parseStorageData() {
@@ -102,20 +91,7 @@ export class StorageHandler {
         this.mapStorageData(returnIndex)
     }
 
-    public async validateRevertedStorage() {
-        if (this.loadedStorage.length > 0 && this.changedStorage.length > 0) {
-            const { address, blockNumber } = this.traceLog as ICallTypeTraceLog
-            for (const item of this.changedStorage) {
-                const { key, initialValue } = item
-                const blockchainStorageValue = await this.dataProvider.getStorageAt(address, key, blockNumber!)
-
-                if (blockchainStorageValue !== `0x${initialValue}`) {
-                    this.isReverted = false
-                    break
-                }
-            }
-
-            this.isReverted = true
-        }
+    public returnExpectedStorage() {
+        this.returnedStorage = this.loadedStorage
     }
 }

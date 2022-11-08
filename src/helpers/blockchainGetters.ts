@@ -23,14 +23,9 @@ export const fetchAbiCode = async (address: string): Promise<string> => {
     return await response.text()
 }
 
-export const getStorageAt = async (contractAddress: string, key: string, blockNumber: string) => {
-    return await network.provider.send('eth_getStorageAt', [contractAddress, key, blockNumber])
-}
-
 export const defaultDataProvider: TDataProvider = {
     getTransactionByHash,
     getTransactionTrace,
     fetchAbiCode,
     getContractCode,
-    getStorageAt,
 }

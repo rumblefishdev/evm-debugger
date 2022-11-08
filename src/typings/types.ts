@@ -53,5 +53,4 @@ export interface TDataProvider {
     getTransactionByHash(transactionHash: string): Promise<TTransactionInfo>
     getContractCode(address: string): Promise<string>
     fetchAbiCode(address: string): Promise<string>
-    getStorageAt(contractAddress: string, key: string, blockNumber: string): Promise<any>
 }
