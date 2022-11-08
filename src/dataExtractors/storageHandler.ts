@@ -13,9 +13,9 @@ export class StorageHandler {
     private returnedStorage: TReturnedStorage = []
 
     private getCallContextStructLogs() {
-        const { startIndex, returnIndex } = this.traceLog
+        const { startIndex, returnIndex, depth } = this.traceLog
 
-        this.callContextStructLogs = this.structLogs.slice(startIndex, returnIndex)
+        this.callContextStructLogs = this.structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
     }
 
     private extractStorageStructLogs() {
