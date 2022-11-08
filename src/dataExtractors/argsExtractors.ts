@@ -1,17 +1,22 @@
-import { ethers } from 'hardhat'
+import { ethers } from 'ethers'
+import { OpCodesArgsArray } from '../constants/constants'
 import { readMemory } from '../helpers/helpers'
-import {
-    TCallArgs,
-    TCallCodeArgs,
-    TCreate2Args,
-    TCreateArgs,
-    TDelegateCallArgs,
-    TReturnArgs,
-    TRevertArgs,
-    TStaticCallArgs,
-} from '../typings/opcodes'
+import { TOpCodesWithArgs } from '../typings/opcodes'
+import { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs } from '../typings/stackArgs'
 
-export const extractCallTypeArgsData = (item: TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs, memory: string[]) => {
+export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
+    const opCodeArgumentsNames = OpCodesArgsArray[op]
+
+    const opCodeArguments = {} as TOpCodesArgs[typeof op]
+
+    opCodeArgumentsNames.forEach((arg: string, index: number) => {
+        opCodeArguments[arg] = stack[stack.length - index - 1]
+    })
+
+    return opCodeArguments
+}
+
+export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {
     // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
     const rawValue = 'value' in item ? `0x${item['value']}` : '0x0'
     const value = ethers.utils.formatEther(rawValue)
@@ -27,14 +32,14 @@ export const extractCallTypeArgsData = (item: TCallArgs | TCallCodeArgs | TDeleg
     return { address: parsedAddress, value, input, output }
 }
 
-export const extractReturnTypeArgsData = (item: TReturnArgs | TRevertArgs, memory: string[]) => {
+export const extractReturnTypeArgsData = (item: TReturnTypeArgs, memory: string[]) => {
     const { length, position } = item
     const output = readMemory(memory, position, length)
 
     return { output }
 }
 
-export const extractCreateTypeArgsData = (item: TCreateArgs | TCreate2Args, memory: string[]) => {
+export const extractCreateTypeArgsData = (item: TCreateTypeArgs, memory: string[]) => {
     const { value, byteCodeSize, byteCodePosition } = item
 
     const input = readMemory(memory, byteCodePosition, byteCodeSize)

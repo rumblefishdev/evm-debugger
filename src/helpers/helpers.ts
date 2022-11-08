@@ -1,22 +1,12 @@
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
-import { OpcodesNamesArray } from '../typings/opcodes'
-import {
-    ICallTypeTraceLogs,
-    TReturnedTraceLogs,
-    IStructLog,
-    IBaseStructLog,
-    ICreateTypeTraceLogs,
-    IReturnTypeTraceLogs,
-    ICallStructLogs,
-    ICreateStructLogs,
-    IReturnStructLogs,
-    IStopTypeTraceLogs,
-    TTransactionRootLog,
-} from '../typings/types'
+import { TTransactionInfo } from '../typings/types'
 import { writeFileSync, mkdirSync } from 'fs'
+import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '../typings/structLogs'
+import { ICallTypeTraceLog, ICreateTypeTraceLog, IReturnTypeTraceLog, IStopTypeTraceLog, TReturnedTraceLog } from '../typings/parsedLogs'
+import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
-export const filterForBaseLogs = (structLogs: IStructLog[]) => {
+export const getBaseStructLogs = (structLogs: IStructLog[]) => {
     const indexes: number[] = []
 
     const filteredLogs = structLogs.filter((e, index) => {
@@ -31,7 +21,7 @@ export const filterForBaseLogs = (structLogs: IStructLog[]) => {
         return isBaseLog
     })
 
-    return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IBaseStructLog[]
+    return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IFilteredStructLog[]
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {
@@ -46,7 +36,7 @@ export const readMemory = (memory: string[], rawStart: string, rawLength: string
     return memoryString.slice(readStartIndex, readEndIndex)
 }
 
-export const chceckIfOfCallType = (item: TReturnedTraceLogs | IBaseStructLog): item is ICallTypeTraceLogs | ICallStructLogs => {
+export const chceckIfOfCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICallTypeTraceLog | ICallTypeStructLogs => {
     if ('type' in item) {
         return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
     } else {
@@ -54,7 +44,7 @@ export const chceckIfOfCallType = (item: TReturnedTraceLogs | IBaseStructLog): i
     }
 }
 
-export const checkIfOfCreateType = (item: TReturnedTraceLogs | IBaseStructLog): item is ICreateTypeTraceLogs | ICreateStructLogs => {
+export const checkIfOfCreateType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
     if ('type' in item) {
         return item.type === 'CREATE' || item.type === 'CREATE2'
     } else {
@@ -62,7 +52,7 @@ export const checkIfOfCreateType = (item: TReturnedTraceLogs | IBaseStructLog): 
     }
 }
 
-export const checkIfOfReturnType = (item: TReturnedTraceLogs | IBaseStructLog): item is IReturnTypeTraceLogs | IReturnStructLogs => {
+export const checkIfOfReturnType = (item: TReturnedTraceLog | IFilteredStructLog): item is IReturnTypeTraceLog | IReturnTypeStructLogs => {
     if ('type' in item) {
         return item.type === 'RETURN' || item.type === 'REVERT'
     } else {
@@ -80,11 +70,6 @@ export const safeJsonParse = (text: string): any | null => {
 
 export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x`)
 
-const BuiltinErrors: Record<string, { signature: string; inputs: Array<string>; name: string; reason?: boolean }> = {
-    '0x08c379a0': { signature: 'Error(string)', name: 'Error', inputs: ['string'], reason: true },
-    '0x4e487b71': { signature: 'Panic(uint256)', name: 'Panic', inputs: ['uint256'] },
-}
-
 export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
     const bytes = ethers.utils.arrayify(data)
 
@@ -97,24 +82,24 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
     }
 }
 
-export const dumpResultsToJson = (transactionHash: string, trace: IStructLog[], parsedTrace: TReturnedTraceLogs[]) => {
+export const dumpResultsToJson = (transactionHash: string, trace: IStructLog[], parsedTrace: TReturnedTraceLog[]) => {
     mkdirSync(`results/${transactionHash}`, { recursive: true })
     writeFileSync(`results//${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
     writeFileSync(`results//${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
 }
 
-export const getLastItemInCallContext = (traceLogs: TReturnedTraceLogs[], currentIndex: number, depth) => {
+export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
     return traceLogs
         .slice(currentIndex)
         .find(
             (iteratedItem) =>
                 iteratedItem.depth === depth + 1 &&
                 (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
-        ) as IReturnTypeTraceLogs | IStopTypeTraceLogs
+        ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
-export const convertRootLogsToTraceLogs = (firstNestedItem: IStructLog, rootLogs: TTransactionRootLog) => {
-    const { to, input, value } = rootLogs
+export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
+    const { to, input, value } = txInfo
 
     const defaultFields = {
         type: 'CALL',
@@ -123,21 +108,21 @@ export const convertRootLogsToTraceLogs = (firstNestedItem: IStructLog, rootLogs
         startIndex: 1,
         stackTrace: [] as number[],
         input: input.slice(2),
-        passedGas: firstNestedItem.gas,
+        passedGas: firstNestedStructLog.gas,
         value: ethers.utils.formatEther(value),
         pc: 0,
         gasCost: 0,
-    } as ICallTypeTraceLogs | ICreateTypeTraceLogs
+    } as ICallTypeTraceLog | ICreateTypeTraceLog
 
     if (to) {
-        return { ...defaultFields, address: to } as ICallTypeTraceLogs
+        return { ...defaultFields, address: to } as ICallTypeTraceLog
     }
 
-    return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLogs
+    return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
 }
 
-export const filterCallAndCreateType = (transactionList: TReturnedTraceLogs[]) => {
+export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]) => {
     return transactionList.filter((item) => chceckIfOfCallType(item) || checkIfOfCreateType(item)) as Array<
-        ICallTypeTraceLogs | ICreateTypeTraceLogs
+        ICallTypeTraceLog | ICreateTypeTraceLog
     >
 }

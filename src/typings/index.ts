@@ -1,1 +1,6 @@
 export * from './types'
+export * from './structLogs'
+export * from './parsedLogs'
+export * from './stackArgs'
+export * from './opcodes'
+export * from './opcodesNames'

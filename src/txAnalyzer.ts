@@ -2,38 +2,40 @@ import {
     chceckIfOfCallType,
     checkIfOfCreateType,
     checkIfOfReturnType,
-    convertRootLogsToTraceLogs,
+    convertTxInfoToTraceLog,
     dumpResultsToJson,
-    filterCallAndCreateType,
-    filterForBaseLogs,
-    getLastItemInCallContext,
+    getCallAndCreateType,
+    getBaseStructLogs,
+    getLastItemInCallTypeContext,
 } from './helpers/helpers'
-import { TReturnedTraceLogs, IDataProvider, IStructLog, IBaseStructLog } from './typings/types'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
+import { TDataProvider } from './typings'
+import { IFilteredStructLog, IStructLog } from './typings/structLogs'
+import { TReturnedTraceLog } from './typings/parsedLogs'
 
 export class TxAnalyzer {
-    constructor(private readonly dataProvider: IDataProvider, private readonly transactionHash: string) {}
+    constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
 
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader(this.dataProvider)
 
     private traceLogs: IStructLog[]
-    private filteredTraceLogs: IBaseStructLog[]
-    private parsedTransactionList: TReturnedTraceLogs[]
+    private filteredStructLogs: IFilteredStructLog[]
+    private parsedTransactionList: TReturnedTraceLog[]
 
     private async getTraceLogs() {
         const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
-        const filteredTraceLogs = filterForBaseLogs(trace.structLogs)
+        const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
         this.traceLogs = trace.structLogs
-        this.filteredTraceLogs = filteredTraceLogs
+        this.filteredStructLogs = filteredStructLogs
     }
 
-    private parseTraceLogs() {
-        return this.filteredTraceLogs.map((item) => {
+    private parseStructLogs() {
+        return this.filteredStructLogs.map((item) => {
             const structLogParser = new StructLogParser(item, this.traceLogs, this.stackCounter)
 
             // CALL | CALLCODE | DELEGATECALL | STATICCALL
@@ -55,12 +57,12 @@ export class TxAnalyzer {
             if (item.op === 'STOP') {
                 return structLogParser.parseStopStructLog()
             }
-        }) as TReturnedTraceLogs[]
+        }) as TReturnedTraceLog[]
     }
 
-    private async addRootTransactionLogToList() {
+    private async parseAndAddRootTraceLog() {
         const rootTransactionLog = await this.dataProvider.getTransactionByHash(this.transactionHash)
-        this.parsedTransactionList.unshift(convertRootLogsToTraceLogs(this.traceLogs[0], rootTransactionLog))
+        this.parsedTransactionList.unshift(convertTxInfoToTraceLog(this.traceLogs[0], rootTransactionLog))
     }
 
     private async checkIfCallPointsToContract() {
@@ -79,7 +81,7 @@ export class TxAnalyzer {
     private combineCallWithItsReturn() {
         return this.parsedTransactionList.map((item, rootIndex) => {
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-                const lastItemInCallContext = getLastItemInCallContext(this.parsedTransactionList, rootIndex, item.depth)
+                const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
 
                 // If nested Call is Reverted, Parent Call won't have Return Item
                 if (!lastItemInCallContext) {
@@ -106,14 +108,14 @@ export class TxAnalyzer {
             const { depth } = item
 
             if (chceckIfOfCallType(item) && item.isContract && item.input) {
-                const lastItemInCallContext = getLastItemInCallContext(this.parsedTransactionList, i, depth)
+                const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, i, depth)
 
                 if (lastItemInCallContext.type !== 'REVERT') {
-                    this.parsedTransactionList[i] = await this.abiReader.extendCallDataWithDecodedInputOutput(item)
+                    this.parsedTransactionList[i] = await this.abiReader.decodeTraceLogInputOutput(item)
                 }
 
                 if (lastItemInCallContext.type === 'REVERT') {
-                    this.parsedTransactionList[i] = await this.abiReader.extendCallDataWithDecodedErrorOutput(item)
+                    this.parsedTransactionList[i] = await this.abiReader.decodeTraceLogErrorInputOutput(item)
                 }
             }
         }
@@ -124,7 +126,7 @@ export class TxAnalyzer {
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
                 const storageHandler = new StorageHandler(this.traceLogs, item)
 
-                return storageHandler.extractStorageData()
+                return storageHandler.parseStorageData()
             }
             return item
         })
@@ -133,9 +135,9 @@ export class TxAnalyzer {
     public async analyze() {
         await this.getTraceLogs()
 
-        this.parsedTransactionList = this.parseTraceLogs()
+        this.parsedTransactionList = this.parseStructLogs()
 
-        await this.addRootTransactionLogToList()
+        await this.parseAndAddRootTraceLog()
 
         await this.checkIfCallPointsToContract()
 
@@ -143,7 +145,7 @@ export class TxAnalyzer {
 
         await this.decodeCallInputOutput()
 
-        this.parsedTransactionList = filterCallAndCreateType(this.parsedTransactionList)
+        this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
         this.parsedTransactionList = this.parseStorageData()
 

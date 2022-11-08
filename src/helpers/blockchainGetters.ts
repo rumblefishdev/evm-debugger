@@ -1,8 +1,8 @@
 import { network } from 'hardhat'
-import { IDataProvider, TTransactionRootLog, TTransactionTraceResult } from '../typings/types'
+import { TDataProvider, TTransactionInfo, TTransactionTraceResult } from '../typings/types'
 import fetch from 'node-fetch'
 
-export const getTransactionByHash = async (transactionHash: string): Promise<TTransactionRootLog> => {
+export const getTransactionByHash = async (transactionHash: string): Promise<TTransactionInfo> => {
     return await network.provider.send('eth_getTransactionByHash', [transactionHash])
 }
 
@@ -23,7 +23,7 @@ export const fetchAbiCode = async (address: string): Promise<string> => {
     return await response.text()
 }
 
-export const defaultDataProvider: IDataProvider = {
+export const defaultDataProvider: TDataProvider = {
     getTransactionByHash,
     getTransactionTrace,
     fetchAbiCode,

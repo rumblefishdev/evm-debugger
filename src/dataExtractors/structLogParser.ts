@@ -1,100 +1,66 @@
 import { StackCounter } from '../helpers/stackCounter'
-import {
-    OpCodesArgsArray,
-    TCallArgs,
-    TCallCodeArgs,
-    TCreate2Args,
-    TCreateArgs,
-    TDelegateCallArgs,
-    TOpCodes,
-    TOpCodesArgs,
-    TReturnArgs,
-    TRevertArgs,
-    TStaticCallArgs,
-} from '../typings/opcodes'
-import {
-    ICallTypeTraceLogs,
-    ICreateTypeTraceLogs,
-    IParsedTraceLogs,
-    IReturnTypeTraceLogs,
-    IStopTypeTraceLogs,
-    IStructLog,
-    IBaseStructLog,
-} from '../typings/types'
-import { extractCallTypeArgsData, extractCreateTypeArgsData, extractReturnTypeArgsData } from './argsExtractors'
+import { ICallTypeTraceLog, ICreateTypeTraceLog, ITraceLog, IReturnTypeTraceLog, IStopTypeTraceLog } from '../typings/parsedLogs'
+import { TCallTypeArgs, TCreateTypeArgs, TReturnTypeArgs } from '../typings/stackArgs'
+import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '../typings/structLogs'
+import { extractArgsFromStack, extractCallTypeArgsData, extractCreateTypeArgsData, extractReturnTypeArgsData } from './argsExtractors'
 
 export class StructLogParser {
     constructor(
-        private readonly structLog: IBaseStructLog,
-        private readonly traceLogs: IStructLog[],
+        private readonly filteredStructLog: IFilteredStructLog,
+        private readonly structLogs: IStructLog[],
         private readonly stackCounter: StackCounter
     ) {}
 
     private extractDefaultData() {
-        const { depth, gas, gasCost, op, pc, index } = this.structLog
+        const { depth, gas, gasCost, op, pc, index } = this.filteredStructLog
 
-        return { type: op, depth, passedGas: gas, gasCost, pc, index } as IParsedTraceLogs
+        return { type: op, depth, passedGas: gas, gasCost, pc, index } as ITraceLog
     }
 
     private createStackTrace(depth: number): number[] {
         return this.stackCounter.visitDepth(depth)
     }
 
-    private extractArgsFromStack() {
-        const stack = this.structLog.stack
-        const op = this.structLog.op as Exclude<TOpCodes, 'STOP'>
-
-        const opCodeArgumentsNames = OpCodesArgsArray[op]
-
-        const opCodeArguments = {} as TOpCodesArgs[typeof op]
-
-        opCodeArgumentsNames.forEach((arg: string, index: number) => {
-            opCodeArguments[arg] = stack[stack.length - index - 1]
-        })
-
-        return opCodeArguments
-    }
-
     public parseStopStructLog() {
-        return { ...this.extractDefaultData() } as IStopTypeTraceLogs
+        return { ...this.extractDefaultData() } as IStopTypeTraceLog
     }
 
     public parseCallStructLog() {
-        const { depth, memory, index } = this.structLog
+        const { depth, memory, index, op, stack } = this.filteredStructLog as ICallTypeStructLogs
 
-        const opCodeArguments = this.extractArgsFromStack() as TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs
+        const opCodeArguments = extractArgsFromStack(stack, op) as TCallTypeArgs
 
         return {
             ...extractCallTypeArgsData(opCodeArguments, memory),
             ...this.extractDefaultData(),
             startIndex: index + 1,
-            passedGas: this.traceLogs[index + 1].gas,
+            passedGas: this.structLogs[index + 1].gas,
             stackTrace: this.createStackTrace(depth),
-        } as ICallTypeTraceLogs
+        } as ICallTypeTraceLog
     }
 
     public parseCreateStructLog() {
-        const { depth, memory, index } = this.structLog
+        const { depth, memory, index, stack, op } = this.filteredStructLog as ICreateTypeStructLogs
 
-        const opCodeArguments = this.extractArgsFromStack() as TCreateArgs | TCreate2Args
+        const opCodeArguments = extractArgsFromStack(stack, op) as TCreateTypeArgs
 
         return {
             ...extractCreateTypeArgsData(opCodeArguments, memory),
             ...this.extractDefaultData(),
             startIndex: index + 1,
-            passedGas: this.traceLogs[index + 1].gas,
+            passedGas: this.structLogs[index + 1].gas,
             stackTrace: this.createStackTrace(depth),
-        } as ICreateTypeTraceLogs
+        } as ICreateTypeTraceLog
     }
 
     public parseReturnStructLog() {
-        const { memory } = this.structLog
+        const { memory, stack, op } = this.filteredStructLog as IReturnTypeStructLogs
 
-        const opCodeArguments = this.extractArgsFromStack() as TReturnArgs | TRevertArgs
+        const opCodeArguments = extractArgsFromStack(stack, op) as TReturnTypeArgs
 
         return {
             ...extractReturnTypeArgsData(opCodeArguments, memory),
             ...this.extractDefaultData(),
-        } as IReturnTypeTraceLogs
+        } as IReturnTypeTraceLog
     }
 }

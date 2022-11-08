@@ -1,9 +1,10 @@
 import { ethers } from 'ethers'
+import { TDataProvider } from '../typings'
+import { ICallTypeTraceLog } from '../typings/parsedLogs'
 import { decodeErrorResult, getSafeHex, safeJsonParse } from './helpers'
-import { ICallTypeTraceLogs, IDataProvider } from '../typings/types'
 
 export class AbiReader {
-    constructor(private readonly dataProvider: IDataProvider) {}
+    constructor(private readonly dataProvider: TDataProvider) {}
 
     private savedAbis: { [key: string]: ethers.utils.Interface } = {}
 
@@ -32,7 +33,7 @@ export class AbiReader {
 
         return abi
     }
-    public async extendCallDataWithDecodedInputOutput(item: ICallTypeTraceLogs) {
+    public async decodeTraceLogInputOutput(item: ICallTypeTraceLog) {
         const { address, input, output } = item
         const iFace = await this.getAbi(address)
 
@@ -46,7 +47,7 @@ export class AbiReader {
         return item
     }
 
-    public async extendCallDataWithDecodedErrorOutput(item: ICallTypeTraceLogs) {
+    public async decodeTraceLogErrorInputOutput(item: ICallTypeTraceLog) {
         const { address, output, input } = item
         const iFace = await this.getAbi(address)
 

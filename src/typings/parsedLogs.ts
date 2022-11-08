@@ -1,0 +1,54 @@
+import { ethers } from 'ethers'
+import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
+import { TStorageLogs } from './types'
+
+export interface ITraceLog {
+    type: TOpCodes
+    depth: number
+    passedGas: number
+    gasCost: number
+    pc: number
+    index: number
+}
+export interface ICallTypeTraceLog extends ITraceLog {
+    type: TCallTypeOpcodes
+    input: string
+    output: string
+    address: string
+
+    startIndex: number
+    stackTrace: number[]
+    value: string
+
+    decodedInput?: ethers.utils.TransactionDescription
+    decodedOutput?: ethers.utils.Result
+    returnIndex?: number
+    success?: boolean
+    isContract?: boolean
+
+    storageLogs?: TStorageLogs
+}
+
+export interface IReturnTypeTraceLog extends ITraceLog {
+    type: TReturnTypeOpcodes
+    output: string
+}
+
+export interface ICreateTypeTraceLog extends ITraceLog {
+    type: TCreateTypeOpcodes
+    startIndex: number
+    stackTrace: number[]
+    value: string
+    input: string
+    salt?: string
+    success?: boolean
+    returnIndex?: number
+
+    storageLogs?: TStorageLogs
+}
+
+export interface IStopTypeTraceLog extends ITraceLog {
+    type: 'STOP'
+}
+
+export type TReturnedTraceLog = ICallTypeTraceLog | IReturnTypeTraceLog | ICreateTypeTraceLog | IStopTypeTraceLog
