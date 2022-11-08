@@ -10,6 +10,7 @@ export type TStorageLogs = {
     loadedStorage: TLoadedStorage
     returnedStorage: TReturnedStorage
     changedStorage: TChangedStorage
+    isReverted?: boolean
 }
 
 export type TTransactionInfo = {

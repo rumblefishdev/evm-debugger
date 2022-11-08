@@ -99,7 +99,7 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
-    const { to, input, value } = txInfo
+    const { to, input, value, blockNumber } = txInfo
 
     const defaultFields = {
         type: 'CALL',
@@ -112,6 +112,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
         value: ethers.utils.formatEther(value),
         pc: 0,
         gasCost: 0,
+        blockNumber,
     } as ICallTypeTraceLog | ICreateTypeTraceLog
 
     if (to) {

@@ -9,6 +9,7 @@ export interface ITraceLog {
     gasCost: number
     pc: number
     index: number
+    blockNumber?: string
 }
 export interface ICallTypeTraceLog extends ITraceLog {
     type: TCallTypeOpcodes

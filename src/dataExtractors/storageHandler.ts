@@ -1,6 +1,6 @@
 import { ICallTypeTraceLog, ICreateTypeTraceLog } from '../typings/parsedLogs'
 import { IStorageTypeStructLogs, IStructLog } from '../typings/structLogs'
-import { TChangedStorage, TLoadedStorage, TReturnedStorage } from '../typings/types'
+import { TChangedStorage, TDataProvider, TLoadedStorage, TReturnedStorage } from '../typings/types'
 
 export class StorageHandler {
     constructor(private readonly structLogs: IStructLog[], private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {}
@@ -13,9 +13,9 @@ export class StorageHandler {
     private returnedStorage: TReturnedStorage = []
 
     private getCallContextStructLogs() {
-        const { startIndex, returnIndex } = this.traceLog
+        const { startIndex, returnIndex, depth } = this.traceLog
 
-        this.callContextStructLogs = this.structLogs.slice(startIndex, returnIndex)
+        this.callContextStructLogs = this.structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
     }
 
     private extractStorageStructLogs() {
@@ -69,7 +69,7 @@ export class StorageHandler {
         })
     }
 
-    private returnStorageLogs() {
+    public returnStorageLogs() {
         return { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
     }
 
@@ -89,7 +89,9 @@ export class StorageHandler {
         }
 
         this.mapStorageData(returnIndex)
+    }
 
-        return { ...this.traceLog, storageLogs: this.returnStorageLogs() }
+    public returnExpectedStorage() {
+        this.returnedStorage = this.loadedStorage
     }
 }

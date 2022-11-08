@@ -61,8 +61,19 @@ export class TxAnalyzer {
     }
 
     private async parseAndAddRootTraceLog() {
-        const rootTransactionLog = await this.dataProvider.getTransactionByHash(this.transactionHash)
-        this.parsedTransactionList.unshift(convertTxInfoToTraceLog(this.traceLogs[0], rootTransactionLog))
+        const transactionInfo = await this.dataProvider.getTransactionByHash(this.transactionHash)
+
+        const rootTraceLog = convertTxInfoToTraceLog(this.traceLogs[0], transactionInfo)
+        const blockNumber = rootTraceLog.blockNumber
+
+        this.parsedTransactionList.unshift(rootTraceLog)
+
+        return this.parsedTransactionList.map((item) => {
+            if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) {
+                return { ...item, blockNumber } as TReturnedTraceLog
+            }
+            return item
+        })
     }
 
     private async checkIfCallPointsToContract() {
@@ -83,9 +94,8 @@ export class TxAnalyzer {
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
                 const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
 
-                // If nested Call is Reverted, Parent Call won't have Return Item
                 if (!lastItemInCallContext) {
-                    return item
+                    return { ...item, success: false }
                 }
                 const { index, passedGas } = lastItemInCallContext
                 const gasCost = item.passedGas - passedGas
@@ -121,15 +131,22 @@ export class TxAnalyzer {
         }
     }
 
-    private parseStorageData() {
-        return this.parsedTransactionList.map((item) => {
+    private async parseStorageData() {
+        for (let i = 0; i < this.parsedTransactionList.length; i++) {
+            const item = this.parsedTransactionList[i]
+
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
                 const storageHandler = new StorageHandler(this.traceLogs, item)
 
-                return storageHandler.parseStorageData()
+                storageHandler.parseStorageData()
+
+                if (!item.success) {
+                    storageHandler.returnExpectedStorage()
+                }
+
+                this.parsedTransactionList[i] = { ...item, storageLogs: storageHandler.returnStorageLogs() }
             }
-            return item
-        })
+        }
     }
 
     public async analyze() {
@@ -137,17 +154,17 @@ export class TxAnalyzer {
 
         this.parsedTransactionList = this.parseStructLogs()
 
-        await this.parseAndAddRootTraceLog()
+        this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
         await this.checkIfCallPointsToContract()
 
         this.parsedTransactionList = this.combineCallWithItsReturn()
 
-        await this.decodeCallInputOutput()
+        // await this.decodeCallInputOutput()
 
         this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-        this.parsedTransactionList = this.parseStorageData()
+        await this.parseStorageData()
 
         dumpResultsToJson(this.transactionHash, this.traceLogs, this.parsedTransactionList)
 
