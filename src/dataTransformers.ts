@@ -22,6 +22,7 @@ import {
     IStructLog,
     ICreateTypeTraceLogs,
     IDataProvider,
+    IStorageStructLogs,
 } from './types'
 import { ethers } from 'ethers'
 
@@ -142,11 +143,35 @@ export class TraceLogsParserHelper {
         if (iFace) {
             const decodedInput = iFace.parseTransaction({ data: getSafeHex(input) })
 
-            const decodedOutput = decodeErrorResult(iFace, getSafeHex(output))
+            const decodedOutput = decodeErrorResult(getSafeHex(output))
 
             return { ...item, decodedInput, decodedOutput, success: false }
         }
 
         return item
+    }
+
+    public getCallExecutionTraceLogs(traceLogs: IStructLog[], item: ICallTypeTraceLogs | ICreateTypeTraceLogs) {
+        const { startIndex, returnIndex } = item
+
+        return traceLogs.slice(startIndex, returnIndex)
+    }
+
+    public extractStorageTraceLogs(traceLogs: IStructLog[], contextIndex: number) {
+        const indexes: number[] = []
+
+        const filteredLogs = traceLogs.filter((item, index) => {
+            const isStorage = item.op === 'SSTORE' || item.op === 'SLOAD'
+
+            if (isStorage) {
+                indexes.push(contextIndex + index)
+            }
+
+            return isStorage
+        })
+
+        return filteredLogs.map((item, index) => {
+            return { ...item, index: indexes[index] }
+        }) as IStorageStructLogs[]
     }
 }

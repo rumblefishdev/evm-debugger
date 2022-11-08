@@ -10,6 +10,8 @@ import {
     TTransactionRootLog,
     IStructLog,
     IStructLogWithIndex,
+    TLoadedStorage,
+    TChangedStorage,
 } from './types'
 import { TraceLogsParserHelper } from './dataTransformers'
 import { defaultDataProvider } from './blockchainGetters'
@@ -161,6 +163,54 @@ class TraceAnalyzer {
         >
     }
 
+    private extractStorageData() {
+        return this.parsedTransactionList.map((item) => {
+            if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
+                const { index, returnIndex } = item
+                const loadedStorage: TLoadedStorage = []
+                const changedStorage: TChangedStorage = []
+
+                const executionContextLogs = this.traceLogsParserHelper.getCallExecutionTraceLogs(this.traceLogs, item)
+                const storageTraceLogs = this.traceLogsParserHelper.extractStorageTraceLogs(executionContextLogs, index)
+
+                storageTraceLogs.forEach((element, rootIndex) => {
+                    const { op, stack, storage, index } = element
+
+                    if (op === 'SLOAD') {
+                        const key = stack[stack.length - 1]
+
+                        loadedStorage.push({ key, value: storage[key], index })
+                    }
+
+                    if (op === 'SSTORE') {
+                        const key = stack[stack.length - 1]
+                        const value = stack[stack.length - 2]
+
+                        const initialValue = storageTraceLogs[rootIndex - 1].storage[key]
+
+                        changedStorage.push({ key, updatedValue: value, initialValue, index })
+                    }
+                })
+
+                if (!returnIndex) {
+                    return item
+                }
+
+                const storageOfReturnItem = this.traceLogs[returnIndex].storage
+
+                const keys = Object.keys(storageOfReturnItem)
+
+                const returnedStorage = keys.map((item) => {
+                    return { key: item, value: storageOfReturnItem[item] }
+                })
+
+                return { ...item, storageLogs: { loadedStorage, changedStorage, returnedStorage } }
+            }
+
+            return item
+        })
+    }
+
     public async analyze() {
         await this.getTraceLogs()
 
@@ -176,6 +226,8 @@ class TraceAnalyzer {
 
         this.parsedTransactionList = this.filterCallAndCreateType()
 
+        this.parsedTransactionList = this.extractStorageData()
+
         dumpResultsToJson(this.transactionHash, this.traceLogs, this.parsedTransactionList)
 
         return this.parsedTransactionList
@@ -183,14 +235,16 @@ class TraceAnalyzer {
 }
 
 async function main() {
-    // const transactionHash = '0x8136bfb671e98ab1cc279df575abe3ea551f8fa7c7c787f4f6a7ed614b4b7247' // Root = Call | Failed | [Call,DelegateCall,StaticCall,Revert,Revert]
+    const transactionHash = '0x8136bfb671e98ab1cc279df575abe3ea551f8fa7c7c787f4f6a7ed614b4b7247' // Root = Call | Failed | [Call,DelegateCall,StaticCall,Revert,Revert]
     // const transactionHash = '0x5bd69cab4bbd5864a18ec23bd685d94c9ab58e94662409ea10fea756019e3c4f' // Root = Call | Failed | [Call,Create,Revert]
     // const transactionHash = '0xfe12892c9676881b66807797002e2c9473ef5ee62dddeb8adc30eb62f18612b7' // Root = Create | Success | [Create,Return]
     // const transactionHash = '0x8733fe2859afb044abe28859e71486d24758706320fdf47eb280c5fbc9bee51f' // Root = Call | Success | [Call,Create,Return]
     // const transactionHash = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682' // Root = Call |  Success | [Call,StaticCall,Return,Stop]
-    const transactionHash = '0x75eb09c0c35347a44a006a8702a45b13539a5c666337d7b1ddb2ffcc85d14e90' // Root = Call |  Success | [Call,StaticCall,Return,Stop]
+    // const transactionHash = '0x75eb09c0c35347a44a006a8702a45b13539a5c666337d7b1ddb2ffcc85d14e90' // Root = Call |  Success | [Call,StaticCall,Return,Stop]
 
     const analyzer = new TraceAnalyzer(defaultDataProvider, transactionHash)
+
+    await analyzer.analyze()
 
     console.log(await analyzer.analyze())
 }

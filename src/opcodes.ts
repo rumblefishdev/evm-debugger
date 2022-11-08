@@ -64,6 +64,8 @@ export type TOpCodesWithArgs = TReturnTypeOpcodes | TCallTypeOpcodes | TCreateTy
 
 export type TOpCodes = TOpCodesWithArgs | 'STOP'
 
+export type StorageOpCodes = 'SSTORE' | 'SLOAD'
+
 export type TCurrentStackArgs<CurrentOpCode extends TOpCodesWithArgs> = TOpCodesArgs[CurrentOpCode]
 
 export const OpCodesArgsArray: TOpCodesArgNamesArray = {
@@ -76,14 +78,7 @@ export const OpCodesArgsArray: TOpCodesArgNamesArray = {
     RETURN: ['position', 'length'],
     REVERT: ['position', 'length'],
 }
-export const OpcodesNamesArray: TOpCodes[] = [
-    'CALL',
-    'CALLCODE',
-    'DELEGATECALL',
-    'STATICCALL',
-    'CREATE',
-    'CREATE2',
-    'RETURN',
-    'REVERT',
-    'STOP',
-]
+export const SLoadArgsArray = ['key']
+export const SStoreArgsArray = ['key', 'value']
+
+export const OpcodesNamesArray = ['CALL', 'CALLCODE', 'DELEGATECALL', 'STATICCALL', 'CREATE', 'CREATE2', 'RETURN', 'REVERT', 'STOP']
