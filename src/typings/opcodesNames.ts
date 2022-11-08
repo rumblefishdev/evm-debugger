@@ -1,5 +1,8 @@
-export type allOpcodes =
-    | 'STOP'
+import { TOpCodes, TStorageOpCodes } from './opcodes'
+
+export type TAllOpCodes =
+    | TOpCodes
+    | TStorageOpCodes
     | 'ADD'
     | 'MUL'
     | 'SUB'
@@ -54,8 +57,6 @@ export type allOpcodes =
     | 'MLOAD'
     | 'MSTORE'
     | 'MSTORE8'
-    | 'SLOAD'
-    | 'SSTORE'
     | 'JUMP'
     | 'JUMPI'
     | 'PC'
@@ -133,11 +134,3 @@ export type allOpcodes =
     | 'LOG4'
     | 'INVALID'
     | 'SELFDESTRUCT'
-    | 'CALL'
-    | 'CALLCODE'
-    | 'DELEGATECALL'
-    | 'STATICCALL'
-    | 'CREATE'
-    | 'CREATE2'
-    | 'RETURN'
-    | 'REVERT'
