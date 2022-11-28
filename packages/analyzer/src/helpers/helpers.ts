@@ -84,8 +84,8 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
 
 export const dumpResultsToJson = (transactionHash: string, trace: IStructLog[], parsedTrace: TReturnedTraceLog[]) => {
     mkdirSync(`results/${transactionHash}`, { recursive: true })
-    writeFileSync(`results//${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
-    writeFileSync(`results//${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
+    writeFileSync(`results/${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
+    writeFileSync(`results/${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
 }
 
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {

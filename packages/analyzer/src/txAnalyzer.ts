@@ -160,7 +160,7 @@ export class TxAnalyzer {
 
         this.parsedTransactionList = this.combineCallWithItsReturn()
 
-        // await this.decodeCallInputOutput()
+        await this.decodeCallInputOutput()
 
         this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
