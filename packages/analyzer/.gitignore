@@ -1,0 +1,7 @@
+node_modules
+.env
+build
+results
+#Hardhat files
+cache
+artifacts

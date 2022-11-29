@@ -1,0 +1,20 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "dist",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": ["src/**/*"],
+    "references": [
+        {
+            "path": "../analyzer"
+        },
+        {
+            "path": "../frontend"
+        }
+    ],
+    "exclude": ["node_modules", "dist"]
+}

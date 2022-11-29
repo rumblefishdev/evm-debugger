@@ -1,15 +1,18 @@
-docs/README.html
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
-node_modules
-.env
-build
-results
-#Hardhat files
-cache
-artifacts
 
 #yarn
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
 .pnp.*
+
+
+node_modules
+dist
+tsconfig.tsbuildinfo
