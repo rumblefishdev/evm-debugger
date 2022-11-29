@@ -1,5 +1,11 @@
 {
     "name": "@evm-debuger/types",
     "packageManager": "yarn@3.2.4",
-    "main": "src/index.ts"
+    "main": "src/index.ts",
+    "devDependencies": {
+        "typescript": "^4.9.3"
+    },
+    "scripts": {
+        "build": "tsc --noEmit false"
+    }
 }

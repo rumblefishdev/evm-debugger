@@ -7,7 +7,8 @@
     ],
     "scripts": {
         "start-chain": "yarn workspace @evm-debuger/analyzer chain",
-        "analyze:dev": "yarn workspace @evm-debuger/analyzer start:dev"
+        "analyze:dev": "yarn workspace @evm-debuger/analyzer start:dev",
+        "frontend:start": "yarn workspace @evm-debuger/frontend start"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.45.0",

@@ -12,5 +12,6 @@
         {
             "path": "../analyzer"
         }
-    ]
+    ],
+    "exclude": ["node_modules", "dist"]
 }
