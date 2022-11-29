@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { TxAnalyzer } from '@evm-debuger/analyzer/src'
+import { useCallback, useEffect, useState } from 'react'
+import { TxAnalyzer } from '@evm-debuger/analyzer/dist/txAnalyzer'
 import type { TDataProvider, TTransactionTraceResult } from '@evm-debuger/types'
 
 import { useTypedDispatch, useTypedSelector } from '../store/storeHooks'

@@ -12,7 +12,6 @@ import {
     checkIfOfCreateType,
     checkIfOfReturnType,
     convertTxInfoToTraceLog,
-    dumpResultsToJson,
     getCallAndCreateType,
     getBaseStructLogs,
     getLastItemInCallTypeContext,
@@ -157,8 +156,6 @@ export class TxAnalyzer {
         this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
         this.parseStorageData()
-
-        dumpResultsToJson(this.transactionHash, this.traceLogs, this.parsedTransactionList)
 
         return this.parsedTransactionList
     }
