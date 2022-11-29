@@ -12,7 +12,7 @@ jobs:
         if: github.event.action == 'opened'
         with:
           project: EVM debugger
-          column: To do
+          column: Backlog
           repo-token: ${{ secrets.GH_TOKEN }}
 
   move_issue_after_closed:
