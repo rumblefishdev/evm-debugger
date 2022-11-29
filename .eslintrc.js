@@ -104,7 +104,7 @@ module.exports = {
         //Eslint rules
         //Rules that prevents possible logic errors
 
-        "no-await-in-loop": "error",
+        "no-await-in-loop": "warn",
         "no-constant-binary-expression": "error",
         "no-promise-executor-return": "error",
         "no-self-compare": "error",
@@ -207,6 +207,7 @@ module.exports = {
 
         //Unicorn
         "unicorn/no-keyword-prefix": "error",
+        "unicorn/consistent-destructuring": "warn",
         "unicorn/prefer-add-event-listener": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/filename-case": "off",

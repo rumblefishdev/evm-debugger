@@ -21,8 +21,8 @@ import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 export const getBaseStructLogs = (structLogs: IStructLog[]) => {
     const indexes: number[] = []
 
-    const filteredLogs = structLogs.filter((e, index) => {
-        const { op } = e
+    const filteredLogs = structLogs.filter((structLog, index) => {
+        const { op } = structLog
 
         const isBaseLog = OpcodesNamesArray.includes(op)
 

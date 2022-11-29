@@ -2,18 +2,17 @@ export class StackCounter {
     private stackCount: number[] = []
 
     public visitDepth = (depth: number): number[] => {
-        let newStackCount = [...this.stackCount]
+        let copiedStackCount = [...this.stackCount]
 
         const index = depth - 1
 
-        if (newStackCount[index] === undefined) newStackCount[index] = 0
-        else {
-            newStackCount[index] = newStackCount[index] + 1
-            newStackCount = newStackCount.slice(0, depth)
-        }
+        if (copiedStackCount[index]) {
+            copiedStackCount[index] = copiedStackCount[index] + 1
+            copiedStackCount = copiedStackCount.slice(0, depth)
+        } else copiedStackCount[index] = 0
 
-        this.stackCount = newStackCount
+        this.stackCount = copiedStackCount
 
-        return newStackCount
+        return copiedStackCount
     }
 }

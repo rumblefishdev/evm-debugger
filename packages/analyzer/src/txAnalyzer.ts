@@ -118,7 +118,7 @@ export class TxAnalyzer {
         }
     }
 
-    private async parseStorageData() {
+    private parseStorageData() {
         for (let index = 0; index < this.parsedTransactionList.length; index++) {
             const item = this.parsedTransactionList[index]
 
@@ -149,7 +149,7 @@ export class TxAnalyzer {
 
         this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-        await this.parseStorageData()
+        this.parseStorageData()
 
         dumpResultsToJson(this.transactionHash, this.traceLogs, this.parsedTransactionList)
 
