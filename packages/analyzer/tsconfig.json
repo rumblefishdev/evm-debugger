@@ -1,13 +1,14 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext",
+        "module": "CommonJS",
         "target": "es2017",
         "rootDir": "src",
         "outDir": "dist",
         "composite": true
     },
     "include": ["src/**/*"],
+    "exclude": ["./hardhat.config.ts"],
     "references": [
         {
             "path": "../types"
