@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
         "incremental": true,
-        "target": "ES2017",
-        "lib": [],
+        "target": "ES6",
+        "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
         "module": "CommonJS",
         "allowJs": false,
         "jsx": "react-jsx",
+        "sourceMap": true,
         "declaration": true,
         "declarationMap": true,
         "removeComments": false,

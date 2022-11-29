@@ -1,4 +1,11 @@
-import type { IFilteredStructLog, IStructLog, TDataProvider, TReturnedTraceLog } from '@evm-debuger/types'
+import type {
+    ICallTypeTraceLog,
+    ICreateTypeTraceLog,
+    IFilteredStructLog,
+    IStructLog,
+    TDataProvider,
+    TReturnedTraceLog,
+} from '@evm-debuger/types'
 
 import {
     chceckIfOfCallType,
@@ -154,5 +161,23 @@ export class TxAnalyzer {
         dumpResultsToJson(this.transactionHash, this.traceLogs, this.parsedTransactionList)
 
         return this.parsedTransactionList
+    }
+
+    public async baseAnalyze() {
+        await this.getTraceLogs()
+
+        this.parsedTransactionList = this.parseStructLogs()
+
+        this.parsedTransactionList = await this.parseAndAddRootTraceLog()
+
+        // await this.checkIfCallPointsToContract()
+
+        this.parsedTransactionList = this.combineCallWithItsReturn()
+
+        this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
+
+        this.parseStorageData()
+
+        return this.parsedTransactionList as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
     }
 }

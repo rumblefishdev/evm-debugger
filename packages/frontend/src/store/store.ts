@@ -3,19 +3,19 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage'
 
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
-import { structLogsReducer } from './structLogs/structLogs.slice'
+import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
 import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 
 const rootReducer = combineReducers({
     traceLogs: traceLogsReducer,
-    structLogs: structLogsReducer,
+    rawTxData: rawTxDataReducer,
     activeBlock: activeBlockReducer,
 })
 
 const persistConfig = {
     storage,
     key: 'root',
-    blacklist: ['activeBlock', 'structLogs'],
+    blacklist: ['activeBlock', 'structLogs', 'rawTxData'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
