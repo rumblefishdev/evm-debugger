@@ -1,8 +1,10 @@
 {
     "name": "@evm-debuger/analyzer",
     "packageManager": "yarn@3.2.4",
+    "main": "src/index.ts",
     "scripts": {
         "chain": "hardhat node",
+        "build": "tsc --build",
         "start:dev": "npx hardhat run ./src/script.ts --network localhost",
         "lint:fix": "eslint \"src/**/*.ts\" --fix",
         "lint:check": "eslint \"src/**/*.ts\"",

@@ -1,36 +1,36 @@
-{
-    "env": {
-        "es2022": true,
-        "jest": true,
-        "node": true,
-        "es6": true
+module.exports = {
+    env: {
+        es2022: true,
+        jest: true,
+        node: true,
     },
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+        tsconfigRootDir: __dirname,
+        ecmaVersion: 12,
+        sourceType: "module",
+        ecmaFeatures: {
+            jsx: true
         }
     },
-    "settings": {
+    settings: {
         "import/ignore": ["node_modules"],
         "import/resolver": {
-            "typescript": "true"
+            typescript: "true"
         }
     },
-    "extends": [
+    extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:sonarjs/recommended",
         "plugin:unicorn/recommended",
         "plugin:import/typescript"
     ],
-    "plugins": ["unicorn", "@typescript-eslint", "sort-keys-fix", "import", "jest", "sonarjs"],
-    "overrides": [
+    plugins: ["unicorn", "@typescript-eslint", "sort-keys-fix", "import", "jest", "sonarjs"],
+    overrides: [
         {
-            "files": ["*.ts", "*.tsx"],
-            "rules": {
+            files: ["*.ts", "*.tsx"],
+            rules: {
                 //Typescript
                 "@typescript-eslint/array-type": ["error", { "default": "array" }],
                 "@typescript-eslint/consistent-generic-constructors": ["error", "type-annotation"],
@@ -87,20 +87,20 @@
             }
         },
         {
-            "files": ["types.ts", "*types.ts"],
-            "rules": {
+            files: ["types.ts", "*types.ts"],
+            rules: {
                 "no-unused-vars": "off"
             }
         },
         {
-            "files": ["*.test.ts", "*.test.tsx"],
-            "extends": ["plugin:jest/recommended"],
-            "rules": {
+            files: ["*.test.ts", "*.test.tsx"],
+            extends: ["plugin:jest/recommended"],
+            rules: {
                 "jest/expect-expect": "off"
             }
         }
     ],
-    "rules": {
+    rules: {
         //Eslint rules
         //Rules that prevents possible logic errors
 
@@ -125,7 +125,7 @@
         "id-denylist": ["error", "err", "e", "cb", "callback"],
         "no-bitwise": "error",
         "no-caller": "error",
-        "no-confusing-arrow": "error",
+        "no-confusing-arrow": "off",
         "no-console": "off",
         "no-continue": "error",
         "no-else-return": ["error", { "allowElseIf": false }],
@@ -141,7 +141,7 @@
         "no-labels": "error",
         "no-lone-blocks": "error",
         "no-loop-func": "error",
-        "no-magic-numbers": ["error", { "ignoreDefaultValues": true, "ignore": [1, -1, 0] }],
+        "no-magic-numbers": "off",
         "no-mixed-operators": "off",
         "no-multi-assign": "error",
         "no-nested-ternary": "off",
@@ -191,7 +191,7 @@
         "import/export": "error",
         "import/no-named-as-default": "error",
         "import/no-named-as-default-member": "error",
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": false }],
+        "import/no-extraneous-dependencies": "off",
         "import/no-mutable-exports": "error",
         "import/no-unused-modules": "error",
 
@@ -199,7 +199,7 @@
         "import/exports-last": "error",
         "import/no-duplicates": "error",
         "import/newline-after-import": "error",
-        "import/no-unassigned-import": "error",
+        "import/no-unassigned-import": "off",
         "import/no-named-default": "error",
         "import/no-anonymous-default-export": "error",
         "import/group-exports": "off",
@@ -213,6 +213,8 @@
         "unicorn/no-null": "off",
         "unicorn/prefer-module": "off",
         "unicorn/prefer-at": "error",
+        "unicorn/no-array-reduce": "off",
+        "unicorn/no-array-callback-reference": "off",
         "unicorn/prevent-abbreviations": [
             "error",
             {

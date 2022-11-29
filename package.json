@@ -10,6 +10,7 @@
         "analyzer:dev": "yarn workspace @evm-debuger/analyzer start:dev",
         "frontend:start": "yarn workspace @evm-debuger/frontend start",
         "types:build": "yarn workspace @evm-debuger/types build",
+        "analyzer:build": "yarn workspace @evm-debuger/analyzer build",
         "lint:check": "yarn workspaces foreach run lint:check",
         "lint:fix": "yarn workspaces foreach run lint:fix",
         "prettier:check": "yarn workspaces foreach run prettier:check",

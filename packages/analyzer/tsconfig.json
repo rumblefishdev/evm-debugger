@@ -1,14 +1,11 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "module": "esnext",
         "target": "es2017",
-        "module": "ESNext",
         "rootDir": "src",
         "outDir": "dist",
-        "composite": true,
-        "declaration": true,
-        "declarationMap": true,
-        "strictPropertyInitialization": false
+        "composite": true
     },
     "include": ["src/**/*"],
     "references": [
