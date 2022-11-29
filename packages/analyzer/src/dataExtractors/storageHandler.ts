@@ -1,4 +1,4 @@
-import {
+import type {
     TChangedStorage,
     TLoadedStorage,
     TReturnedStorage,
@@ -30,9 +30,7 @@ export class StorageHandler {
         const filteredLogs = this.callContextStructLogs.filter((item, index) => {
             const isStorage = item.op === 'SSTORE' || item.op === 'SLOAD'
 
-            if (isStorage) {
-                indexes.push(this.traceLog.index + index)
-            }
+            if (isStorage) indexes.push(this.traceLog.index + index)
 
             return isStorage
         })
@@ -46,9 +44,9 @@ export class StorageHandler {
         const { op, stack, storage, index } = item
 
         if (op === 'SLOAD') {
-            const key = stack[stack.length - 1]
+            const key = stack.at(-1)
 
-            this.loadedStorage.push({ key, value: storage[key], index })
+            this.loadedStorage.push({ value: storage[key], key, index })
         }
     }
 
@@ -56,12 +54,12 @@ export class StorageHandler {
         const { op, stack, index } = item
 
         if (op === 'SSTORE') {
-            const key = stack[stack.length - 1]
-            const value = stack[stack.length - 2]
+            const key = stack.at(-1)
+            const value = stack.at(-2)
 
             const initialValue = this.storageStructLogs[rootIndex - 1].storage[key]
 
-            this.changedStorage.push({ key, updatedValue: value, initialValue, index })
+            this.changedStorage.push({ updatedValue: value, key, initialValue, index })
         }
     }
 
@@ -71,12 +69,12 @@ export class StorageHandler {
         const keys = Object.keys(storageOfReturnItem)
 
         this.returnedStorage = keys.map((item) => {
-            return { key: item, value: storageOfReturnItem[item] }
+            return { value: storageOfReturnItem[item], key: item }
         })
     }
 
     public returnStorageLogs() {
-        return { loadedStorage: this.loadedStorage, changedStorage: this.changedStorage, returnedStorage: this.returnedStorage }
+        return { returnedStorage: this.returnedStorage, loadedStorage: this.loadedStorage, changedStorage: this.changedStorage }
     }
 
     public parseStorageData() {
@@ -90,9 +88,7 @@ export class StorageHandler {
             this.saveStorageChange(element, rootIndex)
         })
 
-        if (!returnIndex) {
-            return this.traceLog
-        }
+        if (!returnIndex) return this.traceLog
 
         this.mapStorageData(returnIndex)
     }

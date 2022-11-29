@@ -1,3 +1,7 @@
 dist
 .github
 node_modules
+
+cache
+results
+templates

@@ -1,13 +1,10 @@
-import { txHashes } from './constants/txHash'
 import { defaultDataProvider } from './helpers/blockchainGetters'
 import { TxAnalyzer } from './txAnalyzer'
 
 async function main() {
-    const transactionHash = txHashes.Call__Success__Call_StaticCall_Return_Stop[0]
-
-    const analyzer = new TxAnalyzer(defaultDataProvider, transactionHash)
+    const analyzer = new TxAnalyzer(defaultDataProvider, '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682')
 
     await analyzer.analyze()
 }
 
-main()
+await main()

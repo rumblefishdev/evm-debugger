@@ -6,14 +6,28 @@
         "packages/*"
     ],
     "scripts": {
-        "start-chain": "yarn workspace @evm-debuger/analyzer chain",
-        "analyze:dev": "yarn workspace @evm-debuger/analyzer start:dev",
-        "frontend:start": "yarn workspace @evm-debuger/frontend start"
+        "analyzer:chain": "yarn workspace @evm-debuger/analyzer chain",
+        "analyzer:dev": "yarn workspace @evm-debuger/analyzer start:dev",
+        "frontend:start": "yarn workspace @evm-debuger/frontend start",
+        "types:build": "yarn workspace @evm-debuger/types build",
+        "lint:check": "yarn workspaces foreach run lint:check",
+        "lint:fix": "yarn workspaces foreach run lint:fix",
+        "prettier:check": "yarn workspaces foreach run prettier:check",
+        "prettier:fix": "yarn workspaces foreach run prettier:fix",
+        "analyzer:lint-check": "yarn workspace @evm-debuger/analyzer lint:check",
+        "analyzer:lint-fix": "yarn workspace @evm-debuger/analyzer lint:fix",
+        "analyzer:prettier-check": "yarn workspace @evm-debuger/analyzer prettier:check",
+        "analyzer:prettier-fix": "yarn workspace @evm-debuger/analyzer prettier:fix",
+        "frontend:lint-check": "yarn workspace @evm-debuger/frontend lint:check",
+        "frontend:lint-fix": "yarn workspace @evm-debuger/frontend lint:fix",
+        "frontend:prettier-check": "yarn workspace @evm-debuger/frontend prettier:check",
+        "frontend:prettier-fix": "yarn workspace @evm-debuger/frontend prettier:fix"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.45.0",
         "@typescript-eslint/parser": "^5.45.0",
         "eslint": "^8.28.0",
+        "eslint-import-resolver-typescript": "^3.5.2",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-jest": "^27.1.6",
         "eslint-plugin-sonarjs": "^0.16.0",

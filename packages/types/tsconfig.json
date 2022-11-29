@@ -11,6 +11,9 @@
     "references": [
         {
             "path": "../analyzer"
+        },
+        {
+            "path": "../frontend"
         }
     ],
     "exclude": ["node_modules", "dist"]
