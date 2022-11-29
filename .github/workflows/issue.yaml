@@ -8,7 +8,7 @@ jobs:
   move_issue_after_opened:
     runs-on: ubuntu-latest
     steps:
-      - uses: alex-page/github-project-automation-plus@@v0.8.1
+      - uses: alex-page/github-project-automation-plus@v0.8.1
         if: github.event.action == 'opened'
         with:
           project: EVM debugger
