@@ -1,6 +1,6 @@
 import { IStructLog } from './structLogs'
 
-export type TStorage = Array<{ [key: string]: string }>
+export type TStorage = { [key: string]: string }
 
 export type TLoadedStorage = Array<{ key: string; value: string; index: number }>
 export type TChangedStorage = Array<{ key: string; initialValue: string; updatedValue: string; index: number }>

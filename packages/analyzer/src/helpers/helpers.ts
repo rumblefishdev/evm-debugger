@@ -1,9 +1,9 @@
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
-import { TTransactionInfo } from '../typings/types'
+import { TTransactionInfo } from '@evm-debuger/types'
 import { writeFileSync, mkdirSync } from 'fs'
-import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '../typings/structLogs'
-import { ICallTypeTraceLog, ICreateTypeTraceLog, IReturnTypeTraceLog, IStopTypeTraceLog, TReturnedTraceLog } from '../typings/parsedLogs'
+import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '@evm-debuger/types'
+import { ICallTypeTraceLog, ICreateTypeTraceLog, IReturnTypeTraceLog, IStopTypeTraceLog, TReturnedTraceLog } from '@evm-debuger/types'
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
 export const getBaseStructLogs = (structLogs: IStructLog[]) => {

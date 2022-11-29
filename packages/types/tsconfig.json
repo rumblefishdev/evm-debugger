@@ -5,13 +5,12 @@
         "outDir": "dist",
         "composite": true,
         "declaration": true,
-        "declarationMap": true,
-        "strictPropertyInitialization": false
+        "declarationMap": true
     },
     "include": ["src/**/*"],
     "references": [
         {
-            "path": "../types"
+            "path": "../analyzer"
         }
     ]
 }

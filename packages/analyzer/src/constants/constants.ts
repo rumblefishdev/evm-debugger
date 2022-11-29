@@ -1,4 +1,4 @@
-import { TOpCodesArgsArray } from '../typings/stackArgs'
+import { TOpCodesArgsArray } from '@evm-debuger/types'
 
 export const OpCodesArgsArray: TOpCodesArgsArray = {
     CALL: ['gas', 'address', 'value', 'inputOffset', 'inputLength', 'returnOffset', 'returnLength'],

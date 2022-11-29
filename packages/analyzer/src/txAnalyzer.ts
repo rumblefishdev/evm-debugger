@@ -12,9 +12,7 @@ import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
-import { TDataProvider } from './typings'
-import { IFilteredStructLog, IStructLog } from './typings/structLogs'
-import { TReturnedTraceLog } from './typings/parsedLogs'
+import { IFilteredStructLog, IStructLog, TDataProvider, TReturnedTraceLog } from '@evm-debuger/types'
 
 export class TxAnalyzer {
     constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}

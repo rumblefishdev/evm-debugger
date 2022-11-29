@@ -1,7 +1,7 @@
 import { StackCounter } from '../helpers/stackCounter'
-import { ICallTypeTraceLog, ICreateTypeTraceLog, ITraceLog, IReturnTypeTraceLog, IStopTypeTraceLog } from '../typings/parsedLogs'
-import { TCallTypeArgs, TCreateTypeArgs, TReturnTypeArgs } from '../typings/stackArgs'
-import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '../typings/structLogs'
+import { ICallTypeTraceLog, ICreateTypeTraceLog, ITraceLog, IReturnTypeTraceLog, IStopTypeTraceLog } from '@evm-debuger/types'
+import { TCallTypeArgs, TCreateTypeArgs, TReturnTypeArgs } from '@evm-debuger/types'
+import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '@evm-debuger/types'
 import { extractArgsFromStack, extractCallTypeArgsData, extractCreateTypeArgsData, extractReturnTypeArgsData } from './argsExtractors'
 
 export class StructLogParser {

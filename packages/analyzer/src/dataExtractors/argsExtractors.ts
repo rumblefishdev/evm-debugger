@@ -1,8 +1,7 @@
 import { ethers } from 'ethers'
 import { OpCodesArgsArray } from '../constants/constants'
 import { readMemory } from '../helpers/helpers'
-import { TOpCodesWithArgs } from '../typings/opcodes'
-import { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs } from '../typings/stackArgs'
+import { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs, TOpCodesWithArgs } from '@evm-debuger/types'
 
 export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
     const opCodeArgumentsNames = OpCodesArgsArray[op]

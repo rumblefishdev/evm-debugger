@@ -1,6 +1,12 @@
-import { ICallTypeTraceLog, ICreateTypeTraceLog } from '../typings/parsedLogs'
-import { IStorageTypeStructLogs, IStructLog } from '../typings/structLogs'
-import { TChangedStorage, TDataProvider, TLoadedStorage, TReturnedStorage } from '../typings/types'
+import {
+    TChangedStorage,
+    TLoadedStorage,
+    TReturnedStorage,
+    IStorageTypeStructLogs,
+    IStructLog,
+    ICallTypeTraceLog,
+    ICreateTypeTraceLog,
+} from '@evm-debuger/types'
 
 export class StorageHandler {
     constructor(private readonly structLogs: IStructLog[], private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {}

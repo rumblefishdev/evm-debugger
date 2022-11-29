@@ -1,0 +1,5 @@
+{
+    "name": "@evm-debuger/types",
+    "packageManager": "yarn@3.2.4",
+    "main": "src/index.ts"
+}

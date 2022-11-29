@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
-import { TDataProvider } from '../typings'
-import { ICallTypeTraceLog } from '../typings/parsedLogs'
+import { TDataProvider } from '@evm-debuger/types'
+import { ICallTypeTraceLog } from '@evm-debuger/types'
 import { decodeErrorResult, getSafeHex, safeJsonParse } from './helpers'
 
 export class AbiReader {

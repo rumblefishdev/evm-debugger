@@ -3,7 +3,6 @@
         "target": "ES6",
         "module": "CommonJS",
         "lib": ["ESNext", "DOM"],
-        "outDir": "./dist",
         "strict": true,
         "sourceMap": true,
         "noImplicitAny": true,
@@ -11,13 +10,16 @@
         "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
-            "@monorepo/*": ["packages/*/src/index.ts"]
+            "@evm-debuger/*": ["packages/*/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "dist", "*.d.ts"],
     "references": [
         {
             "path": "packages/analyzer"
+        },
+        {
+            "path": "packages/types"
         }
     ]
 }
