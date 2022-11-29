@@ -1,5 +1,5 @@
 import { network } from 'hardhat'
-import { TDataProvider, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import type { TDataProvider, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import fetch from 'node-fetch'
 
 export const getTransactionByHash = async (transactionHash: string): Promise<TTransactionInfo> => {
@@ -24,8 +24,8 @@ export const fetchAbiCode = async (address: string): Promise<string> => {
 }
 
 export const defaultDataProvider: TDataProvider = {
-    getTransactionByHash,
     getTransactionTrace,
-    fetchAbiCode,
+    getTransactionByHash,
     getContractCode,
+    fetchAbiCode,
 }

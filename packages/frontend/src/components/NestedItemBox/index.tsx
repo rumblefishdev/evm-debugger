@@ -1,1 +1,1 @@
-export { NestedItemBox } from './NestedItemBox';
+export { NestedItemBox } from './NestedItemBox'

@@ -1,6 +1,6 @@
-import { TCallTypeOpcodes, TCreateTypeOpcodes, TReturnTypeOpcodes, TStorageOpCodes } from './opcodes'
-import { TAllOpCodes } from './opcodesNames'
-import { TStorage } from './types'
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TReturnTypeOpcodes, TStorageOpCodes } from './opcodes'
+import type { TAllOpCodes } from './opcodesNames'
+import type { TStorage } from './types'
 
 export interface IStructLog {
     pc: number

@@ -1,4 +1,4 @@
-import { ICallTypeTraceLog, ICreateTypeTraceLog } from '@evm-debuger/types'
+import type { ICallTypeTraceLog, ICreateTypeTraceLog } from '@evm-debuger/types'
 
 export type TTraceLog = ICallTypeTraceLog | ICreateTypeTraceLog
 

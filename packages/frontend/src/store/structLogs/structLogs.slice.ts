@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-
 import type { IStructLog } from '@evm-debuger/types'
 
 const initialState = [] as IStructLog[]

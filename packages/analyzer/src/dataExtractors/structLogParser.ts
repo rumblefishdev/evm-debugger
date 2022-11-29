@@ -1,7 +1,21 @@
-import { StackCounter } from '../helpers/stackCounter'
-import { ICallTypeTraceLog, ICreateTypeTraceLog, ITraceLog, IReturnTypeTraceLog, IStopTypeTraceLog } from '@evm-debuger/types'
-import { TCallTypeArgs, TCreateTypeArgs, TReturnTypeArgs } from '@evm-debuger/types'
-import { ICallTypeStructLogs, ICreateTypeStructLogs, IFilteredStructLog, IReturnTypeStructLogs, IStructLog } from '@evm-debuger/types'
+import type {
+    ICallTypeTraceLog,
+    ICreateTypeTraceLog,
+    ITraceLog,
+    IReturnTypeTraceLog,
+    IStopTypeTraceLog,
+    TCallTypeArgs,
+    TCreateTypeArgs,
+    TReturnTypeArgs,
+    ICallTypeStructLogs,
+    ICreateTypeStructLogs,
+    IFilteredStructLog,
+    IReturnTypeStructLogs,
+    IStructLog,
+} from '@evm-debuger/types'
+
+import type { StackCounter } from '../helpers/stackCounter'
+
 import { extractArgsFromStack, extractCallTypeArgsData, extractCreateTypeArgsData, extractReturnTypeArgsData } from './argsExtractors'
 
 export class StructLogParser {
@@ -14,7 +28,7 @@ export class StructLogParser {
     private extractDefaultData() {
         const { depth, gas, gasCost, op, pc, index } = this.filteredStructLog
 
-        return { type: op, depth, passedGas: gas, gasCost, pc, index } as ITraceLog
+        return { type: op, pc, passedGas: gas, index, gasCost, depth } as ITraceLog
     }
 
     private createStackTrace(depth: number): number[] {
@@ -34,8 +48,8 @@ export class StructLogParser {
             ...extractCallTypeArgsData(opCodeArguments, memory),
             ...this.extractDefaultData(),
             startIndex: index + 1,
-            passedGas: this.structLogs[index + 1].gas,
             stackTrace: this.createStackTrace(depth),
+            passedGas: this.structLogs[index + 1].gas,
         } as ICallTypeTraceLog
     }
 
@@ -48,8 +62,8 @@ export class StructLogParser {
             ...extractCreateTypeArgsData(opCodeArguments, memory),
             ...this.extractDefaultData(),
             startIndex: index + 1,
-            passedGas: this.structLogs[index + 1].gas,
             stackTrace: this.createStackTrace(depth),
+            passedGas: this.structLogs[index + 1].gas,
         } as ICreateTypeTraceLog
     }
 

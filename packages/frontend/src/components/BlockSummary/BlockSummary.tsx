@@ -7,7 +7,7 @@ import type { BlockSummaryProps } from './BlockSummary.types'
 import { StyledBox } from './styles'
 
 export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
-    const currentBlock = useTypedSelector(state => state.activeBlock)
+    const currentBlock = useTypedSelector((state) => state.activeBlock)
 
     return (
         <StyledBox {...props}>

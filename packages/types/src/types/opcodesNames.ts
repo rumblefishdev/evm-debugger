@@ -1,4 +1,4 @@
-import { TOpCodes, TStorageOpCodes } from './opcodes'
+import type { TOpCodes, TStorageOpCodes } from './opcodes'
 
 export type TAllOpCodes =
     | TOpCodes

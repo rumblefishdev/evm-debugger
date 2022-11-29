@@ -7,4 +7,8 @@ async function main() {
     await analyzer.analyze()
 }
 
-await main()
+try {
+    await main()
+} catch (error) {
+    console.log(error)
+}

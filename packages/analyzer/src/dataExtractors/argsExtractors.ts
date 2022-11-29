@@ -1,7 +1,8 @@
 import { ethers } from 'ethers'
+import type { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs, TOpCodesWithArgs } from '@evm-debuger/types'
+
 import { OpCodesArgsArray } from '../constants/constants'
 import { readMemory } from '../helpers/helpers'
-import { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs, TOpCodesWithArgs } from '@evm-debuger/types'
 
 export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
     const opCodeArgumentsNames = OpCodesArgsArray[op]
@@ -28,7 +29,7 @@ export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) =
 
     const parsedAddress = `0x${address.slice(-40)}`
 
-    return { address: parsedAddress, value, input, output }
+    return { value, output, input, address: parsedAddress }
 }
 
 export const extractReturnTypeArgsData = (item: TReturnTypeArgs, memory: string[]) => {
@@ -45,9 +46,7 @@ export const extractCreateTypeArgsData = (item: TCreateTypeArgs, memory: string[
 
     const defaultReturn = { value: ethers.utils.formatEther(value), input }
 
-    if ('salt' in item) {
-        return { ...defaultReturn, salt: item.salt }
-    }
+    if ('salt' in item) return { ...defaultReturn, salt: item.salt }
 
     return defaultReturn
 }

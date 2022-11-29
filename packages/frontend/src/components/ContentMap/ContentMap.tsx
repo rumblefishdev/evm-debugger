@@ -30,7 +30,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
         }
     }, [])
 
-    const traceLog = useTypedSelector(state => selectMappedTraceLogs(state, width, height, 24))
+    const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height, 24))
 
     console.log(traceLog)
 

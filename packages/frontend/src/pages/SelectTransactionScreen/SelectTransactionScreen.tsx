@@ -20,7 +20,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
         const fileReader = new FileReader()
         if (event.target.files?.length) {
             fileReader.readAsText(event.target.files[0])
-            fileReader.onload = loadEvent => {
+            fileReader.onload = (loadEvent) => {
                 // console.log(loadEvent!.target!.result)
                 if (type === 'struct') setStruct(loadEvent!.target!.result as string)
                 if (type === 'trace') setTrace(loadEvent!.target!.result as string)
@@ -46,12 +46,12 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
             <Typography variant="h4">Upload Trace Logs</Typography>
             <Button variant="contained" component="label">
                 Upload
-                <input hidden type="file" onChange={event => uploadHandler(event, 'trace')}></input>
+                <input hidden type="file" onChange={(event) => uploadHandler(event, 'trace')}></input>
             </Button>
             <Typography variant="h4">Upload Struct Logs</Typography>
             <Button variant="contained" component="label">
                 Upload
-                <input hidden type="file" onChange={event => uploadHandler(event, 'struct')}></input>
+                <input hidden type="file" onChange={(event) => uploadHandler(event, 'struct')}></input>
             </Button>
 
             <Typography variant="h4">Display Information</Typography>

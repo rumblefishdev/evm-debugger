@@ -6,9 +6,8 @@ export class StackCounter {
 
         const index = depth - 1
 
-        if (newStackCount[index] === undefined) {
-            newStackCount[index] = 0
-        } else {
+        if (newStackCount[index] === undefined) newStackCount[index] = 0
+        else {
             newStackCount[index] = newStackCount[index] + 1
             newStackCount = newStackCount.slice(0, depth)
         }

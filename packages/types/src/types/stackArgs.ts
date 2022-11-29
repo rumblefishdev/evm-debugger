@@ -1,4 +1,4 @@
-import { TCallTypeOpcodes, TCreateTypeOpcodes, TReturnTypeOpcodes } from './opcodes'
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TReturnTypeOpcodes } from './opcodes'
 
 export type TCallArgsNames = 'gas' | 'address' | 'value' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
 export type TCallCodeArgsNames = 'gas' | 'address' | 'value' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
@@ -59,5 +59,5 @@ export type TOpCodesArgs = {
 }
 
 export type TOpCodesArgsArray = {
-    [item in TReturnTypeOpcodes | TCallTypeOpcodes | TCreateTypeOpcodes]: Array<keyof TOpCodesArgs[item]>
+    [item in TReturnTypeOpcodes | TCallTypeOpcodes | TCreateTypeOpcodes]: (keyof TOpCodesArgs[item])[]
 }
