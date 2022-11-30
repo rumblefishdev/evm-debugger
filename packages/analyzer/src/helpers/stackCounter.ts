@@ -6,10 +6,12 @@ export class StackCounter {
 
     const index = depth - 1
 
-    if (copiedStackCount[index]) {
+    // eslint-disable-next-line no-undefined
+    if (copiedStackCount[index] === undefined) copiedStackCount[index] = 0
+    else {
       copiedStackCount[index] = copiedStackCount[index] + 1
       copiedStackCount = copiedStackCount.slice(0, depth)
-    } else copiedStackCount[index] = 0
+    }
 
     this.stackCount = copiedStackCount
 

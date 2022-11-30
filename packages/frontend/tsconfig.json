@@ -4,7 +4,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "lib": ["esnext", "dom"],
-    "composite": true
+    "composite": true,
+    "sourceMap": false
   },
   "include": ["src/**/*"],
   "references": [

@@ -71,8 +71,8 @@ const selectTraceAsNestedArrays = (state: TTraceLog[], width: number, height: nu
 
 export const traceLogsSlice = createSlice({
   reducers: {
-    loadTraceLogs: (state, action: PayloadAction<string>) => {
-      return JSON.parse(action.payload) as TTraceLog[]
+    loadTraceLogs: (state, action: PayloadAction<TTraceLog[]>) => {
+      return action.payload
     },
   },
   name: 'traceLogs',

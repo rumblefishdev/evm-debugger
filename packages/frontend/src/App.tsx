@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>
+  return (
+    <Box sx={{ width: '100vw', height: '100vh' }}>
+      <RouterProvider router={router} />
+    </Box>
+  )
 }
 
 export default App

@@ -1,32 +1,33 @@
 {
-    "compilerOptions": {
-        "incremental": true,
-        "target": "ES2017",
-        "lib": [],
-        "module": "CommonJS",
-        "allowJs": false,
-        "jsx": "react-jsx",
-        "declaration": true,
-        "declarationMap": true,
-        "removeComments": false,
-        "noEmit": false,
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "skipLibCheck": true,
-        "strictPropertyInitialization": false
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ES6",
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
+    "module": "CommonJS",
+    "allowJs": false,
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": false,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false
+  },
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "./packages/analyzer"
     },
-    "exclude": ["node_modules", "dist"],
-    "references": [
-        {
-            "path": "./packages/analyzer"
-        },
-        {
-            "path": "./packages/types"
-        },
-        {
-            "path": "./packages/frontend"
-        }
-    ]
+    {
+      "path": "./packages/types"
+    },
+    {
+      "path": "./packages/frontend"
+    }
+  ]
 }

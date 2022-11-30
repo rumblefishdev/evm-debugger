@@ -1,63 +1,50 @@
-import { Button, Typography } from '@mui/material'
-import React, { useCallback, useState } from 'react'
+import type { TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import { Button, Typography, Stack } from '@mui/material'
+import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useFileUpload } from '../../hooks/useFileUpload'
+import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedDispatch } from '../../store/storeHooks'
-import { loadStructLogs } from '../../store/structLogs/structLogs.slice'
-import { loadTraceLogs } from '../../store/traceLogs/traceLogs.slice'
 
 import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
-import { StyledBox } from './styles'
+import { StyledStack } from './styles'
 
 export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
-  const [trace, setTrace] = useState<string>('')
-  const [struct, setStruct] = useState<string>('')
+  const [txInfo, uploadTxInfo] = useFileUpload()
+  const [structLogs, uploadStructLogs] = useFileUpload()
 
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
 
-  const uploadHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>, type: 'struct' | 'trace') => {
-    const fileReader = new FileReader()
-    if (event.target.files?.length) {
-      fileReader.readAsText(event.target.files[0])
-      fileReader.onload = (loadEvent) => {
-        // console.log(loadEvent!.target!.result)
-        if (type === 'struct') setStruct(loadEvent!.target!.result as string)
-        if (type === 'trace') setTrace(loadEvent!.target!.result as string)
-      }
-    } else {
-      if (type === 'struct') setStruct('')
-      if (type === 'trace') setTrace('')
-    }
-  }, [])
-
   const submitHandler = useCallback(() => {
-    console.log(trace)
-    console.log(struct)
-    if (trace && struct) {
-      dispatch(loadTraceLogs(trace))
-      dispatch(loadStructLogs(struct))
+    if (txInfo && structLogs) {
+      dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
+      dispatch(setStructLogs(JSON.parse(structLogs) as TTransactionTraceResult))
       navigate('/mainDisplay')
     }
-  }, [trace, struct])
+  }, [txInfo, structLogs])
 
   return (
-    <StyledBox {...props}>
-      <Typography variant="h4">Upload Trace Logs</Typography>
-      <Button variant="contained" component="label">
-        Upload
-        <input hidden type="file" onChange={(event) => uploadHandler(event, 'trace')}></input>
-      </Button>
-      <Typography variant="h4">Upload Struct Logs</Typography>
-      <Button variant="contained" component="label">
-        Upload
-        <input hidden type="file" onChange={(event) => uploadHandler(event, 'struct')}></input>
-      </Button>
+    <StyledStack {...props} spacing={4}>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
+        <Button variant="contained" component="label">
+          Upload
+          <input hidden type="file" onChange={uploadTxInfo}></input>
+        </Button>
+      </Stack>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
+        <Button variant="contained" component="label">
+          Upload
+          <input hidden type="file" onChange={uploadStructLogs}></input>
+        </Button>
+      </Stack>
 
-      <Typography variant="h4">Display Information</Typography>
       <Button variant="contained" component="label" onClick={submitHandler}>
-        Done
+        Process logs
       </Button>
-    </StyledBox>
+    </StyledStack>
   )
 }

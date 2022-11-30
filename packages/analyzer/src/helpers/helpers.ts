@@ -85,12 +85,6 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
   if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
-export const dumpResultsToJson = (transactionHash: string, trace: IStructLog[], parsedTrace: TReturnedTraceLog[]) => {
-  mkdirSync(`results/${transactionHash}`, { recursive: true })
-  writeFileSync(`results/${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
-  writeFileSync(`results/${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
-}
-
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
   return traceLogs
     .slice(currentIndex)
