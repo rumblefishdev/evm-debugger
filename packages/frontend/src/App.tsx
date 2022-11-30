@@ -5,18 +5,18 @@ import { MainDisplay } from './pages/MainDisplay'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 
 const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <SelectTransactionScreen />,
-    },
-    {
-        path: '/mainDisplay',
-        element: <MainDisplay />,
-    },
+  {
+    path: '/',
+    element: <SelectTransactionScreen />,
+  },
+  {
+    path: '/mainDisplay',
+    element: <MainDisplay />,
+  },
 ])
 
 function App() {
-    return <RouterProvider router={router}></RouterProvider>
+  return <RouterProvider router={router}></RouterProvider>
 }
 
 export default App

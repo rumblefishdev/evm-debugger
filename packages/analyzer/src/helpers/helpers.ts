@@ -3,132 +3,131 @@ import { writeFileSync, mkdirSync } from 'node:fs'
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import type {
-    TTransactionInfo,
-    ICallTypeStructLogs,
-    ICreateTypeStructLogs,
-    IFilteredStructLog,
-    IReturnTypeStructLogs,
-    IStructLog,
-    ICallTypeTraceLog,
-    ICreateTypeTraceLog,
-    IReturnTypeTraceLog,
-    IStopTypeTraceLog,
-    TReturnedTraceLog,
-    TMainTraceLogs,
+  TTransactionInfo,
+  ICallTypeStructLogs,
+  ICreateTypeStructLogs,
+  IFilteredStructLog,
+  IReturnTypeStructLogs,
+  IStructLog,
+  ICallTypeTraceLog,
+  ICreateTypeTraceLog,
+  IReturnTypeTraceLog,
+  IStopTypeTraceLog,
+  TReturnedTraceLog,
+  TMainTraceLogs,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
 export const getBaseStructLogs = (structLogs: IStructLog[]) => {
-    const indexes: number[] = []
+  const indexes: number[] = []
 
-    const filteredLogs = structLogs.filter((structLog, index) => {
-        const { op } = structLog
+  const filteredLogs = structLogs.filter((structLog, index) => {
+    const { op } = structLog
 
-        const isBaseLog = OpcodesNamesArray.includes(op)
+    const isBaseLog = OpcodesNamesArray.includes(op)
 
-        if (isBaseLog) indexes.push(index)
+    if (isBaseLog) indexes.push(index)
 
-        return isBaseLog
-    })
+    return isBaseLog
+  })
 
-    return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IFilteredStructLog[]
+  return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IFilteredStructLog[]
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {
-    const start = Number.parseInt(rawStart, 16)
-    const length = Number.parseInt(rawLength, 16)
+  const start = Number.parseInt(rawStart, 16)
+  const length = Number.parseInt(rawLength, 16)
 
-    const memoryString = memory.join('')
+  const memoryString = memory.join('')
 
-    const readStartIndex = start * 2
-    const readEndIndex = readStartIndex + length * 2
+  const readStartIndex = start * 2
+  const readEndIndex = readStartIndex + length * 2
 
-    return memoryString.slice(readStartIndex, readEndIndex)
+  return memoryString.slice(readStartIndex, readEndIndex)
 }
 
 export const chceckIfOfCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICallTypeTraceLog | ICallTypeStructLogs => {
-    if ('type' in item)
-        return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
+  if ('type' in item) return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
 
-    return item.op === 'CALL' || item.op === 'CALLCODE' || item.op === 'DELEGATECALL' || item.op === 'STATICCALL'
+  return item.op === 'CALL' || item.op === 'CALLCODE' || item.op === 'DELEGATECALL' || item.op === 'STATICCALL'
 }
 
 export const checkIfOfCreateType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
-    if ('type' in item) return item.type === 'CREATE' || item.type === 'CREATE2'
+  if ('type' in item) return item.type === 'CREATE' || item.type === 'CREATE2'
 
-    return item.op === 'CREATE' || item.op === 'CREATE2'
+  return item.op === 'CREATE' || item.op === 'CREATE2'
 }
 
 export const checkIfOfReturnType = (item: TReturnedTraceLog | IFilteredStructLog): item is IReturnTypeTraceLog | IReturnTypeStructLogs => {
-    if ('type' in item) return item.type === 'RETURN' || item.type === 'REVERT'
+  if ('type' in item) return item.type === 'RETURN' || item.type === 'REVERT'
 
-    return item.op === 'RETURN' || item.op === 'REVERT'
+  return item.op === 'RETURN' || item.op === 'REVERT'
 }
 
 export const safeJsonParse = (text: string): any | null => {
-    try {
-        return JSON.parse(text)
-    } catch {
-        return null
-    }
+  try {
+    return JSON.parse(text)
+  } catch {
+    return null
+  }
 }
 
 export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x`)
 
 export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
-    const bytes = ethers.utils.arrayify(data)
+  const bytes = ethers.utils.arrayify(data)
 
-    const selectorSignature = hexlify(bytes.slice(0, 4))
+  const selectorSignature = hexlify(bytes.slice(0, 4))
 
-    const builtin = BuiltinErrors[selectorSignature]
+  const builtin = BuiltinErrors[selectorSignature]
 
-    if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
+  if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
 export const dumpResultsToJson = (transactionHash: string, trace: IStructLog[], parsedTrace: TReturnedTraceLog[]) => {
-    mkdirSync(`results/${transactionHash}`, { recursive: true })
-    writeFileSync(`results/${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
-    writeFileSync(`results/${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
+  mkdirSync(`results/${transactionHash}`, { recursive: true })
+  writeFileSync(`results/${transactionHash}/trace.json`, JSON.stringify(trace, null, 2))
+  writeFileSync(`results/${transactionHash}/parsedTrace.json`, JSON.stringify(parsedTrace, null, 2))
 }
 
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
-    return traceLogs
-        .slice(currentIndex)
-        .find(
-            (iteratedItem) =>
-                iteratedItem.depth === depth + 1 &&
-                (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
-        ) as IReturnTypeTraceLog | IStopTypeTraceLog
+  return traceLogs
+    .slice(currentIndex)
+    .find(
+      (iteratedItem) =>
+        iteratedItem.depth === depth + 1 &&
+        (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
+    ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
-    const { to, input, value, blockNumber } = txInfo
+  const { to, input, value, blockNumber } = txInfo
 
-    const defaultFields = {
-        value: ethers.utils.formatEther(value),
-        type: 'CALL',
-        startIndex: 1,
-        stackTrace: [] as number[],
-        pc: 0,
-        passedGas: firstNestedStructLog.gas,
-        input: input.slice(2),
-        index: 0,
-        gasCost: 0,
-        depth: 0,
-        blockNumber,
-    } as ICallTypeTraceLog | ICreateTypeTraceLog
+  const defaultFields = {
+    value: ethers.utils.formatEther(value),
+    type: 'CALL',
+    startIndex: 1,
+    stackTrace: [] as number[],
+    pc: 0,
+    passedGas: firstNestedStructLog.gas,
+    input: input.slice(2),
+    index: 0,
+    gasCost: 0,
+    depth: 0,
+    blockNumber,
+  } as ICallTypeTraceLog | ICreateTypeTraceLog
 
-    if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
+  if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
 
-    return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
+  return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
 }
 
 export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
-    const results: TMainTraceLogs[] = []
-    transactionList.forEach((item) => {
-        if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
-    })
+  const results: TMainTraceLogs[] = []
+  transactionList.forEach((item) => {
+    if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
+  })
 
-    return results
+  return results
 }

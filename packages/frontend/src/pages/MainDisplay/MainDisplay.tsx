@@ -7,12 +7,12 @@ import type { MainDisplayProps } from './MainDisplay.types'
 import { StyledContentWrapper, StyledMainDisplay } from './styles'
 
 export const MainDisplay = ({ ...props }: MainDisplayProps) => {
-    return (
-        <StyledMainDisplay {...props}>
-            <StyledContentWrapper>
-                <ContentMap />
-                <BlockSummary />
-            </StyledContentWrapper>
-        </StyledMainDisplay>
-    )
+  return (
+    <StyledMainDisplay {...props}>
+      <StyledContentWrapper>
+        <ContentMap />
+        <BlockSummary />
+      </StyledContentWrapper>
+    </StyledMainDisplay>
+  )
 }
