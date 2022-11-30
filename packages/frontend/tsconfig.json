@@ -1,19 +1,19 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "rootDir": "src",
-        "outDir": "dist",
-        "lib": ["esnext", "dom"],
-        "composite": true,
-        "sourceMap": false
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["esnext", "dom"],
+    "composite": true,
+    "sourceMap": false
+  },
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "../types"
     },
-    "include": ["src/**/*"],
-    "references": [
-        {
-            "path": "../types"
-        },
-        {
-            "path": "../analyzer"
-        }
-    ]
+    {
+      "path": "../analyzer"
+    }
+  ]
 }

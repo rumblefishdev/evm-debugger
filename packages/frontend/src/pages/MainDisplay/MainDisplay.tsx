@@ -8,16 +8,16 @@ import type { MainDisplayProps } from './MainDisplay.types'
 import { StyledContentWrapper, StyledMainDisplay } from './styles'
 
 export const MainDisplay = ({ ...props }: MainDisplayProps) => {
-    const { isLoading } = useAnalyzer()
+  const { isLoading } = useAnalyzer()
 
-    return (
-        <StyledMainDisplay {...props}>
-            {isLoading ? null : (
-                <StyledContentWrapper>
-                    <ContentMap />
-                    <BlockSummary />
-                </StyledContentWrapper>
-            )}
-        </StyledMainDisplay>
-    )
+  return (
+    <StyledMainDisplay {...props}>
+      {isLoading ? null : (
+        <StyledContentWrapper>
+          <ContentMap />
+          <BlockSummary />
+        </StyledContentWrapper>
+      )}
+    </StyledMainDisplay>
+  )
 }

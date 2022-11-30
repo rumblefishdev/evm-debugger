@@ -6,13 +6,13 @@ import type { TParsedExtendedTraceLog } from '../../types'
 const initialState = {} as TParsedExtendedTraceLog
 
 export const activeBlockSlice = createSlice({
-    reducers: {
-        loadActiveBlock: (state, action: PayloadAction<TParsedExtendedTraceLog>) => {
-            return action.payload
-        },
+  reducers: {
+    loadActiveBlock: (state, action: PayloadAction<TParsedExtendedTraceLog>) => {
+      return action.payload
     },
-    name: 'activeBlock',
-    initialState,
+  },
+  name: 'activeBlock',
+  initialState,
 })
 
 export const activeBlockReducer = activeBlockSlice.reducer

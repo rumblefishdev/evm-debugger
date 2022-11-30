@@ -5,48 +5,48 @@ import { OpCodesArgsArray } from '../constants/constants'
 import { readMemory } from '../helpers/helpers'
 
 export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
-    const opCodeArgumentsNames = OpCodesArgsArray[op]
+  const opCodeArgumentsNames = OpCodesArgsArray[op]
 
-    const opCodeArguments = {} as TOpCodesArgs[typeof op]
+  const opCodeArguments = {} as TOpCodesArgs[typeof op]
 
-    opCodeArgumentsNames.forEach((arg: string, index: number) => {
-        opCodeArguments[arg] = stack[stack.length - index - 1]
-    })
+  opCodeArgumentsNames.forEach((arg: string, index: number) => {
+    opCodeArguments[arg] = stack[stack.length - index - 1]
+  })
 
-    return opCodeArguments
+  return opCodeArguments
 }
 
 export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {
-    // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
-    const rawValue = 'value' in item ? `0x${item['value']}` : '0x0'
-    const value = ethers.utils.formatEther(rawValue)
+  // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
+  const rawValue = 'value' in item ? `0x${item['value']}` : '0x0'
+  const value = ethers.utils.formatEther(rawValue)
 
-    const { address, inputLength, inputOffset, returnLength, returnOffset } = item
+  const { address, inputLength, inputOffset, returnLength, returnOffset } = item
 
-    const input = readMemory(memory, inputOffset, inputLength)
+  const input = readMemory(memory, inputOffset, inputLength)
 
-    const output = readMemory(memory, returnOffset, returnLength)
+  const output = readMemory(memory, returnOffset, returnLength)
 
-    const parsedAddress = `0x${address.slice(-40)}`
+  const parsedAddress = `0x${address.slice(-40)}`
 
-    return { value, output, input, address: parsedAddress }
+  return { value, output, input, address: parsedAddress }
 }
 
 export const extractReturnTypeArgsData = (item: TReturnTypeArgs, memory: string[]) => {
-    const { length, position } = item
-    const output = readMemory(memory, position, length)
+  const { length, position } = item
+  const output = readMemory(memory, position, length)
 
-    return { output }
+  return { output }
 }
 
 export const extractCreateTypeArgsData = (item: TCreateTypeArgs, memory: string[]) => {
-    const { value, byteCodeSize, byteCodePosition } = item
+  const { value, byteCodeSize, byteCodePosition } = item
 
-    const input = readMemory(memory, byteCodePosition, byteCodeSize)
+  const input = readMemory(memory, byteCodePosition, byteCodeSize)
 
-    const defaultReturn = { value: ethers.utils.formatEther(value), input }
+  const defaultReturn = { value: ethers.utils.formatEther(value), input }
 
-    if ('salt' in item) return { ...defaultReturn, salt: item.salt }
+  if ('salt' in item) return { ...defaultReturn, salt: item.salt }
 
-    return defaultReturn
+  return defaultReturn
 }

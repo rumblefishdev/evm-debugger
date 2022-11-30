@@ -11,40 +11,40 @@ import type { SelectTransactionScreenProps } from './SelectTransactionScreen.typ
 import { StyledStack } from './styles'
 
 export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
-    const [txInfo, uploadTxInfo] = useFileUpload()
-    const [structLogs, uploadStructLogs] = useFileUpload()
+  const [txInfo, uploadTxInfo] = useFileUpload()
+  const [structLogs, uploadStructLogs] = useFileUpload()
 
-    const navigate = useNavigate()
-    const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
+  const dispatch = useTypedDispatch()
 
-    const submitHandler = useCallback(() => {
-        if (txInfo && structLogs) {
-            dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
-            dispatch(setStructLogs(JSON.parse(structLogs) as TTransactionTraceResult))
-            navigate('/mainDisplay')
-        }
-    }, [txInfo, structLogs])
+  const submitHandler = useCallback(() => {
+    if (txInfo && structLogs) {
+      dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
+      dispatch(setStructLogs(JSON.parse(structLogs) as TTransactionTraceResult))
+      navigate('/mainDisplay')
+    }
+  }, [txInfo, structLogs])
 
-    return (
-        <StyledStack {...props} spacing={4}>
-            <Stack direction="row" spacing={4}>
-                <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
-                <Button variant="contained" component="label">
-                    Upload
-                    <input hidden type="file" onChange={uploadTxInfo}></input>
-                </Button>
-            </Stack>
-            <Stack direction="row" spacing={4}>
-                <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
-                <Button variant="contained" component="label">
-                    Upload
-                    <input hidden type="file" onChange={uploadStructLogs}></input>
-                </Button>
-            </Stack>
+  return (
+    <StyledStack {...props} spacing={4}>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
+        <Button variant="contained" component="label">
+          Upload
+          <input hidden type="file" onChange={uploadTxInfo}></input>
+        </Button>
+      </Stack>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
+        <Button variant="contained" component="label">
+          Upload
+          <input hidden type="file" onChange={uploadStructLogs}></input>
+        </Button>
+      </Stack>
 
-            <Button variant="contained" component="label" onClick={submitHandler}>
-                Process logs
-            </Button>
-        </StyledStack>
-    )
+      <Button variant="contained" component="label" onClick={submitHandler}>
+        Process logs
+      </Button>
+    </StyledStack>
+  )
 }
