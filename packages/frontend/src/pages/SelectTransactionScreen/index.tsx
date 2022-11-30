@@ -1,1 +1,1 @@
-export { SelectTransactionScreen } from './SelectTransactionScreen';
+export { SelectTransactionScreen } from './SelectTransactionScreen'

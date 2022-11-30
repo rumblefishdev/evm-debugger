@@ -3,18 +3,7 @@
     "compilerOptions": {
         "rootDir": "src",
         "outDir": "dist",
-        "composite": true,
-        "declaration": true,
-        "declarationMap": true
+        "composite": true
     },
-    "include": ["src/**/*"],
-    "references": [
-        {
-            "path": "../analyzer"
-        },
-        {
-            "path": "../frontend"
-        }
-    ],
-    "exclude": ["node_modules", "dist"]
+    "include": ["src/**/*"]
 }

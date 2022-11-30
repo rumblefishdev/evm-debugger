@@ -8,15 +8,15 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const config: HardhatUserConfig = {
-    solidity: '0.8.9',
-    networks: {
-        hardhat: {
-            forking: {
-                url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
-                blockNumber: 15_881_396,
-            },
-        },
+  solidity: '0.8.9',
+  networks: {
+    hardhat: {
+      forking: {
+        url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
+        blockNumber: 15_881_396,
+      },
     },
+  },
 }
 
 export default config

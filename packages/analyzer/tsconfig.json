@@ -1,19 +1,17 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "target": "es2017",
-        "module": "ESNext",
-        "rootDir": "src",
-        "outDir": "dist",
-        "composite": true,
-        "declaration": true,
-        "declarationMap": true,
-        "strictPropertyInitialization": false
-    },
-    "include": ["src/**/*"],
-    "references": [
-        {
-            "path": "../types"
-        }
-    ]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es2017",
+    "rootDir": "src",
+    "outDir": "dist",
+    "composite": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["./hardhat.config.ts"],
+  "references": [
+    {
+      "path": "../types"
+    }
+  ]
 }

@@ -1,6 +1,7 @@
-import { ethers } from 'ethers'
-import { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
-import { TStorageLogs } from './types'
+import type { ethers } from 'ethers'
+
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
+import type { TStorageLogs } from './types'
 
 export interface ITraceLog {
     type: TOpCodes
@@ -53,3 +54,5 @@ export interface IStopTypeTraceLog extends ITraceLog {
 }
 
 export type TReturnedTraceLog = ICallTypeTraceLog | IReturnTypeTraceLog | ICreateTypeTraceLog | IStopTypeTraceLog
+
+export type TMainTraceLogs = ICallTypeTraceLog | ICreateTypeTraceLog

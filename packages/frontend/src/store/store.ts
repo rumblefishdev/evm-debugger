@@ -7,27 +7,27 @@ import { structLogsReducer } from './structLogs/structLogs.slice'
 import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 
 const rootReducer = combineReducers({
-    traceLogs: traceLogsReducer,
-    structLogs: structLogsReducer,
-    activeBlock: activeBlockReducer,
+  traceLogs: traceLogsReducer,
+  structLogs: structLogsReducer,
+  activeBlock: activeBlockReducer,
 })
 
 const persistConfig = {
-    storage,
-    key: 'root',
-    blacklist: ['activeBlock', 'structLogs'],
+  storage,
+  key: 'root',
+  blacklist: ['activeBlock', 'structLogs'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: getDefaultMiddleware =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
-        }),
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 })
 
 export const persistor = persistStore(store)

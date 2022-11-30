@@ -1,21 +1,18 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "lib": ["DOM", "DOM.Iterable"],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "composite": true,
-        "jsx": "react-jsx"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["esnext", "dom"],
+    "composite": true
+  },
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "../types"
     },
-    "include": ["src"],
-    "exclude": ["build", "dist"],
-    "references": [{ "path": "../analyzer" }, { "path": "../types" }]
+    {
+      "path": "../analyzer"
+    }
+  ]
 }

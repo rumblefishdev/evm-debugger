@@ -1,27 +1,32 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "incremental": true,
+        "target": "ES2017",
+        "lib": [],
         "module": "CommonJS",
-        "lib": ["ESNext", "DOM"],
-        "strict": true,
-        "sourceMap": true,
-        "noImplicitAny": true,
+        "allowJs": false,
+        "jsx": "react-jsx",
+        "declaration": true,
+        "declarationMap": true,
+        "removeComments": false,
+        "noEmit": false,
         "esModuleInterop": true,
-        "baseUrl": ".",
-        "paths": {
-            "@evm-debuger/*": ["packages/*/src/index.ts"]
-        }
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+        "strictPropertyInitialization": false
     },
-    "exclude": ["node_modules", "dist", "*.d.ts"],
+    "exclude": ["node_modules", "dist"],
     "references": [
         {
-            "path": "packages/analyzer"
+            "path": "./packages/analyzer"
         },
         {
-            "path": "packages/types"
+            "path": "./packages/types"
         },
         {
-            "path": "packages/frontend"
+            "path": "./packages/frontend"
         }
     ]
 }

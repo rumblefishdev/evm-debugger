@@ -1,10 +1,10 @@
-import { IStructLog } from './structLogs'
+import type { IStructLog } from './structLogs'
 
-export type TStorage = { [key: string]: string }
+export type TStorage = Record<string, string>
 
-export type TLoadedStorage = Array<{ key: string; value: string; index: number }>
-export type TChangedStorage = Array<{ key: string; initialValue: string; updatedValue: string; index: number }>
-export type TReturnedStorage = Array<{ key: string; value: string }>
+export type TLoadedStorage = { key: string; value: string; index: number }[]
+export type TChangedStorage = { key: string; initialValue: string; updatedValue: string; index: number }[]
+export type TReturnedStorage = { key: string; value: string }[]
 
 export type TStorageLogs = {
     loadedStorage: TLoadedStorage
@@ -35,12 +35,6 @@ export type TTransactionInfo = {
     maxPriorityFeePerGas: string
 }
 
-export type TTransactionTrace = {
-    jsonrpc: string
-    id: number
-    result: TTransactionTraceResult
-}
-
 export type TTransactionTraceResult = {
     gas: number
     failed: boolean
@@ -48,9 +42,15 @@ export type TTransactionTraceResult = {
     structLogs: IStructLog[]
 }
 
+export type TTransactionTrace = {
+    jsonrpc: string
+    id: number
+    result: TTransactionTraceResult
+}
+
 export interface TDataProvider {
-    getTransactionTrace(transactionHash: string): Promise<TTransactionTraceResult>
-    getTransactionByHash(transactionHash: string): Promise<TTransactionInfo>
-    getContractCode(address: string): Promise<string>
-    fetchAbiCode(address: string): Promise<string>
+    getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
+    getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
+    getContractCode: (address: string) => Promise<string>
+    fetchAbiCode: (address: string) => Promise<string>
 }
