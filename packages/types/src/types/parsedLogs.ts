@@ -54,3 +54,5 @@ export interface IStopTypeTraceLog extends ITraceLog {
 }
 
 export type TReturnedTraceLog = ICallTypeTraceLog | IReturnTypeTraceLog | ICreateTypeTraceLog | IStopTypeTraceLog
+
+export type TMainTraceLogs = ICallTypeTraceLog | ICreateTypeTraceLog
