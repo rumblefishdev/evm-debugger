@@ -27,21 +27,21 @@ export class TxAnalyzer {
     private readonly stackCounter = new StackCounter()
     private readonly abiReader = new AbiReader(this.dataProvider)
 
-    private traceLogs: IStructLog[]
+    private structLogs: IStructLog[]
     private filteredStructLogs: IFilteredStructLog[]
     private parsedTransactionList: TReturnedTraceLog[]
 
-    private async getTraceLogs() {
+    private async getStructLogs() {
         const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
         const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
-        this.traceLogs = trace.structLogs
+        this.structLogs = trace.structLogs
         this.filteredStructLogs = filteredStructLogs
     }
 
     private parseStructLogs() {
         return this.filteredStructLogs.map((item) => {
-            const structLogParser = new StructLogParser(item, this.traceLogs, this.stackCounter)
+            const structLogParser = new StructLogParser(item, this.structLogs, this.stackCounter)
 
             // CALL | CALLCODE | DELEGATECALL | STATICCALL
             if (chceckIfOfCallType(item)) return structLogParser.parseCallStructLog()
@@ -60,7 +60,7 @@ export class TxAnalyzer {
     private async parseAndAddRootTraceLog() {
         const transactionInfo = await this.dataProvider.getTransactionByHash(this.transactionHash)
 
-        const rootTraceLog = convertTxInfoToTraceLog(this.traceLogs[0], transactionInfo)
+        const rootTraceLog = convertTxInfoToTraceLog(this.structLogs[0], transactionInfo)
         const { blockNumber } = rootTraceLog
 
         this.parsedTransactionList.unshift(rootTraceLog)
@@ -72,22 +72,22 @@ export class TxAnalyzer {
         })
     }
 
-    private async checkIfCallPointsToContract() {
-        for (let index = 0; index < this.parsedTransactionList.length; index++) {
-            const item = this.parsedTransactionList[index]
-
+    private checkIfCallPointsToContract() {
+        return this.parsedTransactionList.map((item) => {
             if (chceckIfOfCallType(item)) {
-                const byteCode = await this.dataProvider.getContractCode(item.address)
-                const isContract = byteCode !== '0x'
+                const { index, depth } = item
+                const nextStructLog = this.structLogs[index + 1]
 
-                this.parsedTransactionList[index] = { ...item, isContract }
+                if (nextStructLog.depth === depth + 1) return { ...item, isContract: true }
             }
-        }
+
+            return item
+        })
     }
 
     private combineCallWithItsReturn() {
         return this.parsedTransactionList.map((item, rootIndex) => {
-            if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
+            if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) {
                 const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
 
                 if (!lastItemInCallContext) return { ...item, success: false }
@@ -129,7 +129,7 @@ export class TxAnalyzer {
             const item = this.parsedTransactionList[index]
 
             if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-                const storageHandler = new StorageHandler(this.traceLogs, item)
+                const storageHandler = new StorageHandler(this.structLogs, item)
 
                 storageHandler.parseStorageData()
 
@@ -141,13 +141,13 @@ export class TxAnalyzer {
     }
 
     public async analyze() {
-        await this.getTraceLogs()
+        await this.getStructLogs()
 
         this.parsedTransactionList = this.parseStructLogs()
 
         this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-        await this.checkIfCallPointsToContract()
+        this.checkIfCallPointsToContract()
 
         this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -161,13 +161,13 @@ export class TxAnalyzer {
     }
 
     public async baseAnalyze() {
-        await this.getTraceLogs()
+        await this.getStructLogs()
 
         this.parsedTransactionList = this.parseStructLogs()
 
         this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-        // await this.checkIfCallPointsToContract()
+        this.checkIfCallPointsToContract()
 
         this.parsedTransactionList = this.combineCallWithItsReturn()
 
