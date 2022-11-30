@@ -1,3 +1,5 @@
+import { writeFileSync, mkdirSync } from 'node:fs'
+
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import type {
@@ -12,6 +14,7 @@ import type {
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
   TReturnedTraceLog,
+  TMainTraceLogs,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
@@ -114,9 +117,11 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
 }
 
-export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]) => {
-  return transactionList.filter((item) => chceckIfOfCallType(item) || checkIfOfCreateType(item)) as (
-    | ICallTypeTraceLog
-    | ICreateTypeTraceLog
-  )[]
+export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
+  const results: TMainTraceLogs[] = []
+  transactionList.forEach((item) => {
+    if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
+  })
+
+  return results
 }
