@@ -213,6 +213,7 @@ module.exports = {
         "unicorn/filename-case": "off",
         "unicorn/no-null": "off",
         "unicorn/prefer-module": "off",
+        "unicorn/prefer-top-level-await": "off",
         "unicorn/prefer-at": "error",
         "unicorn/no-array-reduce": "off",
         "unicorn/no-array-callback-reference": "off",

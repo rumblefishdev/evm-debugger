@@ -147,7 +147,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.checkIfCallPointsToContract()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -167,7 +167,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.checkIfCallPointsToContract()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
