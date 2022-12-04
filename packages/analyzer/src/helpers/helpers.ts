@@ -1,5 +1,3 @@
-import { writeFileSync, mkdirSync } from 'node:fs'
-
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import type {
