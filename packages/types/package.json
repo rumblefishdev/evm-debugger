@@ -1,11 +1,11 @@
 {
-    "name": "@evm-debuger/types",
-    "packageManager": "yarn@3.2.4",
-    "main": "dist/index.js",
-    "devDependencies": {
-        "typescript": "^4.9.3"
-    },
-    "scripts": {
-        "build": "tsc --build"
-    }
+  "name": "@evm-debuger/types",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "scripts": {
+    "build": "tsc --build"
+  }
 }

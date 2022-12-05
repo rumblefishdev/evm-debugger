@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/analyzer",
-  "packageManager": "yarn@3.2.4",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
     "chain": "hardhat node",
@@ -34,6 +34,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "@evm-debuger/types": "^0.0.1",
     "evm": "^0.2.0",
     "hardhat": "^2.12.0",
     "node-fetch": "2.6.6"
