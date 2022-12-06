@@ -103,7 +103,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
     stackTrace: [] as number[],
     pc: 0,
     passedGas: firstNestedStructLog.gas,
-    input: input.slice(2),
+    input,
     index: 0,
     gasCost: 0,
     depth: 0,

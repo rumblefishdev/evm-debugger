@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "analyzer:chain": "lerna run chain --scope @evm-debuger/analyzer",
-    "analyzer:dev": "lerna run dev --scope @evm-debuger/analyzer ",
+    "analyzer:dev": "lerna run start:dev --scope @evm-debuger/analyzer ",
     "frontend:start": "lerna run start --scope @evm-debuger/frontend",
     "types:build": "lerna run build --scope @evm-debuger/types",
     "analyzer:build": "lerna run build --scope @evm-debuger/analyzer",
