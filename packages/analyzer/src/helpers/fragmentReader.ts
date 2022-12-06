@@ -65,7 +65,7 @@ export class FragmentReader {
     return { functionDescription, decodedOutput, decodedInput }
   }
 
-  private decodeErrorResult = (sighash: string, data: ethers.utils.BytesLike) => {
+  private decodeBuiltinErrorResult = (sighash: string, data: ethers.utils.BytesLike) => {
     const builtin = BUILTIN_ERRORS[sighash]
 
     const arrayify = ethers.utils.arrayify(data)
@@ -92,7 +92,7 @@ export class FragmentReader {
       functionDescription = abiInterface.parseTransaction({ data: inputData })
     }
 
-    if (BUILTIN_ERRORS[errorSighash]) decodedOutput = this.decodeErrorResult(errorSighash, output)
+    if (BUILTIN_ERRORS[errorSighash]) decodedOutput = this.decodeBuiltinErrorResult(errorSighash, output)
 
     if (errorFragment) {
       const abiInterface = new ethers.utils.Interface([errorFragment])
