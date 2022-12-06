@@ -20,7 +20,7 @@ import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
-import { FragmentReader } from './helpers/fragmentReaders/fragmentReader'
+import { FragmentReader } from './helpers/fragmentReader'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}

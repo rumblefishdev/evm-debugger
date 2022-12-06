@@ -1,8 +1,8 @@
 import type { IErrorDescription } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 
-import { BUILTIN_ERRORS } from '../../resources/builtinErrors'
-import { cachedAbis } from '../../resources/predefinedAbis'
+import { BUILTIN_ERRORS } from '../resources/builtinErrors'
+import { cachedAbis } from '../resources/predefinedAbis'
 
 export class FragmentReader {
   private fragmentStore = {
