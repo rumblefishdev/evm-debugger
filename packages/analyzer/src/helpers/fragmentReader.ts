@@ -22,7 +22,6 @@ export class FragmentReader {
   public getFragment(sighash: string, type: 'function' | 'event' | 'error'): ethers.utils.Fragment | null {
     return this.fragmentStore[type][sighash] || null
   }
-
   public loadFragmentsFromAbi(abi: ethers.utils.Interface): void {
     const functionFragmentKeys = Object.keys(abi.functions)
     const errorFragmentKeys = Object.keys(abi.errors)
