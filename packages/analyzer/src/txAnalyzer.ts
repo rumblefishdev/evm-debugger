@@ -128,8 +128,11 @@ export class TxAnalyzer {
           this.parsedTransactionList[index] = { ...item, functionDescription, decodedOutput, decodedInput }
         }
         if (!item.success) {
-          const { decodedInput, decodedOutput } = this.fragmentReader.decodeFragmentWithError(item.input, item.output)
-          this.parsedTransactionList[index] = { ...item, decodedOutput, decodedInput }
+          const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragmentWithError(
+            item.input,
+            item.output
+          )
+          this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
         }
       }
     })

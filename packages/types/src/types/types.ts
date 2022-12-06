@@ -1,3 +1,5 @@
+import type { ethers } from 'ethers'
+
 import type { IStructLog } from './structLogs'
 
 export type TStorage = Record<string, string>
@@ -53,4 +55,12 @@ export interface TDataProvider {
   getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
   getContractCode: (address: string) => Promise<string>
   fetchAbiCode: (address: string) => Promise<string>
+}
+
+export interface IErrorDescription {
+  readonly errorFragment: ethers.utils.ErrorFragment
+  readonly name: string
+  readonly args: ethers.utils.Result
+  readonly signature: string
+  readonly sighash: string
 }
