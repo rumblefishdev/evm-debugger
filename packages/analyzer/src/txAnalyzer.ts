@@ -20,7 +20,7 @@ import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
-import { FragmentReader } from './helpers/fragmentReaders/functionFragmentReader'
+import { FragmentReader } from './helpers/fragmentReaders/fragmentReader'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
@@ -118,7 +118,7 @@ export class TxAnalyzer {
 
     const abis = this.abiReader.getAbis()
     Object.keys(abis).forEach((address) => {
-      this.fragmentReader.loadFunctionFragmentsFromAbi(abis[address])
+      this.fragmentReader.loadFragmentsFromAbi(abis[address])
     })
 
     this.parsedTransactionList.forEach((item, index) => {
