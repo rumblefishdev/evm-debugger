@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
+import { hexlify } from 'ethers/lib/utils'
 
-import { cachedAbis } from '../../resources/predefinedAbis'
+import { BUILTIN_ERRORS, cachedAbis } from '../../resources/predefinedAbis'
 
 export class FragmentReader {
   public storedFragments: Record<string, ethers.utils.Fragment> = {}
@@ -36,14 +37,25 @@ export class FragmentReader {
 
     const fragment = this.getFragment(sighash)
 
-    if (!fragment) return { decodedOutput: null, decodedInput: null }
+    if (!fragment) return { functionDescription: null, decodedOutput: null, decodedInput: null }
 
     const abiInterface = new ethers.utils.Interface([fragment])
 
     const decodedInput = abiInterface.decodeFunctionData(fragment.name, inputData)
     const decodedOutput = abiInterface.decodeFunctionResult(fragment.name, outputData)
+    const functionDescription: ethers.utils.TransactionDescription = abiInterface.parseTransaction({ data: inputData })
 
-    return { decodedOutput, decodedInput }
+    return { functionDescription, decodedOutput, decodedInput }
+  }
+
+  private decodeErrorResult = (data: ethers.utils.BytesLike) => {
+    const bytes = ethers.utils.arrayify(data)
+
+    const selectorSignature = hexlify(bytes.slice(0, 4))
+
+    const builtin = BUILTIN_ERRORS[selectorSignature]
+
+    if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
   }
 
   public decodeFragmentWithError(inputData: string, output: string) {
@@ -51,31 +63,34 @@ export class FragmentReader {
     const errorSighash = output.slice(0, 10)
 
     const inputFragment = this.getFragment(inputSighash)
-    const errorFragment = this.getFragment(errorSighash)
+    const errorFragment = BUILTIN_ERRORS[errorSighash]
 
-    if (!inputFragment && !errorFragment) return { decodedOutput: null, decodedInput: null }
+    if (!inputFragment && !errorFragment)
+      return { functionDescription: null, errorDescription: null, decodedOutput: null, decodedInput: null }
 
     if (!inputFragment) {
-      const abiInterface = new ethers.utils.Interface([errorFragment])
+      const decodedOutput = this.decodeErrorResult(output)
 
-      const decodedOutput = abiInterface.decodeFunctionResult(errorFragment.name, output)
-
-      return { decodedOutput, decodedInput: null }
+      return { functionDescription: null, decodedOutput, decodedInput: null }
     }
 
     if (!errorFragment) {
       const abiInterface = new ethers.utils.Interface([inputFragment])
 
       const decodedInput = abiInterface.decodeFunctionData(inputFragment.name, inputData)
+      const functionDescription = abiInterface.parseTransaction({ data: inputData })
 
-      return { decodedOutput: null, decodedInput }
+      return { functionDescription, errorDescription: null, decodedOutput: null, decodedInput }
     }
 
-    const abiInterface = new ethers.utils.Interface([inputFragment, errorFragment])
+    const abiInterface = new ethers.utils.Interface([inputFragment])
 
     const decodedInput = abiInterface.decodeFunctionData(inputFragment.name, inputData)
-    const decodedOutput = abiInterface.decodeErrorResult(errorFragment.name, output)
+    const decodedOutput = this.decodeErrorResult(output)
 
-    return { decodedOutput, decodedInput }
+    const functionDescription = abiInterface.parseTransaction({ data: inputData })
+    const errorDescription = abiInterface.parseError(output as ethers.utils.BytesLike) as IErrorDescription
+
+    return { functionDescription, errorDescription, decodedOutput, decodedInput }
   }
 }

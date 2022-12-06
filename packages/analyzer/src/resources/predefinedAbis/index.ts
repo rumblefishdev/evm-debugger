@@ -9,3 +9,5 @@ export const cachedAbis = {
   ERC721: new ethers.utils.Interface(ERC721_ABI),
   ERC20: new ethers.utils.Interface(ERC20_ABI),
 }
+
+export { BUILTIN_ERRORS } from './builtinErrors'
