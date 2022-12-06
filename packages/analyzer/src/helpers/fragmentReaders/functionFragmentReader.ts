@@ -1,5 +1,5 @@
+import type { IErrorDescription } from '@evm-debuger/types'
 import { ethers } from 'ethers'
-import { hexlify } from 'ethers/lib/utils'
 
 import { BUILTIN_ERRORS, cachedAbis } from '../../resources/predefinedAbis'
 
@@ -48,48 +48,40 @@ export class FragmentReader {
     return { functionDescription, decodedOutput, decodedInput }
   }
 
-  private decodeErrorResult = (data: ethers.utils.BytesLike) => {
-    const bytes = ethers.utils.arrayify(data)
+  private decodeErrorResult = (sighash: string, data: ethers.utils.BytesLike) => {
+    const builtin = BUILTIN_ERRORS[sighash]
 
-    const selectorSignature = hexlify(bytes.slice(0, 4))
+    const arrayify = ethers.utils.arrayify(data)
 
-    const builtin = BUILTIN_ERRORS[selectorSignature]
-
-    if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
+    return new ethers.utils.AbiCoder().decode(builtin.inputs, arrayify.slice(4))
   }
 
   public decodeFragmentWithError(inputData: string, output: string) {
+    let decodedInput: ethers.utils.Result | null = null
+    let decodedOutput: ethers.utils.Result | null = null
+    let functionDescription: ethers.utils.TransactionDescription | null = null
+    let errorDescription: IErrorDescription | null = null
+
     const inputSighash = inputData.slice(0, 10)
     const errorSighash = output.slice(0, 10)
 
     const inputFragment = this.getFragment(inputSighash)
-    const errorFragment = BUILTIN_ERRORS[errorSighash]
 
-    if (!inputFragment && !errorFragment)
-      return { functionDescription: null, errorDescription: null, decodedOutput: null, decodedInput: null }
-
-    if (!inputFragment) {
-      const decodedOutput = this.decodeErrorResult(output)
-
-      return { functionDescription: null, decodedOutput, decodedInput: null }
-    }
-
-    if (!errorFragment) {
+    if (inputFragment) {
       const abiInterface = new ethers.utils.Interface([inputFragment])
 
-      const decodedInput = abiInterface.decodeFunctionData(inputFragment.name, inputData)
-      const functionDescription = abiInterface.parseTransaction({ data: inputData })
-
-      return { functionDescription, errorDescription: null, decodedOutput: null, decodedInput }
+      decodedInput = abiInterface.decodeFunctionData(inputFragment.name, inputData)
+      functionDescription = abiInterface.parseTransaction({ data: inputData })
     }
 
-    const abiInterface = new ethers.utils.Interface([inputFragment])
+    if (BUILTIN_ERRORS[errorSighash]) decodedOutput = this.decodeErrorResult(errorSighash, output)
 
-    const decodedInput = abiInterface.decodeFunctionData(inputFragment.name, inputData)
-    const decodedOutput = this.decodeErrorResult(output)
+    if (this.getFragment(errorSighash)) {
+      const abiInterface = new ethers.utils.Interface([this.getFragment(errorSighash)])
 
-    const functionDescription = abiInterface.parseTransaction({ data: inputData })
-    const errorDescription = abiInterface.parseError(output as ethers.utils.BytesLike) as IErrorDescription
+      decodedOutput = new ethers.utils.AbiCoder().decode(this.getFragment(errorSighash).inputs, output)
+      errorDescription = abiInterface.parseError(output) as IErrorDescription
+    }
 
     return { functionDescription, errorDescription, decodedOutput, decodedInput }
   }
