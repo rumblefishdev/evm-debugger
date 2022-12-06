@@ -124,8 +124,8 @@ export class TxAnalyzer {
     this.parsedTransactionList.forEach((item, index) => {
       if (chceckIfOfCallType(item) && item.isContract && item.input) {
         if (item.success) {
-          const { decodedInput, decodedOutput } = this.fragmentReader.decodeFragment(item.input, item.output)
-          this.parsedTransactionList[index] = { ...item, decodedOutput, decodedInput }
+          const { decodedInput, decodedOutput, functionDescription } = this.fragmentReader.decodeFragment(item.input, item.output)
+          this.parsedTransactionList[index] = { ...item, functionDescription, decodedOutput, decodedInput }
         }
         if (!item.success) {
           const { decodedInput, decodedOutput } = this.fragmentReader.decodeFragmentWithError(item.input, item.output)

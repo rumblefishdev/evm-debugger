@@ -7,50 +7,50 @@ export type TChangedStorage = { key: string; initialValue: string; updatedValue:
 export type TReturnedStorage = { key: string; value: string }[]
 
 export type TStorageLogs = {
-    loadedStorage: TLoadedStorage
-    returnedStorage: TReturnedStorage
-    changedStorage: TChangedStorage
-    isReverted?: boolean
+  loadedStorage: TLoadedStorage
+  returnedStorage: TReturnedStorage
+  changedStorage: TChangedStorage
+  isReverted?: boolean
 }
 
 export type TTransactionInfo = {
-    blockHash: string
-    blockNumber: string
-    from: string
-    gas: string
-    hash: string
-    input: string
-    nonce: string
-    to: string
-    transactionIndex: string
-    value: string
-    v: string
-    r: string
-    s: string
-    type: string
-    accessList: string
-    chainId: string
-    gasPrice: string
-    maxFeePerGas: string
-    maxPriorityFeePerGas: string
+  blockHash: string
+  blockNumber: string
+  from: string
+  gas: string
+  hash: string
+  input: string
+  nonce: string
+  to: string
+  transactionIndex: string
+  value: string
+  v: string
+  r: string
+  s: string
+  type: string
+  accessList: string
+  chainId: string
+  gasPrice: string
+  maxFeePerGas: string
+  maxPriorityFeePerGas: string
 }
 
 export type TTransactionTraceResult = {
-    gas: number
-    failed: boolean
-    returnValue: string
-    structLogs: IStructLog[]
+  gas: number
+  failed: boolean
+  returnValue: string
+  structLogs: IStructLog[]
 }
 
 export type TTransactionTrace = {
-    jsonrpc: string
-    id: number
-    result: TTransactionTraceResult
+  jsonrpc: string
+  id: number
+  result: TTransactionTraceResult
 }
 
 export interface TDataProvider {
-    getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
-    getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
-    getContractCode: (address: string) => Promise<string>
-    fetchAbiCode: (address: string) => Promise<string>
+  getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
+  getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
+  getContractCode: (address: string) => Promise<string>
+  fetchAbiCode: (address: string) => Promise<string>
 }
