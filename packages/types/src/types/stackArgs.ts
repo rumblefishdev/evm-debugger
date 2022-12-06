@@ -56,7 +56,6 @@ export type TOpCodesArgs = {
     CREATE2: TCreate2Args
     RETURN: TReturnArgs
     REVERT: TRevertArgs
-    ERROR: TReturnArgs
 }
 
 export type TOpCodesArgsArray = {

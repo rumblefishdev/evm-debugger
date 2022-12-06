@@ -1,21 +1,21 @@
-import { ethers } from 'ethers'
-import { hexlify } from 'ethers/lib/utils'
+import {ethers} from 'ethers'
+import {hexlify} from 'ethers/lib/utils'
 import type {
-  TTransactionInfo,
   ICallTypeStructLogs,
+  ICallTypeTraceLog,
   ICreateTypeStructLogs,
+  ICreateTypeTraceLog,
   IFilteredStructLog,
   IReturnTypeStructLogs,
-  IStructLog,
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
-  TReturnedTraceLog,
+  IStructLog,
   TMainTraceLogs,
+  TReturnedTraceLog,
+  TTransactionInfo,
 } from '@evm-debuger/types'
 
-import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
+import {BuiltinErrors, OpcodesNamesArray} from '../constants/constants'
 
 export const getBaseStructLogs = (structLogs: IStructLog[]) => {
   const indexes: number[] = []
@@ -86,20 +86,18 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
 export const prepareTraceToSearch = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
   const slicedTraceLogs = traceLogs.slice(currentIndex + 1)
   const maxLastCallIndex = slicedTraceLogs.findIndex(log => log.depth === depth)
-  return maxLastCallIndex === -1 ? [...slicedTraceLogs] : slicedTraceLogs.slice(0 ,maxLastCallIndex)
+  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0 ,maxLastCallIndex)
 }
 
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
   const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth)
 
-  const typeTraceLog = traceToSearch
+  return traceToSearch
     .find(
       (iteratedItem) =>
         iteratedItem.depth === depth + 1 &&
         (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
     ) as IReturnTypeTraceLog | IStopTypeTraceLog
-
-  return typeTraceLog ?? { type: "ERROR"} as TReturnedTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {

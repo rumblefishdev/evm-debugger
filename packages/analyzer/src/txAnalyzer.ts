@@ -95,7 +95,7 @@ export class TxAnalyzer {
         const { index, passedGas } = lastItemInCallContext
         const gasCost = item.passedGas - passedGas
 
-        if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT' || lastItemInCallContext.type === 'ERROR') {
+        if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
           const { output } = lastItemInCallContext
           const isSuccess = lastItemInCallContext.type === 'RETURN'
           return { ...item, success: isSuccess, returnIndex: index, output, gasCost }
@@ -114,7 +114,7 @@ export class TxAnalyzer {
 
       if (checkIfOfCallType(item) && item.isContract && item.input) {
         const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, index, depth)
-        if (lastItemInCallContext.type !== 'REVERT' && lastItemInCallContext.type !== 'ERROR')
+        if (lastItemInCallContext.type !== 'REVERT')
           this.parsedTransactionList[index] = await this.abiReader.decodeTraceLogInputOutput(item)
 
         if (lastItemInCallContext.type === 'REVERT')
