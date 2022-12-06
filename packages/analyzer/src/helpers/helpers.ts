@@ -1,5 +1,3 @@
-import { writeFileSync, mkdirSync } from 'node:fs'
-
 import { ethers } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import type {
@@ -47,7 +45,7 @@ export const readMemory = (memory: string[], rawStart: string, rawLength: string
   return memoryString.slice(readStartIndex, readEndIndex)
 }
 
-export const chceckIfOfCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICallTypeTraceLog | ICallTypeStructLogs => {
+export const checkIfOfCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICallTypeTraceLog | ICallTypeStructLogs => {
   if ('type' in item) return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
 
   return item.op === 'CALL' || item.op === 'CALLCODE' || item.op === 'DELEGATECALL' || item.op === 'STATICCALL'
@@ -85,14 +83,23 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
   if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
+export const prepareTraceToSearch = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
+  const slicedTraceLogs = traceLogs.slice(currentIndex + 1)
+  const maxLastCallIndex = slicedTraceLogs.findIndex(log => log.depth === depth)
+  return maxLastCallIndex === -1 ? [...slicedTraceLogs] : slicedTraceLogs.slice(0 ,maxLastCallIndex)
+}
+
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
-  return traceLogs
-    .slice(currentIndex)
+  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth)
+
+  const typeTraceLog = traceToSearch
     .find(
       (iteratedItem) =>
         iteratedItem.depth === depth + 1 &&
         (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
     ) as IReturnTypeTraceLog | IStopTypeTraceLog
+
+  return typeTraceLog ?? { type: "ERROR"} as TReturnedTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
@@ -120,7 +127,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
 export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
   const results: TMainTraceLogs[] = []
   transactionList.forEach((item) => {
-    if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
+    if (checkIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
   })
 
   return results
