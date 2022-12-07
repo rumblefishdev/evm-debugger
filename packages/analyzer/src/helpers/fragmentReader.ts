@@ -22,6 +22,7 @@ export class FragmentReader {
   public getFragment(sighash: string, type: 'function' | 'event' | 'error'): ethers.utils.Fragment | null {
     return this.fragmentStore[type][sighash] || null
   }
+
   public loadFragmentsFromAbi(abi: ethers.utils.Interface): void {
     const functionFragmentKeys = Object.keys(abi.functions)
     const errorFragmentKeys = Object.keys(abi.errors)
@@ -49,12 +50,18 @@ export class FragmentReader {
     })
   }
 
-  public decodeFragment(inputData: string, outputData: string) {
+  public decodeFragment(isSuccess: boolean, inputData: string, outputData: string) {
+    return isSuccess
+        ? this.decodeFragmentWithSuccess(inputData, outputData)
+        : this.decodeFragmentWithError(inputData, outputData);
+  }
+
+  private decodeFragmentWithSuccess(inputData: string, outputData: string) {
     const sighash = inputData.slice(0, 10)
 
     const functionFragment = this.getFragment(sighash, 'function')
 
-    if (!functionFragment) return { functionDescription: null, decodedOutput: null, decodedInput: null }
+    if (!functionFragment) return { functionDescription: null, decodedOutput: null, decodedInput: null } //TODO some wrapper ?
 
     const abiInterface = new ethers.utils.Interface([functionFragment])
 
@@ -62,7 +69,7 @@ export class FragmentReader {
     const decodedOutput = abiInterface.decodeFunctionResult(functionFragment.name, outputData)
     const functionDescription: ethers.utils.TransactionDescription = abiInterface.parseTransaction({ data: inputData })
 
-    return { functionDescription, decodedOutput, decodedInput }
+    return { functionDescription, errorDescription: null, decodedOutput, decodedInput }
   }
 
   private decodeBuiltinErrorResult = (sighash: string, data: ethers.utils.BytesLike) => {
@@ -73,7 +80,7 @@ export class FragmentReader {
     return new ethers.utils.AbiCoder().decode(builtin.inputs, arrayify.slice(4))
   }
 
-  public decodeFragmentWithError(inputData: string, output: string) {
+  private decodeFragmentWithError(inputData: string, output: string) {
     let decodedInput: ethers.utils.Result | null = null
     let decodedOutput: ethers.utils.Result | null = null
     let functionDescription: ethers.utils.TransactionDescription | null = null

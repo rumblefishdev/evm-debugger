@@ -6,28 +6,23 @@ import { safeJsonParse } from './helpers'
 export class AbiReader {
   constructor(private readonly dataProvider: TDataProvider) {}
 
-  private savedAbis: Record<string, ethers.utils.Interface> = {}
-  private notVerifiedContracts: Set<string> = new Set()
-
   private async fetchAbi(address: string): Promise<ethers.utils.Interface | null> {
     const response = await this.dataProvider.fetchAbiCode(address)
 
     const abi = safeJsonParse(response)
 
-    if (abi.result === 'Contract source code not verified' || abi === null) return null
+    if (abi === null || abi.result === 'Contract source code not verified') return null
 
     return new ethers.utils.Interface(abi.result)
   }
 
-  public async fetchFromAllContracts(addressList: string[]) {
+  public async getAbis(addressList: string[]) {
+    const abis: Record<string, ethers.utils.Interface> = {}
     for (const address of addressList) {
       const abi = await this.fetchAbi(address)
-      if (abi !== null) this.savedAbis[address] = abi
-      this.notVerifiedContracts.add(address)
+      if (abi !== null) abis[address] = abi
     }
-  }
 
-  public getAbis() {
-    return this.savedAbis
+    return abis
   }
 }

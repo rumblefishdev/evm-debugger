@@ -75,14 +75,14 @@ export class TxAnalyzer {
     })
   }
 
-  private checkIfCallPointsToContract() {
+  private checkIfCallPointsToContract() { //TODO wrong name ?
     return this.parsedTransactionList.map((item) => {
       if (chceckIfOfCallType(item)) {
-        const { index, depth } = item
+        const { index, depth, address } = item
         const nextStructLog = this.structLogs[index + 1]
 
         if (nextStructLog.depth === depth + 1) {
-          if (!this.contractAddressesLists.includes(item.address)) this.contractAddressesLists.push(item.address)
+          if (!this.contractAddressesLists.includes(address)) this.contractAddressesLists.push(address)
 
           return { ...item, isContract: true }
         }
@@ -114,26 +114,18 @@ export class TxAnalyzer {
   }
 
   private async decodeCallInputOutput() {
-    await this.abiReader.fetchFromAllContracts(this.contractAddressesLists)
+    const abis = await this.abiReader.getAbis(this.contractAddressesLists)
 
-    const abis = this.abiReader.getAbis()
     Object.keys(abis).forEach((address) => {
       this.fragmentReader.loadFragmentsFromAbi(abis[address])
     })
 
     this.parsedTransactionList.forEach((item, index) => {
       if (chceckIfOfCallType(item) && item.isContract && item.input) {
-        if (item.success) {
-          const { decodedInput, decodedOutput, functionDescription } = this.fragmentReader.decodeFragment(item.input, item.output)
-          this.parsedTransactionList[index] = { ...item, functionDescription, decodedOutput, decodedInput }
-        }
-        if (!item.success) {
-          const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragmentWithError(
-            item.input,
-            item.output
-          )
-          this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
-        }
+        const { decodedInput, decodedOutput, functionDescription, errorDescription }
+            = this.fragmentReader.decodeFragment(item.success, item.input, item.output)
+
+        this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
       }
     })
   }
