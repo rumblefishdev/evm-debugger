@@ -75,7 +75,7 @@ export class TxAnalyzer {
     })
   }
 
-  private checkIfCallPointsToContract() { //TODO wrong name ?
+  private returnTransactionListWithContractFlag() {
     return this.parsedTransactionList.map((item) => {
       if (chceckIfOfCallType(item)) {
         const { index, depth, address } = item
@@ -122,8 +122,11 @@ export class TxAnalyzer {
 
     this.parsedTransactionList.forEach((item, index) => {
       if (chceckIfOfCallType(item) && item.isContract && item.input) {
-        const { decodedInput, decodedOutput, functionDescription, errorDescription }
-            = this.fragmentReader.decodeFragment(item.success, item.input, item.output)
+        const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
+          item.success,
+          item.input,
+          item.output
+        )
 
         this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
       }
@@ -153,7 +156,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -173,7 +176,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 

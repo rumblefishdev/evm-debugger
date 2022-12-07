@@ -64,3 +64,13 @@ export interface IErrorDescription {
   readonly signature: string
   readonly sighash: string
 }
+
+export type TFragmentStoreTypes = 'function' | 'event' | 'error'
+export type TFragmentStore = Record<TFragmentStoreTypes, ethers.utils.Fragment>
+
+export interface IFragmentDecodeResult {
+  readonly functionDescription: ethers.utils.TransactionDescription | null
+  readonly errorDescription: IErrorDescription | null
+  readonly decodedOutput: ethers.utils.Result | null
+  readonly decodedInput: ethers.utils.Result | null
+}
