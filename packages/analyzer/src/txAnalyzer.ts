@@ -144,7 +144,7 @@ export class TxAnalyzer {
 
   private parseLogsData() {
     this.parsedTransactionList.forEach((item) => {
-      if (chceckIfOfCallType(item) && item.isContract) {
+      if (checkIfOfCallType(item) && item.isContract) {
         const { startIndex, returnIndex, depth } = item
 
         const callStructLogContext = [...this.structLogs].slice(startIndex, returnIndex).filter((element) => element.depth === depth + 1)
