@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     env: {
         es2022: true,
         jest: true,
@@ -217,6 +218,7 @@ module.exports = {
         "unicorn/prefer-at": "error",
         "unicorn/no-array-reduce": "off",
         "unicorn/no-array-callback-reference": "off",
+        "unicorn/prefer-logical-operator-over-ternary": "off",
         "unicorn/prevent-abbreviations": [
             "error",
             {

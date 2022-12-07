@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
-        blockNumber: 15_881_396,
+        blockNumber: 16_097_308,
       },
     },
   },

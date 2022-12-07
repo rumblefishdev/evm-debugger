@@ -20,16 +20,19 @@ import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
+import { FragmentReader } from './helpers/fragmentReader'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
 
   private readonly stackCounter = new StackCounter()
   private readonly abiReader = new AbiReader(this.dataProvider)
+  private readonly fragmentReader = new FragmentReader()
 
   private structLogs: IStructLog[]
   private filteredStructLogs: IFilteredStructLog[]
   private parsedTransactionList: TReturnedTraceLog[]
+  private contractAddressesLists: string[] = []
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
@@ -72,13 +75,17 @@ export class TxAnalyzer {
     })
   }
 
-  private checkIfCallPointsToContract() {
+  private returnTransactionListWithContractFlag() {
     return this.parsedTransactionList.map((item) => {
       if (checkIfOfCallType(item)) {
-        const { index, depth } = item
+        const { index, depth, address } = item
         const nextStructLog = this.structLogs[index + 1]
 
-        if (nextStructLog.depth === depth + 1) return { ...item, isContract: true }
+        if (nextStructLog.depth === depth + 1) {
+          if (!this.contractAddressesLists.includes(address)) this.contractAddressesLists.push(address)
+
+          return { ...item, isContract: true }
+        }
       }
 
       return item
@@ -107,20 +114,23 @@ export class TxAnalyzer {
   }
 
   private async decodeCallInputOutput() {
-    for (let index = 0; index < this.parsedTransactionList.length; index++) {
-      const item = this.parsedTransactionList[index]
+    const abis = await this.abiReader.getAbis(this.contractAddressesLists)
 
-      const { depth } = item
+    Object.keys(abis).forEach((address) => {
+      this.fragmentReader.loadFragmentsFromAbi(abis[address])
+    })
 
+    this.parsedTransactionList.forEach((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, index, depth)
-        if (lastItemInCallContext.type !== 'REVERT')
-          this.parsedTransactionList[index] = await this.abiReader.decodeTraceLogInputOutput(item)
+        const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
+          item.success,
+          item.input,
+          item.output
+        )
 
-        if (lastItemInCallContext.type === 'REVERT')
-          this.parsedTransactionList[index] = await this.abiReader.decodeTraceLogErrorInputOutput(item)
+        this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
       }
-    }
+    })
   }
 
   private parseStorageData() {
@@ -146,7 +156,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -166,7 +176,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.checkIfCallPointsToContract()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 

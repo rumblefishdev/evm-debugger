@@ -1,21 +1,21 @@
-import {ethers} from 'ethers'
-import {hexlify} from 'ethers/lib/utils'
+import { ethers } from 'ethers'
+import { hexlify } from 'ethers/lib/utils'
 import type {
+  TTransactionInfo,
   ICallTypeStructLogs,
-  ICallTypeTraceLog,
   ICreateTypeStructLogs,
-  ICreateTypeTraceLog,
   IFilteredStructLog,
   IReturnTypeStructLogs,
+  IStructLog,
+  ICallTypeTraceLog,
+  ICreateTypeTraceLog,
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
-  IStructLog,
-  TMainTraceLogs,
   TReturnedTraceLog,
-  TTransactionInfo,
+  TMainTraceLogs,
 } from '@evm-debuger/types'
 
-import {BuiltinErrors, OpcodesNamesArray} from '../constants/constants'
+import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
 export const getBaseStructLogs = (structLogs: IStructLog[]) => {
   const indexes: number[] = []
@@ -110,7 +110,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
     stackTrace: [] as number[],
     pc: 0,
     passedGas: firstNestedStructLog.gas,
-    input: input.slice(2),
+    input,
     index: 0,
     gasCost: 0,
     depth: 0,
