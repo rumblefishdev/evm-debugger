@@ -8,7 +8,7 @@ import type {
 } from '@evm-debuger/types'
 
 import {
-  chceckIfOfCallType,
+  checkIfOfCallType,
   checkIfOfCreateType,
   checkIfOfReturnType,
   convertTxInfoToTraceLog,
@@ -47,7 +47,7 @@ export class TxAnalyzer {
       const structLogParser = new StructLogParser(item, this.structLogs, this.stackCounter)
 
       // CALL | CALLCODE | DELEGATECALL | STATICCALL
-      if (chceckIfOfCallType(item)) return structLogParser.parseCallStructLog()
+      if (checkIfOfCallType(item)) return structLogParser.parseCallStructLog()
 
       // CREATE | CREATE2
       if (checkIfOfCreateType(item)) return structLogParser.parseCreateStructLog()
@@ -69,7 +69,7 @@ export class TxAnalyzer {
     this.parsedTransactionList.unshift(rootTraceLog)
 
     return this.parsedTransactionList.map((item) => {
-      if (chceckIfOfCallType(item) || checkIfOfCreateType(item)) return { ...item, blockNumber } as TReturnedTraceLog
+      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) return { ...item, blockNumber } as TReturnedTraceLog
 
       return item
     })
@@ -77,7 +77,7 @@ export class TxAnalyzer {
 
   private returnTransactionListWithContractFlag() {
     return this.parsedTransactionList.map((item) => {
-      if (chceckIfOfCallType(item)) {
+      if (checkIfOfCallType(item)) {
         const { index, depth, address } = item
         const nextStructLog = this.structLogs[index + 1]
 
@@ -94,7 +94,7 @@ export class TxAnalyzer {
 
   private combineCallWithItsReturn() {
     return this.parsedTransactionList.map((item, rootIndex) => {
-      if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
+      if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
         const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
 
         if (!lastItemInCallContext) return { ...item, success: false }
@@ -121,7 +121,7 @@ export class TxAnalyzer {
     })
 
     this.parsedTransactionList.forEach((item, index) => {
-      if (chceckIfOfCallType(item) && item.isContract && item.input) {
+      if (checkIfOfCallType(item) && item.isContract && item.input) {
         const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
           item.success,
           item.input,
@@ -137,7 +137,7 @@ export class TxAnalyzer {
     for (let index = 0; index < this.parsedTransactionList.length; index++) {
       const item = this.parsedTransactionList[index]
 
-      if ((chceckIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
+      if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
         const storageHandler = new StorageHandler(this.structLogs, item)
 
         storageHandler.parseStorageData()
