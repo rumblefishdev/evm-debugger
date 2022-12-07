@@ -7,5 +7,5 @@ import { TxAnalyzer } from './txAnalyzer'
 
   const result = await analyzer.analyze()
 
-  // console.log(result.map(item))
+  console.log(result)
 })()
