@@ -1,3 +1,5 @@
+import { writeFileSync } from 'node:fs'
+
 import type {
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
@@ -15,12 +17,16 @@ import {
   getCallAndCreateType,
   getBaseStructLogs,
   getLastItemInCallTypeContext,
+  isLogType,
+  getSafeHex,
+  readMemory,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
 import { FragmentReader } from './helpers/fragmentReader'
+import { LogArgsArray } from './constants/constants'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
@@ -36,6 +42,9 @@ export class TxAnalyzer {
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
+
+    writeFileSync('trace.json', JSON.stringify(trace, null, 2))
+
     const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
     this.structLogs = trace.structLogs
@@ -133,6 +142,39 @@ export class TxAnalyzer {
     })
   }
 
+  private parseLogsData() {
+    this.parsedTransactionList.forEach((item) => {
+      if (chceckIfOfCallType(item) && item.isContract) {
+        const { startIndex, returnIndex, depth } = item
+
+        const callStructLogContext = [...this.structLogs].slice(startIndex, returnIndex).filter((element) => element.depth === depth + 1)
+
+        const logTypeStructLogs = callStructLogContext.filter(isLogType)
+
+        logTypeStructLogs.forEach((logTypeStructLog) => {
+          const { stack, memory } = logTypeStructLog
+
+          const stackCopy = [...stack]
+
+          const topics: string[] = []
+
+          const logArgsNames = LogArgsArray[logTypeStructLog.op]
+
+          const logArgs = logArgsNames.map((argName) => logTypeStructLog[argName])
+
+          const numberOfTopics = logArgs.slice(2)
+
+          const logDataOffset = stackCopy.pop()
+          const logDataLength = stackCopy.pop()
+
+          const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
+
+          numberOfTopics.forEach(() => topics.push(getSafeHex(stackCopy.pop())))
+        })
+      }
+    })
+  }
+
   private parseStorageData() {
     for (let index = 0; index < this.parsedTransactionList.length; index++) {
       const item = this.parsedTransactionList[index]
@@ -165,6 +207,8 @@ export class TxAnalyzer {
     this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
     this.parseStorageData()
+
+    this.parseLogsData()
 
     return this.parsedTransactionList
   }
