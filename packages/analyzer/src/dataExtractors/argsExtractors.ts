@@ -1,7 +1,14 @@
 import { ethers } from 'ethers'
-import type { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs, TOpCodesWithArgs } from '@evm-debuger/types'
+import type {
+  TCallTypeArgs,
+  TCreateTypeArgs,
+  TOpCodesArgs,
+  TReturnTypeArgs,
+  TOpCodesWithArgs,
+  ILogTypeStructLogs,
+} from '@evm-debuger/types'
 
-import { OpCodesArgsArray } from '../constants/constants'
+import { LogArgsArray, OpCodesArgsArray } from '../constants/constants'
 import { getSafeHex, readMemory } from '../helpers/helpers'
 
 export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
@@ -14,6 +21,27 @@ export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
   })
 
   return opCodeArguments
+}
+
+export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
+  const { stack } = item
+
+  const stackCopy = [...stack]
+
+  const extractedTopics: string[] = []
+
+  const logArgsNames = LogArgsArray[item.op]
+
+  const logArgs = logArgsNames.map((argName) => item[argName])
+
+  const topicsList = logArgs.slice(2)
+
+  const logDataOffset = stackCopy.pop()
+  const logDataLength = stackCopy.pop()
+
+  topicsList.forEach(() => extractedTopics.push(getSafeHex(stackCopy.pop())))
+
+  return { topics: extractedTopics, logDataOffset, logDataLength }
 }
 
 export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {
