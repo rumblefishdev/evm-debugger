@@ -32,8 +32,8 @@ export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
 
   const topicsList = logArgsNames.slice(2)
 
-  const logDataOffset = stackCopy.at(-1)
-  const logDataLength = stackCopy.at(-2)
+  const logDataOffset = stackCopy.pop()
+  const logDataLength = stackCopy.pop()
 
   const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
 
