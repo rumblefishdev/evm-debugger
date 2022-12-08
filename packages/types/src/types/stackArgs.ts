@@ -8,8 +8,6 @@ export type TCreateArgsNames = 'value' | 'byteCodePosition' | 'byteCodeSize'
 export type TCreate2ArgsNames = 'value' | 'byteCodePosition' | 'byteCodeSize' | 'salt'
 export type TReturnArgsNames = 'position' | 'length'
 export type TRevertArgsNames = 'position' | 'length'
-export type TSStorArgsNames = 'key' | 'value'
-export type TSLoadArgsNames = 'key'
 
 export type TLog0ArgsNames = 'dataOffset' | 'dataLength'
 export type TLog1ArgsNames = 'dataOffset' | 'dataLength' | 'topic1'
@@ -72,7 +70,6 @@ export type TRevertArgs = {
 export type TCallTypeArgs = TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs
 export type TCreateTypeArgs = TCreateArgs | TCreate2Args
 export type TReturnTypeArgs = TReturnArgs | TRevertArgs
-export type TLogTypeArgs = TLog0Args | TLog1Args | TLog2Args | TLog3Args | TLog4Args
 
 export type TOpCodesArgs = {
   CALL: TCallArgs

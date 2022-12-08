@@ -24,22 +24,18 @@ export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
 }
 
 export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
-  const { stack } = item
+  const { stack, op } = item
 
   const stackCopy = [...stack]
 
-  const extractedTopics: string[] = []
+  const logArgsNames = LogArgsArray[op]
 
-  const logArgsNames = LogArgsArray[item.op]
+  const topicsList = logArgsNames.slice(2)
 
-  const logArgs = logArgsNames.map((argName) => item[argName])
+  const logDataOffset = stackCopy.at(-1)
+  const logDataLength = stackCopy.at(-2)
 
-  const topicsList = logArgs.slice(2)
-
-  const logDataOffset = stackCopy.pop()
-  const logDataLength = stackCopy.pop()
-
-  topicsList.forEach(() => extractedTopics.push(getSafeHex(stackCopy.pop())))
+  const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
 
   return { topics: extractedTopics, logDataOffset, logDataLength }
 }
