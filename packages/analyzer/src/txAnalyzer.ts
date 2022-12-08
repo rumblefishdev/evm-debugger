@@ -137,7 +137,7 @@ export class TxAnalyzer {
 
   private parseLogsData() {
     this.parsedTransactionList.forEach((item, index) => {
-      if (checkIfOfCallType(item) && item.isContract) {
+      if (checkIfOfCallType(item) && item.isContract && item.success) {
         const events: TEventInfo[] = []
 
         const { startIndex, returnIndex, depth } = item
