@@ -27,7 +27,7 @@ export interface ICallTypeTraceLog extends ITraceLog {
   functionDescription?: ethers.utils.TransactionDescription
   errorDescription?: IErrorDescription
   returnIndex?: number
-  success?: boolean
+  isSuccess?: boolean
   isContract?: boolean
 
   storageLogs?: TStorageLogs
@@ -45,7 +45,7 @@ export interface ICreateTypeTraceLog extends ITraceLog {
   value: string
   input: string
   salt?: string
-  success?: boolean
+  isSuccess?: boolean
   returnIndex?: number
 
   storageLogs?: TStorageLogs

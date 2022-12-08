@@ -1,99 +1,85 @@
 import type {
-  TChangedStorage,
-  TLoadedStorage,
-  TReturnedStorage,
-  IStorageTypeStructLogs,
-  IStructLog,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
+  IStorageTypeStructLogs,
+  IStructLog,
+  TStorage,
 } from '@evm-debuger/types'
 
 export class StorageHandler {
-  constructor(private readonly structLogs: IStructLog[], private readonly traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {}
 
-  private callContextStructLogs: IStructLog[]
-  private storageStructLogs: IStorageTypeStructLogs[]
+  public parseTraceLog(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+    const { returnIndex, isSuccess } = traceLog
 
-  private loadedStorage: TLoadedStorage = []
-  private changedStorage: TChangedStorage = []
-  private returnedStorage: TReturnedStorage = []
+    const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
+    const storageLogs = this.extractStorageLogs(callContextStructLogs, traceLog)
 
-  private getCallContextStructLogs() {
-    const { startIndex, returnIndex, depth } = this.traceLog
+    const { loadedStorage, changedStorage } = this.getLoadedAndChangedStorage(storageLogs);
 
-    this.callContextStructLogs = this.structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
+    const storageData = structLogs[returnIndex].storage
+    let returnedStorage =  this.mapStorageData(storageData)
+
+    if (!isSuccess) returnedStorage = loadedStorage
+
+    return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  private extractStorageStructLogs() {
-    const indexes: number[] = []
+  private getLoadedAndChangedStorage(storageLogs: IStorageTypeStructLogs[]) {
+    const loadedStorage = []
+    const changedStorage = []
+    storageLogs.forEach((element, rootIndex) => {
+      const loadStorageElement = this.getLoadStorageElement(element)
+      if (loadStorageElement) loadedStorage.push(loadStorageElement)
 
-    const filteredLogs = this.callContextStructLogs.filter((item, index) => {
-      const isStorage = item.op === 'SSTORE' || item.op === 'SLOAD'
-
-      if (isStorage) indexes.push(this.traceLog.index + index)
-
-      return isStorage
+      const previousStructLog = storageLogs[rootIndex - 1];
+      const changeStorageElement = this.getChangeStorageElement(element, previousStructLog)
+      if (changeStorageElement) changedStorage.push(changeStorageElement)
     })
 
-    this.storageStructLogs = filteredLogs.map((item, index) => {
-      return { ...item, index: indexes[index] }
-    }) as IStorageTypeStructLogs[]
+    return { loadedStorage, changedStorage }
   }
 
-  private saveStorageLoad(item: IStorageTypeStructLogs) {
-    const { op, stack, storage, index } = item
+  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+    const { startIndex, returnIndex, depth } = traceLog
+    return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
+  }
+
+  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {
+    return callContextStructLogs
+        .map((log, index) => {
+          const isStorage = log.op === 'SSTORE' || log.op === 'SLOAD'
+          if (isStorage) return { ...log, index: traceLog.index + index }
+          return null
+        })
+        .filter(log => log !== null) as IStorageTypeStructLogs[]
+  }
+
+  private getLoadStorageElement(log: IStorageTypeStructLogs) {
+    const { op, stack, storage, index } = log
 
     if (op === 'SLOAD') {
       const key = stack.at(-1)
-
-      this.loadedStorage.push({ value: storage[key], key, index })
+      return { value: storage[key], key, index }
     }
   }
 
-  private saveStorageChange(item: IStorageTypeStructLogs, rootIndex: number) {
+  private getChangeStorageElement(item: IStorageTypeStructLogs, previousStructLog: IStorageTypeStructLogs) {
     const { op, stack, index } = item
 
     if (op === 'SSTORE') {
       const key = stack.at(-1)
       const value = stack.at(-2)
+      const initialValue = previousStructLog.storage[key]
 
-      const initialValue = this.storageStructLogs[rootIndex - 1].storage[key]
-
-      this.changedStorage.push({ updatedValue: value, key, initialValue, index })
+      return { updatedValue: value, key, initialValue, index }
     }
   }
 
-  private mapStorageData(returnIndex: number) {
-    const storageOfReturnItem = this.structLogs[returnIndex].storage
+  private mapStorageData(storageData: TStorage) {
+    const keys = Object.keys(storageData)
 
-    const keys = Object.keys(storageOfReturnItem)
-
-    this.returnedStorage = keys.map((item) => {
-      return { value: storageOfReturnItem[item], key: item }
+    return keys.map((item) => {
+      return { value: storageData[item], key: item }
     })
-  }
-
-  public returnStorageLogs() {
-    return { returnedStorage: this.returnedStorage, loadedStorage: this.loadedStorage, changedStorage: this.changedStorage }
-  }
-
-  public parseStorageData() {
-    const { returnIndex } = this.traceLog
-
-    this.getCallContextStructLogs()
-    this.extractStorageStructLogs()
-
-    this.storageStructLogs.forEach((element, rootIndex) => {
-      this.saveStorageLoad(element)
-      this.saveStorageChange(element, rootIndex)
-    })
-
-    if (!returnIndex) return this.traceLog
-
-    this.mapStorageData(returnIndex)
-  }
-
-  public returnExpectedStorage() {
-    this.returnedStorage = this.loadedStorage
   }
 }

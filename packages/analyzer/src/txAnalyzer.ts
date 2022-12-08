@@ -25,6 +25,7 @@ import { FragmentReader } from './helpers/fragmentReader'
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
 
+  private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
   private readonly abiReader = new AbiReader(this.dataProvider)
   private readonly fragmentReader = new FragmentReader()
@@ -97,7 +98,7 @@ export class TxAnalyzer {
       if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
         const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
 
-        if (!lastItemInCallContext) return { ...item, success: false }
+        if (!lastItemInCallContext) return { ...item, isSuccess: false }
 
         const { index, passedGas } = lastItemInCallContext
         const gasCost = item.passedGas - passedGas
@@ -105,9 +106,9 @@ export class TxAnalyzer {
         if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
           const { output } = lastItemInCallContext
           const isSuccess = lastItemInCallContext.type === 'RETURN'
-          return { ...item, success: isSuccess, returnIndex: index, output, gasCost }
+          return { ...item, returnIndex: index, output, isSuccess, gasCost }
         }
-        return { ...item, success: true, returnIndex: index, gasCost }
+        return { ...item, returnIndex: index, isSuccess: true, gasCost }
       }
       return item
     })
@@ -123,7 +124,7 @@ export class TxAnalyzer {
     this.parsedTransactionList.forEach((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
         const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
-          item.success,
+          item.isSuccess,
           item.input,
           item.output
         )
@@ -135,16 +136,11 @@ export class TxAnalyzer {
 
   private parseStorageData() {
     for (let index = 0; index < this.parsedTransactionList.length; index++) {
-      const item = this.parsedTransactionList[index]
+      const traceLog = this.parsedTransactionList[index]
 
-      if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-        const storageHandler = new StorageHandler(this.structLogs, item)
-
-        storageHandler.parseStorageData()
-
-        if (!item.success) storageHandler.returnExpectedStorage()
-
-        this.parsedTransactionList[index] = { ...item, storageLogs: storageHandler.returnStorageLogs() }
+      if ((checkIfOfCallType(traceLog) && traceLog.isContract) || checkIfOfCreateType(traceLog)) {
+        const storageLogs = this.storageHandler.parseTraceLog(traceLog, this.structLogs)
+        this.parsedTransactionList[index] = { ...traceLog, storageLogs }
       }
     }
   }
