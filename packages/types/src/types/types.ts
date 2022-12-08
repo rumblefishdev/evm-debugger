@@ -74,3 +74,5 @@ export interface IFragmentDecodeResult {
   readonly decodedOutput: ethers.utils.Result | null
   readonly decodedInput: ethers.utils.Result | null
 }
+
+export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }

@@ -1,11 +1,4 @@
-import type {
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
-  IFilteredStructLog,
-  IStructLog,
-  TDataProvider,
-  TReturnedTraceLog,
-} from '@evm-debuger/types'
+import type { IFilteredStructLog, IStructLog, TDataProvider, TEventInfo, TMainTraceLogs, TReturnedTraceLog } from '@evm-debuger/types'
 
 import {
   checkIfOfCallType,
@@ -15,12 +8,16 @@ import {
   getCallAndCreateType,
   getBaseStructLogs,
   getLastItemInCallTypeContext,
+  isLogType,
+  getSafeHex,
+  readMemory,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { AbiReader } from './helpers/abiReader'
 import { FragmentReader } from './helpers/fragmentReader'
+import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
@@ -36,6 +33,7 @@ export class TxAnalyzer {
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
+
     const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
     this.structLogs = trace.structLogs
@@ -133,6 +131,32 @@ export class TxAnalyzer {
     })
   }
 
+  private parseLogsData() {
+    this.parsedTransactionList.forEach((item, index) => {
+      if (checkIfOfCallType(item) && item.isContract && item.success) {
+        const events: TEventInfo[] = []
+
+        const { startIndex, returnIndex, depth } = item
+
+        const callStructLogContext = [...this.structLogs].slice(startIndex, returnIndex).filter((element) => element.depth === depth + 1)
+
+        const logTypeStructLogs = callStructLogContext.filter(isLogType)
+
+        logTypeStructLogs.forEach((logTypeStructLog) => {
+          const { memory } = logTypeStructLog
+          const { logDataLength, logDataOffset, topics } = extractLogTypeArgsData(logTypeStructLog)
+
+          const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
+
+          const eventResult = this.fragmentReader.decodeEvent(logData, topics)
+
+          events.push(eventResult)
+        })
+        this.parsedTransactionList[index] = { ...item, events }
+      }
+    })
+  }
+
   private parseStorageData() {
     for (let index = 0; index < this.parsedTransactionList.length; index++) {
       const item = this.parsedTransactionList[index]
@@ -166,7 +190,9 @@ export class TxAnalyzer {
 
     this.parseStorageData()
 
-    return this.parsedTransactionList
+    this.parseLogsData()
+
+    return this.parsedTransactionList as TMainTraceLogs[]
   }
 
   public async baseAnalyze() {
@@ -184,6 +210,6 @@ export class TxAnalyzer {
 
     this.parseStorageData()
 
-    return this.parsedTransactionList as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
+    return this.parsedTransactionList as TMainTraceLogs[]
   }
 }

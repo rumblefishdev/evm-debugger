@@ -1,5 +1,7 @@
 export type TStorageOpCodes = 'SSTORE' | 'SLOAD'
 
+export type TLogOpcodes = 'LOG0' | 'LOG1' | 'LOG2' | 'LOG3' | 'LOG4'
+
 export type TReturnTypeOpcodes = 'RETURN' | 'REVERT'
 
 export type TCallTypeOpcodes = 'CALL' | 'CALLCODE' | 'DELEGATECALL' | 'STATICCALL'

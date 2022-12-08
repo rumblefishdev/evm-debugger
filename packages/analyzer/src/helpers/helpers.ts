@@ -13,6 +13,7 @@ import type {
   IStopTypeTraceLog,
   TReturnedTraceLog,
   TMainTraceLogs,
+  ILogTypeStructLogs,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
@@ -61,6 +62,10 @@ export const checkIfOfReturnType = (item: TReturnedTraceLog | IFilteredStructLog
   if ('type' in item) return item.type === 'RETURN' || item.type === 'REVERT'
 
   return item.op === 'RETURN' || item.op === 'REVERT'
+}
+
+export const isLogType = (item: IStructLog): item is ILogTypeStructLogs => {
+  return item.op === 'LOG0' || item.op === 'LOG1' || item.op === 'LOG2' || item.op === 'LOG3' || item.op === 'LOG4'
 }
 
 export const safeJsonParse = (text: string): any | null => {
