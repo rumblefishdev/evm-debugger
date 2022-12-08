@@ -1,5 +1,3 @@
-import { writeFileSync } from 'node:fs'
-
 import type { IFilteredStructLog, IStructLog, TDataProvider, TEventInfo, TMainTraceLogs, TReturnedTraceLog } from '@evm-debuger/types'
 
 import {
@@ -35,8 +33,6 @@ export class TxAnalyzer {
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
-
-    writeFileSync('trace.json', JSON.stringify(trace, null, 2))
 
     const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
