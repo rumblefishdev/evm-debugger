@@ -1,5 +1,5 @@
 import type {
-  ContractAddress,
+  IContractAddress,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IFilteredStructLog,
@@ -34,7 +34,7 @@ export class TxAnalyzer {
   private structLogs: IStructLog[]
   private filteredStructLogs: IFilteredStructLog[]
   private parsedTransactionList: TReturnedTraceLog[]
-  private contractAddressesLists: ContractAddress[] = []
+  private contractAddressesLists: IContractAddress[] = []
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
@@ -77,7 +77,7 @@ export class TxAnalyzer {
     })
   }
 
-  private returnTransactionListWithContractFlagAnd() {
+  private returnTransactionListWithContractFlag() {
     return this.parsedTransactionList.map((item) => {
       if (checkIfOfCallType(item)) {
         const { index, depth, address } = item
@@ -157,7 +157,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlagAnd()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -175,7 +175,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlagAnd()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 

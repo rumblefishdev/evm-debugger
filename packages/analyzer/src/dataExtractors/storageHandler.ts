@@ -1,5 +1,5 @@
 import type {
-  ContractAddress,
+  IContractAddress,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IStorageTypeStructLogs,
@@ -15,7 +15,7 @@ export class StorageHandler {
     const { returnIndex, isSuccess } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
-    const storageLogs = this.extractStorageLogs(callContextStructLogs, traceLog)
+    const storageLogs = this.extractStorageLogs(callContextStructLogs, traceLog.index)
 
     const { loadedStorage, changedStorage } = this.getLoadedAndChangedStorage(storageLogs);
 
@@ -27,7 +27,7 @@ export class StorageHandler {
     return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog, contractAddressesLists: ContractAddress[]) {
+  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog, contractAddressesLists: IContractAddress[]) {
     let storageAddress = null
 
     if (traceLog.type === 'DELEGATECALL')
@@ -60,14 +60,15 @@ export class StorageHandler {
     return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
   }
 
-  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLog: ICallTypeTraceLog | ICreateTypeTraceLog) {
-    return callContextStructLogs
-        .map((log, index) => {
+  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLogIndex: number) {
+    const storageLogs = []
+    callContextStructLogs
+        .forEach((log, index) => {
           const isStorage = log.op === 'SSTORE' || log.op === 'SLOAD'
-          if (isStorage) return { ...log, index: traceLog.index + index }
-          return null
+          if (isStorage) storageLogs.push({ ...log, index: traceLogIndex + index })
         })
-        .filter(log => log !== null) as IStorageTypeStructLogs[]
+
+    return storageLogs
   }
 
   private getLoadStorageElement(log: IStorageTypeStructLogs) {
