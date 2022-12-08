@@ -1,4 +1,5 @@
 import type {
+  ContractAddress,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IStorageTypeStructLogs,
@@ -6,9 +7,11 @@ import type {
   TStorage,
 } from '@evm-debuger/types'
 
+import {checkIfOfCreateType} from "../helpers/helpers";
+
 export class StorageHandler {
 
-  public parseTraceLog(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
     const { returnIndex, isSuccess } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
@@ -22,6 +25,19 @@ export class StorageHandler {
     if (!isSuccess) returnedStorage = loadedStorage
 
     return { returnedStorage, loadedStorage, changedStorage }
+  }
+
+  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog, contractAddressesLists: ContractAddress[]) {
+    let storageAddress = null
+
+    if (traceLog.type === 'DELEGATECALL')
+      storageAddress = previousTransactionLog.address
+    else if (traceLog.type === 'CALL' || traceLog.type === 'STATICCALL')
+      storageAddress = traceLog.address
+    else if (checkIfOfCreateType(traceLog))
+      storageAddress = contractAddressesLists.find(contractAddress => contractAddress.index === traceLog.index).address
+
+    return storageAddress
   }
 
   private getLoadedAndChangedStorage(storageLogs: IStorageTypeStructLogs[]) {

@@ -30,6 +30,7 @@ export interface ICallTypeTraceLog extends ITraceLog {
   isSuccess?: boolean
   isContract?: boolean
 
+  storageAddress?: string
   storageLogs?: TStorageLogs
 }
 
@@ -48,6 +49,7 @@ export interface ICreateTypeTraceLog extends ITraceLog {
   isSuccess?: boolean
   returnIndex?: number
 
+  storageAddress?: string
   storageLogs?: TStorageLogs
 }
 

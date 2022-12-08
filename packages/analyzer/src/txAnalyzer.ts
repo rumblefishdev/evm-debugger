@@ -1,4 +1,5 @@
 import type {
+  ContractAddress,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IFilteredStructLog,
@@ -12,15 +13,15 @@ import {
   checkIfOfCreateType,
   checkIfOfReturnType,
   convertTxInfoToTraceLog,
-  getCallAndCreateType,
   getBaseStructLogs,
+  getCallAndCreateType,
   getLastItemInCallTypeContext,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { AbiReader } from './helpers/abiReader'
-import { FragmentReader } from './helpers/fragmentReader'
+import {StructLogParser} from './dataExtractors/structLogParser'
+import {StackCounter} from './helpers/stackCounter'
+import {StorageHandler} from './dataExtractors/storageHandler'
+import {AbiReader} from './helpers/abiReader'
+import {FragmentReader} from './helpers/fragmentReader'
 
 export class TxAnalyzer {
   constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
@@ -33,7 +34,7 @@ export class TxAnalyzer {
   private structLogs: IStructLog[]
   private filteredStructLogs: IFilteredStructLog[]
   private parsedTransactionList: TReturnedTraceLog[]
-  private contractAddressesLists: string[] = []
+  private contractAddressesLists: ContractAddress[] = []
 
   private async getStructLogs() {
     const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
@@ -76,14 +77,14 @@ export class TxAnalyzer {
     })
   }
 
-  private returnTransactionListWithContractFlag() {
+  private returnTransactionListWithContractFlagAnd() {
     return this.parsedTransactionList.map((item) => {
       if (checkIfOfCallType(item)) {
         const { index, depth, address } = item
         const nextStructLog = this.structLogs[index + 1]
 
         if (nextStructLog.depth === depth + 1) {
-          if (!this.contractAddressesLists.includes(address)) this.contractAddressesLists.push(address)
+          if (!this.contractAddressesLists.includes({index, address})) this.contractAddressesLists.push({index, address})
 
           return { ...item, isContract: true }
         }
@@ -115,7 +116,7 @@ export class TxAnalyzer {
   }
 
   private async decodeCallInputOutput() {
-    const abis = await this.abiReader.getAbis(this.contractAddressesLists)
+    const abis = await this.abiReader.getAbis(this.contractAddressesLists.map(contractAddress => contractAddress.address))
 
     Object.keys(abis).forEach((address) => {
       this.fragmentReader.loadFragmentsFromAbi(abis[address])
@@ -134,15 +135,19 @@ export class TxAnalyzer {
     })
   }
 
-  private parseStorageData() {
-    for (let index = 0; index < this.parsedTransactionList.length; index++) {
-      const traceLog = this.parsedTransactionList[index]
+  private parseStorageData(transactionList: TReturnedTraceLog[]) {
+    for (let index = 0; index < transactionList.length; index++) {
+      const traceLog = transactionList[index]
 
       if ((checkIfOfCallType(traceLog) && traceLog.isContract) || checkIfOfCreateType(traceLog)) {
-        const storageLogs = this.storageHandler.parseTraceLog(traceLog, this.structLogs)
-        this.parsedTransactionList[index] = { ...traceLog, storageLogs }
+        const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.structLogs)
+        const storageAddress = this.storageHandler.resolveStorageAddress(traceLog, transactionList[index - 1] as ICallTypeTraceLog, this.contractAddressesLists);
+
+        transactionList[index] = { ...traceLog, storageLogs, storageAddress }
       }
     }
+
+    return transactionList
   }
 
   public async analyze() {
@@ -152,7 +157,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlagAnd()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
@@ -160,9 +165,7 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-    this.parseStorageData()
-
-    return this.parsedTransactionList
+    return this.parseStorageData(this.parsedTransactionList)
   }
 
   public async baseAnalyze() {
@@ -172,14 +175,14 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = await this.parseAndAddRootTraceLog()
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+    this.parsedTransactionList = this.returnTransactionListWithContractFlagAnd()
 
     this.parsedTransactionList = this.combineCallWithItsReturn()
 
     this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-    this.parseStorageData()
+    const transactionListWithParsedStorageData = this.parseStorageData(this.parsedTransactionList);
 
-    return this.parsedTransactionList as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
+    return transactionListWithParsedStorageData as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
   }
 }

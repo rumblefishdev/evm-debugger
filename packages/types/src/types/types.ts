@@ -74,3 +74,8 @@ export interface IFragmentDecodeResult {
   readonly decodedOutput: ethers.utils.Result | null
   readonly decodedInput: ethers.utils.Result | null
 }
+
+export interface ContractAddress {
+  index: number,
+  address: string
+}
