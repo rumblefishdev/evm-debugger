@@ -45,12 +45,6 @@ export type TTransactionTraceResult = {
   structLogs: IStructLog[]
 }
 
-export type TTransactionTrace = {
-  jsonrpc: string
-  id: number
-  result: TTransactionTraceResult
-}
-
 export interface TDataProvider {
   getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
   getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>

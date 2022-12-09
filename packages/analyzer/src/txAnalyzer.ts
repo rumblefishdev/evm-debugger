@@ -1,10 +1,10 @@
 import type {
+  ICallTypeTraceLog,
+  IContractAddress,
   IFilteredStructLog,
   TEventInfo,
   TMainTraceLogs,
   TReturnedTraceLog,
-  IContractAddress,
-  ICallTypeTraceLog,
   TTransactionData,
 } from '@evm-debuger/types'
 
@@ -16,15 +16,15 @@ import {
   getBaseStructLogs,
   getCallAndCreateType,
   getLastItemInCallTypeContext,
-  isLogType,
   getSafeHex,
+  isLogType,
   readMemory,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { FragmentReader } from './helpers/fragmentReader'
-import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
+import {StructLogParser} from './dataExtractors/structLogParser'
+import {StackCounter} from './helpers/stackCounter'
+import {StorageHandler} from './dataExtractors/storageHandler'
+import {FragmentReader} from './helpers/fragmentReader'
+import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
@@ -38,8 +38,7 @@ export class TxAnalyzer {
   private contractAddressesLists: IContractAddress[] = []
 
   private getStructLogs() {
-    const filteredStructLogs = getBaseStructLogs(this.transactionData.structLogs)
-    this.filteredStructLogs = filteredStructLogs
+    this.filteredStructLogs = getBaseStructLogs(this.transactionData.structLogs)
   }
 
   private parseStructLogs() {
@@ -113,7 +112,7 @@ export class TxAnalyzer {
     })
   }
 
-  private async decodeCallInputOutput() {
+  private decodeCallInputOutput() {
     const abis = this.transactionData.abis || {}
 
     Object.keys(abis).forEach((address) => {

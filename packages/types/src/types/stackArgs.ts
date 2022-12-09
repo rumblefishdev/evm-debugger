@@ -70,7 +70,6 @@ export type TRevertArgs = {
 export type TCallTypeArgs = TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs
 export type TCreateTypeArgs = TCreateArgs | TCreate2Args
 export type TReturnTypeArgs = TReturnArgs | TRevertArgs
-export type TLogTypeArgs = TLog0Args | TLog1Args | TLog2Args | TLog3Args | TLog4Args
 
 export type TOpCodesArgs = {
   CALL: TCallArgs

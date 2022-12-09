@@ -84,8 +84,6 @@ export const traceLogsReducer = traceLogsSlice.reducer
 
 export const { loadTraceLogs } = traceLogsSlice.actions
 
-// export const getTraceLog = (state: TRootState, index: number) => state.traceLogs.find(item => item.index === index)
-
 export const selectMappedTraceLogs = createSelector(
   [
     (state: TRootState) => state.traceLogs,
