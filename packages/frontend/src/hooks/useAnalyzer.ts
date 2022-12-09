@@ -14,7 +14,7 @@ export const useAnalyzer = () => {
 
   const analyze = useCallback(() => {
     const analyzer = new TxAnalyzer({ transactionInfo, structLogs })
-    const result = analyzer.baseAnalyze()
+    const result = analyzer.analyze()
 
     dispatch(loadTraceLogs(result))
     setLoading(false)
