@@ -1,7 +1,14 @@
 import { ethers } from 'ethers'
-import type { TCallTypeArgs, TCreateTypeArgs, TOpCodesArgs, TReturnTypeArgs, TOpCodesWithArgs } from '@evm-debuger/types'
+import type {
+  TCallTypeArgs,
+  TCreateTypeArgs,
+  TOpCodesArgs,
+  TReturnTypeArgs,
+  TOpCodesWithArgs,
+  ILogTypeStructLogs,
+} from '@evm-debuger/types'
 
-import { OpCodesArgsArray } from '../constants/constants'
+import { LogArgsArray, OpCodesArgsArray } from '../constants/constants'
 import { getSafeHex, readMemory } from '../helpers/helpers'
 
 export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
@@ -14,6 +21,23 @@ export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
   })
 
   return opCodeArguments
+}
+
+export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
+  const { stack, op } = item
+
+  const stackCopy = [...stack]
+
+  const logArgsNames = LogArgsArray[op]
+
+  const topicsList = logArgsNames.slice(2)
+
+  const logDataOffset = stackCopy.pop()
+  const logDataLength = stackCopy.pop()
+
+  const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
+
+  return { topics: extractedTopics, logDataOffset, logDataLength }
 }
 
 export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {

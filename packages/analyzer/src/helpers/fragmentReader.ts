@@ -22,7 +22,6 @@ export class FragmentReader {
   public getFragment(sighash: string, type: 'function' | 'event' | 'error'): ethers.utils.Fragment | null {
     return this.fragmentStore[type][sighash] || null
   }
-
   public loadFragmentsFromAbi(abi: ethers.utils.Interface): void {
     const functionFragmentKeys = Object.keys(abi.functions)
     const errorFragmentKeys = Object.keys(abi.errors)
@@ -107,5 +106,20 @@ export class FragmentReader {
     }
 
     return { functionDescription, errorDescription, decodedOutput, decodedInput }
+  }
+
+  public decodeEvent(eventData: string, topics: string[]) {
+    const sighash = topics[0].slice(0, 10)
+
+    const eventFragment = this.getFragment(sighash, 'event')
+
+    if (!eventFragment) return { eventDescription: null, decodedEvent: null }
+
+    const abiInterface = new ethers.utils.Interface([eventFragment])
+
+    const decodedEvent = abiInterface.decodeEventLog(eventFragment.name, eventData, topics)
+    const eventDescription: ethers.utils.LogDescription = abiInterface.parseLog({ topics, data: eventData })
+
+    return { eventDescription, decodedEvent }
   }
 }
