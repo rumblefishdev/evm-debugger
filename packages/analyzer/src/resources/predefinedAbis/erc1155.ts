@@ -1,4 +1,6 @@
-export const ERC1155_ABI = [
+import type { JsonFragment } from '@ethersproject/abi'
+
+export const ERC1155_ABI: JsonFragment[] = [
   {
     type: 'event',
     name: 'ApprovalForAll',

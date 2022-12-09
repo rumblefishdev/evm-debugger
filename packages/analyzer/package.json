@@ -5,7 +5,7 @@
   "scripts": {
     "chain": "hardhat node",
     "build": "tsc --build",
-    "start:dev": "npx hardhat run ./src/script.ts --network localhost",
+    "start:dev": "npx hardhat run ./script.ts --network localhost",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "lint:check": "eslint \"src/**/*.ts\"",
     "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
@@ -34,6 +34,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@evm-debuger/types": "^0.0.1",
     "evm": "^0.2.0",
     "hardhat": "^2.12.0",

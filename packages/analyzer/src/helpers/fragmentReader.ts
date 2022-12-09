@@ -1,4 +1,4 @@
-import type { IErrorDescription, IFragmentDecodeResult, TFragmentStore } from '@evm-debuger/types'
+import type { IErrorDescription, IFragmentDecodeResult, TAbi, TFragmentStore } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 
 import { BUILTIN_ERRORS } from '../resources/builtinErrors'
@@ -22,24 +22,26 @@ export class FragmentReader {
   public getFragment(sighash: string, type: 'function' | 'event' | 'error'): ethers.utils.Fragment | null {
     return this.fragmentStore[type][sighash] || null
   }
-  public loadFragmentsFromAbi(abi: ethers.utils.Interface): void {
-    const functionFragmentKeys = Object.keys(abi.functions)
-    const errorFragmentKeys = Object.keys(abi.errors)
-    const eventFragmentKeys = Object.keys(abi.events)
+  public loadFragmentsFromAbi(abiDefinition: TAbi): void {
+    const abiInterface = new ethers.utils.Interface(abiDefinition)
+
+    const functionFragmentKeys = Object.keys(abiInterface.functions)
+    const errorFragmentKeys = Object.keys(abiInterface.errors)
+    const eventFragmentKeys = Object.keys(abiInterface.events)
 
     errorFragmentKeys.forEach((key) => {
-      const fragment = abi.errors[key]
-      this.storeFragment(abi.getSighash(fragment), fragment, 'error')
+      const fragment = abiInterface.errors[key]
+      this.storeFragment(abiInterface.getSighash(fragment), fragment, 'error')
     })
 
     eventFragmentKeys.forEach((key) => {
-      const fragment = abi.events[key]
-      this.storeFragment(abi.getSighash(fragment), fragment, 'event')
+      const fragment = abiInterface.events[key]
+      this.storeFragment(abiInterface.getSighash(fragment), fragment, 'event')
     })
 
     functionFragmentKeys.forEach((key) => {
-      const fragment = abi.functions[key]
-      this.storeFragment(abi.getSighash(fragment), fragment, 'function')
+      const fragment = abiInterface.functions[key]
+      this.storeFragment(abiInterface.getSighash(fragment), fragment, 'function')
     })
   }
 
