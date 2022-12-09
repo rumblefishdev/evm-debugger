@@ -12,9 +12,6 @@ export const useAnalyzer = () => {
   const transactionInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
 
-  console.log('transactionInfo', transactionInfo)
-  console.log('structLogs', structLogs)
-
   const analyze = useCallback(() => {
     const analyzer = new TxAnalyzer({ transactionInfo, structLogs })
     const result = analyzer.baseAnalyze()
