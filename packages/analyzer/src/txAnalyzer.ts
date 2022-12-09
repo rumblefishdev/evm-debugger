@@ -5,7 +5,7 @@ import type {
     TEventInfo,
     TMainTraceLogs,
     TReturnedTraceLog,
-    IContractAddress
+    IContractAddress, ICallTypeTraceLog
 } from '@evm-debuger/types'
 
 import {
@@ -151,8 +151,8 @@ export class TxAnalyzer {
         })
     }
 
-    private parseLogsData() {
-        this.parsedTransactionList.forEach((item, index) => {
+    private parseLogsData(parseTxWithStorageData: TReturnedTraceLog[]) {
+        parseTxWithStorageData.forEach((item, index) => {
             if (checkIfOfCallType(item) && item.isContract && item.isSuccess) {
                 const events: TEventInfo[] = []
 
@@ -172,9 +172,11 @@ export class TxAnalyzer {
 
                     events.push(eventResult)
                 })
-                this.parsedTransactionList[index] = { ...item, events }
+                parseTxWithStorageData[index] = { ...item, events }
             }
         })
+
+        return parseTxWithStorageData
     }
 
     private parseStorageData(transactionList: TReturnedTraceLog[]) {
@@ -207,11 +209,11 @@ export class TxAnalyzer {
 
         this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-        const parsedStorageData = this.parseStorageData(this.parsedTransactionList)
+        const parseTxWithStorageData = this.parseStorageData(this.parsedTransactionList)
 
-        this.parseLogsData()
+        const parseTxWithLogsData = this.parseLogsData(parseTxWithStorageData)
 
-        return this.parsedTransactionList as TMainTraceLogs[]
+        return parseTxWithLogsData as TMainTraceLogs[]
     }
 
     public async baseAnalyze() {
