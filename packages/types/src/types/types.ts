@@ -76,3 +76,8 @@ export interface IFragmentDecodeResult {
 }
 
 export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }
+
+export interface IContractAddress {
+  index: number,
+  address: string
+}

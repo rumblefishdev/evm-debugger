@@ -1029,7 +1029,7 @@ Tasks:
     to, //address
     value, // native coin passed to the call
     gasCost, // difference in gas between start and finish
-    success, // flag returned
+    isSuccess, // flag returned
     returnData, // you need to parse from stack of RETURN opcode and copy from memory
     startIndex, // index of structLogs where we entered this step
     returnIndex, // index of structLogs where we finished this step

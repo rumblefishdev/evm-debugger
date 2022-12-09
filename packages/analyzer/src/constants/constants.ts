@@ -19,9 +19,6 @@ export const LogArgsArray: TLogArgsArray = {
   LOG0: ['dataOffset', 'dataLength'],
 }
 
-export const SLoadArgsArray = ['key']
-export const SStoreArgsArray = ['key', 'value']
-
 export const OpcodesNamesArray = ['CALL', 'CALLCODE', 'DELEGATECALL', 'STATICCALL', 'CREATE', 'CREATE2', 'RETURN', 'REVERT', 'STOP']
 
 export const BuiltinErrors: Record<string, { signature: string; inputs: string[]; name: string; reason?: boolean }> = {

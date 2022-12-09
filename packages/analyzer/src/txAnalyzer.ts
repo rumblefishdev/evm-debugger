@@ -1,215 +1,234 @@
-import type { IFilteredStructLog, IStructLog, TDataProvider, TEventInfo, TMainTraceLogs, TReturnedTraceLog } from '@evm-debuger/types'
+import type {
+    IFilteredStructLog,
+    IStructLog,
+    TDataProvider,
+    TEventInfo,
+    TMainTraceLogs,
+    TReturnedTraceLog,
+    IContractAddress, ICallTypeTraceLog
+} from '@evm-debuger/types'
 
 import {
-  checkIfOfCallType,
-  checkIfOfCreateType,
-  checkIfOfReturnType,
-  convertTxInfoToTraceLog,
-  getCallAndCreateType,
-  getBaseStructLogs,
-  getLastItemInCallTypeContext,
-  isLogType,
-  getSafeHex,
-  readMemory,
+    checkIfOfCallType,
+    checkIfOfCreateType,
+    checkIfOfReturnType,
+    convertTxInfoToTraceLog,
+    getBaseStructLogs,
+    getCallAndCreateType,
+    getLastItemInCallTypeContext,
+    isLogType,
+    getSafeHex,
+    readMemory,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { AbiReader } from './helpers/abiReader'
-import { FragmentReader } from './helpers/fragmentReader'
-import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
+import {StructLogParser} from './dataExtractors/structLogParser'
+import {StackCounter} from './helpers/stackCounter'
+import {StorageHandler} from './dataExtractors/storageHandler'
+import {AbiReader} from './helpers/abiReader'
+import {FragmentReader} from './helpers/fragmentReader'
+import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
 
 export class TxAnalyzer {
-  constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {}
-
-  private readonly stackCounter = new StackCounter()
-  private readonly abiReader = new AbiReader(this.dataProvider)
-  private readonly fragmentReader = new FragmentReader()
-
-  private structLogs: IStructLog[]
-  private filteredStructLogs: IFilteredStructLog[]
-  private parsedTransactionList: TReturnedTraceLog[]
-  private contractAddressesLists: string[] = []
-
-  private async getStructLogs() {
-    const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
-
-    const filteredStructLogs = getBaseStructLogs(trace.structLogs)
-
-    this.structLogs = trace.structLogs
-    this.filteredStructLogs = filteredStructLogs
-  }
-
-  private parseStructLogs() {
-    return this.filteredStructLogs.map((item) => {
-      const structLogParser = new StructLogParser(item, this.structLogs, this.stackCounter)
-
-      // CALL | CALLCODE | DELEGATECALL | STATICCALL
-      if (checkIfOfCallType(item)) return structLogParser.parseCallStructLog()
-
-      // CREATE | CREATE2
-      if (checkIfOfCreateType(item)) return structLogParser.parseCreateStructLog()
-
-      // REVERT AND RETURN
-      if (checkIfOfReturnType(item)) return structLogParser.parseReturnStructLog()
-
-      // STOP
-      if (item.op === 'STOP') return structLogParser.parseStopStructLog()
-    }) as TReturnedTraceLog[]
-  }
-
-  private async parseAndAddRootTraceLog() {
-    const transactionInfo = await this.dataProvider.getTransactionByHash(this.transactionHash)
-
-    const rootTraceLog = convertTxInfoToTraceLog(this.structLogs[0], transactionInfo)
-    const { blockNumber } = rootTraceLog
-
-    this.parsedTransactionList.unshift(rootTraceLog)
-
-    return this.parsedTransactionList.map((item) => {
-      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) return { ...item, blockNumber } as TReturnedTraceLog
-
-      return item
-    })
-  }
-
-  private returnTransactionListWithContractFlag() {
-    return this.parsedTransactionList.map((item) => {
-      if (checkIfOfCallType(item)) {
-        const { index, depth, address } = item
-        const nextStructLog = this.structLogs[index + 1]
-
-        if (nextStructLog.depth === depth + 1) {
-          if (!this.contractAddressesLists.includes(address)) this.contractAddressesLists.push(address)
-
-          return { ...item, isContract: true }
-        }
-      }
-
-      return item
-    })
-  }
-
-  private combineCallWithItsReturn() {
-    return this.parsedTransactionList.map((item, rootIndex) => {
-      if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-        const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
-
-        if (!lastItemInCallContext) return { ...item, success: false }
-
-        const { index, passedGas } = lastItemInCallContext
-        const gasCost = item.passedGas - passedGas
-
-        if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
-          const { output } = lastItemInCallContext
-          const isSuccess = lastItemInCallContext.type === 'RETURN'
-          return { ...item, success: isSuccess, returnIndex: index, output, gasCost }
-        }
-        return { ...item, success: true, returnIndex: index, gasCost }
-      }
-      return item
-    })
-  }
-
-  private async decodeCallInputOutput() {
-    const abis = await this.abiReader.getAbis(this.contractAddressesLists)
-
-    Object.keys(abis).forEach((address) => {
-      this.fragmentReader.loadFragmentsFromAbi(abis[address])
-    })
-
-    this.parsedTransactionList.forEach((item, index) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
-          item.success,
-          item.input,
-          item.output
-        )
-
-        this.parsedTransactionList[index] = { ...item, functionDescription, errorDescription, decodedOutput, decodedInput }
-      }
-    })
-  }
-
-  private parseLogsData() {
-    this.parsedTransactionList.forEach((item, index) => {
-      if (checkIfOfCallType(item) && item.isContract && item.success) {
-        const events: TEventInfo[] = []
-
-        const { startIndex, returnIndex, depth } = item
-
-        const callStructLogContext = [...this.structLogs].slice(startIndex, returnIndex).filter((element) => element.depth === depth + 1)
-
-        const logTypeStructLogs = callStructLogContext.filter(isLogType)
-
-        logTypeStructLogs.forEach((logTypeStructLog) => {
-          const { memory } = logTypeStructLog
-          const { logDataLength, logDataOffset, topics } = extractLogTypeArgsData(logTypeStructLog)
-
-          const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
-
-          const eventResult = this.fragmentReader.decodeEvent(logData, topics)
-
-          events.push(eventResult)
-        })
-        this.parsedTransactionList[index] = { ...item, events }
-      }
-    })
-  }
-
-  private parseStorageData() {
-    for (let index = 0; index < this.parsedTransactionList.length; index++) {
-      const item = this.parsedTransactionList[index]
-
-      if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
-        const storageHandler = new StorageHandler(this.structLogs, item)
-
-        storageHandler.parseStorageData()
-
-        if (!item.success) storageHandler.returnExpectedStorage()
-
-        this.parsedTransactionList[index] = { ...item, storageLogs: storageHandler.returnStorageLogs() }
-      }
+    constructor(private readonly dataProvider: TDataProvider, private readonly transactionHash: string) {
     }
-  }
 
-  public async analyze() {
-    await this.getStructLogs()
+    private readonly storageHandler = new StorageHandler()
+    private readonly stackCounter = new StackCounter()
+    private readonly abiReader = new AbiReader(this.dataProvider)
+    private readonly fragmentReader = new FragmentReader()
 
-    this.parsedTransactionList = this.parseStructLogs()
+    private structLogs: IStructLog[]
+    private filteredStructLogs: IFilteredStructLog[]
+    private parsedTransactionList: TReturnedTraceLog[]
+    private contractAddressesLists: IContractAddress[] = []
 
-    this.parsedTransactionList = await this.parseAndAddRootTraceLog()
+    private async getStructLogs() {
+        const trace = await this.dataProvider.getTransactionTrace(this.transactionHash)
+        const filteredStructLogs = getBaseStructLogs(trace.structLogs)
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+        this.structLogs = trace.structLogs
+        this.filteredStructLogs = filteredStructLogs
+    }
 
-    this.parsedTransactionList = this.combineCallWithItsReturn()
+    private parseStructLogs() {
+        return this.filteredStructLogs.map((item) => {
+            const structLogParser = new StructLogParser(item, this.structLogs, this.stackCounter)
 
-    await this.decodeCallInputOutput()
+            // CALL | CALLCODE | DELEGATECALL | STATICCALL
+            if (checkIfOfCallType(item)) return structLogParser.parseCallStructLog()
 
-    this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
+            // CREATE | CREATE2
+            if (checkIfOfCreateType(item)) return structLogParser.parseCreateStructLog()
 
-    this.parseStorageData()
+            // REVERT AND RETURN
+            if (checkIfOfReturnType(item)) return structLogParser.parseReturnStructLog()
 
-    this.parseLogsData()
+            // STOP
+            if (item.op === 'STOP') return structLogParser.parseStopStructLog()
+        }) as TReturnedTraceLog[]
+    }
 
-    return this.parsedTransactionList as TMainTraceLogs[]
-  }
+    private async parseAndAddRootTraceLog() {
+        const transactionInfo = await this.dataProvider.getTransactionByHash(this.transactionHash)
 
-  public async baseAnalyze() {
-    await this.getStructLogs()
+        const rootTraceLog = convertTxInfoToTraceLog(this.structLogs[0], transactionInfo)
+        const {blockNumber} = rootTraceLog
 
-    this.parsedTransactionList = this.parseStructLogs()
+        this.parsedTransactionList.unshift(rootTraceLog)
 
-    this.parsedTransactionList = await this.parseAndAddRootTraceLog()
+        return this.parsedTransactionList.map((item) => {
+            if (checkIfOfCallType(item) || checkIfOfCreateType(item)) return {...item, blockNumber} as TReturnedTraceLog
 
-    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+            return item
+        })
+    }
 
-    this.parsedTransactionList = this.combineCallWithItsReturn()
+    private returnTransactionListWithContractFlag() {
+        return this.parsedTransactionList.map((item) => {
+            if (checkIfOfCallType(item)) {
+                const {index, depth, address} = item
+                const nextStructLog = this.structLogs[index + 1]
 
-    this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
+                if (nextStructLog.depth === depth + 1) {
+                    if (!this.contractAddressesLists.includes({index, address})) this.contractAddressesLists.push({index, address})
 
-    this.parseStorageData()
+                    return {...item, isContract: true}
+                }
+            }
 
-    return this.parsedTransactionList as TMainTraceLogs[]
-  }
+            return item
+        })
+    }
+
+    private combineCallWithItsReturn() {
+        return this.parsedTransactionList.map((item, rootIndex) => {
+            if ((checkIfOfCallType(item) && item.isContract) || checkIfOfCreateType(item)) {
+                const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
+
+            if (!lastItemInCallContext) return { ...item, isSuccess: false }
+
+                const {index, passedGas} = lastItemInCallContext
+                const gasCost = item.passedGas - passedGas
+
+                if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
+                    const {output} = lastItemInCallContext
+                    const isSuccess = lastItemInCallContext.type === 'RETURN'
+                    return { ...item, returnIndex: index, output, isSuccess, gasCost }
+                }
+                return { ...item, returnIndex: index, isSuccess: true, gasCost }
+            }
+            return item
+        })
+    }
+
+    private async decodeCallInputOutput() {
+    const abis = await this.abiReader.getAbis(this.contractAddressesLists.map(contractAddress => contractAddress.address))
+
+        Object.keys(abis).forEach((address) => {
+            this.fragmentReader.loadFragmentsFromAbi(abis[address])
+        })
+
+        this.parsedTransactionList.forEach((item, index) => {
+            if (checkIfOfCallType(item) && item.isContract && item.input) {
+                const {
+                    decodedInput,
+                    decodedOutput,
+                    functionDescription,
+                    errorDescription
+                } = this.fragmentReader.decodeFragment(
+                    item.isSuccess,
+                    item.input,
+                    item.output
+                )
+
+                this.parsedTransactionList[index] = {
+                    ...item,
+                    functionDescription,
+                    errorDescription,
+                    decodedOutput,
+                    decodedInput
+                }
+            }
+        })
+    }
+
+    private parseLogsData(parseTxWithStorageData: TReturnedTraceLog[]) {
+        parseTxWithStorageData.forEach((item, index) => {
+            if (checkIfOfCallType(item) && item.isContract && item.isSuccess) {
+                const events: TEventInfo[] = []
+
+                const { startIndex, returnIndex, depth } = item
+
+                const callStructLogContext = [...this.structLogs].slice(startIndex, returnIndex).filter((element) => element.depth === depth + 1)
+
+                const logTypeStructLogs = callStructLogContext.filter(isLogType)
+
+                logTypeStructLogs.forEach((logTypeStructLog) => {
+                    const { memory } = logTypeStructLog
+                    const { logDataLength, logDataOffset, topics } = extractLogTypeArgsData(logTypeStructLog)
+
+                    const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
+
+                    const eventResult = this.fragmentReader.decodeEvent(logData, topics)
+
+                    events.push(eventResult)
+                })
+                parseTxWithStorageData[index] = { ...item, events }
+            }
+        })
+
+        return parseTxWithStorageData
+    }
+
+    private parseStorageData(transactionList: TReturnedTraceLog[]) {
+        for (let index = 0; index < transactionList.length; index++) {
+            const traceLog = transactionList[index]
+
+            if ((checkIfOfCallType(traceLog) && traceLog.isContract) || checkIfOfCreateType(traceLog)) {
+                const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.structLogs)
+                const storageAddress = this.storageHandler.resolveStorageAddress(traceLog, transactionList[index - 1] as ICallTypeTraceLog , this.structLogs);
+
+                transactionList[index] = { ...traceLog, storageLogs, storageAddress }
+            }
+        }
+
+        return transactionList
+    }
+
+    public async analyze() {
+        await this.getStructLogs()
+
+        this.parsedTransactionList = this.parseStructLogs()
+
+        this.parsedTransactionList = await this.parseAndAddRootTraceLog()
+
+        this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+
+        this.parsedTransactionList = this.combineCallWithItsReturn()
+
+        await this.decodeCallInputOutput()
+
+        this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
+
+        const parseTxWithStorageData = this.parseStorageData(this.parsedTransactionList)
+
+        const parseTxWithLogsData = this.parseLogsData(parseTxWithStorageData)
+
+        return parseTxWithLogsData as TMainTraceLogs[]
+    }
+
+    public async baseAnalyze() {
+        await this.getStructLogs()
+
+        this.parsedTransactionList = this.parseStructLogs()
+
+        this.parsedTransactionList = await this.parseAndAddRootTraceLog()
+
+        this.parsedTransactionList = this.returnTransactionListWithContractFlag()
+
+        this.parsedTransactionList = this.combineCallWithItsReturn()
+
+        this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
+
+    return this.parseStorageData(this.parsedTransactionList) as TMainTraceLogs[]
+    }
 }
