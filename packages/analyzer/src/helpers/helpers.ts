@@ -57,6 +57,18 @@ export const checkIfOfCreateType = (item: TReturnedTraceLog | IFilteredStructLog
   return item.op === 'CREATE' || item.op === 'CREATE2'
 }
 
+export const checkIfOfDelegateCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
+  if ('type' in item) return item.type === 'DELEGATECALL'
+
+  return item.op === 'DELEGATECALL'
+}
+
+export const checkIfOfCallOrStaticCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
+  if ('type' in item) return item.type === 'CALL' || item.type === 'STATICCALL'
+
+  return item.op === 'CALL' || item.op === 'STATICCALL'
+}
+
 export const checkIfOfReturnType = (item: TReturnedTraceLog | IFilteredStructLog): item is IReturnTypeTraceLog | IReturnTypeStructLogs => {
   if ('type' in item) return item.type === 'RETURN' || item.type === 'REVERT'
 
@@ -83,14 +95,20 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
   if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
-export const prepareTraceToSearch = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
-  const slicedTraceLogs = traceLogs.slice(currentIndex + 1)
-  const maxLastCallIndex = slicedTraceLogs.findIndex(log => log.depth === depth)
-  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0 ,maxLastCallIndex)
+export const prepareTraceToSearch = (logs: TReturnedTraceLog[] | IStructLog[], currentIndex: number, depth: number, inclusiveLastElement: boolean) => {
+  const slicedTraceLogs = logs.slice(currentIndex + 1)
+  let maxLastCallIndex = slicedTraceLogs.findIndex(log => log.depth === depth)
+  maxLastCallIndex = inclusiveLastElement ? maxLastCallIndex + 1 : maxLastCallIndex
+  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0 , maxLastCallIndex)
+}
+
+export const getNextItemOnSameDepth = (traceLogs: IStructLog[], currentIndex: number, depth: number): IStructLog => {
+  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, true)
+  return traceToSearch.at(-1) as IStructLog
 }
 
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
-  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth)
+  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, false) as TReturnedTraceLog[]
 
   return traceToSearch
     .find(

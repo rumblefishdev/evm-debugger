@@ -141,7 +141,7 @@ export class TxAnalyzer {
 
       if ((checkIfOfCallType(traceLog) && traceLog.isContract) || checkIfOfCreateType(traceLog)) {
         const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.structLogs)
-        const storageAddress = this.storageHandler.resolveStorageAddress(traceLog, transactionList[index - 1] as ICallTypeTraceLog, this.contractAddressesLists);
+        const storageAddress = this.storageHandler.resolveStorageAddress(traceLog, transactionList[index - 1] as ICallTypeTraceLog , this.structLogs);
 
         transactionList[index] = { ...traceLog, storageLogs, storageAddress }
       }
@@ -181,8 +181,6 @@ export class TxAnalyzer {
 
     this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
 
-    const transactionListWithParsedStorageData = this.parseStorageData(this.parsedTransactionList);
-
-    return transactionListWithParsedStorageData as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
+    return this.parseStorageData(this.parsedTransactionList) as (ICallTypeTraceLog | ICreateTypeTraceLog)[]
   }
 }

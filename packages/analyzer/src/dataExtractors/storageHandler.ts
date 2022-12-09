@@ -1,5 +1,4 @@
 import type {
-  IContractAddress,
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IStorageTypeStructLogs,
@@ -7,15 +6,20 @@ import type {
   TStorage,
 } from '@evm-debuger/types'
 
-import {checkIfOfCreateType} from "../helpers/helpers";
+import {
+  checkIfOfCallOrStaticCallType,
+  checkIfOfCreateType,
+  checkIfOfDelegateCallType,
+  getNextItemOnSameDepth, getSafeHex
+} from "../helpers/helpers";
 
 export class StorageHandler {
 
   public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
-    const { returnIndex, isSuccess } = traceLog
+    const { returnIndex, isSuccess, index } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
-    const storageLogs = this.extractStorageLogs(callContextStructLogs, traceLog.index)
+    const storageLogs = this.extractStorageLogs(callContextStructLogs, index)
 
     const { loadedStorage, changedStorage } = this.getLoadedAndChangedStorage(storageLogs);
 
@@ -27,17 +31,17 @@ export class StorageHandler {
     return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog, contractAddressesLists: IContractAddress[]) {
-    let storageAddress = null
-
-    if (traceLog.type === 'DELEGATECALL')
-      storageAddress = previousTransactionLog.address
-    else if (traceLog.type === 'CALL' || traceLog.type === 'STATICCALL')
-      storageAddress = traceLog.address
-    else if (checkIfOfCreateType(traceLog))
-      storageAddress = contractAddressesLists.find(contractAddress => contractAddress.index === traceLog.index).address
-
-    return storageAddress
+  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
+                               previousTransactionLog: ICallTypeTraceLog,
+                               structLogs: IStructLog[]) {
+    if (checkIfOfDelegateCallType(traceLog))
+      return previousTransactionLog.address
+    if (checkIfOfCallOrStaticCallType(traceLog))
+      return  traceLog.address
+    if (checkIfOfCreateType(traceLog)) {
+      const nextItemOnSameDepth = getNextItemOnSameDepth(structLogs, traceLog.index, traceLog.depth)
+      return getSafeHex(nextItemOnSameDepth.stack.at(-1).slice(-40))
+    }
   }
 
   private getLoadedAndChangedStorage(storageLogs: IStorageTypeStructLogs[]) {
