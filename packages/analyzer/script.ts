@@ -1,5 +1,3 @@
-import { writeFileSync } from 'node:fs'
-
 import { network } from 'hardhat'
 import type { TTransactionData } from '@evm-debuger/types'
 
@@ -11,11 +9,7 @@ const TRANSACTION_HASH = '0x8733fe2859afb044abe28859e71486d24758706320fdf47eb280
 ;(async () => {
   const traceResult = await network.provider.send('debug_traceTransaction', [TRANSACTION_HASH, { tracer: 'callTracer' }])
 
-  writeFileSync('traceResult.json', JSON.stringify(traceResult, null, 2))
-
   const transactionInfo = await network.provider.send('eth_getTransactionByHash', [TRANSACTION_HASH])
-
-  writeFileSync('transactionInfo.json', JSON.stringify(transactionInfo, null, 2))
 
   const transactionData: TTransactionData = {
     transactionInfo,
