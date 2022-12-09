@@ -1,4 +1,6 @@
-export const ERC20_ABI = [
+import type { JsonFragment } from '@ethersproject/abi'
+
+export const ERC20_ABI: JsonFragment[] = [
   {
     type: 'function',
     stateMutability: 'view',

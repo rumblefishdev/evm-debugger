@@ -10,6 +10,8 @@ import { StyledContentWrapper, StyledMainDisplay } from './styles'
 export const MainDisplay = ({ ...props }: MainDisplayProps) => {
   const { isLoading } = useAnalyzer()
 
+  console.log(isLoading)
+
   return (
     <StyledMainDisplay {...props}>
       {isLoading ? null : (

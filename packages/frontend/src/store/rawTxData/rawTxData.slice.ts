@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import type { IStructLog, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 
 const initialState = {
   txHash: '',
@@ -15,8 +15,8 @@ export const rawTxDataSlice = createSlice({
     setTxHash: (state, action: PayloadAction<string>) => {
       state.txHash = action.payload
     },
-    setStructLogs: (state, action: PayloadAction<TTransactionTraceResult>) => {
-      state.structLogs = action.payload.structLogs
+    setStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
+      state.structLogs = action.payload
     },
   },
   name: 'rawTxData',

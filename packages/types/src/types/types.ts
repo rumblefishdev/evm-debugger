@@ -1,4 +1,5 @@
 import type { ethers } from 'ethers'
+import type { JsonFragment } from '@ethersproject/abi'
 
 import type { IStructLog } from './structLogs'
 
@@ -78,6 +79,16 @@ export interface IFragmentDecodeResult {
 export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }
 
 export interface IContractAddress {
-  index: number,
+  index: number
   address: string
+}
+export type TSighashes = Record<string, ethers.utils.Fragment>
+export type TAbi = string | readonly (string | ethers.utils.Fragment | JsonFragment)[]
+export type TAbis = Record<string, TAbi>
+
+export type TTransactionData = {
+  structLogs: IStructLog[]
+  transactionInfo: TTransactionInfo
+  abis?: TAbis
+  sighashes?: TSighashes
 }

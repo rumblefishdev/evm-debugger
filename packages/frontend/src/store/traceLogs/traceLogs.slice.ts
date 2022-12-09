@@ -1,12 +1,13 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice, createSelector } from '@reduxjs/toolkit'
+import type { TMainTraceLogs } from '@evm-debuger/types'
 
 import type { TParsedExtendedTraceLog, TTraceLog } from '../../types'
 import type { TRootState } from '../store'
 import { sumReducer } from '../../helpers/helpers'
 import { NestedMap } from '../../helpers/nestedTreeMap'
 
-const initialState = [] as TTraceLog[]
+const initialState = [] as TMainTraceLogs[]
 
 const lastItemInContext = (rootItem: TParsedExtendedTraceLog, state: TTraceLog[]) => {
   const lastItem = state.findIndex((item) => item.index > rootItem.index && item.depth === rootItem.depth)
@@ -71,7 +72,7 @@ const selectTraceAsNestedArrays = (state: TTraceLog[], width: number, height: nu
 
 export const traceLogsSlice = createSlice({
   reducers: {
-    loadTraceLogs: (state, action: PayloadAction<TTraceLog[]>) => {
+    loadTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
       return action.payload
     },
   },

@@ -1,4 +1,4 @@
-import type { TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { Button, Typography, Stack } from '@mui/material'
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -20,7 +20,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   const submitHandler = useCallback(() => {
     if (txInfo && structLogs) {
       dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
-      dispatch(setStructLogs(JSON.parse(structLogs) as TTransactionTraceResult))
+      dispatch(setStructLogs(JSON.parse(structLogs) as IStructLog[]))
       navigate('/mainDisplay')
     }
   }, [txInfo, structLogs])

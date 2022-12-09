@@ -9,7 +9,7 @@
     "composite": true
   },
   "include": ["src/**/*"],
-  "exclude": ["./hardhat.config.ts"],
+  "exclude": ["./hardhat.config.ts", "./script.ts"],
   "references": [
     {
       "path": "../types"
