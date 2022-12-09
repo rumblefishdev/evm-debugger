@@ -40,16 +40,18 @@ export class StructLogParser {
   }
 
   public parseCallStructLog() {
-    const { depth, memory, index, op, stack } = this.filteredStructLog as ICallTypeStructLogs
+    const { depth, memory, index, op, stack, gas } = this.filteredStructLog as ICallTypeStructLogs
 
     const opCodeArguments = extractArgsFromStack(stack, op) as TCallTypeArgs
+
+    const nextStructLog = this.structLogs[index + 1]
 
     return {
       ...extractCallTypeArgsData(opCodeArguments, memory),
       ...this.extractDefaultData(),
       startIndex: index + 1,
       stackTrace: this.createStackTrace(depth),
-      passedGas: this.structLogs[index + 1].gas,
+      passedGas: nextStructLog.depth === depth ? gas : nextStructLog.gas,
     } as ICallTypeTraceLog
   }
 
