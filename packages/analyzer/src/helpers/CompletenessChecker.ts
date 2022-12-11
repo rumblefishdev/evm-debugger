@@ -15,7 +15,7 @@ export class CompletnessChecker {
 
   public addContractSighash = (address: string, sighash: string, fragment: TSighashFragment | null) => {
     if (!this.completenessData.contractSighashesList[address].find((item) => item.sighash === sighash)) {
-      const value = fragment ? { sighash, fragment, found: true } : { sighash, fragment: null, found: false }
+      const value = fragment !== null ? { sighash, fragment, found: true } : { sighash, fragment: null, found: false }
       this.completenessData.contractSighashesList[address].push(value)
     }
   }

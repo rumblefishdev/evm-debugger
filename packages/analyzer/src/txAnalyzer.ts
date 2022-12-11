@@ -53,7 +53,6 @@ export class TxAnalyzer {
     })
   }
 
-  //TODO block number to all items
   private parseAndAddRootTraceLog(transactionList: TReturnedTraceLog[]) {
     const rootTraceLog = convertTxInfoToTraceLog(this.transactionData.structLogs[0], this.transactionData.transactionInfo)
     return [rootTraceLog, ...transactionList]
@@ -179,22 +178,16 @@ export class TxAnalyzer {
     return transactionList.filter(checkIfOfCreateOrCallType)
   }
 
-  private getExtraTraceLogsData(traceLogs: TReturnedTraceLog[]) {
-    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
-    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
-    return this.combineCallWithItsReturn(traceLogsListWithContractFlag)
-  }
-
   private gatherSighashesInfo(mainTraceLogList: TMainTraceLogs[]) {
     mainTraceLogList.forEach((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
         const { input, address, errorDescription, functionDescription } = item
         const sighash = input.slice(0, 10)
 
-        if (functionDescription) this.completenessChecker.addContractSighash(address, sighash, functionDescription)
+        if (functionDescription !== null) this.completenessChecker.addContractSighash(address, sighash, functionDescription)
         else this.completenessChecker.addContractSighash(address, sighash, null)
 
-        if (errorDescription) this.completenessChecker.addContractSighash(address, sighash, errorDescription)
+        if (errorDescription !== null) this.completenessChecker.addContractSighash(address, sighash, errorDescription)
         else this.completenessChecker.addContractSighash(address, sighash, null)
       }
     })
@@ -204,8 +197,9 @@ export class TxAnalyzer {
     this.completenessChecker = new CompletnessChecker()
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
-    const traceLogsList = this.getExtraTraceLogsData(parsedTraceLogs)
-    let mainTraceLogList = this.getCallAndCreateType(traceLogsList)
+    const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
+    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
     this.gatherTracelogsAddresses(mainTraceLogList)
 
     return this.completenessChecker.getContractList()
@@ -216,14 +210,18 @@ export class TxAnalyzer {
     this.fragmentReader = new FragmentReader()
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
-    const traceLogsList = this.getExtraTraceLogsData(parsedTraceLogs)
-    let mainTraceLogList = this.getCallAndCreateType(traceLogsList)
-    this.gatherTracelogsAddresses(mainTraceLogList)
-    this.gatherSighashesInfo(mainTraceLogList)
+    const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
+    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
+    const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsListWithContractFlag)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithReturnData)
+
     mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
     mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
     mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
     mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
+
+    this.gatherTracelogsAddresses(mainTraceLogList)
+    this.gatherSighashesInfo(mainTraceLogList)
 
     return { mainTraceLogList, completenessChecker: this.completenessChecker.getCompletnessData() }
   }
