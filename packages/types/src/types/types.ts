@@ -81,13 +81,11 @@ export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
   abis?: TAbis
-  sighashes?: TSighashes
 }
 
 export type TSighahsStatus = { sighash: string; fragment: TSighashFragment | null; found: boolean }
 
 export type TCompletenessData = {
   contractList: string[]
-  // TODO extract to seperate type
   contractSighashesList: Record<string, TSighahsStatus[]>
 }
