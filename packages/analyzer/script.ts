@@ -35,5 +35,5 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
 
   const result = analyzer.analyze()
 
-  console.log(result.completenessChecker.contractSighashesList)
+  console.log(result)
 })()
