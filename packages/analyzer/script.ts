@@ -1,6 +1,6 @@
 import { network } from 'hardhat'
 import type { TTransactionData } from '@evm-debuger/types'
-
+import fetch from 'node-fetch'
 import { TxAnalyzer } from './src'
 
 const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682'
@@ -14,9 +14,24 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
   const transactionData: TTransactionData = {
     transactionInfo,
     structLogs: traceResult.structLogs,
+    abis: {},
   }
 
   const analyzer = new TxAnalyzer(transactionData)
+
+  const addresses = analyzer.getContractAddressesInTransaction()
+
+  for (const address of addresses) {
+    const response = await fetch(
+      `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=Y8XNE3W519FITZJRPRGYY4ZEII2IV3W73F`
+    )
+
+    const { result, status } = await response.json()
+
+    if (status === '1') {
+      transactionData.abis[address] = result
+    }
+  }
 
   const result = analyzer.analyze()
 

@@ -76,8 +76,10 @@ export interface IContractAddress {
   index: number
   address: string
 }
+
+export type TSighashFragment = string | ethers.utils.Fragment | JsonFragment
 export type TSighashes = Record<string, ethers.utils.Fragment>
-export type TAbi = string | readonly (string | ethers.utils.Fragment | JsonFragment)[]
+export type TAbi = string | readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 
 export type TTransactionData = {
@@ -85,4 +87,10 @@ export type TTransactionData = {
   transactionInfo: TTransactionInfo
   abis?: TAbis
   sighashes?: TSighashes
+}
+
+export type TCompletenessData = {
+  contractList: string[]
+  // TODO extract to seperate type
+  contractSighashesList: Record<string, { sighash: string; fragment: TSighashFragment | null; found: boolean }[]>
 }

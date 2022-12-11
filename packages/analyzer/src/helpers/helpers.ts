@@ -18,7 +18,7 @@ import type {
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
-export const getBaseStructLogs = (structLogs: IStructLog[]) => {
+export const getFilteredStructLogs = (structLogs: IStructLog[]) => {
   const indexes: number[] = []
 
   const filteredLogs = structLogs.filter((structLog, index) => {
@@ -58,13 +58,21 @@ export const checkIfOfCreateType = (item: TReturnedTraceLog | IFilteredStructLog
   return item.op === 'CREATE' || item.op === 'CREATE2'
 }
 
-export const checkIfOfDelegateCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
+export const checkIfOfCreateOrCallType = (item: TReturnedTraceLog): item is TMainTraceLogs => {
+  return checkIfOfCallType(item) || checkIfOfCreateType(item)
+}
+
+export const checkIfOfDelegateCallType = (
+  item: TReturnedTraceLog | IFilteredStructLog
+): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
   if ('type' in item) return item.type === 'DELEGATECALL'
 
   return item.op === 'DELEGATECALL'
 }
 
-export const checkIfOfCallOrStaticCallType = (item: TReturnedTraceLog | IFilteredStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
+export const checkIfOfCallOrStaticCallType = (
+  item: TReturnedTraceLog | IFilteredStructLog
+): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
   if ('type' in item) return item.type === 'CALL' || item.type === 'STATICCALL'
 
   return item.op === 'CALL' || item.op === 'STATICCALL'
@@ -100,11 +108,16 @@ export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
   if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
-export const prepareTraceToSearch = (logs: TReturnedTraceLog[] | IStructLog[], currentIndex: number, depth: number, inclusiveLastElement: boolean) => {
+export const prepareTraceToSearch = (
+  logs: TReturnedTraceLog[] | IStructLog[],
+  currentIndex: number,
+  depth: number,
+  inclusiveLastElement: boolean
+) => {
   const slicedTraceLogs = logs.slice(currentIndex + 1)
-  let maxLastCallIndex = slicedTraceLogs.findIndex(log => log.depth === depth)
+  let maxLastCallIndex = slicedTraceLogs.findIndex((log) => log.depth === depth)
   maxLastCallIndex = inclusiveLastElement ? maxLastCallIndex + 1 : maxLastCallIndex
-  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0 , maxLastCallIndex)
+  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0, maxLastCallIndex)
 }
 
 export const getNextItemOnSameDepth = (traceLogs: IStructLog[], currentIndex: number, depth: number): IStructLog => {
@@ -115,12 +128,10 @@ export const getNextItemOnSameDepth = (traceLogs: IStructLog[], currentIndex: nu
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
   const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, false) as TReturnedTraceLog[]
 
-  return traceToSearch
-    .find(
-      (iteratedItem) =>
-        iteratedItem.depth === depth + 1 &&
-        (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
-    ) as IReturnTypeTraceLog | IStopTypeTraceLog
+  return traceToSearch.find(
+    (iteratedItem) =>
+      iteratedItem.depth === depth + 1 && (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
+  ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
@@ -143,13 +154,4 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
 
   return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
-}
-
-export const getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
-  const results: TMainTraceLogs[] = []
-  transactionList.forEach((item) => {
-    if (checkIfOfCallType(item) || checkIfOfCreateType(item)) results.push(item)
-  })
-
-  return results
 }

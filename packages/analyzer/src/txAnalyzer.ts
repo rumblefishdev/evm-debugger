@@ -10,39 +10,33 @@ import type {
 
 import {
   checkIfOfCallType,
+  checkIfOfCreateOrCallType,
   checkIfOfCreateType,
   checkIfOfReturnType,
   convertTxInfoToTraceLog,
-  getBaseStructLogs,
-  getCallAndCreateType,
+  getFilteredStructLogs,
   getLastItemInCallTypeContext,
   getSafeHex,
   isLogType,
   readMemory,
 } from './helpers/helpers'
-import {StructLogParser} from './dataExtractors/structLogParser'
-import {StackCounter} from './helpers/stackCounter'
-import {StorageHandler} from './dataExtractors/storageHandler'
-import {FragmentReader} from './helpers/fragmentReader'
-import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
+import { StructLogParser } from './dataExtractors/structLogParser'
+import { StackCounter } from './helpers/stackCounter'
+import { StorageHandler } from './dataExtractors/storageHandler'
+import { FragmentReader } from './helpers/fragmentReader'
+import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
+import { CompletnessChecker } from './helpers/CompletenessChecker'
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
-  private readonly fragmentReader = new FragmentReader()
+  private fragmentReader: FragmentReader
+  private completenessChecker: CompletnessChecker
 
-  private filteredStructLogs: IFilteredStructLog[]
-  private parsedTransactionList: TReturnedTraceLog[]
-  private contractAddressesLists: IContractAddress[] = []
-
-  private getStructLogs() {
-    this.filteredStructLogs = getBaseStructLogs(this.transactionData.structLogs)
-  }
-
-  private parseStructLogs() {
-    return this.filteredStructLogs.map((item) => {
+  private getParsedTraceLogs(filteredStructLogs: IFilteredStructLog[]): TReturnedTraceLog[] {
+    return filteredStructLogs.map((item) => {
       const structLogParser = new StructLogParser(item, this.transactionData.structLogs, this.stackCounter)
 
       // CALL | CALLCODE | DELEGATECALL | STATICCALL
@@ -56,45 +50,36 @@ export class TxAnalyzer {
 
       // STOP
       if (item.op === 'STOP') return structLogParser.parseStopStructLog()
-    }) as TReturnedTraceLog[]
-  }
-
-  private parseAndAddRootTraceLog() {
-    const rootTraceLog = convertTxInfoToTraceLog(this.transactionData.structLogs[0], this.transactionData.transactionInfo)
-    const { blockNumber } = rootTraceLog
-
-    this.parsedTransactionList.unshift(rootTraceLog)
-
-    return this.parsedTransactionList.map((item) => {
-      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) return { ...item, blockNumber } as TReturnedTraceLog
-
-      return item
     })
   }
-  private returnTransactionListWithContractFlag() {
-    return this.parsedTransactionList.map((item) => {
+
+  //TODO block number to all items
+  private parseAndAddRootTraceLog(transactionList: TReturnedTraceLog[]) {
+    const rootTraceLog = convertTxInfoToTraceLog(this.transactionData.structLogs[0], this.transactionData.transactionInfo)
+    return [rootTraceLog, ...transactionList]
+  }
+
+  private returnTransactionListWithContractFlag(traceLogs: TReturnedTraceLog[]) {
+    return traceLogs.map((item) => {
       if (checkIfOfCallType(item)) {
-        const { index, depth, address } = item
+        const { index, depth } = item
         const nextStructLog = this.transactionData.structLogs[index + 1]
 
         if (nextStructLog.depth === depth + 1) {
-          if (!this.contractAddressesLists.includes({ index, address })) this.contractAddressesLists.push({ index, address })
-
           return { ...item, isContract: true }
         }
       }
-
       return item
     })
   }
-  private combineCallWithItsReturn() {
-    return this.parsedTransactionList.map((item, rootIndex) => {
+  private combineCallWithItsReturn(traceLogs: TReturnedTraceLog[]) {
+    return traceLogs.map((item, rootIndex) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
         if (checkIfOfCallType(item) && !item.isContract) {
           return { ...item, gasCost: item.passedGas - this.transactionData.structLogs[item.index + 1].gas }
         }
 
-        const lastItemInCallContext = getLastItemInCallTypeContext(this.parsedTransactionList, rootIndex, item.depth)
+        const lastItemInCallContext = getLastItemInCallTypeContext(traceLogs, rootIndex, item.depth)
 
         if (!lastItemInCallContext) return { ...item, isSuccess: false }
 
@@ -112,34 +97,25 @@ export class TxAnalyzer {
     })
   }
 
-  private decodeCallInputOutput() {
+  private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const abis = this.transactionData.abis || {}
 
     Object.keys(abis).forEach((address) => {
       this.fragmentReader.loadFragmentsFromAbi(abis[address])
     })
 
-    this.parsedTransactionList.forEach((item, index) => {
+    return mainTraceLogList.map((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const { decodedInput, decodedOutput, functionDescription, errorDescription } = this.fragmentReader.decodeFragment(
-          item.isSuccess,
-          item.input,
-          item.output
-        )
+        const result = this.fragmentReader.decodeFragment(item.isSuccess, item.input, item.output)
 
-        this.parsedTransactionList[index] = {
-          ...item,
-          functionDescription,
-          errorDescription,
-          decodedOutput,
-          decodedInput,
-        }
+        return { ...item, ...result }
       }
+      return item
     })
   }
 
-  private parseLogsData(parseTxWithStorageData: TReturnedTraceLog[]) {
-    parseTxWithStorageData.forEach((item, index) => {
+  private extendWithLogsData(mainTraceLogList: TMainTraceLogs[]) {
+    mainTraceLogList.forEach((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.isSuccess) {
         const events: TEventInfo[] = []
 
@@ -161,18 +137,18 @@ export class TxAnalyzer {
 
           events.push(eventResult)
         })
-        parseTxWithStorageData[index] = { ...item, events }
+        mainTraceLogList[index] = { ...item, events }
       }
     })
 
-    return parseTxWithStorageData
+    return mainTraceLogList
   }
 
-  private parseStorageData(transactionList: TReturnedTraceLog[]) {
+  private extendWithStorageData(transactionList: TMainTraceLogs[]) {
     for (let index = 0; index < transactionList.length; index++) {
       const traceLog = transactionList[index]
 
-      if ((checkIfOfCallType(traceLog) && traceLog.isContract) || checkIfOfCreateType(traceLog)) {
+      if (checkIfOfCallType(traceLog) && traceLog.isContract) {
         const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.transactionData.structLogs)
         const storageAddress = this.storageHandler.resolveStorageAddress(
           traceLog,
@@ -187,17 +163,68 @@ export class TxAnalyzer {
     return transactionList
   }
 
-  public analyze() {
-    this.getStructLogs()
-    this.parsedTransactionList = this.parseStructLogs()
-    this.parsedTransactionList = this.parseAndAddRootTraceLog()
-    this.parsedTransactionList = this.returnTransactionListWithContractFlag()
-    this.parsedTransactionList = this.combineCallWithItsReturn()
-    this.decodeCallInputOutput()
-    this.parsedTransactionList = getCallAndCreateType(this.parsedTransactionList)
-    const parseTxWithStorageData = this.parseStorageData(this.parsedTransactionList)
-    const parseTxWithLogsData = this.parseLogsData(parseTxWithStorageData)
+  private gatherTracelogsAddresses(transactionList: TMainTraceLogs[]) {
+    transactionList.forEach((item) => {
+      if (checkIfOfCallType(item) && item.isContract) {
+        this.completenessChecker.addContractAddress(item.address)
+      }
+    })
+  }
 
-    return parseTxWithLogsData as TMainTraceLogs[]
+  private extendWithBlockNumber(transactionList: TMainTraceLogs[]) {
+    return transactionList.map((item) => ({ ...item, blockNumber: this.transactionData.transactionInfo.blockNumber }))
+  }
+
+  private getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
+    return transactionList.filter(checkIfOfCreateOrCallType)
+  }
+
+  private getExtraTraceLogsData(traceLogs: TReturnedTraceLog[]) {
+    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
+    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
+    return this.combineCallWithItsReturn(traceLogsListWithContractFlag)
+  }
+
+  private gatherSighashesInfo(mainTraceLogList: TMainTraceLogs[]) {
+    mainTraceLogList.forEach((item) => {
+      if (checkIfOfCallType(item) && item.isContract && item.input) {
+        const { input, address, errorDescription, functionDescription } = item
+        const sighash = input.slice(0, 10)
+
+        if (functionDescription) this.completenessChecker.addContractSighash(address, sighash, functionDescription)
+        else this.completenessChecker.addContractSighash(address, sighash, null)
+
+        if (errorDescription) this.completenessChecker.addContractSighash(address, sighash, errorDescription)
+        else this.completenessChecker.addContractSighash(address, sighash, null)
+      }
+    })
+  }
+
+  public getContractAddressesInTransaction() {
+    this.completenessChecker = new CompletnessChecker()
+    const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
+    const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
+    const traceLogsList = this.getExtraTraceLogsData(parsedTraceLogs)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsList)
+    this.gatherTracelogsAddresses(mainTraceLogList)
+
+    return this.completenessChecker.getContractList()
+  }
+
+  public analyze() {
+    this.completenessChecker = new CompletnessChecker()
+    this.fragmentReader = new FragmentReader()
+    const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
+    const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
+    const traceLogsList = this.getExtraTraceLogsData(parsedTraceLogs)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsList)
+    this.gatherTracelogsAddresses(mainTraceLogList)
+    this.gatherSighashesInfo(mainTraceLogList)
+    mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
+    mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
+    mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
+    mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
+
+    return { mainTraceLogList, completenessChecker: this.completenessChecker.getCompletnessData() }
   }
 }
