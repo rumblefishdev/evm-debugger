@@ -1,6 +1,5 @@
 import type {
   ICallTypeTraceLog,
-  IContractAddress,
   IFilteredStructLog,
   TEventInfo,
   TMainTraceLogs,
