@@ -48,7 +48,6 @@ export interface ICreateTypeTraceLog extends ITraceLog {
   input: string
   salt?: string
   isSuccess?: boolean
-  isContract?: boolean
   returnIndex?: number
 
   storageAddress?: string
