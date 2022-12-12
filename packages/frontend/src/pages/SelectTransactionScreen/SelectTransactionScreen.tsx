@@ -21,7 +21,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
     if (txInfo && structLogs) {
       dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
       dispatch(setStructLogs(JSON.parse(structLogs) as IStructLog[]))
-      navigate('/mainDisplay')
+      navigate('/summary')
     }
   }, [txInfo, structLogs])
 
