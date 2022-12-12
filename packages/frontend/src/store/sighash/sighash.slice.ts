@@ -3,7 +3,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TSighahsStatus } from '@evm-debuger/types'
 
 const sighashAdapter = createEntityAdapter<TSighahsStatus>({
-  sortComparer: (a, b) => a.address.localeCompare(b.address),
+  sortComparer: (a, b) => a.sighash.localeCompare(b.sighash),
   selectId: (entity) => entity.sighash,
 })
 
@@ -12,7 +12,7 @@ export const sighashSlice = createSlice({
     updateSighash: sighashAdapter.updateOne,
     setAsFoundByAddress(sighashState, action: PayloadAction<string>) {
       const keys = Object.keys(sighashState.entities)
-      const sighashesOfAddress = keys.filter((entity) => entity === action.payload)
+      const sighashesOfAddress = keys.filter((entity) => sighashState.entities[entity].addresses.has(action.payload))
       sighashesOfAddress.forEach((sighash) => {
         sighashState.entities[sighash].found = true
       })

@@ -222,6 +222,6 @@ export class TxAnalyzer {
     this.gatherTracelogsAddresses(mainTraceLogList)
     this.gatherSighashesInfo(mainTraceLogList)
 
-    return { mainTraceLogList, completenessChecker: this.completenessChecker.getCompletnessData() }
+    return { mainTraceLogList, analyzeSummary: this.completenessChecker.getCompletnessData() }
   }
 }

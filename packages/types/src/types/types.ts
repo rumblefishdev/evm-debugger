@@ -83,9 +83,9 @@ export type TTransactionData = {
   abis?: TAbis
 }
 
-export type TSighahsStatus = { sighash: string; address: string; fragment: TSighashFragment | null; found: boolean }
+export type TSighahsStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }
 
 export type TCompletenessData = {
   contractList: string[]
-  contractSighashesList: Record<string, TSighahsStatus[]>
+  contractSighashesList: TSighahsStatus[]
 }

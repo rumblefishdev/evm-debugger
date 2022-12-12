@@ -3,20 +3,27 @@ import { TCompletenessData, TSighashFragment } from '@evm-debuger/types'
 export class CompletnessChecker {
   private completenessData: TCompletenessData = {
     contractList: [],
-    contractSighashesList: {},
+    contractSighashesList: [],
   }
 
   public addContractAddress = (address: string) => {
     if (!this.completenessData.contractList.includes(address)) {
       this.completenessData.contractList.push(address)
-      this.completenessData.contractSighashesList[address] = []
     }
   }
 
   public addContractSighash = (address: string, sighash: string, fragment: TSighashFragment | null) => {
-    if (!this.completenessData.contractSighashesList[address].find((item) => item.sighash === sighash)) {
-      const value = fragment !== null ? { sighash, address, fragment, found: true } : { sighash, address, fragment: null, found: false }
-      this.completenessData.contractSighashesList[address].push(value)
+    const value =
+      fragment !== null
+        ? { sighash, addresses: new Set([address]), fragment, found: true }
+        : { sighash, addresses: new Set([address]), fragment: null, found: false }
+
+    const sighashIndex = this.completenessData.contractSighashesList.findIndex((item) => item.sighash === sighash)
+
+    if (sighashIndex !== -1) {
+      this.completenessData.contractSighashesList[sighashIndex].addresses.add(address)
+    } else {
+      this.completenessData.contractSighashesList.push(value)
     }
   }
 
