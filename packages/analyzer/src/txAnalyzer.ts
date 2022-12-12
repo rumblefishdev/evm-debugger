@@ -8,6 +8,7 @@ import type {
 } from '@evm-debuger/types'
 
 import {
+  addContractSighash,
   checkIfOfCallType,
   checkIfOfCreateOrCallType,
   checkIfOfCreateType,
@@ -24,8 +25,7 @@ import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
-import { CompletenessHolder } from './helpers/CompletenessHolder'
-import { TSighahsStatus } from "@evm-debuger/types"
+import { TSighahsStatus } from '@evm-debuger/types'
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
@@ -33,7 +33,6 @@ export class TxAnalyzer {
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
   private fragmentReader: FragmentReader
-  private completenessChecker: CompletenessHolder
 
   private getParsedTraceLogs(filteredStructLogs: IFilteredStructLog[]): TReturnedTraceLog[] {
     return filteredStructLogs.map((item) => {
@@ -163,7 +162,7 @@ export class TxAnalyzer {
   }
 
   private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]) {
-    const contractAddressList = [];
+    const contractAddressList = []
     transactionList.forEach((item) => {
       if (checkIfOfCallType(item) && item.isContract) {
         contractAddressList.push(item.address)
@@ -182,17 +181,17 @@ export class TxAnalyzer {
   }
 
   private getContractSighashList(mainTraceLogList: TMainTraceLogs[]) {
-    const contractSighashesList: Record<string, TSighahsStatus[]> = {}
+    const contractSighashesList: TSighahsStatus[] = []
     mainTraceLogList.forEach((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
         const { input, address, errorDescription, functionDescription } = item
         const sighash = input.slice(0, 10)
 
-        if (functionDescription !== null) this.completenessChecker.addContractSighash(address, sighash, functionDescription)
-        else this.completenessChecker.addContractSighash(address, sighash, null)
+        if (functionDescription !== null) addContractSighash(address, sighash, functionDescription, contractSighashesList)
+        else addContractSighash(address, sighash, null, contractSighashesList)
 
-        if (errorDescription !== null) this.completenessChecker.addContractSighash(address, sighash, errorDescription)
-        else this.completenessChecker.addContractSighash(address, sighash, null)
+        if (errorDescription !== null) addContractSighash(address, sighash, errorDescription, contractSighashesList)
+        else addContractSighash(address, sighash, null, contractSighashesList)
       }
     })
 
@@ -210,7 +209,6 @@ export class TxAnalyzer {
   }
 
   public analyze() {
-    this.completenessChecker = new CompletenessHolder()
     this.fragmentReader = new FragmentReader()
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
@@ -224,8 +222,8 @@ export class TxAnalyzer {
     mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
     mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
 
-    const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList);
-    const contractSighashesInfo = this.getContractSighashList(mainTraceLogList);
+    const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
+    const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
 
     return { mainTraceLogList, completenessChecker: { contractAddresses, contractSighashesInfo } }
   }
