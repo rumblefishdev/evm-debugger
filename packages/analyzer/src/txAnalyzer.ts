@@ -8,7 +8,6 @@ import type {
 } from '@evm-debuger/types'
 
 import {
-  addContractSighash,
   checkIfOfCallType,
   checkIfOfCreateOrCallType,
   checkIfOfCreateType,
@@ -25,7 +24,7 @@ import { StackCounter } from './helpers/stackCounter'
 import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
-import { TSighahsStatus } from '@evm-debuger/types'
+import { SigHashStatuses } from './sigHashes'
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
@@ -96,7 +95,7 @@ export class TxAnalyzer {
   }
 
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
-    const abis = this.transactionData.abis || {}
+    const abis = this.transactionData.abis
 
     Object.keys(abis).forEach((address) => {
       this.fragmentReader.loadFragmentsFromAbi(abis[address])
@@ -161,10 +160,10 @@ export class TxAnalyzer {
     return transactionList
   }
 
-  private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]) {
+  private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]): string[] {
     const contractAddressList = []
     transactionList.forEach((item) => {
-      if (checkIfOfCallType(item) && item.isContract) {
+      if (checkIfOfCallType(item) && item.isContract && !contractAddressList.includes(item.address)) {
         contractAddressList.push(item.address)
       }
     })
@@ -181,21 +180,21 @@ export class TxAnalyzer {
   }
 
   private getContractSighashList(mainTraceLogList: TMainTraceLogs[]) {
-    const contractSighashesList: TSighahsStatus[] = []
+    const sighashStatues = new SigHashStatuses()
     mainTraceLogList.forEach((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
         const { input, address, errorDescription, functionDescription } = item
         const sighash = input.slice(0, 10)
 
-        if (functionDescription !== null) addContractSighash(address, sighash, functionDescription, contractSighashesList)
-        else addContractSighash(address, sighash, null, contractSighashesList)
+        if (functionDescription !== null) sighashStatues.add(address, sighash, functionDescription)
+        else sighashStatues.add(address, sighash, null)
 
-        if (errorDescription !== null) addContractSighash(address, sighash, errorDescription, contractSighashesList)
-        else addContractSighash(address, sighash, null, contractSighashesList)
+        if (errorDescription !== null) sighashStatues.add(address, sighash, errorDescription)
+        else sighashStatues.add(address, sighash, null)
       }
     })
 
-    return contractSighashesList
+    return sighashStatues.sighashStatusList
   }
 
   public getContractAddressesInTransaction() {

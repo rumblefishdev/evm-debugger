@@ -79,12 +79,7 @@ export type TAbis = Record<string, TAbi>
 export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
-  abis?: TAbis
+  abis: TAbis
 }
 
-export type TSighahsStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }
-
-export type TCompletenessData = {
-  contractList: string[]
-  contractSighashesList: TSighahsStatus[]
-}
+export type TSighashStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }

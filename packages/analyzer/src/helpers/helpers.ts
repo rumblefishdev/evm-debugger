@@ -15,7 +15,7 @@ import type {
   TMainTraceLogs,
   ILogTypeStructLogs,
   TSighashFragment,
-  TSighahsStatus,
+  TSighashStatus,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
@@ -150,22 +150,4 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
 
   return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
-}
-
-export const addContractSighash = (
-  address: string,
-  sighash: string,
-  fragment: TSighashFragment | null,
-  contractSighashesList: TSighahsStatus[]
-) => {
-  const sighashIndex = contractSighashesList.findIndex((item) => item.sighash === sighash)
-  if (sighashIndex === -1) {
-    const value =
-      fragment !== null
-        ? { sighash, addresses: new Set([address]), fragment, found: true }
-        : { sighash, addresses: new Set([address]), fragment: null, found: false }
-    contractSighashesList.push(value)
-  } else {
-    contractSighashesList[sighashIndex].addresses.add(address)
-  }
 }
