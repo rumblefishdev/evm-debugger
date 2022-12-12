@@ -151,21 +151,3 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
 
   return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
 }
-
-export const addContractSighash = (
-  address: string,
-  sighash: string,
-  fragment: TSighashFragment | null,
-  contractSighashesList: TSighahsStatus[]
-) => {
-  const sighashIndex = contractSighashesList.findIndex((item) => item.sighash === sighash)
-  if (sighashIndex === -1) {
-    const value =
-      fragment !== null
-        ? { sighash, addresses: new Set([address]), fragment, found: true }
-        : { sighash, addresses: new Set([address]), fragment: null, found: false }
-    contractSighashesList.push(value)
-  } else {
-    contractSighashesList[sighashIndex].addresses.add(address)
-  }
-}

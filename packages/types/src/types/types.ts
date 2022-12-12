@@ -83,8 +83,3 @@ export type TTransactionData = {
 }
 
 export type TSighahsStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }
-
-export type TCompletenessData = {
-  contractList: string[]
-  contractSighashesList: TSighahsStatus[]
-}
