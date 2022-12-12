@@ -13,10 +13,10 @@ export const useAnalyzer = () => {
   const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
 
   const analyze = useCallback(() => {
-    const analyzer = new TxAnalyzer({ transactionInfo, structLogs })
-    const result = analyzer.analyze()
+    const analyzer = new TxAnalyzer({ transactionInfo, structLogs, abis: {} })
+    const { mainTraceLogList } = analyzer.analyze()
 
-    dispatch(loadTraceLogs(result))
+    dispatch(loadTraceLogs(mainTraceLogList))
     setLoading(false)
   }, [transactionInfo, structLogs])
 
