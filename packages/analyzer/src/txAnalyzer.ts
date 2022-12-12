@@ -19,12 +19,12 @@ import {
   isLogType,
   readMemory,
 } from './helpers/helpers'
-import {StructLogParser} from './dataExtractors/structLogParser'
-import {StackCounter} from './helpers/stackCounter'
-import {StorageHandler} from './dataExtractors/storageHandler'
-import {FragmentReader} from './helpers/fragmentReader'
-import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
-import {SigHashStatuses} from "./sigHashes";
+import { StructLogParser } from './dataExtractors/structLogParser'
+import { StackCounter } from './helpers/stackCounter'
+import { StorageHandler } from './dataExtractors/storageHandler'
+import { FragmentReader } from './helpers/fragmentReader'
+import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
+import { SigHashStatuses } from './sigHashes'
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
@@ -95,7 +95,7 @@ export class TxAnalyzer {
   }
 
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
-    const abis = this.transactionData.abis || {}
+    const abis = this.transactionData.abis
 
     Object.keys(abis).forEach((address) => {
       this.fragmentReader.loadFragmentsFromAbi(abis[address])
@@ -160,10 +160,10 @@ export class TxAnalyzer {
     return transactionList
   }
 
-  private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]) {
+  private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]): string[] {
     const contractAddressList = []
     transactionList.forEach((item) => {
-      if (checkIfOfCallType(item) && item.isContract) {
+      if (checkIfOfCallType(item) && item.isContract && !contractAddressList.includes(item.address)) {
         contractAddressList.push(item.address)
       }
     })
@@ -183,7 +183,7 @@ export class TxAnalyzer {
     const sighashStatues = new SigHashStatuses()
     mainTraceLogList.forEach((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const {input, address, errorDescription, functionDescription} = item
+        const { input, address, errorDescription, functionDescription } = item
         const sighash = input.slice(0, 10)
 
         if (functionDescription !== null) sighashStatues.add(address, sighash, functionDescription)
@@ -224,6 +224,6 @@ export class TxAnalyzer {
     const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
 
-    return { mainTraceLogList, completenessChecker: { contractAddresses, contractSighashesInfo } }
+    return { mainTraceLogList, analyzeSummary: { contractAddresses, contractSighashesInfo } }
   }
 }

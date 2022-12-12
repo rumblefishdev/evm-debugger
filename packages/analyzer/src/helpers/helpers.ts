@@ -15,7 +15,7 @@ import type {
   TMainTraceLogs,
   ILogTypeStructLogs,
   TSighashFragment,
-  TSighahsStatus,
+  TSighashStatus,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
