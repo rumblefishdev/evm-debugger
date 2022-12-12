@@ -73,7 +73,6 @@ export interface IFragmentDecodeResult {
 export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }
 
 export type TSighashFragment = string | ethers.utils.Fragment | JsonFragment
-export type TSighashes = Record<string, ethers.utils.Fragment>
 export type TAbi = string | readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 
