@@ -73,19 +73,13 @@ export interface IFragmentDecodeResult {
 export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }
 
 export type TSighashFragment = string | ethers.utils.Fragment | JsonFragment
-export type TSighashes = Record<string, ethers.utils.Fragment>
 export type TAbi = string | readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 
 export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
-  abis?: TAbis
+  abis: TAbis
 }
 
-export type TSighahsStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }
-
-export type TCompletenessData = {
-  contractList: string[]
-  contractSighashesList: TSighahsStatus[]
-}
+export type TSighashStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }

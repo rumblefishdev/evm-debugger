@@ -14,24 +14,20 @@ import type {
   TReturnedTraceLog,
   TMainTraceLogs,
   ILogTypeStructLogs,
+  TSighashFragment,
+  TSighashStatus,
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
-export const getFilteredStructLogs = (structLogs: IStructLog[]) => {
-  const indexes: number[] = []
-
-  const filteredLogs = structLogs.filter((structLog, index) => {
-    const { op } = structLog
-
-    const isBaseLog = OpcodesNamesArray.includes(op)
-
-    if (isBaseLog) indexes.push(index)
-
-    return isBaseLog
+export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStructLog[] => {
+  const filteredLogs = []
+  structLogs.forEach((log, index) => {
+    const { op } = log
+    if (OpcodesNamesArray.includes(op)) filteredLogs.push({ ...log, index: index })
   })
 
-  return filteredLogs.map((item) => ({ ...item, index: indexes.shift() })) as IFilteredStructLog[]
+  return filteredLogs
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {
