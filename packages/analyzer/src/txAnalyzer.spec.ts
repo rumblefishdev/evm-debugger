@@ -16,9 +16,10 @@ describe('TxAnalyzer', () => {
                 abis: {},
             }
 
-            const analyzer = new TxAnalyzer(transactionData)
-            await analyzer.enrichTransactionDataWithTranslatedAddresses()
+            const analyzerForAddressesTranslation = new TxAnalyzer(transactionData)
+            await analyzerForAddressesTranslation.enrichTransactionDataWithTranslatedAddresses()
 
+            const analyzer = new TxAnalyzer(analyzerForAddressesTranslation.transactionData)
             const result = analyzer.analyze()
             const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
 

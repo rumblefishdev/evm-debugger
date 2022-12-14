@@ -30,7 +30,7 @@ import { SigHashStatuses } from './sigHashes'
 import fetch from "node-fetch"
 
 export class TxAnalyzer {
-  constructor(private readonly transactionData: TTransactionData) {}
+  constructor(public readonly transactionData: TTransactionData) {}
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
@@ -224,7 +224,7 @@ export class TxAnalyzer {
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
     const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
     const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
-    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
+    const mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
 
     return this.getTraceLogsContractAddresses(mainTraceLogList)
   }

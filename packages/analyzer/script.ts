@@ -16,9 +16,10 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
     abis: {},
   }
 
-  const analyzer = new TxAnalyzer(transactionData)
-  await analyzer.enrichTransactionDataWithTranslatedAddresses()
+  const analyzerForAddressesTranslation = new TxAnalyzer(transactionData)
+  await analyzerForAddressesTranslation.enrichTransactionDataWithTranslatedAddresses()
 
+  const analyzer = new TxAnalyzer(analyzerForAddressesTranslation.transactionData)
   const result = analyzer.analyze()
 
   console.log(result)
