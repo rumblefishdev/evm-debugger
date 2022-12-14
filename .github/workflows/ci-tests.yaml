@@ -18,6 +18,9 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
+      - name: Upgrade NPM
+        run: npm install -g npm
+
       - name: Install npm dependencies
         run: npm ci
 
