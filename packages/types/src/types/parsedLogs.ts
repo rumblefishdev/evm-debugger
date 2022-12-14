@@ -29,6 +29,7 @@ export interface ICallTypeTraceLog extends ITraceLog {
   events: TEventInfo[]
   returnIndex?: number
   isSuccess?: boolean
+  isReverted?: boolean
   isContract?: boolean
 
   storageAddress?: string
@@ -48,6 +49,7 @@ export interface ICreateTypeTraceLog extends ITraceLog {
   input: string
   salt?: string
   isSuccess?: boolean
+  isReverted?: boolean
   returnIndex?: number
 
   storageAddress?: string

@@ -59,8 +59,8 @@ export class FragmentReader {
     return new ethers.utils.AbiCoder().decode(builtin.inputs, arrayify.slice(4))
   }
 
-  public decodeFragment(isSuccess: boolean, inputData: string, outputData: string): IFragmentDecodeResult {
-    return isSuccess ? this.decodeFragmentWithSuccess(inputData, outputData) : this.decodeFragmentWithError(inputData, outputData)
+  public decodeFragment(isReverted: boolean, inputData: string, outputData: string): IFragmentDecodeResult {
+    return !isReverted ? this.decodeFragmentWithSuccess(inputData, outputData) : this.decodeFragmentWithError(inputData, outputData)
   }
 
   private decodeFragmentWithSuccess(inputData: string, outputData: string): IFragmentDecodeResult {

@@ -1,0 +1,2093 @@
+{
+  "mainTraceLogList": [
+    {
+      "value": "0.15",
+      "type": "CALL",
+      "startIndex": 1,
+      "stackTrace": [],
+      "pc": 0,
+      "passedGas": 187729,
+      "input": "0x5ae401dc000000000000000000000000000000000000000000000000000000006393401f00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000e4472b43f30000000000000000000000000000000000000000000000000214e8348c4f00000000000000000000000000000000000000000000004abdc3df33f3f799d71531000000000000000000000000000000000000000000000000000000000000008000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd0110000000000000000000000000000000000000000000000000000000000",
+      "index": 0,
+      "gasCost": 149444,
+      "depth": 0,
+      "blockNumber": "0xf66408",
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "isContract": true,
+      "returnIndex": 6171,
+      "output": "0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000013546f6f206c6974746c6520726563656976656400000000000000000000000000",
+      "isSuccess": false,
+      "isReverted": true,
+      "functionDescription": {
+        "args": [
+          {
+            "type": "BigNumber",
+            "hex": "0x6393401f"
+          },
+          [
+            "0x472b43f30000000000000000000000000000000000000000000000000214e8348c4f00000000000000000000000000000000000000000000004abdc3df33f3f799d71531000000000000000000000000000000000000000000000000000000000000008000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100"
+          ]
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "multicall",
+          "constant": false,
+          "inputs": [
+            {
+              "name": "deadline",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            },
+            {
+              "name": "data",
+              "type": "bytes[]",
+              "indexed": null,
+              "components": null,
+              "arrayLength": -1,
+              "arrayChildren": {
+                "name": null,
+                "type": "bytes",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "bytes",
+                "_isParamType": true
+              },
+              "baseType": "array",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "bytes[]",
+              "indexed": null,
+              "components": null,
+              "arrayLength": -1,
+              "arrayChildren": {
+                "name": null,
+                "type": "bytes",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "bytes",
+                "_isParamType": true
+              },
+              "baseType": "array",
+              "_isParamType": true
+            }
+          ],
+          "payable": true,
+          "stateMutability": "payable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "multicall",
+        "signature": "multicall(uint256,bytes[])",
+        "sighash": "0x5ae401dc",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        "Too little received"
+      ],
+      "decodedInput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x6393401f"
+        },
+        [
+          "0x472b43f30000000000000000000000000000000000000000000000000214e8348c4f00000000000000000000000000000000000000000000004abdc3df33f3f799d71531000000000000000000000000000000000000000000000000000000000000008000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100"
+        ]
+      ],
+      "storageLogs": {
+        "returnedStorage": [],
+        "loadedStorage": [],
+        "changedStorage": []
+      },
+      "storageAddress": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45"
+    },
+    {
+      "value": "0.0",
+      "output": "0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000013546f6f206c6974746c6520726563656976656400000000000000000000000000",
+      "input": "0x472b43f30000000000000000000000000000000000000000000000000214e8348c4f00000000000000000000000000000000000000000000004abdc3df33f3f799d71531000000000000000000000000000000000000000000000000000000000000008000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "type": "DELEGATECALL",
+      "pc": 6737,
+      "passedGas": 183509,
+      "index": 337,
+      "gasCost": 146985,
+      "depth": 1,
+      "startIndex": 338,
+      "stackTrace": [
+        1
+      ],
+      "isContract": true,
+      "returnIndex": 5828,
+      "isSuccess": false,
+      "isReverted": true,
+      "functionDescription": {
+        "args": [
+          {
+            "type": "BigNumber",
+            "hex": "0x0214e8348c4f0000"
+          },
+          {
+            "type": "BigNumber",
+            "hex": "0x4abdc3df33f3f799d71531"
+          },
+          [
+            "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            "0x1856BC58f5511269aFE2CA1e89Bf08CBDCD01100"
+          ],
+          "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "swapExactTokensForTokens",
+          "constant": false,
+          "inputs": [
+            {
+              "name": "amountIn",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            },
+            {
+              "name": "amountOutMin",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            },
+            {
+              "name": "path",
+              "type": "address[]",
+              "indexed": null,
+              "components": null,
+              "arrayLength": -1,
+              "arrayChildren": {
+                "name": null,
+                "type": "address",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "address",
+                "_isParamType": true
+              },
+              "baseType": "array",
+              "_isParamType": true
+            },
+            {
+              "name": "to",
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": "amountOut",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": true,
+          "stateMutability": "payable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "swapExactTokensForTokens",
+        "signature": "swapExactTokensForTokens(uint256,uint256,address[],address)",
+        "sighash": "0x472b43f3",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        "Too little received"
+      ],
+      "decodedInput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x0214e8348c4f0000"
+        },
+        {
+          "type": "BigNumber",
+          "hex": "0x4abdc3df33f3f799d71531"
+        },
+        [
+          "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          "0x1856BC58f5511269aFE2CA1e89Bf08CBDCD01100"
+        ],
+        "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+      ],
+      "storageLogs": {
+        "returnedStorage": [],
+        "loadedStorage": [],
+        "changedStorage": []
+      },
+      "storageAddress": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.15",
+      "output": "0x",
+      "input": "0xd0e30db0",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "type": "CALL",
+      "pc": 11864,
+      "passedGas": 169342,
+      "index": 939,
+      "gasCost": 23974,
+      "depth": 2,
+      "startIndex": 940,
+      "stackTrace": [
+        1,
+        0
+      ],
+      "isContract": true,
+      "returnIndex": 1066,
+      "isSuccess": false,
+      "functionDescription": {
+        "args": [],
+        "functionFragment": {
+          "type": "function",
+          "name": "deposit",
+          "constant": false,
+          "inputs": [],
+          "outputs": [],
+          "payable": true,
+          "stateMutability": "payable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "deposit",
+        "signature": "deposit()",
+        "sighash": "0xd0e30db0",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [],
+      "decodedInput": [],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1031
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1031
+          }
+        ],
+        "changedStorage": [
+          {
+            "updatedValue": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "initialValue": "0000000000000000000000000000000000000000000000000000000000000000",
+            "index": 1038
+          }
+        ]
+      },
+      "storageAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "input": "0xa9059cbb000000000000000000000000ff72e5ca70a1ec9a9a3758a5638b3f299895add00000000000000000000000000000000000000000000000000214e8348c4f0000",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "type": "CALL",
+      "pc": 12034,
+      "passedGas": 145318,
+      "index": 1131,
+      "gasCost": 8062,
+      "depth": 2,
+      "startIndex": 1132,
+      "stackTrace": [
+        1,
+        1
+      ],
+      "isContract": true,
+      "returnIndex": 1404,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0",
+          {
+            "type": "BigNumber",
+            "hex": "0x0214e8348c4f0000"
+          }
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "transfer",
+          "constant": false,
+          "inputs": [
+            {
+              "name": "to",
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            },
+            {
+              "name": "value",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "bool",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "bool",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "transfer",
+        "signature": "transfer(address,uint256)",
+        "sighash": "0xa9059cbb",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        true
+      ],
+      "decodedInput": [
+        "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0",
+        {
+          "type": "BigNumber",
+          "hex": "0x0214e8348c4f0000"
+        }
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1251
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1298
+          },
+          {
+            "value": "000000000000000000000000000000000000000000000000ca969e48aec6406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 1329
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1251
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "index": 1298
+          },
+          {
+            "value": "000000000000000000000000000000000000000000000000ca969e48aec6406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 1329
+          }
+        ],
+        "changedStorage": [
+          {
+            "updatedValue": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "dc51a0a44317b550a6b5ddb34687ce2bd40e4750eec27343e32b23e686739208",
+            "initialValue": "0000000000000000000000000000000000000000000000000214e8348c4f0000",
+            "index": 1305
+          },
+          {
+            "updatedValue": "000000000000000000000000000000000000000000000000ccab867d3b15406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "initialValue": "000000000000000000000000000000000000000000000000ca969e48aec6406c",
+            "index": 1336
+          }
+        ]
+      },
+      "storageAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "input": "0x70a0823100000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd891",
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "type": "STATICCALL",
+      "pc": 4376,
+      "passedGas": 134198,
+      "index": 1568,
+      "gasCost": 2668,
+      "depth": 2,
+      "startIndex": 1569,
+      "stackTrace": [
+        1,
+        2
+      ],
+      "isContract": true,
+      "returnIndex": 1714,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "inputs": [
+            {
+              "name": null,
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "balanceOf",
+        "signature": "balanceOf(address)",
+        "sighash": "0x70a08231",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      ],
+      "decodedInput": [
+        "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 1693
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 1693
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x00000000000000000000000000000000000000001c5074921683c0b8eb485d4b000000000000000000000000000000000000000000000000ca969e48aec6406c000000000000000000000000000000000000000000000000000000006393392f",
+      "input": "0x0902f1ac",
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "type": "STATICCALL",
+      "pc": 12345,
+      "passedGas": 127481,
+      "index": 2137,
+      "gasCost": 2504,
+      "depth": 2,
+      "startIndex": 2138,
+      "stackTrace": [
+        1,
+        3
+      ],
+      "isContract": true,
+      "returnIndex": 2249,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [],
+        "functionFragment": {
+          "type": "function",
+          "name": "getReserves",
+          "constant": true,
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "_reserve0",
+              "type": "uint112",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint112",
+              "_isParamType": true
+            },
+            {
+              "name": "_reserve1",
+              "type": "uint112",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint112",
+              "_isParamType": true
+            },
+            {
+              "name": "_blockTimestampLast",
+              "type": "uint32",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint32",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "getReserves",
+        "signature": "getReserves()",
+        "sighash": "0x0902f1ac",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x1c5074921683c0b8eb485d4b"
+        },
+        {
+          "type": "BigNumber",
+          "hex": "0xca969e48aec6406c"
+        },
+        1670592815
+      ],
+      "decodedInput": [],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 2195
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 2195
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x000000000000000000000000000000000000000000000000ccab867d3b15406c",
+      "input": "0x70a08231000000000000000000000000ff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "type": "STATICCALL",
+      "pc": 4647,
+      "passedGas": 124164,
+      "index": 2456,
+      "gasCost": 534,
+      "depth": 2,
+      "startIndex": 2457,
+      "stackTrace": [
+        1,
+        4
+      ],
+      "isContract": true,
+      "returnIndex": 2566,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "inputs": [
+            {
+              "name": null,
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "balanceOf",
+        "signature": "balanceOf(address)",
+        "sighash": "0x70a08231",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0xccab867d3b15406c"
+        }
+      ],
+      "decodedInput": [
+        "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "000000000000000000000000000000000000000000000000ccab867d3b15406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 2544
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "000000000000000000000000000000000000000000000000ccab867d3b15406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 2544
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x",
+      "input": "0x022c0d9f0000000000000000000000000000000000000000004981080f33fdffb4fbb2bb000000000000000000000000000000000000000000000000000000000000000000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd89100000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "type": "CALL",
+      "pc": 12870,
+      "passedGas": 121963,
+      "index": 3018,
+      "gasCost": 85628,
+      "depth": 2,
+      "startIndex": 3019,
+      "stackTrace": [
+        1,
+        5
+      ],
+      "isContract": true,
+      "returnIndex": 5407,
+      "isSuccess": false,
+      "functionDescription": {
+        "args": [
+          {
+            "type": "BigNumber",
+            "hex": "0x4981080f33fdffb4fbb2bb"
+          },
+          {
+            "type": "BigNumber",
+            "hex": "0x00"
+          },
+          "0x81D0474a020A7d0059c60A0adc7d89063E4bD891",
+          "0x"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "swap",
+          "constant": false,
+          "inputs": [
+            {
+              "name": "amount0Out",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            },
+            {
+              "name": "amount1Out",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            },
+            {
+              "name": "to",
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "bytes",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "swap",
+        "signature": "swap(uint256,uint256,address,bytes)",
+        "sighash": "0x022c0d9f",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [],
+      "decodedInput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x4981080f33fdffb4fbb2bb"
+        },
+        {
+          "type": "BigNumber",
+          "hex": "0x00"
+        },
+        "0x81D0474a020A7d0059c60A0adc7d89063E4bD891",
+        "0x"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "000000000000000000000000000000000000000000000000000000000000000c",
+            "index": 3148
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 3174
+          },
+          {
+            "value": "0000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100",
+            "key": "0000000000000000000000000000000000000000000000000000000000000006",
+            "index": 3220
+          },
+          {
+            "value": "000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "key": "0000000000000000000000000000000000000000000000000000000000000007",
+            "index": 3222
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 4087
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 4121
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "000000000000000000000000000000000000000000000000000000000000000c",
+            "index": 3148
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 3174
+          },
+          {
+            "value": "0000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100",
+            "key": "0000000000000000000000000000000000000000000000000000000000000006",
+            "index": 3220
+          },
+          {
+            "value": "000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "key": "0000000000000000000000000000000000000000000000000000000000000007",
+            "index": 3222
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 4087
+          },
+          {
+            "value": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 4121
+          }
+        ],
+        "changedStorage": [
+          {
+            "updatedValue": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "000000000000000000000000000000000000000000000000000000000000000c",
+            "initialValue": "0000000000000000000000000000000000000000000000000000000000000001",
+            "index": 3156
+          },
+          {
+            "updatedValue": "6393392f000000000000ccab867d3b15406c00001c06f38a074fc2b9364caa90",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "initialValue": "6393392f000000000000ca969e48aec6406c00001c5074921683c0b8eb485d4b",
+            "index": 4155
+          },
+          {
+            "updatedValue": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "000000000000000000000000000000000000000000000000000000000000000c",
+            "initialValue": "0000000000000000000000000000000000000000000000000000000000000000",
+            "index": 4241
+          }
+        ]
+      },
+      "storageAddress": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "input": "0xa9059cbb00000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000004981080f33fdffb4fbb2bb",
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "type": "CALL",
+      "pc": 8468,
+      "passedGas": 109353,
+      "index": 3446,
+      "gasCost": 63519,
+      "depth": 3,
+      "startIndex": 3447,
+      "stackTrace": [
+        1,
+        5,
+        0
+      ],
+      "isContract": true,
+      "returnIndex": 4343,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0x81D0474a020A7d0059c60A0adc7d89063E4bD891",
+          {
+            "type": "BigNumber",
+            "hex": "0x4981080f33fdffb4fbb2bb"
+          }
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "transfer",
+          "constant": false,
+          "inputs": [
+            {
+              "name": "to",
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            },
+            {
+              "name": "value",
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "bool",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "bool",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "transfer",
+        "signature": "transfer(address,uint256)",
+        "sighash": "0xa9059cbb",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        true
+      ],
+      "decodedInput": [
+        "0x81D0474a020A7d0059c60A0adc7d89063E4bD891",
+        {
+          "type": "BigNumber",
+          "hex": "0x4981080f33fdffb4fbb2bb"
+        }
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000010101",
+            "key": "0000000000000000000000000000000000000000000000000000000000000011",
+            "index": 3581
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3588
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3607
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3658
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000010101",
+            "key": "0000000000000000000000000000000000000000000000000000000000000011",
+            "index": 3672
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "0000000000000000000000000000000000000000000000000000000000000013",
+            "index": 3682
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3689
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000f63ba4",
+            "key": "3144f5a79fa9380177e1167156d5650aee56e1bd3061687654b135685f4fec3d",
+            "index": 3760
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "55ae30bf593963563230282021fbdd8820d2d25760c7bfcc07c4a9713f5b5ed8",
+            "index": 3798
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "51822d5befbb2444f41fba0e85428d06d568e5871eab399ac9159c3fbfd25a98",
+            "index": 3823
+          },
+          {
+            "value": "000000000000000000000000000000000000000009b18ab5df7180b6b8000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 3832
+          },
+          {
+            "value": "000000000000000000000000000000000000000009b18ab5df7180b6b8000000",
+            "key": "000000000000000000000000000000000000000000000000000000000000000a",
+            "index": 3840
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 3859
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "a18f3b849ab02aacb3dfbc9b87fff51fc992c5cac1e2b7a0970c2ef0856e2dae",
+            "index": 3900
+          },
+          {
+            "value": "000000000000000000000000000000000000000000295be96e64066972000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000009",
+            "index": 3902
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3938
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "adb8ff3e1f7742ca6331f2ce89560fd43e7faa0cfda1eef7a82a50a79db8108f",
+            "index": 3969
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3993
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "2cd7598ef3ab9a7d3772351a42c5b2f65c101d4db7b2db9a4f52c78931813e17",
+            "index": 4011
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "29dfac2669277a0d15017ba5d948fc83ee7fceeabad55f1352767567860fa2c5",
+            "index": 4045
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "adb8ff3e1f7742ca6331f2ce89560fd43e7faa0cfda1eef7a82a50a79db8108f",
+            "index": 4075
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "55ae30bf593963563230282021fbdd8820d2d25760c7bfcc07c4a9713f5b5ed8",
+            "index": 4104
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000014",
+            "index": 4114
+          },
+          {
+            "value": "00000000000000000000000000000000000000001c5074921683c0b8eb485d4b",
+            "key": "89b8a28925c4b1075331c30faebe4c6a84c4f8a635da428ed92f7362cbc37f13",
+            "index": 4193
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 4235
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000010101",
+            "key": "0000000000000000000000000000000000000000000000000000000000000011",
+            "index": 3581
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3588
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3607
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3658
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000010101",
+            "key": "0000000000000000000000000000000000000000000000000000000000000011",
+            "index": 3672
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "0000000000000000000000000000000000000000000000000000000000000013",
+            "index": 3682
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3689
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000f63ba4",
+            "key": "3144f5a79fa9380177e1167156d5650aee56e1bd3061687654b135685f4fec3d",
+            "index": 3760
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "55ae30bf593963563230282021fbdd8820d2d25760c7bfcc07c4a9713f5b5ed8",
+            "index": 3798
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "51822d5befbb2444f41fba0e85428d06d568e5871eab399ac9159c3fbfd25a98",
+            "index": 3823
+          },
+          {
+            "value": "000000000000000000000000000000000000000009b18ab5df7180b6b8000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000008",
+            "index": 3832
+          },
+          {
+            "value": "000000000000000000000000000000000000000009b18ab5df7180b6b8000000",
+            "key": "000000000000000000000000000000000000000000000000000000000000000a",
+            "index": 3840
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 3859
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "a18f3b849ab02aacb3dfbc9b87fff51fc992c5cac1e2b7a0970c2ef0856e2dae",
+            "index": 3900
+          },
+          {
+            "value": "000000000000000000000000000000000000000000295be96e64066972000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000009",
+            "index": 3902
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3938
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "adb8ff3e1f7742ca6331f2ce89560fd43e7faa0cfda1eef7a82a50a79db8108f",
+            "index": 3969
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000005",
+            "index": 3993
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "2cd7598ef3ab9a7d3772351a42c5b2f65c101d4db7b2db9a4f52c78931813e17",
+            "index": 4011
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "29dfac2669277a0d15017ba5d948fc83ee7fceeabad55f1352767567860fa2c5",
+            "index": 4045
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "adb8ff3e1f7742ca6331f2ce89560fd43e7faa0cfda1eef7a82a50a79db8108f",
+            "index": 4075
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000001",
+            "key": "55ae30bf593963563230282021fbdd8820d2d25760c7bfcc07c4a9713f5b5ed8",
+            "index": 4104
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "0000000000000000000000000000000000000000000000000000000000000014",
+            "index": 4114
+          },
+          {
+            "value": "00000000000000000000000000000000000000001c5074921683c0b8eb485d4b",
+            "key": "89b8a28925c4b1075331c30faebe4c6a84c4f8a635da428ed92f7362cbc37f13",
+            "index": 4193
+          },
+          {
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 4235
+          }
+        ],
+        "changedStorage": [
+          {
+            "updatedValue": "0000000000000000000000000000000000000000000000000000000000f66408",
+            "key": "3144f5a79fa9380177e1167156d5650aee56e1bd3061687654b135685f4fec3d",
+            "initialValue": "0000000000000000000000000000000000000000000000000000000000f63ba4",
+            "index": 3779
+          },
+          {
+            "updatedValue": "00000000000000000000000000000000000000001c06f38a074fc2b9364caa90",
+            "key": "89b8a28925c4b1075331c30faebe4c6a84c4f8a635da428ed92f7362cbc37f13",
+            "initialValue": "00000000000000000000000000000000000000001c5074921683c0b8eb485d4b",
+            "index": 4225
+          },
+          {
+            "updatedValue": "0000000000000000000000000000000000000000004981080f33fdffb4fbb2bb",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "initialValue": "0000000000000000000000000000000000000000000000000000000000000000",
+            "index": 4265
+          }
+        ]
+      },
+      "storageAddress": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x00000000000000000000000000000000000000001c06f38a074fc2b9364caa90",
+      "input": "0x70a08231000000000000000000000000ff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "type": "STATICCALL",
+      "pc": 2610,
+      "passedGas": 46205,
+      "index": 4478,
+      "gasCost": 668,
+      "depth": 3,
+      "startIndex": 4479,
+      "stackTrace": [
+        1,
+        5,
+        1
+      ],
+      "isContract": true,
+      "returnIndex": 4624,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "inputs": [
+            {
+              "name": null,
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "balanceOf",
+        "signature": "balanceOf(address)",
+        "sighash": "0x70a08231",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x1c06f38a074fc2b9364caa90"
+        }
+      ],
+      "decodedInput": [
+        "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "00000000000000000000000000000000000000001c06f38a074fc2b9364caa90",
+            "key": "89b8a28925c4b1075331c30faebe4c6a84c4f8a635da428ed92f7362cbc37f13",
+            "index": 4603
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "00000000000000000000000000000000000000001c06f38a074fc2b9364caa90",
+            "key": "89b8a28925c4b1075331c30faebe4c6a84c4f8a635da428ed92f7362cbc37f13",
+            "index": 4603
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x000000000000000000000000000000000000000000000000ccab867d3b15406c",
+      "input": "0x70a08231000000000000000000000000ff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "type": "STATICCALL",
+      "pc": 2766,
+      "passedGas": 45142,
+      "index": 4695,
+      "gasCost": 534,
+      "depth": 3,
+      "startIndex": 4696,
+      "stackTrace": [
+        1,
+        5,
+        2
+      ],
+      "isContract": true,
+      "returnIndex": 4805,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "inputs": [
+            {
+              "name": null,
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "balanceOf",
+        "signature": "balanceOf(address)",
+        "sighash": "0x70a08231",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0xccab867d3b15406c"
+        }
+      ],
+      "decodedInput": [
+        "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "000000000000000000000000000000000000000000000000ccab867d3b15406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 4783
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "000000000000000000000000000000000000000000000000ccab867d3b15406c",
+            "key": "24d2cfe545ef509d1b1421136bb0e3198ddcd926583dd9ee20b27444e87a4450",
+            "index": 4783
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "blockNumber": "0xf66408"
+    },
+    {
+      "value": "0.0",
+      "output": "0x0000000000000000000000000000000000000000004981080f33fdffb4fbb2bb",
+      "input": "0x70a0823100000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd891",
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "type": "STATICCALL",
+      "pc": 4647,
+      "passedGas": 36982,
+      "index": 5565,
+      "gasCost": 668,
+      "depth": 2,
+      "startIndex": 5566,
+      "stackTrace": [
+        1,
+        6
+      ],
+      "isContract": true,
+      "returnIndex": 5711,
+      "isSuccess": false,
+      "isReverted": false,
+      "functionDescription": {
+        "args": [
+          "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+        ],
+        "functionFragment": {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "inputs": [
+            {
+              "name": null,
+              "type": "address",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "address",
+              "_isParamType": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": null,
+              "type": "uint256",
+              "indexed": null,
+              "components": null,
+              "arrayLength": null,
+              "arrayChildren": null,
+              "baseType": "uint256",
+              "_isParamType": true
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "gas": null,
+          "_isFragment": true
+        },
+        "name": "balanceOf",
+        "signature": "balanceOf(address)",
+        "sighash": "0x70a08231",
+        "value": {
+          "type": "BigNumber",
+          "hex": "0x00"
+        }
+      },
+      "errorDescription": null,
+      "decodedOutput": [
+        {
+          "type": "BigNumber",
+          "hex": "0x4981080f33fdffb4fbb2bb"
+        }
+      ],
+      "decodedInput": [
+        "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+      ],
+      "storageLogs": {
+        "returnedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000004981080f33fdffb4fbb2bb",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 5690
+          }
+        ],
+        "loadedStorage": [
+          {
+            "value": "0000000000000000000000000000000000000000004981080f33fdffb4fbb2bb",
+            "key": "436c0a32b3a319a9044ce25ded44bf89461db999ce92bc0b58424d97e2d3023d",
+            "index": 5690
+          }
+        ],
+        "changedStorage": []
+      },
+      "storageAddress": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "blockNumber": "0xf66408"
+    }
+  ],
+  "analyzeSummary": {
+    "contractAddresses": [
+      "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0"
+    ],
+    "contractSighashesInfo": [
+      {
+        "sighash": "0x5ae401dc",
+        "addresses": {},
+        "fragment": {
+          "args": [
+            {
+              "type": "BigNumber",
+              "hex": "0x6393401f"
+            },
+            [
+              "0x472b43f30000000000000000000000000000000000000000000000000214e8348c4f00000000000000000000000000000000000000000000004abdc3df33f3f799d71531000000000000000000000000000000000000000000000000000000000000008000000000000000000000000081d0474a020a7d0059c60a0adc7d89063e4bd8910000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000001856bc58f5511269afe2ca1e89bf08cbdcd01100"
+            ]
+          ],
+          "functionFragment": {
+            "type": "function",
+            "name": "multicall",
+            "constant": false,
+            "inputs": [
+              {
+                "name": "deadline",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              },
+              {
+                "name": "data",
+                "type": "bytes[]",
+                "indexed": null,
+                "components": null,
+                "arrayLength": -1,
+                "arrayChildren": {
+                  "name": null,
+                  "type": "bytes",
+                  "indexed": null,
+                  "components": null,
+                  "arrayLength": null,
+                  "arrayChildren": null,
+                  "baseType": "bytes",
+                  "_isParamType": true
+                },
+                "baseType": "array",
+                "_isParamType": true
+              }
+            ],
+            "outputs": [
+              {
+                "name": null,
+                "type": "bytes[]",
+                "indexed": null,
+                "components": null,
+                "arrayLength": -1,
+                "arrayChildren": {
+                  "name": null,
+                  "type": "bytes",
+                  "indexed": null,
+                  "components": null,
+                  "arrayLength": null,
+                  "arrayChildren": null,
+                  "baseType": "bytes",
+                  "_isParamType": true
+                },
+                "baseType": "array",
+                "_isParamType": true
+              }
+            ],
+            "payable": true,
+            "stateMutability": "payable",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "multicall",
+          "signature": "multicall(uint256,bytes[])",
+          "sighash": "0x5ae401dc",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0x472b43f3",
+        "addresses": {},
+        "fragment": {
+          "args": [
+            {
+              "type": "BigNumber",
+              "hex": "0x0214e8348c4f0000"
+            },
+            {
+              "type": "BigNumber",
+              "hex": "0x4abdc3df33f3f799d71531"
+            },
+            [
+              "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+              "0x1856BC58f5511269aFE2CA1e89Bf08CBDCD01100"
+            ],
+            "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+          ],
+          "functionFragment": {
+            "type": "function",
+            "name": "swapExactTokensForTokens",
+            "constant": false,
+            "inputs": [
+              {
+                "name": "amountIn",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              },
+              {
+                "name": "amountOutMin",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              },
+              {
+                "name": "path",
+                "type": "address[]",
+                "indexed": null,
+                "components": null,
+                "arrayLength": -1,
+                "arrayChildren": {
+                  "name": null,
+                  "type": "address",
+                  "indexed": null,
+                  "components": null,
+                  "arrayLength": null,
+                  "arrayChildren": null,
+                  "baseType": "address",
+                  "_isParamType": true
+                },
+                "baseType": "array",
+                "_isParamType": true
+              },
+              {
+                "name": "to",
+                "type": "address",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "address",
+                "_isParamType": true
+              }
+            ],
+            "outputs": [
+              {
+                "name": "amountOut",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              }
+            ],
+            "payable": true,
+            "stateMutability": "payable",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "swapExactTokensForTokens",
+          "signature": "swapExactTokensForTokens(uint256,uint256,address[],address)",
+          "sighash": "0x472b43f3",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0xd0e30db0",
+        "addresses": {},
+        "fragment": {
+          "args": [],
+          "functionFragment": {
+            "type": "function",
+            "name": "deposit",
+            "constant": false,
+            "inputs": [],
+            "outputs": [],
+            "payable": true,
+            "stateMutability": "payable",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "deposit",
+          "signature": "deposit()",
+          "sighash": "0xd0e30db0",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0xa9059cbb",
+        "addresses": {},
+        "fragment": {
+          "args": [
+            "0xff72e5Ca70a1ec9a9A3758a5638b3f299895ADd0",
+            {
+              "type": "BigNumber",
+              "hex": "0x0214e8348c4f0000"
+            }
+          ],
+          "functionFragment": {
+            "type": "function",
+            "name": "transfer",
+            "constant": false,
+            "inputs": [
+              {
+                "name": "to",
+                "type": "address",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "address",
+                "_isParamType": true
+              },
+              {
+                "name": "value",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              }
+            ],
+            "outputs": [
+              {
+                "name": null,
+                "type": "bool",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "bool",
+                "_isParamType": true
+              }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "transfer",
+          "signature": "transfer(address,uint256)",
+          "sighash": "0xa9059cbb",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0x70a08231",
+        "addresses": {},
+        "fragment": {
+          "args": [
+            "0x81D0474a020A7d0059c60A0adc7d89063E4bD891"
+          ],
+          "functionFragment": {
+            "type": "function",
+            "name": "balanceOf",
+            "constant": true,
+            "inputs": [
+              {
+                "name": null,
+                "type": "address",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "address",
+                "_isParamType": true
+              }
+            ],
+            "outputs": [
+              {
+                "name": null,
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "balanceOf",
+          "signature": "balanceOf(address)",
+          "sighash": "0x70a08231",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0x0902f1ac",
+        "addresses": {},
+        "fragment": {
+          "args": [],
+          "functionFragment": {
+            "type": "function",
+            "name": "getReserves",
+            "constant": true,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "_reserve0",
+                "type": "uint112",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint112",
+                "_isParamType": true
+              },
+              {
+                "name": "_reserve1",
+                "type": "uint112",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint112",
+                "_isParamType": true
+              },
+              {
+                "name": "_blockTimestampLast",
+                "type": "uint32",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint32",
+                "_isParamType": true
+              }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "getReserves",
+          "signature": "getReserves()",
+          "sighash": "0x0902f1ac",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      },
+      {
+        "sighash": "0x022c0d9f",
+        "addresses": {},
+        "fragment": {
+          "args": [
+            {
+              "type": "BigNumber",
+              "hex": "0x4981080f33fdffb4fbb2bb"
+            },
+            {
+              "type": "BigNumber",
+              "hex": "0x00"
+            },
+            "0x81D0474a020A7d0059c60A0adc7d89063E4bD891",
+            "0x"
+          ],
+          "functionFragment": {
+            "type": "function",
+            "name": "swap",
+            "constant": false,
+            "inputs": [
+              {
+                "name": "amount0Out",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              },
+              {
+                "name": "amount1Out",
+                "type": "uint256",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "uint256",
+                "_isParamType": true
+              },
+              {
+                "name": "to",
+                "type": "address",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "address",
+                "_isParamType": true
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "indexed": null,
+                "components": null,
+                "arrayLength": null,
+                "arrayChildren": null,
+                "baseType": "bytes",
+                "_isParamType": true
+              }
+            ],
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "gas": null,
+            "_isFragment": true
+          },
+          "name": "swap",
+          "signature": "swap(uint256,uint256,address,bytes)",
+          "sighash": "0x022c0d9f",
+          "value": {
+            "type": "BigNumber",
+            "hex": "0x00"
+          }
+        },
+        "found": true
+      }
+    ]
+  }
+}

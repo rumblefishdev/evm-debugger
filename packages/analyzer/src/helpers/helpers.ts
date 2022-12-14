@@ -13,9 +13,7 @@ import type {
   IStopTypeTraceLog,
   TReturnedTraceLog,
   TMainTraceLogs,
-  ILogTypeStructLogs,
-  TSighashFragment,
-  TSighashStatus,
+  ILogTypeStructLogs
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
@@ -128,6 +126,12 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
     (iteratedItem) =>
       iteratedItem.depth === depth + 1 && (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP')
   ) as IReturnTypeTraceLog | IStopTypeTraceLog
+}
+
+export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[] , depth: number) => {
+  return traceToSearch.find(
+      (iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.type === 'REVERT'
+  ) as IReturnTypeTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
