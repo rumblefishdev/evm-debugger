@@ -27,6 +27,7 @@ import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
+import fetch from "node-fetch"
 
 export class TxAnalyzer {
   constructor(private readonly transactionData: TTransactionData) {}
@@ -218,7 +219,7 @@ export class TxAnalyzer {
     return sighashStatues.sighashStatusList
   }
 
-  public getContractAddressesInTransaction() {
+  private getContractAddressesInTransaction() {
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
     const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
@@ -226,6 +227,20 @@ export class TxAnalyzer {
     let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
 
     return this.getTraceLogsContractAddresses(mainTraceLogList)
+  }
+
+  public async enrichTransactionDataWithTranslatedAddresses() {
+    const addresses = this.getContractAddressesInTransaction()
+    for (const address of addresses) {
+      const response = await fetch(
+          `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=Y8XNE3W519FITZJRPRGYY4ZEII2IV3W73F`
+      )
+
+      const {result, status} = await response.json()
+      if (status === '1') {
+        this.transactionData.abis[address] = result
+      }
+    }
   }
 
   public analyze() {
