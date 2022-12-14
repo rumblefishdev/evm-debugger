@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { DataAdder } from '../../components/DataAdder'
+import { typedNavigate } from '../../router'
 import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
@@ -17,11 +18,11 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
 
-  const navigate = useNavigate()
   const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
 
   const submitHandler = useCallback(() => {
-    if (txInfo && structLogs) navigate('/summary')
+    if (txInfo && structLogs) typedNavigate(navigate, '/summary')
   }, [txInfo, structLogs])
 
   const handleTxInfoUpload = useCallback((data: string) => {

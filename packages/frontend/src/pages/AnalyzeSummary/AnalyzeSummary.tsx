@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useAnalyzer } from '../../hooks/useAnalyzer'
 import { BytecodesManager, SighashesManager, SourcecodesManager } from '../../components/Managers'
+import { typedNavigate } from '../../router'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledButtonsWrapper, StyledContentWrapper, StyledStack, StyledWrapper } from './styles'
@@ -51,7 +52,7 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
           </Button>
         </StyledButtonsWrapper>
         <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
-        <Button variant="contained" sx={{ marginTop: '12px' }} onClick={() => navigate('/mainDisplay')}>
+        <Button variant="contained" sx={{ marginTop: '12px' }} onClick={() => typedNavigate(navigate, '/mainDisplay')}>
           Proceed
         </Button>
       </StyledWrapper>
