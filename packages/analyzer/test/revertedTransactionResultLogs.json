@@ -130,7 +130,7 @@
       "depth": 1,
       "startIndex": 338,
       "stackTrace": [
-        1
+        0
       ],
       "isContract": true,
       "returnIndex": 5828,
@@ -272,7 +272,7 @@
       "depth": 2,
       "startIndex": 940,
       "stackTrace": [
-        1,
+        0,
         0
       ],
       "isContract": true,
@@ -342,7 +342,7 @@
       "depth": 2,
       "startIndex": 1132,
       "stackTrace": [
-        1,
+        0,
         1
       ],
       "isContract": true,
@@ -485,7 +485,7 @@
       "depth": 2,
       "startIndex": 1569,
       "stackTrace": [
-        1,
+        0,
         2
       ],
       "isContract": true,
@@ -580,7 +580,7 @@
       "depth": 2,
       "startIndex": 2138,
       "stackTrace": [
-        1,
+        0,
         3
       ],
       "isContract": true,
@@ -685,7 +685,7 @@
       "depth": 2,
       "startIndex": 2457,
       "stackTrace": [
-        1,
+        0,
         4
       ],
       "isContract": true,
@@ -780,7 +780,7 @@
       "depth": 2,
       "startIndex": 3019,
       "stackTrace": [
-        1,
+        0,
         5
       ],
       "isContract": true,
@@ -975,7 +975,7 @@
       "depth": 3,
       "startIndex": 3447,
       "stackTrace": [
-        1,
+        0,
         5,
         0
       ],
@@ -1345,7 +1345,7 @@
       "depth": 3,
       "startIndex": 4479,
       "stackTrace": [
-        1,
+        0,
         5,
         1
       ],
@@ -1441,7 +1441,7 @@
       "depth": 3,
       "startIndex": 4696,
       "stackTrace": [
-        1,
+        0,
         5,
         2
       ],
@@ -1537,7 +1537,7 @@
       "depth": 2,
       "startIndex": 5566,
       "stackTrace": [
-        1,
+        0,
         6
       ],
       "isContract": true,

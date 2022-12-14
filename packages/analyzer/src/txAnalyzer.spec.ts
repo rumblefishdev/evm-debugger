@@ -7,7 +7,7 @@ describe('TxAnalyzer', () => {
     describe('analyze transaction', () => {
         jest.setTimeout(20000)
         it('analyze transaction with revert', async () => {
-            const testData = await promises.readFile('./test/revertedTransactionTest.json', "utf8")
+            const testData = await promises.readFile('./test/revertedTransactionLogs.json', "utf8")
             const jsonTestData = JSON.parse(testData)
 
             const transactionData: TTransactionData = {
@@ -23,7 +23,7 @@ describe('TxAnalyzer', () => {
             const result = analyzer.analyze()
             const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
 
-            const expectedResponse = await promises.readFile('./test/revertedTransactionResultTest.json', "utf8")
+            const expectedResponse = await promises.readFile('./test/revertedTransactionResultLogs.json', "utf8")
             const expectedResponseWithoutWhiteSpaces = removeWhiteSpaces(expectedResponse)
 
             expect(expectedResponseWithoutWhiteSpaces).toEqual(resultAsStringWithoutWhiteSpaces)
