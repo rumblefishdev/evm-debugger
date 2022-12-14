@@ -17,6 +17,8 @@ import type {
 } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
+import {TxAnalyzer} from "../txAnalyzer";
+import {TTransactionData} from "@evm-debuger/types";
 
 export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStructLog[] => {
   const filteredLogs = []
@@ -154,4 +156,11 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
 
   return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
+}
+
+export const prepareAnalyzer = async(transactionData: TTransactionData) => {
+  const analyzerForAddressesTranslation = new TxAnalyzer(transactionData)
+  await analyzerForAddressesTranslation.enrichTransactionDataWithTranslatedAddresses()
+
+  return new TxAnalyzer(analyzerForAddressesTranslation.transactionData)
 }

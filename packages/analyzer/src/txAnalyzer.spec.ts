@@ -1,6 +1,7 @@
 import {promises} from "fs"
 import {TxAnalyzer} from "./txAnalyzer"
 import {TTransactionData} from "@evm-debuger/types"
+import {prepareAnalyzer} from "./helpers/helpers"
 
 describe('TxAnalyzer', () => {
 
@@ -20,10 +21,7 @@ describe('TxAnalyzer', () => {
                 abis: {},
             }
 
-            const analyzerForAddressesTranslation = new TxAnalyzer(transactionData)
-            await analyzerForAddressesTranslation.enrichTransactionDataWithTranslatedAddresses()
-
-            const analyzer = new TxAnalyzer(analyzerForAddressesTranslation.transactionData)
+            const analyzer = await prepareAnalyzer(transactionData)
             const result = analyzer.analyze()
             const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
 
