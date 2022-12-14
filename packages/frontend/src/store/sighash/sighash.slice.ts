@@ -17,7 +17,10 @@ export const sighashSlice = createSlice({
         sighashState.entities[sighash].found = true
       })
     },
-    addSighashes: sighashAdapter.addMany,
+    addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
+      console.log(action.payload)
+      return sighashAdapter.setMany(sighashState, action.payload)
+    },
   },
   name: 'sighash',
   initialState: sighashAdapter.getInitialState(),

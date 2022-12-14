@@ -21,10 +21,10 @@ export const useAnalyzer = () => {
     const { mainTraceLogList, analyzeSummary } = analyzer.analyze()
 
     dispatch(loadTraceLogs(mainTraceLogList))
-    dispatch(setContractAddresses(analyzeSummary.contractList))
-    dispatch(addSighashes(analyzeSummary.contractSighashesList))
-    dispatch(addBytecodes(analyzeSummary.contractList.map((address) => ({ bytecode: null, address }))))
-    dispatch(addSourceCodes(analyzeSummary.contractList.map((address) => ({ sourceCode: null, address }))))
+    dispatch(setContractAddresses(analyzeSummary.contractAddresses))
+    dispatch(addSighashes(analyzeSummary.contractSighashesInfo))
+    dispatch(addBytecodes(analyzeSummary.contractAddresses.map((address) => ({ bytecode: null, address }))))
+    dispatch(addSourceCodes(analyzeSummary.contractAddresses.map((address) => ({ sourceCode: null, address }))))
 
     setLoading(false)
   }, [transactionInfo, structLogs])

@@ -48,7 +48,7 @@ module.exports = {
                 "@typescript-eslint/no-empty-interface": "off",
                 "@typescript-eslint/no-implied-eval": "error",
                 "@typescript-eslint/no-loop-func": "error",
-                "@typescript-eslint/no-unused-vars": "error",
+                "@typescript-eslint/no-unused-vars": "warn",
                 "@typescript-eslint/no-useless-empty-export": "error",
                 "@typescript-eslint/require-await": "error",
                 "@typescript-eslint/no-duplicate-imports": "error",

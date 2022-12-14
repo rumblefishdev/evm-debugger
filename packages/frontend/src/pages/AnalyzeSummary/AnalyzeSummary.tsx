@@ -1,23 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 import { useAnalyzer } from '../../hooks/useAnalyzer'
-import { useTypedSelector } from '../../store/storeHooks'
-import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.slice'
-import { bytecodesSelectors } from '../../store/bytecodes/bytecodes.slice'
-import { sighashSelectors } from '../../store/sighash/sighash.slice'
+import { BytecodesManager, SighashesManager, SourcecodesManager } from '../../components/Managers'
 
-import type { AnalyzeSummaryProps } from './AnalyzeSummary.types'
-import { StyledStack } from './styles'
+import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
+import { StyledButtonsWrapper, StyledContentWrapper, StyledStack, StyledWrapper } from './styles'
 
 export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   const { isLoading } = useAnalyzer()
 
-  const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
-  const byteCodes = useTypedSelector((state) => bytecodesSelectors.selectAll(state.bytecodes))
-  const sourceCodes = useTypedSelector((state) => sourceCodesSelectors.selectAll(state.sourceCodes))
-  const sighashes = useTypedSelector((state) => sighashSelectors.selectAll(state.sighashes))
+  const [activeTab, setActiveTab] = useState<TTabType>('sourcecodes')
 
-  console.log({ sourceCodes, sighashes, contractAddresses, byteCodes })
+  const navigate = useNavigate()
 
-  return isLoading ? null : <StyledStack {...props}></StyledStack>
+  const handleTabChange = (tabName: TTabType) => {
+    setActiveTab(tabName)
+  }
+
+  const renderTab = () => {
+    switch (activeTab) {
+      case 'sourcecodes': {
+        return <SourcecodesManager />
+      }
+      case 'bytecodes': {
+        return <BytecodesManager />
+      }
+      case 'sighashes': {
+        return <SighashesManager />
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
+  return isLoading ? null : (
+    <StyledStack {...props}>
+      <StyledWrapper>
+        <StyledButtonsWrapper>
+          <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
+            Source Codes
+          </Button>
+          <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('bytecodes')}>
+            Bytecodes
+          </Button>
+          <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sighashes')}>
+            Abis
+          </Button>
+        </StyledButtonsWrapper>
+        <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
+        <Button variant="contained" sx={{ marginTop: '12px' }} onClick={() => navigate('/mainDisplay')}>
+          Proceed
+        </Button>
+      </StyledWrapper>
+    </StyledStack>
+  )
 }
