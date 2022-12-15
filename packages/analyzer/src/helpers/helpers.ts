@@ -1,22 +1,22 @@
-import { ethers } from 'ethers'
-import { hexlify } from 'ethers/lib/utils'
+import {ethers} from 'ethers'
+import {hexlify} from 'ethers/lib/utils'
 import type {
-  TTransactionInfo,
   ICallTypeStructLogs,
-  ICreateTypeStructLogs,
-  IFilteredStructLog,
-  IReturnTypeStructLogs,
-  IStructLog,
   ICallTypeTraceLog,
+  ICreateTypeStructLogs,
   ICreateTypeTraceLog,
+  IFilteredStructLog,
+  ILogTypeStructLogs,
+  IReturnTypeStructLogs,
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
-  TReturnedTraceLog,
+  IStructLog,
   TMainTraceLogs,
-  ILogTypeStructLogs
+  TReturnedTraceLog,
+  TTransactionInfo
 } from '@evm-debuger/types'
 
-import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
+import {BuiltinErrors, OpcodesNamesArray} from '../constants/constants'
 
 export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStructLog[] => {
   const filteredLogs = []
