@@ -15,19 +15,21 @@ import {
   convertTxInfoToTraceLog,
   getFilteredStructLogs,
   getLastItemInCallTypeContext,
+  getLastLogWithRevertType,
   getSafeHex,
   isLogType,
+  prepareTraceToSearch,
   readMemory,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { FragmentReader } from './helpers/fragmentReader'
-import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
-import { SigHashStatuses } from './sigHashes'
+import {StructLogParser} from './dataExtractors/structLogParser'
+import {StackCounter} from './helpers/stackCounter'
+import {StorageHandler} from './dataExtractors/storageHandler'
+import {FragmentReader} from './helpers/fragmentReader'
+import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
+import {SigHashStatuses} from './sigHashes'
 
 export class TxAnalyzer {
-  constructor(private readonly transactionData: TTransactionData) {}
+  constructor(public readonly transactionData: TTransactionData) {}
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
@@ -69,6 +71,7 @@ export class TxAnalyzer {
       return item
     })
   }
+
   private combineCallWithItsReturn(traceLogs: TReturnedTraceLog[]) {
     return traceLogs.map((item, rootIndex) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
@@ -86,11 +89,29 @@ export class TxAnalyzer {
         if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
           const { output } = lastItemInCallContext
           const isSuccess = lastItemInCallContext.type === 'RETURN'
-          return { ...item, returnIndex: index, output, isSuccess, gasCost }
+          const isReverted = lastItemInCallContext.type === 'REVERT'
+          return { ...item, returnIndex: index, output, isSuccess, isReverted, gasCost }
         }
         return { ...item, returnIndex: index, isSuccess: true, gasCost }
       }
       return item
+    })
+  }
+
+  private markLogEntryAsFailureIfParentReverted(traceLogs: TReturnedTraceLog[]) {
+    const logIndexesToMarkAsFailure = new Set()
+    traceLogs.map((item, rootIndex) => {
+      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
+
+        const childrenLogs = prepareTraceToSearch(traceLogs, rootIndex, item.depth, false) as TReturnedTraceLog[]
+        const lastItemWithRevertType = getLastLogWithRevertType(childrenLogs, item.depth)
+        if (lastItemWithRevertType) childrenLogs.forEach(log => logIndexesToMarkAsFailure.add(log.index))
+      }
+    })
+
+    return traceLogs.map(log => {
+      if (logIndexesToMarkAsFailure.has(log.index)) return { ...log, isSuccess: false }
+      else return log
     })
   }
 
@@ -103,7 +124,7 @@ export class TxAnalyzer {
 
     return mainTraceLogList.map((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const result = this.fragmentReader.decodeFragment(item.isSuccess, item.input, item.output)
+        const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
 
         return { ...item, ...result }
       }
@@ -214,7 +235,8 @@ export class TxAnalyzer {
     const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
     const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
     const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsListWithContractFlag)
-    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithReturnData)
+    const traceLogsListWithSuccessFlag = this.markLogEntryAsFailureIfParentReverted(traceLogsListWithReturnData)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithSuccessFlag)
 
     mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
     mainTraceLogList = this.extendWithStorageData(mainTraceLogList)

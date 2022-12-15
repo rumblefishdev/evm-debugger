@@ -37,7 +37,7 @@ export class StorageHandler {
     if (checkIfOfDelegateCallType(traceLog))
       return previousTransactionLog.address
     if (checkIfOfCallOrStaticCallType(traceLog))
-      return  traceLog.address
+      return traceLog.address
     if (checkIfOfCreateType(traceLog)) {
       const nextItemOnSameDepth = getNextItemOnSameDepth(structLogs, traceLog.index, traceLog.depth)
       return getSafeHex(nextItemOnSameDepth.stack.at(-1).slice(-40))
