@@ -1,4 +1,4 @@
-name: Run tests on push
+name: Run analyzer tests on push
 
 on: [push]
 
@@ -22,8 +22,7 @@ jobs:
         run: npm install -g npm
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci @evm-debuger/analyzer
 
       - name: Run tests
-        run: |
-          npm run analyzer:test
+        run: npm run analyzer:test
