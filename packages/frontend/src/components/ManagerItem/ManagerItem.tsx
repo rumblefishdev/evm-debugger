@@ -1,4 +1,3 @@
-import type { ButtonProps } from '@mui/material'
 import { Dialog, Button } from '@mui/material'
 import React, { useState } from 'react'
 
@@ -9,18 +8,13 @@ import { DataAdder } from '../DataAdder'
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
-const ButtonShow = ({ ...props }: ButtonProps) => (
-  <Button variant="outlined" {...props}>
-    Show
-  </Button>
-)
-
 export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: ManagerItemProps) => {
+  const dispatch = useTypedDispatch()
+
   const [isDataVisible, setDataVisibility] = useState(false)
   const [isDataAdderVisible, setDataAdderVisibility] = useState(false)
 
   const dataAdderHandler = (data: string) => {
-    const dispatch = useTypedDispatch()
     dispatch(updateSourceCode({ id: name, changes: { sourceCode: data } }))
   }
 
@@ -28,7 +22,7 @@ export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: Mana
     <StyledStack {...props}>
       <StyledName>{name}</StyledName>
       {isFound ? (
-        <ButtonShow onClick={() => setDataVisibility(true)} />
+        <Button onClick={() => setDataVisibility(true)}>Show</Button>
       ) : (
         <Button variant="contained" onClick={() => setDataAdderVisibility(true)}>
           Add

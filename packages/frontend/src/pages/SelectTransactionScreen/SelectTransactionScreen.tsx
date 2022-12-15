@@ -12,14 +12,14 @@ import type { SelectTransactionScreenProps } from './SelectTransactionScreen.typ
 import { StyledStack } from './styles'
 
 export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
+  const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
+
   const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
   const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
 
   const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
-
-  const dispatch = useTypedDispatch()
-  const navigate = useNavigate()
 
   const submitHandler = useCallback(() => {
     if (txInfo && structLogs) typedNavigate(navigate, '/summary')

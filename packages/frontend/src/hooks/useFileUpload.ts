@@ -6,15 +6,18 @@ export const useFileUploadHandler = () => {
 
   const uploadFile = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader()
-    if (event.target.files?.length) {
-      fileReader.readAsText(event.target.files[0])
+
+    const file = event.target.files?.[0]
+
+    if (file) {
+      fileReader.readAsText(file)
       fileReader.onload = (loadEvent) => {
-        if (event.target.files[0].size > 1_000_000) {
-          setFileData(loadEvent!.target!.result as string)
+        if (file.size > 1_000_000) {
+          setFileData(loadEvent.target.result as string)
           setTooBigFlag(true)
           return
         }
-        setFileData(loadEvent!.target!.result as string)
+        setFileData(loadEvent.target.result as string)
         setTooBigFlag(false)
       }
     }
