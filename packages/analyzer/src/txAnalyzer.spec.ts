@@ -1,12 +1,9 @@
 import {promises} from "fs"
 import {TxAnalyzer} from "./txAnalyzer"
 import {TTransactionData} from "@evm-debuger/types"
+import {prepareAnalyzer} from "../scripts/scriptHelper";
 
 describe('TxAnalyzer', () => {
-
-    beforeAll(() => {
-        jest.setTimeout(20000)
-    })
 
     describe('analyze transaction', () => {
 
@@ -20,8 +17,7 @@ describe('TxAnalyzer', () => {
                 abis: {},
             }
 
-            const analyzer = new TxAnalyzer(transactionData)
-            await analyzer.enrichTransactionDataWithTranslatedAddresses()
+            const analyzer = await prepareAnalyzer(transactionData);
 
             const result = analyzer.analyze()
             const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
@@ -30,7 +26,7 @@ describe('TxAnalyzer', () => {
             const expectedResponseWithoutWhiteSpaces = removeWhiteSpaces(expectedResponse)
 
             expect(expectedResponseWithoutWhiteSpaces).toEqual(resultAsStringWithoutWhiteSpaces)
-        })
+        }, 20000)
 
     })
 
