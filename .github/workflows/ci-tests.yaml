@@ -25,4 +25,4 @@ jobs:
         run: npm ci @evm-debuger/analyzer
 
       - name: Run tests
-        run: npm run analyzer:test
+        run: npm run test
