@@ -1,6 +1,6 @@
-import {network} from 'hardhat'
-import type {TTransactionData} from '@evm-debuger/types'
-import {prepareAnalyzer} from "./scriptHelper";
+import { network } from 'hardhat'
+import type { TTransactionData } from '@evm-debuger/types'
+import { prepareAnalyzer } from './scriptHelper'
 
 const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c1203a9c62674682'
 
@@ -15,7 +15,9 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
     abis: {},
   }
 
-  const result = prepareAnalyzer(transactionData)
+  const analyzer = await prepareAnalyzer(transactionData)
+
+  const result = analyzer.analyze()
 
   console.log(result)
 })()
