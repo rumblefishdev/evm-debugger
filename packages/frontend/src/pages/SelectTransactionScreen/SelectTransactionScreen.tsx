@@ -1,45 +1,65 @@
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { Button, Typography, Stack } from '@mui/material'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useFileUpload } from '../../hooks/useFileUpload'
+import { DataAdder } from '../../components/DataAdder'
+import { typedNavigate } from '../../router'
 import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
-import { useTypedDispatch } from '../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
 import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
 import { StyledStack } from './styles'
 
 export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
-  const [txInfo, uploadTxInfo] = useFileUpload()
-  const [structLogs, uploadStructLogs] = useFileUpload()
-
-  const navigate = useNavigate()
   const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
+
+  const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
+  const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
+
+  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
+  const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
 
   const submitHandler = useCallback(() => {
-    if (txInfo && structLogs) {
-      dispatch(setTxInfo(JSON.parse(txInfo) as TTransactionInfo))
-      dispatch(setStructLogs(JSON.parse(structLogs) as IStructLog[]))
-      navigate('/mainDisplay')
-    }
+    if (txInfo && structLogs) typedNavigate(navigate, '/summary')
   }, [txInfo, structLogs])
+
+  const handleTxInfoUpload = useCallback((data: string) => {
+    dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
+    setTxInfoDialog(false)
+  }, [])
+
+  const handleStructLogsUpload = useCallback((data: string) => {
+    dispatch(setStructLogs(JSON.parse(data) as IStructLog[]))
+    setStructLogsDialog(false)
+  }, [])
 
   return (
     <StyledStack {...props} spacing={4}>
       <Stack direction="row" spacing={4}>
         <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
-        <Button variant="contained" component="label">
-          Upload
-          <input hidden type="file" onChange={uploadTxInfo}></input>
+        <Button variant="contained" onClick={() => setTxInfoDialog(true)}>
+          Add
         </Button>
+        <DataAdder
+          title="Transaction info"
+          submithandler={handleTxInfoUpload}
+          open={isTxInfoDialogOpen}
+          onClose={() => setTxInfoDialog(false)}
+        />
       </Stack>
       <Stack direction="row" spacing={4}>
         <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
-        <Button variant="contained" component="label">
-          Upload
-          <input hidden type="file" onChange={uploadStructLogs}></input>
+        <Button variant="contained" onClick={() => setStructLogsDialog(true)}>
+          Add
         </Button>
+        <DataAdder
+          title="Struct Logs"
+          submithandler={handleStructLogsUpload}
+          open={isStructLogsDialogOpen}
+          onClose={() => setStructLogsDialog(false)}
+        />
       </Stack>
 
       <Button variant="contained" component="label" onClick={submitHandler}>

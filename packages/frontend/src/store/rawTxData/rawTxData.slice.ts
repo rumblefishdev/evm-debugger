@@ -6,6 +6,7 @@ const initialState = {
   txHash: '',
   transactionInfo: {} as TTransactionInfo,
   structLogs: [] as IStructLog[],
+  contractAddresses: [] as string[],
 }
 export const rawTxDataSlice = createSlice({
   reducers: {
@@ -18,9 +19,12 @@ export const rawTxDataSlice = createSlice({
     setStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
       state.structLogs = action.payload
     },
+    setContractAddresses: (state, action: PayloadAction<string[]>) => {
+      state.contractAddresses = action.payload
+    },
   },
   name: 'rawTxData',
   initialState,
 })
 export const rawTxDataReducer = rawTxDataSlice.reducer
-export const { setTxInfo, setTxHash, setStructLogs } = rawTxDataSlice.actions
+export const { setTxInfo, setTxHash, setStructLogs, setContractAddresses } = rawTxDataSlice.actions
