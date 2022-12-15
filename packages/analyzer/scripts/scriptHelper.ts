@@ -4,10 +4,12 @@ import {TTransactionData} from "@evm-debuger/types"
 
 export const prepareAnalyzer = async (transactionData: TTransactionData) => {
   const analyzerForAddressesTranslation = new TxAnalyzer(transactionData)
-  return await getAnalyzerWithTranslatedAddresses(analyzerForAddressesTranslation);
+  const transactionalDataWithTranslatedAddresses = await getTransactionDataWithTranslatedAddresses(analyzerForAddressesTranslation);
+
+  return new TxAnalyzer(transactionalDataWithTranslatedAddresses)
 }
 
-const getAnalyzerWithTranslatedAddresses = async (analyzer: TxAnalyzer) => {
+const getTransactionDataWithTranslatedAddresses = async (analyzer: TxAnalyzer) => {
   const addresses = analyzer.getContractAddressesInTransaction()
   for (const address of addresses) {
     const response = await fetch(
@@ -20,6 +22,6 @@ const getAnalyzerWithTranslatedAddresses = async (analyzer: TxAnalyzer) => {
     }
   }
 
-  return analyzer
+  return analyzer.transactionData
 }
 
