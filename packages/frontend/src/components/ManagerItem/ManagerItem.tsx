@@ -1,10 +1,9 @@
 import type { ButtonProps } from '@mui/material'
-import { Button } from '@mui/material'
+import { Dialog, Button } from '@mui/material'
 import React, { useState } from 'react'
 
 import { updateSourceCode } from '../../store/sourceCodes/sourceCodes.slice'
 import { useTypedDispatch } from '../../store/storeHooks'
-import { ContentShowPopup } from '../ContentShowPopup'
 import { DataAdder } from '../DataAdder'
 
 import type { ManagerItemProps } from './ManagerItem.types'
@@ -36,7 +35,9 @@ export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: Mana
         </Button>
       )}
       {isFound ? <StyledStatusFound>Found</StyledStatusFound> : <StyledStatusNotFound>Not found</StyledStatusNotFound>}
-      <ContentShowPopup open={isDataVisible} onClose={() => setDataVisibility(false)} popupData={value} />
+      <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
+        {value}
+      </Dialog>
       <DataAdder open={isDataAdderVisible} submithandler={dataAdderHandler} title={name} onClose={() => setDataAdderVisibility(false)} />
     </StyledStack>
   )
