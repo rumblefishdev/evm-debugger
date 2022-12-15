@@ -22,7 +22,11 @@ jobs:
         run: npm install -g npm
 
       - name: Install npm dependencies
-        run: npm ci
+        run: | 
+          cd packages/analyzer
+          npm ci
 
       - name: Run tests
-        run: npm run analyzer:test
+        run: |
+          cd packages/analyzer
+          npm run test
