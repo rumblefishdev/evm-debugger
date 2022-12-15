@@ -1,20 +1,8 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 
-import { MainDisplay } from './pages/MainDisplay'
-import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <SelectTransactionScreen />,
-  },
-  {
-    path: '/mainDisplay',
-    element: <MainDisplay />,
-  },
-])
+import { router } from './router'
 
 function App() {
   return (

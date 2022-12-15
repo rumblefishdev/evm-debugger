@@ -9,3 +9,6 @@ export type TParsedExtendedTraceLog = TTraceLog & {
   y: number
   nestedItems: TParsedExtendedTraceLog[]
 }
+
+export type TBytecodes = { address: string; bytecode: string | null }
+export type TSourceCodes = { address: string; sourceCode: string | null }
