@@ -21,13 +21,12 @@ import {
   prepareTraceToSearch,
   readMemory,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { FragmentReader } from './helpers/fragmentReader'
-import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
-import { SigHashStatuses } from './sigHashes'
-import fetch from "node-fetch"
+import {StructLogParser} from './dataExtractors/structLogParser'
+import {StackCounter} from './helpers/stackCounter'
+import {StorageHandler} from './dataExtractors/storageHandler'
+import {FragmentReader} from './helpers/fragmentReader'
+import {extractLogTypeArgsData} from './dataExtractors/argsExtractors'
+import {SigHashStatuses} from './sigHashes'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {}
@@ -219,28 +218,14 @@ export class TxAnalyzer {
     return sighashStatues.sighashStatusList
   }
 
-  private getContractAddressesInTransaction() {
+  public getContractAddressesInTransaction() {
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
     const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
     const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
     const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
-    const mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
 
     return this.getTraceLogsContractAddresses(mainTraceLogList)
-  }
-
-  public async enrichTransactionDataWithTranslatedAddresses() {
-    const addresses = this.getContractAddressesInTransaction()
-    for (const address of addresses) {
-      const response = await fetch(
-          `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=Y8XNE3W519FITZJRPRGYY4ZEII2IV3W73F`
-      )
-
-      const {result, status} = await response.json()
-      if (status === '1') {
-        this.transactionData.abis[address] = result
-      }
-    }
   }
 
   public analyze() {

@@ -1,41 +1,33 @@
-import {promises} from "fs"
-import {TxAnalyzer} from "./txAnalyzer"
-import {TTransactionData} from "@evm-debuger/types"
-import {prepareAnalyzer} from "./helpers/helpers"
+import { promises } from 'fs'
+import { TTransactionData } from '@evm-debuger/types'
+import { prepareAnalyzer } from '../scripts/scriptHelper'
 
 describe('TxAnalyzer', () => {
+  describe('analyze transaction', () => {
+    it('analyze transaction with revert', async () => {
+      const testData = await promises.readFile('./test/revertedTransactionLogs.json', 'utf8')
+      const jsonTestData = JSON.parse(testData)
 
-    beforeAll(() => {
-        jest.setTimeout(20000)
-    })
+      const transactionData: TTransactionData = {
+        transactionInfo: jsonTestData.transactionInfo,
+        structLogs: jsonTestData.structLogs,
+        abis: {},
+      }
 
-    describe('analyze transaction', () => {
+      const analyzer = await prepareAnalyzer(transactionData)
 
-        it('analyze transaction with revert', async () => {
-            const testData = await promises.readFile('./test/revertedTransactionLogs.json', "utf8")
-            const jsonTestData = JSON.parse(testData)
+      const result = analyzer.analyze()
+      const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
 
-            const transactionData: TTransactionData = {
-                transactionInfo: jsonTestData.transactionInfo,
-                structLogs: jsonTestData.structLogs,
-                abis: {},
-            }
+      const expectedResponse = await promises.readFile('./test/revertedTransactionResultLogs.json', 'utf8')
+      const expectedResponseWithoutWhiteSpaces = removeWhiteSpaces(expectedResponse)
 
-            const analyzer = await prepareAnalyzer(transactionData)
-            const result = analyzer.analyze()
-            const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(JSON.stringify(result))
+      expect(expectedResponseWithoutWhiteSpaces).toEqual(resultAsStringWithoutWhiteSpaces)
+    }, 20000)
+  })
 
-            const expectedResponse = await promises.readFile('./test/revertedTransactionResultLogs.json', "utf8")
-            const expectedResponseWithoutWhiteSpaces = removeWhiteSpaces(expectedResponse)
-
-            expect(expectedResponseWithoutWhiteSpaces).toEqual(resultAsStringWithoutWhiteSpaces)
-        })
-
-    })
-
-    const removeWhiteSpaces = (data: string) => {
-        return data.replace(/\s/g, "")
-    }
-
-});
+  const removeWhiteSpaces = (data: string) => {
+    return data.replace(/\s/g, '')
+  }
+})
 export {}

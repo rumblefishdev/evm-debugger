@@ -3,13 +3,13 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "CommonJS",
-    "rootDir": "src",
+    "rootDir": "./",
     "outDir": "dist",
     "sourceMap": true,
     "composite": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["./hardhat.config.ts", "./script.ts"],
+  "include": ["src/**/*", "scripts/scriptHelper.ts"],
+  "exclude": ["./hardhat.config.ts", "./scripts/script.ts"],
   "references": [
     {
       "path": "../types"
