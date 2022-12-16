@@ -44,8 +44,6 @@ jobs:
           node_modules/.bin/lerna bootstrap
 
       - name: 'Build'
-        env:
-          CI: false
         run: |
           npm run types:build
           npm run analyzer:build
