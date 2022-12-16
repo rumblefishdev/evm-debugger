@@ -1,12 +1,12 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.1.0",
+  "version": "0.1.1-alpha.8",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@evm-debuger/analyzer": "^0.0.1",
-    "@evm-debuger/types": "^0.0.1",
+    "@evm-debuger/analyzer": "^0.0.2",
+    "@evm-debuger/types": "^0.0.2",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.13",
@@ -31,8 +31,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=/evmDebugger react-scripts start",
+    "build": "PUBLIC_URL=/evmDebugger react-scripts build",
     "test": "jest",
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

@@ -1,10 +1,10 @@
 {
   "name": "@evm-debuger/analyzer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "scripts": {
     "chain": "hardhat node",
-    "build": "tsc --build",
+    "build": "tsc -p tsconfig.build.json",
     "start:dev": "npx hardhat run scripts/script.ts --network localhost",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "lint:check": "eslint \"src/**/*.ts\"",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
-    "@evm-debuger/types": "^0.0.1",
+    "@evm-debuger/types": "^0.0.2",
     "evm": "^0.2.0",
     "hardhat": "^2.12.0",
     "node-fetch": "2.6.6",
