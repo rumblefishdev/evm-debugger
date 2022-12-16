@@ -11,7 +11,7 @@ env:
   AWS_EC2_METADATA_DISABLED: true
 
 jobs:
-  rumblefish_java_deploy_stage:
+  frontend_deploy_stage:
     runs-on: ubuntu-20.04
     env:
       BUCKET_NAME: java-staging-aldnr.rumblefish.dev.evmdebugger
@@ -45,8 +45,8 @@ jobs:
 
       - name: 'Build'
         run: |
-          npm run analyzer:build
           npm run types:build
+          npm run analyzer:build
           npm run build
 
       - name: 'Deploy'
