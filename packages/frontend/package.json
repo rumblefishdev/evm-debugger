@@ -31,8 +31,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=/evmDebugger react-scripts start",
+    "build": "PUBLIC_URL=/evmDebugger react-scripts build",
     "test": "jest",
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

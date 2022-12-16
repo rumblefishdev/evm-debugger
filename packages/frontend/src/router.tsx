@@ -22,7 +22,7 @@ export const routes: RouteObject[] = [
 
 export type TPaths = '/' | '/mainDisplay' | '/summary'
 
-export const router = createBrowserRouter(routes)
+export const router = createBrowserRouter(routes, { basename: process.env.PUBLIC_URL })
 
 export const typedNavigate = (navigate: NavigateFunction, path: TPaths) => {
   navigate(path)
