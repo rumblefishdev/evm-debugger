@@ -40,8 +40,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm i -g lerna@^5
-          lerna bootstrap
+          npm i
+          node_modules/.bin/lerna bootstrap
 
       - name: 'Build'
         run: |
