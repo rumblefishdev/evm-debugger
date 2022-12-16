@@ -21,6 +21,19 @@ jobs:
       - name: Upgrade NPM
         run: npm install -g npm
 
+      - name: Install lerna
+        run: |
+          npm install lerna
+
+      - name: Install types npm dependencies
+        run: |
+          cd packages/types
+          npm ci
+
+      - name: build types
+        run: |
+          npm run types:build
+
       - name: Install npm dependencies
         run: | 
           cd packages/analyzer
@@ -28,5 +41,4 @@ jobs:
 
       - name: Run tests
         run: |
-          cd packages/analyzer
-          npm run test
+          npm run analyzer:test
