@@ -1,6 +1,7 @@
 name: Run analyzer tests on push
 
-on: [pull-request]
+on:
+  pull_request:
 
 jobs:
   tests:
