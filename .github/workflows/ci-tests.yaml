@@ -1,43 +1,35 @@
 name: Run analyzer tests on push
 
-on: [push]
+on: [pull-request]
 
 jobs:
   tests:
     runs-on: ubuntu-20.04
-    container: node:14.17-buster
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Cache NPM dependencies
-        uses: actions/cache@v1
+      - uses: actions/setup-node@master
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 'Cache NPM dependencies'
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
-      - name: Upgrade NPM
-        run: npm install -g npm
-
-      - name: Install lerna
+      - name: Install dependencies
         run: |
-          npm install lerna
+          npm i
+          node_modules/.bin/lerna bootstrap
 
-      - name: Install types npm dependencies
-        run: |
-          cd packages/types
-          npm ci
-
-      - name: build types
+      - name: 'Build types'
         run: |
           npm run types:build
-
-      - name: Install npm dependencies
-        run: | 
-          cd packages/analyzer
-          npm ci
 
       - name: Run tests
         run: |
