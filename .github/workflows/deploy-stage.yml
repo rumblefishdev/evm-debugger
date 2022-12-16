@@ -52,7 +52,7 @@ jobs:
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${java-staging-aldnr.rumblefish.dev.evmdebugger}/${PREFIX} --delete --exact-timestamps
-          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
