@@ -18,7 +18,7 @@ jobs:
       PREFIX: evmDebugger
 
     if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend) &&
+      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
       contains(github.ref, '-alpha.')
 
     steps:
