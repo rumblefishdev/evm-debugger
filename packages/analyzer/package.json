@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "chain": "hardhat node",
-    "build": "tsc --build",
+    "build": "tsc -p tsconfig.build.json",
     "start:dev": "npx hardhat run scripts/script.ts --network localhost",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "lint:check": "eslint \"src/**/*.ts\"",
