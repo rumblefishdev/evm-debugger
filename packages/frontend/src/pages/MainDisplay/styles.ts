@@ -1,6 +1,6 @@
-import { Box, styled, Stack } from '@mui/material'
+import { styled, Stack } from '@mui/material'
 
-export const StyledMainDisplay = styled(Box)(() => ({
+export const StyledMainDisplay = styled(Stack)(() => ({
   width: '100vw',
   height: '100vh',
 }))

@@ -2,6 +2,7 @@ import { Stack, styled } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
   position: 'absolute',
+  overflow: 'hidden',
   justifyContent: 'center',
   display: 'flex',
   cursor: 'pointer',
