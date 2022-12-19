@@ -20,10 +20,6 @@ export const routes: RouteObject[] = [
     element: <AnalyzeSummary />,
   },
   {
-    path: '/summary',
-    element: <AnalyzeSummary />,
-  },
-  {
     path: '/structlogsExplorer',
     element: <StructlogsExplorer />,
   },
