@@ -1,63 +1,70 @@
-import { Button, Typography } from '@mui/material'
+import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import { Button, Typography, Stack } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useTypedDispatch } from '../../store/storeHooks'
-import { loadStructLogs } from '../../store/structLogs/structLogs.slice'
-import { loadTraceLogs } from '../../store/traceLogs/traceLogs.slice'
+import { DataAdder } from '../../components/DataAdder'
+import { typedNavigate } from '../../router'
+import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
+import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
 import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
-import { StyledBox } from './styles'
+import { StyledStack } from './styles'
 
 export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
-    const [trace, setTrace] = useState<string>('')
-    const [struct, setStruct] = useState<string>('')
+  const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
-    const dispatch = useTypedDispatch()
+  const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
+  const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
 
-    const uploadHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>, type: 'struct' | 'trace') => {
-        const fileReader = new FileReader()
-        if (event.target.files?.length) {
-            fileReader.readAsText(event.target.files[0])
-            fileReader.onload = loadEvent => {
-                // console.log(loadEvent!.target!.result)
-                if (type === 'struct') setStruct(loadEvent!.target!.result as string)
-                if (type === 'trace') setTrace(loadEvent!.target!.result as string)
-            }
-        } else {
-            if (type === 'struct') setStruct('')
-            if (type === 'trace') setTrace('')
-        }
-    }, [])
+  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
+  const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
 
-    const submitHandler = useCallback(() => {
-        console.log(trace)
-        console.log(struct)
-        if (trace && struct) {
-            dispatch(loadTraceLogs(trace))
-            dispatch(loadStructLogs(struct))
-            navigate('/mainDisplay')
-        }
-    }, [trace, struct])
+  const submitHandler = useCallback(() => {
+    if (txInfo && structLogs) typedNavigate(navigate, '/summary')
+  }, [txInfo, structLogs])
 
-    return (
-        <StyledBox {...props}>
-            <Typography variant="h4">Upload Trace Logs</Typography>
-            <Button variant="contained" component="label">
-                Upload
-                <input hidden type="file" onChange={event => uploadHandler(event, 'trace')}></input>
-            </Button>
-            <Typography variant="h4">Upload Struct Logs</Typography>
-            <Button variant="contained" component="label">
-                Upload
-                <input hidden type="file" onChange={event => uploadHandler(event, 'struct')}></input>
-            </Button>
+  const handleTxInfoUpload = useCallback((data: string) => {
+    dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
+    setTxInfoDialog(false)
+  }, [])
 
-            <Typography variant="h4">Display Information</Typography>
-            <Button variant="contained" component="label" onClick={submitHandler}>
-                Done
-            </Button>
-        </StyledBox>
-    )
+  const handleStructLogsUpload = useCallback((data: string) => {
+    dispatch(setStructLogs(JSON.parse(data) as IStructLog[]))
+    setStructLogsDialog(false)
+  }, [])
+
+  return (
+    <StyledStack {...props} spacing={4}>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
+        <Button variant="contained" onClick={() => setTxInfoDialog(true)}>
+          Add
+        </Button>
+        <DataAdder
+          title="Transaction info"
+          submithandler={handleTxInfoUpload}
+          open={isTxInfoDialogOpen}
+          onClose={() => setTxInfoDialog(false)}
+        />
+      </Stack>
+      <Stack direction="row" spacing={4}>
+        <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
+        <Button variant="contained" onClick={() => setStructLogsDialog(true)}>
+          Add
+        </Button>
+        <DataAdder
+          title="Struct Logs"
+          submithandler={handleStructLogsUpload}
+          open={isStructLogsDialogOpen}
+          onClose={() => setStructLogsDialog(false)}
+        />
+      </Stack>
+
+      <Button variant="contained" component="label" onClick={submitHandler}>
+        Process logs
+      </Button>
+    </StyledStack>
+  )
 }

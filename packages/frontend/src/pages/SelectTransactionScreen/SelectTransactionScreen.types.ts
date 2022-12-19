@@ -1,4 +1,3 @@
-import type { BoxProps } from '@mui/material';
+import type { StackProps } from '@mui/material'
 
-export interface SelectTransactionScreenProps extends BoxProps {}
-
+export interface SelectTransactionScreenProps extends StackProps {}

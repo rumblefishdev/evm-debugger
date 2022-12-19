@@ -3,31 +3,37 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage'
 
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
-import { structLogsReducer } from './structLogs/structLogs.slice'
+import { bytecodesReducer } from './bytecodes/bytecodes.slice'
+import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
+import { sighashReducer } from './sighash/sighash.slice'
+import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
 import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 
 const rootReducer = combineReducers({
-    traceLogs: traceLogsReducer,
-    structLogs: structLogsReducer,
-    activeBlock: activeBlockReducer,
+  traceLogs: traceLogsReducer,
+  sourceCodes: sourceCodesReducer,
+  sighashes: sighashReducer,
+  rawTxData: rawTxDataReducer,
+  bytecodes: bytecodesReducer,
+  activeBlock: activeBlockReducer,
 })
 
 const persistConfig = {
-    storage,
-    key: 'root',
-    blacklist: ['activeBlock', 'structLogs'],
+  storage,
+  key: 'root',
+  blacklist: ['activeBlock', 'structLogs', 'rawTxData'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: getDefaultMiddleware =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
-        }),
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 })
 
 export const persistor = persistStore(store)

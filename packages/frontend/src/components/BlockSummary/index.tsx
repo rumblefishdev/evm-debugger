@@ -1,1 +1,1 @@
-export { BlockSummary } from './BlockSummary';
+export { BlockSummary } from './BlockSummary'

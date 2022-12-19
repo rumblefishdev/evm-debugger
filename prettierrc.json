@@ -8,6 +8,6 @@
     "semi": false,
     "printWidth": 140,
     "useTabs": false,
-    "tabWidth": 4,
+    "tabWidth": 2,
     "trailingComma": "es5"
 }

@@ -10,37 +10,37 @@ import type { ContentMapProps } from './ContentMap.types'
 import { StyledCard, StyledWrapper } from './styles'
 
 export const ContentMap = ({ ...props }: ContentMapProps) => {
-    const [height, setHeight] = useState(0)
-    const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
+  const [width, setWidth] = useState(0)
 
-    const rootRef = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        setWidth(rootRef.current?.clientWidth || 0)
-        setHeight(rootRef.current?.clientHeight || 0)
+  useEffect(() => {
+    setWidth(rootRef.current?.clientWidth || 0)
+    setHeight(rootRef.current?.clientHeight || 0)
 
-        if (rootRef.current) {
-            const element = rootRef.current
-            const zoomFunction = (event: WheelEvent) => zoom(event, element)
-            document.addEventListener('wheel', zoomFunction)
+    if (rootRef.current) {
+      const element = rootRef.current
+      const zoomFunction = (event: WheelEvent) => zoom(event, element)
+      document.addEventListener('wheel', zoomFunction)
 
-            return () => {
-                document.removeEventListener('wheel', zoomFunction)
-            }
-        }
-    }, [])
+      return () => {
+        document.removeEventListener('wheel', zoomFunction)
+      }
+    }
+  }, [])
 
-    const traceLog = useTypedSelector(state => selectMappedTraceLogs(state, width, height, 24))
+  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height, 24))
 
-    console.log(traceLog)
+  console.log(traceLog)
 
-    const { nestedItems } = traceLog
+  const { nestedItems } = traceLog
 
-    return (
-        <StyledWrapper>
-            <StyledCard {...props} ref={rootRef}>
-                {nestedItems && width && height ? <NestedItemBox item={traceLog} /> : <ItemBox item={traceLog} />}
-            </StyledCard>
-        </StyledWrapper>
-    )
+  return (
+    <StyledWrapper>
+      <StyledCard {...props} ref={rootRef}>
+        {nestedItems && width && height ? <NestedItemBox item={traceLog} /> : <ItemBox item={traceLog} />}
+      </StyledCard>
+    </StyledWrapper>
+  )
 }
