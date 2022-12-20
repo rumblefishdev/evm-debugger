@@ -1,70 +1,57 @@
-import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
-import { Button, Typography, Stack } from '@mui/material'
-import React, { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
+import {Box, Card, CardContent, Tab, Tabs} from "@mui/material";
+import Grid2 from "@mui/material/Unstable_Grid2";
 
-import { DataAdder } from '../../components/DataAdder'
-import { typedNavigate } from '../../router'
-import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
-import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import {ManualUploadTransactionScreen} from "./ManualUploadTransactionScreen";
+import {SelectTransactionTabPanel} from "./SelectTransactionTabPanel/SelectTransactionTabPanel";
+import {SupportedChainsTransactionScreen} from "./SupportedChainsTransactionScreen";
+import {CustomChainTransactionScreen} from "./CustomChainTransactionScreen";
 
-import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
-import { StyledStack } from './styles'
+function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
-export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenProps) => {
-  const dispatch = useTypedDispatch()
-  const navigate = useNavigate()
+export const SelectTransactionScreen = () => {
+    const [value, setValue] = React.useState(2);
 
-  const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
-  const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
+    const handleChange = (event: React.SyntheticEvent, valueToSet: number) => {
+        setValue(valueToSet);
+    };
 
-  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
-  const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
-
-  const submitHandler = useCallback(() => {
-    if (txInfo && structLogs) typedNavigate(navigate, '/summary')
-  }, [txInfo, structLogs])
-
-  const handleTxInfoUpload = useCallback((data: string) => {
-    dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
-    setTxInfoDialog(false)
-  }, [])
-
-  const handleStructLogsUpload = useCallback((data: string) => {
-    dispatch(setStructLogs(JSON.parse(data) as IStructLog[]))
-    setStructLogsDialog(false)
-  }, [])
-
-  return (
-    <StyledStack {...props} spacing={4}>
-      <Stack direction="row" spacing={4}>
-        <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
-        <Button variant="contained" onClick={() => setTxInfoDialog(true)}>
-          Add
-        </Button>
-        <DataAdder
-          title="Transaction info"
-          submithandler={handleTxInfoUpload}
-          open={isTxInfoDialogOpen}
-          onClose={() => setTxInfoDialog(false)}
-        />
-      </Stack>
-      <Stack direction="row" spacing={4}>
-        <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
-        <Button variant="contained" onClick={() => setStructLogsDialog(true)}>
-          Add
-        </Button>
-        <DataAdder
-          title="Struct Logs"
-          submithandler={handleStructLogsUpload}
-          open={isStructLogsDialogOpen}
-          onClose={() => setStructLogsDialog(false)}
-        />
-      </Stack>
-
-      <Button variant="contained" component="label" onClick={submitHandler}>
-        Process logs
-      </Button>
-    </StyledStack>
-  )
+    return (
+        <Grid2 container
+               spacing={0}
+               direction="column"
+               alignItems="center"
+               justifyContent="center"
+               style={{minHeight: '100vh'}}>
+            <Grid2>
+                <Card sx={{width: 1000, height: 500}}>
+                    <CardContent>
+                        <Box sx={{width: '100%'}}>
+                            <Box sx={{borderColor: 'divider', borderBottom: 1}}>
+                                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                    <Tab label="SUPPORTED CHAINS" {...a11yProps(0)} />
+                                    <Tab label="CUSTOM CHAIN" {...a11yProps(1)} />
+                                    <Tab label="MANUAL UPLOAD" {...a11yProps(2)} />
+                                </Tabs>
+                            </Box>
+                            <SelectTransactionTabPanel index={0} value={value}>
+                                <SupportedChainsTransactionScreen/>
+                            </SelectTransactionTabPanel>
+                            <SelectTransactionTabPanel index={1} value={value}>
+                                <CustomChainTransactionScreen/>
+                            </SelectTransactionTabPanel>
+                            <SelectTransactionTabPanel index={2} value={value}>
+                                <ManualUploadTransactionScreen/>
+                            </SelectTransactionTabPanel>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Grid2>
+        </Grid2>
+    )
 }
