@@ -37,6 +37,11 @@ export const StyledArgName = styled(Typography)(() => ({
   textAlign: 'right',
   marginRight: '24px',
   fontWeight: 'bold',
+  fontSize: '14px',
+  fontFamily: 'roboto mono',
 }))
 
-export const StyledArgValue = styled(Typography)(() => ({}))
+export const StyledArgValue = styled(Typography)(() => ({
+  fontSize: '14px',
+  fontFamily: 'roboto mono',
+}))

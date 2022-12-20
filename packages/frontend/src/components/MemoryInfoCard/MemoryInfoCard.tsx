@@ -5,7 +5,7 @@ import { useTypedSelector } from '../../store/storeHooks'
 import { selectStructlogMemory } from '../../store/activeStructlog/activeStructlog.slice'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
-import { StyledRecord, StyledRecordIndex, StyledStack } from './styles'
+import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useTypedSelector(selectStructlogMemory)
@@ -28,7 +28,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
           <StyledRecord direction="row">
             <StyledRecordIndex>{memoryItem.index}</StyledRecordIndex>
             {memoryItem.value.map((value) => {
-              return <Typography sx={{ width: '32px' }}>{value}</Typography>
+              return <StyledRecordValue>{value}</StyledRecordValue>
             })}
           </StyledRecord>
         )
