@@ -1,4 +1,5 @@
 import React from 'react'
+import { ViewportList } from 'react-viewport-list'
 
 import { selectParsedStructLogs } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedSelector } from '../../store/storeHooks'
@@ -11,11 +12,15 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
   const currentTraceLog = useTypedSelector((state) => state.activeBlock)
   const structLogs = useTypedSelector((state) => selectParsedStructLogs(state, currentTraceLog.startIndex, currentTraceLog.returnIndex))
 
+  const ref = React.useRef<HTMLDivElement>(null)
+
   return (
-    <StyledStack>
-      {structLogs.map((structLog, index) => {
-        return <StructLogItem key={index} structLog={structLog} />
-      })}
+    <StyledStack ref={ref}>
+      <ViewportList viewportRef={ref} items={structLogs}>
+        {(item, index) => {
+          return <StructLogItem key={index} structLog={item} />
+        }}
+      </ViewportList>
     </StyledStack>
   )
 }
