@@ -1,5 +1,5 @@
-import {ethers} from 'ethers'
-import {hexlify} from 'ethers/lib/utils'
+import { ethers } from 'ethers'
+import { hexlify } from 'ethers/lib/utils'
 import type {
   ICallTypeStructLogs,
   ICallTypeTraceLog,
@@ -13,10 +13,10 @@ import type {
   IStructLog,
   TMainTraceLogs,
   TReturnedTraceLog,
-  TTransactionInfo
+  TTransactionInfo,
 } from '@evm-debuger/types'
 
-import {BuiltinErrors, OpcodesNamesArray} from '../constants/constants'
+import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
 export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStructLog[] => {
   const filteredLogs = []
@@ -128,10 +128,8 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
   ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
-export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[] , depth: number) => {
-  return traceToSearch.find(
-      (iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.type === 'REVERT'
-  ) as IReturnTypeTraceLog
+export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], depth: number) => {
+  return traceToSearch.find((iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.type === 'REVERT') as IReturnTypeTraceLog
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {

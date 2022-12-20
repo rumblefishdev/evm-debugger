@@ -24,8 +24,3 @@ export const StyledInformationCard = styled(Card)(() => ({
   padding: '8px 16px',
   height: '100%',
 }))
-
-export const StyledNavigation = styled(Stack)(() => ({
-  justifyContent: 'space-around',
-  flexDirection: 'row',
-}))
