@@ -14,7 +14,7 @@ export const SupportedChainsTransactionScreen = () => {
         setNetwork(event.target.value as string);
     };
 
-    const onTransactionHashInputChange = (event: any) => {
+    const onTransactionHashInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTransactionHash(event.target.value)
     }
 
