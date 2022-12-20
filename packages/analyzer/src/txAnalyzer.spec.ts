@@ -1,5 +1,6 @@
 import { promises } from 'fs'
 import { TTransactionData } from '@evm-debuger/types'
+// @ts-ignore
 import { prepareAnalyzer } from '../scripts/scriptHelper'
 
 describe('TxAnalyzer', () => {
