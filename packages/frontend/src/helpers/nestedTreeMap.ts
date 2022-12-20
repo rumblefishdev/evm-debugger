@@ -1,5 +1,7 @@
 // TODO: refactor so congitive-complexity is less than 15
 /* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import type { TParsedExtendedTraceLog, TTraceLog } from '../types'
 
 import { sumReducer } from './helpers'

@@ -1,5 +1,4 @@
 import { Dialog, Typography } from '@mui/material'
-import React, { useState } from 'react'
 
 import { useFileUploadHandler } from '../../hooks/useFileUpload'
 
