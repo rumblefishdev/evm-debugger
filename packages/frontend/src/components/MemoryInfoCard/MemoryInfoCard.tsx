@@ -1,10 +1,15 @@
 import React, { useMemo } from 'react'
 import { Typography } from '@mui/material'
 
+import { useTypedSelector } from '../../store/storeHooks'
+import { selectStructlogMemory } from '../../store/activeStructlog/activeStructlog.slice'
+
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 import { StyledRecord, StyledRecordIndex, StyledStack } from './styles'
 
-export const MemoryInfoCard = ({ memory, ...props }: MemoryInfoCardProps) => {
+export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
+  const memory = useTypedSelector(selectStructlogMemory)
+
   const parsedStack = useMemo(() => {
     return memory.map((memoryItem, index) => {
       const defaultString = '00000000'

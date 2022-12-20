@@ -1,16 +1,28 @@
 import React from 'react'
 
-import type { StorageInfoCardProps } from './StorageInfoCard.types'
-import { StyledStack } from './styles'
+import { selectStructlogStorage } from '../../store/activeStructlog/activeStructlog.slice'
+import { useTypedSelector } from '../../store/storeHooks'
 
-export const StorageInfoCard = ({ storage, ...props }: StorageInfoCardProps) => {
+import type { StorageInfoCardProps } from './StorageInfoCard.types'
+import { StyledStorageIndex, StyledStack, StyledStorageItem, StyledStorageItemRecord, StyledStorageValue } from './styles'
+
+export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
+  const storage = useTypedSelector(selectStructlogStorage)
+
   return (
     <StyledStack {...props}>
       {Object.keys(storage).map((key, index) => {
         return (
-          <div key={index}>
-            {key}: {storage[key]}
-          </div>
+          <StyledStorageItem key={index}>
+            <StyledStorageItemRecord>
+              <StyledStorageIndex>Key: </StyledStorageIndex>
+              <StyledStorageValue>{key}</StyledStorageValue>
+            </StyledStorageItemRecord>
+            <StyledStorageItemRecord>
+              <StyledStorageIndex>Value: </StyledStorageIndex>
+              <StyledStorageValue>{storage[key]}</StyledStorageValue>
+            </StyledStorageItemRecord>
+          </StyledStorageItem>
         )
       })}
     </StyledStack>

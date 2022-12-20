@@ -206,7 +206,6 @@ module.exports = {
         "import/group-exports": "off",
         "import/no-cycle": "off",
         "import/order": ["error", { "groups": ["builtin", "external", "parent", "sibling", "index"], "newlines-between": "always" }],
-
         //Unicorn
         "unicorn/no-keyword-prefix": "error",
         "unicorn/consistent-destructuring": "warn",
@@ -218,6 +217,7 @@ module.exports = {
         "unicorn/prefer-top-level-await": "off",
         "unicorn/prefer-at": "error",
         "unicorn/no-array-reduce": "off",
+        "unicorn/number-literal-case": "off",
         "unicorn/no-array-callback-reference": "off",
         "unicorn/prefer-logical-operator-over-ternary": "off",
         "unicorn/prevent-abbreviations": [

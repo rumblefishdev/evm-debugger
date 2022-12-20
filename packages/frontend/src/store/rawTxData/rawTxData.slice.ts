@@ -3,7 +3,9 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 
 import type { TRootState } from '../store'
-import type { TRawTxData } from '../../types'
+import type { IExtendedStructLog, TRawTxData } from '../../types'
+import { argStackExtractor } from '../../helpers/argStackExtractor'
+import { extendStack } from '../../helpers/helpers'
 
 const initialState = {
   txHash: '',
@@ -30,8 +32,12 @@ export const rawTxDataSlice = createSlice({
   initialState,
 })
 
-export const getParsedStructLogs = (state: TRawTxData, startIndex: number, returnIndex: number) => {
-  return state.structLogs.slice(startIndex, returnIndex)
+export const getParsedStructLogs = (state: TRawTxData, startIndex: number, returnIndex: number): IExtendedStructLog[] => {
+  return state.structLogs.slice(startIndex, returnIndex).map((item, index) => ({
+    ...argStackExtractor(item),
+    stack: extendStack(item.stack),
+    index,
+  }))
 }
 
 export const selectParsedStructLogs = createSelector(

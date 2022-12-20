@@ -19,3 +19,15 @@ export type TRawTxData = {
   structLogs: IStructLog[]
   contractAddresses: string[]
 }
+
+export type TExtendedStack = { value: string; isSelected: boolean }[]
+
+export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
+  description: string
+  args: {
+    name: string
+    value: string
+  }[]
+  index: number
+  stack: TExtendedStack
+}

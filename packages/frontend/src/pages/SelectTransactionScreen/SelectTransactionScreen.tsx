@@ -1,5 +1,6 @@
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { Button, Typography, Stack } from '@mui/material'
+import { ethers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
