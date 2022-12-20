@@ -7,7 +7,7 @@ export const SupportedChainsTransactionScreen = () => {
     const [network, setNetwork] = React.useState('');
 
     const submitHandler = useCallback( (hash: string) => {
-        if (hash) console.log("ELO:",hash)
+        if (hash) console.log(hash)
     }, [])
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -24,12 +24,11 @@ export const SupportedChainsTransactionScreen = () => {
             sx={{'& .MuiTextField-root': {m: 1}}}
             noValidate
             autoComplete="off">
-            <TextField fullWidth id="transaction-hash-input" label="Transaction hash" variant="outlined" value={transactionHash} onChange={onTransactionHashInputChange} />
+            <TextField fullWidth label="Transaction hash" variant="outlined" value={transactionHash} onChange={onTransactionHashInputChange} />
             <FormControl fullWidth  sx={{m: 1}}>
-                <InputLabel id="demo-simple-select-label">Network</InputLabel>
+                <InputLabel>Network</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     value={network}
                     label="Network"
                     onChange={handleChange}

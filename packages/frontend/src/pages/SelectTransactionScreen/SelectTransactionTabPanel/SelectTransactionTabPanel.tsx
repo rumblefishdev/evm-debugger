@@ -9,12 +9,11 @@ interface TabPanelProps {
 
 export const SelectTransactionTabPanel = (props: TabPanelProps) => {
     const {children, value, index, ...other} = props;
+    if (value !== index) return null;
 
     return (
         <div
             role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
