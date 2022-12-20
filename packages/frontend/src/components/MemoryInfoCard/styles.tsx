@@ -7,6 +7,11 @@ export const StyledStack = styled(Stack)(() => ({
 
 export const StyledRecordIndex = styled(Typography)(() => ({
   marginRight: '16px',
+  fontFamily: 'roboto mono',
+}))
+export const StyledRecordValue = styled(Typography)(() => ({
+  width: '32px',
+  fontFamily: 'roboto mono',
 }))
 
 export const StyledRecord = styled(Stack)(() => ({

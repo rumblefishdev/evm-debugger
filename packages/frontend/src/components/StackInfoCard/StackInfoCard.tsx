@@ -1,19 +1,18 @@
 import React, { useMemo } from 'react'
-import { Typography } from '@mui/material'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectStructlogStack } from '../../store/activeStructlog/activeStructlog.slice'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'
-import { StyledRecord, StyledRecordIndex, StyledStack } from './styles'
+import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
 export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
   const stack = useTypedSelector(selectStructlogStack)
 
   const parsedStack = useMemo(() => {
     return stack.map((stackItem, index) => {
-      const defaultString = '00000000'
-      const hexValue = (index * 32).toString(16)
+      const defaultString = '0000'
+      const hexValue = (stack.length - 1 - index).toString()
       const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
 
       return { value: stackItem, index: paddedHexValue }
@@ -28,7 +27,7 @@ export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
         return (
           <StyledRecord direction="row" sx={isSelected}>
             <StyledRecordIndex>{stackItem.index}</StyledRecordIndex>
-            <Typography sx={{ width: '32px' }}>{stackItem.value.value}</Typography>
+            <StyledRecordValue>{stackItem.value.value}</StyledRecordValue>
           </StyledRecord>
         )
       })}

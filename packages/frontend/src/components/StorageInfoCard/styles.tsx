@@ -16,6 +16,10 @@ export const StyledStorageItemRecord = styled(Stack)(() => ({
 }))
 
 export const StyledStorageIndex = styled(Typography)(() => ({
-  width: '50px',
+  width: '64px',
+  marginRight: '16px',
+  fontFamily: 'roboto mono',
 }))
-export const StyledStorageValue = styled(Typography)(() => ({}))
+export const StyledStorageValue = styled(Typography)(() => ({
+  fontFamily: 'roboto mono',
+}))
