@@ -9,7 +9,7 @@ import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useTypedSelector(selectStructlogMemory)
 
-  const parsedStack = useMemo(() => {
+  const parsedMemory = useMemo(() => {
     return memory.map((memoryItem, index) => {
       const defaultString = '00000000'
       const hexValue = (index * 32).toString(16)
@@ -22,7 +22,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
 
   return (
     <StyledStack {...props}>
-      {parsedStack.map((memoryItem) => {
+      {parsedMemory.map((memoryItem) => {
         return (
           <StyledRecord direction="row">
             <StyledRecordIndex>{memoryItem.index}</StyledRecordIndex>
