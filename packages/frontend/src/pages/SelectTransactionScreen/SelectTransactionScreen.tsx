@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { DataAdder } from '../../components/DataAdder'
 import { typedNavigate } from '../../router'
-import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
+import { loadStructLogs } from '../../store/activeStructlog/activeStructlog.slice'
+import { setTxInfo } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
 import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
@@ -32,7 +33,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   }, [])
 
   const handleStructLogsUpload = useCallback((data: string) => {
-    dispatch(setStructLogs(JSON.parse(data) as IStructLog[]))
+    dispatch(loadStructLogs(JSON.parse(data) as IStructLog[]))
     setStructLogsDialog(false)
   }, [])
 
