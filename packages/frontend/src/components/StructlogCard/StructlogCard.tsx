@@ -15,13 +15,14 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // add keydown listener
+    // add keypress listener
+
     const handleKeyDown = (event: KeyboardEvent) => {
       event.preventDefault()
 
-      if (event.key === 'ArrowDown') dispatch(loadNextStructlog(structLogs))
+      if (event.key === 'ArrowDown' && !event.repeat) dispatch(loadNextStructlog(structLogs))
 
-      if (event.key === 'ArrowUp') dispatch(loadPreviousStructlog(structLogs))
+      if (event.key === 'ArrowUp' && !event.repeat) dispatch(loadPreviousStructlog(structLogs))
     }
 
     document.addEventListener('keydown', handleKeyDown)
