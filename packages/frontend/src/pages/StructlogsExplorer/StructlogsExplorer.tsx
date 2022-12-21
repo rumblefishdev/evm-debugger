@@ -1,11 +1,14 @@
 import React from 'react'
 
+import { BytecodeInfoCard } from '../../components/BytecodeInfoCard'
+import { MemoryInfoCard } from '../../components/MemoryInfoCard'
 import { Navigation } from '../../components/Navigation'
+import { StackInfoCard } from '../../components/StackInfoCard'
+import { StorageInfoCard } from '../../components/StorageInfoCard'
 import { StructlogCard } from '../../components/StructlogCard'
-import { StructlogNavigation } from '../../components/StructlogPanels'
 
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
-import { StyledContentWrapper, StyledStack } from './styles'
+import { StyledContentWrapper, StyledPanelsWrapper, StyledStack } from './styles'
 
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   return (
@@ -13,7 +16,12 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
       <Navigation />
       <StyledContentWrapper {...props}>
         <StructlogCard />
-        <StructlogNavigation />
+        <StyledPanelsWrapper>
+          <StackInfoCard />
+          <MemoryInfoCard />
+          <StorageInfoCard />
+          <BytecodeInfoCard />
+        </StyledPanelsWrapper>
       </StyledContentWrapper>
     </StyledStack>
   )

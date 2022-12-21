@@ -12,15 +12,15 @@ export const StyledContentWrapper = styled(Stack)(() => ({
   alignItems: 'center',
 }))
 
+export const StyledPanelsWrapper = styled(Stack)(() => ({
+  width: '1024px',
+  padding: '8px 16px',
+  height: '100%',
+}))
+
 export const StyledStructLogCard = styled(Card)(() => ({
   width: '824px',
   padding: '8px 16px',
   overflow: 'auto',
-  height: '100%',
-}))
-
-export const StyledInformationCard = styled(Card)(() => ({
-  width: '1024px',
-  padding: '8px 16px',
   height: '100%',
 }))

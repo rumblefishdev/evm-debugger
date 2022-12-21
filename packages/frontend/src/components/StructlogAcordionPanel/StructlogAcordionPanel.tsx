@@ -1,11 +1,10 @@
-import type { ReactElement } from 'react'
 import React, { useCallback, useState, useRef, useEffect } from 'react'
-import { AccordionSummary, AccordionDetails } from '@mui/material'
+import { AccordionDetails } from '@mui/material'
 
 import type { StructlogAcordionPanelProps } from './StructlogAcordionPanel.types'
 import { StyledAccordion, StyledAccordionSummary, StyledContainer, StyledWrapper } from './styles'
 
-export const StructlogAcordionPanel = ({ text, children, ...props }: StructlogAcordionPanelProps) => {
+export const StructlogAcordionPanel = ({ canExpand = false, text, children, ...props }: StructlogAcordionPanelProps) => {
   const [isExpanded, setExpanded] = useState(false)
   const [containerHeight, setContainerHeight] = useState(0)
 
@@ -16,11 +15,12 @@ export const StructlogAcordionPanel = ({ text, children, ...props }: StructlogAc
     if (container) setContainerHeight(container.clientHeight)
   }, [])
 
-  const rootStyles = isExpanded ? { flexGrow: 1 } : {}
-  const handleExpand = useCallback(() => setExpanded(!isExpanded), [isExpanded])
+  const rootStyles = isExpanded && canExpand ? { flexGrow: 1 } : {}
+  const canExpandStyles = canExpand ? { cursor: 'pointer' } : { backgroundColor: 'rgba(0, 0, 0, 0.12)' }
+  const handleExpand = useCallback(() => setExpanded(!isExpanded && canExpand), [isExpanded, canExpand])
 
   return (
-    <StyledAccordion ref={containerRef} {...props} expanded={isExpanded} sx={{ ...rootStyles }}>
+    <StyledAccordion ref={containerRef} {...props} expanded={isExpanded && canExpand} sx={{ ...rootStyles, ...canExpandStyles }}>
       <StyledAccordionSummary onClick={handleExpand}>{text}</StyledAccordionSummary>
       <AccordionDetails>
         {containerHeight ? (
