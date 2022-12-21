@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TMainTraceLogs, TTransactionInfo } from '@evm-debuger/types'
+import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 
 import type { TRootState } from '../store'
 import type { IExtendedStructLog, TRawTxData } from '../../types'
@@ -32,20 +33,37 @@ export const rawTxDataSlice = createSlice({
   initialState,
 })
 
-export const getParsedStructLogs = (state: TRawTxData, startIndex: number, returnIndex: number): IExtendedStructLog[] => {
-  return state.structLogs.slice(startIndex, returnIndex).map((item, index) => ({
-    ...argStackExtractor(item),
-    stack: extendStack(item.stack),
-    index,
-  }))
+export const getParsedStructLogs = (
+  structLogs: IStructLog[],
+  traceLogs: TMainTraceLogs[],
+  startIndex: number,
+  returnIndex: number
+): IExtendedStructLog[] => {
+  return structLogs
+    .slice(startIndex, returnIndex)
+    .filter((item) => item.depth === structLogs[startIndex].depth)
+    .map((item, index) => {
+      if (checkIfOfCallType(item) || checkIfOfCreateType(item))
+        return {
+          ...argStackExtractor(item),
+          stack: extendStack(item.stack),
+          index,
+          gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
+        }
+
+      return {
+        ...argStackExtractor(item),
+        stack: extendStack(item.stack),
+        index,
+      }
+    })
 }
 
 export const selectParsedStructLogs = createSelector(
-  [
-    (state: TRootState) => state.rawTxData,
-    (state: TRootState, startIndex: number) => startIndex,
-    (state: TRootState, startIndex: number, returnIndex: number) => returnIndex,
-  ],
+  (state: TRootState) => state.rawTxData.structLogs,
+  (state: TRootState) => state.traceLogs,
+  (state: TRootState) => state.activeBlock.startIndex,
+  (state: TRootState) => state.activeBlock.returnIndex,
   getParsedStructLogs
 )
 
