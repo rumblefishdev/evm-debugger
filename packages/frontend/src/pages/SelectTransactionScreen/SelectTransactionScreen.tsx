@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { DataAdder } from '../../components/DataAdder'
 import { typedNavigate } from '../../router'
-import { loadStructLogs } from '../../store/activeStructlog/activeStructlog.slice'
+import { loadStructLogs } from '../../store/structlogs/structlogs.slice'
 import { setTxInfo } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 

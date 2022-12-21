@@ -1,8 +1,8 @@
 import { Accordion, AccordionDetails, Chip, Tooltip } from '@mui/material'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { isStructLogActive, loadActiveStructLog, updateStackSelectionStatus } from '../../store/activeStructlog/activeStructlog.slice'
+import { isStructLogActive, loadActiveStructLog, updateStackSelectionStatus } from '../../store/structlogs/structlogs.slice'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { StructLogItemProps } from './StructLogItem.types'
@@ -22,7 +22,15 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   const dispatch = useDispatch()
   const { pc, op, args, index, description, gasCost } = structLog
 
+  const itemRef = useRef<HTMLDivElement>(null)
+
   const isActive = useTypedSelector((state) => isStructLogActive(state, index))
+
+  useEffect(() => {
+    if (isActive && itemRef.current)
+      // when active scroll into view
+      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [isActive])
 
   const counter = useMemo(() => {
     const defaultString = '00000000'
@@ -43,7 +51,7 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   const activeStyle: React.CSSProperties = isActive ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
 
   return (
-    <Accordion expanded={isActive} TransitionProps={{ unmountOnExit: true }}>
+    <Accordion expanded={isActive} ref={itemRef}>
       <StyledAcoordionSummary onClick={handleOnClick} sx={activeStyle}>
         <StyledStack {...props}>
           <StyledCounter>{counter}</StyledCounter>

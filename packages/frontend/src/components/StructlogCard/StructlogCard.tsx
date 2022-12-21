@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { ViewportList } from 'react-viewport-list'
 
-import { loadPreviousStructlog, loadNextStructlog, selectParsedStructLogs } from '../../store/activeStructlog/activeStructlog.slice'
+import { loadPreviousStructlog, loadNextStructlog, selectParsedStructLogs } from '../../store/structlogs/structlogs.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { StructLogItem } from '../StructLogItem'
 
@@ -12,13 +12,13 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
 
-  console.log(structLogs)
-
   const ref = React.useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // add keydown listener
     const handleKeyDown = (event: KeyboardEvent) => {
+      event.preventDefault()
+
       if (event.key === 'ArrowDown') dispatch(loadNextStructlog(structLogs))
 
       if (event.key === 'ArrowUp') dispatch(loadPreviousStructlog(structLogs))
@@ -33,7 +33,7 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
 
   return (
     <StyledStack ref={ref}>
-      <ViewportList viewportRef={ref} items={structLogs}>
+      <ViewportList viewportRef={ref} items={structLogs} withCache={true}>
         {(item, index) => {
           return <StructLogItem key={index} structLog={item} />
         }}

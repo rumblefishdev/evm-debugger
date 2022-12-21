@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { useTypedSelector } from '../../store/storeHooks'
-import { selectStructlogStack } from '../../store/activeStructlog/activeStructlog.slice'
+import { selectStructlogStack } from '../../store/structlogs/structlogs.slice'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'
 import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'

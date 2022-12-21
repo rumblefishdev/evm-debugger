@@ -13,7 +13,7 @@ const initialState: { structLogs: IStructLog[]; activeStructLog: IExtendedStruct
   activeStructLog: null,
 }
 
-export const activeStructlogSlice = createSlice({
+export const structLogsSlice = createSlice({
   reducers: {
     updateStackSelectionStatus: (state, action: PayloadAction<string>) => {
       const activeStructlog = state.activeStructLog
@@ -39,14 +39,14 @@ export const activeStructlogSlice = createSlice({
       state.activeStructLog = action.payload
     },
   },
-  name: 'activeStructlog',
+  name: 'structLogs',
   initialState,
 })
 
-export const activeStructlogReducer = activeStructlogSlice.reducer
+export const structLogsReducer = structLogsSlice.reducer
 
 export const isStructLogActive = (state: TRootState, index: number): boolean => {
-  return state.activeStructlog.activeStructLog?.index === index
+  return state.structLogs.activeStructLog?.index === index
 }
 
 export const getParsedStructLogs = (
@@ -76,28 +76,25 @@ export const getParsedStructLogs = (
 }
 
 export const selectParsedStructLogs = createSelector(
-  (state: TRootState) => state.activeStructlog.structLogs,
+  (state: TRootState) => state.structLogs.structLogs,
   (state: TRootState) => state.traceLogs,
   (state: TRootState) => state.activeBlock.startIndex,
   (state: TRootState) => state.activeBlock.returnIndex,
   getParsedStructLogs
 )
 
-export const selectStructlogStack = createSelector(
-  [(state: TRootState) => state.activeStructlog.activeStructLog?.stack],
-  (state) => state ?? []
-)
+export const selectStructlogStack = createSelector([(state: TRootState) => state.structLogs.activeStructLog?.stack], (state) => state ?? [])
 export const selectStructlogMemory = createSelector(
-  [(state: TRootState) => state.activeStructlog.activeStructLog?.memory],
+  [(state: TRootState) => state.structLogs.activeStructLog?.memory],
   (state) => state ?? []
 )
 export const selectStructlogStorage = createSelector(
-  [(state: TRootState) => state.activeStructlog.activeStructLog?.storage],
+  [(state: TRootState) => state.structLogs.activeStructLog?.storage],
   (state) => state ?? {}
 )
 
 export const { loadStructLogs, updateStackSelectionStatus, loadPreviousStructlog, loadNextStructlog, loadActiveStructLog } =
-  activeStructlogSlice.actions
+  structLogsSlice.actions
 
 // state.structLogs = structLogs
 //   .slice(startIndex, returnIndex)
