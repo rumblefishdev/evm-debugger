@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { selectStructlogStorage } from '../../store/activeStructlog/activeStructlog.slice'
+import { selectStructlogStorage } from '../../store/structlogs/structlogs.slice'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'

@@ -1,17 +1,12 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSelector, createSlice } from '@reduxjs/toolkit'
-import type { IStructLog, TMainTraceLogs, TTransactionInfo } from '@evm-debuger/types'
-import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
+import { createSlice } from '@reduxjs/toolkit'
+import type { TTransactionInfo } from '@evm-debuger/types'
 
-import type { TRootState } from '../store'
-import type { IExtendedStructLog, TRawTxData } from '../../types'
-import { argStackExtractor } from '../../helpers/argStackExtractor'
-import { extendStack } from '../../helpers/helpers'
+import type { TRawTxData } from '../../types'
 
 const initialState = {
   txHash: '',
   transactionInfo: {},
-  structLogs: [],
   contractAddresses: [],
 } as TRawTxData
 export const rawTxDataSlice = createSlice({
