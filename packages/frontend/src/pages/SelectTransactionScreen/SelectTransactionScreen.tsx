@@ -20,7 +20,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
   const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
 
-  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
+  const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
 
   const submitHandler = useCallback(() => {
