@@ -6,10 +6,8 @@ import { selectStructlogStack } from '../../store/activeStructlog/activeStructlo
 import type { StackInfoCardProps } from './StackInfoCard.types'
 import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
-export const StackInfoCard = ({ height, ...props }: StackInfoCardProps) => {
+export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
   const stack = useTypedSelector(selectStructlogStack)
-
-  console.log(height)
 
   const parsedStack = useMemo(() => {
     return stack.map((stackItem, index) => {

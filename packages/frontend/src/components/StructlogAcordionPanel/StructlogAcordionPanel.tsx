@@ -23,7 +23,11 @@ export const StructlogAcordionPanel = ({ text, children, ...props }: StructlogAc
     <StyledAccordion ref={containerRef} {...props} expanded={isExpanded} sx={{ ...rootStyles, transition: 'all 0.4s ease-in-out' }}>
       <AccordionSummary onClick={handleExpand}>{text}</AccordionSummary>
       <AccordionDetails>
-        {containerHeight ? React.cloneElement(children as ReactElement, { height: containerHeight }) : null}
+        {containerHeight ? (
+          <Stack sx={{ width: '100%', position: 'relative', overflow: 'auto', height: 'calc(100% - 72px)' }}>
+            <Stack sx={{ width: '100%', position: 'absolute', height: ' 100%' }}>{children}</Stack>
+          </Stack>
+        ) : null}
       </AccordionDetails>
     </StyledAccordion>
   )
