@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails } from '@mui/material'
+import { Accordion, AccordionDetails, Chip, Tooltip } from '@mui/material'
 import React, { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -13,13 +13,14 @@ import {
   StyledArgsWrapper,
   StyledArgValue,
   StyledCounter,
+  StyledOpcodeDescriptionIcon,
   StyledStack,
   StyledType,
 } from './styles'
 
 export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemProps) => {
   const dispatch = useDispatch()
-  const { pc, op, args, index } = structLog
+  const { pc, op, args, index, description, gasCost } = structLog
 
   const isActive = useTypedSelector((state) => isStructLogActive(state.activeStructlog, index))
 
@@ -46,7 +47,13 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
       <StyledAcoordionSummary onClick={handleOnClick} sx={activeStyle}>
         <StyledStack {...props}>
           <StyledCounter>{counter}</StyledCounter>
-          <StyledType>{op}</StyledType>
+          <StyledType>
+            {op}
+            <Tooltip title={description}>
+              <StyledOpcodeDescriptionIcon />
+            </Tooltip>
+          </StyledType>
+          <Chip label={`gasCost: ${gasCost}`} />
         </StyledStack>
       </StyledAcoordionSummary>
       {args.length > 0 ? (

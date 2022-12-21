@@ -3,6 +3,7 @@ import { Stack, styled, Typography } from '@mui/material'
 export const StyledStack = styled(Stack)(() => ({
   overflow: 'auto',
   marginTop: '16px',
+  height: '100%',
 }))
 
 export const StyledStorageItem = styled(Stack)(() => ({

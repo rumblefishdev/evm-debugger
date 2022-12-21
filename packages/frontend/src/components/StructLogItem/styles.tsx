@@ -1,3 +1,4 @@
+import { HelpOutline } from '@mui/icons-material'
 import { AccordionSummary, Stack, styled, Typography } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
@@ -19,7 +20,7 @@ export const StyledCounter = styled(Typography)(() => ({
 }))
 
 export const StyledType = styled(Typography)(() => ({
-  width: '112px',
+  width: '136px',
   marginRight: '24px',
 }))
 
@@ -44,4 +45,10 @@ export const StyledArgName = styled(Typography)(() => ({
 export const StyledArgValue = styled(Typography)(() => ({
   fontSize: '14px',
   fontFamily: 'roboto mono',
+}))
+
+export const StyledOpcodeDescriptionIcon = styled(HelpOutline)(() => ({
+  width: '12px',
+  marginLeft: '4px',
+  height: '12px',
 }))

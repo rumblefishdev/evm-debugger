@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { Typography } from '@mui/material'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectStructlogMemory } from '../../store/activeStructlog/activeStructlog.slice'
