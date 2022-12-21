@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, Chip, Tooltip } from '@mui/material'
 import React, { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { isStructLogActive, loadActiveStructlog, updateStackSelectionStatus } from '../../store/activeStructlog/activeStructlog.slice'
+import { isStructLogActive, loadActiveStructLog, updateStackSelectionStatus } from '../../store/activeStructlog/activeStructlog.slice'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { StructLogItemProps } from './StructLogItem.types'
@@ -22,7 +22,7 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   const dispatch = useDispatch()
   const { pc, op, args, index, description, gasCost } = structLog
 
-  const isActive = useTypedSelector((state) => isStructLogActive(state.activeStructlog, index))
+  const isActive = useTypedSelector((state) => isStructLogActive(state, index))
 
   const counter = useMemo(() => {
     const defaultString = '00000000'
@@ -31,7 +31,7 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   }, [])
 
   const handleOnClick = () => {
-    dispatch(loadActiveStructlog(isActive ? null : structLog))
+    dispatch(loadActiveStructLog(isActive ? null : structLog))
   }
 
   const handleStackSelection = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, value: string) => {
