@@ -7,7 +7,7 @@ export const StyledStack = styled(Stack)(() => ({
 
 export const StyledContentWrapper = styled(Stack)(() => ({
   justifyContent: 'space-around',
-  height: 'calc(100% - 96px)',
+  height: 'calc(100% - 112px)',
   flexDirection: 'row',
   alignItems: 'center',
 }))
