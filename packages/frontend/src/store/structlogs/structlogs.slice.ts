@@ -5,7 +5,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 import { argStackExtractor } from '../../helpers/argStackExtractor'
 import { extendStack } from '../../helpers/helpers'
-import type { IExtendedStructLog } from '../../types'
+import type { IExtendedStructLog, TExtendedStack } from '../../types'
 import type { TRootState } from '../store'
 
 const initialState: { structLogs: IStructLog[]; activeStructLog: IExtendedStructLog | null } = {
@@ -75,6 +75,27 @@ export const getParsedStructLogs = (
     })
 }
 
+export const getParsedStack = (stack: TExtendedStack) => {
+  return stack.map((stackItem, index) => {
+    const defaultString = '0000'
+    const hexValue = (stack.length - 1 - index).toString()
+    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+
+    return { value: stackItem, index: paddedHexValue }
+  })
+}
+
+export const getParsedMemory = (memory: string[]) => {
+  return memory.map((memoryItem, index) => {
+    const defaultString = '00000000'
+    const hexValue = (index * 32).toString(16)
+    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+    const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
+
+    return { value: splitMemoryItem, index: paddedHexValue }
+  })
+}
+
 export const selectParsedStructLogs = createSelector(
   (state: TRootState) => state.structLogs.structLogs,
   (state: TRootState) => state.traceLogs,
@@ -83,11 +104,8 @@ export const selectParsedStructLogs = createSelector(
   getParsedStructLogs
 )
 
-export const selectStructlogStack = createSelector([(state: TRootState) => state.structLogs.activeStructLog?.stack], (state) => state ?? [])
-export const selectStructlogMemory = createSelector(
-  [(state: TRootState) => state.structLogs.activeStructLog?.memory],
-  (state) => state ?? []
-)
+export const selectParsedStack = createSelector((state: TRootState) => state.structLogs.activeStructLog?.stack ?? [], getParsedStack)
+export const selectParsedMemory = createSelector((state: TRootState) => state.structLogs.activeStructLog?.memory ?? [], getParsedMemory)
 export const selectStructlogStorage = createSelector(
   [(state: TRootState) => state.structLogs.activeStructLog?.storage],
   (state) => state ?? {}
