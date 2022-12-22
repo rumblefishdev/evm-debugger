@@ -8,14 +8,16 @@ import {
   StyledRecord,
   StyledRecordIndex,
 } from './styles'
+import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 
 export const OpcodeItem = React.forwardRef(({ opcode, ref, ...props}: OpcodeItemProps) => {
-  
+  const currentOpcode = opcodesDictionary[opcode.name]
+
   return (
     <StyledRecord direction="row" ref={ref} {...props}>
       <StyledRecordIndex>{convertNrToHexString(opcode.pc)}</StyledRecordIndex>
       <StyledRecordIndex>{opcode.name}
-        <Tooltip title={opcode.description}>
+        <Tooltip title={currentOpcode?.description ? currentOpcode.description : ''}>
           <StyledOpcodeDescriptionIcon />
         </Tooltip>
         </StyledRecordIndex>
