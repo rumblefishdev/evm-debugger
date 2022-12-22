@@ -1,6 +1,7 @@
 {
   "version": "independent",
   "packages": ["packages/*"],
+  "useWorkspaces": true,
   "command": {
     "version": {
       "allowBranch": "master",
