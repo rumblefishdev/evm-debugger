@@ -113,22 +113,3 @@ export const selectStructlogStorage = createSelector(
 
 export const { loadStructLogs, updateStackSelectionStatus, loadPreviousStructlog, loadNextStructlog, loadActiveStructLog } =
   structLogsSlice.actions
-
-// state.structLogs = structLogs
-//   .slice(startIndex, returnIndex)
-//   .filter((item) => item.depth === structLogs[startIndex].depth)
-//   .map((item, index) => {
-//     if (checkIfOfCallType(item) || checkIfOfCreateType(item))
-//       return {
-//         ...argStackExtractor(item),
-//         stack: extendStack(item.stack),
-//         index,
-//         gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
-//       }
-
-//     return {
-//       ...argStackExtractor(item),
-//       stack: extendStack(item.stack),
-//       index,
-//     }
-//   })
