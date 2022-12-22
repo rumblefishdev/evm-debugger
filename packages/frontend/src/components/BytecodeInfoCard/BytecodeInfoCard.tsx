@@ -24,43 +24,35 @@ const exampleDis = `
 "_pc": 0`
 
 const tst: IOpCodeDisassemled = {
-    pushes: 1,
-    pops: 0,
     pc: 0,
-    operandSize: 1,
     operand: 128,
     opcode: 96,
     name: "PUSH1",
-    fee: 3,
     description: "Place 1 byte item on stack."
 }
 
 const tst2: IOpCodeDisassemled = {
-    pushes: 1,
-    pops: 1,
     pc: 8,
-    operandSize: 0,
     operand: 128,
     opcode: 84,
     name: "SLOAD",
-    fee: 800,
     description: "Load word from storage."
 }
 
 export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     // const [tst, setTst] = useState<string>()
-    const [disassembledCode, setDisassembledCode] = useState<string>(exampleDis)
+    const [disassembledCode, setDisassembledCode] = useState<IOpCodeDisassemled[]>([])
     const data = useTypedSelector((state) => bytecodesSelectors.selectAll(state.bytecodes))
     const activeAddress = useTypedSelector((state) => state.activeBlock).storageAddress
 
     const activeBytecode = useMemo(()=>{ return data.find(x => x.address === activeAddress).bytecode},[activeAddress])
     
     const disassembledCodeArray = [tst,tst2,tst, tst,tst2,tst, tst,tst2,tst]
-    const parsedOpcodes = useMemo(()=> {
-        return disassembledCodeArray.map((singleOpCode, index) => {
-            return {value: singleOpCode, index}
-        })
-    },[])
+    // const parsedOpcodes = useMemo(()=> {
+    //     disassembledCode.length > 0 return disassembledCode.map((singleOpCode, index) => {
+    //         return {value: singleOpCode, index}
+    //     })
+    // },[])
 
     useEffect(() => {
         const getBytecode = async () => {
@@ -80,20 +72,21 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
 
 console.log('tst code', data)
 console.log('tst disass', Boolean(activeBytecode), data[2].address)
-console.log('tst zupa zdeasemblowana', disassembledCode)
+console.log('tst zupa zdeasemblowana', disassembledCode.length > 0 ? disassembledCode : undefined)
 
 return (
-<StructlogAcordionPanel text="Bytecode" canExpand={parsedOpcodes.length > 0}>
+<StructlogAcordionPanel text="Bytecode" canExpand={disassembledCode.length > 0}>
 <StyledBox {...props}>
-    {parsedOpcodes.map((stackItem) => {
+    {disassembledCode.length > 0 ?
+    disassembledCode.map((stackItem) => {
       return (
         <StyledRecord direction="row">
             <Tooltip title={'ELOOOOOOOOOOOOOOOO'} >
-                <OpcodeItem opcode={stackItem.value}></OpcodeItem>
+                <OpcodeItem opcode={stackItem}></OpcodeItem>
             </Tooltip>
         </StyledRecord>
       )
-    })}
+    }) : null}
 </StyledBox>
 </StructlogAcordionPanel>
 )

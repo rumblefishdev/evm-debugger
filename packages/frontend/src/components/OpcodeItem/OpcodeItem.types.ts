@@ -8,10 +8,6 @@ export interface OpcodeItemProps extends StackProps {
 export interface IOpCodeDisassemled {
   opcode: number
   name: TAllOpCodes
-  operandSize: number
-  pops: number
-  pushes: number
-  fee: number
   description: string
   operand: number
   pc: number

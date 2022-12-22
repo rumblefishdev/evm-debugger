@@ -17,6 +17,7 @@ import {
   StyledStack,
   StyledType,
 } from './styles'
+import { convertNrToHexString } from '../../helpers/helpers'
 
 export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemProps) => {
   const dispatch = useDispatch()
@@ -31,9 +32,7 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   }, [isActive])
 
   const counter = useMemo(() => {
-    const defaultString = '00000000'
-    const hexValue = pc.toString(16)
-    return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+    return convertNrToHexString(pc)
   }, [])
 
   const handleOnClick = () => {

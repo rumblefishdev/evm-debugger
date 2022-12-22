@@ -33,3 +33,9 @@ export const sumReducer = (accumulator: number, currentValue: number) => accumul
 export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
 }
+
+export const convertNrToHexString = (pc: number) => {
+  const defaultString = '00000000'
+  const hexValue = pc.toString(16)
+  return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+}

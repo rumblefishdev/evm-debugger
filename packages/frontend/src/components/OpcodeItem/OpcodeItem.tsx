@@ -1,6 +1,9 @@
+import { Tooltip } from '@mui/material'
 import React from 'react'
+import { convertNrToHexString } from '../../helpers/helpers'
 
 import type { OpcodeItemProps } from './OpcodeItem.types'
+import { StyledOpcodeDescriptionIcon } from '../StructLogItem/styles'
 import {
   StyledRecord,
   StyledRecordIndex,
@@ -10,8 +13,12 @@ export const OpcodeItem = React.forwardRef(({ opcode, ref, ...props}: OpcodeItem
   
   return (
     <StyledRecord direction="row" ref={ref} {...props}>
-      <StyledRecordIndex>{opcode.opcode}</StyledRecordIndex>
-      <StyledRecordIndex>{opcode.name}</StyledRecordIndex>
+      <StyledRecordIndex>{convertNrToHexString(opcode.pc)}</StyledRecordIndex>
+      <StyledRecordIndex>{opcode.name}
+        <Tooltip title={opcode.description}>
+          <StyledOpcodeDescriptionIcon />
+        </Tooltip>
+        </StyledRecordIndex>
       <StyledRecordIndex>{opcode.operand}</StyledRecordIndex>
     </StyledRecord>
   )

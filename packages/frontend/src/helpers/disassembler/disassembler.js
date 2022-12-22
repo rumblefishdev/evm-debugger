@@ -19,7 +19,7 @@ export class Disassembler {
     const textResult = await this.pyodide.runPythonAsync(`
       import pyevmasm, json, binascii
       res = pyevmasm.disassemble_all(binascii.unhexlify("${code}"))
-      json.dumps([{"opcode":x.opcode, "name":x.name, "operand":x.operand} for x in res])
+      json.dumps([{"pc":x.pc, "opcode":x.opcode, "name":x.name, "operand":x.operand} for x in res])
     `);
     return JSON.parse(textResult);
   }
