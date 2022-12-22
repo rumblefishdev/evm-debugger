@@ -27,9 +27,7 @@ export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemPro
   const isActive = useTypedSelector((state) => isStructLogActive(state, index))
 
   useEffect(() => {
-    if (isActive && itemRef.current)
-      // when active scroll into view
-      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    if (isActive && itemRef.current) itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [isActive])
 
   const counter = useMemo(() => {
