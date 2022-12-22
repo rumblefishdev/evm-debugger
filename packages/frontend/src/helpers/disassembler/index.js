@@ -22,7 +22,7 @@ import { Disassembler } from './disassembler'
   // }
   disassembler.disassemble(hexcode).then((result) => {
       tst = JSON.stringify(result, null, 2);
-      console.log('error NO', tst.length)
+      console.log('DISASSEMBLED:', tst)
       return tst
     })
     .catch(error => {

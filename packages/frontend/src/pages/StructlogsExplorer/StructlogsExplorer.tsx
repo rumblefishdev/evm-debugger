@@ -35,7 +35,7 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
         return <StorageInfoCard storage={selectedStructLog.storage ?? {}} />
       }
       case 'bytecode': {
-        return <BytecodeInfoCard bytecode={selectedStructLog} storage={selectedStructLog.storage ?? {}} />
+        return <BytecodeInfoCard bytecode={selectedStructLog} />
       }
       default: {
         return null
