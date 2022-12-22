@@ -32,10 +32,10 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
         return <MemoryInfoCard memory={selectedStructLog.memory ?? []} />
       }
       case 'storage': {
-        return <StorageInfoCard storage={selectedStructLog.storage} />
+        return <StorageInfoCard storage={selectedStructLog.storage ?? {}} />
       }
       case 'bytecode': {
-        return <BytecodeInfoCard />
+        return <BytecodeInfoCard bytecode={selectedStructLog} storage={selectedStructLog.storage ?? {}} />
       }
       default: {
         return null

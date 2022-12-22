@@ -62,7 +62,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
         />
       </Stack>
 
-      <Button variant="contained" component="label" onClick={submitHandler}>
+      <Button id="result" variant="contained" component="label" onClick={submitHandler}>
         Process logs
       </Button>
     </StyledStack>

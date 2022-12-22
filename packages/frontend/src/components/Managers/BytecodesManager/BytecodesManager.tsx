@@ -7,12 +7,12 @@ import { StyledStack, StyledTitle } from '../styles'
 
 import type { BytecodesManagerProps } from './BytecodesManager.types'
 
-const addBytecode = (id: string, value: string) => {
+export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
   const dispatch = useTypedDispatch()
+  const addBytecode = (id: string, value: string) => {
   dispatch(updateBytecode({ id, changes: { bytecode: value } }))
 }
 
-export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
   const data = useTypedSelector((state) => bytecodesSelectors.selectAll(state.bytecodes))
 
   return (

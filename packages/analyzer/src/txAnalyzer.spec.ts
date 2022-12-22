@@ -2,6 +2,7 @@ import { promises } from 'fs'
 import { TTransactionData } from '@evm-debuger/types'
 import { prepareAnalyzer } from '../scripts/scriptHelper'
 
+
 describe('TxAnalyzer', () => {
   describe('analyze transaction', () => {
     it('analyze transaction with revert', async () => {

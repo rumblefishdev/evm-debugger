@@ -7,12 +7,12 @@ import { StyledStack, StyledTitle } from '../styles'
 
 import type { SourcecodesManagerProps } from './SourcecodesManager.types'
 
-const addSourcecode = (id: string, value: string) => {
+export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
   const dispatch = useTypedDispatch()
+  const addSourcecode = (id: string, value: string) => {
   dispatch(updateSourceCode({ id, changes: { sourceCode: value } }))
 }
 
-export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
   const data = useTypedSelector((state) => sourceCodesSelectors.selectAll(state.sourceCodes))
 
   return (
