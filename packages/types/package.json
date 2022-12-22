@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/types",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "devDependencies": {
     "typescript": "^4.9.3"
