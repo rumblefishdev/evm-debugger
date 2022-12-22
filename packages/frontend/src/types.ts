@@ -16,7 +16,6 @@ export type TSourceCodes = { address: string; sourceCode: string | null }
 export type TRawTxData = {
   txHash: string
   transactionInfo: TTransactionInfo
-  structLogs: IStructLog[]
   contractAddresses: string[]
 }
 

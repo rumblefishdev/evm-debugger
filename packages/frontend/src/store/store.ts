@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   storage,
   key: 'root',
-  blacklist: ['activeBlock', 'structLogs', 'rawTxData', 'activeStructlog', 'activeBlock', 'traceLogs'],
+  blacklist: ['activeBlock', 'structLogs', 'rawTxData', 'activeBlock', 'traceLogs', 'bytecodes', 'sourceCodes', 'sighashes'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
