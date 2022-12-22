@@ -1,0 +1,1 @@
+export { SupportedChainsTransactionScreen } from './SupportedChainsTransactionScreen'

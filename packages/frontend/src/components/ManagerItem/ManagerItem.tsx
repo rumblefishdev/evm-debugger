@@ -8,7 +8,7 @@ import { DataAdder } from '../DataAdder'
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
-export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: ManagerItemProps) => {
+export const ManagerItem = ({ isFound, name, value, ...props }: ManagerItemProps) => {
   const dispatch = useTypedDispatch()
 
   const [isDataVisible, setDataVisibility] = useState(false)
