@@ -15,8 +15,6 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // add keypress listener
-
     const handleKeyDown = (event: KeyboardEvent) => {
       event.preventDefault()
 
