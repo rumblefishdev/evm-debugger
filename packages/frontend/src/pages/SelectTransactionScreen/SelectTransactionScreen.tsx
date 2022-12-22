@@ -1,11 +1,13 @@
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { Button, Typography, Stack } from '@mui/material'
+import { ethers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { DataAdder } from '../../components/DataAdder'
 import { typedNavigate } from '../../router'
-import { setStructLogs, setTxInfo } from '../../store/rawTxData/rawTxData.slice'
+import { loadStructLogs } from '../../store/structlogs/structlogs.slice'
+import { setTxInfo } from '../../store/rawTxData/rawTxData.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
 import type { SelectTransactionScreenProps } from './SelectTransactionScreen.types'
@@ -18,7 +20,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
   const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
 
-  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
+  const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
 
   const submitHandler = useCallback(() => {
@@ -31,7 +33,7 @@ export const SelectTransactionScreen = ({ ...props }: SelectTransactionScreenPro
   }, [])
 
   const handleStructLogsUpload = useCallback((data: string) => {
-    dispatch(setStructLogs(JSON.parse(data) as IStructLog[]))
+    dispatch(loadStructLogs(JSON.parse(data) as IStructLog[]))
     setStructLogsDialog(false)
   }, [])
 

@@ -16,6 +16,17 @@ export type TSourceCodes = { address: string; sourceCode: string | null }
 export type TRawTxData = {
   txHash: string
   transactionInfo: TTransactionInfo
-  structLogs: IStructLog[]
   contractAddresses: string[]
+}
+
+export type TExtendedStack = { value: string; isSelected: boolean }[]
+
+export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
+  description: string
+  args: {
+    name: string
+    value: string
+  }[]
+  index: number
+  stack: TExtendedStack
 }

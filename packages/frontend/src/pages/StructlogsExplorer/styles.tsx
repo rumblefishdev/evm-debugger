@@ -7,9 +7,15 @@ export const StyledStack = styled(Stack)(() => ({
 
 export const StyledContentWrapper = styled(Stack)(() => ({
   justifyContent: 'space-around',
-  height: 'calc(100% - 96px)',
+  height: 'calc(100% - 112px)',
   flexDirection: 'row',
   alignItems: 'center',
+}))
+
+export const StyledPanelsWrapper = styled(Stack)(() => ({
+  width: '1024px',
+  padding: '8px 16px',
+  height: '100%',
 }))
 
 export const StyledStructLogCard = styled(Card)(() => ({
@@ -17,15 +23,4 @@ export const StyledStructLogCard = styled(Card)(() => ({
   padding: '8px 16px',
   overflow: 'auto',
   height: '100%',
-}))
-
-export const StyledInformationCard = styled(Card)(() => ({
-  width: '1024px',
-  padding: '8px 16px',
-  height: '100%',
-}))
-
-export const StyledNavigation = styled(Stack)(() => ({
-  justifyContent: 'space-around',
-  flexDirection: 'row',
 }))

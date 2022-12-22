@@ -1,33 +1,29 @@
-import React, { useMemo } from 'react'
-import { Typography } from '@mui/material'
+import React from 'react'
+
+import { useTypedSelector } from '../../store/storeHooks'
+import { selectParsedStack } from '../../store/structlogs/structlogs.slice'
+import { StructlogAcordionPanel } from '../StructlogAcordionPanel'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'
-import { StyledRecord, StyledRecordIndex, StyledStack } from './styles'
+import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
-export const StackInfoCard = ({ stack, ...props }: StackInfoCardProps) => {
-  const parsedStack = useMemo(() => {
-    return stack.map((stackItem, index) => {
-      const defaultString = '00000000'
-      const hexValue = (index * 32).toString(16)
-      const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
-      const splitStackItem = [...stackItem.match(/.{1,2}/g)]
-
-      return { value: splitStackItem, index: paddedHexValue }
-    })
-  }, [stack])
+export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
+  const stack = useTypedSelector(selectParsedStack)
 
   return (
-    <StyledStack {...props}>
-      {parsedStack.map((stackItem) => {
-        return (
-          <StyledRecord direction="row">
-            <StyledRecordIndex>{stackItem.index}</StyledRecordIndex>
-            {stackItem.value.map((value) => {
-              return <Typography sx={{ width: '32px' }}>{value}</Typography>
-            })}
-          </StyledRecord>
-        )
-      })}
-    </StyledStack>
+    <StructlogAcordionPanel text="Stack" canExpand={stack.length > 0}>
+      <StyledStack {...props}>
+        {stack.map((stackItem, index) => {
+          const isSelected: React.CSSProperties = stackItem.value.isSelected ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
+
+          return (
+            <StyledRecord direction="row" sx={isSelected} key={index}>
+              <StyledRecordIndex>{stackItem.index}</StyledRecordIndex>
+              <StyledRecordValue>{stackItem.value.value}</StyledRecordValue>
+            </StyledRecord>
+          )
+        })}
+      </StyledStack>
+    </StructlogAcordionPanel>
   )
 }

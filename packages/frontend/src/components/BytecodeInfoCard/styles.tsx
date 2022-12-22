@@ -1,6 +1,9 @@
 import { Box, Stack, styled, Typography } from '@mui/material'
 
-export const StyledBox = styled(Box)(() => ({}))
+export const StyledBox = styled(Box)(() => ({
+  overflow: 'auto',
+  height: '100%',
+}))
 
 
 export const StyledStack = styled(Stack)(() => ({
