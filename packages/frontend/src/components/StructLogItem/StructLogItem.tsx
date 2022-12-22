@@ -18,7 +18,7 @@ import {
   StyledType,
 } from './styles'
 
-export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemProps) => {
+export const StructLogItem = ({ structLog, ...props }: StructLogItemProps) => {
   const dispatch = useDispatch()
   const { pc, op, args, index, description, gasCost } = structLog
 

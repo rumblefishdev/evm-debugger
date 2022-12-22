@@ -31,7 +31,7 @@ export const StructlogCard = ({ ...props }: StructlogCardProps) => {
   }, [structLogs])
 
   return (
-    <StyledStack ref={ref}>
+    <StyledStack ref={ref} {...props}>
       <ViewportList viewportRef={ref} items={structLogs} withCache={true}>
         {(item, index) => {
           return <StructLogItem key={index} structLog={item} />
