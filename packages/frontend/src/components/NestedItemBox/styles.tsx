@@ -2,6 +2,7 @@ import { Box, styled } from '@mui/material'
 
 export const StyledBox = styled(Box)(() => ({
   position: 'absolute',
+  overflow: 'hidden',
   cursor: 'pointer',
   boxSizing: 'border-box',
 }))
@@ -15,5 +16,6 @@ export const StyledInfoPanel = styled(Box)(() => ({
 
 export const StyledNestedItemsBox = styled(Box)(() => ({
   position: 'relative',
+  overflow: 'hidden',
   boxSizing: 'border-box',
 }))
