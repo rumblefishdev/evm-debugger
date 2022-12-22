@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Typography } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 import { disassembleBytecode } from '../../helpers/disassembler'
 import { useTypedSelector } from '../../store/storeHooks'
 import { bytecodesSelectors } from '../../store/bytecodes/bytecodes.slice'
+import { OpcodeItem } from '../OpcodeItem';
+import { StructlogAcordionPanel } from '../StructlogAcordionPanel';
+import type { IOpCodeDisassemled } from '../OpcodeItem/OpcodeItem.types';
 
-import { StyledRecord, StyledRecordIndex, StyledStack } from './styles'
-import type { BytecodeInfoCardProps, IOpCodeDisassemled } from './BytecodeInfoCard.types'
+import type { BytecodeInfoCardProps } from './BytecodeInfoCard.types'
+import { StyledBox, StyledRecord } from './styles'
+
 
 const exampleDis = `    
 "_opcode": 96,/n
@@ -51,37 +55,16 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
 
     const activeBytecode = useMemo(()=>{ return data.find(x => x.address === activeAddress).bytecode},[activeAddress])
     
-    const disassembledCodeArray = [tst,tst2,tst]
+    const disassembledCodeArray = [tst,tst2,tst, tst,tst2,tst, tst,tst2,tst]
     const parsedOpcodes = useMemo(()=> {
         return disassembledCodeArray.map((singleOpCode, index) => {
             return {value: singleOpCode, index}
         })
     },[])
 
-    const handleDisassemble = useCallback((hexcode: string) => {
-        disassembleBytecode(hexcode)
-        .then((result) => {
-
-            console.log('tst result', result)
-            setDisassembledCode(result)
-        })
-
-
-    },[])
-
-    // const disassembledCodeTst = useMemo(() => {
-    //     const promise = disassembleBytecode(codeToDisassemble)
-    //     promise
-    //     .then((result) => {
-    //         console.log('tst memo', result)
-    //         return result
-    //     })
-    // },[codeToDisassemble, storage])
-
     useEffect(() => {
         const getBytecode = async () => {
             try{
-                
                 const result = await disassembleBytecode(activeBytecode)    
                 result && setDisassembledCode(result)
                 console.log('efekt result', result)
@@ -100,37 +83,18 @@ console.log('tst disass', Boolean(activeBytecode), data[2].address)
 console.log('tst zupa zdeasemblowana', disassembledCode)
 
 return (
-    // <StyledBox {...props}>
-    //     {
-    //     <button type="submit" id="submitCode" onClick={()=>handleDisassemble(hexcode)}>Disassemble</button>
-    // }
-    // <text>"hej"</text>
-    // </StyledBox>
-//     <StyledStack {...props}>
-//         <button type="submit" id="submitCode" onClick={()=>handleDisassemble(activeBytecode)}>Disassemble</button>
-
-//         <div>
-//           {activeAddress}: {disassembledCode}
-//         </div>
-
-//   </StyledStack>
-<StyledStack {...props}>
- <button type="submit" id="submitCode" onClick={()=>handleDisassemble(activeBytecode)}>Disassemble</button>
-
-{parsedOpcodes.map((stackItem) => {
-  return (
-    <StyledRecord direction="row">
-      <StyledRecordIndex>{stackItem.index}</StyledRecordIndex>
-      <StyledRecordIndex>{stackItem.value.opcode}</StyledRecordIndex>
-      <StyledRecordIndex>{stackItem.value.operand}</StyledRecordIndex>
-      <StyledRecordIndex>{stackItem.value.fee}</StyledRecordIndex>
-      <StyledRecordIndex>{stackItem.value.description}</StyledRecordIndex>
-
-
-    </StyledRecord>
-  )
-})}
-</StyledStack>
-
-    )
+<StructlogAcordionPanel text="Bytecode" canExpand={parsedOpcodes.length > 0}>
+<StyledBox {...props}>
+    {parsedOpcodes.map((stackItem) => {
+      return (
+        <StyledRecord direction="row">
+            <Tooltip title={'ELOOOOOOOOOOOOOOOO'} >
+                <OpcodeItem opcode={stackItem.value}></OpcodeItem>
+            </Tooltip>
+        </StyledRecord>
+      )
+    })}
+</StyledBox>
+</StructlogAcordionPanel>
+)
 }
