@@ -1,0 +1,1 @@
+export { StorageInfoCard } from './StorageInfoCard';

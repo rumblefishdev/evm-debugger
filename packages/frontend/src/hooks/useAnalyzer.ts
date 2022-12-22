@@ -14,7 +14,7 @@ export const useAnalyzer = () => {
   const dispatch = useTypedDispatch()
 
   const transactionInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
-  const structLogs = useTypedSelector((state) => state.rawTxData.structLogs)
+  const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
   const analyze = useCallback(() => {
     const analyzer = new TxAnalyzer({ transactionInfo, structLogs, abis: {} })
