@@ -1,14 +1,13 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import type { TTransactionInfo } from '@evm-debuger/types'
-
-import type { TRawTxData } from '../../types'
+import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 
 const initialState = {
   txHash: '',
-  transactionInfo: {},
-  contractAddresses: [],
-} as TRawTxData
+  transactionInfo: {} as TTransactionInfo,
+  structLogs: [] as IStructLog[],
+  contractAddresses: [] as string[],
+}
 export const rawTxDataSlice = createSlice({
   reducers: {
     setTxInfo: (state, action: PayloadAction<TTransactionInfo>) => {
@@ -17,6 +16,9 @@ export const rawTxDataSlice = createSlice({
     setTxHash: (state, action: PayloadAction<string>) => {
       state.txHash = action.payload
     },
+    setStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
+      state.structLogs = action.payload
+    },
     setContractAddresses: (state, action: PayloadAction<string[]>) => {
       state.contractAddresses = action.payload
     },
@@ -24,6 +26,5 @@ export const rawTxDataSlice = createSlice({
   name: 'rawTxData',
   initialState,
 })
-
 export const rawTxDataReducer = rawTxDataSlice.reducer
-export const { setTxInfo, setTxHash, setContractAddresses } = rawTxDataSlice.actions
+export const { setTxInfo, setTxHash, setStructLogs, setContractAddresses } = rawTxDataSlice.actions

@@ -1,3 +1,4 @@
-import type { StackProps } from '@mui/material'
+import type { BoxProps } from '@mui/material';
 
-export interface StructlogsExplorerProps extends StackProps {}
+export interface StructlogsExplorerProps extends BoxProps {}
+

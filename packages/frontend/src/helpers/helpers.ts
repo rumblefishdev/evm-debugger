@@ -1,5 +1,3 @@
-import type { TExtendedStack } from '../types'
-
 export const itemSpacePercentageByGasCost = (gasCost: number, parentGasCost: number) => {
   const MAX_SPACE = 100
   const ROUNDING = 0
@@ -29,7 +27,3 @@ export const zoom = (event: WheelEvent, element: HTMLDivElement) => {
 }
 
 export const sumReducer = (accumulator: number, currentValue: number) => accumulator + currentValue
-
-export const extendStack = (stack: string[]): TExtendedStack => {
-  return stack.map((item) => ({ value: item, isSelected: false }))
-}
