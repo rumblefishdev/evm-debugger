@@ -9,22 +9,22 @@ import { StructlogsExplorer } from './pages/StructlogsExplorer'
 export const routes: RouteObject[] = [
   {
     path: '/',
+    loader: () => import('./pages/SelectTransactionScreen'),
     element: <SelectTransactionScreen />,
   },
   {
     path: '/mainDisplay',
+    loader: () => import('./pages/MainDisplay'),
     element: <MainDisplay />,
   },
   {
     path: '/summary',
-    element: <AnalyzeSummary />,
-  },
-  {
-    path: '/summary',
+    loader: () => import('./pages/AnalyzeSummary'),
     element: <AnalyzeSummary />,
   },
   {
     path: '/structlogsExplorer',
+    loader: () => import('./pages/StructlogsExplorer'),
     element: <StructlogsExplorer />,
   },
 ]
