@@ -34,8 +34,9 @@ export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
 }
 
-export const convertNrToHexString = (pc: number) => {
-  const defaultString = '00000000'
-  const hexValue = pc.toString(16)
+export const convertNrToHexString = (nr: number | null) => {
+  if(nr === null) return ''
+  const defaultString = '0x0000'
+  const hexValue = nr.toString(16)
   return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
 }
