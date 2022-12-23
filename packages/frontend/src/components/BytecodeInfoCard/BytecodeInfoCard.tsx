@@ -10,6 +10,7 @@ import type { IOpCodeDisassemled } from '../OpcodeItem/OpcodeItem.types';
 
 import type { BytecodeInfoCardProps } from './BytecodeInfoCard.types'
 import { StyledBox, StyledRecord } from './styles'
+import { remappedOpcodesDict } from '../../helpers/opcodesDictionary';
 
 
 const exampleDis = `    
@@ -45,7 +46,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     const data = useTypedSelector((state) => bytecodesSelectors.selectAll(state.bytecodes))
     const activeAddress = useTypedSelector((state) => state.activeBlock).storageAddress
 
-    const activeBytecode = useMemo(()=>{ return data.find(x => x.address === activeAddress).bytecode},[activeAddress])
+    // const activeBytecode = useMemo(()=>{ return data.find(x => x.address === activeAddress).bytecode},[activeAddress])
     
     const disassembledCodeArray = [tst,tst2,tst, tst,tst2,tst, tst,tst2,tst]
     // const parsedOpcodes = useMemo(()=> {
@@ -55,24 +56,24 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     // },[])
 
     useEffect(() => {
+        const activeBytecode = data.find(x => x.address === activeAddress).bytecode
+        console.log('efekt before', activeAddress, Boolean(activeBytecode))
         const getBytecode = async () => {
             try{
                 const result = await disassembleBytecode(activeBytecode)    
                 result && setDisassembledCode(result)
-                console.log('efekt result', result)
+                console.log('efekt result', result.length)
             } catch(error) {
                 console.log('efekt error',error)
             }
         }
 
-        console.log('efekt before', activeAddress, Boolean(activeBytecode))
             
         getBytecode()
-    },[activeBytecode])
+    },[activeAddress])
 
 console.log('tst code', data)
-console.log('tst disass', Boolean(activeBytecode), data[2].address)
-console.log('tst zupa zdeasemblowana', disassembledCode.length > 0 ? disassembledCode : undefined)
+console.log('tst zupa zdeasemblowana', disassembledCode.length > 0 ? disassembledCode[0] : undefined)
 
 return (
 <StructlogAcordionPanel text="Bytecode" canExpand={disassembledCode.length > 0}>
@@ -81,9 +82,7 @@ return (
     disassembledCode.map((stackItem) => {
       return (
         <StyledRecord direction="row">
-            <Tooltip title={'ELOOOOOOOOOOOOOOOO'} >
-                <OpcodeItem opcode={stackItem}></OpcodeItem>
-            </Tooltip>
+            <OpcodeItem opcode={stackItem}></OpcodeItem>
         </StyledRecord>
       )
     }) : null}

@@ -511,3 +511,18 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
     args: ['address'],
   },
 }
+
+export const INVALID_OPCODE = {name: "INVALID", description: "Unspecified invalid instruction.", args: []}
+
+export const remapOpcodesDict = () : {name: string; args: string[]; description: string} => {
+  const opcodes = opcodesDictionary
+  const keys = Object.keys(opcodes)
+  
+  // remap opcodes to be indexed by opcode number
+  return keys.reduce((accumulator, key) => {
+    const { opcode, description, args } = opcodes[key]
+    accumulator[opcode] = {name: key, args: args, description: description}
+    return accumulator
+  }, {name: '', args: [], description: ''})
+}
+export const remappedOpcodesDict = remapOpcodesDict()

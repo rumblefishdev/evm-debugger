@@ -1,24 +1,6 @@
 import { Disassembler } from './disassembler'
 
-
-// document.getElementById('form').addEventListener('submit', (ev) => {
-//   ev.preventDefault();
-//   const hexcode = document.getElementById('code').value;
-//   disassembler.disassemble(hexcode).then((result) => {
-  //     document.getElementById('result').textContent = JSON.stringify(result, null, 2);
-  //   });
-  // })
-  
+const disassembler = new Disassembler()
   export async function disassembleBytecode(hexcode) {
-    const disassembler = new Disassembler()
-  // try{
-  //     result = await disassembler.disasseble(hexcode)
-  // } catch(error) {
-  //     console.log('error disassembler', error)
-  //     return ''
-  // } finally {
-  //     tst = JSON.stringify(result, null,2)
-  // }
   return await disassembler.disassemble(hexcode)
-  
 }

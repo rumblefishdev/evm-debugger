@@ -8,20 +8,20 @@ import {
   StyledRecord,
   StyledRecordIndex,
 } from './styles'
-import { opcodesDictionary } from '../../helpers/opcodesDictionary'
+import { INVALID_OPCODE, remappedOpcodesDict } from '../../helpers/opcodesDictionary'
 
-export const OpcodeItem = React.forwardRef(({ opcode, ref, ...props}: OpcodeItemProps) => {
-  const currentOpcode = opcodesDictionary[opcode.name]
+export const OpcodeItem = ({ opcode,  ...props}: OpcodeItemProps) => {
+  const currentOpcode = remappedOpcodesDict[opcode.opcode] ?? INVALID_OPCODE
 
   return (
-    <StyledRecord direction="row" ref={ref} {...props}>
+    <StyledRecord direction="row" {...props}>
       <StyledRecordIndex>{convertNrToHexString(opcode.pc)}</StyledRecordIndex>
-      <StyledRecordIndex>{opcode.name}
-        <Tooltip title={currentOpcode?.description ? currentOpcode.description : ''}>
+      <StyledRecordIndex>{currentOpcode.name}
+        <Tooltip title={currentOpcode.description}>
           <StyledOpcodeDescriptionIcon />
         </Tooltip>
         </StyledRecordIndex>
       <StyledRecordIndex>{opcode.operand}</StyledRecordIndex>
     </StyledRecord>
   )
-})
+}
