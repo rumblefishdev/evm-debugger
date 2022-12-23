@@ -23,7 +23,7 @@ export const useAnalyzer = () => {
     dispatch(loadTraceLogs(mainTraceLogList))
     dispatch(setContractAddresses(analyzeSummary.contractAddresses))
     dispatch(addSighashes(analyzeSummary.contractSighashesInfo))
-    dispatch(addBytecodes(analyzeSummary.contractAddresses.map((address) => ({ bytecode: null, address }))))
+    dispatch(addBytecodes(analyzeSummary.contractAddresses.map((address) => ({ bytecode: null, address, disassembled: null }))))
     dispatch(addSourceCodes(analyzeSummary.contractAddresses.map((address) => ({ sourceCode: null, address }))))
 
     setLoading(false)

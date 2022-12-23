@@ -16,6 +16,7 @@ export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: Mana
 
   const dataAdderHandler = (data: string) => {
     updateItem(name, data)
+    setDataAdderVisibility(false)
   }
 
   return (

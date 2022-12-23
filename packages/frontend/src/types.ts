@@ -10,7 +10,7 @@ export type TParsedExtendedTraceLog = TTraceLog & {
   nestedItems: TParsedExtendedTraceLog[]
 }
 
-export type TBytecodes = { address: string; bytecode: string | null }
+export type TBytecodes = { address: string; bytecode: string | null, disassembled: TOpcodeDisassemled[] | null }
 export type TSourceCodes = { address: string; sourceCode: string | null }
 
 export type TRawTxData = {
@@ -29,4 +29,10 @@ export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
   }[]
   index: number
   stack: TExtendedStack
+}
+
+export type TOpcodeDisassemled = {
+  opcode: number
+  operand: number
+  pc: number
 }
