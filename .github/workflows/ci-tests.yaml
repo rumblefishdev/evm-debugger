@@ -35,3 +35,7 @@ jobs:
       - name: Run tests
         run: |
           npm run analyzer:test
+
+      - name: Run frontend linter
+        run: |
+          npm run frontend:lint-check
