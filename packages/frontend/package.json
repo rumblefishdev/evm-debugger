@@ -36,8 +36,8 @@
     "start": "PUBLIC_URL=/evmDebugger react-scripts start",
     "build": "PUBLIC_URL=/evmDebugger react-scripts build",
     "test": "jest",
-    "lint:check": "eslint \"src/**/*.ts\"",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "lint:check": "eslint --ext .ts,.tsx src/**",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
     "prettier:fix": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --write ."
   },

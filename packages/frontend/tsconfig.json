@@ -5,6 +5,7 @@
     "outDir": "dist",
     "lib": ["esnext", "dom"],
     "composite": true,
+    "esModuleInterop": true,
     "sourceMap": false
   },
   "include": ["src/**/*"],

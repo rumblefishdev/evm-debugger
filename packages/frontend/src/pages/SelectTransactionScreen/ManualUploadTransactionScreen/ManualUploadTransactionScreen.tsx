@@ -27,12 +27,15 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
   }, [txInfo, structLogs])
 
   const handleTxInfoUpload = useCallback((data: string) => {
+    console.log({ data })
     dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
     setTxInfoDialog(false)
   }, [])
 
   const handleStructLogsUpload = useCallback((data: string) => {
-    dispatch(loadStructLogs(JSON.parse(data) as IStructLog[]))
+    const parsed = JSON.parse(data)
+    const logs = Array.isArray(parsed) ? parsed : parsed.structLogs
+    dispatch(loadStructLogs(logs as IStructLog[]))
     setStructLogsDialog(false)
   }, [])
   return (
