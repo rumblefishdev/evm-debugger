@@ -20,17 +20,15 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     const addDisassembledCode = (id: string, value: TOpcodeDisassemled[]) => {
         dispatch(updateBytecode({ id, changes: { disassembled: value } }))
     }
-
     useEffect(() => {
         const getBytecode = async () => {
             try{
-                if(activeBlockBytecode && !activeBlockBytecode.disassembled) {
+                if(activeBlockBytecode.bytecode && !activeBlockBytecode.disassembled) {
                     const result = await disassembleBytecode(activeBlockBytecode.bytecode)    
                     result && setDisassembledCode(result)
                     addDisassembledCode(activeBlockBytecode.address, result)
-                } else 
+                } else if(activeBlockBytecode.disassembled)
                     setDisassembledCode(activeBlockBytecode.disassembled)
-                
             } catch(error) {
                 console.log('Disassembling error',error)
             }

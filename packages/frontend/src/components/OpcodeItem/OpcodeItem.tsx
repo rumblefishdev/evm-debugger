@@ -1,12 +1,12 @@
 import { Accordion, Tooltip } from '@mui/material'
 import React, { useMemo, useRef } from 'react'
-import { convertNrToHexString } from '../../helpers/helpers'
 
-import type { OpcodeItemProps } from './OpcodeItem.types'
+import { convertNrToHexString } from '../../helpers/helpers'
 import { StyledAcoordionSummary, StyledCounter, StyledOpcodeDescriptionIcon, StyledType } from '../StructLogItem/styles'
-import { StyledStack } from './styles'
 import { INVALID_OPCODE, remappedOpcodesDict } from '../../helpers/opcodesDictionary'
 
+import type { OpcodeItemProps } from './OpcodeItem.types'
+import { StyledStack } from './styles'
 
 export const OpcodeItem = ({ opcode,  ...props}: OpcodeItemProps) => {
   const currentOpcode = remappedOpcodesDict[opcode.opcode] ?? INVALID_OPCODE

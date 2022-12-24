@@ -1,16 +1,12 @@
 import { Dialog, Button } from '@mui/material'
 import React, { useState } from 'react'
 
-import { updateSourceCode } from '../../store/sourceCodes/sourceCodes.slice'
-import { useTypedDispatch } from '../../store/storeHooks'
 import { DataAdder } from '../DataAdder'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
 export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: ManagerItemProps) => {
-  const dispatch = useTypedDispatch()
-
   const [isDataVisible, setDataVisibility] = useState(false)
   const [isDataAdderVisible, setDataAdderVisibility] = useState(false)
 

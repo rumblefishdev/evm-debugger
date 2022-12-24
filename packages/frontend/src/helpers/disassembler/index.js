@@ -4,12 +4,11 @@ const SingletonDisassembler = (function(){
   let instance;
 
   function createDisassembler() {
-    const disassembler = new Disassembler();
-    return disassembler;
+    return new Disassembler();
   }
 
   return {
-    getInstance: function(){
+    getInstance(){
       if (!instance) {
         instance = createDisassembler();
         delete instance.constructor;
@@ -21,5 +20,5 @@ const SingletonDisassembler = (function(){
 
 export async function disassembleBytecode(hexcode) {
   const disassembler = SingletonDisassembler.getInstance()
-  return await disassembler.disassemble(hexcode)
+  return disassembler.disassemble(hexcode)
 }
