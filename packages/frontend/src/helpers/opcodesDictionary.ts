@@ -521,7 +521,7 @@ export const remapOpcodesDict = () : {name: string; args: string[]; description:
   // remap opcodes to be indexed by opcode number
   return keys.reduce((accumulator, key) => {
     const { opcode, description, args } = opcodes[key]
-    accumulator[opcode] = {name: key, args: args, description: description}
+    accumulator[opcode] = {name: key, args, description}
     return accumulator
   }, {name: '', args: [], description: ''})
 }

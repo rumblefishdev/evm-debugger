@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import ViewportList from 'react-viewport-list';
 
 import { disassembleBytecode } from '../../helpers/disassembler'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { bytecodesSelectors, updateBytecode } from '../../store/bytecodes/bytecodes.slice'
 import { OpcodeItem } from '../OpcodeItem';
 import { StructlogAcordionPanel } from '../StructlogAcordionPanel';
+import type { TOpcodeDisassemled } from '../../types';
 
 import type { BytecodeInfoCardProps } from './BytecodeInfoCard.types'
-
 import { StyledStack } from './styles'
-import type { TOpcodeDisassemled } from '../../types';
-import ViewportList from 'react-viewport-list';
 
 export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     const ref = React.useRef<HTMLDivElement>(null)
@@ -29,9 +28,9 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
                     const result = await disassembleBytecode(activeBlockBytecode.bytecode)    
                     result && setDisassembledCode(result)
                     addDisassembledCode(activeBlockBytecode.address, result)
-                } else {
+                } else 
                     setDisassembledCode(activeBlockBytecode.disassembled)
-                }
+                
             } catch(error) {
                 console.log('Disassembling error',error)
             }
@@ -41,7 +40,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
 
 return (
 <StructlogAcordionPanel text="Bytecode" canExpand={disassembledCode.length > 0}>
-<StyledStack ref={ref}>
+<StyledStack ref={ref} {...props}>
       <ViewportList viewportRef={ref} items={disassembledCode} withCache={true}>
         {(item, index) => {
           return <OpcodeItem key={index} opcode={item}></OpcodeItem>

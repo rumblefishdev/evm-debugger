@@ -204,7 +204,6 @@ module.exports = {
         "import/no-named-default": "error",
         "import/no-anonymous-default-export": "error",
         "import/group-exports": "off",
-        "import/no-cycle": "off",
         "import/order": ["error", { "groups": ["builtin", "external", "parent", "sibling", "index"], "newlines-between": "always" }],
         //Unicorn
         "unicorn/no-keyword-prefix": "error",

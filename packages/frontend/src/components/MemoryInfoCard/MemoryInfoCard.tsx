@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectParsedMemory } from '../../store/structlogs/structlogs.slice'

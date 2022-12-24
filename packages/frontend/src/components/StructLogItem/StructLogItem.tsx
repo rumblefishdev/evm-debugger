@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { isStructLogActive, loadActiveStructLog, updateStackSelectionStatus } from '../../store/structlogs/structlogs.slice'
 import { useTypedSelector } from '../../store/storeHooks'
+import { convertNrToHexString } from '../../helpers/helpers'
 
 import type { StructLogItemProps } from './StructLogItem.types'
 import {
@@ -17,9 +18,8 @@ import {
   StyledStack,
   StyledType,
 } from './styles'
-import { convertNrToHexString } from '../../helpers/helpers'
 
-export const StructLogItem = ({ structLog, onClick, ...props }: StructLogItemProps) => {
+export const StructLogItem = ({ structLog, ...props }: StructLogItemProps) => {
   const dispatch = useDispatch()
   const { pc, op, args, index, description, gasCost } = structLog
 
