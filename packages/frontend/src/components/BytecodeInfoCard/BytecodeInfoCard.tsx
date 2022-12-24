@@ -17,11 +17,13 @@ import { StyledStack } from './styles'
 export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const dispatch = useTypedDispatch()
+  // FIXME: address below should not be storageAddress, but address, however it doesn't seem it's
+  //        in the analyzer output at this point
+  const activeBlock = useTypedSelector((state) => state.activeBlock)
+  console.log('a', activeBlock)
+  const currentAddress = activeBlock.address
   const activeBlockBytecode = useTypedSelector((state) =>
-    bytecodesSelectors.selectById(
-      state.bytecodes,
-      state.activeBlock.storageAddress,
-    ),
+    bytecodesSelectors.selectById(state.bytecodes, currentAddress),
   )
   const [disassembledCode, setDisassembledCode] = useState<
     TOpcodeDisassemled[]
@@ -33,7 +35,12 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   useEffect(() => {
     const getBytecode = async () => {
       try {
-        if (activeBlockBytecode.bytecode && !activeBlockBytecode.disassembled) {
+        if (!activeBlockBytecode) {
+          // FIXME: remove this case
+        } else if (
+          activeBlockBytecode.bytecode &&
+          !activeBlockBytecode.disassembled
+        ) {
           const result = await disassembleBytecode(activeBlockBytecode.bytecode)
           result && setDisassembledCode(result)
           addDisassembledCode(activeBlockBytecode.address, result)
@@ -46,9 +53,12 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     getBytecode()
   }, [activeBlockBytecode])
 
+  const label = activeBlockBytecode
+    ? 'Bytecode'
+    : `Bytecode (no bytecode loaded for ${currentAddress}`
   return (
     <StructlogAcordionPanel
-      text="Bytecode"
+      text={label}
       canExpand={disassembledCode.length > 0}
     >
       <StyledStack ref={ref} {...props}>
