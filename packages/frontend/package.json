@@ -30,9 +30,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^4.9.0"
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "PUBLIC_URL=/evmDebugger react-scripts start",
@@ -41,8 +39,7 @@
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
-    "prettier:fix": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --write .",
-    "webpack:start": "webpack serve"
+    "prettier:fix": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --write ."
   },
   "eslintConfig": {
     "extends": [
