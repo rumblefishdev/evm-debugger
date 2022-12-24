@@ -17,10 +17,7 @@ import { StyledStack } from './styles'
 export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const dispatch = useTypedDispatch()
-  // FIXME: address below should not be storageAddress, but address, however it doesn't seem it's
-  //        in the analyzer output at this point
   const activeBlock = useTypedSelector((state) => state.activeBlock)
-  console.log('a', activeBlock)
   const currentAddress = activeBlock.address
   const activeBlockBytecode = useTypedSelector((state) =>
     bytecodesSelectors.selectById(state.bytecodes, currentAddress),
@@ -53,9 +50,11 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     getBytecode()
   }, [activeBlockBytecode])
 
-  const label = activeBlockBytecode
-    ? 'Bytecode'
-    : `Bytecode (no bytecode loaded for ${currentAddress}`
+  if (!activeBlockBytecode) return null
+
+  const label = activeBlockBytecode.bytecode
+    ? `Bytecode (${currentAddress})`
+    : `Bytecode (no bytecode loaded for ${currentAddress})`
   return (
     <StructlogAcordionPanel
       text={label}

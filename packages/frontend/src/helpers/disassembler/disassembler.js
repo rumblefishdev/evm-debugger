@@ -16,9 +16,12 @@ export class Disassembler {
 
   async disassemble(code) {
     await this._initialize();
+    let trimmedCode = code.trim()
+    if (trimmedCode.startsWith('0x'))
+      trimmedCode = trimmedCode.slice(2)
     const textResult = await this.pyodide.runPythonAsync(`
       import pyevmasm, json, binascii
-      res = pyevmasm.disassemble_all(binascii.unhexlify("${code}"))
+      res = pyevmasm.disassemble_all(binascii.unhexlify("${trimmedCode}"))
       json.dumps([{"pc":x.pc, "opcode":x.opcode, "operand":x.operand} for x in res])
     `);
     return JSON.parse(textResult);
