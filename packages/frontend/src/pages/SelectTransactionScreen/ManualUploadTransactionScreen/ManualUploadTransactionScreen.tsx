@@ -12,7 +12,9 @@ import { DataAdder } from '../../../components/DataAdder'
 import type { ManualUploadTransactionScreenProps } from './ManualUploadTransactionScreen.types'
 import { StyledStack } from './styles'
 
-export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransactionScreenProps) => {
+export const ManualUploadTransactionScreen = ({
+  ...props
+}: ManualUploadTransactionScreenProps) => {
   const dispatch = useTypedDispatch()
   const navigate = useNavigate()
 
@@ -41,7 +43,9 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
   return (
     <StyledStack {...props} spacing={4}>
       <Stack direction="row" spacing={4}>
-        <Typography variant="h4">Upload result of eth_getTransactionByHash</Typography>
+        <Typography variant="h4">
+          Upload result of eth_getTransactionByHash
+        </Typography>
         <Button variant="contained" onClick={() => setTxInfoDialog(true)}>
           Add
         </Button>
@@ -53,7 +57,9 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
         />
       </Stack>
       <Stack direction="row" spacing={4}>
-        <Typography variant="h4">Upload result of debug_traceTransaction</Typography>
+        <Typography variant="h4">
+          Upload result of debug_traceTransaction
+        </Typography>
         <Button variant="contained" onClick={() => setStructLogsDialog(true)}>
           Add
         </Button>

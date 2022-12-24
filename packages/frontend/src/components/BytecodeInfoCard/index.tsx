@@ -1,1 +1,1 @@
-export { BytecodeInfoCard } from './BytecodeInfoCard';
+export { BytecodeInfoCard } from './BytecodeInfoCard'

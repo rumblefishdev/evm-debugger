@@ -1,1 +1,1 @@
-export { OpcodeItem } from './OpcodeItem';
+export { OpcodeItem } from './OpcodeItem'

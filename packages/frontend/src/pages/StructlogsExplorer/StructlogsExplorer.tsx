@@ -8,7 +8,11 @@ import { StorageInfoCard } from '../../components/StorageInfoCard'
 import { StructlogCard } from '../../components/StructlogCard'
 
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
-import { StyledContentWrapper, StyledPanelsWrapper, StyledStack } from './styles'
+import {
+  StyledContentWrapper,
+  StyledPanelsWrapper,
+  StyledStack,
+} from './styles'
 
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   return (

@@ -5,7 +5,6 @@ export const StyledBox = styled(Box)(() => ({
   height: '100%',
 }))
 
-
 export const StyledStack = styled(Stack)(() => ({
   overflow: 'auto',
   marginTop: '16px',
@@ -21,4 +20,3 @@ export const StyledRecord = styled(Stack)(() => ({
   flexDirection: 'row',
   alignItems: 'center',
 }))
-

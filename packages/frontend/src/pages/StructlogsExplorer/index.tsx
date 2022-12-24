@@ -1,1 +1,1 @@
-export { StructlogsExplorer } from './StructlogsExplorer';
+export { StructlogsExplorer } from './StructlogsExplorer'

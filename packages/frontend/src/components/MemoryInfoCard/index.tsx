@@ -1,1 +1,1 @@
-export { MemoryInfoCard } from './MemoryInfoCard';
+export { MemoryInfoCard } from './MemoryInfoCard'

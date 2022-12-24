@@ -12,7 +12,9 @@ export const sighashSlice = createSlice({
     updateSighash: sighashAdapter.updateOne,
     setAsFoundByAddress(sighashState, action: PayloadAction<string>) {
       const keys = Object.keys(sighashState.entities)
-      const sighashesOfAddress = keys.filter((entity) => sighashState.entities[entity].addresses.has(action.payload))
+      const sighashesOfAddress = keys.filter((entity) =>
+        sighashState.entities[entity].addresses.has(action.payload),
+      )
       sighashesOfAddress.forEach((sighash) => {
         sighashState.entities[sighash].found = true
       })
@@ -26,6 +28,7 @@ export const sighashSlice = createSlice({
   initialState: sighashAdapter.getInitialState(),
 })
 
-export const { addSighashes, setAsFoundByAddress, updateSighash } = sighashSlice.actions
+export const { addSighashes, setAsFoundByAddress, updateSighash } =
+  sighashSlice.actions
 export const sighashReducer = sighashSlice.reducer
 export const sighashSelectors = sighashAdapter.getSelectors()

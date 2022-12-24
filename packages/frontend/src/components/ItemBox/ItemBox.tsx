@@ -12,7 +12,9 @@ export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
 
   const dispatch = useTypedDispatch()
 
-  const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const setActiveBlock = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
     dispatch(loadActiveBlock(item))
     event.stopPropagation()
   }

@@ -2,13 +2,21 @@ import { Accordion, Tooltip } from '@mui/material'
 import React, { useMemo, useRef } from 'react'
 
 import { convertNrToHexString } from '../../helpers/helpers'
-import { StyledAcoordionSummary, StyledCounter, StyledOpcodeDescriptionIcon, StyledType } from '../StructLogItem/styles'
-import { INVALID_OPCODE, remappedOpcodesDict } from '../../helpers/opcodesDictionary'
+import {
+  StyledAcoordionSummary,
+  StyledCounter,
+  StyledOpcodeDescriptionIcon,
+  StyledType,
+} from '../StructLogItem/styles'
+import {
+  INVALID_OPCODE,
+  remappedOpcodesDict,
+} from '../../helpers/opcodesDictionary'
 
 import type { OpcodeItemProps } from './OpcodeItem.types'
 import { StyledStack } from './styles'
 
-export const OpcodeItem = ({ opcode,  ...props}: OpcodeItemProps) => {
+export const OpcodeItem = ({ opcode, ...props }: OpcodeItemProps) => {
   const currentOpcode = remappedOpcodesDict[opcode.opcode] ?? INVALID_OPCODE
   const itemRef = useRef<HTMLDivElement>(null)
   const counter = useMemo(() => {
@@ -18,12 +26,13 @@ export const OpcodeItem = ({ opcode,  ...props}: OpcodeItemProps) => {
     return convertNrToHexString(opcode.operand)
   }, [])
 
-  const activeStyle: React.CSSProperties = itemRef.current ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
+  const activeStyle: React.CSSProperties = itemRef.current
+    ? { background: 'rgba(0, 0, 0, 0.04)' }
+    : {}
 
   return (
     <Accordion ref={itemRef}>
-            <StyledAcoordionSummary sx={activeStyle}>
-
+      <StyledAcoordionSummary sx={activeStyle}>
         <StyledStack {...props} direction="row">
           <StyledCounter>{counter}</StyledCounter>
           <StyledType>
@@ -32,11 +41,9 @@ export const OpcodeItem = ({ opcode,  ...props}: OpcodeItemProps) => {
               <StyledOpcodeDescriptionIcon />
             </Tooltip>
           </StyledType>
-          <StyledType>
-            {operand}
-          </StyledType>
+          <StyledType>{operand}</StyledType>
         </StyledStack>
-        </StyledAcoordionSummary>
+      </StyledAcoordionSummary>
     </Accordion>
   )
 }

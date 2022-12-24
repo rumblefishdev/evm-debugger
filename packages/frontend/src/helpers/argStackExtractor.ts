@@ -18,5 +18,9 @@ export const argStackExtractor = (structLog: IStructLog) => {
     extractedArgs.push({ value, name: arg })
   })
 
-  return { ...structLog, description, args: extractedArgs.filter((item) => item.name !== 'ignored') }
+  return {
+    ...structLog,
+    description,
+    args: extractedArgs.filter((item) => item.name !== 'ignored'),
+  }
 }

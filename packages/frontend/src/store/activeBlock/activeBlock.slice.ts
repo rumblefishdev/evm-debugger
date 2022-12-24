@@ -8,7 +8,10 @@ const initialState = {} as TParsedExtendedTraceLog
 
 export const activeBlockSlice = createSlice({
   reducers: {
-    loadActiveBlock: (state, action: PayloadAction<TParsedExtendedTraceLog>) => {
+    loadActiveBlock: (
+      state,
+      action: PayloadAction<TParsedExtendedTraceLog>,
+    ) => {
       return action.payload
     },
   },
