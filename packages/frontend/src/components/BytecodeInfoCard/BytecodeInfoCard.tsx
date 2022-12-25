@@ -23,7 +23,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     bytecodesSelectors.selectById(state.bytecodes, currentAddress),
   )
   useEffect(() => {
-    if (!activeBlockBytecode) return null
+    if (!activeBlockBytecode) return
     if (activeStrucLog && previousActiveStrucLog.current !== activeStrucLog) {
       previousActiveStrucLog.current = activeStrucLog
       const pcFormatted = `0x${activeStrucLog.pc.toString(16)}`
