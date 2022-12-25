@@ -26,20 +26,8 @@ describe('TxAnalyzer', () => {
       const analyzer = await prepareAnalyzer(transactionData)
 
       const result = analyzer.analyze()
-      const resultAsStringWithoutWhiteSpaces = removeWhiteSpaces(
-        JSON.stringify(result),
-      )
 
-      const expectedResponse = await promises.readFile(
-        './test/revertedTransactionResultLogs.json',
-        'utf8',
-      )
-      const expectedResponseWithoutWhiteSpaces =
-        removeWhiteSpaces(expectedResponse)
-
-      expect(expectedResponseWithoutWhiteSpaces).toEqual(
-        resultAsStringWithoutWhiteSpaces,
-      )
+      expect(result).toMatchSnapshot()
     }, 20_000)
   })
 })
