@@ -11,15 +11,13 @@ export class SigHashStatuses {
       const value =
         fragment === null
           ? {
-            sighash,
-            fragment: null,
-            found: false,
-            addresses: new Set([address]),
-          }
+              sighash,
+              fragment: null,
+              found: false,
+              addresses: new Set([address]),
+            }
           : { sighash, fragment, found: true, addresses: new Set([address]) }
       this.sighashStatusList.push(value)
-    } else {
-      this.sighashStatusList[sighashIndex].addresses.add(address)
-    }
+    } else this.sighashStatusList[sighashIndex].addresses.add(address)
   }
 }
