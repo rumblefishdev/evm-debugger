@@ -21,7 +21,11 @@ async function disassembleBytecode(pyodide, code: string) {
   const textResult = await pyodide.runPythonAsync(`
     import pyevmasm, json, binascii
     res = pyevmasm.disassemble_all(binascii.unhexlify("${trimmedCode}"))
-    json.dumps([{"pc":x.pc, "opcode":x.opcode, "operand":x.operand} for x in res])
+    json.dumps([{
+      "pc": hex(x.pc),
+      "opcode": x.opcode,
+      "operand": hex(x.operand) if x.operand is not None else None
+    } for x in res])
   `)
   return JSON.parse(textResult) as TOpcodeDisassemled[]
 }
