@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import createSagaMiddleware from 'redux-saga'
 import {
   persistReducer,
   persistStore,
@@ -18,6 +19,7 @@ import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
 import { sighashReducer } from './sighash/sighash.slice'
 import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
 import { traceLogsReducer } from './traceLogs/traceLogs.slice'
+import { rootSaga } from './root.saga'
 
 const rootReducer = combineReducers({
   traceLogs: traceLogsReducer,
@@ -46,6 +48,8 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+export const sagaMiddleware = createSagaMiddleware()
+
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -53,10 +57,12 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).prepend(sagaMiddleware),
 })
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store, null, () =>
+  sagaMiddleware.run(rootSaga),
+)
 
 export type TRootState = ReturnType<typeof store.getState>
 

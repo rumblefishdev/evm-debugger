@@ -28,6 +28,7 @@ export const useAnalyzer = () => {
     dispatch(
       addBytecodes(
         analyzeSummary.contractAddresses.map((address) => ({
+          error: null,
           disassembled: null,
           bytecode: null,
           address,

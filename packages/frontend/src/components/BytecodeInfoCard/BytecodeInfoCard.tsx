@@ -1,55 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ViewportList from 'react-viewport-list'
 
-import { disassembleBytecode } from '../../helpers/disassembler'
-import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
-import {
-  bytecodesSelectors,
-  updateBytecode,
-} from '../../store/bytecodes/bytecodes.slice'
+import { useTypedSelector } from '../../store/storeHooks'
+import { bytecodesSelectors } from '../../store/bytecodes/bytecodes.slice'
 import { OpcodeItem } from '../OpcodeItem'
 import { StructlogAcordionPanel } from '../StructlogAcordionPanel'
-import type { TOpcodeDisassemled } from '../../types'
 
 import type { BytecodeInfoCardProps } from './BytecodeInfoCard.types'
 import { StyledStack } from './styles'
 
 export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
-  const dispatch = useTypedDispatch()
+
   const activeBlock = useTypedSelector((state) => state.activeBlock)
   const currentAddress = activeBlock.address
   const activeBlockBytecode = useTypedSelector((state) =>
     bytecodesSelectors.selectById(state.bytecodes, currentAddress),
   )
-  const [disassembledCode, setDisassembledCode] = useState<
-    TOpcodeDisassemled[]
-  >([])
-
-  const addDisassembledCode = (id: string, value: TOpcodeDisassemled[]) => {
-    dispatch(updateBytecode({ id, changes: { disassembled: value } }))
-  }
-  useEffect(() => {
-    const getBytecode = async () => {
-      try {
-        if (!activeBlockBytecode) {
-          // FIXME: remove this case
-        } else if (
-          activeBlockBytecode.bytecode &&
-          !activeBlockBytecode.disassembled
-        ) {
-          const result = await disassembleBytecode(activeBlockBytecode.bytecode)
-          result && setDisassembledCode(result)
-          addDisassembledCode(activeBlockBytecode.address, result)
-        } else if (activeBlockBytecode.disassembled)
-          setDisassembledCode(activeBlockBytecode.disassembled)
-      } catch (error) {
-        console.log('Disassembling error', error)
-      }
-    }
-    getBytecode()
-  }, [activeBlockBytecode])
-
   if (!activeBlockBytecode) return null
 
   const label = activeBlockBytecode.bytecode
@@ -58,12 +25,12 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   return (
     <StructlogAcordionPanel
       text={label}
-      canExpand={disassembledCode.length > 0}
+      canExpand={activeBlockBytecode.disassembled?.length > 0}
     >
       <StyledStack ref={ref} {...props}>
         <ViewportList
           viewportRef={ref}
-          items={disassembledCode}
+          items={activeBlockBytecode.disassembled}
           withCache={true}
         >
           {(item, index) => {

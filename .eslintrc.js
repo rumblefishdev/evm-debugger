@@ -130,7 +130,7 @@ module.exports = {
         "no-caller": "error",
         "no-confusing-arrow": "off",
         "no-console": "off",
-        "no-continue": "error",
+        "no-continue": "off",
         "no-else-return": ["error", { "allowElseIf": false }],
         "no-eval": "error",
         "no-extend-native": "error",

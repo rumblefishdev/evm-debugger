@@ -6,6 +6,7 @@
     "lib": ["esnext", "dom"],
     "composite": true,
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "sourceMap": false
   },
   "include": ["src/**/*"],
