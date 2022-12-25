@@ -17,8 +17,8 @@ export type TParsedExtendedTraceLog = TTraceLog & {
 
 export type TOpcodeDisassemled = {
   opcode: number
-  operand: number
-  pc: number
+  operand: string
+  pc: string
 }
 
 export type TBytecodes = {
