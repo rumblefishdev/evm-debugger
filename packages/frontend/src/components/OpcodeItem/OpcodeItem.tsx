@@ -1,9 +1,8 @@
-import { Accordion, Tooltip } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import React, { useMemo, useRef } from 'react'
 
 import { convertNrToHexString } from '../../helpers/helpers'
 import {
-  StyledAcoordionSummary,
   StyledCounter,
   StyledOpcodeDescriptionIcon,
   StyledType,
@@ -17,33 +16,25 @@ import type { OpcodeItemProps } from './OpcodeItem.types'
 import { StyledStack } from './styles'
 
 export const OpcodeItem = ({ opcode, ...props }: OpcodeItemProps) => {
-  const currentOpcode = remappedOpcodesDict[opcode.opcode] ?? INVALID_OPCODE
   const itemRef = useRef<HTMLDivElement>(null)
+  const currentOpcode = remappedOpcodesDict[opcode.opcode] ?? INVALID_OPCODE
   const counter = useMemo(() => {
     return convertNrToHexString(opcode.pc)
-  }, [])
+  }, [opcode.pc])
   const operand = useMemo(() => {
     return convertNrToHexString(opcode.operand)
-  }, [])
-
-  const activeStyle: React.CSSProperties = itemRef.current
-    ? { background: 'rgba(0, 0, 0, 0.04)' }
-    : {}
+  }, [opcode.operand])
 
   return (
-    <Accordion ref={itemRef}>
-      <StyledAcoordionSummary sx={activeStyle}>
-        <StyledStack {...props} direction="row">
-          <StyledCounter>{counter}</StyledCounter>
-          <StyledType>
-            {currentOpcode.name}
-            <Tooltip title={currentOpcode.description}>
-              <StyledOpcodeDescriptionIcon />
-            </Tooltip>
-          </StyledType>
-          <StyledType>{operand}</StyledType>
-        </StyledStack>
-      </StyledAcoordionSummary>
-    </Accordion>
+    <StyledStack id={`pc-${counter}`} ref={itemRef} {...props} direction="row">
+      <StyledCounter>{counter}</StyledCounter>
+      <StyledType>
+        {currentOpcode.name}
+        <Tooltip title={currentOpcode.description}>
+          <StyledOpcodeDescriptionIcon />
+        </Tooltip>
+      </StyledType>
+      <StyledType>{operand}</StyledType>
+    </StyledStack>
   )
 }

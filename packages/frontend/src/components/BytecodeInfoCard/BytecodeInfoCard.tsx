@@ -27,17 +27,19 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
       text={label}
       canExpand={activeBlockBytecode.disassembled?.length > 0}
     >
-      <StyledStack ref={ref} {...props}>
-        <ViewportList
-          viewportRef={ref}
-          items={activeBlockBytecode.disassembled}
-          withCache={true}
-        >
-          {(item, index) => {
-            return <OpcodeItem key={index} opcode={item}></OpcodeItem>
-          }}
-        </ViewportList>
-      </StyledStack>
+      {activeBlockBytecode.disassembled?.length > 0 ? (
+        <StyledStack ref={ref} {...props}>
+          <ViewportList
+            viewportRef={ref}
+            items={activeBlockBytecode.disassembled}
+            withCache={true}
+          >
+            {(item) => {
+              return <OpcodeItem key={item.pc} opcode={item}></OpcodeItem>
+            }}
+          </ViewportList>
+        </StyledStack>
+      ) : null}
     </StructlogAcordionPanel>
   )
 }
