@@ -20,7 +20,6 @@ export const sighashSlice = createSlice({
       })
     },
     addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
-      console.log(action.payload)
       return sighashAdapter.setMany(sighashState, action.payload)
     },
   },

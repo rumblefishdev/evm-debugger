@@ -38,8 +38,9 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
               </Stack>
               {filteredSighashes.map((sighash) => (
                 <ManagerItem
+                  key={sighash.sighash}
                   name={sighash.sighash}
-                  value={JSON.stringify(sighash.fragment)}
+                  value={JSON.stringify(sighash.fragment, null, 2)}
                   isFound={sighash.fragment !== null}
                   updateItem={addSighash}
                 />

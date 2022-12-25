@@ -5,14 +5,24 @@ export const ERC721_ABI: JsonFragment[] = [
     type: 'event',
     name: 'Approval',
     inputs: [
-      { type: 'address', name: 'owner', internalType: 'address', indexed: true },
+      {
+        type: 'address',
+        name: 'owner',
+        internalType: 'address',
+        indexed: true,
+      },
       {
         type: 'address',
         name: 'approved',
         internalType: 'address',
         indexed: true,
       },
-      { type: 'uint256', name: 'tokenId', internalType: 'uint256', indexed: true },
+      {
+        type: 'uint256',
+        name: 'tokenId',
+        internalType: 'uint256',
+        indexed: true,
+      },
     ],
     anonymous: false,
   },
@@ -20,7 +30,12 @@ export const ERC721_ABI: JsonFragment[] = [
     type: 'event',
     name: 'ApprovalForAll',
     inputs: [
-      { type: 'address', name: 'owner', internalType: 'address', indexed: true },
+      {
+        type: 'address',
+        name: 'owner',
+        internalType: 'address',
+        indexed: true,
+      },
       {
         type: 'address',
         name: 'operator',
@@ -42,7 +57,12 @@ export const ERC721_ABI: JsonFragment[] = [
         internalType: 'address',
         indexed: true,
       },
-      { type: 'uint256', name: 'tokenId', internalType: 'uint256', indexed: true },
+      {
+        type: 'uint256',
+        name: 'tokenId',
+        internalType: 'uint256',
+        indexed: true,
+      },
     ],
     anonymous: false,
   },

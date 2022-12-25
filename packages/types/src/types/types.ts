@@ -6,7 +6,12 @@ import type { IStructLog } from './structLogs'
 export type TStorage = Record<string, string>
 
 export type TLoadedStorage = { key: string; value: string; index: number }[]
-export type TChangedStorage = { key: string; initialValue: string; updatedValue: string; index: number }[]
+export type TChangedStorage = {
+  key: string
+  initialValue: string
+  updatedValue: string
+  index: number
+}[]
 export type TReturnedStorage = { key: string; value: string }[]
 
 export type TStorageLogs = {
@@ -46,7 +51,9 @@ export type TTransactionTraceResult = {
 }
 
 export interface TDataProvider {
-  getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
+  getTransactionTrace: (
+    transactionHash: string,
+  ) => Promise<TTransactionTraceResult>
   getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
   getContractCode: (address: string) => Promise<string>
   fetchAbiCode: (address: string) => Promise<string>
@@ -70,7 +77,10 @@ export interface IFragmentDecodeResult {
   readonly decodedInput: ethers.utils.Result | null
 }
 
-export type TEventInfo = { eventDescription: ethers.utils.LogDescription; decodedEvent: ethers.utils.Result }
+export type TEventInfo = {
+  eventDescription: ethers.utils.LogDescription
+  decodedEvent: ethers.utils.Result
+}
 
 export type TSighashFragment = string | ethers.utils.Fragment | JsonFragment
 export type TAbi = string | readonly TSighashFragment[]
@@ -82,4 +92,9 @@ export type TTransactionData = {
   abis: TAbis
 }
 
-export type TSighashStatus = { sighash: string; addresses: Set<string>; fragment: TSighashFragment | null; found: boolean }
+export type TSighashStatus = {
+  sighash: string
+  addresses: Set<string>
+  fragment: TSighashFragment | null
+  found: boolean
+}

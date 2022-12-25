@@ -25,6 +25,7 @@ export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
       <StyledTitle>Bytecodes</StyledTitle>
       {data.map((item) => (
         <ManagerItem
+          key={item.address}
           name={item.address}
           value={item.bytecode}
           isFound={item.bytecode !== null}

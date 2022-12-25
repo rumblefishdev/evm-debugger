@@ -45,7 +45,7 @@ export const ManagerItem = ({
         <StyledStatusNotFound>Not found</StyledStatusNotFound>
       )}
       <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
-        {value}
+        <pre>{value}</pre>
       </Dialog>
       <DataAdder
         open={isDataAdderVisible}
