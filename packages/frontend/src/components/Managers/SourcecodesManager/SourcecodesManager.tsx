@@ -25,6 +25,7 @@ export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
       <StyledTitle>Source Codes</StyledTitle>
       {data.map((item) => (
         <ManagerItem
+          key={item.address}
           name={item.address}
           value={item.sourceCode}
           isFound={item.sourceCode !== null}

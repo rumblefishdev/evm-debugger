@@ -29,7 +29,6 @@ export const ManualUploadTransactionScreen = ({
   }, [txInfo, structLogs])
 
   const handleTxInfoUpload = useCallback((data: string) => {
-    console.log({ data })
     dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
     setTxInfoDialog(false)
   }, [])
