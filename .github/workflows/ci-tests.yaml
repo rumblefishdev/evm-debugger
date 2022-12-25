@@ -32,7 +32,11 @@ jobs:
         run: |
           npm run types:build
 
-      - name: Run tests
+      - name: Run analyzer lint
+        run: |
+          npm run analyzer:lint-check
+
+      - name: Run analyzer tests
         run: |
           npm run analyzer:test
 
