@@ -30,7 +30,7 @@ export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
   return (
     <StyledStack {...props} sx={styleDimension} onClick={setActiveBlock}>
       <Typography>
-        {type}__{stackTrace.join('__')}
+        {type}__{stackTrace?.join('__')}
       </Typography>
       <Typography> {gasCost}</Typography>
     </StyledStack>

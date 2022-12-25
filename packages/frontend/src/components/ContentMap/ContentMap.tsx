@@ -33,7 +33,6 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
   const traceLog = useTypedSelector((state) =>
     selectMappedTraceLogs(state, width, height, 24),
   )
-
   const { nestedItems } = traceLog
 
   return (

@@ -59,7 +59,7 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
       onClick={setActiveBlock}
     >
       <StyledInfoPanel>
-        {type}__{stackTrace.join('__')}{' '}
+        {type}__{stackTrace?.join('__')}{' '}
       </StyledInfoPanel>
       <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
         {nestedItems.map((nestedItem, blockIndex) =>
