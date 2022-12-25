@@ -1,1 +1,1 @@
-export { DataAdder } from './DataAdder';
+export { DataAdder } from './DataAdder'

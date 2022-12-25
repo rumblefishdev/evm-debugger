@@ -1,4 +1,9 @@
-import type { ICallTypeTraceLog, ICreateTypeTraceLog, IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import type {
+  ICallTypeTraceLog,
+  ICreateTypeTraceLog,
+  IStructLog,
+  TTransactionInfo,
+} from '@evm-debuger/types'
 
 export type TTraceLog = ICallTypeTraceLog | ICreateTypeTraceLog
 
@@ -10,7 +15,18 @@ export type TParsedExtendedTraceLog = TTraceLog & {
   nestedItems: TParsedExtendedTraceLog[]
 }
 
-export type TBytecodes = { address: string; bytecode: string | null }
+export type TOpcodeDisassemled = {
+  opcode: number
+  operand: string
+  pc: string
+}
+
+export type TBytecodes = {
+  address: string
+  bytecode: string | null
+  error: string | null
+  disassembled: TOpcodeDisassemled[] | null
+}
 export type TSourceCodes = { address: string; sourceCode: string | null }
 
 export type TRawTxData = {

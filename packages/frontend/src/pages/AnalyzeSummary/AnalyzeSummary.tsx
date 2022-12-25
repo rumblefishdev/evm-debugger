@@ -2,11 +2,19 @@ import React, { useState } from 'react'
 import { Button } from '@mui/material'
 
 import { useAnalyzer } from '../../hooks/useAnalyzer'
-import { BytecodesManager, SighashesManager, SourcecodesManager } from '../../components/Managers'
+import {
+  BytecodesManager,
+  SighashesManager,
+  SourcecodesManager,
+} from '../../components/Managers'
 import { Navigation } from '../../components/Navigation'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
-import { StyledButtonsWrapper, StyledContentWrapper, StyledStack } from './styles'
+import {
+  StyledButtonsWrapper,
+  StyledContentWrapper,
+  StyledStack,
+} from './styles'
 
 export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   const { isLoading } = useAnalyzer()
@@ -38,13 +46,28 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
     <StyledStack {...props}>
       <Navigation />
       <StyledButtonsWrapper>
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ margin: '0 12px' }}
+          onClick={() => handleTabChange('sourcecodes')}
+        >
           Source Codes
         </Button>
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('bytecodes')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ margin: '0 12px' }}
+          onClick={() => handleTabChange('bytecodes')}
+        >
           Bytecodes
         </Button>
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sighashes')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ margin: '0 12px' }}
+          onClick={() => handleTabChange('sighashes')}
+        >
           Abis
         </Button>
       </StyledButtonsWrapper>

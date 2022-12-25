@@ -1,58 +1,174 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import type { TAllOpCodes } from '@evm-debuger/types'
 
-export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: string[]; description: string }> = {
+export const opcodesDictionary: Record<
+  TAllOpCodes,
+  { opcode: number; args: string[]; description: string }
+> = {
   STOP: { opcode: 0x0, description: 'Halts execution.', args: [] },
   ADD: { opcode: 0x1, description: 'Addition operation.', args: ['a', 'b'] },
-  MUL: { opcode: 0x2, description: 'Multiplication operation.', args: ['a', 'b'] },
+  MUL: {
+    opcode: 0x2,
+    description: 'Multiplication operation.',
+    args: ['a', 'b'],
+  },
   SUB: { opcode: 0x3, description: 'Subtraction operation.', args: ['a', 'b'] },
-  DIV: { opcode: 0x4, description: 'Integer division operation.', args: ['a', 'b'] },
-  SDIV: { opcode: 0x5, description: 'Signed integer division operation (truncated).', args: ['a', 'b'] },
-  MOD: { opcode: 0x6, description: 'Modulo remainder operation.', args: ['a', 'b'] },
-  SMOD: { opcode: 0x7, description: 'Signed modulo remainder operation.', args: ['a', 'b'] },
-  ADDMOD: { opcode: 0x8, description: 'Modulo addition operation.', args: ['a', 'b', 'c'] },
-  MULMOD: { opcode: 0x9, description: 'Modulo multiplication operation.', args: ['a', 'b', 'c'] },
-  EXP: { opcode: 0xa, description: 'Exponential operation.', args: ['base', 'exponent'] },
-  SIGNEXTEND: { opcode: 0xb, description: "Extend length of two's complement signed integer.", args: ['size', 'value'] },
+  DIV: {
+    opcode: 0x4,
+    description: 'Integer division operation.',
+    args: ['a', 'b'],
+  },
+  SDIV: {
+    opcode: 0x5,
+    description: 'Signed integer division operation (truncated).',
+    args: ['a', 'b'],
+  },
+  MOD: {
+    opcode: 0x6,
+    description: 'Modulo remainder operation.',
+    args: ['a', 'b'],
+  },
+  SMOD: {
+    opcode: 0x7,
+    description: 'Signed modulo remainder operation.',
+    args: ['a', 'b'],
+  },
+  ADDMOD: {
+    opcode: 0x8,
+    description: 'Modulo addition operation.',
+    args: ['a', 'b', 'c'],
+  },
+  MULMOD: {
+    opcode: 0x9,
+    description: 'Modulo multiplication operation.',
+    args: ['a', 'b', 'c'],
+  },
+  EXP: {
+    opcode: 0xa,
+    description: 'Exponential operation.',
+    args: ['base', 'exponent'],
+  },
+  SIGNEXTEND: {
+    opcode: 0xb,
+    description: "Extend length of two's complement signed integer.",
+    args: ['size', 'value'],
+  },
   LT: { opcode: 0x10, description: 'Less-than comparision.', args: ['a', 'b'] },
-  GT: { opcode: 0x11, description: 'Greater-than comparision.', args: ['a', 'b'] },
-  SLT: { opcode: 0x12, description: 'Signed less-than comparision.', args: ['a', 'b'] },
-  SGT: { opcode: 0x13, description: 'Signed greater-than comparision.', args: ['a', 'b'] },
+  GT: {
+    opcode: 0x11,
+    description: 'Greater-than comparision.',
+    args: ['a', 'b'],
+  },
+  SLT: {
+    opcode: 0x12,
+    description: 'Signed less-than comparision.',
+    args: ['a', 'b'],
+  },
+  SGT: {
+    opcode: 0x13,
+    description: 'Signed greater-than comparision.',
+    args: ['a', 'b'],
+  },
   EQ: { opcode: 0x14, description: 'Equality comparision.', args: ['a', 'b'] },
-  ISZERO: { opcode: 0x15, description: 'Simple not operator.', args: ['value'] },
-  AND: { opcode: 0x16, description: 'Bitwise AND operation.', args: ['a', 'b'] },
+  ISZERO: {
+    opcode: 0x15,
+    description: 'Simple not operator.',
+    args: ['value'],
+  },
+  AND: {
+    opcode: 0x16,
+    description: 'Bitwise AND operation.',
+    args: ['a', 'b'],
+  },
   OR: { opcode: 0x17, description: 'Bitwise OR operation.', args: ['a', 'b'] },
-  XOR: { opcode: 0x18, description: 'Bitwise XOR operation.', args: ['a', 'b'] },
+  XOR: {
+    opcode: 0x18,
+    description: 'Bitwise XOR operation.',
+    args: ['a', 'b'],
+  },
   NOT: { opcode: 0x19, description: 'Bitwise NOT operation.', args: ['value'] },
-  BYTE: { opcode: 0x1a, description: 'Retrieve single byte from word.', args: ['index', 'value'] },
-  SHL: { opcode: 0x1b, description: 'Shift left operation.', args: ['shift', 'value'] },
-  SHR: { opcode: 0x1c, description: 'Logical shift right operation.', args: ['shift', 'value'] },
-  SAR: { opcode: 0x1d, description: 'Arithmetic shift right operation.', args: ['shift', 'value'] },
-  SHA3: { opcode: 0x20, description: 'Compute Keccak-256 hash.', args: ['offset', 'length'] },
-  ADDRESS: { opcode: 0x30, description: 'Get address of currently executing account.', args: [] },
-  BALANCE: { opcode: 0x31, description: 'Get balance of the given account.', args: ['address'] },
-  ORIGIN: { opcode: 0x32, description: 'Get execution origination address.', args: [] },
+  BYTE: {
+    opcode: 0x1a,
+    description: 'Retrieve single byte from word.',
+    args: ['index', 'value'],
+  },
+  SHL: {
+    opcode: 0x1b,
+    description: 'Shift left operation.',
+    args: ['shift', 'value'],
+  },
+  SHR: {
+    opcode: 0x1c,
+    description: 'Logical shift right operation.',
+    args: ['shift', 'value'],
+  },
+  SAR: {
+    opcode: 0x1d,
+    description: 'Arithmetic shift right operation.',
+    args: ['shift', 'value'],
+  },
+  SHA3: {
+    opcode: 0x20,
+    description: 'Compute Keccak-256 hash.',
+    args: ['offset', 'length'],
+  },
+  ADDRESS: {
+    opcode: 0x30,
+    description: 'Get address of currently executing account.',
+    args: [],
+  },
+  BALANCE: {
+    opcode: 0x31,
+    description: 'Get balance of the given account.',
+    args: ['address'],
+  },
+  ORIGIN: {
+    opcode: 0x32,
+    description: 'Get execution origination address.',
+    args: [],
+  },
   CALLER: { opcode: 0x33, description: 'Get caller address.', args: [] },
   CALLVALUE: {
     opcode: 0x34,
-    description: 'Get deposited value by the instruction/transaction responsible for this execution.',
+    description:
+      'Get deposited value by the instruction/transaction responsible for this execution.',
     args: [],
   },
-  CALLDATALOAD: { opcode: 0x35, description: 'Get input data of current environment.', args: ['index'] },
-  CALLDATASIZE: { opcode: 0x36, description: 'Get size of input data in current environment.', args: [] },
+  CALLDATALOAD: {
+    opcode: 0x35,
+    description: 'Get input data of current environment.',
+    args: ['index'],
+  },
+  CALLDATASIZE: {
+    opcode: 0x36,
+    description: 'Get size of input data in current environment.',
+    args: [],
+  },
   CALLDATACOPY: {
     opcode: 0x37,
     description: 'Copy input data in current environment to memory.',
     args: ['destOffset', 'byteOffset', 'length'],
   },
-  CODESIZE: { opcode: 0x38, description: 'Get size of code running in current environment.', args: [] },
+  CODESIZE: {
+    opcode: 0x38,
+    description: 'Get size of code running in current environment.',
+    args: [],
+  },
   CODECOPY: {
     opcode: 0x39,
     description: 'Copy code running in current environment to memory.',
     args: ['destOffset', 'byteOffset', 'length'],
   },
-  GASPRICE: { opcode: 0x3a, description: 'Get price of gas in current environment.', args: [] },
-  EXTCODESIZE: { opcode: 0x3b, description: "Get size of an account's code.", args: ['address'] },
+  GASPRICE: {
+    opcode: 0x3a,
+    description: 'Get price of gas in current environment.',
+    args: [],
+  },
+  EXTCODESIZE: {
+    opcode: 0x3b,
+    description: "Get size of an account's code.",
+    args: ['address'],
+  },
   EXTCODECOPY: {
     opcode: 0x3c,
     description: "Copy an account's code to memory.",
@@ -60,7 +176,8 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   },
   RETURNDATASIZE: {
     opcode: 0x3d,
-    description: 'Get size of output data from the previous call from the current environment.',
+    description:
+      'Get size of output data from the previous call from the current environment.',
     args: [],
   },
   RETURNDATACOPY: {
@@ -68,36 +185,113 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
     description: 'Copy output data from the previous call to memory.',
     args: ['destOffset', 'byteOffset', 'length'],
   },
-  EXTCODEHASH: { opcode: 0x3f, description: 'Get the code hash of an account.', args: ['address'] },
+  EXTCODEHASH: {
+    opcode: 0x3f,
+    description: 'Get the code hash of an account.',
+    args: ['address'],
+  },
   BLOCKHASH: {
     opcode: 0x40,
     description: 'Get the hash of one of the 256 most recent complete blocks.',
     args: ['blockNumber'],
   },
-  COINBASE: { opcode: 0x41, description: "Get the block's beneficiary address.", args: [] },
-  TIMESTAMP: { opcode: 0x42, description: "Get the block's timestamp.", args: [] },
-  NUMBER: { opcode: 0x43, description: "Get the block's number.", args: [] },
-  PREVRANDAO: { opcode: 0x44, description: "Get the previous block's RANDAO mix", args: [] },
-  GASLIMIT: { opcode: 0x45, description: "Get the block's gas limit.", args: [] },
-  CHAINID: { opcode: 0x46, description: "Get the current chain's EIP-155 unique identifier.", args: [] },
-  SELFBALANCE: { opcode: 0x47, description: 'Get the balance of the current contract executing.', args: [] },
-  BASEFEE: { opcode: 0x48, description: 'Get the base fee of the current block.', args: [] },
-  POP: { opcode: 0x50, description: 'Remove item from stack.', args: ['value'] },
-  MLOAD: { opcode: 0x51, description: 'Load word from memory.', args: ['offset'] },
-  MSTORE: { opcode: 0x52, description: 'Save word to memory.', args: ['offset', 'value'] },
-  MSTORE8: { opcode: 0x53, description: 'Save byte to memory.', args: ['offset', 'value'] },
-  SLOAD: { opcode: 0x54, description: 'Load word from storage.', args: ['key'] },
-  SSTORE: { opcode: 0x55, description: 'Save word to storage.', args: ['key', 'value'] },
-  JUMP: { opcode: 0x56, description: 'Alter the program counter.', args: ['counter'] },
-  JUMPI: { opcode: 0x57, description: 'Conditionally alter the program counter.', args: ['counter', 'condition'] },
-  PC: { opcode: 0x58, description: 'Get the value of the program counter prior to the increment.', args: [] },
-  MSIZE: { opcode: 0x59, description: 'Get the size of active memory in bytes.', args: [] },
-  GAS: {
-    opcode: 0x5a,
-    description: 'Get the amount of available gas, including the corresponding reduction the amount of available gas.',
+  COINBASE: {
+    opcode: 0x41,
+    description: "Get the block's beneficiary address.",
     args: [],
   },
-  JUMPDEST: { opcode: 0x5b, description: 'Mark a valid destination for jumps.', args: [] },
+  TIMESTAMP: {
+    opcode: 0x42,
+    description: "Get the block's timestamp.",
+    args: [],
+  },
+  NUMBER: { opcode: 0x43, description: "Get the block's number.", args: [] },
+  PREVRANDAO: {
+    opcode: 0x44,
+    description: "Get the previous block's RANDAO mix",
+    args: [],
+  },
+  GASLIMIT: {
+    opcode: 0x45,
+    description: "Get the block's gas limit.",
+    args: [],
+  },
+  CHAINID: {
+    opcode: 0x46,
+    description: "Get the current chain's EIP-155 unique identifier.",
+    args: [],
+  },
+  SELFBALANCE: {
+    opcode: 0x47,
+    description: 'Get the balance of the current contract executing.',
+    args: [],
+  },
+  BASEFEE: {
+    opcode: 0x48,
+    description: 'Get the base fee of the current block.',
+    args: [],
+  },
+  POP: {
+    opcode: 0x50,
+    description: 'Remove item from stack.',
+    args: ['value'],
+  },
+  MLOAD: {
+    opcode: 0x51,
+    description: 'Load word from memory.',
+    args: ['offset'],
+  },
+  MSTORE: {
+    opcode: 0x52,
+    description: 'Save word to memory.',
+    args: ['offset', 'value'],
+  },
+  MSTORE8: {
+    opcode: 0x53,
+    description: 'Save byte to memory.',
+    args: ['offset', 'value'],
+  },
+  SLOAD: {
+    opcode: 0x54,
+    description: 'Load word from storage.',
+    args: ['key'],
+  },
+  SSTORE: {
+    opcode: 0x55,
+    description: 'Save word to storage.',
+    args: ['key', 'value'],
+  },
+  JUMP: {
+    opcode: 0x56,
+    description: 'Alter the program counter.',
+    args: ['counter'],
+  },
+  JUMPI: {
+    opcode: 0x57,
+    description: 'Conditionally alter the program counter.',
+    args: ['counter', 'condition'],
+  },
+  PC: {
+    opcode: 0x58,
+    description: 'Get the value of the program counter prior to the increment.',
+    args: [],
+  },
+  MSIZE: {
+    opcode: 0x59,
+    description: 'Get the size of active memory in bytes.',
+    args: [],
+  },
+  GAS: {
+    opcode: 0x5a,
+    description:
+      'Get the amount of available gas, including the corresponding reduction the amount of available gas.',
+    args: [],
+  },
+  JUMPDEST: {
+    opcode: 0x5b,
+    description: 'Mark a valid destination for jumps.',
+    args: [],
+  },
   PUSH1: { opcode: 0x60, description: 'Place 1 byte item on stack.', args: [] },
   PUSH2: { opcode: 0x61, description: 'Place 2 byte item on stack.', args: [] },
   PUSH3: { opcode: 0x62, description: 'Place 3 byte item on stack.', args: [] },
@@ -107,33 +301,141 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   PUSH7: { opcode: 0x66, description: 'Place 7 byte item on stack.', args: [] },
   PUSH8: { opcode: 0x67, description: 'Place 8 byte item on stack.', args: [] },
   PUSH9: { opcode: 0x68, description: 'Place 9 byte item on stack.', args: [] },
-  PUSH10: { opcode: 0x69, description: 'Place 10 byte item on stack.', args: [] },
-  PUSH11: { opcode: 0x6a, description: 'Place 11 byte item on stack.', args: [] },
-  PUSH12: { opcode: 0x6b, description: 'Place 12 byte item on stack.', args: [] },
-  PUSH13: { opcode: 0x6c, description: 'Place 13 byte item on stack.', args: [] },
-  PUSH14: { opcode: 0x6d, description: 'Place 14 byte item on stack.', args: [] },
-  PUSH15: { opcode: 0x6e, description: 'Place 15 byte item on stack.', args: [] },
-  PUSH16: { opcode: 0x6f, description: 'Place 16 byte item on stack.', args: [] },
-  PUSH17: { opcode: 0x70, description: 'Place 17 byte item on stack.', args: [] },
-  PUSH18: { opcode: 0x71, description: 'Place 18 byte item on stack.', args: [] },
-  PUSH19: { opcode: 0x72, description: 'Place 19 byte item on stack.', args: [] },
-  PUSH20: { opcode: 0x73, description: 'Place 20 byte item on stack.', args: [] },
-  PUSH21: { opcode: 0x74, description: 'Place 21 byte item on stack.', args: [] },
-  PUSH22: { opcode: 0x75, description: 'Place 22 byte item on stack.', args: [] },
-  PUSH23: { opcode: 0x76, description: 'Place 23 byte item on stack.', args: [] },
-  PUSH24: { opcode: 0x77, description: 'Place 24 byte item on stack.', args: [] },
-  PUSH25: { opcode: 0x78, description: 'Place 25 byte item on stack.', args: [] },
-  PUSH26: { opcode: 0x79, description: 'Place 26 byte item on stack.', args: [] },
-  PUSH27: { opcode: 0x7a, description: 'Place 27 byte item on stack.', args: [] },
-  PUSH28: { opcode: 0x7b, description: 'Place 28 byte item on stack.', args: [] },
-  PUSH29: { opcode: 0x7c, description: 'Place 29 byte item on stack.', args: [] },
-  PUSH30: { opcode: 0x7d, description: 'Place 30 byte item on stack.', args: [] },
-  PUSH31: { opcode: 0x7e, description: 'Place 31 byte item on stack.', args: [] },
-  PUSH32: { opcode: 0x7f, description: 'Place 32 byte (full word) item on stack.', args: [] },
-  DUP1: { opcode: 0x80, description: 'Duplicate 1st stack item.', args: ['value'] },
-  DUP2: { opcode: 0x81, description: 'Duplicate 2nd stack item.', args: ['ignored', 'value'] },
-  DUP3: { opcode: 0x82, description: 'Duplicate 3rd stack item.', args: ['ignored', 'ignored', 'value'] },
-  DUP4: { opcode: 0x83, description: 'Duplicate 4th stack item.', args: ['ignored', 'ignored', 'ignored', 'value'] },
+  PUSH10: {
+    opcode: 0x69,
+    description: 'Place 10 byte item on stack.',
+    args: [],
+  },
+  PUSH11: {
+    opcode: 0x6a,
+    description: 'Place 11 byte item on stack.',
+    args: [],
+  },
+  PUSH12: {
+    opcode: 0x6b,
+    description: 'Place 12 byte item on stack.',
+    args: [],
+  },
+  PUSH13: {
+    opcode: 0x6c,
+    description: 'Place 13 byte item on stack.',
+    args: [],
+  },
+  PUSH14: {
+    opcode: 0x6d,
+    description: 'Place 14 byte item on stack.',
+    args: [],
+  },
+  PUSH15: {
+    opcode: 0x6e,
+    description: 'Place 15 byte item on stack.',
+    args: [],
+  },
+  PUSH16: {
+    opcode: 0x6f,
+    description: 'Place 16 byte item on stack.',
+    args: [],
+  },
+  PUSH17: {
+    opcode: 0x70,
+    description: 'Place 17 byte item on stack.',
+    args: [],
+  },
+  PUSH18: {
+    opcode: 0x71,
+    description: 'Place 18 byte item on stack.',
+    args: [],
+  },
+  PUSH19: {
+    opcode: 0x72,
+    description: 'Place 19 byte item on stack.',
+    args: [],
+  },
+  PUSH20: {
+    opcode: 0x73,
+    description: 'Place 20 byte item on stack.',
+    args: [],
+  },
+  PUSH21: {
+    opcode: 0x74,
+    description: 'Place 21 byte item on stack.',
+    args: [],
+  },
+  PUSH22: {
+    opcode: 0x75,
+    description: 'Place 22 byte item on stack.',
+    args: [],
+  },
+  PUSH23: {
+    opcode: 0x76,
+    description: 'Place 23 byte item on stack.',
+    args: [],
+  },
+  PUSH24: {
+    opcode: 0x77,
+    description: 'Place 24 byte item on stack.',
+    args: [],
+  },
+  PUSH25: {
+    opcode: 0x78,
+    description: 'Place 25 byte item on stack.',
+    args: [],
+  },
+  PUSH26: {
+    opcode: 0x79,
+    description: 'Place 26 byte item on stack.',
+    args: [],
+  },
+  PUSH27: {
+    opcode: 0x7a,
+    description: 'Place 27 byte item on stack.',
+    args: [],
+  },
+  PUSH28: {
+    opcode: 0x7b,
+    description: 'Place 28 byte item on stack.',
+    args: [],
+  },
+  PUSH29: {
+    opcode: 0x7c,
+    description: 'Place 29 byte item on stack.',
+    args: [],
+  },
+  PUSH30: {
+    opcode: 0x7d,
+    description: 'Place 30 byte item on stack.',
+    args: [],
+  },
+  PUSH31: {
+    opcode: 0x7e,
+    description: 'Place 31 byte item on stack.',
+    args: [],
+  },
+  PUSH32: {
+    opcode: 0x7f,
+    description: 'Place 32 byte (full word) item on stack.',
+    args: [],
+  },
+  DUP1: {
+    opcode: 0x80,
+    description: 'Duplicate 1st stack item.',
+    args: ['value'],
+  },
+  DUP2: {
+    opcode: 0x81,
+    description: 'Duplicate 2nd stack item.',
+    args: ['ignored', 'value'],
+  },
+  DUP3: {
+    opcode: 0x82,
+    description: 'Duplicate 3rd stack item.',
+    args: ['ignored', 'ignored', 'value'],
+  },
+  DUP4: {
+    opcode: 0x83,
+    description: 'Duplicate 4th stack item.',
+    args: ['ignored', 'ignored', 'ignored', 'value'],
+  },
   DUP5: {
     opcode: 0x84,
     description: 'Duplicate 5th stack item.',
@@ -147,27 +449,77 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   DUP7: {
     opcode: 0x86,
     description: 'Duplicate 7th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP8: {
     opcode: 0x87,
     description: 'Duplicate 8th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP9: {
     opcode: 0x88,
     description: 'Duplicate 9th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP10: {
     opcode: 0x89,
     description: 'Duplicate 10th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP11: {
     opcode: 0x8a,
     description: 'Duplicate 11th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP12: {
     opcode: 0x8b,
@@ -269,8 +621,16 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
       'value',
     ],
   },
-  SWAP1: { opcode: 0x90, description: 'Exchange 1st and 2nd stack items.', args: ['value1', 'value2'] },
-  SWAP2: { opcode: 0x91, description: 'Exchange 1st and 3rd stack items.', args: ['value1', 'ignored', 'value2'] },
+  SWAP1: {
+    opcode: 0x90,
+    description: 'Exchange 1st and 2nd stack items.',
+    args: ['value1', 'value2'],
+  },
+  SWAP2: {
+    opcode: 0x91,
+    description: 'Exchange 1st and 3rd stack items.',
+    args: ['value1', 'ignored', 'value2'],
+  },
   SWAP3: {
     opcode: 0x92,
     description: 'Exchange 1st and 4th stack items.',
@@ -289,27 +649,77 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   SWAP6: {
     opcode: 0x95,
     description: 'Exchange 1st and 7th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP7: {
     opcode: 0x96,
     description: 'Exchange 1st and 8th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP8: {
     opcode: 0x97,
     description: 'Exchange 1st and 9th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP9: {
     opcode: 0x98,
     description: 'Exchange 1st and 10th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP10: {
     opcode: 0x99,
     description: 'Exchange 1st and 11th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP11: {
     opcode: 0x9a,
@@ -467,12 +877,29 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   CALL: {
     opcode: 0xf1,
     description: 'Message-call into an account.',
-    args: ['gas', 'address', 'value', 'inOffset', 'inSize', 'outOffset', 'outSize'],
+    args: [
+      'gas',
+      'address',
+      'value',
+      'inOffset',
+      'inSize',
+      'outOffset',
+      'outSize',
+    ],
   },
   CALLCODE: {
     opcode: 0xf2,
-    description: 'Message-call into this account with alternative account’s code.',
-    args: ['gas', 'address', 'value', 'inOffset', 'inSize', 'outOffset', 'outSize'],
+    description:
+      'Message-call into this account with alternative account’s code.',
+    args: [
+      'gas',
+      'address',
+      'value',
+      'inOffset',
+      'inSize',
+      'outOffset',
+      'outSize',
+    ],
   },
   RETURN: {
     opcode: 0xf3,
@@ -492,12 +919,14 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   },
   STATICCALL: {
     opcode: 0xfa,
-    description: 'Message-call into an account, but disallow state modifications.',
+    description:
+      'Message-call into an account, but disallow state modifications.',
     args: ['gas', 'address', 'inOffset', 'inSize', 'outOffset', 'outSize'],
   },
   REVERT: {
     opcode: 0xfd,
-    description: 'Stop execution and revert state changes, without consuming all provided gas and providing a reason.',
+    description:
+      'Stop execution and revert state changes, without consuming all provided gas and providing a reason.',
     args: ['offset', 'size'],
   },
   INVALID: {
@@ -511,3 +940,29 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
     args: ['address'],
   },
 }
+
+export const INVALID_OPCODE = {
+  name: 'INVALID',
+  description: 'Unspecified invalid instruction.',
+  args: [],
+}
+
+export const remapOpcodesDict = (): {
+  name: string
+  args: string[]
+  description: string
+} => {
+  const opcodes = opcodesDictionary
+  const keys = Object.keys(opcodes)
+
+  // remap opcodes to be indexed by opcode number
+  return keys.reduce(
+    (accumulator, key) => {
+      const { opcode, description, args } = opcodes[key]
+      accumulator[opcode] = { name: key, args, description }
+      return accumulator
+    },
+    { name: '', args: [], description: '' },
+  )
+}
+export const remappedOpcodesDict = remapOpcodesDict()

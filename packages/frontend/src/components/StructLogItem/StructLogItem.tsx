@@ -2,8 +2,13 @@ import { Accordion, AccordionDetails, Chip, Tooltip } from '@mui/material'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { isStructLogActive, loadActiveStructLog, updateStackSelectionStatus } from '../../store/structlogs/structlogs.slice'
+import {
+  isStructLogActive,
+  loadActiveStructLog,
+  updateStackSelectionStatus,
+} from '../../store/structlogs/structlogs.slice'
 import { useTypedSelector } from '../../store/storeHooks'
+import { convertNrToHexString } from '../../helpers/helpers'
 
 import type { StructLogItemProps } from './StructLogItem.types'
 import {
@@ -27,26 +32,30 @@ export const StructLogItem = ({ structLog, ...props }: StructLogItemProps) => {
   const isActive = useTypedSelector((state) => isStructLogActive(state, index))
 
   useEffect(() => {
-    if (isActive && itemRef.current) itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    if (isActive && itemRef.current)
+      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [isActive])
 
   const counter = useMemo(() => {
-    const defaultString = '00000000'
-    const hexValue = pc.toString(16)
-    return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+    return convertNrToHexString(pc)
   }, [])
 
   const handleOnClick = () => {
     dispatch(loadActiveStructLog(isActive ? null : structLog))
   }
 
-  const handleStackSelection = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, value: string) => {
+  const handleStackSelection = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    value: string,
+  ) => {
     dispatch(updateStackSelectionStatus(value))
     event.stopPropagation()
     event.preventDefault()
   }
 
-  const activeStyle: React.CSSProperties = isActive ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
+  const activeStyle: React.CSSProperties = isActive
+    ? { background: 'rgba(0, 0, 0, 0.04)' }
+    : {}
 
   return (
     <Accordion expanded={isActive} ref={itemRef}>
@@ -68,7 +77,9 @@ export const StructLogItem = ({ structLog, ...props }: StructLogItemProps) => {
             {args.map((arg) => {
               return (
                 <StyledArgsItemWrapper
-                  onMouseOver={(event) => handleStackSelection(event, arg.value)}
+                  onMouseOver={(event) =>
+                    handleStackSelection(event, arg.value)
+                  }
                   onMouseOut={(event) => handleStackSelection(event, arg.value)}
                 >
                   <StyledArgName>{arg.name}</StyledArgName>

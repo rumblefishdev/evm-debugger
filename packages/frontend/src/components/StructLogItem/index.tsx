@@ -1,1 +1,1 @@
-export { StructLogItem } from './StructLogItem';
+export { StructLogItem } from './StructLogItem'

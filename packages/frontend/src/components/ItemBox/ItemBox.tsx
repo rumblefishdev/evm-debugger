@@ -12,7 +12,9 @@ export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
 
   const dispatch = useTypedDispatch()
 
-  const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const setActiveBlock = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
     dispatch(loadActiveBlock(item))
     event.stopPropagation()
   }
@@ -28,7 +30,7 @@ export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
   return (
     <StyledStack {...props} sx={styleDimension} onClick={setActiveBlock}>
       <Typography>
-        {type}__{stackTrace.join('__')}
+        {type}__{stackTrace?.join('__')}
       </Typography>
       <Typography> {gasCost}</Typography>
     </StyledStack>

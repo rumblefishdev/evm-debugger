@@ -1,1 +1,1 @@
-export { ManagerItem } from './ManagerItem';
+export { ManagerItem } from './ManagerItem'

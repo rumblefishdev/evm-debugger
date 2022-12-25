@@ -1,7 +1,10 @@
 import { Box, Stack } from '@mui/material'
 import React from 'react'
 
-import { sighashSelectors, updateSighash } from '../../../store/sighash/sighash.slice'
+import {
+  sighashSelectors,
+  updateSighash,
+} from '../../../store/sighash/sighash.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../ManagerItem'
 import { StyledStack, StyledTitle } from '../styles'
@@ -14,14 +17,20 @@ const addSighash = (id: string, value: string) => {
 }
 
 export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
-  const sighashes = useTypedSelector((state) => sighashSelectors.selectAll(state.sighashes))
-  const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
+  const sighashes = useTypedSelector((state) =>
+    sighashSelectors.selectAll(state.sighashes),
+  )
+  const contractAddresses = useTypedSelector(
+    (state) => state.rawTxData.contractAddresses,
+  )
   return (
     <StyledStack {...props}>
       <StyledTitle>Sighashes</StyledTitle>
       <Stack sx={{ overflow: 'auto' }}>
         {contractAddresses.map((address) => {
-          const filteredSighashes = sighashes.filter((sighash) => sighash.addresses.has(address))
+          const filteredSighashes = sighashes.filter((sighash) =>
+            sighash.addresses.has(address),
+          )
           return (
             <Stack>
               <Stack direction="row">

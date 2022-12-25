@@ -11,20 +11,29 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
 
-  const hovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsHovered(true)
-    event.stopPropagation()
-  }, [])
+  const hovered = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsHovered(true)
+      event.stopPropagation()
+    },
+    [],
+  )
 
-  const notHovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsHovered(false)
-    event.stopPropagation()
-  }, [])
+  const notHovered = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsHovered(false)
+      event.stopPropagation()
+    },
+    [],
+  )
 
-  const setActiveBlock = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch(loadActiveBlock(item))
-    event.stopPropagation()
-  }, [])
+  const setActiveBlock = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      dispatch(loadActiveBlock(item))
+      event.stopPropagation()
+    },
+    [],
+  )
 
   const { nestedItems, type, stackTrace, width, height, x, y, index } = item
 
@@ -37,13 +46,20 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
   return (
     <StyledBox
       {...props}
-      sx={{ ...styleDimension, ...hoverStyle, top: y, left: x, ...props.sx, zIndex: 0 }}
+      sx={{
+        ...styleDimension,
+        ...hoverStyle,
+        top: y,
+        left: x,
+        ...props.sx,
+        zIndex: 0,
+      }}
       onMouseOver={hovered}
       onMouseOut={notHovered}
       onClick={setActiveBlock}
     >
       <StyledInfoPanel>
-        {type}__{stackTrace.join('__')}{' '}
+        {type}__{stackTrace?.join('__')}{' '}
       </StyledInfoPanel>
       <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
         {nestedItems.map((nestedItem, blockIndex) =>
@@ -51,7 +67,7 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
             <NestedItemBox key={blockIndex} item={nestedItem} />
           ) : (
             <ItemBox key={blockIndex} item={nestedItem} />
-          )
+          ),
         )}
       </StyledNestedItemsBox>
     </StyledBox>

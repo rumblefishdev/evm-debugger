@@ -30,14 +30,19 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     }
   }, [])
 
-  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height, 24))
-
+  const traceLog = useTypedSelector((state) =>
+    selectMappedTraceLogs(state, width, height, 24),
+  )
   const { nestedItems } = traceLog
 
   return (
     <StyledWrapper>
       <StyledCard {...props} ref={rootRef}>
-        {nestedItems && width && height ? <NestedItemBox item={traceLog} /> : <ItemBox item={traceLog} />}
+        {nestedItems && width && height ? (
+          <NestedItemBox item={traceLog} />
+        ) : (
+          <ItemBox item={traceLog} />
+        )}
       </StyledCard>
     </StyledWrapper>
   )

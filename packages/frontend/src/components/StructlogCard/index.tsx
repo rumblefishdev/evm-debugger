@@ -1,1 +1,1 @@
-export { StructlogCard } from './StructlogCard';
+export { StructlogCard } from './StructlogCard'

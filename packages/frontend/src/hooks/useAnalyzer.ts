@@ -13,7 +13,9 @@ export const useAnalyzer = () => {
 
   const dispatch = useTypedDispatch()
 
-  const transactionInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
+  const transactionInfo = useTypedSelector(
+    (state) => state.rawTxData.transactionInfo,
+  )
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
   const analyze = useCallback(() => {
@@ -23,8 +25,24 @@ export const useAnalyzer = () => {
     dispatch(loadTraceLogs(mainTraceLogList))
     dispatch(setContractAddresses(analyzeSummary.contractAddresses))
     dispatch(addSighashes(analyzeSummary.contractSighashesInfo))
-    dispatch(addBytecodes(analyzeSummary.contractAddresses.map((address) => ({ bytecode: null, address }))))
-    dispatch(addSourceCodes(analyzeSummary.contractAddresses.map((address) => ({ sourceCode: null, address }))))
+    dispatch(
+      addBytecodes(
+        analyzeSummary.contractAddresses.map((address) => ({
+          error: null,
+          disassembled: null,
+          bytecode: null,
+          address,
+        })),
+      ),
+    )
+    dispatch(
+      addSourceCodes(
+        analyzeSummary.contractAddresses.map((address) => ({
+          sourceCode: null,
+          address,
+        })),
+      ),
+    )
 
     setLoading(false)
   }, [transactionInfo, structLogs])

@@ -11,13 +11,22 @@ export const Navigation = ({ ...props }: NavigationProps) => {
 
   return (
     <StyledStack {...props}>
-      <StyledButton variant="outlined" onClick={() => typedNavigate(navigate, '/summary')}>
+      <StyledButton
+        variant="outlined"
+        onClick={() => typedNavigate(navigate, '/summary')}
+      >
         Data Summary
       </StyledButton>
-      <StyledButton variant="outlined" onClick={() => typedNavigate(navigate, '/mainDisplay')}>
+      <StyledButton
+        variant="outlined"
+        onClick={() => typedNavigate(navigate, '/mainDisplay')}
+      >
         Transaction Information
       </StyledButton>
-      <StyledButton variant="outlined" onClick={() => typedNavigate(navigate, '/structlogsExplorer')}>
+      <StyledButton
+        variant="outlined"
+        onClick={() => typedNavigate(navigate, '/structlogsExplorer')}
+      >
         Struct Logs Explorer
       </StyledButton>
     </StyledStack>

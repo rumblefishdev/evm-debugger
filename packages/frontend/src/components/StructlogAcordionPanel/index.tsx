@@ -1,1 +1,1 @@
-export { StructlogAcordionPanel } from './StructlogAcordionPanel';
+export { StructlogAcordionPanel } from './StructlogAcordionPanel'

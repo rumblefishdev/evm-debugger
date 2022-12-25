@@ -1,1 +1,1 @@
-export { StackInfoCard } from './StackInfoCard';
+export { StackInfoCard } from './StackInfoCard'
