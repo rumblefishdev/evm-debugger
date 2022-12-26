@@ -6,7 +6,7 @@ import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { addSighashes } from '../sighash/sighash.slice'
 import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
-import { loadTraceLogs } from '../traceLogs/traceLogs.slice'
+import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
 
@@ -42,7 +42,7 @@ export function* runAnalyzer(
       [],
     )
 
-    yield* put(loadTraceLogs(mainTraceLogList))
+    yield* put(addTraceLogs(mainTraceLogList))
     yield* put(setContractAddresses(analyzeSummary.contractAddresses))
     yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
     yield* put(

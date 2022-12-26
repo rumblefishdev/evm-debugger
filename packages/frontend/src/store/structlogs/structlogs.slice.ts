@@ -7,6 +7,7 @@ import { argStackExtractor } from '../../helpers/argStackExtractor'
 import { extendStack } from '../../helpers/helpers'
 import type { IExtendedStructLog, TExtendedStack } from '../../types'
 import type { TRootState } from '../store'
+import { traceLogsSelectors } from '../traceLogs/traceLogs.slice'
 
 const initialState: {
   structLogs: IStructLog[]
@@ -125,7 +126,7 @@ export const getParsedMemory = (memory: string[]) => {
 
 export const selectParsedStructLogs = createSelector(
   (state: TRootState) => state.structLogs.structLogs,
-  (state: TRootState) => state.traceLogs,
+  (state: TRootState) => traceLogsSelectors.selectAll(state.traceLogs),
   (state: TRootState) => state.activeBlock.startIndex,
   (state: TRootState) => state.activeBlock.returnIndex,
   getParsedStructLogs,

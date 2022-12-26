@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 
 import { zoom } from '../../helpers/helpers'
 import { useTypedSelector } from '../../store/storeHooks'
-import { selectMappedTraceLogs } from '../../store/traceLogs/traceLogs.slice'
+import { selectMappedTraceLogs } from '../../store/traceLogs/mappedTraceLog.selector'
 import { ItemBox } from '../ItemBox'
 import { NestedItemBox } from '../NestedItemBox'
 
@@ -31,8 +31,11 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
   }, [])
 
   const traceLog = useTypedSelector((state) =>
-    selectMappedTraceLogs(state, width, height, 24),
+    selectMappedTraceLogs(state, width, height),
   )
+
+  console.log(traceLog)
+
   const { nestedItems } = traceLog
 
   return (
