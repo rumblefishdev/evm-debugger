@@ -1,5 +1,5 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbis, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { addBytecodes } from '../bytecodes/bytecodes.slice'
@@ -11,14 +11,20 @@ import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { loadTraceLogs } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
+import type { IAbiProvider } from './analyzer.types'
 
 function* callAnalyzerOnce(
   transactionInfo: TTransactionInfo,
   structLogs: IStructLog[],
+  additionalAbis: TAbis = {},
 ) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
   const abis = yield* select(sighashSelectors.abis)
-  const analyzer = new TxAnalyzer({ transactionInfo, structLogs, abis })
+  const analyzer = new TxAnalyzer({
+    transactionInfo,
+    structLogs,
+    abis: { ...abis, ...additionalAbis },
+  })
   const { mainTraceLogList, analyzeSummary } = yield* apply(
     analyzer,
     analyzer.analyze,
@@ -29,15 +35,38 @@ function* callAnalyzerOnce(
   return analyzeSummary
 }
 
+function* fetchAdditionalAbis(
+  abiProvider: IAbiProvider,
+  addresses: Set<string>,
+) {
+  const additionalAbis = {}
+  for (const address of addresses.values())
+    try {
+      yield* put(
+        analyzerActions.logMessage(`Trying to fetch abi of ${address}`),
+      )
+      const abi = yield* apply(abiProvider, abiProvider.getAbi, [address])
+      if (!abi) throw new Error(`No abi for ${address}`)
+
+      additionalAbis[address] = abi
+      yield* put(analyzerActions.logMessage(`Success`))
+    } catch (error) {
+      yield* put(analyzerActions.logMessage(error.toString()))
+    }
+
+  return additionalAbis
+}
+
 export function* runAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
 ) {
+  const { txInfoProvider, structLogProvider, abiProvider } = action.payload
   yield* put(analyzerActions.reset())
   try {
     yield* put(analyzerActions.logMessage('Fetching txInfo'))
     const transactionInfo = yield* apply(
-      action.payload.txInfoProvider,
-      action.payload.txInfoProvider.getTxInfo,
+      txInfoProvider,
+      txInfoProvider.getTxInfo,
       [],
     )
     yield* put(analyzerActions.logMessage('Success!'))
@@ -45,8 +74,8 @@ export function* runAnalyzer(
 
     yield* put(analyzerActions.logMessage('Fetching structLogs'))
     const structLogs = yield* apply(
-      action.payload.structLogProvider,
-      action.payload.structLogProvider.getStructLog,
+      structLogProvider,
+      structLogProvider.getStructLog,
       [],
     )
     yield* put(analyzerActions.logMessage('Success!'))
@@ -73,6 +102,27 @@ export function* runAnalyzer(
         })),
       ),
     )
+
+    yield* put(analyzerActions.logMessage('Calculating address to fetch ABIs!'))
+    const addresses = yield* select(sighashSelectors.addressesWithMissingAbis)
+    if (addresses.size === 0)
+      yield* put(analyzerActions.logMessage('No more abis to fetch.'))
+    else {
+      const additionalAbis = yield* fetchAdditionalAbis(abiProvider, addresses)
+      const additionalAbisCount = Object.keys(additionalAbis).length
+      if (additionalAbisCount === 0)
+        yield* put(
+          analyzerActions.logMessage('No additional abis were fetched.'),
+        )
+      else {
+        yield* put(
+          analyzerActions.logMessage(
+            `${additionalAbisCount} were fetched. Calling analyzer again`,
+          ),
+        )
+        yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbis)
+      }
+    }
 
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {

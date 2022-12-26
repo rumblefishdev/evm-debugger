@@ -14,4 +14,16 @@ const abis = createSelector([(state: TRootState) => state.sighashes], (state) =>
   ),
 )
 
-export const sighashSelectors = { abis }
+const addressesWithMissingAbis = createSelector(
+  [(state: TRootState) => state.sighashes],
+  (state) =>
+    new Set<string>(
+      sighashAdapter
+        .getSelectors()
+        .selectAll(state)
+        .filter((sighash) => !sighash.fragment)
+        .flatMap((sighash) => [...sighash.addresses.values()]),
+    ),
+)
+
+export const sighashSelectors = { addressesWithMissingAbis, abis }
