@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material'
-import React from 'react'
+import type { JsonFragment } from '@ethersproject/abi'
 
 import {
   sighashSelectors,
@@ -14,6 +14,12 @@ import type { SighashesManagerProps } from './SighashesManager.types'
 const addSighash = (id: string, value: string) => {
   const dispatch = useTypedDispatch()
   dispatch(updateSighash({ id, changes: { sighash: value } }))
+}
+
+function formatFragment(fragment: JsonFragment) {
+  return `${fragment.name}(${fragment.inputs
+    .map((input) => input.type)
+    .join(',')})`
 }
 
 export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
@@ -32,7 +38,7 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
             sighash.addresses.has(address),
           )
           return (
-            <Stack>
+            <Stack key={address}>
               <Stack direction="row">
                 <Box sx={{ fontSize: '24px' }}>{address}</Box>
               </Stack>
@@ -41,7 +47,7 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
                   key={sighash.sighash}
                   name={
                     sighash.fragment
-                      ? sighash.fragment.signature
+                      ? formatFragment(sighash.fragment)
                       : sighash.sighash
                   }
                   value={JSON.stringify(sighash.fragment, null, 2)}
