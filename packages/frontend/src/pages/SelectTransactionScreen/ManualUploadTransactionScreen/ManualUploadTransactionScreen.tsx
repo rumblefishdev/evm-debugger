@@ -1,76 +1,102 @@
-import React, { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useCallback } from 'react'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack } from '@mui/material'
+import { Controller, useForm } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
-import { typedNavigate } from '../../../router'
-import { setTxInfo } from '../../../store/rawTxData/rawTxData.slice'
-import { loadStructLogs } from '../../../store/structlogs/structlogs.slice'
-import { DataAdder } from '../../../components/DataAdder'
+import { useTypedDispatch } from '../../../store/storeHooks'
+import { UploadJsonFile } from '../../../components/UploadJsonFile'
+import {
+  StaticStructLogProvider,
+  StaticTxInfoProvider,
+} from '../../../store/analyzer/analyzer.providers'
+import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
+import { validateSchema } from '../../../helpers/validateSchema'
 
+import { traceTransactionSchema, txInfoSchema } from './schemas'
 import type { ManualUploadTransactionScreenProps } from './ManualUploadTransactionScreen.types'
 import { StyledStack } from './styles'
+
+export interface IManualUploadFormData {
+  txInfo: TTransactionInfo
+  structLogs: { structLogs: IStructLog[] }
+}
 
 export const ManualUploadTransactionScreen = ({
   ...props
 }: ManualUploadTransactionScreenProps) => {
   const dispatch = useTypedDispatch()
-  const navigate = useNavigate()
+  /* const navigate = useNavigate()*/
 
-  const [isTxInfoDialogOpen, setTxInfoDialog] = useState(false)
-  const [isStructLogsDialogOpen, setStructLogsDialog] = useState(false)
+  const { control, handleSubmit, formState } = useForm<IManualUploadFormData>({
+    mode: 'onBlur',
+  })
 
-  const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
-  const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
+  const submitHandler = useCallback(
+    (data: IManualUploadFormData) => {
+      dispatch(
+        analyzerActions.runAnalyzer({
+          txInfoProvider: new StaticTxInfoProvider(data.txInfo),
+          structLogProvider: new StaticStructLogProvider(
+            data.structLogs.structLogs,
+          ),
+        }),
+      )
+    },
+    [dispatch],
+  )
 
-  const submitHandler = useCallback(() => {
-    if (txInfo && structLogs) typedNavigate(navigate, '/summary')
-  }, [txInfo, structLogs])
-
-  const handleTxInfoUpload = useCallback((data: string) => {
-    dispatch(setTxInfo(JSON.parse(data) as TTransactionInfo))
-    setTxInfoDialog(false)
-  }, [])
-
-  const handleStructLogsUpload = useCallback((data: string) => {
-    const parsed = JSON.parse(data)
-    const logs = Array.isArray(parsed) ? parsed : parsed.structLogs
-    dispatch(loadStructLogs(logs as IStructLog[]))
-    setStructLogsDialog(false)
-  }, [])
   return (
     <StyledStack {...props} spacing={4}>
       <Stack direction="row" spacing={4}>
-        <Typography variant="h4">
-          Upload result of eth_getTransactionByHash
-        </Typography>
-        <Button variant="contained" onClick={() => setTxInfoDialog(true)}>
-          Add
-        </Button>
-        <DataAdder
-          title="Transaction info"
-          submithandler={handleTxInfoUpload}
-          open={isTxInfoDialogOpen}
-          onClose={() => setTxInfoDialog(false)}
+        <Controller
+          control={control}
+          name="txInfo"
+          render={({ field }) => (
+            <UploadJsonFile
+              label="Upload result of eth_getTransactionByHash"
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              title="Transaction info"
+            />
+          )}
+          rules={{
+            validate: {
+              schema: validateSchema(txInfoSchema),
+            },
+            required: 'This field is required',
+          }}
         />
       </Stack>
+      <ErrorMessage errors={formState.errors} name="txInfo" />
       <Stack direction="row" spacing={4}>
-        <Typography variant="h4">
-          Upload result of debug_traceTransaction
-        </Typography>
-        <Button variant="contained" onClick={() => setStructLogsDialog(true)}>
-          Add
-        </Button>
-        <DataAdder
-          title="Struct Logs"
-          submithandler={handleStructLogsUpload}
-          open={isStructLogsDialogOpen}
-          onClose={() => setStructLogsDialog(false)}
+        <Controller
+          control={control}
+          name="structLogs"
+          render={({ field }) => (
+            <UploadJsonFile
+              label="Upload result of debug_traceTransaction"
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              title="Struct Logs"
+            />
+          )}
+          rules={{
+            validate: {
+              schema: validateSchema(traceTransactionSchema),
+            },
+            required: 'This field is required',
+          }}
         />
       </Stack>
+      <ErrorMessage errors={formState.errors} name="structLogs" />
 
-      <Button variant="contained" component="label" onClick={submitHandler}>
+      <Button
+        variant="contained"
+        component="label"
+        onClick={handleSubmit(submitHandler)}
+        disabled={!formState.isValid}
+      >
         Process logs
       </Button>
     </StyledStack>
