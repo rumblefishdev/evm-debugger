@@ -161,9 +161,9 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const { abis } = this.transactionData
 
-    Object.keys(abis).forEach((address) => {
-      this.fragmentReader.loadFragmentsFromAbi(abis[address])
-    })
+    for (const abi of Object.values(abis)) {
+      this.fragmentReader.loadFragmentsFromAbi(abi)
+    }
 
     return mainTraceLogList.map((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {

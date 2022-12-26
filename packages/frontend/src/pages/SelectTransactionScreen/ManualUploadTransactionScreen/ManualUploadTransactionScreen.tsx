@@ -8,12 +8,14 @@ import { ErrorMessage } from '@hookform/error-message'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { UploadJsonFile } from '../../../components/UploadJsonFile'
 import {
+  EtherscanAbiFetcher,
   StaticStructLogProvider,
   StaticTxInfoProvider,
 } from '../../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { validateSchema } from '../../../helpers/validateSchema'
 import { typedNavigate } from '../../../router'
+import { etherscanKey, etherscanUrl } from '../../../config'
 
 import { traceTransactionSchema, txInfoSchema } from './schemas'
 import type { ManualUploadTransactionScreenProps } from './ManualUploadTransactionScreen.types'
@@ -42,6 +44,7 @@ export const ManualUploadTransactionScreen = ({
           structLogProvider: new StaticStructLogProvider(
             data.structLogs.structLogs,
           ),
+          abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         }),
       )
       typedNavigate(navigate, '/summary')

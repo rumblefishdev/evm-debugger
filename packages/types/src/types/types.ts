@@ -87,7 +87,7 @@ export type TEventInfo = {
 }
 
 export type TSighashFragment = JsonFragment
-export type TAbi = string | readonly TSighashFragment[]
+export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 
 export type TTransactionData = {

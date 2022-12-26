@@ -2,7 +2,7 @@ import { Box, Stack } from '@mui/material'
 import type { JsonFragment } from '@ethersproject/abi'
 
 import {
-  sighashSelectors,
+  sighashAdapter,
   updateSighash,
 } from '../../../store/sighash/sighash.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
@@ -24,7 +24,7 @@ function formatFragment(fragment: JsonFragment) {
 
 export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
   const sighashes = useTypedSelector((state) =>
-    sighashSelectors.selectAll(state.sighashes),
+    sighashAdapter.getSelectors().selectAll(state.sighashes),
   )
   const contractAddresses = useTypedSelector(
     (state) => state.rawTxData.contractAddresses,

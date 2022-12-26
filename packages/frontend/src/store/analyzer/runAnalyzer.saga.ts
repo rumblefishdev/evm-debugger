@@ -1,14 +1,33 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import { apply, put } from 'typed-redux-saga'
+import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import { apply, put, select } from 'typed-redux-saga'
 
 import { addBytecodes } from '../bytecodes/bytecodes.slice'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
+import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
 import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { loadTraceLogs } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
+
+function* callAnalyzerOnce(
+  transactionInfo: TTransactionInfo,
+  structLogs: IStructLog[],
+) {
+  yield* put(analyzerActions.logMessage('Calling analyzer'))
+  const abis = yield* select(sighashSelectors.abis)
+  const analyzer = new TxAnalyzer({ transactionInfo, structLogs, abis })
+  const { mainTraceLogList, analyzeSummary } = yield* apply(
+    analyzer,
+    analyzer.analyze,
+    [],
+  )
+  yield* put(loadTraceLogs(mainTraceLogList))
+  yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
+  return analyzeSummary
+}
 
 export function* runAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
@@ -33,18 +52,9 @@ export function* runAnalyzer(
     yield* put(analyzerActions.logMessage('Success!'))
     yield* put(loadStructLogs(structLogs))
 
-    yield* put(analyzerActions.logMessage('Calling analyzer'))
-    // TODO: fetch abis from some selector in store
-    const analyzer = new TxAnalyzer({ transactionInfo, structLogs, abis: {} })
-    const { mainTraceLogList, analyzeSummary } = yield* apply(
-      analyzer,
-      analyzer.analyze,
-      [],
-    )
+    const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
 
-    yield* put(loadTraceLogs(mainTraceLogList))
     yield* put(setContractAddresses(analyzeSummary.contractAddresses))
-    yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
     yield* put(
       addBytecodes(
         analyzeSummary.contractAddresses.map((address) => ({

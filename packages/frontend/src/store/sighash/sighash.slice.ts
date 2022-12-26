@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TSighashStatus } from '@evm-debuger/types'
 
-const sighashAdapter = createEntityAdapter<TSighashStatus>({
+export const sighashAdapter = createEntityAdapter<TSighashStatus>({
   sortComparer: (a, b) => a.sighash.localeCompare(b.sighash),
   selectId: (entity) => entity.sighash,
 })
@@ -34,4 +34,3 @@ export const sighashSlice = createSlice({
 export const { addSighashes, setAsFoundByAddress, updateSighash } =
   sighashSlice.actions
 export const sighashReducer = sighashSlice.reducer
-export const sighashSelectors = sighashAdapter.getSelectors()
