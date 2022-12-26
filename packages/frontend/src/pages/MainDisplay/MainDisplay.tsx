@@ -13,10 +13,10 @@ export const MainDisplay = ({ ...props }: MainDisplayProps) => {
   const traceLog = useTypedSelector((state) => state.traceLogs)
   const navigate = useNavigate()
   useEffect(() => {
-    if (traceLog.length === 0) navigate('/')
+    if (traceLog.ids.length === 0) navigate('/')
   }, [traceLog, navigate])
 
-  if (traceLog.length === 0) return null
+  if (traceLog.ids.length === 0) return null
 
   return (
     <StyledMainDisplay {...props}>

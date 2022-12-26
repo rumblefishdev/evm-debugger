@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Tooltip, Typography } from '@mui/material'
 import React from 'react'
 
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
@@ -28,11 +28,16 @@ export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
   }
 
   return (
-    <StyledStack {...props} sx={styleDimension} onClick={setActiveBlock}>
-      <Typography>
-        {type}__{stackTrace?.join('__')}
-      </Typography>
-      <Typography> {gasCost}</Typography>
-    </StyledStack>
+    <Tooltip
+      title={'test'}
+      followCursor={true}
+      TransitionProps={{ timeout: 0 }}
+    >
+      <StyledStack
+        {...props}
+        sx={styleDimension}
+        onClick={setActiveBlock}
+      ></StyledStack>
+    </Tooltip>
   )
 }

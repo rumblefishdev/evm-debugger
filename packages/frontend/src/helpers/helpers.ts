@@ -1,3 +1,5 @@
+import type { TOpCodes } from '@evm-debuger/types'
+
 import type { TExtendedStack } from '../types'
 
 export const itemSpacePercentageByGasCost = (
@@ -55,4 +57,9 @@ export const convertNrToHexString = (nr: number | null) => {
       Math.max(0, defaultString.length - hexValue.length),
     ) + hexValue
   )
+}
+
+export const createCallIdentifier = (stackTrace: number[], type: TOpCodes) => {
+  const stack = stackTrace.join('__')
+  return stackTrace.length > 0 ? `${type}__${stack}` : `${type}__ROOT`
 }

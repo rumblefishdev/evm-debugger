@@ -2,7 +2,11 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import type { TParsedExtendedTraceLog, TTraceLog } from '../types'
+import type {
+  TIntrinsicLog,
+  TMainTraceLogsWithId,
+  TNestedTreeMapItem,
+} from '../types'
 
 import { sumReducer } from './helpers'
 
@@ -10,21 +14,20 @@ export class NestedMap {
   constructor(
     private width: number,
     private height: number,
-    private gasSum: number,
-    private items: TTraceLog[],
+    private items: (TMainTraceLogsWithId | TIntrinsicLog)[],
   ) {
     this.items = [...items]
   }
 
-  private margin = 8
+  private margin = 12
 
   private currentWidth = this.margin * 2
   private currentHeight = this.margin * 2
 
   private stageValue = 0
-  private stageBlocks = [] as TParsedExtendedTraceLog[]
+  private stageBlocks = [] as TNestedTreeMapItem[]
 
-  private placedBlocks: TParsedExtendedTraceLog[] = []
+  private placedBlocks: TNestedTreeMapItem[] = []
 
   private lastAspectRatio = 0
 
@@ -39,7 +42,10 @@ export class NestedMap {
     return Math.abs(1 - currentAspect) > Math.abs(1 - this.lastAspectRatio)
   }
 
-  private placeBlock(item: TTraceLog, index: number) {
+  private placeBlock(
+    item: TMainTraceLogsWithId | TIntrinsicLog,
+    index: number,
+  ) {
     const isVertical =
       this.width - this.currentWidth > this.height - this.currentHeight
 
@@ -58,7 +64,7 @@ export class NestedMap {
       ...item,
       y: this.currentHeight - this.margin,
       x: this.currentWidth - this.margin,
-    } as TParsedExtendedTraceLog
+    } as TNestedTreeMapItem
 
     const gasPercentage =
       item.gasCost /
@@ -114,7 +120,7 @@ export class NestedMap {
 
     this.stageBlocks.forEach((block, blockIndex) => {
       const rootIndex = this.placedBlocks.findIndex(
-        (rootBlock) => rootBlock.index === block.index,
+        (rootBlock) => rootBlock.id === block.id,
       )
       const sum = this.stageBlocks.reduce(
         (accumulator, element) => accumulator + element.gasCost,

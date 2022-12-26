@@ -1,7 +1,7 @@
 import type { StackProps } from '@mui/material'
 
-import type { TParsedExtendedTraceLog } from '../../types'
+import type { TDimmensions, TMainTraceLogsWithId } from '../../types'
 
 export interface ItemBoxProps extends StackProps {
-  item: TParsedExtendedTraceLog
+  item: TMainTraceLogsWithId & TDimmensions
 }

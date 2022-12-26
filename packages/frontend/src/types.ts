@@ -1,19 +1,45 @@
 import type {
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
   IStructLog,
   TTransactionInfo,
+  TMainTraceLogs,
 } from '@evm-debuger/types'
 
-export type TTraceLog = ICallTypeTraceLog | ICreateTypeTraceLog
+export type TMainTraceLogsWithId = TMainTraceLogs & {
+  id: string
+}
 
-export type TParsedExtendedTraceLog = TTraceLog & {
+export type TDimmensions = {
   width: number
   height: number
   x: number
   y: number
-  nestedItems: TParsedExtendedTraceLog[]
 }
+
+export type TIntrinsicLog = {
+  owningLog: string
+  gasCost: number
+  id: string
+}
+
+export type TNestedTraceLogs = TMainTraceLogsWithId & {
+  nestedItems: (TNestedTraceLogs | TIntrinsicLog)[]
+}
+
+export type TNestedTreeMapItem = TMainTraceLogsWithId &
+  TDimmensions & {
+    nestedItems: (TNestedTreeMapItem | (TIntrinsicLog & TDimmensions))[]
+  }
+
+// export type TNestedTreeMapItem = TTraceLog & TIntrinsicLog
+
+// export type TParsedExtendedTraceLog = TTraceLog &
+//   TDimmensions & {
+//     nestedItems: TNestedTreeMapItem[]
+//   }
+
+// export type TRootTreeMapItem = TTraceLog & {
+//   nestedItems: TNestedTreeMapItem[]
+// }
 
 export type TOpcodeDisassemled = {
   opcode: number

@@ -2,10 +2,16 @@ import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import { useTypedDispatch } from '../../store/storeHooks'
+import type {
+  TDimmensions,
+  TIntrinsicLog,
+  TNestedTreeMapItem,
+} from '../../types'
+import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
 
 import type { NestedItemBoxProps } from './NestedItemBox.types'
-import { StyledBox, StyledInfoPanel, StyledNestedItemsBox } from './styles'
+import { StyledBox, StyledNestedItemsBox } from './styles'
 
 export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
   const [isHovered, setIsHovered] = useState(false)
@@ -35,6 +41,16 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
     [],
   )
 
+  const renderContent = (
+    element: TNestedTreeMapItem | (TIntrinsicLog & TDimmensions),
+  ) => {
+    if ('owningLog' in element)
+      return <IntrinsicItemBox item={element} key={element.id} />
+    if (element.nestedItems.length > 0)
+      return <NestedItemBox item={element} key={element.id} />
+    return <ItemBox item={element} key={element.id} />
+  }
+
   const { nestedItems, type, stackTrace, width, height, x, y, index } = item
 
   const styleDimension: React.CSSProperties = { width, height }
@@ -58,17 +74,8 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
       onMouseOut={notHovered}
       onClick={setActiveBlock}
     >
-      <StyledInfoPanel>
-        {type}__{stackTrace?.join('__')}{' '}
-      </StyledInfoPanel>
       <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
-        {nestedItems.map((nestedItem, blockIndex) =>
-          nestedItem.nestedItems.length > 0 ? (
-            <NestedItemBox key={blockIndex} item={nestedItem} />
-          ) : (
-            <ItemBox key={blockIndex} item={nestedItem} />
-          ),
-        )}
+        {nestedItems.map((nestedItem) => renderContent(nestedItem))}
       </StyledNestedItemsBox>
     </StyledBox>
   )
