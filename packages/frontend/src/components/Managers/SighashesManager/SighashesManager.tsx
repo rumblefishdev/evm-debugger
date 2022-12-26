@@ -39,7 +39,11 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
               {filteredSighashes.map((sighash) => (
                 <ManagerItem
                   key={sighash.sighash}
-                  name={sighash.sighash}
+                  name={
+                    sighash.fragment
+                      ? sighash.fragment.signature
+                      : sighash.sighash
+                  }
                   value={JSON.stringify(sighash.fragment, null, 2)}
                   isFound={sighash.fragment !== null}
                   updateItem={addSighash}

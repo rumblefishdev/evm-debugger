@@ -82,7 +82,7 @@ export type TEventInfo = {
   decodedEvent: ethers.utils.Result
 }
 
-export type TSighashFragment = string | ethers.utils.Fragment | JsonFragment
+export type TSighashFragment = JsonFragment
 export type TAbi = string | readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 
