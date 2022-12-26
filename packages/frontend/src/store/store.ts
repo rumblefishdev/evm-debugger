@@ -1,20 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
-import {
-  persistReducer,
-  persistStore,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist'
+import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
 import { structLogsReducer } from './structlogs/structlogs.slice'
 import { bytecodesReducer } from './bytecodes/bytecodes.slice'
+import { analyzerReducer } from './analyzer/analyzer.slice'
 import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
 import { sighashReducer } from './sighash/sighash.slice'
 import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
@@ -28,6 +20,7 @@ const rootReducer = combineReducers({
   sighashes: sighashReducer,
   rawTxData: rawTxDataReducer,
   bytecodes: bytecodesReducer,
+  analyzer: analyzerReducer,
   activeBlock: activeBlockReducer,
 })
 
@@ -35,6 +28,7 @@ const persistConfig = {
   storage,
   key: 'root',
   blacklist: [
+    'analyzer',
     'activeBlock',
     'structLogs',
     'rawTxData',
@@ -54,9 +48,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
     }).prepend(sagaMiddleware),
 })
 
