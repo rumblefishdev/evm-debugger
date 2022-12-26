@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
 import { structLogsReducer } from './structlogs/structlogs.slice'
 import { bytecodesReducer } from './bytecodes/bytecodes.slice'
+import { analyzerReducer } from './analyzer/analyzer.slice'
 import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
 import { sighashReducer } from './sighash/sighash.slice'
 import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   sighashes: sighashReducer,
   rawTxData: rawTxDataReducer,
   bytecodes: bytecodesReducer,
+  analyzer: analyzerReducer,
   activeBlock: activeBlockReducer,
 })
 
@@ -26,6 +28,7 @@ const persistConfig = {
   storage,
   key: 'root',
   blacklist: [
+    'analyzer',
     'activeBlock',
     'structLogs',
     'rawTxData',

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { Button, Stack } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 
@@ -12,6 +13,7 @@ import {
 } from '../../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { validateSchema } from '../../../helpers/validateSchema'
+import { typedNavigate } from '../../../router'
 
 import { traceTransactionSchema, txInfoSchema } from './schemas'
 import type { ManualUploadTransactionScreenProps } from './ManualUploadTransactionScreen.types'
@@ -26,7 +28,7 @@ export const ManualUploadTransactionScreen = ({
   ...props
 }: ManualUploadTransactionScreenProps) => {
   const dispatch = useTypedDispatch()
-  /* const navigate = useNavigate()*/
+  const navigate = useNavigate()
 
   const { control, handleSubmit, formState } = useForm<IManualUploadFormData>({
     mode: 'onBlur',
@@ -42,6 +44,7 @@ export const ManualUploadTransactionScreen = ({
           ),
         }),
       )
+      typedNavigate(navigate, '/summary')
     },
     [dispatch],
   )

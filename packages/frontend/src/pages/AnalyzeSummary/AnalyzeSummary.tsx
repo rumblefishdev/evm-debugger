@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 
-import { useAnalyzer } from '../../hooks/useAnalyzer'
 import {
   BytecodesManager,
   SighashesManager,
   SourcecodesManager,
 } from '../../components/Managers'
 import { Navigation } from '../../components/Navigation'
+import { useTypedSelector } from '../../store/storeHooks'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import {
@@ -17,8 +17,7 @@ import {
 } from './styles'
 
 export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
-  const { isLoading } = useAnalyzer()
-
+  const isLoading = useTypedSelector((state) => state.analyzer.isLoading)
   const [activeTab, setActiveTab] = useState<TTabType>('sourcecodes')
 
   const handleTabChange = (tabName: TTabType) => {
@@ -41,6 +40,8 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
       }
     }
   }
+
+  // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
 
   return isLoading ? null : (
     <StyledStack {...props}>
