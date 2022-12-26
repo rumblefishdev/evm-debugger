@@ -6,6 +6,7 @@ import type {
   TReturnedTraceLog,
   TTransactionData,
 } from '@evm-debuger/types'
+import { FormatTypes } from '@ethersproject/abi'
 
 import {
   checkIfOfCallType,
@@ -27,10 +28,9 @@ import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
-import { FormatTypes } from '@ethersproject/abi'
 
 export class TxAnalyzer {
-  constructor(public readonly transactionData: TTransactionData) { }
+  constructor(public readonly transactionData: TTransactionData) {}
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
@@ -161,9 +161,8 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const { abis } = this.transactionData
 
-    for (const abi of Object.values(abis)) {
+    for (const abi of Object.values(abis))
       this.fragmentReader.loadFragmentsFromAbi(abi)
-    }
 
     return mainTraceLogList.map((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
@@ -265,7 +264,7 @@ export class TxAnalyzer {
 
   private getContractSighashList(mainTraceLogList: TMainTraceLogs[]) {
     const sighashStatues = new SigHashStatuses()
-    for (const traceLog of mainTraceLogList) {
+    for (const traceLog of mainTraceLogList)
       if (
         checkIfOfCallType(traceLog) &&
         traceLog.isContract &&
@@ -293,7 +292,6 @@ export class TxAnalyzer {
             JSON.parse(errorDescription.errorFragment.format(FormatTypes.json)),
           )
       }
-    }
 
     return sighashStatues.sighashStatusList
   }
