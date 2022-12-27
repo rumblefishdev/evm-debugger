@@ -5,7 +5,7 @@
 import type {
   TIntrinsicLog,
   TMainTraceLogsWithId,
-  TNestedTreeMapItem,
+  TTreeMapItemWithoutNested,
 } from '../types'
 
 import { sumReducer } from './helpers'
@@ -25,9 +25,9 @@ export class NestedMap {
   private currentHeight = this.margin * 2
 
   private stageValue = 0
-  private stageBlocks: TNestedTreeMapItem[] = []
+  private stageBlocks: TTreeMapItemWithoutNested[] = []
 
-  private placedBlocks: TNestedTreeMapItem[] = []
+  private placedBlocks: TTreeMapItemWithoutNested[] = []
 
   private lastAspectRatio = 0
 
@@ -60,53 +60,61 @@ export class NestedMap {
           .map((block) => block.gasCost)
           .reduce(sumReducer, 0))
 
-    const blockData = {
-      ...item,
-      y: this.currentHeight - this.margin,
-      x: this.currentWidth - this.margin,
-    } as TNestedTreeMapItem
+    const blockData: TTreeMapItemWithoutNested = {
+      item,
+      dimmensions: {
+        y: this.currentHeight - this.margin,
+        x: this.currentWidth - this.margin,
+        width: 0,
+        height: 0,
+      },
+    }
 
     const gasPercentage =
       item.gasCost /
       (this.stageBlocks.reduce(
-        (accumulator, element) => accumulator + element.gasCost,
+        (accumulator, element) => accumulator + element.item.gasCost,
         0,
       ) +
         item.gasCost)
 
     if (isVertical) {
-      blockData.height = (this.height - this.currentHeight) * gasPercentage
-      blockData.width = itemArea / blockData.height
+      blockData.dimmensions.height =
+        (this.height - this.currentHeight) * gasPercentage
+      blockData.dimmensions.width = itemArea / blockData.dimmensions.height
     } else {
-      blockData.width = (this.width - this.currentWidth) * gasPercentage
-      blockData.height = itemArea / blockData.width
+      blockData.dimmensions.width =
+        (this.width - this.currentWidth) * gasPercentage
+      blockData.dimmensions.height = itemArea / blockData.dimmensions.width
     }
 
     if (this.stageBlocks.length === 0) {
       this.placedBlocks.push(blockData)
       this.stageBlocks.push(blockData)
       this.lastAspectRatio = this.calculateAspectRatio(
-        blockData.width,
-        blockData.height,
+        blockData.dimmensions.width,
+        blockData.dimmensions.height,
       )
-      if (isVertical) this.stageValue += blockData.width + this.margin
+      if (isVertical)
+        this.stageValue += blockData.dimmensions.width + this.margin
 
-      if (!isVertical) this.stageValue += blockData.height + this.margin
+      if (!isVertical)
+        this.stageValue += blockData.dimmensions.height + this.margin
 
       return
     }
 
     const currentAspect = this.calculateAspectRatio(
-      blockData.width,
-      blockData.height,
+      blockData.dimmensions.width,
+      blockData.dimmensions.height,
     )
     if (this.isWorseRatio(currentAspect)) {
       if (isVertical) {
-        this.placedBlocks.at(-1).width -= this.margin / 2
+        this.placedBlocks.at(-1).dimmensions.width -= this.margin / 2
         this.currentWidth += this.stageValue - this.margin
       }
       if (!isVertical) {
-        this.placedBlocks.at(-1).height -= this.margin / 2
+        this.placedBlocks.at(-1).dimmensions.height -= this.margin / 2
         this.currentHeight += this.stageValue - this.margin
       }
 
@@ -119,67 +127,75 @@ export class NestedMap {
 
     this.stageBlocks.forEach((block, blockIndex) => {
       const rootIndex = this.placedBlocks.findIndex(
-        (rootBlock) => rootBlock.id === block.id,
+        (rootBlock) => rootBlock.item.id === block.item.id,
       )
       const sum = this.stageBlocks.reduce(
-        (accumulator, element) => accumulator + element.gasCost,
+        (accumulator, element) => accumulator + element.item.gasCost,
         0,
       )
       if (isVertical) {
         const innerHeight =
           (this.height - this.currentHeight) *
-          (block.gasCost / (sum + blockData.gasCost))
+          (block.item.gasCost / (sum + blockData.item.gasCost))
         const y =
           blockIndex === 0
             ? this.currentHeight - this.margin
-            : this.placedBlocks[blockIndex - 1].y +
-              this.placedBlocks[blockIndex - 1].height -
+            : this.placedBlocks[blockIndex - 1].dimmensions.y +
+              this.placedBlocks[blockIndex - 1].dimmensions.height -
               this.margin
         this.placedBlocks[rootIndex] = {
           ...block,
-          y,
-          width: blockData.width - this.margin / 2,
-          height: innerHeight,
+          dimmensions: {
+            ...block.dimmensions,
+            y,
+            width: blockData.dimmensions.width - this.margin / 2,
+            height: innerHeight,
+          },
         }
       }
       if (!isVertical) {
         const innerWidth =
           (this.width - this.currentWidth) *
-          (block.gasCost / (sum + blockData.gasCost))
+          (block.item.gasCost / (sum + blockData.item.gasCost))
         const x =
           blockIndex === 0
             ? this.currentWidth - this.margin
-            : this.placedBlocks[blockIndex - 1].x +
-              this.placedBlocks[blockIndex - 1].width -
+            : this.placedBlocks[blockIndex - 1].dimmensions.x +
+              this.placedBlocks[blockIndex - 1].dimmensions.width -
               this.margin
         this.placedBlocks[rootIndex] = {
           ...block,
-          x,
-          width: innerWidth,
-          height: blockData.height - this.margin / 2,
+          dimmensions: {
+            ...block.dimmensions,
+            x,
+            width: innerWidth,
+            height: blockData.dimmensions.height - this.margin / 2,
+          },
         }
       }
     })
 
     if (isVertical) {
-      if (this.placedBlocks.at(-1)!.x === blockData.x) {
-        blockData['y'] =
-          this.placedBlocks.at(-1)!.y +
-          this.placedBlocks.at(-1)!.height +
+      if (this.placedBlocks.at(-1)!.dimmensions.x === blockData.dimmensions.x) {
+        blockData.dimmensions.y =
+          this.placedBlocks.at(-1)!.dimmensions.y +
+          this.placedBlocks.at(-1)!.dimmensions.height +
           this.margin
-        blockData['height'] = this.height - blockData.y - this.margin
+        blockData.dimmensions.height =
+          this.height - blockData.dimmensions.y - this.margin
       }
-      this.stageValue = blockData.width + this.margin
+      this.stageValue = blockData.dimmensions.width + this.margin
     }
     if (!isVertical) {
-      if (this.placedBlocks.at(-1)!.y === blockData.y) {
-        blockData['x'] =
-          this.placedBlocks.at(-1)!.x +
-          this.placedBlocks.at(-1)!.width +
+      if (this.placedBlocks.at(-1)!.dimmensions.y === blockData.dimmensions.y) {
+        blockData.dimmensions.x =
+          this.placedBlocks.at(-1)!.dimmensions.x +
+          this.placedBlocks.at(-1)!.dimmensions.width +
           this.margin
-        blockData['width'] = this.width - blockData.x - this.margin
+        blockData.dimmensions.width =
+          this.width - blockData.dimmensions.x - this.margin
       }
-      this.stageValue = blockData.height + this.margin
+      this.stageValue = blockData.dimmensions.height + this.margin
     }
     this.placedBlocks.push(blockData)
     this.stageBlocks.push(blockData)

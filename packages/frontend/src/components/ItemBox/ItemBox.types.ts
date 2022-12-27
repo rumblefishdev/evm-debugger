@@ -1,9 +1,13 @@
 import type { StackProps } from '@mui/material'
 import type { Dispatch, SetStateAction } from 'react'
 
-import type { TDimmensions, TMainTraceLogsWithId } from '../../types'
+import type {
+  TDimmensions,
+  TMainTraceLogsWithId,
+  TTreeMapData,
+} from '../../types'
 
 export interface ItemBoxProps extends StackProps {
-  item: TMainTraceLogsWithId & TDimmensions
+  treeMapItem: TTreeMapData & { item: TMainTraceLogsWithId }
   parentHoverHandler?: Dispatch<SetStateAction<boolean>>
 }

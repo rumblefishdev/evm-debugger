@@ -1,9 +1,9 @@
 import type { BoxProps } from '@mui/material'
 import type { Dispatch, SetStateAction } from 'react'
 
-import type { TDimmensions, TIntrinsicLog } from '../../types'
+import type { TDimmensions, TIntrinsicLog, TTreeMapData } from '../../types'
 
 export interface IntrinsicItemBoxProps extends BoxProps {
-  item: TIntrinsicLog & TDimmensions
+  treeMapItem: TTreeMapData & { item: TIntrinsicLog }
   parentHoverHandler?: Dispatch<SetStateAction<boolean>>
 }

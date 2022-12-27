@@ -6,11 +6,13 @@ import { StyledBox } from './styles'
 import type { IntrinsicItemBoxProps } from './IntrinsicItemBox.types'
 
 export const IntrinsicItemBox = ({
-  item,
+  treeMapItem,
   parentHoverHandler,
   ...props
 }: IntrinsicItemBoxProps) => {
-  const { width, height, x, y, gasCost, owningLog } = item
+  const { gasCost, owningLog } = treeMapItem.item
+
+  const { width, height, x, y } = treeMapItem.dimmensions
 
   const [isHovered, setIsHovered] = useState(false)
 

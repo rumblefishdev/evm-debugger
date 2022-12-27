@@ -139,6 +139,8 @@ const CreateBlockSummary = ({ item, ...props }: CreateBlockSummaryProps) => {
 export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
   const currentBlock = useTypedSelector(selectActiveBlock)
 
+  console.log(currentBlock)
+
   if (!currentBlock) return <StyledBox></StyledBox>
   const renderBlock = () => {
     if (checkIfOfCallType(currentBlock))

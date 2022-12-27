@@ -2,11 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
-import type {
-  TDimmensions,
-  TIntrinsicLog,
-  TNestedTreeMapItem,
-} from '../../types'
+import type { TTreeMapData } from '../../types'
 import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
 import { TreemapTooltip } from '../TreemapTooltip'
@@ -14,7 +10,10 @@ import { TreemapTooltip } from '../TreemapTooltip'
 import type { NestedItemBoxProps } from './NestedItemBox.types'
 import { StyledBox, StyledNestedItemsBox } from './styles'
 
-export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
+export const NestedItemBox = ({
+  treeMapItem,
+  ...props
+}: NestedItemBoxProps) => {
   const [isTooltipActive, setIsTooltipActive] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
@@ -41,46 +40,40 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      dispatch(loadActiveBlock(item))
+      dispatch(loadActiveBlock(treeMapItem.item))
       event.stopPropagation()
     },
     [],
   )
 
-  const renderContent = (
-    element: TNestedTreeMapItem | (TIntrinsicLog & TDimmensions),
-  ) => {
-    if ('owningLog' in element)
+  const renderContent = (element: TTreeMapData) => {
+    if ('owningLog' in element.item)
       return (
         <IntrinsicItemBox
-          item={element}
-          key={element.id}
-          parentHoverHandler={setIsHovered}
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
         />
       )
+
     if (element.nestedItems.length > 0)
-      return <NestedItemBox item={element} key={element.id} />
+      return (
+        <NestedItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
+
     return (
       <ItemBox
-        item={element}
-        key={element.id}
-        parentHoverHandler={setIsHovered}
+        treeMapItem={{ ...element, item: element.item }}
+        key={element.item.id}
       />
     )
   }
 
-  const {
-    nestedItems,
-    gasCost,
-    width,
-    height,
-    x,
-    y,
-    index,
-    type,
-    stackTrace,
-    id,
-  } = item
+  const { gasCost, index, type, stackTrace, id } = treeMapItem.item
+
+  const { width, height, x, y } = treeMapItem.dimmensions
 
   const styleDimension: React.CSSProperties = { width, height }
 
@@ -116,7 +109,9 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
         onClick={setActiveBlock}
       >
         <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
-          {nestedItems.map((nestedItem) => renderContent(nestedItem))}
+          {treeMapItem.nestedItems.map((nestedItem) =>
+            renderContent(nestedItem),
+          )}
         </StyledNestedItemsBox>
       </StyledBox>
     </TreemapTooltip>

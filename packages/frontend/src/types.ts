@@ -8,14 +8,6 @@ export type TMainTraceLogsWithId = TMainTraceLogs & {
   id: string
 }
 
-export type TParsedExtendedTraceLog = {
-  traceLog: TMainTraceLogsWithId
-  width: number
-  height: number
-  x: number
-  y: number
-}
-
 export type TDimmensions = {
   width: number
   height: number
@@ -32,14 +24,15 @@ export type TIntrinsicLog = {
   id: string
 }
 
-export type TNestedTraceLogs = TMainTraceLogsWithId & {
-  nestedItems: (TNestedTraceLogs | TIntrinsicLog)[]
+export type TTreeMapItem = TIntrinsicLog | TMainTraceLogsWithId
+
+export type TTreeMapData = {
+  item: TMainTraceLogsWithId | TIntrinsicLog
+  dimmensions: TDimmensions
+  nestedItems: TTreeMapData[]
 }
 
-export type TNestedTreeMapItem = TMainTraceLogsWithId &
-  TDimmensions & {
-    nestedItems: (TNestedTreeMapItem | (TIntrinsicLog & TDimmensions))[]
-  }
+export type TTreeMapItemWithoutNested = Omit<TTreeMapData, 'nestedItems'>
 
 export type TOpcodeDisassemled = {
   opcode: number

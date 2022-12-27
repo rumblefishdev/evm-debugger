@@ -8,11 +8,13 @@ import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
 export const ItemBox = ({
-  item,
+  treeMapItem,
   parentHoverHandler,
   ...props
 }: ItemBoxProps) => {
-  const { type, stackTrace, gasCost, width, height, x, y, index, id } = item
+  const { type, stackTrace, gasCost, index, id } = treeMapItem.item
+
+  const { width, height, x, y } = treeMapItem.dimmensions
 
   const [isHovered, setIsHovered] = useState(false)
 
@@ -41,7 +43,7 @@ export const ItemBox = ({
   const setActiveBlock = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    dispatch(loadActiveBlock(item))
+    dispatch(loadActiveBlock(treeMapItem.item))
 
     event.stopPropagation()
   }
