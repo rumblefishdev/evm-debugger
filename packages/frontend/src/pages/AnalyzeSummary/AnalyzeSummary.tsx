@@ -26,9 +26,10 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'sourcecodes': {
-        return <SourcecodesManager />
-      }
+      // TODO: Hidden for future use
+      // case 'sourcecodes': {
+      //   return <SourcecodesManager />
+      // }
       case 'bytecodes': {
         return <BytecodesManager />
       }
@@ -44,17 +45,12 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
 
   return isLoading ? null : (
-    <StyledStack {...props}>
+    <>
       <Navigation />
       <StyledButtonsWrapper>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
-          onClick={() => handleTabChange('sourcecodes')}
-        >
+        {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
           Source Codes
-        </Button>
+        </Button> */}
         <Button
           variant="contained"
           color="primary"
@@ -73,6 +69,6 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
         </Button>
       </StyledButtonsWrapper>
       <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
-    </StyledStack>
+    </>
   )
 }
