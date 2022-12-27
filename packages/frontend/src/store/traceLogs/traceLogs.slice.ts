@@ -9,10 +9,7 @@ import { NestedMap } from '../../helpers/nestedTreeMap'
 
 const initialState = [] as TMainTraceLogs[]
 
-const lastItemInContext = (
-  rootItem: TParsedExtendedTraceLog,
-  state: TTraceLog[],
-) => {
+const lastItemInContext = (rootItem: TTraceLog, state: TTraceLog[]) => {
   const lastItem = state.findIndex(
     (item) => item.index > rootItem.index && item.depth === rootItem.depth,
   )
@@ -20,16 +17,13 @@ const lastItemInContext = (
 }
 
 const parseRecursive = (
-  rootItem: TParsedExtendedTraceLog,
+  rootItem: TTraceLog,
   state: TTraceLog[],
   width: number,
   height: number,
   margin: number,
 ): TParsedExtendedTraceLog[] => {
-  if (!rootItem.nestedItems || rootItem.nestedItems.length === 0)
-    return [] as TParsedExtendedTraceLog[]
-
-  const nestedItems = rootItem.nestedItems
+  const nestedItems = state
     .slice(
       state.findIndex((item) => item.index === rootItem.index),
       lastItemInContext(rootItem, state),
@@ -47,7 +41,7 @@ const parseRecursive = (
     nestedItems: null,
     index: 100_000,
     gasCost: gasSum,
-  } as unknown as TParsedExtendedTraceLog
+  } as unknown as TTraceLog
 
   nestedItems.push(blockData)
 
@@ -64,7 +58,7 @@ const parseRecursive = (
     return {
       ...item,
       nestedItems: parseRecursive(
-        { ...item, nestedItems: state as TParsedExtendedTraceLog[] },
+        item.traceLog,
         state,
         item.width,
         item.height,
@@ -80,23 +74,14 @@ const selectTraceAsNestedArrays = (
   height: number,
   margin: number,
 ) => {
-  const rootItem = {
-    ...state[0],
+  const rootItem: TParsedExtendedTraceLog = {
     y: 0,
     x: 0,
     width,
-    nestedItems: state.length > 1 ? state.slice(1) : [],
+    traceLog: state[0],
+    nestedItems: parseRecursive(state[0], state, width, height, margin),
     height,
-  } as TParsedExtendedTraceLog
-
-  if (rootItem.nestedItems)
-    rootItem.nestedItems = parseRecursive(
-      rootItem,
-      state,
-      width,
-      height,
-      margin,
-    )
+  }
 
   return rootItem
 }

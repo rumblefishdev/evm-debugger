@@ -8,14 +8,20 @@ import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
 export const ItemBox = ({ item, ...props }: ItemBoxProps) => {
-  const { type, stackTrace, gasCost, width, height, x, y, index } = item
+  const {
+    traceLog: { type, stackTrace, gasCost, index },
+    width,
+    height,
+    x,
+    y,
+  } = item
 
   const dispatch = useTypedDispatch()
 
   const setActiveBlock = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    dispatch(loadActiveBlock(item))
+    dispatch(loadActiveBlock(item.traceLog))
     event.stopPropagation()
   }
 
