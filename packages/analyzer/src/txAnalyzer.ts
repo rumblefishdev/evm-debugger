@@ -6,6 +6,7 @@ import type {
   TReturnedTraceLog,
   TTransactionData,
 } from '@evm-debuger/types'
+import { FormatTypes } from '@ethersproject/abi'
 
 import {
   checkIfOfCallType,
@@ -160,9 +161,8 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const { abis } = this.transactionData
 
-    Object.keys(abis).forEach((address) => {
-      this.fragmentReader.loadFragmentsFromAbi(abis[address])
-    })
+    for (const abi of Object.values(abis))
+      this.fragmentReader.loadFragmentsFromAbi(abi)
 
     return mainTraceLogList.map((item) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
@@ -264,20 +264,34 @@ export class TxAnalyzer {
 
   private getContractSighashList(mainTraceLogList: TMainTraceLogs[]) {
     const sighashStatues = new SigHashStatuses()
-    mainTraceLogList.forEach((item) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const { input, address, errorDescription, functionDescription } = item
+    for (const traceLog of mainTraceLogList)
+      if (
+        checkIfOfCallType(traceLog) &&
+        traceLog.isContract &&
+        traceLog.input &&
+        traceLog.input !== '0x' // this is pure transfer of ETH
+      ) {
+        const { input, address, errorDescription, functionFragment } = traceLog
         const sighash = input.slice(0, 10)
 
-        if (functionDescription === null)
+        if (functionFragment === null)
           sighashStatues.add(address, sighash, null)
-        else sighashStatues.add(address, sighash, functionDescription)
+        else
+          sighashStatues.add(
+            address,
+            sighash,
+            JSON.parse(functionFragment.format(FormatTypes.json)),
+          )
 
         if (errorDescription === null)
           sighashStatues.add(address, sighash, null)
-        else sighashStatues.add(address, sighash, errorDescription)
+        else
+          sighashStatues.add(
+            address,
+            sighash,
+            JSON.parse(errorDescription.errorFragment.format(FormatTypes.json)),
+          )
       }
-    })
 
     return sighashStatues.sighashStatusList
   }

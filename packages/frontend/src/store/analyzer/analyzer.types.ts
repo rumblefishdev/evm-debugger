@@ -1,5 +1,4 @@
-import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
-import type { JsonFragment } from '@ethersproject/abi'
+import type { IStructLog, TAbi, TTransactionInfo } from '@evm-debuger/types'
 
 export interface IStructLogProvider {
   getStructLog: () => Promise<IStructLog[]>
@@ -9,7 +8,7 @@ export interface ITxInfoProvider {
 }
 
 export interface IAbiProvider {
-  getAbi: (address: string) => Promise<JsonFragment | null>
+  getAbi: (address: string) => Promise<TAbi | null>
 }
 
 export interface IBytecodeProvider {
