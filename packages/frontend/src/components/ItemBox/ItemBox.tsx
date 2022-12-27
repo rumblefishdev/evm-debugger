@@ -57,9 +57,7 @@ export const ItemBox = ({
   }
 
   const activeStyle =
-    getActiveBlock?.id === id
-      ? { border: '4px solid rgba(255, 129, 120 , 1)' }
-      : {}
+    getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
 
   return (
     <TreemapTooltip

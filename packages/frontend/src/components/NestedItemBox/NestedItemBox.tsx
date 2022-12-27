@@ -50,6 +50,7 @@ export const NestedItemBox = ({
     if ('owningLog' in element.item)
       return (
         <IntrinsicItemBox
+          parentHoverHandler={setIsHovered}
           treeMapItem={{ ...element, item: element.item }}
           key={element.item.id}
         />
@@ -65,6 +66,7 @@ export const NestedItemBox = ({
 
     return (
       <ItemBox
+        parentHoverHandler={setIsHovered}
         treeMapItem={{ ...element, item: element.item }}
         key={element.item.id}
       />
@@ -78,9 +80,7 @@ export const NestedItemBox = ({
   const styleDimension: React.CSSProperties = { width, height }
 
   const activeStyle =
-    getActiveBlock?.id === id
-      ? { border: '4px solid rgba(255, 129, 120 , 1)' }
-      : {}
+    getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
 
   const hoverStyle: React.CSSProperties = isHovered
     ? { background: 'rgba(255, 129, 120 , .4)' }
@@ -101,7 +101,6 @@ export const NestedItemBox = ({
           top: y,
           left: x,
           ...props.sx,
-          zIndex: 0,
           ...activeStyle,
         }}
         onMouseOver={hovered}
