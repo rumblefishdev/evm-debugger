@@ -23,35 +23,23 @@ export const structLogsSlice = createSlice({
       const activeStructlog = state.activeStructLog
 
       if (activeStructlog) {
-        const index = [...activeStructlog.stack]
-          .reverse()
-          .findIndex((item) => item.value === action.payload)
+        const index = [...activeStructlog.stack].reverse().findIndex((item) => item.value === action.payload)
         const count = activeStructlog.stack.length - 1
-        if (index !== -1)
-          state.activeStructLog.stack[count - index].isSelected =
-            !activeStructlog.stack[count - index].isSelected
+        if (index !== -1) state.activeStructLog.stack[count - index].isSelected = !activeStructlog.stack[count - index].isSelected
       }
     },
     loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
       state.structLogs = action.payload
     },
 
-    loadPreviousStructlog: (
-      state,
-      action: PayloadAction<IExtendedStructLog[]>,
-    ) => {
-      if (state.activeStructLog.index > 0)
-        state.activeStructLog = action.payload[state.activeStructLog.index - 1]
+    loadPreviousStructlog: (state, action: PayloadAction<IExtendedStructLog[]>) => {
+      if (state.activeStructLog.index > 0) state.activeStructLog = action.payload[state.activeStructLog.index - 1]
     },
 
     loadNextStructlog: (state, action: PayloadAction<IExtendedStructLog[]>) => {
-      if (state.activeStructLog.index < state.structLogs.length - 1)
-        state.activeStructLog = action.payload[state.activeStructLog.index + 1]
+      if (state.activeStructLog.index < state.structLogs.length - 1) state.activeStructLog = action.payload[state.activeStructLog.index + 1]
     },
-    loadActiveStructLog: (
-      state,
-      action: PayloadAction<IExtendedStructLog | null>,
-    ) => {
+    loadActiveStructLog: (state, action: PayloadAction<IExtendedStructLog | null>) => {
       state.activeStructLog = action.payload
     },
   },
@@ -61,10 +49,7 @@ export const structLogsSlice = createSlice({
 
 export const structLogsReducer = structLogsSlice.reducer
 
-export const isStructLogActive = (
-  state: TRootState,
-  index: number,
-): boolean => {
+export const isStructLogActive = (state: TRootState, index: number): boolean => {
   return state.structLogs.activeStructLog?.index === index
 }
 
@@ -72,7 +57,7 @@ export const getParsedStructLogs = (
   structLogs: IStructLog[],
   traceLogs: TMainTraceLogs[],
   startIndex: number,
-  returnIndex: number,
+  returnIndex: number
 ): IExtendedStructLog[] => {
   return structLogs
     .slice(startIndex, returnIndex)
@@ -83,8 +68,7 @@ export const getParsedStructLogs = (
           ...argStackExtractor(item),
           stack: extendStack(item.stack),
           index,
-          gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)
-            ?.gasCost,
+          gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
         }
 
       return {
@@ -99,11 +83,7 @@ export const getParsedStack = (stack: TExtendedStack) => {
   return stack.map((stackItem, index) => {
     const defaultString = '0000'
     const hexValue = (stack.length - 1 - index).toString()
-    const paddedHexValue =
-      defaultString.slice(
-        0,
-        Math.max(0, defaultString.length - hexValue.length),
-      ) + hexValue
+    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
 
     return { value: stackItem, index: paddedHexValue }
   })
@@ -113,11 +93,7 @@ export const getParsedMemory = (memory: string[]) => {
   return memory.map((memoryItem, index) => {
     const defaultString = '00000000'
     const hexValue = (index * 32).toString(16)
-    const paddedHexValue =
-      defaultString.slice(
-        0,
-        Math.max(0, defaultString.length - hexValue.length),
-      ) + hexValue
+    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
     const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
 
     return { value: splitMemoryItem, index: paddedHexValue }
@@ -129,26 +105,15 @@ export const selectParsedStructLogs = createSelector(
   (state: TRootState) => traceLogsSelectors.selectAll(state.traceLogs),
   (state: TRootState) => state.activeBlock.startIndex,
   (state: TRootState) => state.activeBlock.returnIndex,
-  getParsedStructLogs,
+  getParsedStructLogs
 )
 
-export const selectParsedStack = createSelector(
-  (state: TRootState) => state.structLogs.activeStructLog?.stack ?? [],
-  getParsedStack,
-)
-export const selectParsedMemory = createSelector(
-  (state: TRootState) => state.structLogs.activeStructLog?.memory ?? [],
-  getParsedMemory,
-)
+export const selectParsedStack = createSelector((state: TRootState) => state.structLogs.activeStructLog?.stack ?? [], getParsedStack)
+export const selectParsedMemory = createSelector((state: TRootState) => state.structLogs.activeStructLog?.memory ?? [], getParsedMemory)
 export const selectStructlogStorage = createSelector(
   [(state: TRootState) => state.structLogs.activeStructLog?.storage],
-  (state) => state ?? {},
+  (state) => state ?? {}
 )
 
-export const {
-  loadStructLogs,
-  updateStackSelectionStatus,
-  loadPreviousStructlog,
-  loadNextStructlog,
-  loadActiveStructLog,
-} = structLogsSlice.actions
+export const { loadStructLogs, updateStackSelectionStatus, loadPreviousStructlog, loadNextStructlog, loadActiveStructLog } =
+  structLogsSlice.actions

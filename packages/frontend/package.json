@@ -31,7 +31,6 @@
     "react-scripts": "5.0.1",
     "react-viewport-list": "^6.3.0-beta.0",
     "redux": "^4.2.0",
-    "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.2",
     "typed-redux-saga": "^1.5.0",
     "typescript": "^4.4.2",

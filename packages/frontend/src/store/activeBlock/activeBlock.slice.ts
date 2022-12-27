@@ -4,12 +4,16 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { TMainTraceLogsWithId } from '../../types'
 import type { TRootState } from '../store'
 
-const initialState: TMainTraceLogsWithId | null = null
+export class ActiveBlockState {
+  activeBlock?: TMainTraceLogsWithId = null
+}
+
+export const initialState: TMainTraceLogsWithId | null = null
 
 export const activeBlockSlice = createSlice({
   reducers: {
     loadActiveBlock: (state, action: PayloadAction<TMainTraceLogsWithId>) => {
-      return action.payload
+      state = action.payload
     },
   },
   name: 'activeBlock',

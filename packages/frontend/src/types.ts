@@ -1,11 +1,15 @@
-import type {
-  IStructLog,
-  TTransactionInfo,
-  TMainTraceLogs,
-} from '@evm-debuger/types'
+import type { IStructLog, TTransactionInfo, TMainTraceLogs } from '@evm-debuger/types'
 
 export type TMainTraceLogsWithId = TMainTraceLogs & {
   id: string
+}
+
+export type TParsedExtendedTraceLog = {
+  traceLog: TMainTraceLogsWithId
+  width: number
+  height: number
+  x: number
+  y: number
 }
 
 export type TDimmensions = {

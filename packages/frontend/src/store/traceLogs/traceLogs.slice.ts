@@ -17,7 +17,7 @@ export const traceLogsSlice = createSlice({
         action.payload.map((traceLog) => ({
           ...traceLog,
           id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
-        })),
+        }))
       )
     },
   },
