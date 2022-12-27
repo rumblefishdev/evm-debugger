@@ -1,11 +1,20 @@
-import { Stack, Typography } from '@mui/material'
-import React from 'react'
-import { ethers } from 'ethers'
+import React, { useMemo } from 'react'
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
+import { Stack } from '@mui/system'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  List,
+} from '@mui/material'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import { parseStackTrace } from '../../helpers/helpers'
+import {
+  parseEventLog,
+  parseFunctionFragment,
+  parseStackTrace,
+} from '../../helpers/helpers'
 
 import type {
   BlockSummaryProps,
@@ -17,28 +26,21 @@ import {
   StyledInfoRow,
   StyledInfoType,
   StyledInfoValue,
+  StyledSectionHeader,
   StyledWrapper,
+  StyleRawBytecode,
 } from './styles'
 
+// Todo: handle reverted calls with errorDescription
+
 const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
-  const {
-    events,
-    input,
-    output,
-    decodedInput,
-    decodedOutput,
-    errorDescription,
-    functionDescription,
-    isContract,
-    storageAddress,
-    storageLogs,
-  } = item
+  const { events, input, output, functionDescription, isContract } = item
 
-  console.log('input', input)
-  console.log('decodedInput', decodedInput)
-  console.log('functionDescription', functionDescription)
-
-  console.log('output', decodedOutput)
+  const parsedEvents = useMemo(() => parseEventLog(events), [events])
+  const { signature, parsedOutputs, parsedInputs } = useMemo(
+    () => parseFunctionFragment(functionDescription),
+    [functionDescription],
+  )
 
   return (
     <>
@@ -48,27 +50,77 @@ const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
-        <StyledInfoValue>{input}</StyledInfoValue>
+        <StyleRawBytecode>{input}</StyleRawBytecode>
       </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Raw output</StyledInfoType>
+        <StyleRawBytecode>{output}</StyleRawBytecode>
+      </StyledInfoRow>
+      <StyledSectionHeader>
+        Decoded Function: <b>{signature}</b>
+      </StyledSectionHeader>
+      <Accordion>
+        <AccordionSummary>Inputs</AccordionSummary>
+        <AccordionDetails>
+          <List>
+            {parsedInputs.map((parsedInput) => {
+              return (
+                <StyledInfoRow>
+                  <StyledInfoType>
+                    {parsedInput.name} ({parsedInput.type})
+                  </StyledInfoType>
+                  <StyledInfoValue>{parsedInput.value}</StyledInfoValue>
+                </StyledInfoRow>
+              )
+            })}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary>Outputs</AccordionSummary>
+        <AccordionDetails>
+          <List>
+            {parsedOutputs.map((parsedOutput) => {
+              return (
+                <StyledInfoRow>
+                  <StyledInfoType>
+                    {parsedOutput.name} ({parsedOutput.type})
+                  </StyledInfoType>
+                  <StyledInfoValue>{parsedOutput.value}</StyledInfoValue>
+                </StyledInfoRow>
+              )
+            })}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+      <StyledSectionHeader>Events:</StyledSectionHeader>
+      <Stack sx={{ marginBottom: '12px' }}>
+        {parsedEvents.map((event, index) => {
+          return (
+            <Accordion>
+              <AccordionSummary>{event.signature}</AccordionSummary>
+              <AccordionDetails>
+                <List>
+                  {event.parsedArgs.map((arg) => {
+                    return (
+                      <StyledInfoRow>
+                        <StyledInfoType>{arg.name}</StyledInfoType>
+                        <StyledInfoValue>{arg.value}</StyledInfoValue>
+                      </StyledInfoRow>
+                    )
+                  })}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+          )
+        })}
+      </Stack>
     </>
   )
 }
 
 const CreateBlockSummary = ({ item, ...props }: CreateBlockSummaryProps) => {
-  const {
-    address,
-    gasCost,
-    input,
-    passedGas,
-    stackTrace,
-    type,
-    isSuccess,
-    value,
-    blockNumber,
-    salt,
-    storageLogs,
-    storageAddress,
-  } = item
+  const { input, isSuccess, salt } = item
   return (
     <>
       <StyledInfoRow></StyledInfoRow>
@@ -131,6 +183,81 @@ export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
           <StyledInfoValue>{value}</StyledInfoValue>
         </StyledInfoRow>
         {renderBlock()}
+
+        <StyledSectionHeader>Storage Information</StyledSectionHeader>
+        <StyledInfoRow>
+          <StyledInfoType>Storage address</StyledInfoType>
+          <StyleRawBytecode>{storageAddress}</StyleRawBytecode>
+        </StyledInfoRow>
+        <Stack sx={{ marginBottom: '12px' }}>
+          <Accordion>
+            <AccordionSummary>Loaded Storage</AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {storageLogs.loadedStorage.map((log) => {
+                  return (
+                    <>
+                      <StyledInfoRow>
+                        <StyledInfoType>Key</StyledInfoType>
+                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                      </StyledInfoRow>
+                      <StyledInfoRow>
+                        <StyledInfoType>Value</StyledInfoType>
+                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
+                      </StyledInfoRow>
+                    </>
+                  )
+                })}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary>Changed Storage</AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {storageLogs.changedStorage.map((log) => {
+                  return (
+                    <>
+                      <StyledInfoRow>
+                        <StyledInfoType>Key</StyledInfoType>
+                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                      </StyledInfoRow>
+                      <StyledInfoRow>
+                        <StyledInfoType>Initial Value</StyledInfoType>
+                        <StyleRawBytecode>{log.initialValue}</StyleRawBytecode>
+                      </StyledInfoRow>
+                      <StyledInfoRow>
+                        <StyledInfoType>Updated Value</StyledInfoType>
+                        <StyleRawBytecode>{log.updatedValue}</StyleRawBytecode>
+                      </StyledInfoRow>
+                    </>
+                  )
+                })}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary>Returned Storage</AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {storageLogs.returnedStorage.map((log) => {
+                  return (
+                    <>
+                      <StyledInfoRow>
+                        <StyledInfoType>Key</StyledInfoType>
+                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                      </StyledInfoRow>
+                      <StyledInfoRow>
+                        <StyledInfoType>Value</StyledInfoType>
+                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
+                      </StyledInfoRow>
+                    </>
+                  )
+                })}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        </Stack>
       </StyledWrapper>
     </StyledBox>
   )

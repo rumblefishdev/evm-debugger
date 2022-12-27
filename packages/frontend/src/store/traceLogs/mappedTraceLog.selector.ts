@@ -99,7 +99,7 @@ const applyNestedMap = (
     rootItem.nestedItems,
   ).mapItems()
 
-  const test = mappedItems.map((item) => {
+  const nestedItems = mappedItems.map((item) => {
     return {
       ...item,
       nestedItems: applyNestedMapRecursive(item, item.width, item.height),
@@ -111,7 +111,7 @@ const applyNestedMap = (
     y: 0,
     x: 0,
     width,
-    nestedItems: test,
+    nestedItems,
     height,
   }
 }

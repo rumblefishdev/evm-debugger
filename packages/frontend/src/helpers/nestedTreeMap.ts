@@ -25,7 +25,7 @@ export class NestedMap {
   private currentHeight = this.margin * 2
 
   private stageValue = 0
-  private stageBlocks = [] as TNestedTreeMapItem[]
+  private stageBlocks: TNestedTreeMapItem[] = []
 
   private placedBlocks: TNestedTreeMapItem[] = []
 

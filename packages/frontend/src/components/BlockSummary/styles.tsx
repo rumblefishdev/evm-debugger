@@ -3,7 +3,8 @@ import { Card, Stack, styled, Typography } from '@mui/material'
 export const StyledBox = styled(Card)(() => ({
   width: '100%',
   padding: '24px',
-  maxWidth: '824px',
+  overflow: 'auto',
+  maxWidth: '1024px',
   height: '100%',
   borderRadius: '18px',
 }))
@@ -21,6 +22,14 @@ export const StyledInfoType = styled(Typography)(() => ({
 }))
 
 export const StyledInfoValue = styled(Typography)(() => ({
-  width: 'cacl(100% - 128px - 24px)',
+  width: 'calc(100% - 128px - 24px)',
+}))
+
+export const StyleRawBytecode = styled(StyledInfoValue)(() => ({
   overflowWrap: 'anywhere',
+  fontFamily: 'roboto mono',
+}))
+
+export const StyledSectionHeader = styled(Typography)(() => ({
+  fontSize: '18px',
 }))
