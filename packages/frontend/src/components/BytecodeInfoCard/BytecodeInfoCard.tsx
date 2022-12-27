@@ -13,7 +13,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef(null)
 
-  const activeBlock = useTypedSelector((state) => state.activeBlock.activeBlock)
+  const activeBlock = useTypedSelector((state) => state.activeBlock)
   const activeStrucLog = useTypedSelector(
     (state) => state.structLogs.activeStructLog,
   )

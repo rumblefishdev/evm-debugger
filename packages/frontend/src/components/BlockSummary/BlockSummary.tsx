@@ -1,22 +1,54 @@
 import React, { useMemo } from 'react'
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import { Stack } from '@mui/system'
-import { Accordion, AccordionDetails, AccordionSummary, List } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  List,
+} from '@mui/material'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import { parseEventLog, parseFunctionFragment, parseStackTrace } from '../../helpers/helpers'
+import {
+  parseEventLog,
+  parseFunctionFragment,
+  parseStackTrace,
+} from '../../helpers/helpers'
 
-import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps } from './BlockSummary.types'
-import { StyledBox, StyledInfoRow, StyledInfoType, StyledInfoValue, StyledSectionHeader, StyledWrapper, StyleRawBytecode } from './styles'
+import type {
+  BlockSummaryProps,
+  CallBlockSummaryProps,
+  CreateBlockSummaryProps,
+} from './BlockSummary.types'
+import {
+  StyledBox,
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyledSectionHeader,
+  StyledWrapper,
+  StyleRawBytecode,
+} from './styles'
 
 // Todo: handle reverted calls with errorDescription
 
 const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
-  const { events, input, output, functionDescription, isContract } = item
+  const {
+    events,
+    input,
+    output,
+    functionFragment,
+    decodedInput,
+    decodedOutput,
+    isContract,
+  } = item
 
   const parsedEvents = useMemo(() => parseEventLog(events), [events])
-  const { signature, parsedOutputs, parsedInputs } = useMemo(() => parseFunctionFragment(functionDescription), [functionDescription])
+  // const { signature, parsedOutputs, parsedInputs } = useMemo(
+  //   () => parseFunctionFragment(functionFragment, decodedInput, decodedOutput),
+  //   [functionFragment]
+  // )
 
   return (
     <>
@@ -32,7 +64,7 @@ const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
         <StyledInfoType>Raw output</StyledInfoType>
         <StyleRawBytecode>{output}</StyleRawBytecode>
       </StyledInfoRow>
-      <StyledSectionHeader>
+      {/* <StyledSectionHeader>
         Decoded Function: <b>{signature}</b>
       </StyledSectionHeader>
       <Accordion>
@@ -51,9 +83,9 @@ const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
             })}
           </List>
         </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary>Outputs</AccordionSummary>
+      </Accordion> */}
+      {/* <Accordion>
+      <AccordionSummary>Outputs</AccordionSummary>
         <AccordionDetails>
           <List>
             {parsedOutputs.map((parsedOutput) => {
@@ -68,7 +100,7 @@ const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
             })}
           </List>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
       <StyledSectionHeader>Events:</StyledSectionHeader>
       <Stack sx={{ marginBottom: '12px' }}>
         {parsedEvents.map((event, index) => {
@@ -109,11 +141,23 @@ export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
 
   if (!currentBlock) return <StyledBox></StyledBox>
   const renderBlock = () => {
-    if (checkIfOfCallType(currentBlock)) return <CallBlockSummary item={currentBlock} {...props} />
-    if (checkIfOfCreateType(currentBlock)) return <CreateBlockSummary item={currentBlock} {...props} />
+    if (checkIfOfCallType(currentBlock))
+      return <CallBlockSummary item={currentBlock} {...props} />
+    if (checkIfOfCreateType(currentBlock))
+      return <CreateBlockSummary item={currentBlock} {...props} />
   }
 
-  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, storageAddress, storageLogs } = currentBlock
+  const {
+    address,
+    gasCost,
+    passedGas,
+    stackTrace,
+    type,
+    value,
+    blockNumber,
+    storageAddress,
+    storageLogs,
+  } = currentBlock
 
   return (
     <StyledBox>

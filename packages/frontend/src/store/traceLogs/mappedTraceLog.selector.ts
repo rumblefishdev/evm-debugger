@@ -79,6 +79,8 @@ const applyNestedMapRecursive = (
   ).mapItems()
 
   return mappedItems.map((item) => {
+    console.log(item)
+
     return {
       ...item,
       nestedItems: applyNestedMapRecursive(item, item.width, item.height),
