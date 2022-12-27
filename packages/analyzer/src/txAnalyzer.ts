@@ -6,6 +6,7 @@ import type {
   TReturnedTraceLog,
   TTransactionData,
 } from '@evm-debuger/types'
+import { ethers } from 'ethers'
 
 import {
   checkIfOfCallType,
@@ -252,7 +253,9 @@ export class TxAnalyzer {
   private extendWithBlockNumber(transactionList: TMainTraceLogs[]) {
     return transactionList.map((item) => ({
       ...item,
-      blockNumber: this.transactionData.transactionInfo.blockNumber,
+      blockNumber: ethers.BigNumber.from(
+        this.transactionData.transactionInfo.blockNumber,
+      ).toString(),
     }))
   }
 
