@@ -34,8 +34,6 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     selectMappedTraceLogs(state, width, height),
   )
 
-  console.log(traceLog)
-
   const { nestedItems } = traceLog
 
   return (
