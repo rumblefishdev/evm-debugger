@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material'
 
 export const StyledBox = styled(Box)(() => ({
+  transition: 'all 0.2s ease-in-out',
   position: 'absolute',
   overflow: 'hidden',
   cursor: 'pointer',

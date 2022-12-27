@@ -3,7 +3,6 @@ import { Card, Box, styled } from '@mui/material'
 export const StyledWrapper = styled(Box)(() => ({
   width: '100%',
   overflow: 'hidden',
-  maxWidth: '1280px',
   height: '100%',
   borderRadius: '18px',
 }))

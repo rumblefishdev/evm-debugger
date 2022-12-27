@@ -5,5 +5,9 @@ export const StyledBox = styled(Box)(() => ({
   overflow: 'hidden',
   cursor: 'pointer',
   boxSizing: 'border-box',
-  background: 'rgba(215, 229, 120 , 1)',
+  background: 'rgba(255, 129, 120 , .2)',
+  // hover
+  '&:hover': {
+    background: 'rgba(255, 129, 120 , 1)',
+  },
 }))
