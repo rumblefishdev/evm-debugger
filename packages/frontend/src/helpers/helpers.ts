@@ -63,3 +63,7 @@ export const createCallIdentifier = (stackTrace: number[], type: TOpCodes) => {
   const stack = stackTrace.join('__')
   return stackTrace.length > 0 ? `${type}__${stack}` : `${type}__ROOT`
 }
+
+export const parseStackTrace = (stackTrace: number[]) => {
+  return `[ ${stackTrace.join(' , ')} ]`
+}
