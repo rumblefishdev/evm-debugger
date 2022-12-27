@@ -44,7 +44,7 @@ export const ManualUploadTransactionScreen = ({
           ),
         }),
       )
-      typedNavigate(navigate, '/summary')
+      typedNavigate(navigate, '/dataManager')
     },
     [dispatch],
   )

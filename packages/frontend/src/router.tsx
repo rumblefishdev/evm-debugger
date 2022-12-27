@@ -2,9 +2,10 @@ import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { MainDisplay } from './pages/MainDisplay'
+import { GasTreeMap } from './pages/GasTreeMap'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 import { StructlogsExplorer } from './pages/StructlogsExplorer'
+import { TracelogInformation } from './pages/TracelogInformation'
 
 export const routes: RouteObject[] = [
   {
@@ -13,12 +14,17 @@ export const routes: RouteObject[] = [
     element: <SelectTransactionScreen />,
   },
   {
-    path: '/mainDisplay',
-    loader: () => import('./pages/MainDisplay'),
-    element: <MainDisplay />,
+    path: '/gasTreeMap',
+    loader: () => import('./pages/GasTreeMap'),
+    element: <GasTreeMap />,
   },
   {
-    path: '/summary',
+    path: '/tracelogInformation',
+    loader: () => import('./pages/TracelogInformation'),
+    element: <TracelogInformation />,
+  },
+  {
+    path: '/dataManager',
     loader: () => import('./pages/AnalyzeSummary'),
     element: <AnalyzeSummary />,
   },
@@ -29,7 +35,12 @@ export const routes: RouteObject[] = [
   },
 ]
 
-export type TPaths = '/' | '/mainDisplay' | '/summary' | '/structlogsExplorer'
+export type TPaths =
+  | '/'
+  | '/gasTreeMap'
+  | '/tracelogInformation'
+  | '/dataManager'
+  | '/structlogsExplorer'
 
 export const router = createBrowserRouter(routes, {
   basename: process.env.PUBLIC_URL,

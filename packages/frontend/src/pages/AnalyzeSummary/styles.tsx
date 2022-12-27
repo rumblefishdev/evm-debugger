@@ -1,9 +1,7 @@
 import { Stack, styled } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
-  width: '100%',
   justifyContent: 'flex-start',
-  height: '100%',
   flexDirection: 'column',
   alignItems: 'center',
 }))

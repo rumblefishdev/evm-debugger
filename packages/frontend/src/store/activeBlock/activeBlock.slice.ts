@@ -1,10 +1,12 @@
+import { checkIfOfCallType } from '@evm-debuger/analyzer'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
+import { ethers } from 'ethers'
 
 import type { TMainTraceLogsWithId } from '../../types'
 import type { TRootState } from '../store'
 
-const initialState = {} as TMainTraceLogsWithId
+const initialState: TMainTraceLogsWithId | null = null
 
 export const activeBlockSlice = createSlice({
   reducers: {

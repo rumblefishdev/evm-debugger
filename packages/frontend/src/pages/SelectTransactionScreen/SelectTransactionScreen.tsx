@@ -28,7 +28,7 @@ export const SelectTransactionScreen = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh' }}
+      style={{ minHeight: '100%' }}
     >
       <Grid2>
         <Card sx={{ width: 1000, height: 500 }}>
