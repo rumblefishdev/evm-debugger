@@ -47,7 +47,10 @@ const parseToNestedStructure = (
     nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
 
   const intrinsicLog: TIntrinsicLog = {
-    owningLog: createCallIdentifier(rootItem.stackTrace, rootItem.type),
+    owningLog: {
+      type: rootItem.type,
+      stackTrace: rootItem.stackTrace,
+    },
     id: rootItem.id,
     gasCost: gasSum,
   }

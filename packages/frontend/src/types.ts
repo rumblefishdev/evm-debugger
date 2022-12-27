@@ -16,7 +16,10 @@ export type TDimmensions = {
 }
 
 export type TIntrinsicLog = {
-  owningLog: string
+  owningLog: {
+    type: string
+    stackTrace: number[]
+  }
   gasCost: number
   id: string
 }
@@ -29,17 +32,6 @@ export type TNestedTreeMapItem = TMainTraceLogsWithId &
   TDimmensions & {
     nestedItems: (TNestedTreeMapItem | (TIntrinsicLog & TDimmensions))[]
   }
-
-// export type TNestedTreeMapItem = TTraceLog & TIntrinsicLog
-
-// export type TParsedExtendedTraceLog = TTraceLog &
-//   TDimmensions & {
-//     nestedItems: TNestedTreeMapItem[]
-//   }
-
-// export type TRootTreeMapItem = TTraceLog & {
-//   nestedItems: TNestedTreeMapItem[]
-// }
 
 export type TOpcodeDisassemled = {
   opcode: number
