@@ -22,9 +22,9 @@ export class NestedMap {
   private currentHeight = this.margin * 2
 
   private stageValue = 0
-  private stageBlocks = [] as TParsedExtendedTraceLog[]
+  private stageBlocks: Omit<TParsedExtendedTraceLog, 'nestedItems'>[] = []
 
-  private placedBlocks: TParsedExtendedTraceLog[] = []
+  private placedBlocks: Omit<TParsedExtendedTraceLog, 'nestedItems'>[] = []
 
   private lastAspectRatio = 0
 
@@ -54,27 +54,29 @@ export class NestedMap {
           .map((block) => block.gasCost)
           .reduce(sumReducer, 0))
 
-    const blockData = {
-      ...item,
-      y: this.currentHeight - this.margin,
-      x: this.currentWidth - this.margin,
-    } as TParsedExtendedTraceLog
-
     const gasPercentage =
       item.gasCost /
       (this.stageBlocks.reduce(
-        (accumulator, element) => accumulator + element.gasCost,
+        (accumulator, element) => accumulator + element.traceLog.gasCost,
         0,
       ) +
         item.gasCost)
 
+    let width: number, height: number
     if (isVertical) {
-      blockData['height'] = (this.height - this.currentHeight) * gasPercentage
-      blockData['width'] = itemArea / blockData['height']
+      height = (this.height - this.currentHeight) * gasPercentage
+      width = itemArea / height
+    } else {
+      width = (this.width - this.currentWidth) * gasPercentage
+      height = itemArea / width
     }
-    if (!isVertical) {
-      blockData['width'] = (this.width - this.currentWidth) * gasPercentage
-      blockData['height'] = itemArea / blockData['width']
+
+    const blockData: Omit<TParsedExtendedTraceLog, 'nestedItems'> = {
+      y: this.currentHeight - this.margin,
+      x: this.currentWidth - this.margin,
+      width,
+      traceLog: item,
+      height,
     }
 
     if (this.stageBlocks.length === 0) {
@@ -106,16 +108,16 @@ export class NestedMap {
 
     this.stageBlocks.forEach((block, blockIndex) => {
       const rootIndex = this.placedBlocks.findIndex(
-        (rootBlock) => rootBlock.index === block.index,
+        (rootBlock) => rootBlock.traceLog.index === block.traceLog.index,
       )
       const sum = this.stageBlocks.reduce(
-        (accumulator, element) => accumulator + element.gasCost,
+        (accumulator, element) => accumulator + element.traceLog.gasCost,
         0,
       )
       if (isVertical) {
-        const height =
+        const innerHeight =
           (this.height - this.currentHeight) *
-          (block.gasCost / sum + blockData.gasCost)
+          (block.traceLog.gasCost / sum + blockData.traceLog.gasCost)
         const y =
           blockIndex === 0
             ? this.currentHeight - this.margin
@@ -126,13 +128,13 @@ export class NestedMap {
           ...block,
           y,
           width: blockData.width,
-          height,
+          height: innerHeight,
         }
       }
       if (!isVertical) {
-        const width =
+        const innerWidth =
           (this.width - this.currentWidth) *
-          (block.gasCost / (sum + blockData.gasCost))
+          (block.traceLog.gasCost / (sum + blockData.traceLog.gasCost))
         const x =
           blockIndex === 0
             ? this.currentWidth - this.margin
@@ -142,7 +144,7 @@ export class NestedMap {
         this.placedBlocks[rootIndex] = {
           ...block,
           x,
-          width,
+          width: innerWidth,
           height: blockData.height,
         }
       }

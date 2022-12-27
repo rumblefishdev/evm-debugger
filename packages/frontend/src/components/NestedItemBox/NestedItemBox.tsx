@@ -29,13 +29,20 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      dispatch(loadActiveBlock(item))
+      dispatch(loadActiveBlock(item.traceLog))
       event.stopPropagation()
     },
     [],
   )
 
-  const { nestedItems, type, stackTrace, width, height, x, y, index } = item
+  const {
+    nestedItems,
+    traceLog: { type, stackTrace, index },
+    width,
+    height,
+    x,
+    y,
+  } = item
 
   const styleDimension: React.CSSProperties = { width, height }
 

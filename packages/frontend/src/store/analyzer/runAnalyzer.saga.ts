@@ -2,6 +2,7 @@ import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { IStructLog, TAbis, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
+import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
 import { addBytecodes } from '../bytecodes/bytecodes.slice'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
@@ -31,6 +32,7 @@ function* callAnalyzerOnce(
     [],
   )
   yield* put(loadTraceLogs(mainTraceLogList))
+  yield* put(loadActiveBlock(mainTraceLogList[0]))
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
   return analyzeSummary
 }

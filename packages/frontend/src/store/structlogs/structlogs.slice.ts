@@ -126,8 +126,8 @@ export const getParsedMemory = (memory: string[]) => {
 export const selectParsedStructLogs = createSelector(
   (state: TRootState) => state.structLogs.structLogs,
   (state: TRootState) => state.traceLogs,
-  (state: TRootState) => state.activeBlock.startIndex,
-  (state: TRootState) => state.activeBlock.returnIndex,
+  (state: TRootState) => state.activeBlock.activeBlock.startIndex,
+  (state: TRootState) => state.activeBlock.activeBlock.returnIndex,
   getParsedStructLogs,
 )
 

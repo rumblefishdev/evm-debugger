@@ -7,7 +7,8 @@ import type {
 
 export type TTraceLog = ICallTypeTraceLog | ICreateTypeTraceLog
 
-export type TParsedExtendedTraceLog = TTraceLog & {
+export type TParsedExtendedTraceLog = {
+  traceLog: TTraceLog
   width: number
   height: number
   x: number
