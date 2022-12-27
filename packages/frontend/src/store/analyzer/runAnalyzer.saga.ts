@@ -62,6 +62,8 @@ export function* runAnalyzer(
 ) {
   const { txInfoProvider, structLogProvider, abiProvider } = action.payload
   yield* put(analyzerActions.reset())
+  yield* put(analyzerActions.setLoading(true))
+
   try {
     yield* put(analyzerActions.logMessage('Fetching txInfo'))
     const transactionInfo = yield* apply(
