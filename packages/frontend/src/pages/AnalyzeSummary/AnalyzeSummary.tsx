@@ -1,24 +1,16 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 
-import {
-  BytecodesManager,
-  SighashesManager,
-  SourcecodesManager,
-} from '../../components/Managers'
+import { BytecodesManager, SighashesManager } from '../../components/Managers'
 import { Navigation } from '../../components/Navigation'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
-import {
-  StyledButtonsWrapper,
-  StyledContentWrapper,
-  StyledStack,
-} from './styles'
+import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
 
 export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   const isLoading = useTypedSelector((state) => state.analyzer.isLoading)
-  const [activeTab, setActiveTab] = useState<TTabType>('sourcecodes')
+  const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 
   const handleTabChange = (tabName: TTabType) => {
     setActiveTab(tabName)

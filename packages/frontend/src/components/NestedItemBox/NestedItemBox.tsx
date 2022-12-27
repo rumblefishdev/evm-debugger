@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import { useTypedDispatch } from '../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import type {
   TDimmensions,
   TIntrinsicLog,
@@ -18,6 +18,8 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
   const [isTooltipActive, setIsTooltipActive] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
+
+  const getActiveBlock = useTypedSelector((state) => state.activeBlock)
 
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -67,10 +69,25 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
     )
   }
 
-  const { nestedItems, gasCost, width, height, x, y, index, type, stackTrace } =
-    item
+  const {
+    nestedItems,
+    gasCost,
+    width,
+    height,
+    x,
+    y,
+    index,
+    type,
+    stackTrace,
+    id,
+  } = item
 
   const styleDimension: React.CSSProperties = { width, height }
+
+  const activeStyle =
+    getActiveBlock?.id === id
+      ? { border: '4px solid rgba(255, 129, 120 , 1)' }
+      : {}
 
   const hoverStyle: React.CSSProperties = isHovered
     ? { background: 'rgba(255, 129, 120 , .4)' }
@@ -92,6 +109,7 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
           left: x,
           ...props.sx,
           zIndex: 0,
+          ...activeStyle,
         }}
         onMouseOver={hovered}
         onMouseOut={notHovered}

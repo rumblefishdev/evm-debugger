@@ -1,13 +1,11 @@
-import { Typography } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 
-import { parseStackTrace } from '../../helpers/helpers'
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import { useTypedDispatch } from '../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { TreemapTooltip } from '../TreemapTooltip'
 
 import type { ItemBoxProps } from './ItemBox.types'
-import { StyledStack, TextTest } from './styles'
+import { StyledStack } from './styles'
 
 export const ItemBox = ({
   item,
@@ -17,6 +15,8 @@ export const ItemBox = ({
   const { type, stackTrace, gasCost, width, height, x, y, index, id } = item
 
   const [isHovered, setIsHovered] = useState(false)
+
+  const getActiveBlock = useTypedSelector((state) => state.activeBlock)
 
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -54,6 +54,11 @@ export const ItemBox = ({
     height,
   }
 
+  const activeStyle =
+    getActiveBlock?.id === id
+      ? { border: '4px solid rgba(255, 129, 120 , 1)' }
+      : {}
+
   return (
     <TreemapTooltip
       open={isHovered}
@@ -65,7 +70,7 @@ export const ItemBox = ({
     >
       <StyledStack
         {...props}
-        sx={styleDimension}
+        sx={{ ...styleDimension, ...activeStyle }}
         onClick={setActiveBlock}
       ></StyledStack>
     </TreemapTooltip>

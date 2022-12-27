@@ -129,7 +129,8 @@ export class NestedMap {
       if (isVertical) {
         const height =
           (this.height - this.currentHeight) *
-          (block.gasCost / sum + blockData.gasCost)
+          (block.gasCost / (sum + blockData.gasCost))
+
         const y =
           blockIndex === 0
             ? this.currentHeight - this.margin
@@ -139,7 +140,7 @@ export class NestedMap {
         this.placedBlocks[rootIndex] = {
           ...block,
           y,
-          width: blockData.width,
+          width: blockData.width - this.margin / 2,
           height,
         }
       }

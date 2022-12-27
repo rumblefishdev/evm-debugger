@@ -4,7 +4,6 @@ export const StyledWrapper = styled(Box)(() => ({
   width: '100%',
   overflow: 'hidden',
   height: '100%',
-  borderRadius: '18px',
 }))
 export const StyledCard = styled(Card)(() => ({
   width: '100%',
