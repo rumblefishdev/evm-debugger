@@ -1,32 +1,32 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import type { TMainTraceLogs } from '@evm-debuger/types'
 
 import type { TMainTraceLogsWithId } from '../../types'
 import { createCallIdentifier } from '../../helpers/helpers'
+import type { TRootState } from '../store'
 
-const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
-  selectId: (entity) => entity.id,
-})
+const initialState: TMainTraceLogsWithId[] = []
 
 export const traceLogsSlice = createSlice({
   reducers: {
     addTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
-      traceLogsAdapter.addMany(
-        state,
-        action.payload.map((traceLog) => ({
+      const traceLogsWithId: TMainTraceLogsWithId[] = action.payload.map(
+        (traceLog) => ({
           ...traceLog,
           id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
-        })),
+        }),
       )
+
+      return traceLogsWithId
     },
   },
   name: 'traceLogs',
-  initialState: traceLogsAdapter.getInitialState(),
+  initialState,
 })
 
 export const traceLogsReducer = traceLogsSlice.reducer
 
 export const { addTraceLogs } = traceLogsSlice.actions
 
-export const traceLogsSelectors = traceLogsAdapter.getSelectors()
+export const selectAllTraceLogs = (state: TRootState) => state.traceLogs
