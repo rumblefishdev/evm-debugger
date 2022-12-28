@@ -2,9 +2,9 @@ import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { MainDisplay } from './pages/MainDisplay'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 import { StructlogsExplorer } from './pages/StructlogsExplorer'
+import { TranscationScreen } from './pages/TranscationScreen'
 
 export const routes: RouteObject[] = [
   {
@@ -13,12 +13,12 @@ export const routes: RouteObject[] = [
     element: <SelectTransactionScreen />,
   },
   {
-    path: '/mainDisplay',
-    loader: () => import('./pages/MainDisplay'),
-    element: <MainDisplay />,
+    path: '/transactionScreen',
+    loader: () => import('./pages/TranscationScreen'),
+    element: <TranscationScreen />,
   },
   {
-    path: '/summary',
+    path: '/dataManager',
     loader: () => import('./pages/AnalyzeSummary'),
     element: <AnalyzeSummary />,
   },
@@ -29,7 +29,11 @@ export const routes: RouteObject[] = [
   },
 ]
 
-export type TPaths = '/' | '/mainDisplay' | '/summary' | '/structlogsExplorer'
+export type TPaths =
+  | '/'
+  | '/transactionScreen'
+  | '/dataManager'
+  | '/structlogsExplorer'
 
 export const router = createBrowserRouter(routes, {
   basename: process.env.PUBLIC_URL,

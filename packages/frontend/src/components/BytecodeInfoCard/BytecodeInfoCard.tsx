@@ -13,7 +13,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef(null)
 
-  const activeBlock = useTypedSelector((state) => state.activeBlock.activeBlock)
+  const activeBlock = useTypedSelector((state) => state.activeBlock)
   const activeStrucLog = useTypedSelector(
     (state) => state.structLogs.activeStructLog,
   )
@@ -23,7 +23,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
     bytecodesSelectors.selectById(state.bytecodes, currentAddress),
   )
   useEffect(() => {
-    if (!activeBlockBytecode) return
+    if (!activeBlockBytecode.disassembled) return
     if (activeStrucLog && previousActiveStrucLog.current !== activeStrucLog) {
       previousActiveStrucLog.current = activeStrucLog
       const pcFormatted = `0x${activeStrucLog.pc.toString(16)}`

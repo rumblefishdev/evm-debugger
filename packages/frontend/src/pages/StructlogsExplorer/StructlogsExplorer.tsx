@@ -16,7 +16,7 @@ import {
 
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   return (
-    <StyledStack>
+    <>
       <Navigation />
       <StyledContentWrapper {...props}>
         <StructlogCard />
@@ -27,6 +27,6 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
           <BytecodeInfoCard />
         </StyledPanelsWrapper>
       </StyledContentWrapper>
-    </StyledStack>
+    </>
   )
 }

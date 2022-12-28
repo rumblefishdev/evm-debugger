@@ -2,6 +2,7 @@ import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { IStructLog, TAbis, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
+import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
 import { addBytecodes } from '../bytecodes/bytecodes.slice'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
@@ -9,7 +10,7 @@ import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
 import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
-import { loadTraceLogs } from '../traceLogs/traceLogs.slice'
+import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IAbiProvider } from './analyzer.types'
@@ -31,8 +32,16 @@ function* callAnalyzerOnce(
     analyzer.analyze,
     [],
   )
-  yield* put(loadTraceLogs(mainTraceLogList))
-  yield* put(loadActiveBlock(mainTraceLogList[0]))
+  yield* put(addTraceLogs(mainTraceLogList))
+  yield* put(
+    loadActiveBlock({
+      ...mainTraceLogList[0],
+      id: createCallIdentifier(
+        mainTraceLogList[0].stackTrace,
+        mainTraceLogList[0].type,
+      ),
+    }),
+  )
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
   return analyzeSummary
 }

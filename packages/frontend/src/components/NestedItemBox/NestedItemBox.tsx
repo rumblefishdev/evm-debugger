@@ -1,18 +1,28 @@
 import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import { useTypedDispatch } from '../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import type { TTreeMapData } from '../../types'
+import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
+import { TreemapTooltip } from '../TreemapTooltip'
 
 import type { NestedItemBoxProps } from './NestedItemBox.types'
-import { StyledBox, StyledInfoPanel, StyledNestedItemsBox } from './styles'
+import { StyledBox, StyledNestedItemsBox } from './styles'
 
-export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
+export const NestedItemBox = ({
+  treeMapItem,
+  ...props
+}: NestedItemBoxProps) => {
+  const [isTooltipActive, setIsTooltipActive] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
 
+  const getActiveBlock = useTypedSelector((state) => state.activeBlock)
+
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsTooltipActive(true)
       setIsHovered(true)
       event.stopPropagation()
     },
@@ -21,6 +31,7 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
 
   const notHovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsTooltipActive(false)
       setIsHovered(false)
       event.stopPropagation()
     },
@@ -29,54 +40,79 @@ export const NestedItemBox = ({ item, ...props }: NestedItemBoxProps) => {
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      dispatch(loadActiveBlock(item.traceLog))
+      dispatch(loadActiveBlock(treeMapItem.item))
       event.stopPropagation()
     },
     [],
   )
 
-  const {
-    nestedItems,
-    traceLog: { type, stackTrace, index },
-    width,
-    height,
-    x,
-    y,
-  } = item
+  const renderContent = (element: TTreeMapData) => {
+    if ('owningLog' in element.item)
+      return (
+        <IntrinsicItemBox
+          parentHoverHandler={setIsHovered}
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
+
+    if (element.nestedItems.length > 0)
+      return (
+        <NestedItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
+
+    return (
+      <ItemBox
+        parentHoverHandler={setIsHovered}
+        treeMapItem={{ ...element, item: element.item }}
+        key={element.item.id}
+      />
+    )
+  }
+
+  const { gasCost, index, type, stackTrace, id } = treeMapItem.item
+
+  const { width, height, x, y } = treeMapItem.dimmensions
 
   const styleDimension: React.CSSProperties = { width, height }
+
+  const activeStyle =
+    getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
 
   const hoverStyle: React.CSSProperties = isHovered
     ? { background: 'rgba(255, 129, 120 , .4)' }
     : { background: 'rgba(255, 129, 120 , .1)' }
 
   return (
-    <StyledBox
-      {...props}
-      sx={{
-        ...styleDimension,
-        ...hoverStyle,
-        top: y,
-        left: x,
-        ...props.sx,
-        zIndex: 0,
-      }}
-      onMouseOver={hovered}
-      onMouseOut={notHovered}
-      onClick={setActiveBlock}
+    <TreemapTooltip
+      type={type}
+      stackTrace={stackTrace}
+      gasCost={gasCost}
+      open={isTooltipActive}
     >
-      <StyledInfoPanel>
-        {type}__{stackTrace?.join('__')}{' '}
-      </StyledInfoPanel>
-      <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
-        {nestedItems.map((nestedItem, blockIndex) =>
-          nestedItem.nestedItems.length > 0 ? (
-            <NestedItemBox key={blockIndex} item={nestedItem} />
-          ) : (
-            <ItemBox key={blockIndex} item={nestedItem} />
-          ),
-        )}
-      </StyledNestedItemsBox>
-    </StyledBox>
+      <StyledBox
+        {...props}
+        sx={{
+          ...styleDimension,
+          ...hoverStyle,
+          top: y,
+          left: x,
+          ...props.sx,
+          ...activeStyle,
+        }}
+        onMouseOver={hovered}
+        onMouseOut={notHovered}
+        onClick={setActiveBlock}
+      >
+        <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
+          {treeMapItem.nestedItems.map((nestedItem) =>
+            renderContent(nestedItem),
+          )}
+        </StyledNestedItemsBox>
+      </StyledBox>
+    </TreemapTooltip>
   )
 }

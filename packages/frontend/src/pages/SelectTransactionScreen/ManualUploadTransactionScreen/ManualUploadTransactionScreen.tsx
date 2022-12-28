@@ -47,7 +47,7 @@ export const ManualUploadTransactionScreen = ({
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         }),
       )
-      typedNavigate(navigate, '/summary')
+      typedNavigate(navigate, '/dataManager')
     },
     [dispatch],
   )

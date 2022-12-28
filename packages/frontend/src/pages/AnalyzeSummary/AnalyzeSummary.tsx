@@ -1,24 +1,16 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 
-import {
-  BytecodesManager,
-  SighashesManager,
-  SourcecodesManager,
-} from '../../components/Managers'
+import { BytecodesManager, SighashesManager } from '../../components/Managers'
 import { Navigation } from '../../components/Navigation'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
-import {
-  StyledButtonsWrapper,
-  StyledContentWrapper,
-  StyledStack,
-} from './styles'
+import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
 
 export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   const isLoading = useTypedSelector((state) => state.analyzer.isLoading)
-  const [activeTab, setActiveTab] = useState<TTabType>('sourcecodes')
+  const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 
   const handleTabChange = (tabName: TTabType) => {
     setActiveTab(tabName)
@@ -26,9 +18,10 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'sourcecodes': {
-        return <SourcecodesManager />
-      }
+      // TODO: https://github.com/rumblefishdev/evm-debuger/issues/103
+      // case 'sourcecodes': {
+      //   return <SourcecodesManager />
+      // }
       case 'bytecodes': {
         return <BytecodesManager />
       }
@@ -44,17 +37,12 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
   // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
 
   return isLoading ? null : (
-    <StyledStack {...props}>
+    <>
       <Navigation />
       <StyledButtonsWrapper>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
-          onClick={() => handleTabChange('sourcecodes')}
-        >
+        {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
           Source Codes
-        </Button>
+        </Button> */}
         <Button
           variant="contained"
           color="primary"
@@ -73,6 +61,6 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
         </Button>
       </StyledButtonsWrapper>
       <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
-    </StyledStack>
+    </>
   )
 }

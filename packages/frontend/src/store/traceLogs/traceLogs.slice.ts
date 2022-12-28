@@ -1,112 +1,32 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice, createSelector } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TMainTraceLogs } from '@evm-debuger/types'
 
-import type { TParsedExtendedTraceLog, TTraceLog } from '../../types'
-import type { TRootState } from '../store'
-import { sumReducer } from '../../helpers/helpers'
-import { NestedMap } from '../../helpers/nestedTreeMap'
+import type { TMainTraceLogsWithId } from '../../types'
+import { createCallIdentifier } from '../../helpers/helpers'
 
-const initialState = [] as TMainTraceLogs[]
-
-const lastItemInContext = (rootItem: TTraceLog, state: TTraceLog[]) => {
-  const lastItem = state.findIndex(
-    (item) => item.index > rootItem.index && item.depth === rootItem.depth,
-  )
-  return lastItem === -1 ? state.length : lastItem
-}
-
-const parseRecursive = (
-  rootItem: TTraceLog,
-  state: TTraceLog[],
-  width: number,
-  height: number,
-  margin: number,
-): TParsedExtendedTraceLog[] => {
-  const nestedItems = state
-    .slice(
-      state.findIndex((item) => item.index === rootItem.index),
-      lastItemInContext(rootItem, state),
-    )
-    .filter((item) => item.depth === rootItem.depth + 1)
-
-  if (nestedItems.length === 0) return [] as TParsedExtendedTraceLog[]
-
-  const gasSum =
-    rootItem.gasCost -
-    nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
-  const blockData = {
-    type: 'Gas Leftover',
-    stackTrace: [],
-    nestedItems: null,
-    index: 100_000,
-    gasCost: gasSum,
-  } as unknown as TTraceLog
-
-  nestedItems.push(blockData)
-
-  const nestedMap = new NestedMap(
-    width,
-    height - margin,
-    rootItem.gasCost,
-    nestedItems,
-  )
-
-  const nestedExtendedItems = nestedMap.mapItems()
-
-  return nestedExtendedItems.map((item) => {
-    return {
-      ...item,
-      nestedItems: parseRecursive(
-        item.traceLog,
-        state,
-        item.width,
-        item.height,
-        margin,
-      ),
-    }
-  })
-}
-
-const selectTraceAsNestedArrays = (
-  state: TTraceLog[],
-  width: number,
-  height: number,
-  margin: number,
-) => {
-  const rootItem: TParsedExtendedTraceLog = {
-    y: 0,
-    x: 0,
-    width,
-    traceLog: state[0],
-    nestedItems: parseRecursive(state[0], state, width, height, margin),
-    height,
-  }
-
-  return rootItem
-}
+const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
+  selectId: (entity) => entity.id,
+})
 
 export const traceLogsSlice = createSlice({
   reducers: {
-    loadTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
-      return action.payload
+    addTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
+      traceLogsAdapter.addMany(
+        state,
+        action.payload.map((traceLog) => ({
+          ...traceLog,
+          id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
+        })),
+      )
     },
   },
   name: 'traceLogs',
-  initialState,
+  initialState: traceLogsAdapter.getInitialState(),
 })
 
 export const traceLogsReducer = traceLogsSlice.reducer
 
-export const { loadTraceLogs } = traceLogsSlice.actions
+export const { addTraceLogs } = traceLogsSlice.actions
 
-export const selectMappedTraceLogs = createSelector(
-  [
-    (state: TRootState) => state.traceLogs,
-    (state: TRootState, width: number) => width,
-    (state: TRootState, width: number, height: number) => height,
-    (stage: TRootState, width: number, height: number, margin: number) =>
-      margin,
-  ],
-  selectTraceAsNestedArrays,
-)
+export const traceLogsSelectors = traceLogsAdapter.getSelectors()

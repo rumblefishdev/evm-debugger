@@ -1,7 +1,7 @@
 import { Button, Stack, styled } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
-  width: '720px',
+  maxWidth: '1024px',
   justifyContent: 'space-around',
   height: '96px',
   flexDirection: 'row',
