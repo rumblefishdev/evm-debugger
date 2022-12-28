@@ -32,9 +32,9 @@ export const StorageBlock = ({
           <AccordionSummary>Loaded Storage</AccordionSummary>
           <AccordionDetails>
             <List>
-              {storageLogs.loadedStorage.map((log) => {
+              {storageLogs.loadedStorage.map((log, index) => {
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     <StyledInfoRow>
                       <StyledInfoType>Key</StyledInfoType>
                       <StyleRawBytecode>{log.key}</StyleRawBytecode>
@@ -43,7 +43,7 @@ export const StorageBlock = ({
                       <StyledInfoType>Value</StyledInfoType>
                       <StyleRawBytecode>{log.value}</StyleRawBytecode>
                     </StyledInfoRow>
-                  </>
+                  </React.Fragment>
                 )
               })}
             </List>
@@ -53,9 +53,9 @@ export const StorageBlock = ({
           <AccordionSummary>Changed Storage</AccordionSummary>
           <AccordionDetails>
             <List>
-              {storageLogs.changedStorage.map((log) => {
+              {storageLogs.changedStorage.map((log, index) => {
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     <StyledInfoRow>
                       <StyledInfoType>Key</StyledInfoType>
                       <StyleRawBytecode>{log.key}</StyleRawBytecode>
@@ -68,7 +68,7 @@ export const StorageBlock = ({
                       <StyledInfoType>Updated Value</StyledInfoType>
                       <StyleRawBytecode>{log.updatedValue}</StyleRawBytecode>
                     </StyledInfoRow>
-                  </>
+                  </React.Fragment>
                 )
               })}
             </List>
@@ -78,9 +78,9 @@ export const StorageBlock = ({
           <AccordionSummary>Returned Storage</AccordionSummary>
           <AccordionDetails>
             <List>
-              {storageLogs.returnedStorage.map((log) => {
+              {storageLogs.returnedStorage.map((log, index) => {
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     <StyledInfoRow>
                       <StyledInfoType>Key</StyledInfoType>
                       <StyleRawBytecode>{log.key}</StyleRawBytecode>
@@ -89,7 +89,7 @@ export const StorageBlock = ({
                       <StyledInfoType>Value</StyledInfoType>
                       <StyleRawBytecode>{log.value}</StyleRawBytecode>
                     </StyledInfoRow>
-                  </>
+                  </React.Fragment>
                 )
               })}
             </List>

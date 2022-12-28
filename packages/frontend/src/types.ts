@@ -66,7 +66,7 @@ export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
   stack: TExtendedStack
 }
 
-export type TParsedEventLog = {
+export type TParsedEventLogBody = {
   signature: string
   parsedArgs: {
     value: any
@@ -74,4 +74,6 @@ export type TParsedEventLog = {
     name: string
   }[]
   name: string
-} | null
+}
+
+export type TParsedEventLog = TParsedEventLogBody | null

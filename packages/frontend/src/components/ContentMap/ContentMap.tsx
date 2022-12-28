@@ -21,7 +21,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     setWidth(rootRef.current?.clientWidth || 0)
     setHeight(rootRef.current?.clientHeight || 0)
 
-    // Todo: fix zoom functionality
+    // TODO: https://github.com/rumblefishdev/evm-debuger/issues/104
     // if (rootRef.current) {
     //   const element = rootRef.current
     //   const zoomFunction = (event: WheelEvent) => zoom(event, element)

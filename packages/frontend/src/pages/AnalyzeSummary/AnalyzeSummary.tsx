@@ -18,7 +18,7 @@ export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
 
   const renderTab = () => {
     switch (activeTab) {
-      // TODO: Hidden for future use
+      // TODO: https://github.com/rumblefishdev/evm-debuger/issues/103
       // case 'sourcecodes': {
       //   return <SourcecodesManager />
       // }
