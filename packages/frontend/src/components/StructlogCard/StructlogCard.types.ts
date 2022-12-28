@@ -1,3 +1,7 @@
 import type { StackProps } from '@mui/material'
 
-export interface StructlogCardProps extends StackProps {}
+import type { IExtendedStructLog } from '../../types'
+
+export interface StructlogCardProps extends StackProps {
+  structLogs: IExtendedStructLog[]
+}

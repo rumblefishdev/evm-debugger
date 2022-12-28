@@ -4,17 +4,15 @@ import { ViewportList } from 'react-viewport-list'
 import {
   loadPreviousStructlog,
   loadNextStructlog,
-  selectParsedStructLogs,
 } from '../../store/structlogs/structlogs.slice'
-import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import { useTypedDispatch } from '../../store/storeHooks'
 import { StructLogItem } from '../StructLogItem'
 
 import type { StructlogCardProps } from './StructlogCard.types'
 import { StyledStack } from './styles'
 
-export const StructlogCard = ({ ...props }: StructlogCardProps) => {
+export const StructlogCard = ({ structLogs, ...props }: StructlogCardProps) => {
   const dispatch = useTypedDispatch()
-  const structLogs = useTypedSelector(selectParsedStructLogs)
 
   const ref = React.useRef<HTMLDivElement>(null)
 
