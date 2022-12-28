@@ -74,13 +74,14 @@ export const StructLogItem = ({ structLog, ...props }: StructLogItemProps) => {
       {args.length > 0 ? (
         <AccordionDetails sx={activeStyle}>
           <StyledArgsWrapper>
-            {args.map((arg) => {
+            {args.map((arg, argIndex) => {
               return (
                 <StyledArgsItemWrapper
                   onMouseOver={(event) =>
                     handleStackSelection(event, arg.value)
                   }
                   onMouseOut={(event) => handleStackSelection(event, arg.value)}
+                  key={argIndex}
                 >
                   <StyledArgName>{arg.name}</StyledArgName>
                   <StyledArgValue>{arg.value}</StyledArgValue>

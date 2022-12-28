@@ -9,7 +9,7 @@ import { sumReducer } from '../../helpers/helpers'
 import { NestedMap } from '../../helpers/nestedTreeMap'
 import type { TRootState } from '../store'
 
-import { traceLogsSelectors } from './traceLogs.slice'
+import { selectAllTraceLogs } from './traceLogs.slice'
 
 const lastItemInContext = (
   rootItem: TMainTraceLogsWithId,
@@ -95,7 +95,7 @@ const selectTraceAsNestedArrays = (
 
 export const selectMappedTraceLogs = createSelector(
   [
-    (state: TRootState) => traceLogsSelectors.selectAll(state.traceLogs),
+    (state: TRootState) => selectAllTraceLogs(state),
     (state: TRootState, width: number) => width,
     (state: TRootState, width: number, height: number) => height,
   ],

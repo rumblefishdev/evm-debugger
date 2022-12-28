@@ -9,22 +9,18 @@ import { TranscationScreen } from './pages/TranscationScreen'
 export const routes: RouteObject[] = [
   {
     path: '/',
-    loader: () => import('./pages/SelectTransactionScreen'),
     element: <SelectTransactionScreen />,
   },
   {
     path: '/transactionScreen',
-    loader: () => import('./pages/TranscationScreen'),
     element: <TranscationScreen />,
   },
   {
     path: '/dataManager',
-    loader: () => import('./pages/AnalyzeSummary'),
     element: <AnalyzeSummary />,
   },
   {
     path: '/structlogsExplorer',
-    loader: () => import('./pages/StructlogsExplorer'),
     element: <StructlogsExplorer />,
   },
 ]

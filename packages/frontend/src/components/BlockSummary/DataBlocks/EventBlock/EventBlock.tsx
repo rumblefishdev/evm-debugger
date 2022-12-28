@@ -24,9 +24,9 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
           <AccordionSummary>{event.signature}</AccordionSummary>
           <AccordionDetails>
             <List>
-              {event.parsedArgs.map((arg) => {
+              {event.parsedArgs.map((arg, index) => {
                 return (
-                  <StyledInfoRow>
+                  <StyledInfoRow key={index}>
                     <StyledInfoType>{arg.name}</StyledInfoType>
                     {arg.type === 'bytes' ? (
                       <StyleRawBytecode>{arg.value}</StyleRawBytecode>
