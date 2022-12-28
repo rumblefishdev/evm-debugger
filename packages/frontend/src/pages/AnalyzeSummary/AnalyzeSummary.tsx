@@ -8,7 +8,7 @@ import { useTypedSelector } from '../../store/storeHooks'
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
 
-export const AnalyzeSummary = ({ ...props }: AnalyzeSummaryProps) => {
+export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
   const isLoading = useTypedSelector((state) => state.analyzer.isLoading)
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 

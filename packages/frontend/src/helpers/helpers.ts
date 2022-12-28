@@ -1,7 +1,7 @@
-import type { TEventInfo, TOpCodes } from '@evm-debuger/types'
+import type { TOpCodes } from '@evm-debuger/types'
 import type { ethers } from 'ethers'
 
-import type { TExtendedStack, TParsedEventLog } from '../types'
+import type { TExtendedStack } from '../types'
 
 export const itemSpacePercentageByGasCost = (
   gasCost: number,

@@ -1,10 +1,5 @@
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
-import type {
-  TCallTypeOpcodes,
-  TCreateTypeOpcodes,
-  TEventInfo,
-  TStorageLogs,
-} from '@evm-debuger/types'
+import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 import { ethers } from 'ethers'
 
@@ -75,7 +70,7 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
     if (!eventLog.eventDescription)
       return { signature: null, parsedArgs: null, name: null }
     const { eventDescription } = eventLog
-    const { name, signature, args, eventFragment, topic } = eventDescription
+    const { name, signature, args, eventFragment } = eventDescription
     const { inputs } = eventFragment
 
     const parsedArgs = inputs.map((input, index) => {
@@ -131,6 +126,7 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
     address,
   }
 
+  // eslint-disable-next-line unicorn/consistent-destructuring
   if (checkIfOfCallType(block) && block.isContract) {
     const {
       events,
@@ -138,11 +134,11 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
       errorDescription,
       decodedInput,
       decodedOutput,
-      isContract,
       storageAddress,
       storageLogs,
       input,
       output,
+      isContract,
     } = block
 
     const callResult: TBlockCallSpecificData = {

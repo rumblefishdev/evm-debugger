@@ -22,7 +22,7 @@ import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
 
-const CallBlockSummary = ({ data, ...props }: CallBlockSummaryProps) => {
+const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   const {
     errorSignature,
     functionSignature,
@@ -75,7 +75,7 @@ const CallBlockSummary = ({ data, ...props }: CallBlockSummaryProps) => {
   )
 }
 
-const CreateBlockSummary = ({ data, ...props }: CreateBlockSummaryProps) => {
+const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
   const { input, salt, storageAddress, storageLogs } = data
   return (
     <>
@@ -92,7 +92,7 @@ const CreateBlockSummary = ({ data, ...props }: CreateBlockSummaryProps) => {
   )
 }
 
-const DefaultBlockSummary = ({ data, ...props }: DefaultBlockSummaryProps) => {
+const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
   const {
     address,
     blockNumber,
@@ -142,7 +142,7 @@ const DefaultBlockSummary = ({ data, ...props }: DefaultBlockSummaryProps) => {
   )
 }
 
-export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
+export const BlockSummary: React.FC<BlockSummaryProps> = () => {
   const currentBlock = useTypedSelector(selectParsedActiveBlock)
 
   const { callSpecificData, createSpecificData, defaultData } = currentBlock

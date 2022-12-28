@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
 
-import { zoom } from '../../helpers/helpers'
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectMappedTraceLogs } from '../../store/traceLogs/mappedTraceLog.selector'
 import type { TTreeMapData } from '../../types'
