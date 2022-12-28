@@ -22,8 +22,6 @@ import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
 
-// Todo: handle reverted calls with errorDescription
-
 const CallBlockSummary = ({ data, ...props }: CallBlockSummaryProps) => {
   const {
     errorSignature,
@@ -147,7 +145,6 @@ const DefaultBlockSummary = ({ data, ...props }: DefaultBlockSummaryProps) => {
 export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
   const currentBlock = useTypedSelector(selectParsedActiveBlock)
 
-  console.log(currentBlock)
 
   const { callSpecificData, createSpecificData, defaultData } = currentBlock
 
