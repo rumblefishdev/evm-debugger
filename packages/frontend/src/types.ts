@@ -65,3 +65,13 @@ export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
   index: number
   stack: TExtendedStack
 }
+
+export type TParsedEventLog = {
+  signature: string
+  parsedArgs: {
+    value: any
+    type: string
+    name: string
+  }[]
+  name: string
+} | null

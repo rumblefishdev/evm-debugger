@@ -21,15 +21,16 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     setWidth(rootRef.current?.clientWidth || 0)
     setHeight(rootRef.current?.clientHeight || 0)
 
-    if (rootRef.current) {
-      const element = rootRef.current
-      const zoomFunction = (event: WheelEvent) => zoom(event, element)
-      document.addEventListener('wheel', zoomFunction)
+    // Todo: fix zoom functionality
+    // if (rootRef.current) {
+    //   const element = rootRef.current
+    //   const zoomFunction = (event: WheelEvent) => zoom(event, element)
+    //   document.addEventListener('wheel', zoomFunction)
 
-      return () => {
-        document.removeEventListener('wheel', zoomFunction)
-      }
-    }
+    //   return () => {
+    //     document.removeEventListener('wheel', zoomFunction)
+    //   }
+    // }
   }, [])
 
   const traceLog = useTypedSelector((state) =>

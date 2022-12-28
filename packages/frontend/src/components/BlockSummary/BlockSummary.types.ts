@@ -1,10 +1,19 @@
-import type { ICallTypeTraceLog, ICreateTypeTraceLog } from '@evm-debuger/types'
 import type { CardProps } from '@mui/material'
+
+import type {
+  TBlockCallSpecificData,
+  TBlockCreateSpecificData,
+  TBlockDefaultData,
+} from '../../store/activeBlock/activeBlock.types'
 
 export interface BlockSummaryProps extends CardProps {}
 export interface CallBlockSummaryProps extends BlockSummaryProps {
-  item: ICallTypeTraceLog
+  data: TBlockCallSpecificData
 }
 export interface CreateBlockSummaryProps extends BlockSummaryProps {
-  item: ICreateTypeTraceLog
+  data: TBlockCreateSpecificData
+}
+
+export interface DefaultBlockSummaryProps extends BlockSummaryProps {
+  data: TBlockDefaultData
 }

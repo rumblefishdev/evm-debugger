@@ -19,15 +19,9 @@ export const Navigation = ({ ...props }: NavigationProps) => {
       </StyledButton>
       <StyledButton
         variant="outlined"
-        onClick={() => typedNavigate(navigate, '/gasTreeMap')}
+        onClick={() => typedNavigate(navigate, '/transactionScreen')}
       >
-        Gas Tree Map
-      </StyledButton>
-      <StyledButton
-        variant="outlined"
-        onClick={() => typedNavigate(navigate, '/tracelogInformation')}
-      >
-        Tracelog Information
+        Transaction Screen
       </StyledButton>
       <StyledButton
         variant="outlined"

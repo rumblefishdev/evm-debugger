@@ -8,8 +8,8 @@ export const StyledStack = styled(Stack)(() => ({
 
 export const StyledContentWrapper = styled(Stack)(() => ({
   overflow: 'hidden',
+  maxHeight: 'calc(100% - 96px - 64px - 24px)',
   justifyContent: 'flex-start',
-  height: 'calc(100% - 96px)',
   flexDirection: 'column',
   alignItems: 'center',
 }))

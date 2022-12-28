@@ -2,10 +2,9 @@ import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { GasTreeMap } from './pages/GasTreeMap'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 import { StructlogsExplorer } from './pages/StructlogsExplorer'
-import { TracelogInformation } from './pages/TracelogInformation'
+import { TranscationScreen } from './pages/TranscationScreen'
 
 export const routes: RouteObject[] = [
   {
@@ -14,14 +13,9 @@ export const routes: RouteObject[] = [
     element: <SelectTransactionScreen />,
   },
   {
-    path: '/gasTreeMap',
-    loader: () => import('./pages/GasTreeMap'),
-    element: <GasTreeMap />,
-  },
-  {
-    path: '/tracelogInformation',
-    loader: () => import('./pages/TracelogInformation'),
-    element: <TracelogInformation />,
+    path: '/transactionScreen',
+    loader: () => import('./pages/TranscationScreen'),
+    element: <TranscationScreen />,
   },
   {
     path: '/dataManager',
@@ -37,8 +31,7 @@ export const routes: RouteObject[] = [
 
 export type TPaths =
   | '/'
-  | '/gasTreeMap'
-  | '/tracelogInformation'
+  | '/transactionScreen'
   | '/dataManager'
   | '/structlogsExplorer'
 

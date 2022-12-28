@@ -1,25 +1,13 @@
-import React, { useMemo } from 'react'
-import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
-import { Stack } from '@mui/system'
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  List,
-} from '@mui/material'
+import React from 'react'
 
 import { useTypedSelector } from '../../store/storeHooks'
-import { selectActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import {
-  parseEventLog,
-  parseFunctionFragment,
-  parseStackTrace,
-} from '../../helpers/helpers'
+import { selectParsedActiveBlock } from '../../store/activeBlock/activeBlock.selector'
 
 import type {
   BlockSummaryProps,
   CallBlockSummaryProps,
   CreateBlockSummaryProps,
+  DefaultBlockSummaryProps,
 } from './BlockSummary.types'
 import {
   StyledBox,
@@ -30,25 +18,28 @@ import {
   StyledWrapper,
   StyleRawBytecode,
 } from './styles'
+import { ParamBlock } from './DataBlocks/ParamBlock'
+import { StorageBlock } from './DataBlocks/StorageBlock'
+import { EventBlock } from './DataBlocks/EventBlock'
 
 // Todo: handle reverted calls with errorDescription
 
-const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
+const CallBlockSummary = ({ data, ...props }: CallBlockSummaryProps) => {
   const {
-    events,
+    errorSignature,
+    functionSignature,
+    isContract,
+    parsedError,
+    parsedEvents,
+    parsedOutput,
+    parsedInput,
+    storageAddress,
+    storageLogs,
     input,
     output,
-    functionFragment,
-    decodedInput,
-    decodedOutput,
-    isContract,
-  } = item
+  } = data
 
-  const parsedEvents = useMemo(() => parseEventLog(events), [events])
-  // const { signature, parsedOutputs, parsedInputs } = useMemo(
-  //   () => parseFunctionFragment(functionFragment, decodedInput, decodedOutput),
-  //   [functionFragment]
-  // )
+  if (!isContract) return null
 
   return (
     <>
@@ -64,210 +55,110 @@ const CallBlockSummary = ({ item, ...props }: CallBlockSummaryProps) => {
         <StyledInfoType>Raw output</StyledInfoType>
         <StyleRawBytecode>{output}</StyleRawBytecode>
       </StyledInfoRow>
-      {/* <StyledSectionHeader>
-        Decoded Function: <b>{signature}</b>
-      </StyledSectionHeader>
-      <Accordion>
-        <AccordionSummary>Inputs</AccordionSummary>
-        <AccordionDetails>
-          <List>
-            {parsedInputs.map((parsedInput) => {
-              return (
-                <StyledInfoRow>
-                  <StyledInfoType>
-                    {parsedInput.name} ({parsedInput.type})
-                  </StyledInfoType>
-                  <StyledInfoValue>{parsedInput.value}</StyledInfoValue>
-                </StyledInfoRow>
-              )
-            })}
-          </List>
-        </AccordionDetails>
-      </Accordion> */}
-      {/* <Accordion>
-      <AccordionSummary>Outputs</AccordionSummary>
-        <AccordionDetails>
-          <List>
-            {parsedOutputs.map((parsedOutput) => {
-              return (
-                <StyledInfoRow>
-                  <StyledInfoType>
-                    {parsedOutput.name} ({parsedOutput.type})
-                  </StyledInfoType>
-                  <StyledInfoValue>{parsedOutput.value}</StyledInfoValue>
-                </StyledInfoRow>
-              )
-            })}
-          </List>
-        </AccordionDetails>
-      </Accordion> */}
+      {functionSignature ? (
+        <StyledSectionHeader>
+          Decoded Function: <b>{functionSignature}</b>
+        </StyledSectionHeader>
+      ) : null}
+      {parsedInput ? <ParamBlock title="Inputs" items={parsedInput} /> : null}
+      {parsedOutput ? (
+        <ParamBlock title="Outputs" items={parsedOutput} />
+      ) : null}
+      {errorSignature ? (
+        <StyledSectionHeader>
+          Decoded Error: <b>{errorSignature}</b>
+        </StyledSectionHeader>
+      ) : null}
+      {parsedError ? <ParamBlock title="Error" items={parsedError} /> : null}
       <StyledSectionHeader>Events:</StyledSectionHeader>
-      <Stack sx={{ marginBottom: '12px' }}>
-        {parsedEvents.map((event, index) => {
-          return (
-            <Accordion>
-              <AccordionSummary>{event.signature}</AccordionSummary>
-              <AccordionDetails>
-                <List>
-                  {event.parsedArgs.map((arg) => {
-                    return (
-                      <StyledInfoRow>
-                        <StyledInfoType>{arg.name}</StyledInfoType>
-                        <StyledInfoValue>{arg.value}</StyledInfoValue>
-                      </StyledInfoRow>
-                    )
-                  })}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          )
-        })}
-      </Stack>
+      <EventBlock eventLogs={parsedEvents} />
+      <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
     </>
   )
 }
 
-const CreateBlockSummary = ({ item, ...props }: CreateBlockSummaryProps) => {
-  const { input, isSuccess, salt } = item
+const CreateBlockSummary = ({ data, ...props }: CreateBlockSummaryProps) => {
+  const { input, salt, storageAddress, storageLogs } = data
   return (
     <>
-      <StyledInfoRow></StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Salt</StyledInfoType>
+        <StyledInfoValue>{salt}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Raw input</StyledInfoType>
+        <StyleRawBytecode>{input}</StyleRawBytecode>
+      </StyledInfoRow>
+      <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
     </>
   )
 }
 
-export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
-  const currentBlock = useTypedSelector(selectActiveBlock)
-
-  console.log(currentBlock)
-
-  if (!currentBlock) return <StyledBox></StyledBox>
-  const renderBlock = () => {
-    if (checkIfOfCallType(currentBlock))
-      return <CallBlockSummary item={currentBlock} {...props} />
-    if (checkIfOfCreateType(currentBlock))
-      return <CreateBlockSummary item={currentBlock} {...props} />
-  }
-
+const DefaultBlockSummary = ({ data, ...props }: DefaultBlockSummaryProps) => {
   const {
     address,
+    blockNumber,
     gasCost,
     passedGas,
     stackTrace,
     type,
     value,
-    blockNumber,
-    storageAddress,
-    storageLogs,
-  } = currentBlock
+    isSuccess,
+  } = data
+
+  return (
+    <>
+      <StyledInfoRow>
+        <StyledInfoType>Address</StyledInfoType>
+        <StyledInfoValue>{address}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Is Success</StyledInfoType>
+        <StyledInfoValue>{isSuccess ? 'true' : 'false'}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Type</StyledInfoType>
+        <StyledInfoValue>{type}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Stack trace</StyledInfoType>
+        <StyledInfoValue>{stackTrace}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Block Number</StyledInfoType>
+        <StyledInfoValue>{blockNumber}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Passed Gas</StyledInfoType>
+        <StyledInfoValue>{passedGas}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Gas Cost</StyledInfoType>
+        <StyledInfoValue>{gasCost}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Value</StyledInfoType>
+        <StyledInfoValue>{value}</StyledInfoValue>
+      </StyledInfoRow>
+    </>
+  )
+}
+
+export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
+  const currentBlock = useTypedSelector(selectParsedActiveBlock)
+
+  console.log(currentBlock)
+
+  const { callSpecificData, createSpecificData, defaultData } = currentBlock
 
   return (
     <StyledBox>
       <StyledWrapper>
-        <StyledInfoRow>
-          <StyledInfoType>Address</StyledInfoType>
-          <StyledInfoValue>{address}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Type</StyledInfoType>
-          <StyledInfoValue>{type}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Stack trace</StyledInfoType>
-          <StyledInfoValue>{parseStackTrace(stackTrace)}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Block Number</StyledInfoType>
-          <StyledInfoValue>{blockNumber}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Passed Gas</StyledInfoType>
-          <StyledInfoValue>{passedGas}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Gas Cost</StyledInfoType>
-          <StyledInfoValue>{gasCost}</StyledInfoValue>
-        </StyledInfoRow>
-        <StyledInfoRow>
-          <StyledInfoType>Value</StyledInfoType>
-          <StyledInfoValue>{value}</StyledInfoValue>
-        </StyledInfoRow>
-        {renderBlock()}
-
-        <StyledSectionHeader>Storage Information</StyledSectionHeader>
-        <StyledInfoRow>
-          <StyledInfoType>Storage address</StyledInfoType>
-          <StyleRawBytecode>{storageAddress}</StyleRawBytecode>
-        </StyledInfoRow>
-        <Stack sx={{ marginBottom: '12px' }}>
-          <Accordion>
-            <AccordionSummary>Loaded Storage</AccordionSummary>
-            <AccordionDetails>
-              <List>
-                {storageLogs.loadedStorage.map((log) => {
-                  return (
-                    <>
-                      <StyledInfoRow>
-                        <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
-                      </StyledInfoRow>
-                      <StyledInfoRow>
-                        <StyledInfoType>Value</StyledInfoType>
-                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
-                      </StyledInfoRow>
-                    </>
-                  )
-                })}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary>Changed Storage</AccordionSummary>
-            <AccordionDetails>
-              <List>
-                {storageLogs.changedStorage.map((log) => {
-                  return (
-                    <>
-                      <StyledInfoRow>
-                        <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
-                      </StyledInfoRow>
-                      <StyledInfoRow>
-                        <StyledInfoType>Initial Value</StyledInfoType>
-                        <StyleRawBytecode>{log.initialValue}</StyleRawBytecode>
-                      </StyledInfoRow>
-                      <StyledInfoRow>
-                        <StyledInfoType>Updated Value</StyledInfoType>
-                        <StyleRawBytecode>{log.updatedValue}</StyleRawBytecode>
-                      </StyledInfoRow>
-                    </>
-                  )
-                })}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary>Returned Storage</AccordionSummary>
-            <AccordionDetails>
-              <List>
-                {storageLogs.returnedStorage.map((log) => {
-                  return (
-                    <>
-                      <StyledInfoRow>
-                        <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
-                      </StyledInfoRow>
-                      <StyledInfoRow>
-                        <StyledInfoType>Value</StyledInfoType>
-                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
-                      </StyledInfoRow>
-                    </>
-                  )
-                })}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        </Stack>
+        {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
+        {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
+        {createSpecificData ? (
+          <CreateBlockSummary data={createSpecificData} />
+        ) : null}
       </StyledWrapper>
     </StyledBox>
   )

@@ -18,11 +18,11 @@ export const StyledInfoRow = styled(Stack)(() => ({
 }))
 
 export const StyledInfoType = styled(Typography)(() => ({
-  width: '128px',
+  width: '152px',
 }))
 
 export const StyledInfoValue = styled(Typography)(() => ({
-  width: 'calc(100% - 128px - 24px)',
+  width: 'calc(100% - 152px - 24px)',
 }))
 
 export const StyleRawBytecode = styled(StyledInfoValue)(() => ({

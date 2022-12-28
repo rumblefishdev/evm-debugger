@@ -1,7 +1,7 @@
 import type { TEventInfo, TOpCodes } from '@evm-debuger/types'
-import { ethers } from 'ethers'
+import type { ethers } from 'ethers'
 
-import type { TExtendedStack } from '../types'
+import type { TExtendedStack, TParsedEventLog } from '../types'
 
 export const itemSpacePercentageByGasCost = (
   gasCost: number,
@@ -69,57 +69,12 @@ export const parseStackTrace = (stackTrace: number[]) => {
   return `[ ${stackTrace.join(' , ')} ]`
 }
 
-export const safeArgParse = (
-  arg: string | ethers.BigNumber,
-  type: 'address' | 'uint256' | string,
-) => {
-  const parsedArg = ethers.BigNumber.isBigNumber(arg)
-    ? ethers.BigNumber.from(arg).toString()
-    : arg
-
-  if (type === 'uint256') return `${ethers.utils.formatEther(parsedArg)} ETH`
-  return parsedArg
+export const isArrayOfStrings = (value: unknown): value is string[] => {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }
 
-export const parseEventLog = (eventLogs: TEventInfo[]) => {
-  return eventLogs.map((eventLog) => {
-    const { eventDescription } = eventLog
-    const { name, signature, args, eventFragment, topic } = eventDescription
-    const { inputs } = eventFragment
+export const getSignature = (fragment: ethers.utils.FunctionFragment) => {
+  const { inputs, name } = fragment
 
-    const parsedArgs = inputs.map((input, index) => {
-      const value = args[index]
-
-      const parsedValue = safeArgParse(value, input.type)
-
-      return { value: parsedValue, type: input.type, name: input.name }
-    })
-
-    return { signature, parsedArgs, name }
-  })
-}
-
-export const parseFunctionFragment = (
-  input: ethers.utils.TransactionDescription,
-) => {
-  const { name, args, signature, functionFragment, sighash } = input
-  const { inputs, outputs, gas } = functionFragment
-
-  const parsedInputs = inputs.map((inputItem, index) => {
-    const value = args[index]
-
-    const parsedValue = safeArgParse(value, inputItem.type)
-
-    return { value: parsedValue, type: inputItem.type, name: inputItem.name }
-  })
-
-  const parsedOutputs = outputs.map((outputItem, index) => {
-    const value = args[index]
-
-    const parsedValue = safeArgParse(value, outputItem.type)
-
-    return { value: parsedValue, type: outputItem.type, name: outputItem.name }
-  })
-
-  return { signature, sighash, parsedOutputs, parsedInputs, name, gas }
+  return `${name}(${inputs.map((inputItem) => inputItem.type).join(',')})`
 }

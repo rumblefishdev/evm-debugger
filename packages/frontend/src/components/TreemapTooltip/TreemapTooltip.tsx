@@ -15,6 +15,7 @@ export const TreemapTooltip = ({
   gasCost,
   stackTrace,
   type,
+  signature,
   ...props
 }: TreemapTooltipProps) => (
   <StyledTooltip
@@ -24,6 +25,12 @@ export const TreemapTooltip = ({
           <StyledInfoType>Type</StyledInfoType>
           <StyledInfoValue>{type}</StyledInfoValue>
         </StyledInfoRow>
+        {signature ? (
+          <StyledInfoRow>
+            <StyledInfoType>Type</StyledInfoType>
+            <StyledInfoValue>{type}</StyledInfoValue>
+          </StyledInfoRow>
+        ) : null}
         <StyledInfoRow>
           <StyledInfoType>Gas Cost</StyledInfoType>
           <StyledInfoValue>{gasCost}</StyledInfoValue>

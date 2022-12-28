@@ -82,7 +82,7 @@ export class TxAnalyzer {
         if (nextStructLog.depth === depth + 1)
           return { ...item, isContract: true }
       }
-      return item
+      return { ...item, isContract: false }
     })
   }
 
