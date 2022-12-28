@@ -7,7 +7,12 @@ import {
 } from '@mui/material'
 import React from 'react'
 
-import { StyledInfoRow, StyledInfoType, StyledInfoValue } from '../../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyleRawBytecode,
+} from '../../styles'
 
 import type { EventBlockProps } from './EventBlock.types'
 
@@ -23,7 +28,11 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
                 return (
                   <StyledInfoRow>
                     <StyledInfoType>{arg.name}</StyledInfoType>
-                    <StyledInfoValue>{arg.value}</StyledInfoValue>
+                    {arg.type === 'bytes' ? (
+                      <StyleRawBytecode>{arg.value}</StyleRawBytecode>
+                    ) : (
+                      <StyledInfoValue>{arg.value}</StyledInfoValue>
+                    )}
                   </StyledInfoRow>
                 )
               })}

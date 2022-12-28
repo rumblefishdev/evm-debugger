@@ -145,7 +145,6 @@ const DefaultBlockSummary = ({ data, ...props }: DefaultBlockSummaryProps) => {
 export const BlockSummary = ({ ...props }: BlockSummaryProps) => {
   const currentBlock = useTypedSelector(selectParsedActiveBlock)
 
-
   const { callSpecificData, createSpecificData, defaultData } = currentBlock
 
   return (

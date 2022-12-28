@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 
-import { getSignature } from '../../helpers/helpers'
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { TreemapTooltip } from '../TreemapTooltip'

@@ -4,7 +4,7 @@ export const StyledBox = styled(Card)(() => ({
   width: '100%',
   padding: '24px',
   overflow: 'auto',
-  maxWidth: '1024px',
+  maxWidth: '824px',
   height: '100%',
   borderRadius: '18px',
 }))
