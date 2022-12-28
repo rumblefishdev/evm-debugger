@@ -21,7 +21,7 @@ const lastItemInContext = (
   return lastItem === -1 ? state.length : lastItem
 }
 
-const getItems = (
+const getNestedItems = (
   rootItem: TMainTraceLogsWithId,
   state: TMainTraceLogsWithId[],
 ): TMainTraceLogsWithId[] => {
@@ -41,7 +41,7 @@ const parseNestedArrayRecursive = (
 ): TTreeMapData[] => {
   if ('owningLog' in rootItem.item) return []
 
-  const nestedItems = getItems(rootItem.item, state)
+  const nestedItems = getNestedItems(rootItem.item, state)
 
   if (nestedItems.length === 0) return []
 
