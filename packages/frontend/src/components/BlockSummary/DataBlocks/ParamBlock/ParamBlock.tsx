@@ -21,7 +21,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
           {items.map((item, index) => {
             if (typeof item.value === 'string')
               return (
-                <>
+                <React.Fragment key={index}>
                   <StyledInfoRow key={index}>
                     <StyledInfoType>
                       {item.name} ({item.type})
@@ -32,12 +32,12 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                       <StyledInfoValue>{item.value}</StyledInfoValue>
                     )}
                   </StyledInfoRow>
-                </>
+                </React.Fragment>
               )
 
             if (isArrayOfStrings(item.value))
               return (
-                <>
+                <React.Fragment key={index}>
                   <StyledInfoRow key={index}>
                     <StyledInfoType>
                       {item.name} ({item.type})
@@ -56,7 +56,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                           })}
                     </StyledInfoValue>
                   </StyledInfoRow>
-                </>
+                </React.Fragment>
               )
 
             return (
