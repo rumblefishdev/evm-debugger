@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
+    "noEmit": false,
+    "outDir": "./dist",
     "experimentalDecorators": true,
     "incremental": true,
     "target": "ES6",
@@ -11,7 +14,6 @@
     "declaration": true,
     "declarationMap": true,
     "removeComments": false,
-    "noEmit": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -19,16 +21,6 @@
     "skipLibCheck": true,
     "strictPropertyInitialization": false
   },
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./packages/analyzer"
-    },
-    {
-      "path": "./packages/types"
-    },
-    {
-      "path": "./packages/frontend"
-    }
-  ]
+  "include": ["src/**/*"]
+
 }

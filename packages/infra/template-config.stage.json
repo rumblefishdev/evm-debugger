@@ -1,0 +1,13 @@
+{
+    "Parameters": {
+      "Domain": "evm-debugger-hardhat.rumblefish.dev",
+      "Environment": "dev",
+      "HostedZoneId": "Z1AXAHZLKLTXED",
+      "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
+      "JsonBucketName": "hardhat.rumblefish.dev",
+      "ApiGatewayAllowOrigin": "*",
+      "TaskCpu": 1024,
+      "TaskMemory": 4096,
+      "HardhatImage": "045028348791.dkr.ecr.us-east-1.amazonaws.com/hardhat:latest"
+    }
+  }
