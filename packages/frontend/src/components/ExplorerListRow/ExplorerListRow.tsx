@@ -5,7 +5,7 @@ import { convertPcToCounter } from '../../helpers/helpers'
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 
 import type { ExplorerListRowProps } from './ExplorerListRow.types'
-import { StyledCounter, StyledOpcodeDescriptionIcon, StyledStack, StyledType } from './styles'
+import { StyledChip, StyledChipText, StyledCounter, StyledOpcodeDescriptionIcon, StyledStack, StyledType } from './styles'
 
 export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...props }: ExplorerListRowProps) => {
   const itemRef = useRef<HTMLDivElement>(null)
@@ -33,7 +33,13 @@ export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...p
           <StyledOpcodeDescriptionIcon />
         </Tooltip>
       </StyledType>
-      <Chip label={chipValue} />
+      {chipValue ? (
+        <Tooltip title={chipValue}>
+          <StyledChip>
+            <StyledChipText>{chipValue}</StyledChipText>
+          </StyledChip>
+        </Tooltip>
+      ) : null}
     </StyledStack>
   )
 }
