@@ -1,5 +1,5 @@
-import { Button, Stack, StepLabel, Typography } from '@mui/material'
-import React, { useCallback } from 'react'
+import { Button, StepLabel, Typography } from '@mui/material'
+import React, { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { etherscanKey, etherscanUrl } from '../../config'
@@ -11,7 +11,6 @@ import {
 } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
-import type { IManualUploadFormData } from '../SelectTransactionScreen/ManualUploadTransactionScreen/ManualUploadTransactionScreen'
 
 import type {
   AnalyzerProgressScreenProps,
@@ -63,8 +62,15 @@ export const AnalyzerProgressScreen = ({
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
-  if (!isLoading && !error)
-    setTimeout(() => typedNavigate(navigate, '/transactionScreen'), 1000)
+  useEffect(() => {
+    if (!isLoading && !error) {
+      const timeout = setTimeout(
+        () => typedNavigate(navigate, '/transactionScreen'),
+        1000,
+      )
+      return () => clearTimeout(timeout)
+    }
+  }, [isLoading, error])
 
   const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
