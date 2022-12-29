@@ -51,7 +51,7 @@ export const AnalyzerProgressScreen = ({
     (state) => state.analyzer,
   )
 
-  // if (!isLoading && !error) typedNavigate(navigate, '/transactionScreen')
+  if (!isLoading && !error) typedNavigate(navigate, '/transactionScreen')
 
   const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
