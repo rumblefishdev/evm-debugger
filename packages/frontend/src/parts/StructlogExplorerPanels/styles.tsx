@@ -1,10 +1,9 @@
-import { HelpOutline } from '@mui/icons-material'
 import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledSmallPanel = styled(Stack)(() => ({
   overflow: 'auto',
   height: '100%',
-  flex: 1,
+  flex: 3,
 }))
 
 export const StyledHeading = styled(Typography)(() => ({
@@ -21,5 +20,5 @@ export const StyledListWrapper = styled(Stack)(() => ({
 export const StyledBigPanel = styled(Stack)(() => ({
   padding: '8px 16px',
   height: '100%',
-  flex: 3,
+  flex: 8,
 }))
