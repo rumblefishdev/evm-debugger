@@ -143,7 +143,6 @@ export function* runAnalyzer(
       }
     }
     yield* put(analyzerActions.updateStage('ReRun analyzer'))
-    yield* delay(1000)
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {
     yield* put(analyzerActions.setLoading(false))

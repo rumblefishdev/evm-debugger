@@ -63,7 +63,8 @@ export const AnalyzerProgressScreen = ({
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
-  // if (!isLoading && !error) typedNavigate(navigate, '/transactionScreen')
+  if (!isLoading && !error)
+    setTimeout(() => typedNavigate(navigate, '/transactionScreen'), 1000)
 
   const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
@@ -88,15 +89,23 @@ export const AnalyzerProgressScreen = ({
       <StyledStepper activeStep={activeStep}>
         {stages.map((stage, index) => {
           if (error && currentIndex === index)
-            return <ErrorStep stepName={stage.stageName} errorMessage={error} />
-          return <DefaultStep stepName={stage.stageName} />
+            return (
+              <ErrorStep
+                key={stage.stageName}
+                stepName={stage.stageName}
+                errorMessage={error}
+              />
+            )
+          return (
+            <DefaultStep key={stage.stageName} stepName={stage.stageName} />
+          )
         })}
       </StyledStepper>
 
       <StyledMessegesFrame>
-        {messages.map((message) => {
+        {messages.map((message, index) => {
           return (
-            <StyledMessageBox>
+            <StyledMessageBox key={index}>
               <StyledTimeStamp>
                 {message.timestamp.toLocaleTimeString()}:
               </StyledTimeStamp>

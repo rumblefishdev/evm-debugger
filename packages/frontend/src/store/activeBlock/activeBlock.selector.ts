@@ -26,8 +26,6 @@ const safeArgParse = (
     | ethers.BigNumber[],
   param: ethers.utils.ParamType,
 ) => {
-  console.log(arg)
-
   if (typeof arg === 'string') return arg
 
   if (ethers.BigNumber.isBigNumber(arg))

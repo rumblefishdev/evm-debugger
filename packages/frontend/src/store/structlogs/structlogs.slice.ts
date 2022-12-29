@@ -75,7 +75,7 @@ export const getParsedStructLogs = (
   returnIndex: number,
 ): IExtendedStructLog[] => {
   return structLogs
-    .slice(startIndex, returnIndex ? returnIndex : startIndex)
+    .slice(startIndex, returnIndex)
     .filter((item) => item.depth === structLogs[startIndex].depth)
     .map((item, index) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item))
