@@ -28,11 +28,7 @@ const DefaultStep = ({ stepName, ...props }: AnalyzerStepProps) => {
   )
 }
 
-const ErrorStep = ({
-  errorMessage,
-  stepName,
-  ...props
-}: AnalyzerStepProps) => {
+const ErrorStep = ({ errorMessage, stepName, ...props }: AnalyzerStepProps) => {
   const stepLabelProps = {
     optional: <Typography variant="caption">{errorMessage}</Typography>,
   }
@@ -65,9 +61,7 @@ export const AnalyzerProgressScreen = ({
       <StyledStepper activeStep={activeStep}>
         {stages.map((stage, index) => {
           if (error && currentIndex === index)
-            return (
-              <ErrorStep stepName={stage.stageName} errorMessage={error} />
-            )
+            return <ErrorStep stepName={stage.stageName} errorMessage={error} />
           return <DefaultStep stepName={stage.stageName} />
         })}
       </StyledStepper>
