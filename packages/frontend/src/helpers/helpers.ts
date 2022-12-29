@@ -3,19 +3,29 @@ import { ethers } from 'ethers'
 
 import type { TExtendedStack } from '../types'
 
-export const itemSpacePercentageByGasCost = (gasCost: number, parentGasCost: number) => {
+export const itemSpacePercentageByGasCost = (
+  gasCost: number,
+  parentGasCost: number,
+) => {
   const MAX_SPACE = 100
   const ROUNDING = 0
 
   // eslint-disable-next-line no-magic-numbers
-  return Number.parseInt(((gasCost / parentGasCost) * MAX_SPACE).toFixed(ROUNDING))
+  return Number.parseInt(
+    ((gasCost / parentGasCost) * MAX_SPACE).toFixed(ROUNDING),
+  )
 }
 
 export const zoom = (event: WheelEvent, element: HTMLDivElement) => {
   const { deltaY } = event
   const { clientX, clientY } = event
   const transformValue = element.style.getPropertyValue('transform')
-  const scaleValue = Number.parseInt(transformValue ? transformValue.split('(')[1].split(')')[0].split(',')[0] : '1', 10)
+  const scaleValue = Number.parseInt(
+    transformValue
+      ? transformValue.split('(')[1].split(')')[0].split(',')[0]
+      : '1',
+    10,
+  )
 
   if (deltaY >= 0 && scaleValue > 1) {
     // zoom out
@@ -31,7 +41,8 @@ export const zoom = (event: WheelEvent, element: HTMLDivElement) => {
   }
 }
 
-export const sumReducer = (accumulator: number, currentValue: number) => accumulator + currentValue
+export const sumReducer = (accumulator: number, currentValue: number) =>
+  accumulator + currentValue
 
 export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
@@ -42,14 +53,26 @@ export const convertPcToCounter = (pc: number | string | null) => {
   const defaultString = '0x0000'
 
   if (typeof pc === 'string') {
-    const hexString = ethers.utils.isHexString(pc) ? pc : ethers.utils.hexlify(pc)
+    const hexString = ethers.utils.isHexString(pc)
+      ? pc
+      : ethers.utils.hexlify(pc)
     const hexValue = hexString.slice(2)
-    return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+    return (
+      defaultString.slice(
+        0,
+        Math.max(0, defaultString.length - hexValue.length),
+      ) + hexValue
+    )
   }
 
   if (typeof pc === 'number') {
     const hexValue = pc.toString(16)
-    return defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+    return (
+      defaultString.slice(
+        0,
+        Math.max(0, defaultString.length - hexValue.length),
+      ) + hexValue
+    )
   }
 }
 

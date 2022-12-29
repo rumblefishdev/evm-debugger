@@ -1,7 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import type { TAllOpCodes } from '@evm-debuger/types'
 
-export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: string[]; description: string }> = {
+export const opcodesDictionary: Record<
+  TAllOpCodes,
+  { opcode: number; args: string[]; description: string }
+> = {
   STOP: { opcode: 0x0, description: 'Halts execution.', args: [] },
   ADD: { opcode: 0x1, description: 'Addition operation.', args: ['a', 'b'] },
   MUL: {
@@ -127,7 +130,8 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   CALLER: { opcode: 0x33, description: 'Get caller address.', args: [] },
   CALLVALUE: {
     opcode: 0x34,
-    description: 'Get deposited value by the instruction/transaction responsible for this execution.',
+    description:
+      'Get deposited value by the instruction/transaction responsible for this execution.',
     args: [],
   },
   CALLDATALOAD: {
@@ -172,7 +176,8 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   },
   RETURNDATASIZE: {
     opcode: 0x3d,
-    description: 'Get size of output data from the previous call from the current environment.',
+    description:
+      'Get size of output data from the previous call from the current environment.',
     args: [],
   },
   RETURNDATACOPY: {
@@ -278,7 +283,8 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   },
   GAS: {
     opcode: 0x5a,
-    description: 'Get the amount of available gas, including the corresponding reduction the amount of available gas.',
+    description:
+      'Get the amount of available gas, including the corresponding reduction the amount of available gas.',
     args: [],
   },
   JUMPDEST: {
@@ -443,27 +449,77 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   DUP7: {
     opcode: 0x86,
     description: 'Duplicate 7th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP8: {
     opcode: 0x87,
     description: 'Duplicate 8th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP9: {
     opcode: 0x88,
     description: 'Duplicate 9th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP10: {
     opcode: 0x89,
     description: 'Duplicate 10th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP11: {
     opcode: 0x8a,
     description: 'Duplicate 11th stack item.',
-    args: ['ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value'],
+    args: [
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value',
+    ],
   },
   DUP12: {
     opcode: 0x8b,
@@ -593,27 +649,77 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   SWAP6: {
     opcode: 0x95,
     description: 'Exchange 1st and 7th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP7: {
     opcode: 0x96,
     description: 'Exchange 1st and 8th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP8: {
     opcode: 0x97,
     description: 'Exchange 1st and 9th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP9: {
     opcode: 0x98,
     description: 'Exchange 1st and 10th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP10: {
     opcode: 0x99,
     description: 'Exchange 1st and 11th stack items.',
-    args: ['value1', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'ignored', 'value2'],
+    args: [
+      'value1',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'ignored',
+      'value2',
+    ],
   },
   SWAP11: {
     opcode: 0x9a,
@@ -771,12 +877,29 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   CALL: {
     opcode: 0xf1,
     description: 'Message-call into an account.',
-    args: ['gas', 'address', 'value', 'inOffset', 'inSize', 'outOffset', 'outSize'],
+    args: [
+      'gas',
+      'address',
+      'value',
+      'inOffset',
+      'inSize',
+      'outOffset',
+      'outSize',
+    ],
   },
   CALLCODE: {
     opcode: 0xf2,
-    description: 'Message-call into this account with alternative account’s code.',
-    args: ['gas', 'address', 'value', 'inOffset', 'inSize', 'outOffset', 'outSize'],
+    description:
+      'Message-call into this account with alternative account’s code.',
+    args: [
+      'gas',
+      'address',
+      'value',
+      'inOffset',
+      'inSize',
+      'outOffset',
+      'outSize',
+    ],
   },
   RETURN: {
     opcode: 0xf3,
@@ -796,12 +919,14 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
   },
   STATICCALL: {
     opcode: 0xfa,
-    description: 'Message-call into an account, but disallow state modifications.',
+    description:
+      'Message-call into an account, but disallow state modifications.',
     args: ['gas', 'address', 'inOffset', 'inSize', 'outOffset', 'outSize'],
   },
   REVERT: {
     opcode: 0xfd,
-    description: 'Stop execution and revert state changes, without consuming all provided gas and providing a reason.',
+    description:
+      'Stop execution and revert state changes, without consuming all provided gas and providing a reason.',
     args: ['offset', 'size'],
   },
   INVALID: {
@@ -844,7 +969,7 @@ export const remapOpcodesDict = (): {
       accumulator[opcode] = { name: key, args, description }
       return accumulator
     },
-    { name: '', args: [], description: '' }
+    { name: '', args: [], description: '' },
   )
 }
 export const remappedOpcodesDict = remapOpcodesDict()

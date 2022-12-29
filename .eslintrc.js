@@ -41,7 +41,7 @@ module.exports = {
 
             files: ["*.ts", "*.tsx"],
             rules: {
-                // "prettier/prettier": "error",
+                "prettier/prettier": "error",
                 //Typescript
                 "@typescript-eslint/array-type": ["error", { "default": "array" }],
                 "@typescript-eslint/consistent-generic-constructors": ["error", "type-annotation"],
