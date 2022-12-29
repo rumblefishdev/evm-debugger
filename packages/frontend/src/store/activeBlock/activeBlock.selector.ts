@@ -26,25 +26,20 @@ const safeArgParse = (
     | ethers.BigNumber[],
   param: ethers.utils.ParamType,
 ) => {
-  const { type } = param
+  if (typeof arg === 'string') return arg
 
-  if (type === 'tuple') {
-    const { components } = param
-    return components.map((component, index) => {
-      const value = arg[index]
+  if (ethers.BigNumber.isBigNumber(arg))
+    return `${ethers.utils.formatEther(
+      ethers.BigNumber.from(arg).toString(),
+    )} ETH`
 
-      const parsedValue = safeArgParse(value, component)
+  if (typeof arg === 'boolean') return arg ? 'true' : 'false'
 
-      return { value: parsedValue, type: component.type, name: component.name }
-    })
-  }
+  if (ethers.utils.isBytesLike(arg)) return arg.toString()
 
   if (isArrayOfStrings(arg)) return arg
 
-  if (
-    Array.isArray(arg) &&
-    arg.every((item) => ethers.BigNumber.isBigNumber(item))
-  )
+  if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
     return arg.map(
       (item) =>
         `${ethers.utils.formatEther(
@@ -52,17 +47,14 @@ const safeArgParse = (
         )} ETH`,
     )
 
-  if (typeof arg === 'boolean') return arg ? 'true' : 'false'
+  const { components } = param
+  return components.map((component, index) => {
+    const value = arg[index]
 
-  if (type === 'bytes' && ethers.utils.isBytesLike(arg)) return arg.toString()
+    const parsedValue = safeArgParse(value, component)
 
-  if (type === 'uint256')
-    return `${ethers.utils.formatEther(
-      ethers.BigNumber.from(arg).toString(),
-    )} ETH
-    `
-
-  return arg
+    return { value: parsedValue, type: component.type, name: component.name }
+  })
 }
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {

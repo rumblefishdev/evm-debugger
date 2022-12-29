@@ -92,6 +92,7 @@ export class TxAnalyzer {
         if (checkIfOfCallType(item) && !item.isContract)
           return {
             ...item,
+            returnIndex: item.startIndex,
             gasCost:
               item.passedGas -
               this.transactionData.structLogs[item.index + 1].gas,
