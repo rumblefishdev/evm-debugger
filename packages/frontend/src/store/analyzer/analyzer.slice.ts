@@ -48,6 +48,8 @@ export const analyzerSlice = createSlice({
     },
     reset: (state) => {
       state.messages = []
+      state.stages = ANALYZE_STAGES
+      state.error = null
       state.isLoading = false
     },
     logMessage: (state, action: PayloadAction<string>) => {

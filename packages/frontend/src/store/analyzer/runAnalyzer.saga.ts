@@ -121,16 +121,18 @@ export function* runAnalyzer(
 
     yield* put(analyzerActions.logMessage('Calculating address to fetch ABIs!'))
     const addresses = yield* select(sighashSelectors.addressesWithMissingAbis)
-    if (addresses.size === 0)
+    if (addresses.size === 0) {
       yield* put(analyzerActions.logMessage('No more abis to fetch.'))
-    else {
+      yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
+    } else {
       const additionalAbis = yield* fetchAdditionalAbis(abiProvider, addresses)
       const additionalAbisCount = Object.keys(additionalAbis).length
-      if (additionalAbisCount === 0)
+      if (additionalAbisCount === 0) {
         yield* put(
           analyzerActions.logMessage('No additional abis were fetched.'),
         )
-      else {
+        yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
+      } else {
         yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
         yield* put(
           analyzerActions.logMessage(
@@ -138,9 +140,9 @@ export function* runAnalyzer(
           ),
         )
         yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbis)
-        yield* put(analyzerActions.updateStage('ReRun analyzer'))
       }
     }
+    yield* put(analyzerActions.updateStage('ReRun analyzer'))
     yield* delay(1000)
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {
