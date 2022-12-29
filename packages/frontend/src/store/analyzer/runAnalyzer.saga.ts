@@ -1,6 +1,6 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { IStructLog, TAbis, TTransactionInfo } from '@evm-debuger/types'
-import { apply, put, select } from 'typed-redux-saga'
+import { apply, put, select, delay } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
@@ -83,6 +83,7 @@ export function* runAnalyzer(
       [],
     )
     yield* put(analyzerActions.logMessage('Success!'))
+    yield* put(analyzerActions.updateStage('Fetching transaction info'))
     yield* put(setTxInfo(transactionInfo))
 
     yield* put(analyzerActions.logMessage('Fetching structLogs'))
@@ -92,9 +93,11 @@ export function* runAnalyzer(
       [],
     )
     yield* put(analyzerActions.logMessage('Success!'))
+    yield* put(analyzerActions.updateStage('Fetching structlogs'))
     yield* put(loadStructLogs(structLogs))
 
     const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+    yield* put(analyzerActions.updateStage('Run analyzer'))
 
     yield* put(setContractAddresses(analyzeSummary.contractAddresses))
     yield* put(
@@ -128,15 +131,17 @@ export function* runAnalyzer(
           analyzerActions.logMessage('No additional abis were fetched.'),
         )
       else {
+        yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
         yield* put(
           analyzerActions.logMessage(
             `${additionalAbisCount} were fetched. Calling analyzer again`,
           ),
         )
         yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbis)
+        yield* put(analyzerActions.updateStage('ReRun analyzer'))
       }
     }
-
+    yield* delay(1000)
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {
     yield* put(analyzerActions.setLoading(false))

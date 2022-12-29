@@ -3,14 +3,43 @@ import { createAction, createSlice } from '@reduxjs/toolkit'
 
 import type { IRunAnalyzerPayload } from './analyzer.types'
 
+type TAnalyzeStageName =
+  | 'Fetching transaction info'
+  | 'Fetching structlogs'
+  | 'Run analyzer'
+  | 'Trying to fetch missing data'
+  | 'ReRun analyzer'
+
+type TAnalyzeStage = {
+  stageName: TAnalyzeStageName
+  isFinished: boolean
+}
+
+const ANALYZE_STAGES: TAnalyzeStage[] = [
+  { stageName: 'Fetching transaction info', isFinished: false },
+  { stageName: 'Fetching structlogs', isFinished: false },
+  { stageName: 'Run analyzer', isFinished: false },
+  { stageName: 'Trying to fetch missing data', isFinished: false },
+  { stageName: 'ReRun analyzer', isFinished: false },
+]
+
 export class AnalyzerState {
   public isLoading = false
   public messages: { timestamp: Date; message: string }[] = []
-  public error?: string = null
+  public error: string | null = null
+  public stages: TAnalyzeStage[] = ANALYZE_STAGES
 }
 
 export const analyzerSlice = createSlice({
   reducers: {
+    updateStage: (state, action: PayloadAction<TAnalyzeStageName>) => {
+      const stageIndex = state.stages.findIndex(
+        (stage) => stage.stageName === action.payload,
+      )
+      if (stageIndex === -1) return state
+
+      state.stages[stageIndex].isFinished = true
+    },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
     },

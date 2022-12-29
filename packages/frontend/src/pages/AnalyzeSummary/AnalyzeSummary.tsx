@@ -9,7 +9,6 @@ import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
 
 export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
-  const isLoading = useTypedSelector((state) => state.analyzer.isLoading)
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 
   const handleTabChange = (tabName: TTabType) => {
@@ -36,7 +35,7 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
 
   // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
 
-  return isLoading ? null : (
+  return (
     <>
       <Navigation />
       <StyledButtonsWrapper>

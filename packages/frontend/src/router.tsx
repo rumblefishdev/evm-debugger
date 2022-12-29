@@ -1,6 +1,7 @@
 import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
+import { AnalyzerProgressScreen } from './pages/AnalyzerProgressScreen'
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 import { StructlogsExplorer } from './pages/StructlogsExplorer'
@@ -23,6 +24,10 @@ export const routes: RouteObject[] = [
     path: '/structlogsExplorer',
     element: <StructlogsExplorer />,
   },
+  {
+    path: '/analyzerProgressScreen',
+    element: <AnalyzerProgressScreen />,
+  },
 ]
 
 export type TPaths =
@@ -30,6 +35,7 @@ export type TPaths =
   | '/transactionScreen'
   | '/dataManager'
   | '/structlogsExplorer'
+  | '/analyzerProgressScreen'
 
 export const router = createBrowserRouter(routes, {
   basename: process.env.PUBLIC_URL,
