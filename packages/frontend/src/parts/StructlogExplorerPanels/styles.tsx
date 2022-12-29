@@ -34,20 +34,3 @@ export const StyledDisabledBytecode = styled(Stack)(() => ({
   background: 'rgba(0, 0, 0, 0.38)',
   alignItems: 'center',
 }))
-
-export const StyledCounter = styled(Typography)(() => ({
-  width: '64px',
-  textAlign: 'right',
-  marginRight: '24px',
-}))
-
-export const StyledType = styled(Typography)(() => ({
-  width: '152px',
-  marginRight: '24px',
-}))
-
-export const StyledOpcodeDescriptionIcon = styled(HelpOutline)(() => ({
-  width: '12px',
-  marginLeft: '4px',
-  height: '12px',
-}))

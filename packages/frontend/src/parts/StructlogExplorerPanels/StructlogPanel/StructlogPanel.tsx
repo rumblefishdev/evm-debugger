@@ -1,17 +1,25 @@
 import React, { useEffect } from 'react'
+import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 
-import { loadPreviousStructlog, loadNextStructlog, selectParsedStructLogs } from '../../../store/structlogs/structlogs.slice'
+import {
+  loadPreviousStructlog,
+  loadNextStructlog,
+  selectParsedStructLogs,
+  loadActiveStructLog,
+} from '../../../store/structlogs/structlogs.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
-
-import { StructLogItem } from './StructLogItem'
+import { ExplorerListRow } from '../../../components/ExplorerListRow'
+import type { IExtendedStructLog } from '../../../types'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
+  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
   const ref = React.useRef<HTMLDivElement>(null)
+  const listRef = React.useRef<ViewportListRef>(null)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -27,15 +35,36 @@ export const StructlogPanel = (): JSX.Element => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [structLogs])
+  }, [])
+
+  useEffect(() => {
+    if (!activeStrucLog) return
+    const index = structLogs.findIndex((structLog) => structLog.pc === activeStrucLog.pc)
+    if (index) listRef.current?.scrollToIndex(index)
+  }, [activeStrucLog])
+
+  const handleClick = (structLog: IExtendedStructLog) => {
+    dispatch(loadActiveStructLog(structLog))
+  }
 
   return (
-    <StyledSmallPanel ref={ref}>
+    <StyledSmallPanel>
       <StyledHeading>EVM steps</StyledHeading>
-      <StyledListWrapper>
-        <ViewportList viewportRef={ref} items={structLogs} withCache={true}>
-          {(item, index) => {
-            return <StructLogItem key={index} structLog={item} />
+      <StyledListWrapper ref={ref}>
+        <ViewportList viewportRef={ref} ref={listRef} items={structLogs} withCache={true}>
+          {(item) => {
+            const { gasCost, op, pc, index } = item
+
+            return (
+              <ExplorerListRow
+                key={index}
+                chipValue={`gasCost: ${gasCost}`}
+                opCode={op}
+                pc={pc}
+                isActive={index === activeStrucLog?.index}
+                onClick={() => handleClick(item)}
+              />
+            )
           }}
         </ViewportList>
       </StyledListWrapper>
