@@ -1,6 +1,6 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { IStructLog, TAbis, TTransactionInfo } from '@evm-debuger/types'
-import { apply, put, select, delay } from 'typed-redux-saga'
+import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'

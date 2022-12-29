@@ -3,7 +3,6 @@ import { Button } from '@mui/material'
 
 import { BytecodesManager, SighashesManager } from '../../components/Managers'
 import { Navigation } from '../../components/Navigation'
-import { useTypedSelector } from '../../store/storeHooks'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
