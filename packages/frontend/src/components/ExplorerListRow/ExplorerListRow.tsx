@@ -5,9 +5,23 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 
 import type { ExplorerListRowProps } from './ExplorerListRow.types'
-import { StyledChip, StyledChipText, StyledCounter, StyledOpcodeDescriptionIcon, StyledStack, StyledType } from './styles'
+import {
+  StyledChip,
+  StyledChipText,
+  StyledCounter,
+  StyledOpcodeDescriptionIcon,
+  StyledStack,
+  StyledType,
+} from './styles'
 
-export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...props }: ExplorerListRowProps) => {
+export const ExplorerListRow = ({
+  chipValue,
+  pc,
+  opCode,
+  isActive,
+  onClick,
+  ...props
+}: ExplorerListRowProps) => {
   const itemRef = useRef<HTMLDivElement>(null)
 
   const description = useMemo(() => {
@@ -15,14 +29,19 @@ export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...p
   }, [opCode])
 
   const counter = useMemo(() => {
-    return typeof pc === 'number' ? ethers.utils.hexlify(pc) : ethers.utils.hexlify(ethers.BigNumber.from(pc))
+    return typeof pc === 'number'
+      ? ethers.utils.hexlify(pc)
+      : ethers.utils.hexlify(ethers.BigNumber.from(pc))
   }, [pc])
 
   useEffect(() => {
-    if (isActive && itemRef.current) itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    if (isActive && itemRef.current)
+      itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }, [isActive, itemRef])
 
-  const activeStyle: React.CSSProperties = isActive ? { background: 'rgba(0, 0, 0, 0.12)' } : {}
+  const activeStyle: React.CSSProperties = isActive
+    ? { background: 'rgba(0, 0, 0, 0.12)' }
+    : {}
 
   return (
     <StyledStack {...props} ref={itemRef} onClick={onClick} sx={activeStyle}>

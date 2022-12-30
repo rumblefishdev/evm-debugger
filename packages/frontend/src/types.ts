@@ -1,4 +1,8 @@
-import type { IStructLog, TTransactionInfo, TMainTraceLogs } from '@evm-debuger/types'
+import type {
+  IStructLog,
+  TTransactionInfo,
+  TMainTraceLogs,
+} from '@evm-debuger/types'
 
 export type TMainTraceLogsWithId = TMainTraceLogs & {
   id: string

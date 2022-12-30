@@ -31,6 +31,9 @@
     },
     {
       "path": "./packages/infra/transaction-trace-lambda"
+    },
+    {
+      "path": "./packages/infra/transaction-trace-provider"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@evm-debuger/infra",
+  "name": "@evm-debuger/transaction-trace-lambda",
   "version": "0.0.1",
   "scripts": {
     "start:dev": "npx hardhat run src/LambdaEntrypoint.ts",

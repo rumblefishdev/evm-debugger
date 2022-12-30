@@ -1,7 +1,18 @@
-import { Accordion, AccordionDetails, AccordionSummary, List, Stack } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  List,
+  Stack,
+} from '@mui/material'
 import React from 'react'
 
-import { StyledInfoRow, StyledInfoType, StyledInfoValue, StyleRawBytecode } from '../../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyleRawBytecode,
+} from '../../styles'
 
 import type { EventBlockProps } from './EventBlock.types'
 
@@ -28,7 +39,7 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
             </List>
           </AccordionDetails>
         </Accordion>
-      ) : null
+      ) : null,
     )}
   </Stack>
 )

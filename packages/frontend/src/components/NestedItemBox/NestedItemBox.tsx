@@ -10,40 +10,67 @@ import { TreemapTooltip } from '../TreemapTooltip'
 import type { NestedItemBoxProps } from './NestedItemBox.types'
 import { StyledBox, StyledNestedItemsBox } from './styles'
 
-export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => {
+export const NestedItemBox = ({
+  treeMapItem,
+  ...props
+}: NestedItemBoxProps) => {
   const [isTooltipActive, setIsTooltipActive] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
 
   const getActiveBlock = useTypedSelector((state) => state.activeBlock)
 
-  const hovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsTooltipActive(true)
-    setIsHovered(true)
-    event.stopPropagation()
-  }, [])
+  const hovered = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsTooltipActive(true)
+      setIsHovered(true)
+      event.stopPropagation()
+    },
+    [],
+  )
 
-  const notHovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsTooltipActive(false)
-    setIsHovered(false)
-    event.stopPropagation()
-  }, [])
+  const notHovered = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setIsTooltipActive(false)
+      setIsHovered(false)
+      event.stopPropagation()
+    },
+    [],
+  )
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       dispatch(loadActiveBlock(treeMapItem.item))
       event.stopPropagation()
     },
-    [treeMapItem.item, dispatch]
+    [treeMapItem.item, dispatch],
   )
 
   const renderContent = (element: TTreeMapData) => {
     if ('owningLog' in element.item)
-      return <IntrinsicItemBox parentHoverHandler={setIsHovered} treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+      return (
+        <IntrinsicItemBox
+          parentHoverHandler={setIsHovered}
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
 
-    if (element.nestedItems.length > 0) return <NestedItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+    if (element.nestedItems.length > 0)
+      return (
+        <NestedItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
 
-    return <ItemBox parentHoverHandler={setIsHovered} treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+    return (
+      <ItemBox
+        parentHoverHandler={setIsHovered}
+        treeMapItem={{ ...element, item: element.item }}
+        key={element.item.id}
+      />
+    )
   }
 
   const { gasCost, index, type, stackTrace, id } = treeMapItem.item
@@ -52,14 +79,20 @@ export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => 
 
   const styleDimension: React.CSSProperties = { width, height }
 
-  const activeStyle = getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
+  const activeStyle =
+    getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
 
   const hoverStyle: React.CSSProperties = isHovered
     ? { background: 'rgba(255, 129, 120 , .4)' }
     : { background: 'rgba(255, 129, 120 , .1)' }
 
   return (
-    <TreemapTooltip type={type} stackTrace={stackTrace} gasCost={gasCost} open={isTooltipActive}>
+    <TreemapTooltip
+      type={type}
+      stackTrace={stackTrace}
+      gasCost={gasCost}
+      open={isTooltipActive}
+    >
       <StyledBox
         {...props}
         sx={{
@@ -75,7 +108,9 @@ export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => 
         onClick={setActiveBlock}
       >
         <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
-          {treeMapItem.nestedItems.map((nestedItem) => renderContent(nestedItem))}
+          {treeMapItem.nestedItems.map((nestedItem) =>
+            renderContent(nestedItem),
+          )}
         </StyledNestedItemsBox>
       </StyledBox>
     </TreemapTooltip>

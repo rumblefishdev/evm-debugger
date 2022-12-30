@@ -1,4 +1,7 @@
-export const BUILTIN_ERRORS: Record<string, { signature: string; inputs: string[]; name: string; reason?: boolean }> = {
+export const BUILTIN_ERRORS: Record<
+  string,
+  { signature: string; inputs: string[]; name: string; reason?: boolean }
+> = {
   '0x4e487b71': {
     signature: 'Panic(uint256)',
     name: 'Panic',

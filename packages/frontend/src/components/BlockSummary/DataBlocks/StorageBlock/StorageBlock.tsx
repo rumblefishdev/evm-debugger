@@ -1,11 +1,25 @@
-import { Accordion, AccordionDetails, AccordionSummary, List, Stack } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  List,
+  Stack,
+} from '@mui/material'
 import React from 'react'
 
-import { StyledInfoRow, StyledInfoType, StyledSectionHeader, StyleRawBytecode } from '../../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyledSectionHeader,
+  StyleRawBytecode,
+} from '../../styles'
 
 import type { StorageBlockProps } from './Storage.types'
 
-export const StorageBlock = ({ storageAddress, storageLogs }: StorageBlockProps) => {
+export const StorageBlock = ({
+  storageAddress,
+  storageLogs,
+}: StorageBlockProps) => {
   return (
     <>
       <StyledSectionHeader>Storage Information</StyledSectionHeader>

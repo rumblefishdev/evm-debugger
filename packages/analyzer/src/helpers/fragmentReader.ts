@@ -1,4 +1,9 @@
-import type { IErrorDescription, IFragmentDecodeResult, TAbi, TFragmentStore } from '@evm-debuger/types'
+import type {
+  IErrorDescription,
+  IFragmentDecodeResult,
+  TAbi,
+  TFragmentStore,
+} from '@evm-debuger/types'
 import { ethers } from 'ethers'
 
 import { BUILTIN_ERRORS } from '../resources/builtinErrors'
@@ -15,7 +20,11 @@ export class FragmentReader {
     this.loadFragmentsFromCachedAbis()
   }
 
-  public storeFragment(sighash: string, fragment: ethers.utils.Fragment, type: 'function' | 'event' | 'error') {
+  public storeFragment(
+    sighash: string,
+    fragment: ethers.utils.Fragment,
+    type: 'function' | 'event' | 'error',
+  ) {
     this.fragmentStore[type][sighash] = ethers.utils.Fragment.from(fragment)
   }
 
@@ -49,7 +58,11 @@ export class FragmentReader {
 
     functionFragmentKeys.forEach((key) => {
       const fragment = abiInterface.functions[key]
-      this.storeFragment(abiInterface.getSighash(fragment), fragment, 'function')
+      this.storeFragment(
+        abiInterface.getSighash(fragment),
+        fragment,
+        'function',
+      )
     })
   }
 
@@ -59,7 +72,10 @@ export class FragmentReader {
     })
   }
 
-  private decodeBuiltinErrorResult = (sighash: string, data: ethers.utils.BytesLike) => {
+  private decodeBuiltinErrorResult = (
+    sighash: string,
+    data: ethers.utils.BytesLike,
+  ) => {
     const builtin = BUILTIN_ERRORS[sighash]
 
     const arrayify = ethers.utils.arrayify(data)
@@ -67,11 +83,20 @@ export class FragmentReader {
     return new ethers.utils.AbiCoder().decode(builtin.inputs, arrayify.slice(4))
   }
 
-  public decodeFragment(isReverted: boolean, inputData: string, outputData: string): IFragmentDecodeResult {
-    return isReverted ? this.decodeFragmentWithError(inputData, outputData) : this.decodeFragmentWithSuccess(inputData, outputData)
+  public decodeFragment(
+    isReverted: boolean,
+    inputData: string,
+    outputData: string,
+  ): IFragmentDecodeResult {
+    return isReverted
+      ? this.decodeFragmentWithError(inputData, outputData)
+      : this.decodeFragmentWithSuccess(inputData, outputData)
   }
 
-  private decodeFragmentWithSuccess(inputData: string, outputData: string): IFragmentDecodeResult {
+  private decodeFragmentWithSuccess(
+    inputData: string,
+    outputData: string,
+  ): IFragmentDecodeResult {
     const sighash = inputData.slice(0, 10)
 
     const functionFragment = this.getFunctionFragment(sighash)
@@ -86,8 +111,14 @@ export class FragmentReader {
 
     const abiInterface = new ethers.utils.Interface([functionFragment])
 
-    const decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
-    const decodedOutput = abiInterface.decodeFunctionResult(functionFragment.name, outputData)
+    const decodedInput = abiInterface.decodeFunctionData(
+      functionFragment.name,
+      inputData,
+    )
+    const decodedOutput = abiInterface.decodeFunctionResult(
+      functionFragment.name,
+      outputData,
+    )
 
     return {
       functionFragment,
@@ -97,7 +128,10 @@ export class FragmentReader {
     }
   }
 
-  private decodeFragmentWithError(inputData: string, output: string): IFragmentDecodeResult {
+  private decodeFragmentWithError(
+    inputData: string,
+    output: string,
+  ): IFragmentDecodeResult {
     let decodedInput: ethers.utils.Result | null = null
     let decodedOutput: ethers.utils.Result | null = null
     let errorDescription: IErrorDescription | null = null
@@ -111,15 +145,22 @@ export class FragmentReader {
     if (functionFragment) {
       const abiInterface = new ethers.utils.Interface([functionFragment])
 
-      decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
+      decodedInput = abiInterface.decodeFunctionData(
+        functionFragment.name,
+        inputData,
+      )
     }
 
-    if (BUILTIN_ERRORS[errorSighash]) decodedOutput = this.decodeBuiltinErrorResult(errorSighash, output)
+    if (BUILTIN_ERRORS[errorSighash])
+      decodedOutput = this.decodeBuiltinErrorResult(errorSighash, output)
 
     if (errorFragment) {
       const abiInterface = new ethers.utils.Interface([errorFragment])
 
-      decodedOutput = new ethers.utils.AbiCoder().decode(errorFragment.inputs, output)
+      decodedOutput = new ethers.utils.AbiCoder().decode(
+        errorFragment.inputs,
+        output,
+      )
       errorDescription = abiInterface.parseError(output) as IErrorDescription
     }
 
@@ -140,8 +181,14 @@ export class FragmentReader {
 
     const abiInterface = new ethers.utils.Interface([eventFragment])
 
-    const decodedEvent = abiInterface.decodeEventLog(eventFragment.name, eventData, topics)
-    const eventDescription: ethers.utils.LogDescription = abiInterface.parseLog({ topics, data: eventData })
+    const decodedEvent = abiInterface.decodeEventLog(
+      eventFragment.name,
+      eventData,
+      topics,
+    )
+    const eventDescription: ethers.utils.LogDescription = abiInterface.parseLog(
+      { topics, data: eventData },
+    )
 
     return { eventDescription, decodedEvent }
   }

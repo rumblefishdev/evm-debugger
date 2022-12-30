@@ -27,7 +27,9 @@ export interface IManualUploadFormData {
   structLogs: { structLogs: IStructLog[] }
 }
 
-export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransactionScreenProps) => {
+export const ManualUploadTransactionScreen = ({
+  ...props
+}: ManualUploadTransactionScreenProps) => {
   const dispatch = useTypedDispatch()
   const navigate = useNavigate()
 
@@ -40,14 +42,16 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(data.txInfo),
-          structLogProvider: new StaticStructLogProvider(data.structLogs.structLogs),
+          structLogProvider: new StaticStructLogProvider(
+            data.structLogs.structLogs,
+          ),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
-        })
+        }),
       )
       typedNavigate(navigate, '/analyzerProgressScreen')
     },
-    [dispatch, navigate]
+    [dispatch, navigate],
   )
 
   return (
@@ -95,7 +99,12 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
       </Stack>
       <ErrorMessage errors={formState.errors} name="structLogs" />
 
-      <Button variant="contained" component="label" onClick={handleSubmit(submitHandler)} disabled={!formState.isValid}>
+      <Button
+        variant="contained"
+        component="label"
+        onClick={handleSubmit(submitHandler)}
+        disabled={!formState.isValid}
+      >
         Process logs
       </Button>
     </StyledStack>

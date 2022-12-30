@@ -1,4 +1,8 @@
-import type { TCallTypeOpcodes, TCreateTypeOpcodes, TStorageLogs } from '@evm-debuger/types'
+import type {
+  TCallTypeOpcodes,
+  TCreateTypeOpcodes,
+  TStorageLogs,
+} from '@evm-debuger/types'
 
 import type { TParsedEventLog } from '../../types'
 

@@ -3,8 +3,21 @@ import React from 'react'
 import { useTypedSelector } from '../../store/storeHooks'
 import { selectParsedActiveBlock } from '../../store/activeBlock/activeBlock.selector'
 
-import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps, DefaultBlockSummaryProps } from './BlockSummary.types'
-import { StyledBox, StyledInfoRow, StyledInfoType, StyledInfoValue, StyledSectionHeader, StyledWrapper, StyleRawBytecode } from './styles'
+import type {
+  BlockSummaryProps,
+  CallBlockSummaryProps,
+  CreateBlockSummaryProps,
+  DefaultBlockSummaryProps,
+} from './BlockSummary.types'
+import {
+  StyledBox,
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyledSectionHeader,
+  StyledWrapper,
+  StyleRawBytecode,
+} from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
@@ -46,7 +59,9 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         </StyledSectionHeader>
       ) : null}
       {parsedInput ? <ParamBlock title="Inputs" items={parsedInput} /> : null}
-      {parsedOutput ? <ParamBlock title="Outputs" items={parsedOutput} /> : null}
+      {parsedOutput ? (
+        <ParamBlock title="Outputs" items={parsedOutput} />
+      ) : null}
       {errorSignature ? (
         <StyledSectionHeader>
           Decoded Error: <b>{errorSignature}</b>
@@ -78,7 +93,16 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
 }
 
 const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
-  const { address, blockNumber, gasCost, passedGas, stackTrace, type, value, isSuccess } = data
+  const {
+    address,
+    blockNumber,
+    gasCost,
+    passedGas,
+    stackTrace,
+    type,
+    value,
+    isSuccess,
+  } = data
 
   return (
     <>
@@ -128,7 +152,9 @@ export const BlockSummary: React.FC<BlockSummaryProps> = () => {
       <StyledWrapper>
         {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
         {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
-        {createSpecificData ? <CreateBlockSummary data={createSpecificData} /> : null}
+        {createSpecificData ? (
+          <CreateBlockSummary data={createSpecificData} />
+        ) : null}
       </StyledWrapper>
     </StyledBox>
   )

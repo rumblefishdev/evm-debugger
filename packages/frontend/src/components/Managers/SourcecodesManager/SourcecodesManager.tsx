@@ -1,6 +1,9 @@
 import React from 'react'
 
-import { sourceCodesSelectors, updateSourceCode } from '../../../store/sourceCodes/sourceCodes.slice'
+import {
+  sourceCodesSelectors,
+  updateSourceCode,
+} from '../../../store/sourceCodes/sourceCodes.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../ManagerItem'
 import { StyledStack, StyledTitle } from '../styles'
@@ -13,7 +16,9 @@ export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
     dispatch(updateSourceCode({ id, changes: { sourceCode: value } }))
   }
 
-  const data = useTypedSelector((state) => sourceCodesSelectors.selectAll(state.sourceCodes))
+  const data = useTypedSelector((state) =>
+    sourceCodesSelectors.selectAll(state.sourceCodes),
+  )
 
   return (
     <StyledStack {...props}>

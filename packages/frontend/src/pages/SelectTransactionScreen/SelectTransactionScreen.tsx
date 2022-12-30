@@ -22,13 +22,24 @@ export const SelectTransactionScreen = () => {
   }
 
   return (
-    <Grid2 container spacing={0} direction="column" alignItems="center" justifyContent="center" style={{ minHeight: '100%' }}>
+    <Grid2
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: '100%' }}
+    >
       <Grid2>
         <Card sx={{ width: 1000, height: 500 }}>
           <CardContent>
             <Box sx={{ width: '100%' }}>
               <Box sx={{ borderColor: 'divider', borderBottom: 1 }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
                   <Tab label="SUPPORTED CHAINS" {...a11yProps(0)} />
                   <Tab label="CUSTOM CHAIN" {...a11yProps(1)} />
                   <Tab label="MANUAL UPLOAD" {...a11yProps(2)} />

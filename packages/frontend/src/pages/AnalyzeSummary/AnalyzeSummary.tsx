@@ -41,10 +41,20 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
         {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
           Source Codes
         </Button> */}
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('bytecodes')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ margin: '0 12px' }}
+          onClick={() => handleTabChange('bytecodes')}
+        >
           Bytecodes
         </Button>
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sighashes')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ margin: '0 12px' }}
+          onClick={() => handleTabChange('sighashes')}
+        >
           Abis
         </Button>
       </StyledButtonsWrapper>

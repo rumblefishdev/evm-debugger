@@ -1,6 +1,10 @@
 import type { CardProps } from '@mui/material'
 
-import type { TBlockCallSpecificData, TBlockCreateSpecificData, TBlockDefaultData } from '../../store/activeBlock/activeBlock.types'
+import type {
+  TBlockCallSpecificData,
+  TBlockCreateSpecificData,
+  TBlockDefaultData,
+} from '../../store/activeBlock/activeBlock.types'
 
 export interface BlockSummaryProps extends CardProps {}
 export interface CallBlockSummaryProps extends BlockSummaryProps {

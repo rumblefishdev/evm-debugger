@@ -2,7 +2,12 @@ import { AccordionDetails, AccordionSummary, List } from '@mui/material'
 import React from 'react'
 
 import { isArrayOfStrings } from '../../../../helpers/helpers'
-import { StyledInfoRow, StyledInfoType, StyledInfoValue, StyleRawBytecode } from '../../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyleRawBytecode,
+} from '../../styles'
 
 import type { ParamBlockProps } from './ParamBlock.types'
 import { StyledAccordion } from './styles'
@@ -54,7 +59,13 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 </React.Fragment>
               )
 
-            return <ParamBlock key={index} title={`${item.name} (${item.type})`} items={item.value} />
+            return (
+              <ParamBlock
+                key={index}
+                title={`${item.name} (${item.type})`}
+                items={item.value}
+              />
+            )
           })}
         </List>
       </AccordionDetails>

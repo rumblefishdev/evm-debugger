@@ -1,5 +1,5 @@
 {
-  "name": "@evm-debuger/infra",
+  "name": "@evm-debuger/transaction-trace-provider",
   "version": "0.0.1",
   "scripts": {
     "start:dev": "npx hardhat run src/transactionTraceProvider.ts",
