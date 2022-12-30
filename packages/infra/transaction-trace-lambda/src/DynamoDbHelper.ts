@@ -2,7 +2,6 @@ import {AnalyzerData} from "./AnalyzerData";
 import * as AWS from "aws-sdk";
 
 export const saveAnalyzerData = async (analyzerData: AnalyzerData) => {
-    AWS.config.update({ region: 'us-east-1' });
     const ddb = new AWS.DynamoDB();
     const params = {
         TableName: process.env.ANALYZER_DATA_TABLE_NAME,
@@ -17,7 +16,6 @@ export const saveAnalyzerData = async (analyzerData: AnalyzerData) => {
 };
 
 export const getAnalyzerDataByTxHash = async (txHash: string): Promise<AnalyzerData> => {
-    AWS.config.update({ region: 'us-east-1' });
     const ddb = new AWS.DynamoDB();
 
     const params = {

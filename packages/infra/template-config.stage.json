@@ -8,6 +8,8 @@
       "ApiGatewayAllowOrigin": "*",
       "TaskCpu": 1024,
       "TaskMemory": 4096,
-      "HardhatImage": "045028348791.dkr.ecr.us-east-1.amazonaws.com/hardhat:latest"
+      "TransactionTraceProviderImage": "045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:latest",
+      "AlchemyKey": "PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ",
+      "Subnets": "subnet-0b9aa96f,subnet-f4b2fddb"
     }
   }

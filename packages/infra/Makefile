@@ -14,10 +14,6 @@ ARTIFACT_NAME=main.zip
 
 .PHONY: deploy-dev
 
-#copy-s3-zip-files-dev:
-#	aws s3 cp s3://$(DEV_ARTIFACTS_BUCKET_NAME)/dev/library-app/library-app.zip .
-#	aws s3 cp s3://$(DEV_ARTIFACTS_BUCKET_NAME)/dev/library-app/imagestateactions.yml .
-
 build-dev:
 	sam build
 

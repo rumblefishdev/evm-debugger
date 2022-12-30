@@ -20,7 +20,11 @@ Parameters:
   TaskMemory:
     Type: String
     Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  HardhatImage:
+  TransactionTraceProviderImage:
+    Type: String
+  AlchemyKey:
+    Type: String
+  Subnets:
     Type: String
 
 Resources:
@@ -58,25 +62,26 @@ Resources:
         Route53:
           HostedZoneId: !Ref HostedZoneId
 
-  HardhatCheckStateHandler:
+  TransactionTraceService:
     Type: AWS::Serverless::Function
     Properties:
       Tracing: Active
-      CodeUri: ./hardhat.zip
-      Handler: dist/script.checkState
+      CodeUri: ./transactionTraceService.zip
+      Handler: dist/LambdaEntrypoint.checkState
       Runtime: nodejs16.x
       Timeout: 600
       MemorySize: 4096
-      AutoPublishAlias: HardhatService
+      AutoPublishAlias: TransactionTraceService
       Environment:
         Variables:
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           TMPDIR: '/tmp'
-          HARDHAT_VERBOSE: true
-          ECS_TASK_DEFINITION: !Ref HardhatTaskDefinition
+          ECS_TASK_DEFINITION: !Ref RetrieveTransactionTraceTaskDefinition
           CLUSTER_ARN: !GetAtt ECSCluster.Arn
+          SUBNETS: !Ref Subnets
+          ALCHEMY_KEY: !Ref AlchemyKey
       Events:
-        HardhatApiEvent:
+        TransactionTraceApiEvent:
           Type: Api
           Properties:
             RestApiId: !Ref Api
@@ -96,9 +101,13 @@ Resources:
             - Effect: Allow
               Action:
                 - ecs:RunTask
+              Resource:
+                - !Ref RetrieveTransactionTraceTaskDefinition
+            - Effect: Allow
+              Action:
                 - ecs:DescribeTasks
               Resource:
-                - !Ref HardhatTaskDefinition
+                - '*'
             - Effect: Allow
               Action:
                 - iam:PassRole
@@ -112,52 +121,12 @@ Resources:
                 - !GetAtt AnalyzerDataTable.Arn
                 - !Sub ${AnalyzerDataTable.Arn}/**
 
-#  HardhatPrepareDataHandler:
-#    Type: AWS::Serverless::Function
-#    Properties:
-#      CodeUri: ./hardhat.zip
-#      Handler: dist/script.prepareTransactionData
-#      Runtime: nodejs16.x
-#      Environment:
-#        Variables:
-#          ALCHEMY_KEY: PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ
-#          HARDHAT_VERBOSE: true
-#          TMPDIR: '/tmp'
-#      Timeout: 600
-#      MemorySize: 4096
-#      Policies:
-#        Statement:
-#          - Action:
-#              - s3:*
-#            Effect: Allow
-#            Resource:
-#              - "*"
-
-#  HardhatStepFunction:
-#    Type: AWS::Serverless::StateMachine
-#    Properties:
-#      Definition:
-#        StartAt: prepareAnalyzerData
-#        States:
-#          prepareAnalyzerData:
-#            Type: Task
-#            Resource: !GetAtt HardhatPrepareDataHandler.Arn
-#            Parameters:
-#              txHash.$: $.detail.requestParameters.txHash
-#              chainId.$: $.detail.requestParameters.chainId
-#            Next: Done
-#          Done:
-#            Type: Succeed
-#      Tracing:
-#        Enabled: true
-#      Role: !GetAtt StatesExecutionRole.Arn
-
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
     Properties:
-      ClusterName: HardhatCluster
+      ClusterName: TransactionTraceProviderCluster
 
-  HardhatTaskDefinition:
+  RetrieveTransactionTraceTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Sub ${AWS::StackName}-transactionTraceData
@@ -169,10 +138,10 @@ Resources:
       Cpu: !Ref TaskCpu
       NetworkMode: awsvpc
       ContainerDefinitions:
-        - Image: !Ref HardhatImage
+        - Image: !Ref TransactionTraceProviderImage
           Essential: true
           Memory: !Ref TaskMemory
-          Name: hardhat
+          Name: transactionTraceProvider
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -213,25 +182,3 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub ${AWS::StackName}/hardhat
-
-#  StatesExecutionRole:
-#    Type: AWS::IAM::Role
-#    Properties:
-#      AssumeRolePolicyDocument:
-#        Version: '2012-10-17'
-#        Statement:
-#          - Effect: Allow
-#            Principal:
-#              Service:
-#                - Fn::Sub: states.${AWS::Region}.amazonaws.com
-#            Action: sts:AssumeRole
-#      Path: /
-#      Policies:
-#        - PolicyName: StatesExecutionPolicy
-#          PolicyDocument:
-#            Version: '2012-10-17'
-#            Statement:
-#              - Effect: Allow
-#                Action:
-#                  - lambda:InvokeFunction
-#                Resource: '*'
