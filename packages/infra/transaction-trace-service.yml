@@ -1,0 +1,185 @@
+Transform: AWS::Serverless-2016-10-31
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  Environment:
+    Type: String
+  HostedZoneId:
+    Type: String
+  Domain:
+    Type: String
+  CertificateArn:
+    Type: String
+  JsonBucketName:
+    Type: String
+  ApiGatewayAllowOrigin:
+    Type: String
+  TaskCpu:
+    Type: String
+    Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
+  TaskMemory:
+    Type: String
+    Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
+  TransactionTraceProviderImage:
+    Type: String
+  HardhatForkingUrl:
+    Type: String
+  Subnets:
+    Type: String
+
+Resources:
+  AnalyzerDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-analyzerStore
+      AttributeDefinitions:
+        -
+          AttributeName: txHash
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: txHash
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
+      Cors:
+        AllowMethods: "'POST, GET, OPTIONS'"
+        AllowOrigin: !Join [ "", [ "'", !Ref ApiGatewayAllowOrigin, "'" ] ]
+        AllowHeaders: "'content-type, x-api-key'"
+        AllowCredentials: false
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+      Domain:
+        CertificateArn: !Ref CertificateArn
+        DomainName: !Ref Domain
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+
+  TransactionTraceService:
+    Type: AWS::Serverless::Function
+    Properties:
+      Tracing: Active
+      CodeUri: ./transactionTraceService.zip
+      Handler: dist/LambdaEntrypoint.checkState
+      Runtime: nodejs16.x
+      Timeout: 30
+      MemorySize: 512
+      AutoPublishAlias: TransactionTraceService
+      Environment:
+        Variables:
+          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TMPDIR: '/tmp'
+          ECS_TASK_DEFINITION: !Ref RetrieveTransactionTraceTaskDefinition
+          CLUSTER_ARN: !GetAtt ECSCluster.Arn
+          SUBNETS: !Ref Subnets
+          HARDHAT_FORKING_URL: !Ref HardhatForkingUrl
+          TRANSACTION_TRACE_BUCKET: !Ref JsonBucketName
+      Events:
+        TransactionTraceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /analyzerData/{txHash}/{chainId}
+            Method: GET
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - states:*
+              Resource: "*"
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - "*"
+            - Effect: Allow
+              Action:
+                - ecs:RunTask
+              Resource:
+                - !Ref RetrieveTransactionTraceTaskDefinition
+            - Effect: Allow
+              Action:
+                - ecs:DescribeTasks
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+              Resource:
+                - !GetAtt AnalyzerDataTable.Arn
+                - !Sub ${AnalyzerDataTable.Arn}/**
+
+  ECSCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: TransactionTraceProviderCluster
+
+  RetrieveTransactionTraceTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${AWS::StackName}-transactionTraceData
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      ExecutionRoleArn: !GetAtt TaskRole.Arn
+      RequiresCompatibilities:
+        - FARGATE
+      Memory: !Ref TaskMemory
+      Cpu: !Ref TaskCpu
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Image: !Ref TransactionTraceProviderImage
+          Essential: true
+          Memory: !Ref TaskMemory
+          Name: transactionTraceProvider
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: hardhat
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      Policies:
+        - PolicyName: AmazonECSTaskExecutionRolePolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - ec2:DescribeNetworkInterfaces
+                  - ecs:DescribeTasks
+                  - s3:*
+                Resource: '*'
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${AWS::StackName}/hardhat

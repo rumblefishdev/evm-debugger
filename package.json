@@ -20,7 +20,16 @@
     "frontend:lint-fix": "lerna run lint:fix --scope @evm-debuger/frontend",
     "frontend:prettier-check": "lerna run prettier:check --scope @evm-debuger/frontend",
     "frontend:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/frontend",
-    "analyzer:test": "lerna run test --scope @evm-debuger/analyzer"
+    "transaction-trace-lambda:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-lambda:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-lambda:prettier-check": "lerna run prettier:check --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-lambda:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-provider:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-providera",
+    "transaction-trace-provider:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-provider",
+    "transaction-trace-provider:prettier-check": "lerna run prettier:check --scope @evm-debuger/transaction-trace-provider",
+    "transaction-trace-provider:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/transaction-trace-provider",
+    "analyzer:test": "lerna run test --scope @evm-debuger/analyzer",
+    "transaction-trace-lambda:zip": "rf-lerna zipbundle @evm-debuger/transaction-trace-lambda --target ./packages/transaction-trace-lambda/transactionTraceService.zip"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.45.0",
