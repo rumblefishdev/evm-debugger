@@ -22,25 +22,14 @@ export type TStorageLogs = {
 }
 
 export type TTransactionInfo = {
-  blockHash: string
   blockNumber: string
+  blockHash?: string
   from: string
-  gas: string
   hash: string
-  input: string
-  nonce: string
-  to: string
-  transactionIndex: string
+  input?: string
+  to?: string
   value: string
-  v: string
-  r: string
-  s: string
-  type: string
-  accessList: string
   chainId: string
-  gasPrice: string
-  maxFeePerGas: string
-  maxPriorityFeePerGas: string
 }
 
 export type TTransactionTraceResult = {
