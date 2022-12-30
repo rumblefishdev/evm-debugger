@@ -1,0 +1,8 @@
+export { default as arrowDownBlack } from '../assets/icons/arrow-down-black.svg'
+export { default as arrowUpBlack } from '../assets/icons/arrow-up-black.svg'
+export { default as arrowDownBlue } from '../assets/icons/arrow-down-blue.svg'
+export { default as arrowUpBlue } from '../assets/icons/arrow-up-blue.svg'
+export { default as crossGrey } from '../assets/icons/cross-grey.svg'
+export { default as questionFilledBlue } from '../assets/icons/question-filled-blue.svg'
+export { default as questionOutlinedBlue } from '../assets/icons/question-outlined-blue.svg'
+export { default as tickFilledBlue } from '../assets/icons/tick-filled-blue.svg'
