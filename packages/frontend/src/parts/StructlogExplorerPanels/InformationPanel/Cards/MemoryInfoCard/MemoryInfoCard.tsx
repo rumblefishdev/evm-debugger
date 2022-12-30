@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { useTypedSelector } from '../../store/storeHooks'
-import { selectParsedMemory } from '../../store/structlogs/structlogs.slice'
-import { StructlogAcordionPanel } from '../StructlogAcordionPanel'
+import { useTypedSelector } from '../../../../../store/storeHooks'
+import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
+import { selectParsedMemory } from '../../../../../store/structlogs/structlogs.slice'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 import {

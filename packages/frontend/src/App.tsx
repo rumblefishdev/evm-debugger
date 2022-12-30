@@ -1,8 +1,9 @@
-import { Stack } from '@mui/material'
+import { Stack, ThemeProvider } from '@mui/material'
 import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 
 import { router } from './router'
+import { theme } from './theme'
 
 function App() {
   return (
@@ -10,11 +11,14 @@ function App() {
       sx={{
         width: '100vw',
         padding: '12px 24px',
+        overflow: 'hidden',
         height: '100vh',
         alignItems: 'center',
       }}
     >
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </Stack>
   )
 }

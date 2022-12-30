@@ -96,17 +96,19 @@ export const getParsedStructLogs = (
 }
 
 export const getParsedStack = (stack: TExtendedStack) => {
-  return stack.map((stackItem, index) => {
-    const defaultString = '0000'
-    const hexValue = (stack.length - 1 - index).toString()
-    const paddedHexValue =
-      defaultString.slice(
-        0,
-        Math.max(0, defaultString.length - hexValue.length),
-      ) + hexValue
+  return stack
+    .map((stackItem, index) => {
+      const defaultString = '0000'
+      const hexValue = (stack.length - 1 - index).toString()
+      const paddedHexValue =
+        defaultString.slice(
+          0,
+          Math.max(0, defaultString.length - hexValue.length),
+        ) + hexValue
 
-    return { value: stackItem, index: paddedHexValue }
-  })
+      return { value: stackItem, index: paddedHexValue }
+    })
+    .reverse()
 }
 
 export const getParsedMemory = (memory: string[]) => {
