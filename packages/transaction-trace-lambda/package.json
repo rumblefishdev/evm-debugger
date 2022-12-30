@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "scripts": {
     "start:dev": "npx hardhat run src/LambdaEntrypoint.ts",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "build:zip": "rf-lerna zipbundle @evm-debuger/transaction-trace-lambda --target transactionTraceService.zip"
   },
   "devDependencies": {
     "typescript": "^4.8.4",
     "@aws-sdk/client-ecs": "^3.238.0",
     "@aws-sdk/client-s3": "^3.241.0",
     "aws-lambda": "^1.0.7"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -14,7 +14,10 @@ ARTIFACT_NAME=main.zip
 
 .PHONY: deploy-dev
 
-build-dev:
+copy-transaction-trace-lambda-zip:
+	cp ../transaction-trace-lambda/transactionTraceService.zip .
+
+build-dev: copy-transaction-trace-lambda-zip
 	sam build
 
 upload-dev: build-dev
