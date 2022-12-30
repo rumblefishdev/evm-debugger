@@ -33,7 +33,7 @@ export const BytecodePanel = (): JSX.Element => {
       )
       if (index) listRef.current?.scrollToIndex(index)
     }
-  }, [activeStrucLog])
+  }, [activeStrucLog, activeBlockBytecode.disassembled])
 
   if (!activeBlockBytecode?.disassembled)
     return (

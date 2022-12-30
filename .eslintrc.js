@@ -28,7 +28,7 @@ module.exports = {
         "plugin:unicorn/recommended",
         "plugin:import/typescript"
     ],
-    plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs"],
+    plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks"],
     overrides: [
         {
             files: ["*slice.ts"],
@@ -38,6 +38,16 @@ module.exports = {
             }
         },
         {
+            files: ["*.tsx"],
+            rules: {
+                "react-hooks/exhaustive-deps": "error"
+            }
+        },
+        {
+
+
+
+
 
             files: ["*.ts", "*.tsx"],
             rules: {

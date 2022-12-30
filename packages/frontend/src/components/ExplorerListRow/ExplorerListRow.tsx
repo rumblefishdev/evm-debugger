@@ -26,11 +26,11 @@ export const ExplorerListRow = ({
 
   const description = useMemo(() => {
     return opcodesDictionary[opCode].description ?? 'No description'
-  }, [])
+  }, [opCode])
 
   const counter = useMemo(() => {
     return convertPcToCounter(pc)
-  }, [])
+  }, [pc])
 
   useEffect(() => {
     if (isActive && itemRef.current)
