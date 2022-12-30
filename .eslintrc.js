@@ -22,18 +22,36 @@ module.exports = {
     },
     extends: [
         "eslint:recommended",
-      "prettier",
+        "prettier",
         "plugin:@typescript-eslint/recommended",
         "plugin:sonarjs/recommended",
         "plugin:unicorn/recommended",
         "plugin:import/typescript"
     ],
-    plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs"],
+    plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks"],
     overrides: [
         {
+            files: ["*slice.ts"],
+            rules: {
+                "no-param-reassign": "off"
+
+            }
+        },
+        {
+            files: ["*.tsx"],
+            rules: {
+                "react-hooks/exhaustive-deps": "error"
+            }
+        },
+        {
+
+
+
+
+
             files: ["*.ts", "*.tsx"],
             rules: {
-              "prettier/prettier": "error",
+                "prettier/prettier": "error",
                 //Typescript
                 "@typescript-eslint/array-type": ["error", { "default": "array" }],
                 "@typescript-eslint/consistent-generic-constructors": ["error", "type-annotation"],

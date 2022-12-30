@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TSighashStatus } from '@evm-debuger/types'
 
-const sighashAdapter = createEntityAdapter<TSighashStatus>({
+export const sighashAdapter = createEntityAdapter<TSighashStatus>({
   sortComparer: (a, b) => a.sighash.localeCompare(b.sighash),
   selectId: (entity) => entity.sighash,
 })
@@ -11,13 +11,17 @@ export const sighashSlice = createSlice({
   reducers: {
     updateSighash: sighashAdapter.updateOne,
     setAsFoundByAddress(sighashState, action: PayloadAction<string>) {
-      const keys = Object.keys(sighashState.entities)
-      const sighashesOfAddress = keys.filter((entity) =>
-        sighashState.entities[entity].addresses.has(action.payload),
+      const sighashesOfAddress = sighashAdapter
+        .getSelectors()
+        .selectAll(sighashState)
+        .filter((sighash) => sighash.addresses.has(action.payload))
+      sighashAdapter.updateMany(
+        sighashState,
+        sighashesOfAddress.map((sighash) => ({
+          id: sighash.sighash,
+          changes: { found: true },
+        })),
       )
-      sighashesOfAddress.forEach((sighash) => {
-        sighashState.entities[sighash].found = true
-      })
     },
     addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
       return sighashAdapter.setMany(sighashState, action.payload)
@@ -30,4 +34,3 @@ export const sighashSlice = createSlice({
 export const { addSighashes, setAsFoundByAddress, updateSighash } =
   sighashSlice.actions
 export const sighashReducer = sighashSlice.reducer
-export const sighashSelectors = sighashAdapter.getSelectors()

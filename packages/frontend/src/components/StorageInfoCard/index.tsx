@@ -1,1 +1,0 @@
-export { StorageInfoCard } from './StorageInfoCard'

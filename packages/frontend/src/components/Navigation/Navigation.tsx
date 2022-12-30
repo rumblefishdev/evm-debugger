@@ -13,15 +13,15 @@ export const Navigation = ({ ...props }: NavigationProps) => {
     <StyledStack {...props}>
       <StyledButton
         variant="outlined"
-        onClick={() => typedNavigate(navigate, '/summary')}
+        onClick={() => typedNavigate(navigate, '/dataManager')}
       >
         Data Summary
       </StyledButton>
       <StyledButton
         variant="outlined"
-        onClick={() => typedNavigate(navigate, '/mainDisplay')}
+        onClick={() => typedNavigate(navigate, '/transactionScreen')}
       >
-        Transaction Information
+        Transaction Screen
       </StyledButton>
       <StyledButton
         variant="outlined"

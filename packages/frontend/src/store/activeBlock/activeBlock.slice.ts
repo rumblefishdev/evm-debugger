@@ -1,17 +1,14 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { TParsedExtendedTraceLog } from '../../types'
+import type { TMainTraceLogsWithId } from '../../types'
 import type { TRootState } from '../store'
 
-const initialState = {} as TParsedExtendedTraceLog
+const initialState: null | TMainTraceLogsWithId = null
 
 export const activeBlockSlice = createSlice({
   reducers: {
-    loadActiveBlock: (
-      state,
-      action: PayloadAction<TParsedExtendedTraceLog>,
-    ) => {
+    loadActiveBlock: (state, action: PayloadAction<TMainTraceLogsWithId>) => {
       return action.payload
     },
   },

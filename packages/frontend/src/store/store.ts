@@ -1,7 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
-import { persistReducer, persistStore } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
 import { structLogsReducer } from './structlogs/structlogs.slice'
@@ -24,37 +22,17 @@ const rootReducer = combineReducers({
   activeBlock: activeBlockReducer,
 })
 
-const persistConfig = {
-  storage,
-  key: 'root',
-  blacklist: [
-    'analyzer',
-    'activeBlock',
-    'structLogs',
-    'rawTxData',
-    'activeBlock',
-    'traceLogs',
-    'bytecodes',
-    'sourceCodes',
-    'sighashes',
-  ],
-}
+const sagaMiddleware = createSagaMiddleware()
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
-
-export const sagaMiddleware = createSagaMiddleware()
-
+// eslint-disable-next-line import/exports-last
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }).prepend(sagaMiddleware),
 })
-
-export const persistor = persistStore(store, null, () =>
-  sagaMiddleware.run(rootSaga),
-)
+sagaMiddleware.run(rootSaga)
 
 export type TRootState = ReturnType<typeof store.getState>
 

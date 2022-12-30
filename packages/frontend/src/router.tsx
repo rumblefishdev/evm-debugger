@@ -1,35 +1,41 @@
 import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
+import { AnalyzerProgressScreen } from './pages/AnalyzerProgressScreen'
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { MainDisplay } from './pages/MainDisplay'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
 import { StructlogsExplorer } from './pages/StructlogsExplorer'
+import { TranscationScreen } from './pages/TranscationScreen'
 
 export const routes: RouteObject[] = [
   {
     path: '/',
-    loader: () => import('./pages/SelectTransactionScreen'),
     element: <SelectTransactionScreen />,
   },
   {
-    path: '/mainDisplay',
-    loader: () => import('./pages/MainDisplay'),
-    element: <MainDisplay />,
+    path: '/transactionScreen',
+    element: <TranscationScreen />,
   },
   {
-    path: '/summary',
-    loader: () => import('./pages/AnalyzeSummary'),
+    path: '/dataManager',
     element: <AnalyzeSummary />,
   },
   {
     path: '/structlogsExplorer',
-    loader: () => import('./pages/StructlogsExplorer'),
     element: <StructlogsExplorer />,
+  },
+  {
+    path: '/analyzerProgressScreen',
+    element: <AnalyzerProgressScreen />,
   },
 ]
 
-export type TPaths = '/' | '/mainDisplay' | '/summary' | '/structlogsExplorer'
+export type TPaths =
+  | '/'
+  | '/transactionScreen'
+  | '/dataManager'
+  | '/structlogsExplorer'
+  | '/analyzerProgressScreen'
 
 export const router = createBrowserRouter(routes, {
   basename: process.env.PUBLIC_URL,

@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
 
-import { zoom } from '../../helpers/helpers'
 import { useTypedSelector } from '../../store/storeHooks'
-import { selectMappedTraceLogs } from '../../store/traceLogs/traceLogs.slice'
+import { selectMappedTraceLogs } from '../../store/traceLogs/mappedTraceLog.selector'
+import type { TTreeMapData } from '../../types'
+import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
 import { NestedItemBox } from '../NestedItemBox'
 
@@ -19,30 +20,51 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     setWidth(rootRef.current?.clientWidth || 0)
     setHeight(rootRef.current?.clientHeight || 0)
 
-    if (rootRef.current) {
-      const element = rootRef.current
-      const zoomFunction = (event: WheelEvent) => zoom(event, element)
-      document.addEventListener('wheel', zoomFunction)
+    // TODO: https://github.com/rumblefishdev/evm-debuger/issues/104
+    // if (rootRef.current) {
+    //   const element = rootRef.current
+    //   const zoomFunction = (event: WheelEvent) => zoom(event, element)
+    //   document.addEventListener('wheel', zoomFunction)
 
-      return () => {
-        document.removeEventListener('wheel', zoomFunction)
-      }
-    }
+    //   return () => {
+    //     document.removeEventListener('wheel', zoomFunction)
+    //   }
+    // }
   }, [])
 
   const traceLog = useTypedSelector((state) =>
-    selectMappedTraceLogs(state, width, height, 24),
+    selectMappedTraceLogs(state, width, height),
   )
-  const { nestedItems } = traceLog
+
+  const renderContent = (element: TTreeMapData) => {
+    if ('owningLog' in element.item)
+      return (
+        <IntrinsicItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
+
+    if (element.nestedItems.length > 0)
+      return (
+        <NestedItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
+
+    return (
+      <ItemBox
+        treeMapItem={{ ...element, item: element.item }}
+        key={element.item.id}
+      />
+    )
+  }
 
   return (
     <StyledWrapper>
       <StyledCard {...props} ref={rootRef}>
-        {nestedItems && width && height ? (
-          <NestedItemBox item={traceLog} />
-        ) : (
-          <ItemBox item={traceLog} />
-        )}
+        {width && height ? renderContent(traceLog) : null}
       </StyledCard>
     </StyledWrapper>
   )

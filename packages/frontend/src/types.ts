@@ -1,19 +1,38 @@
 import type {
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
   IStructLog,
   TTransactionInfo,
+  TMainTraceLogs,
 } from '@evm-debuger/types'
 
-export type TTraceLog = ICallTypeTraceLog | ICreateTypeTraceLog
+export type TMainTraceLogsWithId = TMainTraceLogs & {
+  id: string
+}
 
-export type TParsedExtendedTraceLog = TTraceLog & {
+export type TDimmensions = {
   width: number
   height: number
   x: number
   y: number
-  nestedItems: TParsedExtendedTraceLog[]
 }
+
+export type TIntrinsicLog = {
+  owningLog: {
+    type: string
+    stackTrace: number[]
+  }
+  gasCost: number
+  id: string
+}
+
+export type TTreeMapItem = TIntrinsicLog | TMainTraceLogsWithId
+
+export type TTreeMapData = {
+  item: TMainTraceLogsWithId | TIntrinsicLog
+  dimmensions: TDimmensions
+  nestedItems: TTreeMapData[]
+}
+
+export type TTreeMapItemWithoutNested = Omit<TTreeMapData, 'nestedItems'>
 
 export type TOpcodeDisassemled = {
   opcode: number
@@ -46,3 +65,15 @@ export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
   index: number
   stack: TExtendedStack
 }
+
+export type TParsedEventLogBody = {
+  signature: string
+  parsedArgs: {
+    value: any
+    type: string
+    name: string
+  }[]
+  name: string
+}
+
+export type TParsedEventLog = TParsedEventLogBody | null

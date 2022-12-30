@@ -1,3 +1,6 @@
+import type { TOpCodes } from '@evm-debuger/types'
+import type { ethers } from 'ethers'
+
 import type { TExtendedStack } from '../types'
 
 export const itemSpacePercentageByGasCost = (
@@ -45,14 +48,21 @@ export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
 }
 
-export const convertNrToHexString = (nr: number | null) => {
-  if (nr === null) return ''
-  const defaultString = '0x0000'
-  const hexValue = nr.toString(16)
-  return (
-    defaultString.slice(
-      0,
-      Math.max(0, defaultString.length - hexValue.length),
-    ) + hexValue
-  )
+export const createCallIdentifier = (stackTrace: number[], type: TOpCodes) => {
+  const stack = stackTrace.join('__')
+  return stackTrace.length > 0 ? `${type}__${stack}` : `${type}__ROOT`
+}
+
+export const parseStackTrace = (stackTrace: number[]) => {
+  return `[ ${stackTrace.join(' , ')} ]`
+}
+
+export const isArrayOfStrings = (value: unknown): value is string[] => {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string')
+}
+
+export const getSignature = (fragment: ethers.utils.FunctionFragment) => {
+  const { inputs, name } = fragment
+
+  return `${name}(${inputs.map((inputItem) => inputItem.type).join(',')})`
 }

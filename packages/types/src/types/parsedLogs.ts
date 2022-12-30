@@ -1,11 +1,6 @@
 import type { ethers } from 'ethers'
 
-import type {
-  TCallTypeOpcodes,
-  TCreateTypeOpcodes,
-  TOpCodes,
-  TReturnTypeOpcodes,
-} from './opcodes'
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
 import type { IErrorDescription, TEventInfo, TStorageLogs } from './types'
 
 export interface ITraceLog {
@@ -29,7 +24,7 @@ export interface ICallTypeTraceLog extends ITraceLog {
 
   decodedInput?: ethers.utils.Result
   decodedOutput?: ethers.utils.Result
-  functionDescription?: ethers.utils.TransactionDescription
+  functionFragment?: ethers.utils.FunctionFragment
   errorDescription?: IErrorDescription
   events: TEventInfo[]
   returnIndex?: number
@@ -66,10 +61,6 @@ export interface IStopTypeTraceLog extends ITraceLog {
   type: 'STOP'
 }
 
-export type TReturnedTraceLog =
-  | ICallTypeTraceLog
-  | IReturnTypeTraceLog
-  | ICreateTypeTraceLog
-  | IStopTypeTraceLog
+export type TReturnedTraceLog = ICallTypeTraceLog | IReturnTypeTraceLog | ICreateTypeTraceLog | IStopTypeTraceLog
 
 export type TMainTraceLogs = ICallTypeTraceLog | ICreateTypeTraceLog

@@ -947,22 +947,13 @@ export const INVALID_OPCODE = {
   args: [],
 }
 
-export const remapOpcodesDict = (): {
-  name: string
-  args: string[]
-  description: string
-} => {
-  const opcodes = opcodesDictionary
-  const keys = Object.keys(opcodes)
+export const numberToOpcode: Map<number, string> = new Map(
+  Object.keys(opcodesDictionary).map((key) => [
+    opcodesDictionary[key].opcode,
+    key,
+  ]),
+)
 
-  // remap opcodes to be indexed by opcode number
-  return keys.reduce(
-    (accumulator, key) => {
-      const { opcode, description, args } = opcodes[key]
-      accumulator[opcode] = { name: key, args, description }
-      return accumulator
-    },
-    { name: '', args: [], description: '' },
-  )
+export const convertOpcodeToName = (opcode: number): string => {
+  return numberToOpcode.get(opcode) ?? 'INVALID'
 }
-export const remappedOpcodesDict = remapOpcodesDict()
