@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import type { SelectChangeEvent } from '@mui/material'
 import {
   Box,
   Button,
@@ -9,25 +8,75 @@ import {
   Select,
   TextField,
 } from '@mui/material'
+import { useForm, Controller } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { ErrorMessage } from '@hookform/error-message'
+
+import type {
+  IAbiProvider,
+  IBytecodeProvider,
+  IStructLogProvider,
+  ITxInfoProvider,
+} from '../../../store/analyzer/analyzer.types'
+import {
+  EtherscanAbiFetcher,
+  JSONRpcBytecodeFetcher,
+  JSONRpcTxInfoFetcher,
+} from '../../../store/analyzer/analyzer.providers'
+import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
+import { useTypedDispatch } from '../../../store/storeHooks'
+import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
+import { typedNavigate } from '../../../router'
+
+type SupportedChain = {
+  name: string
+  txInfoProvider: (hash: string) => ITxInfoProvider
+  structLogProvider: IStructLogProvider
+  abiProvider?: IAbiProvider
+  bytecodeProvider?: IBytecodeProvider
+}
+
+type ChainId = number
+
+const supportedChains: Record<ChainId, SupportedChain> = {
+  1: {
+    txInfoProvider: (hash: string) =>
+      new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[1]),
+    structLogProvider: null as IStructLogProvider, // TODO: @Kamil
+    name: 'Ethereum',
+    bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
+    abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
+  },
+}
+
+export interface IFormData {
+  transactionHash: string
+  chainId: ChainId
+}
 
 export const SupportedChainsTransactionScreen = () => {
-  const [transactionHash, setTransactionHash] = React.useState('')
-  const [network, setNetwork] = React.useState('')
+  const dispatch = useTypedDispatch()
+  const navigate = useNavigate()
 
-  const submitHandler = useCallback((hash: string) => {
-    if (hash) console.log(hash)
-  }, [])
+  const { control, handleSubmit, formState } = useForm<IFormData>({
+    mode: 'onChange',
+  })
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setNetwork(event.target.value as string)
-  }
-
-  const onTransactionHashInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setTransactionHash(event.target.value)
-  }
-
+  const submitHandler = useCallback(
+    (data: IFormData) => {
+      const chainData = supportedChains[data.chainId]
+      dispatch(
+        analyzerActions.runAnalyzer({
+          txInfoProvider: chainData.txInfoProvider(data.transactionHash),
+          structLogProvider: chainData.structLogProvider,
+          bytecodeProvider: chainData.bytecodeProvider,
+          abiProvider: chainData.abiProvider,
+        }),
+      )
+      typedNavigate(navigate, '/analyzerProgressScreen')
+    },
+    [dispatch, navigate],
+  )
   return (
     <Box
       component="form"
@@ -35,29 +84,64 @@ export const SupportedChainsTransactionScreen = () => {
       noValidate
       autoComplete="off"
     >
-      <TextField
-        fullWidth
-        label="Transaction hash"
-        variant="outlined"
-        value={transactionHash}
-        onChange={onTransactionHashInputChange}
+      <Controller
+        control={control}
+        defaultValue=""
+        name="transactionHash"
+        render={({ field }) => (
+          <TextField
+            fullWidth
+            label="Transaction hash"
+            variant="outlined"
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+        rules={{
+          required: 'This field is required',
+          pattern: {
+            value: /^0x([\dA-Fa-f]{64})$/,
+
+            message: 'invalid transaction hash',
+          },
+        }}
       />
-      <FormControl fullWidth sx={{ m: 1 }}>
-        <InputLabel>Network</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          value={network}
-          label="Network"
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Etherum</MenuItem>
-        </Select>
-      </FormControl>
+      <ErrorMessage errors={formState.errors} name="transactionHash" />
+
+      <Controller
+        control={control}
+        defaultValue={1}
+        name="chainId"
+        render={({ field }) => (
+          <FormControl fullWidth sx={{ m: 1 }}>
+            <InputLabel>Network</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              value={field.value}
+              label="Network"
+              onChange={field.onChange}
+            >
+              {Object.entries(supportedChains).map(([chainId, chainData]) => (
+                <MenuItem key={chainId.toString()} value={chainId}>
+                  {chainData.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        rules={{
+          required: 'This field is required',
+        }}
+      />
+
+      <ErrorMessage errors={formState.errors} name="chainId" />
+
       <Button
         sx={{ m: 1 }}
         variant="contained"
         component="label"
-        onClick={() => submitHandler(transactionHash)}
+        onClick={handleSubmit(submitHandler)}
+        disabled={!formState.isValid}
       >
         Process logs
       </Button>
