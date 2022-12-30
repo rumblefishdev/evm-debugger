@@ -6,5 +6,4 @@
     "outDir": "./dist"
   },
   "include": ["src/**/*"]
-
 }

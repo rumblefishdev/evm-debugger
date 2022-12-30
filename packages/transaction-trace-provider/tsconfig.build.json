@@ -22,5 +22,4 @@
     "strictPropertyInitialization": false
   },
   "include": ["src/**/*"]
-
 }

@@ -4,16 +4,21 @@
   "scripts": {
     "start:dev": "npx hardhat run src/transactionTraceProvider.ts",
     "build": "tsc -p tsconfig.build.json",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "lint:check": "eslint \"src/**/*.ts\"",
+    "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
+    "prettier:fix": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --write .",
     "prebuild:docker": "npm run build",
     "build:docker": "docker build . -t 045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider",
     "push:docker": "docker push 045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider"
   },
   "devDependencies": {
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "eslint": "^8.28.0",
+    "prettier": "^2.8.0"
   },
   "dependencies": {
     "hardhat": "^2.12.4",
     "aws-sdk": "^2.1249.0"
   }
-
 }

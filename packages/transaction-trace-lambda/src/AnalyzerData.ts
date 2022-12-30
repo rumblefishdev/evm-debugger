@@ -1,5 +1,5 @@
 export interface AnalyzerData {
-    txHash: string,
-    chainId: string,
-    taskArn: string
+  txHash: string
+  chainId: string
+  taskArn: string
 }
