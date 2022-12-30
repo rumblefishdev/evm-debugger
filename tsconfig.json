@@ -28,6 +28,9 @@
     },
     {
       "path": "./packages/frontend"
+    },
+    {
+      "path": "./packages/infra/transaction-trace-lambda"
     }
   ]
 }

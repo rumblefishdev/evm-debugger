@@ -7,11 +7,7 @@ import { TreemapTooltip } from '../TreemapTooltip'
 import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
-export const ItemBox = ({
-  treeMapItem,
-  parentHoverHandler,
-  ...props
-}: ItemBoxProps) => {
+export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxProps) => {
   const { type, stackTrace, gasCost, index, id } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimmensions
@@ -26,7 +22,7 @@ export const ItemBox = ({
       parentHoverHandler(true)
       event.stopPropagation()
     },
-    [parentHoverHandler],
+    [parentHoverHandler]
   )
 
   const notHovered = useCallback(
@@ -35,14 +31,12 @@ export const ItemBox = ({
       parentHoverHandler(false)
       event.stopPropagation()
     },
-    [parentHoverHandler],
+    [parentHoverHandler]
   )
 
   const dispatch = useTypedDispatch()
 
-  const setActiveBlock = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
+  const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch(loadActiveBlock(treeMapItem.item))
 
     event.stopPropagation()
@@ -56,23 +50,11 @@ export const ItemBox = ({
     height,
   }
 
-  const activeStyle =
-    getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
+  const activeStyle = getActiveBlock?.id === id ? { background: 'rgba(80, 180, 242 , .4)' } : {}
 
   return (
-    <TreemapTooltip
-      open={isHovered}
-      type={type}
-      stackTrace={stackTrace}
-      gasCost={gasCost}
-      onMouseOver={hovered}
-      onMouseOut={notHovered}
-    >
-      <StyledStack
-        {...props}
-        sx={{ ...styleDimension, ...activeStyle }}
-        onClick={setActiveBlock}
-      ></StyledStack>
+    <TreemapTooltip open={isHovered} type={type} stackTrace={stackTrace} gasCost={gasCost} onMouseOver={hovered} onMouseOut={notHovered}>
+      <StyledStack {...props} sx={{ ...styleDimension, ...activeStyle }} onClick={setActiveBlock}></StyledStack>
     </TreemapTooltip>
   )
 }

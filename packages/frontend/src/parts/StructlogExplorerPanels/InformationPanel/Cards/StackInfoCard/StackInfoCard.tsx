@@ -5,26 +5,17 @@ import { selectParsedStack } from '../../../../../store/structlogs/structlogs.sl
 import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'
-import {
-  StyledRecord,
-  StyledRecordIndex,
-  StyledRecordValue,
-  StyledStack,
-} from './styles'
+import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
 export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
   const stack = useTypedSelector(selectParsedStack)
-  const activeStructlog = useTypedSelector(
-    (state) => state.structLogs.activeStructLog,
-  )
+  const activeStructlog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
   return (
     <StructlogAcordionPanel text="Stack" canExpand={stack.length > 0}>
       <StyledStack {...props}>
         {stack.map((stackItem, index) => {
-          const isSelected: React.CSSProperties = stackItem.value.isSelected
-            ? { background: 'rgba(0, 0, 0, 0.04)' }
-            : {}
+          const isSelected: React.CSSProperties = stackItem.value.isSelected ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
 
           const argName = activeStructlog.args[index]
 

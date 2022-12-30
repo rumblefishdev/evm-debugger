@@ -26,5 +26,4 @@ export const rawTxDataSlice = createSlice({
 })
 
 export const rawTxDataReducer = rawTxDataSlice.reducer
-export const { setTxInfo, setTxHash, setContractAddresses } =
-  rawTxDataSlice.actions
+export const { setTxInfo, setTxHash, setContractAddresses } = rawTxDataSlice.actions

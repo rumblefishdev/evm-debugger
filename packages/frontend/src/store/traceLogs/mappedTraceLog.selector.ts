@@ -1,34 +1,22 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import type {
-  TMainTraceLogsWithId,
-  TIntrinsicLog,
-  TTreeMapData,
-} from '../../types'
+import type { TMainTraceLogsWithId, TIntrinsicLog, TTreeMapData } from '../../types'
 import { sumReducer } from '../../helpers/helpers'
 import { NestedMap } from '../../helpers/nestedTreeMap'
 import type { TRootState } from '../store'
 
 import { selectAllTraceLogs } from './traceLogs.slice'
 
-const lastItemInContext = (
-  rootItem: TMainTraceLogsWithId,
-  state: TMainTraceLogsWithId[],
-) => {
-  const lastItem = state.findIndex(
-    (item) => item.index > rootItem.index && item.depth === rootItem.depth,
-  )
+const lastItemInContext = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]) => {
+  const lastItem = state.findIndex((item) => item.index > rootItem.index && item.depth === rootItem.depth)
   return lastItem === -1 ? state.length : lastItem
 }
 
-const getNestedItems = (
-  rootItem: TMainTraceLogsWithId,
-  state: TMainTraceLogsWithId[],
-): TMainTraceLogsWithId[] => {
+const getNestedItems = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]): TMainTraceLogsWithId[] => {
   return state
     .slice(
       state.findIndex((item) => item.index === rootItem.index),
-      lastItemInContext(rootItem, state),
+      lastItemInContext(rootItem, state)
     )
     .filter((item) => item.depth === rootItem.depth + 1)
 }
@@ -37,7 +25,7 @@ const parseNestedArrayRecursive = (
   rootItem: TTreeMapData,
   state: TMainTraceLogsWithId[],
   height: number,
-  width: number,
+  width: number
 ): TTreeMapData[] => {
   if ('owningLog' in rootItem.item) return []
 
@@ -45,9 +33,7 @@ const parseNestedArrayRecursive = (
 
   if (nestedItems.length === 0) return []
 
-  const gasSum =
-    rootItem.item.gasCost -
-    nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
+  const gasSum = rootItem.item.gasCost - nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
 
   const intrinsicLog: TIntrinsicLog = {
     owningLog: {
@@ -58,27 +44,15 @@ const parseNestedArrayRecursive = (
     gasCost: gasSum,
   }
 
-  const mappedItems = new NestedMap(width, height, [
-    ...nestedItems,
-    intrinsicLog,
-  ]).mapItems()
+  const mappedItems = new NestedMap(width, height, [...nestedItems, intrinsicLog]).mapItems()
 
   return mappedItems.map((item) => {
-    const childNestedItems = parseNestedArrayRecursive(
-      { ...item, nestedItems: [] },
-      state,
-      item.dimmensions.height,
-      item.dimmensions.width,
-    )
+    const childNestedItems = parseNestedArrayRecursive({ ...item, nestedItems: [] }, state, item.dimmensions.height, item.dimmensions.width)
     return { ...item, nestedItems: childNestedItems }
   })
 }
 
-const selectTraceAsNestedArrays = (
-  state: TMainTraceLogsWithId[],
-  width: number,
-  height: number,
-): TTreeMapData => {
+const selectTraceAsNestedArrays = (state: TMainTraceLogsWithId[], width: number, height: number): TTreeMapData => {
   const dimmensions = { y: 0, x: 0, width, height }
 
   const rootItem = {
@@ -99,5 +73,5 @@ export const selectMappedTraceLogs = createSelector(
     (state: TRootState, width: number) => width,
     (state: TRootState, width: number, height: number) => height,
   ],
-  selectTraceAsNestedArrays,
+  selectTraceAsNestedArrays
 )

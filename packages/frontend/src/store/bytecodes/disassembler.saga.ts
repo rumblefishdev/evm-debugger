@@ -31,9 +31,7 @@ async function disassembleBytecode(pyodide, code: string) {
 }
 
 export function* disassembleNewlyAddedBytescodes() {
-  const channel = yield* actionChannel<ReturnType<typeof updateBytecode>>(
-    updateBytecode.type,
-  )
+  const channel = yield* actionChannel<ReturnType<typeof updateBytecode>>(updateBytecode.type)
   let pyodide
   while (true) {
     const action = yield* take(channel)
@@ -43,23 +41,19 @@ export function* disassembleNewlyAddedBytescodes() {
     if (!changes.bytecode) continue
 
     try {
-      const disassembled = yield* call(
-        disassembleBytecode,
-        pyodide,
-        changes.bytecode,
-      )
+      const disassembled = yield* call(disassembleBytecode, pyodide, changes.bytecode)
       yield* put(
         updateBytecode({
           id,
           changes: { error: null, disassembled },
-        }),
+        })
       )
     } catch (error) {
       yield* put(
         updateBytecode({
           id,
           changes: { error: error.toString() },
-        }),
+        })
       )
     }
   }

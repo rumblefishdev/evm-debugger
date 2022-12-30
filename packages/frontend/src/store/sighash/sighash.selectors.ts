@@ -10,8 +10,8 @@ const abis = createSelector([(state: TRootState) => state.sighashes], (state) =>
       .getSelectors()
       .selectAll(state)
       .filter((sighash) => Boolean(sighash.fragment))
-      .map((sighash) => [sighash.sighash, [sighash.fragment]]),
-  ),
+      .map((sighash) => [sighash.sighash, [sighash.fragment]])
+  )
 )
 
 const addressesWithMissingAbis = createSelector(
@@ -22,8 +22,8 @@ const addressesWithMissingAbis = createSelector(
         .getSelectors()
         .selectAll(state)
         .filter((sighash) => !sighash.fragment)
-        .flatMap((sighash) => [...sighash.addresses.values()]),
-    ),
+        .flatMap((sighash) => [...sighash.addresses.values()])
+    )
 )
 
 export const sighashSelectors = { addressesWithMissingAbis, abis }

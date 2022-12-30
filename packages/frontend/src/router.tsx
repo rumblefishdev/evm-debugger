@@ -30,12 +30,7 @@ export const routes: RouteObject[] = [
   },
 ]
 
-export type TPaths =
-  | '/'
-  | '/transactionScreen'
-  | '/dataManager'
-  | '/structlogsExplorer'
-  | '/analyzerProgressScreen'
+export type TPaths = '/' | '/transactionScreen' | '/dataManager' | '/structlogsExplorer' | '/analyzerProgressScreen'
 
 export const router = createBrowserRouter(routes, {
   basename: process.env.PUBLIC_URL,

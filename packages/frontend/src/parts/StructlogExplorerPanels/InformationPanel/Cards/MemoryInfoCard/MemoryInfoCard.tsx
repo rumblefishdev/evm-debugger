@@ -5,12 +5,7 @@ import { StructlogAcordionPanel } from '../../../../../components/StructlogAcord
 import { selectParsedMemory } from '../../../../../store/structlogs/structlogs.slice'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
-import {
-  StyledRecord,
-  StyledRecordIndex,
-  StyledRecordValue,
-  StyledStack,
-} from './styles'
+import { StyledRecord, StyledRecordIndex, StyledRecordValue, StyledStack } from './styles'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useTypedSelector(selectParsedMemory)

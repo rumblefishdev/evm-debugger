@@ -33,9 +33,7 @@ export class AnalyzerState {
 export const analyzerSlice = createSlice({
   reducers: {
     updateStage: (state, action: PayloadAction<TAnalyzeStageName>) => {
-      const stageIndex = state.stages.findIndex(
-        (stage) => stage.stageName === action.payload,
-      )
+      const stageIndex = state.stages.findIndex((stage) => stage.stageName === action.payload)
       if (stageIndex === -1) return state
 
       state.stages[stageIndex].isFinished = true

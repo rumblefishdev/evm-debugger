@@ -11,12 +11,10 @@ const initialState: TMainTraceLogsWithId[] = []
 export const traceLogsSlice = createSlice({
   reducers: {
     addTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
-      const traceLogsWithId: TMainTraceLogsWithId[] = action.payload.map(
-        (traceLog) => ({
-          ...traceLog,
-          id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
-        }),
-      )
+      const traceLogsWithId: TMainTraceLogsWithId[] = action.payload.map((traceLog) => ({
+        ...traceLog,
+        id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
+      }))
 
       return traceLogsWithId
     },

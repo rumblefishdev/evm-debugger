@@ -4,18 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { etherscanKey, etherscanUrl } from '../../config'
 import { typedNavigate } from '../../router'
-import {
-  EtherscanAbiFetcher,
-  StaticStructLogProvider,
-  StaticTxInfoProvider,
-} from '../../store/analyzer/analyzer.providers'
+import { EtherscanAbiFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 
-import type {
-  AnalyzerProgressScreenProps,
-  AnalyzerStepProps,
-} from './AnalyzerProgressScreen.types'
+import type { AnalyzerProgressScreenProps, AnalyzerStepProps } from './AnalyzerProgressScreen.types'
 import {
   StyledButtonsWrapper,
   StyledMessage,
@@ -49,25 +42,18 @@ const ErrorStep = ({ errorMessage, stepName, ...props }: AnalyzerStepProps) => {
   )
 }
 
-export const AnalyzerProgressScreen = ({
-  ...props
-}: AnalyzerProgressScreenProps) => {
+export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
 
-  const { messages, isLoading, error, stages } = useTypedSelector(
-    (state) => state.analyzer,
-  )
+  const { messages, isLoading, error, stages } = useTypedSelector((state) => state.analyzer)
 
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
   useEffect(() => {
     if (!isLoading && !error) {
-      const timeout = setTimeout(
-        () => typedNavigate(navigate, '/transactionScreen'),
-        1000,
-      )
+      const timeout = setTimeout(() => typedNavigate(navigate, '/transactionScreen'), 1000)
       return () => clearTimeout(timeout)
     }
   }, [isLoading, error, navigate])
@@ -86,7 +72,7 @@ export const AnalyzerProgressScreen = ({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
-        }),
+        })
       )
   }, [dispatch, isLoading, error, structLogs, txInfo])
 
@@ -94,17 +80,8 @@ export const AnalyzerProgressScreen = ({
     <StyledStack {...props}>
       <StyledStepper activeStep={activeStep}>
         {stages.map((stage, index) => {
-          if (error && currentIndex === index)
-            return (
-              <ErrorStep
-                key={stage.stageName}
-                stepName={stage.stageName}
-                errorMessage={error}
-              />
-            )
-          return (
-            <DefaultStep key={stage.stageName} stepName={stage.stageName} />
-          )
+          if (error && currentIndex === index) return <ErrorStep key={stage.stageName} stepName={stage.stageName} errorMessage={error} />
+          return <DefaultStep key={stage.stageName} stepName={stage.stageName} />
         })}
       </StyledStepper>
 
@@ -112,9 +89,7 @@ export const AnalyzerProgressScreen = ({
         {messages.map((message, index) => {
           return (
             <StyledMessageBox key={index}>
-              <StyledTimeStamp>
-                {message.timestamp.toLocaleTimeString()}:
-              </StyledTimeStamp>
+              <StyledTimeStamp>{message.timestamp.toLocaleTimeString()}:</StyledTimeStamp>
               <StyledMessage>{message.message}</StyledMessage>
             </StyledMessageBox>
           )
