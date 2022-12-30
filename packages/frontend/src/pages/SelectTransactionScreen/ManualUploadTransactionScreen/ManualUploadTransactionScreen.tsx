@@ -49,7 +49,7 @@ export const ManualUploadTransactionScreen = ({
       )
       typedNavigate(navigate, '/analyzerProgressScreen')
     },
-    [dispatch],
+    [dispatch, navigate],
   )
 
   return (

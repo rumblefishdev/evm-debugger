@@ -39,7 +39,7 @@ export const StructlogPanel = (): JSX.Element => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [dispatch, structLogs])
 
   useEffect(() => {
     if (!activeStrucLog) return
@@ -47,7 +47,7 @@ export const StructlogPanel = (): JSX.Element => {
       (structLog) => structLog.pc === activeStrucLog.pc,
     )
     if (index) listRef.current?.scrollToIndex(index)
-  }, [activeStrucLog])
+  }, [activeStrucLog, structLogs])
 
   const handleClick = (structLog: IExtendedStructLog) => {
     dispatch(loadActiveStructLog(structLog))

@@ -22,7 +22,7 @@ export const IntrinsicItemBox = ({
       parentHoverHandler(true)
       event.stopPropagation()
     },
-    [],
+    [parentHoverHandler],
   )
 
   const notHovered = useCallback(
@@ -31,7 +31,7 @@ export const IntrinsicItemBox = ({
       parentHoverHandler(false)
       event.stopPropagation()
     },
-    [],
+    [parentHoverHandler],
   )
 
   const styleDimension: React.CSSProperties = {

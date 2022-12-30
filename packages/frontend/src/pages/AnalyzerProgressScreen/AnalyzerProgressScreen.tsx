@@ -70,14 +70,14 @@ export const AnalyzerProgressScreen = ({
       )
       return () => clearTimeout(timeout)
     }
-  }, [isLoading, error])
+  }, [isLoading, error, navigate])
 
   const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
 
   const moveBackToStartingScreen = useCallback(() => {
     typedNavigate(navigate, '/')
-  }, [])
+  }, [navigate])
 
   const restartHandler = useCallback(() => {
     if (error && !isLoading)
@@ -88,7 +88,7 @@ export const AnalyzerProgressScreen = ({
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         }),
       )
-  }, [dispatch, isLoading, error])
+  }, [dispatch, isLoading, error, structLogs, txInfo])
 
   return (
     <StyledStack {...props}>

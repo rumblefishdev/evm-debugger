@@ -1,5 +1,5 @@
 import type { TOpCodes } from '@evm-debuger/types'
-import { ethers } from 'ethers'
+import type { ethers } from 'ethers'
 
 import type { TExtendedStack } from '../types'
 
@@ -46,34 +46,6 @@ export const sumReducer = (accumulator: number, currentValue: number) =>
 
 export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
-}
-
-export const convertPcToCounter = (pc: number | string | null) => {
-  if (pc === null) return ''
-  const defaultString = '0x0000'
-
-  if (typeof pc === 'string') {
-    const hexString = ethers.utils.isHexString(pc)
-      ? pc
-      : ethers.utils.hexlify(pc)
-    const hexValue = hexString.slice(2)
-    return (
-      defaultString.slice(
-        0,
-        Math.max(0, defaultString.length - hexValue.length),
-      ) + hexValue
-    )
-  }
-
-  if (typeof pc === 'number') {
-    const hexValue = pc.toString(16)
-    return (
-      defaultString.slice(
-        0,
-        Math.max(0, defaultString.length - hexValue.length),
-      ) + hexValue
-    )
-  }
 }
 
 export const createCallIdentifier = (stackTrace: number[], type: TOpCodes) => {
