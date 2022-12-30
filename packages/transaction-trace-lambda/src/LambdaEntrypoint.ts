@@ -1,21 +1,15 @@
 import type { Context } from 'aws-lambda'
 import * as AWS from 'aws-sdk'
-import type {
-  DescribeTasksRequest,
-  DescribeTasksResponse,
-  RunTaskRequest,
-} from '@aws-sdk/client-ecs'
-import { LaunchType } from '@aws-sdk/client-ecs'
 
 import { ResponseStatus } from './ResponseStatus'
 import { TaskStatus } from './TaskStatus'
 import { AnalyzerDataRepository } from './AnalyzerDataRepository'
 
-const s3BucketName = process.env.HARDHAT_JSON_BASE_URL
+const s3BucketName = process.env.TRANSACTION_TRACE_BUCKET
 const analyzerDataRepository = new AnalyzerDataRepository(new AWS.DynamoDB())
 
 export const runEcsTask = async (txHash, chainId) => {
-  const params: RunTaskRequest = {
+  const params = {
     taskDefinition: process.env.ECS_TASK_DEFINITION,
     overrides: {
       containerOverrides: [
@@ -34,6 +28,10 @@ export const runEcsTask = async (txHash, chainId) => {
               value: process.env.HARDHAT_FORKING_URL,
               name: 'HARDHAT_FORKING_URL',
             },
+            {
+              value: s3BucketName,
+              name: 'TRANSACTION_TRACE_BUCKET',
+            },
           ],
         },
       ],
@@ -44,7 +42,7 @@ export const runEcsTask = async (txHash, chainId) => {
         assignPublicIp: 'ENABLED',
       },
     },
-    launchType: LaunchType.FARGATE,
+    launchType: 'FARGATE',
     cluster: process.env.CLUSTER_ARN,
   }
 
@@ -69,10 +67,10 @@ export const createResponse = (status: string, output: string) => {
   }
 }
 
-export const getInfoAboutEcsTaskExecution = async (
+export const getInfoAboutEcsTaskExecution = (
   taskArn: string,
-): Promise<DescribeTasksResponse> => {
-  const params: DescribeTasksRequest = {
+) => {
+  const params = {
     tasks: [taskArn],
     cluster: process.env.CLUSTER_ARN,
   }
@@ -126,7 +124,7 @@ export const checkState = async (event: any, context: Context) => {
   if (taskIsRunning(currentTask.lastStatus))
     return createResponse(ResponseStatus.RUNNING, null)
 
-  const jsonS3Key = `hardhat/trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
+  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
   const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
   if (jsonExists) return createResponse(ResponseStatus.SUCCESS, jsonS3Key)
   return createResponse(ResponseStatus.FAILED, null)

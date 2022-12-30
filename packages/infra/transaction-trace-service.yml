@@ -80,6 +80,7 @@ Resources:
           CLUSTER_ARN: !GetAtt ECSCluster.Arn
           SUBNETS: !Ref Subnets
           HARDHAT_FORKING_URL: !Ref HardhatForkingUrl
+          TRANSACTION_TRACE_BUCKET: !Ref JsonBucketName
       Events:
         TransactionTraceApiEvent:
           Type: Api

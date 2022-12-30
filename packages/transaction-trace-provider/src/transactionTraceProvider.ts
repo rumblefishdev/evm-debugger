@@ -2,12 +2,12 @@ import * as AWS from 'aws-sdk'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 
-const s3BucketName = process.env.HARDHAT_JSON_BASE_URL
+const s3BucketName = process.env.TRANSACTION_TRACE_BUCKET
 const txHash = process.env.TX_HASH
 const chainId = process.env.CHAIN_ID
 
-const uploadJson = (json: string, url: string) => {
-  return new AWS.S3()
+const uploadJson = async (json: string, url: string) => {
+  return await new AWS.S3()
     .upload({
       Key: `${url}.json`,
       ContentType: 'application/json',
@@ -25,7 +25,7 @@ const main = async () => {
     ])
     await uploadJson(
       JSON.stringify(traceResult),
-      `transactionTrace/${chainId}/${txHash}`,
+      `trace/${chainId}/${txHash}`,
     )
   } catch (error) {
     console.log('err:', error)

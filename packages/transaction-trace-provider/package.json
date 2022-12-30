@@ -9,7 +9,7 @@
     "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
     "prettier:fix": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --write .",
     "prebuild:docker": "npm run build",
-    "build:docker": "docker build . -t 045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider",
+    "create:docker": "docker build . -t 045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider",
     "push:docker": "docker push 045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider"
   },
   "devDependencies": {
