@@ -33,7 +33,7 @@
       "path": "./packages/transaction-trace-lambda"
     },
     {
-      "path": "./packages/infra/transaction-trace-provider"
+      "path": "./packages/transaction-trace-provider"
     }
   ]
 }
