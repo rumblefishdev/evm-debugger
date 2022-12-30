@@ -43,7 +43,7 @@ export const NestedItemBox = ({
       dispatch(loadActiveBlock(treeMapItem.item))
       event.stopPropagation()
     },
-    [],
+    [treeMapItem.item, dispatch],
   )
 
   const renderContent = (element: TTreeMapData) => {

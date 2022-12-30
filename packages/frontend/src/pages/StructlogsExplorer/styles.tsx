@@ -6,19 +6,15 @@ export const StyledStack = styled(Stack)(() => ({
 }))
 
 export const StyledContentWrapper = styled(Stack)(() => ({
+  width: '100%',
   justifyContent: 'space-around',
   height: 'calc(100% - 112px)',
+  gap: '24px',
   flexDirection: 'row',
   alignItems: 'center',
 }))
 
-export const StyledPanelsWrapper = styled(Stack)(() => ({
-  width: '1024px',
-  padding: '8px 16px',
-  height: '100%',
-}))
-
-export const StyledStructLogCard = styled(Card)(() => ({
+export const StyledStructlogPanel = styled(Card)(() => ({
   width: '824px',
   padding: '8px 16px',
   overflow: 'auto',

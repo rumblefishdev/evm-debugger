@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { selectStructlogStorage } from '../../store/structlogs/structlogs.slice'
-import { useTypedSelector } from '../../store/storeHooks'
-import { StructlogAcordionPanel } from '../StructlogAcordionPanel'
+import { selectStructlogStorage } from '../../../../../store/structlogs/structlogs.slice'
+import { useTypedSelector } from '../../../../../store/storeHooks'
+import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'
 import {

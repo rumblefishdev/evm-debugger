@@ -26,7 +26,7 @@ export const ItemBox = ({
       parentHoverHandler(true)
       event.stopPropagation()
     },
-    [],
+    [parentHoverHandler],
   )
 
   const notHovered = useCallback(
@@ -35,7 +35,7 @@ export const ItemBox = ({
       parentHoverHandler(false)
       event.stopPropagation()
     },
-    [],
+    [parentHoverHandler],
   )
 
   const dispatch = useTypedDispatch()

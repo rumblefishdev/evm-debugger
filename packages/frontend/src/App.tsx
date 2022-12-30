@@ -10,6 +10,7 @@ function App() {
       sx={{
         width: '100vw',
         padding: '12px 24px',
+        overflow: 'hidden',
         height: '100vh',
         alignItems: 'center',
       }}
