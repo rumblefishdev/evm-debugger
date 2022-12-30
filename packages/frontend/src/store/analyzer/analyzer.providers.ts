@@ -1,9 +1,11 @@
+import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 
 import type {
   IStructLogProvider,
   ITxInfoProvider,
   IAbiProvider,
+  IBytecodeProvider,
 } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
@@ -37,5 +39,13 @@ export class EtherscanAbiFetcher implements IAbiProvider {
       throw new Error(`${address} is not verified on Etherscan`)
 
     return JSON.parse(asJson.result)
+  }
+}
+
+export class JSONRpcBytecodeFetcher implements IBytecodeProvider {
+  constructor(private provider: ethers.providers.JsonRpcProvider) {}
+
+  async getBytecode(address: string): Promise<string | null> {
+    return this.provider.getCode(address)
   }
 }

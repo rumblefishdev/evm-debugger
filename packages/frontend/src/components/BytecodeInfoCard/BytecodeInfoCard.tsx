@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import ViewportList from 'react-viewport-list'
 
 import { useTypedSelector } from '../../store/storeHooks'
-import { bytecodesSelectors } from '../../store/bytecodes/bytecodes.slice'
+import { bytecodesAdapter } from '../../store/bytecodes/bytecodes.slice'
 import { OpcodeItem } from '../OpcodeItem'
 import { StructlogAcordionPanel } from '../StructlogAcordionPanel'
 
@@ -20,7 +20,7 @@ export const BytecodeInfoCard = ({ ...props }: BytecodeInfoCardProps) => {
   const previousActiveStrucLog = React.useRef<typeof activeStrucLog>()
   const currentAddress = activeBlock.address
   const activeBlockBytecode = useTypedSelector((state) =>
-    bytecodesSelectors.selectById(state.bytecodes, currentAddress),
+    bytecodesAdapter.getSelectors().selectById(state.bytecodes, currentAddress),
   )
   useEffect(() => {
     if (!activeBlockBytecode?.disassembled) return
