@@ -1,8 +1,9 @@
-import { Stack } from '@mui/material'
+import { Stack, ThemeProvider } from '@mui/material'
 import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 
 import { router } from './router'
+import { theme } from './theme'
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
         alignItems: 'center',
       }}
     >
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </Stack>
   )
 }
