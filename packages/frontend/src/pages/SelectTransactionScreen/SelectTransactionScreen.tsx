@@ -5,7 +5,6 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { ManualUploadTransactionScreen } from './ManualUploadTransactionScreen'
 import { SelectTransactionTabPanel } from './SelectTransactionTabPanel/SelectTransactionTabPanel'
 import { SupportedChainsTransactionScreen } from './SupportedChainsTransactionScreen'
-import { CustomChainTransactionScreen } from './CustomChainTransactionScreen'
 
 function a11yProps(index: number) {
   return {
@@ -15,7 +14,7 @@ function a11yProps(index: number) {
 }
 
 export const SelectTransactionScreen = () => {
-  const [value, setValue] = React.useState(2)
+  const [value, setValue] = React.useState(1)
 
   const handleChange = (event: React.SyntheticEvent, valueToSet: number) => {
     setValue(valueToSet)
@@ -41,17 +40,13 @@ export const SelectTransactionScreen = () => {
                   aria-label="basic tabs example"
                 >
                   <Tab label="SUPPORTED CHAINS" {...a11yProps(0)} />
-                  <Tab label="CUSTOM CHAIN" {...a11yProps(1)} />
-                  <Tab label="MANUAL UPLOAD" {...a11yProps(2)} />
+                  <Tab label="MANUAL UPLOAD" {...a11yProps(1)} />
                 </Tabs>
               </Box>
               <SelectTransactionTabPanel index={0} value={value}>
                 <SupportedChainsTransactionScreen />
               </SelectTransactionTabPanel>
               <SelectTransactionTabPanel index={1} value={value}>
-                <CustomChainTransactionScreen />
-              </SelectTransactionTabPanel>
-              <SelectTransactionTabPanel index={2} value={value}>
                 <ManualUploadTransactionScreen />
               </SelectTransactionTabPanel>
             </Box>
