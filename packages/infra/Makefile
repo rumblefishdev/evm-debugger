@@ -14,10 +14,10 @@ ARTIFACT_NAME=main.zip
 
 .PHONY: deploy-dev
 
-copy-transaction-trace-lambda-zip:
-	cp ../transaction-trace-lambda/transactionTraceService.zip .
+transactionTraceService.zip: $(shell git ls-files --full-name ../*.ts | egrep ^packages/transaction-trace-lambda/src | sed 's/^/..\//')
+	rf-lerna zipbundle @evm-debuger/transaction-trace-lambda --target transactionTraceService.zip
 
-build-dev: copy-transaction-trace-lambda-zip
+build-dev: transactionTraceService.zip
 	sam build
 
 upload-dev: build-dev
