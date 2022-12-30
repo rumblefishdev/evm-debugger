@@ -28,12 +28,6 @@
     },
     {
       "path": "./packages/frontend"
-    },
-    {
-      "path": "./packages/transaction-trace-lambda"
-    },
-    {
-      "path": "./packages/transaction-trace-provider"
     }
   ]
 }

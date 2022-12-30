@@ -2,9 +2,9 @@ DEV_PARAMETERS_FILE=template-config.stage.json
 DEV_PARAMETERS=$(shell cat $(DEV_PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
 DEV_REGION=us-east-1
 
-DEV_ARTIFACTS_BUCKET_NAME=artifacts.evm-debugger-hardhat.rumblefish.com
+DEV_ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
 DEV_ARTIFACTS_S3_PREFIX=dev/infrastructure
-DEV_STACK_NAME=evm-debugger-harhat
+DEV_STACK_NAME=evm-transaction-trace
 
 TEMPLATE_FILE=main.yml
 CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND

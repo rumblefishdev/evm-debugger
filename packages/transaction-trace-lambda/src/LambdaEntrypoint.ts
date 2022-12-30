@@ -1,19 +1,20 @@
 import {Context} from 'aws-lambda';
-import {getAnalyzerDataByTxHash, saveAnalyzerData} from "./DynamoDbHelper";
 import * as AWS from 'aws-sdk';
 import {ResponseStatus} from "./ResponseStatus";
 import {TaskStatus} from "./TaskStatus";
 import {LaunchType, DescribeTasksRequest, DescribeTasksResponse, RunTaskRequest} from "@aws-sdk/client-ecs";
+import {AnalyzerDataRepository} from "./AnalyzerDataRepository";
 
-const s3BucketName = process.env.HARDHAT_JSON_BASE_URL || 'hardhat.rumblefish.dev';
+const s3BucketName = process.env.HARDHAT_JSON_BASE_URL || 'transaction-trace-storage.rumblefish.dev';
+const analyzerDataRepository = new AnalyzerDataRepository(new AWS.DynamoDB())
 
 export const checkState = async (event: any, context: Context) => {
     context.callbackWaitsForEmptyEventLoop = true
-    const analyzerData = await getAnalyzerDataByTxHash(event.pathParameters.txHash);
+    const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(event.pathParameters.txHash);
 
     if (!analyzerData) {
         const taskArn = await runEcsTask(event.pathParameters.txHash, event.pathParameters.chainId)
-        await saveAnalyzerData({
+        await analyzerDataRepository.saveAnalyzerData({
             txHash: event.pathParameters.txHash,
             chainId: event.pathParameters.chainId,
             taskArn: taskArn
@@ -28,7 +29,7 @@ export const checkState = async (event: any, context: Context) => {
         if (taskIsRunning(currentTask.lastStatus)) return createResponse(ResponseStatus.RUNNING, null);
         else {
             const jsonS3Key = `hardhat/trace/${analyzerData.chainId}/${analyzerData.txHash}.json`;
-            const jsonExists = checkIfJsonExistsOnS3(jsonS3Key);
+            const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key);
             if (jsonExists) return createResponse(ResponseStatus.SUCCESS, jsonS3Key);
             else return createResponse(ResponseStatus.FAILED, null);
         }
@@ -102,8 +103,8 @@ export const runEcsTask = async (txHash, chainId) => {
                             value: chainId
                         },
                         {
-                            name: "ALCHEMY_KEY",
-                            value: process.env.ALCHEMY_KEY
+                            name: "HARDHAT_FORKING_URL",
+                            value: process.env.HARDHAT_FORKING_URL
                         }
                     ]
                 }

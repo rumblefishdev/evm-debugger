@@ -22,7 +22,7 @@ Parameters:
     Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   TransactionTraceProviderImage:
     Type: String
-  AlchemyKey:
+  HardhatForkingUrl:
     Type: String
   Subnets:
     Type: String
@@ -69,8 +69,8 @@ Resources:
       CodeUri: ./transactionTraceService.zip
       Handler: dist/LambdaEntrypoint.checkState
       Runtime: nodejs16.x
-      Timeout: 600
-      MemorySize: 4096
+      Timeout: 30
+      MemorySize: 512
       AutoPublishAlias: TransactionTraceService
       Environment:
         Variables:
@@ -79,7 +79,7 @@ Resources:
           ECS_TASK_DEFINITION: !Ref RetrieveTransactionTraceTaskDefinition
           CLUSTER_ARN: !GetAtt ECSCluster.Arn
           SUBNETS: !Ref Subnets
-          ALCHEMY_KEY: !Ref AlchemyKey
+          HARDHAT_FORKING_URL: !Ref HardhatForkingUrl
       Events:
         TransactionTraceApiEvent:
           Type: Api

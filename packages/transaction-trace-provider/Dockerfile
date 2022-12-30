@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm install && npm run build
+RUN npm install --production
 
 COPY ./dist/hardhat.config.js .
 COPY patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js
