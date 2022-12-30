@@ -1,7 +1,7 @@
-import { Chip, Tooltip } from '@mui/material'
+import { Tooltip } from '@mui/material'
+import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
 
-import { convertPcToCounter } from '../../helpers/helpers'
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 
 import type { ExplorerListRowProps } from './ExplorerListRow.types'
@@ -29,7 +29,9 @@ export const ExplorerListRow = ({
   }, [opCode])
 
   const counter = useMemo(() => {
-    return convertPcToCounter(pc)
+    return typeof pc === 'number'
+      ? ethers.utils.hexlify(pc)
+      : ethers.utils.hexlify(ethers.BigNumber.from(pc))
   }, [pc])
 
   useEffect(() => {
