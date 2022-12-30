@@ -67,9 +67,7 @@ export const createResponse = (status: string, output: string) => {
   }
 }
 
-export const getInfoAboutEcsTaskExecution = (
-  taskArn: string,
-) => {
+export const getInfoAboutEcsTaskExecution = (taskArn: string) => {
   const params = {
     tasks: [taskArn],
     cluster: process.env.CLUSTER_ARN,

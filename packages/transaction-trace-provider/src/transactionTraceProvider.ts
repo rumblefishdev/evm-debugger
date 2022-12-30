@@ -7,6 +7,7 @@ const txHash = process.env.TX_HASH
 const chainId = process.env.CHAIN_ID
 
 const uploadJson = async (json: string, url: string) => {
+  // eslint-disable-next-line no-return-await
   return await new AWS.S3()
     .upload({
       Key: `${url}.json`,
@@ -23,10 +24,7 @@ const main = async () => {
     const traceResult = await hardhatProvider.send('debug_traceTransaction', [
       txHash,
     ])
-    await uploadJson(
-      JSON.stringify(traceResult),
-      `trace/${chainId}/${txHash}`,
-    )
+    await uploadJson(JSON.stringify(traceResult), `trace/${chainId}/${txHash}`)
   } catch (error) {
     console.log('err:', error)
     // eslint-disable-next-line unicorn/no-process-exit
