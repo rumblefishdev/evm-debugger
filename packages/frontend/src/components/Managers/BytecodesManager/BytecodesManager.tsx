@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {
-  bytecodesSelectors,
+  bytecodesAdapter,
   updateBytecode,
 } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
@@ -17,7 +17,7 @@ export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
   }
 
   const data = useTypedSelector((state) =>
-    bytecodesSelectors.selectAll(state.bytecodes),
+    bytecodesAdapter.getSelectors().selectAll(state.bytecodes),
   )
 
   return (

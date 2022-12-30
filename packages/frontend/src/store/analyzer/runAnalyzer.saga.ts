@@ -4,7 +4,8 @@ import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
-import { addBytecodes } from '../bytecodes/bytecodes.slice'
+import { addBytecodes, updateBytecode } from '../bytecodes/bytecodes.slice'
+import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
@@ -13,7 +14,7 @@ import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
-import type { IAbiProvider } from './analyzer.types'
+import type { IAbiProvider, IBytecodeProvider } from './analyzer.types'
 
 function* callAnalyzerOnce(
   transactionInfo: TTransactionInfo,
@@ -68,10 +69,36 @@ function* fetchAdditionalAbis(
   return additionalAbis
 }
 
+export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
+  yield* put(
+    analyzerActions.logMessage('Fetching bytecode of involved contracts'),
+  )
+  const addresses = yield* select(
+    bytecodesSelectors.addressesWithMissingBytecode,
+  )
+  for (const address of addresses)
+    try {
+      yield* put(analyzerActions.logMessage(`Fetching bytecode of ${address}`))
+      const bytecode = yield* apply(
+        bytecodeProvider,
+        bytecodeProvider.getBytecode,
+        [address],
+      )
+      if (!bytecode)
+        throw new Error(`Bytecode of address ${address} not found!`)
+
+      yield* put(analyzerActions.logMessage('Success!'))
+      yield* put(updateBytecode({ id: address, changes: { bytecode } }))
+    } catch (error) {
+      yield* put(analyzerActions.logMessage(error.toString()))
+    }
+}
+
 export function* runAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
 ) {
-  const { txInfoProvider, structLogProvider, abiProvider } = action.payload
+  const { txInfoProvider, structLogProvider, abiProvider, bytecodeProvider } =
+    action.payload
   yield* put(analyzerActions.reset())
   yield* put(analyzerActions.setLoading(true))
 
@@ -119,30 +146,43 @@ export function* runAnalyzer(
       ),
     )
 
-    yield* put(analyzerActions.logMessage('Calculating address to fetch ABIs!'))
-    const addresses = yield* select(sighashSelectors.addressesWithMissingAbis)
-    if (addresses.size === 0) {
-      yield* put(analyzerActions.logMessage('No more abis to fetch.'))
-      yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
-    } else {
-      const additionalAbis = yield* fetchAdditionalAbis(abiProvider, addresses)
-      const additionalAbisCount = Object.keys(additionalAbis).length
-      if (additionalAbisCount === 0) {
-        yield* put(
-          analyzerActions.logMessage('No additional abis were fetched.'),
-        )
+    if (bytecodeProvider) yield* fetchBytecodes(bytecodeProvider)
+
+    if (abiProvider) {
+      yield* put(
+        analyzerActions.logMessage('Calculating address to fetch ABIs!'),
+      )
+      const addresses = yield* select(sighashSelectors.addressesWithMissingAbis)
+      if (addresses.size === 0) {
+        yield* put(analyzerActions.logMessage('No more abis to fetch.'))
         yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
       } else {
-        yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
-        yield* put(
-          analyzerActions.logMessage(
-            `${additionalAbisCount} were fetched. Calling analyzer again`,
-          ),
+        const additionalAbis = yield* fetchAdditionalAbis(
+          abiProvider,
+          addresses,
         )
-        yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbis)
+        const additionalAbisCount = Object.keys(additionalAbis).length
+        if (additionalAbisCount === 0) {
+          yield* put(
+            analyzerActions.logMessage('No additional abis were fetched.'),
+          )
+          yield* put(
+            analyzerActions.updateStage('Trying to fetch missing data'),
+          )
+        } else {
+          yield* put(
+            analyzerActions.updateStage('Trying to fetch missing data'),
+          )
+          yield* put(
+            analyzerActions.logMessage(
+              `${additionalAbisCount} were fetched. Calling analyzer again`,
+            ),
+          )
+          yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbis)
+        }
       }
+      yield* put(analyzerActions.updateStage('ReRun analyzer'))
     }
-    yield* put(analyzerActions.updateStage('ReRun analyzer'))
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {
     yield* put(analyzerActions.setLoading(false))
