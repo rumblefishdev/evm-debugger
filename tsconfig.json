@@ -30,7 +30,7 @@
       "path": "./packages/frontend"
     },
     {
-      "path": "./packages/infra/transaction-trace-lambda"
+      "path": "./packages/transaction-trace-lambda"
     },
     {
       "path": "./packages/infra/transaction-trace-provider"
