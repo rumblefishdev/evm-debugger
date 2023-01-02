@@ -6,10 +6,10 @@ import { Button } from '../../components/Button'
 import { Error, TickFilledBlue } from '../../icons'
 import { TailProgressScreen } from '../../images'
 import { etherscanKey, etherscanUrl } from '../../config'
-import { typedNavigate } from '../../router'
 import { EtherscanAbiFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import { ROUTES } from '../../router'
 
 import type { AnalyzerProgressScreenProps, AnalyzerStepProps } from './AnalyzerProgressScreen.types'
 import {
@@ -69,7 +69,7 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
 
   useEffect(() => {
     if (!isLoading && !error) {
-      const timeout = setTimeout(() => typedNavigate(navigate, '/transactionScreen'), 1000)
+      const timeout = setTimeout(() => navigate(ROUTES.TRANSACTION_SCREEN), 1000)
       return () => clearTimeout(timeout)
     }
   }, [isLoading, error, navigate])
@@ -82,7 +82,7 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
 
   const moveBackToStartingScreen = useCallback(() => {
-    typedNavigate(navigate, '/')
+    navigate(ROUTES.HOME)
   }, [navigate])
 
   const restartHandler = useCallback(() => {

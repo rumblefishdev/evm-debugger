@@ -15,8 +15,8 @@ import {
 } from '../../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { validateSchema } from '../../../helpers/validateSchema'
-import { typedNavigate } from '../../../router'
 import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
+import { ROUTES } from '../../../router'
 
 import { traceTransactionSchema, txInfoSchema } from './schemas'
 import type { ManualUploadTransactionScreenProps } from './ManualUploadTransactionScreen.types'
@@ -45,7 +45,7 @@ export const ManualUploadTransactionScreen = ({ ...props }: ManualUploadTransact
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         })
       )
-      typedNavigate(navigate, '/analyzerProgressScreen')
+      navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)
     },
     [dispatch, navigate]
   )

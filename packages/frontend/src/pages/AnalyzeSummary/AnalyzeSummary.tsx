@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Button } from '@mui/material'
 
 import { BytecodesManager, SighashesManager } from '../../components/Managers'
-import { Navigation } from '../../components/Navigation'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
@@ -36,25 +35,14 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
 
   return (
     <>
-      <Navigation />
       <StyledButtonsWrapper>
         {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
           Source Codes
         </Button> */}
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
-          onClick={() => handleTabChange('bytecodes')}
-        >
+        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('bytecodes')}>
           Bytecodes
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
-          onClick={() => handleTabChange('sighashes')}
-        >
+        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sighashes')}>
           Abis
         </Button>
       </StyledButtonsWrapper>
