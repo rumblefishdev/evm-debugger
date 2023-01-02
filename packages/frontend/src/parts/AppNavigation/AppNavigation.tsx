@@ -1,17 +1,20 @@
-import { Box, Tab, Tabs } from '@mui/material'
-import React from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Tab, Tabs } from '@mui/material'
+import React, { useState } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
+import { AppContainer } from '../../components/AppContainer'
 import { ROUTES } from '../../router'
 
 import type { AppNavigationProps } from './AppNavigation.types'
+import { StyledTab, StyledTabs } from './styles'
 
 export const AppNavigation = ({ ...props }: AppNavigationProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState<ROUTES | string>(location.pathname)
 
-  const handleChange = (event: React.SyntheticEvent, nextValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, nextValue: ROUTES) => {
     setValue(nextValue)
   }
 
@@ -20,13 +23,19 @@ export const AppNavigation = ({ ...props }: AppNavigationProps) => {
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      <Tabs value={value} onChange={handleChange} centered>
-        <Tab label="Item One" onClick={() => handleTabClick(ROUTES.DATA_MANAGER)} />
-        <Tab label="Item Two" onClick={() => handleTabClick(ROUTES.TRANSACTION_SCREEN)} />
-        <Tab label="Item Three" onClick={() => handleTabClick(ROUTES.STRUCTLOGS_EXPLORER)} />
-      </Tabs>
-      <Outlet />
-    </Box>
+    <React.Fragment>
+      <StyledTabs value={value} onChange={handleChange} centered>
+        <StyledTab label="Data Manager" value={ROUTES.DATA_MANAGER} onClick={() => handleTabClick(ROUTES.DATA_MANAGER)} />
+        <StyledTab label="Transaction screen" value={ROUTES.TRANSACTION_SCREEN} onClick={() => handleTabClick(ROUTES.TRANSACTION_SCREEN)} />
+        <StyledTab
+          label="Structlog Explorer"
+          value={ROUTES.STRUCTLOGS_EXPLORER}
+          onClick={() => handleTabClick(ROUTES.STRUCTLOGS_EXPLORER)}
+        />
+      </StyledTabs>
+      <AppContainer sx={{ padding: '24px' }}>
+        <Outlet />
+      </AppContainer>
+    </React.Fragment>
   )
 }
