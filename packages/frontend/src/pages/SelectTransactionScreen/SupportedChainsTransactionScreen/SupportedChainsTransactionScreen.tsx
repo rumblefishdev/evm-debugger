@@ -22,8 +22,14 @@ import {
   EtherscanAbiFetcher,
   JSONRpcBytecodeFetcher,
   JSONRpcTxInfoFetcher,
+  TransactionTraceFetcher,
 } from '../../../store/analyzer/analyzer.providers'
-import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
+import {
+  etherscanKey,
+  etherscanUrl,
+  jsonRpcProvider,
+  transactionTraceProviderUrl,
+} from '../../../config'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { typedNavigate } from '../../../router'
@@ -31,7 +37,7 @@ import { typedNavigate } from '../../../router'
 type SupportedChain = {
   name: string
   txInfoProvider: (hash: string) => ITxInfoProvider
-  structLogProvider: IStructLogProvider
+  structLogProvider: (hash: string) => IStructLogProvider
   abiProvider?: IAbiProvider
   bytecodeProvider?: IBytecodeProvider
 }
@@ -42,7 +48,8 @@ const supportedChains: Record<ChainId, SupportedChain> = {
   1: {
     txInfoProvider: (hash: string) =>
       new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[1]),
-    structLogProvider: null as IStructLogProvider, // TODO: @Kamil
+    structLogProvider: (hash: string) =>
+      new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 1), // TODO: @Kamil
     name: 'Ethereum',
     bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
     abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
@@ -68,7 +75,7 @@ export const SupportedChainsTransactionScreen = () => {
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: chainData.txInfoProvider(data.transactionHash),
-          structLogProvider: chainData.structLogProvider,
+          structLogProvider: chainData.structLogProvider(data.transactionHash),
           bytecodeProvider: chainData.bytecodeProvider,
           abiProvider: chainData.abiProvider,
         }),
