@@ -11,10 +11,13 @@ declare module '@mui/material/styles/createPalette' {
     rfButton?: string
     rfWhite?: string
     rfLinesLight?: string
+    rfLines?: string
     rfText?: string
     rfSuccess?: string
     rfBox?: string
+    rfBackground?: string
   }
+
   // eslint-disable-next-line @typescript-eslint/no-shadow
   interface Palette {
     rfBrandPrimary?: string
@@ -26,9 +29,11 @@ declare module '@mui/material/styles/createPalette' {
     rfButton?: string
     rfWhite?: string
     rfLinesLight?: string
+    rfLines?: string
     rfText?: string
     rfSuccess?: string
     rfBox?: string
+    rfBackground?: string
   }
 }
 
@@ -38,6 +43,7 @@ export const palette: Partial<Palette> = {
   rfSuccess: '#35CBB9',
   rfSecondary: '#343A3F',
   rfLinesLight: '#ECEEF0',
+  rfLines: '#C1C7CD',
   rfDisabledDark: '#697077',
   rfDisabled: '#A2A9B0',
   rfButton: '#2F57F4',
@@ -45,4 +51,5 @@ export const palette: Partial<Palette> = {
   rfBrandPrimary: '#01196F',
   rfBox: '#F9277F1A',
   rfBlack: '#000000',
+  rfBackground: '#F5F6F8',
 }

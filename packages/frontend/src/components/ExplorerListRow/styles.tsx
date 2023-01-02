@@ -1,5 +1,5 @@
 import { HelpOutline } from '@mui/icons-material'
-import { Box, Chip, Stack, styled, Typography } from '@mui/material'
+import { Box, Stack, styled, Typography } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
   minHeight: '64px',
