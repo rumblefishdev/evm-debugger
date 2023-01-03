@@ -8,14 +8,8 @@ export const StyledStack = styled(Stack)(() => ({
   flexWrap: 'wrap',
   display: 'flex',
   cursor: 'pointer',
-  boxSizing: 'border-box',
-  background: 'rgba(255, 129, 120 , .2)',
+  borderRadius: '3px',
+  border: '1px solid rgba(47, 87, 244, 0)',
+  background: 'rgba(47, 87, 244, 0.15)',
   alignItems: 'center',
-  '&:hover': {
-    background: 'rgba(255, 129, 120 , 1)',
-  },
-}))
-
-export const TextTest = styled(Typography)(() => ({
-  fontSize: '12px',
 }))

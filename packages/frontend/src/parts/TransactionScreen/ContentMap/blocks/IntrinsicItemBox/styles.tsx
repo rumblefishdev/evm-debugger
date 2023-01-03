@@ -4,10 +4,7 @@ export const StyledBox = styled(Box)(() => ({
   position: 'absolute',
   overflow: 'hidden',
   cursor: 'pointer',
-  boxSizing: 'border-box',
-  background: 'rgba(255, 129, 120 , .2)',
-  // hover
-  '&:hover': {
-    background: 'rgba(255, 129, 120 , 1)',
-  },
+  borderRadius: '3px',
+  border: '1px solid rgba(47, 87, 244, 0)',
+  background: 'rgba(47, 87, 244, 0.15)',
 }))

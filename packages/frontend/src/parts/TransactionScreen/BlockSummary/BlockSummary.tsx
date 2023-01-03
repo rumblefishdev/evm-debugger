@@ -1,21 +1,17 @@
 import React from 'react'
+import { Stack } from '@mui/system'
 
-import { useTypedSelector } from '../../store/storeHooks'
-import { selectParsedActiveBlock } from '../../store/activeBlock/activeBlock.selector'
+import { useTypedSelector } from '../../../store/storeHooks'
+import { selectParsedActiveBlock } from '../../../store/activeBlock/activeBlock.selector'
 
-import type {
-  BlockSummaryProps,
-  CallBlockSummaryProps,
-  CreateBlockSummaryProps,
-  DefaultBlockSummaryProps,
-} from './BlockSummary.types'
+import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps, DefaultBlockSummaryProps } from './BlockSummary.types'
 import {
-  StyledBox,
+  StyledFunctionsignature,
   StyledInfoRow,
   StyledInfoType,
   StyledInfoValue,
   StyledSectionHeader,
-  StyledWrapper,
+  StyledStack,
   StyleRawBytecode,
 } from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
@@ -54,14 +50,13 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         <StyleRawBytecode>{output}</StyleRawBytecode>
       </StyledInfoRow>
       {functionSignature ? (
-        <StyledSectionHeader>
-          Decoded Function: <b>{functionSignature}</b>
-        </StyledSectionHeader>
+        <Stack sx={{ margin: '16px 0 24px 0' }}>
+          <StyledSectionHeader sx={{ marginBottom: '4px' }}>Decoded Parameters:</StyledSectionHeader>
+          <StyledFunctionsignature>{functionSignature}</StyledFunctionsignature>
+        </Stack>
       ) : null}
       {parsedInput ? <ParamBlock title="Inputs" items={parsedInput} /> : null}
-      {parsedOutput ? (
-        <ParamBlock title="Outputs" items={parsedOutput} />
-      ) : null}
+      {parsedOutput ? <ParamBlock title="Outputs" items={parsedOutput} /> : null}
       {errorSignature ? (
         <StyledSectionHeader>
           Decoded Error: <b>{errorSignature}</b>
@@ -93,22 +88,14 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
 }
 
 const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
-  const {
-    address,
-    blockNumber,
-    gasCost,
-    passedGas,
-    stackTrace,
-    type,
-    value,
-    isSuccess,
-  } = data
+  const { address, blockNumber, gasCost, passedGas, stackTrace, type, value, isSuccess } = data
 
   return (
     <>
+      <StyledSectionHeader variant="headingUnknown">Trace Information</StyledSectionHeader>
       <StyledInfoRow>
         <StyledInfoType>Address</StyledInfoType>
-        <StyledInfoValue>{address}</StyledInfoValue>
+        <StyleRawBytecode>{address}</StyleRawBytecode>
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Is Success</StyledInfoType>
@@ -148,14 +135,10 @@ export const BlockSummary: React.FC<BlockSummaryProps> = () => {
   const { callSpecificData, createSpecificData, defaultData } = currentBlock
 
   return (
-    <StyledBox>
-      <StyledWrapper>
-        {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
-        {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
-        {createSpecificData ? (
-          <CreateBlockSummary data={createSpecificData} />
-        ) : null}
-      </StyledWrapper>
-    </StyledBox>
+    <StyledStack>
+      {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
+      {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
+      {createSpecificData ? <CreateBlockSummary data={createSpecificData} /> : null}
+    </StyledStack>
   )
 }

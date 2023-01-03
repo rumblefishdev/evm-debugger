@@ -23,7 +23,6 @@ import {
   StyledMainPanel,
   StyledMainPanelWrapper,
   StyledMessage,
-  StyledStack,
   StyledStepper,
   StyledTimestamp,
 } from './styles'
@@ -99,54 +98,52 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
 
   return (
     <AppContainer>
-      <StyledStack>
-        <StyledMainPanel>
-          <StyledMainPanelWrapper>
-            <Stack>
-              <StyledHeadlineCaption variant="uppercase" gutterBottom={true}>
-                EVM Debugger
-              </StyledHeadlineCaption>
-              <Typography variant="heading4">Fetching progress</Typography>
-            </Stack>
-            <StyledStepper orientation="vertical" activeStep={activeStep}>
-              {stages.map((stage, index) => {
-                if (error && currentIndex === index)
-                  return <ErrorStep key={stage.stageName} stepName={stage.stageName} errorMessage={error} />
-                return <DefaultStep key={stage.stageName} stepName={stage.stageName} />
-              })}
-            </StyledStepper>
-            <StyledImageWrapper>
-              <StyledImage src={TailProgressScreen} />
-            </StyledImageWrapper>
-            <Stack direction="row" spacing={2}>
-              <Button style={{ width: '224px' }} variant="outlined" onClick={moveBackToStartingScreen}>
-                Back
-              </Button>
-              <Button style={{ width: '224px' }} variant="contained" onClick={restartHandler}>
-                Restart
-              </Button>
-            </Stack>
-          </StyledMainPanelWrapper>
-        </StyledMainPanel>
-        <StyledLogPanel>
-          <Typography variant="headingUnknown">Console info</Typography>
-          <StyledLogContiner ref={scrollRef}>
-            {messages.map((item, index) => {
-              const { message, timestamp } = item
-              const isError = message.includes('Error')
-
-              return (
-                <StyledLogRecord key={index}>
-                  <StyledTimestamp>{timestamp.toLocaleTimeString()}:</StyledTimestamp>
-                  <StyledMessage sx={isError ? { color: theme.palette.rfBrandSecondary } : {}} variant="inputText">
-                    {message}
-                  </StyledMessage>
-                </StyledLogRecord>
-              )
+      <StyledMainPanel>
+        <StyledMainPanelWrapper>
+          <Stack>
+            <StyledHeadlineCaption variant="uppercase" gutterBottom={true}>
+              EVM Debugger
+            </StyledHeadlineCaption>
+            <Typography variant="heading4">Fetching progress</Typography>
+          </Stack>
+          <StyledStepper orientation="vertical" activeStep={activeStep}>
+            {stages.map((stage, index) => {
+              if (error && currentIndex === index)
+                return <ErrorStep key={stage.stageName} stepName={stage.stageName} errorMessage={error} />
+              return <DefaultStep key={stage.stageName} stepName={stage.stageName} />
             })}
-          </StyledLogContiner>
-        </StyledLogPanel>
-      </StyledStack>
+          </StyledStepper>
+          <StyledImageWrapper>
+            <StyledImage src={TailProgressScreen} />
+          </StyledImageWrapper>
+          <Stack direction="row" spacing={2}>
+            <Button style={{ width: '224px' }} variant="outlined" onClick={moveBackToStartingScreen}>
+              Back
+            </Button>
+            <Button style={{ width: '224px' }} variant="contained" onClick={restartHandler}>
+              Restart
+            </Button>
+          </Stack>
+        </StyledMainPanelWrapper>
+      </StyledMainPanel>
+      <StyledLogPanel>
+        <Typography variant="headingUnknown">Console info</Typography>
+        <StyledLogContiner ref={scrollRef}>
+          {messages.map((item, index) => {
+            const { message, timestamp } = item
+            const isError = message.includes('Error')
+
+            return (
+              <StyledLogRecord key={index}>
+                <StyledTimestamp>{timestamp.toLocaleTimeString()}:</StyledTimestamp>
+                <StyledMessage sx={isError ? { color: theme.palette.rfBrandSecondary } : {}} variant="inputText">
+                  {message}
+                </StyledMessage>
+              </StyledLogRecord>
+            )
+          })}
+        </StyledLogContiner>
+      </StyledLogPanel>
     </AppContainer>
   )
 }

@@ -1,22 +1,18 @@
-import { AccordionDetails, AccordionSummary, List } from '@mui/material'
+import { List } from '@mui/material'
 import React from 'react'
 
-import { isArrayOfStrings } from '../../../../helpers/helpers'
-import {
-  StyledInfoRow,
-  StyledInfoType,
-  StyledInfoValue,
-  StyleRawBytecode,
-} from '../../styles'
+import { isArrayOfStrings } from '../../../../../helpers/helpers'
+import { ArrowDownBlue } from '../../../../../icons'
+import { StyledInfoRow, StyledInfoType, StyledInfoValue, StyleRawBytecode } from '../../styles'
 
 import type { ParamBlockProps } from './ParamBlock.types'
-import { StyledAccordion } from './styles'
+import { StyledAccordion, StyledAccordionDetails, StyledAccordionSummary } from './styles'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
     <StyledAccordion {...props}>
-      <AccordionSummary>{title}</AccordionSummary>
-      <AccordionDetails>
+      <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>{title}</StyledAccordionSummary>
+      <StyledAccordionDetails>
         <List>
           {items.map((item, index) => {
             if (typeof item.value === 'string')
@@ -26,7 +22,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                     <StyledInfoType>
                       {item.name} ({item.type})
                     </StyledInfoType>
-                    {item.type === 'bytes' ? (
+                    {item.type === 'bytes' || item.type === 'address' ? (
                       <StyleRawBytecode>{item.value}</StyleRawBytecode>
                     ) : (
                       <StyledInfoValue>{item.value}</StyledInfoValue>
@@ -59,16 +55,10 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 </React.Fragment>
               )
 
-            return (
-              <ParamBlock
-                key={index}
-                title={`${item.name} (${item.type})`}
-                items={item.value}
-              />
-            )
+            return <ParamBlock key={index} title={`${item.name} (${item.type})`} items={item.value} />
           })}
         </List>
-      </AccordionDetails>
+      </StyledAccordionDetails>
     </StyledAccordion>
   )
 }

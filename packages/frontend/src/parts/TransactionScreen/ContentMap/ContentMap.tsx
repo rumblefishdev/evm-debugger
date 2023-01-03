@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
 
-import { useTypedSelector } from '../../store/storeHooks'
-import { selectMappedTraceLogs } from '../../store/traceLogs/mappedTraceLog.selector'
-import type { TTreeMapData } from '../../types'
-import { IntrinsicItemBox } from '../IntrinsicItemBox'
-import { ItemBox } from '../ItemBox'
-import { NestedItemBox } from '../NestedItemBox'
+import { useTypedSelector } from '../../../store/storeHooks'
+import { selectMappedTraceLogs } from '../../../store/traceLogs/mappedTraceLog.selector'
+import type { TTreeMapData } from '../../../types'
 
+import { IntrinsicItemBox } from './blocks/IntrinsicItemBox'
+import { ItemBox } from './blocks/ItemBox'
+import { NestedItemBox } from './blocks/NestedItemBox'
 import type { ContentMapProps } from './ContentMap.types'
 import { StyledCard, StyledWrapper } from './styles'
 
@@ -32,33 +32,14 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [])
 
-  const traceLog = useTypedSelector((state) =>
-    selectMappedTraceLogs(state, width, height),
-  )
+  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height))
 
   const renderContent = (element: TTreeMapData) => {
-    if ('owningLog' in element.item)
-      return (
-        <IntrinsicItemBox
-          treeMapItem={{ ...element, item: element.item }}
-          key={element.item.id}
-        />
-      )
+    if ('owningLog' in element.item) return <IntrinsicItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
 
-    if (element.nestedItems.length > 0)
-      return (
-        <NestedItemBox
-          treeMapItem={{ ...element, item: element.item }}
-          key={element.item.id}
-        />
-      )
+    if (element.nestedItems.length > 0) return <NestedItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
 
-    return (
-      <ItemBox
-        treeMapItem={{ ...element, item: element.item }}
-        key={element.item.id}
-      />
-    )
+    return <ItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
   }
 
   return (

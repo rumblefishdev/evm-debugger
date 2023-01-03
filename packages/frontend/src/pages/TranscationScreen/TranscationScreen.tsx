@@ -1,15 +1,11 @@
 import React from 'react'
 
-import { BlockSummary } from '../../components/BlockSummary'
-import { ContentMap } from '../../components/ContentMap'
-
-import { StyledWrapper } from './styles'
+import { BlockSummary } from '../../parts/TransactionScreen/BlockSummary'
+import { ContentMap } from '../../parts/TransactionScreen/ContentMap'
 
 export const TranscationScreen: React.FC = () => (
   <>
-    <StyledWrapper>
-      <ContentMap />
-      <BlockSummary />
-    </StyledWrapper>
+    <ContentMap />
+    <BlockSummary />
   </>
 )

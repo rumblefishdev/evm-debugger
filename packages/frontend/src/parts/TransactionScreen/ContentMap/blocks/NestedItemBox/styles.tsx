@@ -6,18 +6,12 @@ export const StyledBox = styled(Box)(() => ({
   position: 'absolute',
   overflow: 'hidden',
   cursor: 'pointer',
-  boxSizing: 'border-box',
-}))
-
-export const StyledInfoPanel = styled(Box)(() => ({
-  justifyContent: 'center',
-  height: '18px',
-  display: 'flex',
-  alignItems: 'center',
+  borderRadius: '3px',
+  border: '1px solid rgba(47, 87, 244, 0)',
+  background: 'rgba(47, 87, 244, 0.15)',
 }))
 
 export const StyledNestedItemsBox = styled(Box)(() => ({
   position: 'relative',
   overflow: 'hidden',
-  boxSizing: 'border-box',
 }))

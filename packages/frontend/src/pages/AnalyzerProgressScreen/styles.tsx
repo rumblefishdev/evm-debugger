@@ -1,11 +1,4 @@
-import { Stack, Step, Stepper, styled, Typography } from '@mui/material'
-
-export const StyledStack = styled(Stack)(() => ({
-  width: '100%',
-  justifyContent: 'space-around',
-  height: 'calc(100% - 48px)',
-  flexDirection: 'row',
-}))
+import { Stack, Stepper, styled, Typography } from '@mui/material'
 
 export const StyledMainPanel = styled(Stack)(() => ({
   width: '524px',
@@ -65,6 +58,8 @@ export const StyledImage = styled('img')(() => ({
 export const StyledLogPanel = styled(Stack)(({ theme }) => ({
   width: '1003px',
   padding: theme.spacing(6),
+  height: '100%',
+  boxSizing: 'border-box',
   borderRadius: '16px',
   border: `1px solid ${theme.palette.rfLinesLight}`,
   backgroundColor: 'rgba(245, 246, 248, 0.9)',
