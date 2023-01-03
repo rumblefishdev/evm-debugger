@@ -23,7 +23,7 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
   return (
     <StyledStack {...props}>
       <StyledHeading>Sighashes</StyledHeading>
-      <StyledAbisWrapper sx={{ overflow: 'auto' }}>
+      <StyledAbisWrapper>
         {contractAddresses.map((address) => {
           const filteredSighashes = sighashes.filter((sighash) => sighash.addresses.has(address))
           return (
@@ -33,6 +33,7 @@ export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
                 {filteredSighashes.map((sighash) => (
                   <ManagerItem
                     key={sighash.sighash}
+                    address={address}
                     name={sighash.fragment ? formatFragment(sighash.fragment) : sighash.sighash}
                     value={JSON.stringify(sighash.fragment, null, 2)}
                     isFound={sighash.fragment !== null}

@@ -1,4 +1,4 @@
-import type { ButtonUnstyledProps } from '@mui/base'
+import type { ButtonProps as Test } from '@mui/material'
 
 export type TButtonVariant = 'text' | 'outlined' | 'contained'
 
@@ -15,6 +15,6 @@ export type TButtonClasses = {
   sizeLarge: string
 }
 
-export interface ButtonProps extends ButtonUnstyledProps {
+export interface ButtonProps extends Test {
   variant: TButtonVariant
 }

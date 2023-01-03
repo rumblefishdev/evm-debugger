@@ -7,7 +7,7 @@ import { DataAdder } from '../DataAdder'
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
-export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: ManagerItemProps) => {
+export const ManagerItem = ({ isFound, address, name, value, updateItem, ...props }: ManagerItemProps) => {
   const [isDataVisible, setDataVisibility] = useState(false)
   const [isDataAdderVisible, setDataAdderVisibility] = useState(false)
 
@@ -33,7 +33,13 @@ export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: Mana
       <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
         <pre>{value}</pre>
       </Dialog>
-      <DataAdder open={isDataAdderVisible} submithandler={dataAdderHandler} title={name} onClose={() => setDataAdderVisibility(false)} />
+      <DataAdder
+        open={isDataAdderVisible}
+        submithandler={dataAdderHandler}
+        title={`Upload for ${name}`}
+        onClose={() => setDataAdderVisibility(false)}
+        description={address}
+      />
     </StyledStack>
   )
 }
