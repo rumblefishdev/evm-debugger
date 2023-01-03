@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { Button } from '@mui/material'
 
-import { BytecodesManager, SighashesManager } from '../../components/Managers'
+import { BytecodesManager, SighashesManager, SourcecodesManager } from '../../parts/Managers'
 
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
-import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
+import { StyledContentWrapper, StyledStack, StyledTab, StyledTabs } from './styles'
 
 export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
@@ -16,9 +15,9 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
   const renderTab = () => {
     switch (activeTab) {
       // TODO: https://github.com/rumblefishdev/evm-debuger/issues/103
-      // case 'sourcecodes': {
-      //   return <SourcecodesManager />
-      // }
+      case 'sourcecodes': {
+        return <SourcecodesManager />
+      }
       case 'bytecodes': {
         return <BytecodesManager />
       }
@@ -34,19 +33,13 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
   // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
 
   return (
-    <>
-      <StyledButtonsWrapper>
-        {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
-          Source Codes
-        </Button> */}
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('bytecodes')}>
-          Bytecodes
-        </Button>
-        <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sighashes')}>
-          Abis
-        </Button>
-      </StyledButtonsWrapper>
+    <StyledStack>
+      <StyledTabs value={activeTab}>
+        <StyledTab disableRipple disabled label="Source Codes" value={'sourcecodes'} onClick={() => handleTabChange('sourcecodes')} />
+        <StyledTab disableRipple label="Bytecodes" value={'bytecodes'} onClick={() => handleTabChange('bytecodes')} />
+        <StyledTab disableRipple label="Abis" value={'sighashes'} onClick={() => handleTabChange('sighashes')} />
+      </StyledTabs>
       <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
-    </>
+    </StyledStack>
   )
 }

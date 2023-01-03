@@ -1,6 +1,7 @@
-import { Dialog, Button } from '@mui/material'
+import { Dialog } from '@mui/material'
 import React, { useState } from 'react'
 
+import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
 
 import type { ManagerItemProps } from './ManagerItem.types'
@@ -17,15 +18,18 @@ export const ManagerItem = ({ isFound, name, value, updateItem, ...props }: Mana
 
   return (
     <StyledStack {...props}>
+      {isFound ? <StyledStatusFound>Found</StyledStatusFound> : <StyledStatusNotFound>Not found</StyledStatusNotFound>}
       <StyledName>{name}</StyledName>
       {isFound ? (
-        <Button onClick={() => setDataVisibility(true)}>Show</Button>
+        <Button variant="text" onClick={() => setDataVisibility(true)}>
+          Show
+        </Button>
       ) : (
-        <Button variant="contained" onClick={() => setDataAdderVisibility(true)}>
+        <Button variant="text" onClick={() => setDataAdderVisibility(true)}>
           Add
         </Button>
       )}
-      {isFound ? <StyledStatusFound>Found</StyledStatusFound> : <StyledStatusNotFound>Not found</StyledStatusNotFound>}
+
       <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
         <pre>{value}</pre>
       </Dialog>

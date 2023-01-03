@@ -20,4 +20,11 @@ export const StyledButton = styled(ButtonUnstyled)<{ variant: TButtonVariant }>(
     border: `1px solid ${theme.palette.rfLines}`,
     backgroundColor: 'unset',
   }),
+  ...(variant === 'text' && {
+    fontWeight: 600,
+    fontSize: '14px',
+    fontFamily: 'Rajdhani',
+    color: theme.palette.rfButton,
+    backgroundColor: 'unset',
+  }),
 }))
