@@ -1,10 +1,4 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  List,
-  Stack,
-} from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, List, Stack } from '@mui/material'
 import React from 'react'
 
 import {
@@ -12,7 +6,10 @@ import {
   StyledInfoType,
   StyledInfoValue,
   StyleRawBytecode,
-} from '../../styles'
+  StyledAccordion,
+  StyledAccordionSummary,
+  StyledAccordionDetails,
+} from '../styles'
 
 import type { EventBlockProps } from './EventBlock.types'
 
@@ -20,9 +17,9 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
   <Stack sx={{ marginBottom: '12px' }} {...props}>
     {eventLogs.map((event) =>
       event.signature ? (
-        <Accordion>
-          <AccordionSummary>{event.signature}</AccordionSummary>
-          <AccordionDetails>
+        <StyledAccordion>
+          <StyledAccordionSummary>{event.signature}</StyledAccordionSummary>
+          <StyledAccordionDetails>
             <List>
               {event.parsedArgs.map((arg, index) => {
                 return (
@@ -37,9 +34,9 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
                 )
               })}
             </List>
-          </AccordionDetails>
-        </Accordion>
-      ) : null,
+          </StyledAccordionDetails>
+        </StyledAccordion>
+      ) : null
     )}
   </Stack>
 )

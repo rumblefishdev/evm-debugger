@@ -7,11 +7,18 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   maxWidth: '508px',
   height: '100%',
   ...theme.customStyles.scrollbar,
+
+  '& > :last-child': {
+    marginBottom: theme.spacing(0),
+  },
+
+  '& > :first-child': {
+    marginTop: theme.spacing(0),
+  },
 }))
 
 export const StyledInfoRow = styled(Stack)(() => ({
   width: '100%',
-  marginBottom: '8px',
   flexDirection: 'row',
 }))
 

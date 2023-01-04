@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { AccordionDetails } from '@mui/material'
 
 import type { StructlogAcordionPanelProps } from './StructlogAcordionPanel.types'
 import { StyledAccordion, StyledAccordionDetails, StyledAccordionSummary, StyledContainer, StyledWrapper } from './styles'

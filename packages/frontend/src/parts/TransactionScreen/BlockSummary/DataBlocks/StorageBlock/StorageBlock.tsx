@@ -1,36 +1,21 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  List,
-  Stack,
-} from '@mui/material'
+import { List, Stack } from '@mui/material'
 import React from 'react'
 
-import {
-  StyledInfoRow,
-  StyledInfoType,
-  StyledSectionHeader,
-  StyleRawBytecode,
-} from '../../styles'
+import { StyledInfoRow, StyledInfoType, StyleRawBytecode, StyledAccordion, StyledAccordionSummary, StyledAccordionDetails } from '../styles'
 
 import type { StorageBlockProps } from './Storage.types'
 
-export const StorageBlock = ({
-  storageAddress,
-  storageLogs,
-}: StorageBlockProps) => {
+export const StorageBlock = ({ storageAddress, storageLogs }: StorageBlockProps) => {
   return (
     <>
-      <StyledSectionHeader>Storage Information</StyledSectionHeader>
       <StyledInfoRow>
         <StyledInfoType>Storage address</StyledInfoType>
         <StyleRawBytecode>{storageAddress}</StyleRawBytecode>
       </StyledInfoRow>
-      <Stack sx={{ marginBottom: '12px' }}>
-        <Accordion>
-          <AccordionSummary>Loaded Storage</AccordionSummary>
-          <AccordionDetails>
+      <Stack>
+        <StyledAccordion>
+          <StyledAccordionSummary>Loaded Storage</StyledAccordionSummary>
+          <StyledAccordionDetails>
             <List>
               {storageLogs.loadedStorage.map((log, index) => {
                 return (
@@ -47,11 +32,11 @@ export const StorageBlock = ({
                 )
               })}
             </List>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>Changed Storage</AccordionSummary>
-          <AccordionDetails>
+          </StyledAccordionDetails>
+        </StyledAccordion>
+        <StyledAccordion>
+          <StyledAccordionSummary>Changed Storage</StyledAccordionSummary>
+          <StyledAccordionDetails>
             <List>
               {storageLogs.changedStorage.map((log, index) => {
                 return (
@@ -72,11 +57,11 @@ export const StorageBlock = ({
                 )
               })}
             </List>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>Returned Storage</AccordionSummary>
-          <AccordionDetails>
+          </StyledAccordionDetails>
+        </StyledAccordion>
+        <StyledAccordion>
+          <StyledAccordionSummary>Returned Storage</StyledAccordionSummary>
+          <StyledAccordionDetails>
             <List>
               {storageLogs.returnedStorage.map((log, index) => {
                 return (
@@ -93,8 +78,8 @@ export const StorageBlock = ({
                 )
               })}
             </List>
-          </AccordionDetails>
-        </Accordion>
+          </StyledAccordionDetails>
+        </StyledAccordion>
       </Stack>
     </>
   )

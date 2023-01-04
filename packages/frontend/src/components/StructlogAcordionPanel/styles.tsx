@@ -12,7 +12,6 @@ export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand
   borderWidth: '1px 1px 0px 1px',
   borderStyle: 'solid',
   borderColor: theme.palette.rfLinesLight,
-
   backgroundColor: theme.palette.rfWhite,
 
   '&:last-of-type': {
@@ -31,6 +30,7 @@ export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand
     cursor: 'pointer',
   }),
   ...(expanded && {
+    marginBottom: '1px',
     flexGrow: 1,
     borderWidth: '1px 1px 0px 1px',
     borderColor: theme.palette.rfButton,

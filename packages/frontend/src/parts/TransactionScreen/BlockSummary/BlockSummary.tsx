@@ -17,6 +17,7 @@ import {
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
+import { DataSection } from './DataSection'
 
 const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   const {
@@ -36,11 +37,12 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   if (!isContract) return null
 
   return (
-    <>
+    <DataSection title="Call specific data">
       <StyledInfoRow>
         <StyledInfoType>Is contract</StyledInfoType>
         <StyledInfoValue>{isContract ? 'true' : 'false'}</StyledInfoValue>
       </StyledInfoRow>
+
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
         <StyleRawBytecode>{input}</StyleRawBytecode>
@@ -49,31 +51,29 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         <StyledInfoType>Raw output</StyledInfoType>
         <StyleRawBytecode>{output}</StyleRawBytecode>
       </StyledInfoRow>
-      {functionSignature ? (
-        <Stack sx={{ margin: '16px 0 24px 0' }}>
-          <StyledSectionHeader sx={{ marginBottom: '4px' }}>Decoded Parameters:</StyledSectionHeader>
-          <StyledFunctionsignature>{functionSignature}</StyledFunctionsignature>
-        </Stack>
-      ) : null}
+      {functionSignature && (
+        <StyledInfoRow>
+          <StyledInfoType>Function signature</StyledInfoType>
+          <StyledInfoValue>{functionSignature}</StyledInfoValue>
+        </StyledInfoRow>
+      )}
       {parsedInput ? <ParamBlock title="Inputs" items={parsedInput} /> : null}
       {parsedOutput ? <ParamBlock title="Outputs" items={parsedOutput} /> : null}
-      {errorSignature ? (
-        <StyledSectionHeader>
-          Decoded Error: <b>{errorSignature}</b>
-        </StyledSectionHeader>
-      ) : null}
       {parsedError ? <ParamBlock title="Error" items={parsedError} /> : null}
-      <StyledSectionHeader>Events:</StyledSectionHeader>
-      <EventBlock eventLogs={parsedEvents} />
-      <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
-    </>
+      <DataSection title="Events data">
+        <EventBlock eventLogs={parsedEvents} />
+      </DataSection>
+      <DataSection title="Storage data">
+        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
+      </DataSection>
+    </DataSection>
   )
 }
 
 const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
   const { input, salt, storageAddress, storageLogs } = data
   return (
-    <>
+    <DataSection title="Create specific data">
       <StyledInfoRow>
         <StyledInfoType>Salt</StyledInfoType>
         <StyledInfoValue>{salt}</StyledInfoValue>
@@ -82,8 +82,10 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
         <StyledInfoType>Raw input</StyledInfoType>
         <StyleRawBytecode>{input}</StyleRawBytecode>
       </StyledInfoRow>
-      <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
-    </>
+      <DataSection title="Storage data">
+        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
+      </DataSection>
+    </DataSection>
   )
 }
 
@@ -91,8 +93,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
   const { address, blockNumber, gasCost, passedGas, stackTrace, type, value, isSuccess } = data
 
   return (
-    <>
-      <StyledSectionHeader variant="headingUnknown">Trace Information</StyledSectionHeader>
+    <DataSection title="Trace Information">
       <StyledInfoRow>
         <StyledInfoType>Address</StyledInfoType>
         <StyleRawBytecode>{address}</StyleRawBytecode>
@@ -125,7 +126,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
         <StyledInfoType>Value</StyledInfoType>
         <StyledInfoValue>{value}</StyledInfoValue>
       </StyledInfoRow>
-    </>
+    </DataSection>
   )
 }
 

@@ -3,10 +3,17 @@ import React from 'react'
 
 import { isArrayOfStrings } from '../../../../../helpers/helpers'
 import { ArrowDownBlue } from '../../../../../icons'
-import { StyledInfoRow, StyledInfoType, StyledInfoValue, StyleRawBytecode } from '../../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyleRawBytecode,
+  StyledAccordion,
+  StyledAccordionSummary,
+  StyledAccordionDetails,
+} from '../styles'
 
 import type { ParamBlockProps } from './ParamBlock.types'
-import { StyledAccordion, StyledAccordionDetails, StyledAccordionSummary } from './styles'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
