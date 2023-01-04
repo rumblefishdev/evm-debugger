@@ -1,0 +1,15 @@
+{
+    "Parameters": {
+      "Domain": "evm-debugger.rumblefish.dev",
+      "Environment": "dev",
+      "HostedZoneId": "Z1AXAHZLKLTXED",
+      "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
+      "JsonBucketName": "transaction-trace-storage.rumblefish.dev",
+      "ApiGatewayAllowOrigin": "*",
+      "TaskCpu": 1024,
+      "TaskMemory": 4096,
+      "TransactionTraceProviderImage": "045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:latest",
+      "HardhatForkingUrl": "https://eth-mainnet.alchemyapi.io/v2/PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ",
+      "Subnets": "subnet-0b9aa96f,subnet-f4b2fddb"
+    }
+  }

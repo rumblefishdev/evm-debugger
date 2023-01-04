@@ -49,3 +49,20 @@ export class JSONRpcBytecodeFetcher implements IBytecodeProvider {
     return this.provider.getCode(address)
   }
 }
+
+export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
+  constructor(
+    public hash: string,
+    private provider: ethers.providers.JsonRpcProvider,
+  ) {}
+
+  async getTxInfo() {
+    const tx = await this.provider.getTransaction(this.hash)
+    return {
+      ...tx,
+      value: tx.value.toHexString(),
+      chainId: tx.chainId.toString(),
+      blockNumber: tx.blockNumber.toString(),
+    }
+  }
+}
