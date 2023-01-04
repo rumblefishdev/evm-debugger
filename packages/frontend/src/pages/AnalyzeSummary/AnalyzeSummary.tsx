@@ -30,8 +30,6 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
     }
   }
 
-  // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
-
   return (
     <StyledStack>
       <StyledTabs value={activeTab}>
