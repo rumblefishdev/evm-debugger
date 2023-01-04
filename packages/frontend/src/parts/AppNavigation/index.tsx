@@ -1,1 +1,2 @@
-export { AppNavigation } from './AppNavigation';
+// eslint-disable-next-line import/no-cycle
+export { AppNavigation } from './AppNavigation'

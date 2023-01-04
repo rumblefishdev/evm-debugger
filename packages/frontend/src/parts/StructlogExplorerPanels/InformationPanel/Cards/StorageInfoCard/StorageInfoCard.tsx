@@ -1,17 +1,12 @@
 import React from 'react'
+import { Stack } from '@mui/material'
 
 import { selectStructlogStorage } from '../../../../../store/structlogs/structlogs.slice'
 import { useTypedSelector } from '../../../../../store/storeHooks'
 import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
+import { StyledRecord, StyledRecordType, StyledRecordValue, StyledWrapper } from '../styles'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'
-import {
-  StyledStorageIndex,
-  StyledStack,
-  StyledStorageItem,
-  StyledStorageItemRecord,
-  StyledStorageValue,
-} from './styles'
 
 export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
   const storage = useTypedSelector(selectStructlogStorage)
@@ -20,22 +15,22 @@ export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
 
   return (
     <StructlogAcordionPanel text="Storage" canExpand={keys.length > 0}>
-      <StyledStack {...props}>
+      <StyledWrapper {...props}>
         {keys.map((key, index) => {
           return (
-            <StyledStorageItem key={index}>
-              <StyledStorageItemRecord>
-                <StyledStorageIndex>Key: </StyledStorageIndex>
-                <StyledStorageValue>{key}</StyledStorageValue>
-              </StyledStorageItemRecord>
-              <StyledStorageItemRecord>
-                <StyledStorageIndex>Value: </StyledStorageIndex>
-                <StyledStorageValue>{storage[key]}</StyledStorageValue>
-              </StyledStorageItemRecord>
-            </StyledStorageItem>
+            <Stack key={index}>
+              <StyledRecord>
+                <StyledRecordType>Key: </StyledRecordType>
+                <StyledRecordValue>{key}</StyledRecordValue>
+              </StyledRecord>
+              <StyledRecord>
+                <StyledRecordType>Value: </StyledRecordType>
+                <StyledRecordValue>{storage[key]}</StyledRecordValue>
+              </StyledRecord>
+            </Stack>
           )
         })}
-      </StyledStack>
+      </StyledWrapper>
     </StructlogAcordionPanel>
   )
 }

@@ -1,45 +1,76 @@
-import { HelpOutline } from '@mui/icons-material'
 import { Box, Stack, styled, Typography } from '@mui/material'
 
-export const StyledStack = styled(Stack)(() => ({
+type TActive = { active?: boolean }
+
+export const StyledStack = styled(Stack)<TActive>(({ theme, active }) => ({
+  width: '100%',
+  padding: theme.spacing(4.5, 6),
   minHeight: '64px',
+  justifyContent: 'flex-start',
   flexDirection: 'row',
   cursor: 'pointer',
+  boxSizing: 'border-box',
+  borderWidth: '1px 1px 0px 1px',
+  borderStyle: 'solid',
+  borderColor: theme.palette.rfLinesLight,
   alignItems: 'center',
-  '&:hover': {
-    backgroundColor: '#F5F5F5',
-  },
+
+  // active styles
+
+  ...(active && {
+    border: `1px solid ${theme.palette.rfButton}`,
+    backgroundColor: 'rgba(47, 87, 244, 0.05)',
+  }),
 }))
 
-export const StyledCounter = styled(Typography)(() => ({
-  width: '64px',
-  textAlign: 'right',
-  marginRight: '24px',
+export const StyledCounter = styled(Typography)<TActive>(({ theme, active }) => ({
+  width: '48px',
+  ...theme.typography.bodySmall,
+  marginRight: theme.spacing(4),
+  color: theme.palette.rfSecondary,
+
+  ...(active && {
+    color: theme.palette.rfButton,
+  }),
 }))
 
-export const StyledType = styled(Typography)(() => ({
-  width: '152px',
-  marginRight: '24px',
+export const StyledTypeWrapper = styled(Stack)(() => ({
+  width: '224px',
+  justifyContent: 'flex-start',
+  flexDirection: 'row',
+  alignItems: 'center',
 }))
 
-export const StyledOpcodeDescriptionIcon = styled(HelpOutline)(() => ({
-  width: '12px',
-  marginLeft: '4px',
-  height: '12px',
-}))
-
-export const StyledChip = styled(Box)(() => ({
-  padding: '4px 8px',
-  maxWidth: '96px',
-  justifyContent: 'center',
+export const StyledType = styled(Typography)<TActive>(({ theme, active }) => ({
+  ...theme.typography.buttonSmall,
+  textAlign: 'left',
+  marginRight: theme.spacing(2),
   display: 'flex',
-  borderRadius: '48px',
-  backgroundColor: '#F5F5F5',
+  color: theme.palette.rfDisabledDark,
   alignItems: 'center',
+  ...(active && {
+    color: theme.palette.rfButton,
+  }),
 }))
 
-export const StyledChipText = styled(Typography)(() => ({
+export const StyledChip = styled(Box)<TActive>(({ theme, active }) => ({
+  padding: theme.spacing(1, 2),
+  maxWidth: '72px',
+  borderRadius: '21px',
+  backgroundColor: theme.palette.rfBackground,
+  ...(active && {
+    background: theme.palette.rfButton,
+  }),
+}))
+
+export const StyledChipText = styled(Typography)<TActive>(({ theme, active }) => ({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
-  fontSize: '12px',
+  ...theme.typography.caption,
+  maxWidth: '72px',
+  color: theme.palette.rfDisabledDark,
+
+  ...(active && {
+    color: theme.palette.rfWhite,
+  }),
 }))
