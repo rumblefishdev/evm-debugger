@@ -33,7 +33,7 @@ export const AppNavigation = ({ ...props }: AppNavigationProps) => {
           onClick={() => handleTabClick(ROUTES.STRUCTLOGS_EXPLORER)}
         />
       </StyledTabs>
-      <AppContainer>
+      <AppContainer withNavbar>
         <Outlet />
       </AppContainer>
     </React.Fragment>

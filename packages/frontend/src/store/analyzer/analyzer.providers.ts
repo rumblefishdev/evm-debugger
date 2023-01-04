@@ -2,8 +2,6 @@ import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { TransactionTracResponseStatus } from '@evm-debuger/types'
 
-import { transactionTraceProviderUrl } from '../../config'
-
 import type { IAbiProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
@@ -46,7 +44,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
   // eslint-disable-next-line id-denylist
   async getStructLog(): Promise<IStructLog[]> {
     let transactionTraceJson
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         const asJson = await response.json()
@@ -57,12 +55,10 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
         } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
           transactionTraceJson = getTransactionTraceFromS3(asJson.output)
-          clearInterval(transactionTraceInterval)
-        } else {
           console.log('TRACE:', transactionTraceJson)
           clearInterval(transactionTraceInterval)
           resolve(transactionTraceJson)
-        }
+        } else console.log('Waiting for transaction trace to be generated...')
       }, 30_000)
     })
   }

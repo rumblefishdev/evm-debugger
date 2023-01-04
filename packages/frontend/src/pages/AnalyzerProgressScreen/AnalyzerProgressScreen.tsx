@@ -16,12 +16,10 @@ import type { AnalyzerProgressScreenProps, AnalyzerStepProps } from './AnalyzerP
 import {
   StyledHeadlineCaption,
   StyledImage,
-  StyledImageWrapper,
   StyledLogContiner,
   StyledLogPanel,
   StyledLogRecord,
   StyledMainPanel,
-  StyledMainPanelWrapper,
   StyledMessage,
   StyledStepper,
   StyledTimestamp,
@@ -99,7 +97,7 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
   return (
     <AppContainer>
       <StyledMainPanel>
-        <StyledMainPanelWrapper>
+        <Stack>
           <Stack>
             <StyledHeadlineCaption variant="uppercase" gutterBottom={true}>
               EVM Debugger
@@ -113,9 +111,9 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
               return <DefaultStep key={stage.stageName} stepName={stage.stageName} />
             })}
           </StyledStepper>
-          <StyledImageWrapper>
-            <StyledImage src={TailProgressScreen} />
-          </StyledImageWrapper>
+        </Stack>
+        <StyledImage src={TailProgressScreen} />
+        {error && (
           <Stack direction="row" spacing={2}>
             <Button style={{ width: '224px' }} variant="outlined" onClick={moveBackToStartingScreen}>
               Back
@@ -124,7 +122,7 @@ export const AnalyzerProgressScreen = ({ ...props }: AnalyzerProgressScreenProps
               Restart
             </Button>
           </Stack>
-        </StyledMainPanelWrapper>
+        )}
       </StyledMainPanel>
       <StyledLogPanel>
         <Typography variant="headingUnknown">Console info</Typography>

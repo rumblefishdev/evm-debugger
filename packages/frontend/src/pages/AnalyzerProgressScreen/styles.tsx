@@ -3,10 +3,7 @@ import { Stack, Stepper, styled, Typography } from '@mui/material'
 export const StyledMainPanel = styled(Stack)(() => ({
   width: '524px',
   position: 'relative',
-}))
-
-export const StyledMainPanelWrapper = styled(Stack)(() => ({
-  width: '100%',
+  justifyContent: 'space-between',
   height: '100%',
   flexDirection: 'column',
 }))
@@ -41,16 +38,11 @@ export const StyledStepper = styled(Stepper)(({ theme }) => ({
   },
 }))
 
-export const StyledImageWrapper = styled('div')(() => ({
-  width: '100%',
-  height: '445px',
-}))
-
 export const StyledImage = styled('img')(() => ({
   zIndex: -1,
   width: 'auto',
-  top: '-220px',
-  position: 'relative',
+  top: '220px',
+  position: 'absolute',
   left: '128px',
   height: '756px',
 }))
