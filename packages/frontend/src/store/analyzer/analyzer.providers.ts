@@ -1,7 +1,10 @@
 import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import { TransactionTracResponseStatus } from '@evm-debuger/types'
 
-import type { IStructLogProvider, ITxInfoProvider, IAbiProvider, IBytecodeProvider } from './analyzer.types'
+import { transactionTraceProviderUrl } from '../../config'
+
+import type { IAbiProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
   constructor(private structLog: IStructLog[]) {}
@@ -30,6 +33,38 @@ export class EtherscanAbiFetcher implements IAbiProvider {
     if (asJson.status !== '1') throw new Error(`${address} is not verified on Etherscan`)
 
     return JSON.parse(asJson.result)
+  }
+}
+
+export const getTransactionTraceFromS3 = (transactionTraceLocation) => {
+  return transactionTraceLocation
+}
+
+export class TransactionTraceFetcher implements IStructLogProvider {
+  constructor(private transactionTraceProviderUrl: string, public hash: string, private chainId: number) {}
+
+  // eslint-disable-next-line id-denylist
+  async getStructLog(): Promise<IStructLog[]> {
+    let transactionTraceJson
+    return new Promise(function (resolve) {
+      const transactionTraceInterval = setInterval(async () => {
+        const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
+        const asJson = await response.json()
+        console.log('INVOKE:', asJson)
+
+        if (asJson.status === TransactionTracResponseStatus.FAILED) {
+          clearInterval(transactionTraceInterval)
+          throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
+        } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
+          transactionTraceJson = getTransactionTraceFromS3(asJson.output)
+          clearInterval(transactionTraceInterval)
+        } else {
+          console.log('TRACE:', transactionTraceJson)
+          clearInterval(transactionTraceInterval)
+          resolve(transactionTraceJson)
+        }
+      }, 30_000)
+    })
   }
 }
 

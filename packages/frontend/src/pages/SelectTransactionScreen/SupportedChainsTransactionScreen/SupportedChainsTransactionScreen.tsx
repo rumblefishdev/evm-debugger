@@ -5,8 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { ErrorMessage } from '@hookform/error-message'
 
 import type { IAbiProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from '../../../store/analyzer/analyzer.types'
-import { EtherscanAbiFetcher, JSONRpcBytecodeFetcher, JSONRpcTxInfoFetcher } from '../../../store/analyzer/analyzer.providers'
-import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
+import {
+  EtherscanAbiFetcher,
+  JSONRpcBytecodeFetcher,
+  JSONRpcTxInfoFetcher,
+  TransactionTraceFetcher,
+} from '../../../store/analyzer/analyzer.providers'
+import { etherscanKey, etherscanUrl, jsonRpcProvider, transactionTraceProviderUrl } from '../../../config'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { ROUTES } from '../../../router'
@@ -14,7 +19,7 @@ import { ROUTES } from '../../../router'
 type SupportedChain = {
   name: string
   txInfoProvider: (hash: string) => ITxInfoProvider
-  structLogProvider: IStructLogProvider
+  structLogProvider: (hash: string) => IStructLogProvider
   abiProvider?: IAbiProvider
   bytecodeProvider?: IBytecodeProvider
 }
@@ -24,7 +29,7 @@ type ChainId = number
 const supportedChains: Record<ChainId, SupportedChain> = {
   1: {
     txInfoProvider: (hash: string) => new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[1]),
-    structLogProvider: null as IStructLogProvider, // TODO: @Kamil
+    structLogProvider: (hash: string) => new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 1),
     name: 'Ethereum',
     bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
     abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
@@ -50,7 +55,7 @@ export const SupportedChainsTransactionScreen = () => {
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: chainData.txInfoProvider(data.transactionHash),
-          structLogProvider: chainData.structLogProvider,
+          structLogProvider: chainData.structLogProvider(data.transactionHash),
           bytecodeProvider: chainData.bytecodeProvider,
           abiProvider: chainData.abiProvider,
         })
