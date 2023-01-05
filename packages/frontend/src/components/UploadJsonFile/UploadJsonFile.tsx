@@ -14,13 +14,7 @@ function safeJsonParse(data: string): unknown {
   }
 }
 
-export const UploadJsonFile = ({
-  label,
-  onChange,
-  onBlur,
-  title,
-  buttonLabel = 'Add',
-}: UploadJsonFileProps) => {
+export const UploadJsonFile = ({ label, onChange, onBlur, title, buttonLabel = 'Add' }: UploadJsonFileProps) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
   return (
     <>

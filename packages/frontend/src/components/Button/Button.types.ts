@@ -17,4 +17,5 @@ export type TButtonClasses = {
 
 export interface ButtonProps extends Test {
   variant: TButtonVariant
+  big?: boolean
 }

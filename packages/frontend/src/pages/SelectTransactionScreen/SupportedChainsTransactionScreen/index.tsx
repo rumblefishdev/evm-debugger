@@ -1,1 +1,0 @@
-export { SupportedChainsTransactionScreen } from './SupportedChainsTransactionScreen'

@@ -5,9 +5,5 @@ import type { ButtonProps } from './Button.types'
 import { StyledButton } from './styles'
 
 export const Button = ({ ...props }: ButtonProps) => {
-  return (
-    <StyledButton {...props}>
-      <Typography variant="buttonSmall">{props.children}</Typography>
-    </StyledButton>
-  )
+  return <StyledButton {...props}>{props.children}</StyledButton>
 }
