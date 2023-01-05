@@ -20,6 +20,8 @@ export const Navigation = ({ children, ...props }: NavigationProps) => {
     navigate(tabName)
   }
 
+  console.log('ppppppppppppppppppppppppppppppppppppppppppppppppp')
+
   return (
     <StyledStack {...props}>
       <StyledTabs value={value} onChange={handleChange} centered>

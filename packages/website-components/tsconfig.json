@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "jsx": "react",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "composite": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "sourceMap": false,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "custom.d.ts"]
+}

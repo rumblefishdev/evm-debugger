@@ -12,7 +12,6 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
   width: '100%',
   paddingBottom: theme.spacing(12),
-  height: '48px',
 
   '& .MuiTabs-indicator': {
     height: '1px',

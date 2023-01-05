@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { contentfulClient } from '@evm-debuger/website-compontents'
 
 import { SupportedChain } from './pages/SupportedChain'
 import { ManualUpload } from './pages/ManualUpload'
@@ -23,6 +24,14 @@ export const appRouter = createBrowserRouter(
   [
     {
       path: ROUTES.HOME,
+      loader: async () => {
+        const entries = await contentfulClient.getEntries({
+          order: '-fields.pubDate',
+          content_type: 'blogPost',
+        })
+
+        return entries.items
+      },
       element: <StartingScreen />,
       children: [
         {

@@ -16,6 +16,9 @@
     },
     {
       "path": "../analyzer"
+    },
+    {
+      "path": "../website-components"
     }
   ]
 }
