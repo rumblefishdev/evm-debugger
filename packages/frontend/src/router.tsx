@@ -11,7 +11,6 @@ import { StartingScreen } from './pages/StartingScreen'
 
 export enum ROUTES {
   HOME = '/',
-  SUPPORTED_CHAIN = '/supportedChain',
   MANUAL_UPLOAD = '/manualUpload',
   APP = '/app',
   TRANSACTION_SCREEN = '/app/transactionScreen',
@@ -27,7 +26,7 @@ export const appRouter = createBrowserRouter(
       element: <StartingScreen />,
       children: [
         {
-          path: ROUTES.SUPPORTED_CHAIN,
+          path: ROUTES.HOME,
           element: <SupportedChain />,
         },
         {
