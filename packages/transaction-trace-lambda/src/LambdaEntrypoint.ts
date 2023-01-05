@@ -93,15 +93,22 @@ export const checkIfJsonExistsOnS3 = (jsonS3Key: string) => {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const checkState = async (event: any, context: Context) => {
   context.callbackWaitsForEmptyEventLoop = true
-  const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(
-    event.pathParameters.txHash,
-  )
+  const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(event.pathParameters.txHash)
+
+  console.log('analyzerData', analyzerData)
+
+  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
+
+  console.log('jsonS3Key', jsonS3Key)
+
+  const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
+
+  console.log('jsonExists', jsonExists)
+
+  if (jsonExists) return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
 
   if (!analyzerData) {
-    const taskArn = await runEcsTask(
-      event.pathParameters.txHash,
-      event.pathParameters.chainId,
-    )
+    const taskArn = await runEcsTask(event.pathParameters.txHash, event.pathParameters.chainId)
     await analyzerDataRepository.saveAnalyzerData({
       txHash: event.pathParameters.txHash,
       taskArn,
@@ -110,21 +117,18 @@ export const checkState = async (event: any, context: Context) => {
 
     return createResponse(TransactionTracResponseStatus.RUNNING, null)
   }
-  const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
-    analyzerData.taskArn,
-  )
-  if (ecsTaskParameter.failures.length > 0)
-    return createResponse(TransactionTracResponseStatus.FAILED, null)
 
-  const currentTask = ecsTaskParameter.tasks.find(
-    (task) => task.taskArn === analyzerData.taskArn,
-  )
-  if (taskIsRunning(currentTask.lastStatus))
-    return createResponse(TransactionTracResponseStatus.RUNNING, null)
+  const ecsTaskParameter = await getInfoAboutEcsTaskExecution(analyzerData.taskArn)
 
-  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
-  const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
-  if (jsonExists)
-    return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
+  console.log('ecsTaskParameter', ecsTaskParameter)
+
+  if (ecsTaskParameter.failures.length > 0) return createResponse(TransactionTracResponseStatus.FAILED, null)
+
+  const currentTask = ecsTaskParameter.tasks.find((task) => task.taskArn === analyzerData.taskArn)
+
+  console.log('currentTask', currentTask)
+
+  if (taskIsRunning(currentTask.lastStatus)) return createResponse(TransactionTracResponseStatus.RUNNING, null)
+
   return createResponse(TransactionTracResponseStatus.FAILED, null)
 }

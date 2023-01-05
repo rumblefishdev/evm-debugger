@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "aws-lambda": "^1.0.7",
-    "@evm-debuger/types": "../types"
+    "@evm-debuger/types": "^0.0.2",
+    "@types/node": "^16.11.6"
   },
   "files": [
     "dist"
