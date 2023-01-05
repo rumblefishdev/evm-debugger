@@ -1,7 +1,11 @@
 import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
 import { TransactionTracResponseStatus } from '@evm-debuger/types'
+import { S3 } from 'aws-sdk'
 
+import { store } from '../store'
+
+import { analyzerActions } from './analyzer.slice'
 import type { IAbiProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
@@ -34,8 +38,14 @@ export class EtherscanAbiFetcher implements IAbiProvider {
   }
 }
 
-export const getTransactionTraceFromS3 = (transactionTraceLocation) => {
-  return transactionTraceLocation
+export const getTransactionTraceFromS3 = async (transactionTraceLocation) => {
+  const s3 = new S3({
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1',
+    accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  })
+  const s3Object = await s3.getObject({ Key: transactionTraceLocation, Bucket: 'transaction-trace-storage.rumblefish.dev' }).promise()
+  return JSON.parse(s3Object.Body.toString()).structLogs
 }
 
 export class TransactionTraceFetcher implements IStructLogProvider {
@@ -47,19 +57,22 @@ export class TransactionTraceFetcher implements IStructLogProvider {
     return new Promise((resolve) => {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
+        console.log(response)
         const asJson = await response.json()
         console.log('INVOKE:', asJson)
+
+        store.dispatch(analyzerActions.logMessage(`'Fetching structLogs status: ${asJson.status}`))
 
         if (asJson.status === TransactionTracResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
           throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
         } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
-          transactionTraceJson = getTransactionTraceFromS3(asJson.output)
+          transactionTraceJson = await getTransactionTraceFromS3(asJson.output)
           console.log('TRACE:', transactionTraceJson)
           clearInterval(transactionTraceInterval)
           resolve(transactionTraceJson)
-        } else console.log('Waiting for transaction trace to be generated...')
-      }, 30_000)
+        }
+      }, 15_000)
     })
   }
 }
