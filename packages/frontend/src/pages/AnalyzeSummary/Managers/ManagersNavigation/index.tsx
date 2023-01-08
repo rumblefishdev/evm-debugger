@@ -1,1 +1,0 @@
-export { ManagersNavigation } from './ManagersNavigation'
