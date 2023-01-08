@@ -1,9 +1,14 @@
-import { Typography } from '@mui/material'
 import React from 'react'
 
 import type { ButtonProps } from './Button.types'
 import { StyledButton } from './styles'
 
-export const Button = ({ ...props }: ButtonProps) => {
-  return <StyledButton {...props}>{props.children}</StyledButton>
+export const Button = ({ big, ...props }: ButtonProps) => {
+  // TODO: implement "big" as class
+
+  return (
+    <StyledButton big={big} {...props}>
+      {props.children}
+    </StyledButton>
+  )
 }

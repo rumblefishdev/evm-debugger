@@ -35,7 +35,7 @@ export const StyledInputLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
 }))
 
-export const StyledInputLabelStar = styled(Typography)(({ theme }) => ({
+export const StyledInputLabelStar = styled(Typography)<{ component?: 'span' }>(({ theme }) => ({
   ...theme.typography.label,
   display: 'inline',
   color: theme.palette.rfBrandSecondary,

@@ -29,7 +29,7 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
           {description ? <StyledDescription>{description}</StyledDescription> : null}
         </StyledHeader>
         <StyledInputLabel>
-          Code<StyledInputLabelStar>*</StyledInputLabelStar>
+          Code<StyledInputLabelStar component="span">*</StyledInputLabelStar>
         </StyledInputLabel>
         <StyledTextArea multiline minRows={12} value={inputValue} onChange={(event) => setFileValue(event.target.value)} />
         <StyledButtonWrapper>

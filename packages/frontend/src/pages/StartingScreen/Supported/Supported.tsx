@@ -89,7 +89,7 @@ export const Supported = () => {
           required: 'This field is required',
         }}
       />
-      <Button variant="contained" big={true} sx={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
+      <Button variant="contained" big={true} style={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
         Process logs
       </Button>
     </StyledStack>
