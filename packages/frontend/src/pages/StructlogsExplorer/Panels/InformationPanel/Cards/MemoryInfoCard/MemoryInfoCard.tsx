@@ -13,12 +13,12 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   return (
     <StructlogAcordionPanel text="Memory" canExpand={memory.length > 0}>
       <StyledWrapper {...props}>
-        {memory.map((memoryItem, index) => {
+        {memory.map((memoryItem) => {
           return (
-            <StyledRecord direction="row" key={index}>
+            <StyledRecord direction="row" key={memoryItem.index}>
               <StyledRecordType>{memoryItem.index}</StyledRecordType>
-              {memoryItem.value.map((value) => {
-                return <StyledRecordValue>{value}</StyledRecordValue>
+              {memoryItem.value.map((value, index) => {
+                return <StyledRecordValue key={index}>{value}</StyledRecordValue>
               })}
             </StyledRecord>
           )

@@ -4,7 +4,9 @@ type TCanExpand = {
   canExpand: boolean
 }
 
-export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand, expanded }) => ({
+export const StyledAccordion = styled(Accordion, {
+  shouldForwardProp: (prop) => prop !== 'canExpand',
+})<TCanExpand>(({ theme, canExpand, expanded }) => ({
   transition: 'all 0.4s ease-in-out',
   padding: theme.spacing(0, 6),
   outline: 'none',
@@ -52,7 +54,9 @@ export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand
   }),
 }))
 
-export const StyledAccordionSummary = styled(AccordionSummary)<TCanExpand>(({ theme, canExpand }) => ({
+export const StyledAccordionSummary = styled(AccordionSummary, {
+  shouldForwardProp: (prop) => prop !== 'canExpand',
+})<TCanExpand>(({ theme, canExpand }) => ({
   padding: theme.spacing(4, 0, 5, 0),
   minHeight: 'unset',
   color: theme.palette.rfDisabled,

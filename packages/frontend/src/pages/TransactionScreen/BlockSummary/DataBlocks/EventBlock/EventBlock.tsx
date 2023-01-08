@@ -15,9 +15,9 @@ import type { EventBlockProps } from './EventBlock.types'
 
 export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
   <Stack sx={{ marginBottom: '12px' }} {...props}>
-    {eventLogs.map((event) =>
+    {eventLogs.map((event, rootIndex) =>
       event.signature ? (
-        <StyledAccordion>
+        <StyledAccordion key={rootIndex}>
           <StyledAccordionSummary>{event.signature}</StyledAccordionSummary>
           <StyledAccordionDetails>
             <List>
