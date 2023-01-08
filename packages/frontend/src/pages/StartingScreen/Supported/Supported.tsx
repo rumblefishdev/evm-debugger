@@ -8,15 +8,15 @@ import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { ROUTES } from '../../../router'
 import { Button } from '../../../components/Button'
 
-import { StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
-import type { IFormData, SupportedProps } from './Supported.types'
+import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
+import type { IFormData } from './Supported.types'
 
-export const Supported = ({ ...props }: SupportedProps) => {
+export const Supported = () => {
   const dispatch = useTypedDispatch()
   const navigate = useNavigate()
 
   const { control, handleSubmit, formState } = useForm<IFormData>({
-    mode: 'all',
+    mode: 'onChange',
   })
 
   const submitHandler = useCallback(
@@ -35,9 +35,8 @@ export const Supported = ({ ...props }: SupportedProps) => {
     [dispatch, navigate]
   )
 
-  console.log(formState)
   return (
-    <StyledStack {...props}>
+    <StyledStack>
       <Controller
         control={control}
         defaultValue=""
@@ -49,10 +48,10 @@ export const Supported = ({ ...props }: SupportedProps) => {
               fullWidth
               variant="outlined"
               value={field.value}
-              onBlur={field.onBlur}
               onChange={field.onChange}
               error={fieldState.error?.type === 'required' || fieldState.error?.type === 'pattern'}
             />
+            <StyledErrorLabel>{fieldState.error?.message}</StyledErrorLabel>
           </StyledInputWrapper>
         )}
         rules={{
@@ -72,10 +71,10 @@ export const Supported = ({ ...props }: SupportedProps) => {
           <StyledInputWrapper>
             <StyledInputLabel>Network</StyledInputLabel>
             <StyledSelect
+              variant="outlined"
               labelId="demo-simple-select-label"
               value={field.value}
               onChange={field.onChange}
-              onBlur={field.onBlur}
               error={fieldState.error?.type === 'required'}
             >
               {Object.entries(supportedChains).map(([chainId, chainData]) => (
@@ -90,13 +89,7 @@ export const Supported = ({ ...props }: SupportedProps) => {
           required: 'This field is required',
         }}
       />
-      <Button
-        variant="contained"
-        big={true}
-        sx={{ width: '200px', marginTop: '16px' }}
-        onClick={handleSubmit(submitHandler)}
-        disabled={!formState.isValid}
-      >
+      <Button variant="contained" big={true} sx={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
         Process logs
       </Button>
     </StyledStack>

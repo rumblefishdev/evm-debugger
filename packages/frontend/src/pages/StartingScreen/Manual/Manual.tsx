@@ -15,16 +15,16 @@ import {
 } from '../../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { useTypedDispatch } from '../../../store/storeHooks'
+import { traceTransactionSchema, txInfoSchema } from '../../../helpers/schemas'
 
-import { traceTransactionSchema, txInfoSchema } from './schemas'
-import type { IManualUploadFormData, ManualProps } from './Manual.types'
+import type { IManualUploadFormData } from './Manual.types'
 import { StyledLine, StyledStack } from './styles'
 
-export const Manual = ({ ...props }: ManualProps) => {
+export const Manual = () => {
   const dispatch = useTypedDispatch()
   const navigate = useNavigate()
 
-  const { control, handleSubmit, formState } = useForm<IManualUploadFormData>({
+  const { control, handleSubmit } = useForm<IManualUploadFormData>({
     mode: 'onBlur',
   })
 
@@ -44,13 +44,14 @@ export const Manual = ({ ...props }: ManualProps) => {
   )
 
   return (
-    <StyledStack {...props}>
+    <StyledStack>
       <Controller
         control={control}
         name="txInfo"
         render={({ field, fieldState }) => (
           <UploadBox
-            isWrongFile={fieldState.error?.type === 'schema'}
+            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+            errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of eth_getTransactionByHash"
             onChange={field.onChange}
             onBlur={field.onBlur}
@@ -71,7 +72,8 @@ export const Manual = ({ ...props }: ManualProps) => {
         name="structLogs"
         render={({ field, fieldState }) => (
           <UploadBox
-            isWrongFile={fieldState.error?.type === 'schema'}
+            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+            errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of debug_traceTransaction"
             onChange={field.onChange}
             onBlur={field.onBlur}
@@ -86,13 +88,7 @@ export const Manual = ({ ...props }: ManualProps) => {
           required: 'This field is required',
         }}
       />
-      <Button
-        variant="contained"
-        big={true}
-        sx={{ width: '200px', marginTop: '16px' }}
-        onClick={handleSubmit(submitHandler)}
-        disabled={!formState.isValid}
-      >
+      <Button variant="contained" big={true} sx={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
         Process logs
       </Button>
     </StyledStack>

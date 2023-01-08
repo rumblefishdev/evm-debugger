@@ -51,6 +51,7 @@ export const StyledTextArea = styled(Input)(({ theme }) => ({
   height: '100%',
   boxSizing: 'border-box',
   ...theme.customStyles.scrollbar,
+  ...theme.typography.bodySmall,
 
   borderRadius: '3px',
   border: `1px solid ${theme.palette.rfLines}`,

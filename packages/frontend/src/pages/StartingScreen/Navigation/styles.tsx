@@ -3,7 +3,7 @@ import { Tabs, Tab, Stack, styled } from '@mui/material'
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '632px',
   padding: theme.spacing(12),
-  minHeight: '370px',
+  marginTop: theme.spacing(32),
   borderRadius: '16px',
   borderBox: 'border-box',
   border: `1px solid ${theme.palette.rfLinesLight}`,

@@ -4,7 +4,8 @@ export interface UploadStackProps extends StackProps {
   title: string
   uploadInfo: string
   isUploaded: boolean
-  isWrongFile: boolean
+  isError?: boolean
+  errorMessage?: string
   onChange: (value: unknown) => void
   onBlur: () => void
 }

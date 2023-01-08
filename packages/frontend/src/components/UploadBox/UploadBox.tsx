@@ -1,5 +1,6 @@
 import React from 'react'
 import { Stack } from '@mui/system'
+import { Tooltip } from '@mui/material'
 
 import { Button } from '../Button'
 import { TickFilledBlue, Error } from '../../icons'
@@ -9,7 +10,7 @@ import { DataAdder } from '../DataAdder'
 import type { UploadStackProps } from './UploadBox.types'
 import { IconWrapper, StyledLabel, StyledStack, StyledTextWrapper, StyledTitle } from './styles'
 
-export const UploadBox = ({ isUploaded, isWrongFile, onChange, onBlur, title, uploadInfo, ...props }: UploadStackProps) => {
+export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur, title, uploadInfo, ...props }: UploadStackProps) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
 
   const submitHandler = (data: string) => {
@@ -30,8 +31,12 @@ export const UploadBox = ({ isUploaded, isWrongFile, onChange, onBlur, title, up
   return (
     <StyledStack {...props}>
       <IconWrapper>
-        {isUploaded && !isWrongFile && <TickFilledBlue />}
-        {isWrongFile && <Error />}
+        {isUploaded && !isError && <TickFilledBlue />}
+        {isError && (
+          <Tooltip title={errorMessage}>
+            <Error />
+          </Tooltip>
+        )}
         <StyledTextWrapper>
           <StyledLabel>Upload Result of</StyledLabel>
           <StyledTitle>{uploadInfo}</StyledTitle>
