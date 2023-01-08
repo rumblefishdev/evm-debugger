@@ -7,14 +7,6 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   maxWidth: '508px',
   height: '100%',
   ...theme.customStyles.scrollbar,
-
-  '& > :last-child': {
-    marginBottom: theme.spacing(0),
-  },
-
-  '& > :first-child': {
-    marginTop: theme.spacing(0),
-  },
 }))
 
 export const StyledInfoRow = styled(Stack)(() => ({
@@ -26,6 +18,10 @@ export const StyledInfoType = styled(Typography)(({ theme }) => ({
   width: '128px',
   ...theme.typography.bodySmallBold,
   color: theme.palette.rfDisabled,
+}))
+
+export const StyledBlockWrapper = styled(Stack)(({ theme }) => ({
+  margin: theme.spacing(4, 0),
 }))
 
 export const StyledFunctionsignature = styled(Typography)(({ theme }) => ({

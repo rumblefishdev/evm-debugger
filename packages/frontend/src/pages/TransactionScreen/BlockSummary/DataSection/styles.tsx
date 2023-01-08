@@ -1,14 +1,17 @@
 import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  margin: theme.spacing(6, 0),
-}))
+  marginBottom: theme.spacing(0),
 
-export const StyledHeaderWrapper = styled(Stack)(({ theme }) => ({
-  marginBottom: theme.spacing(6),
-  gap: theme.spacing(1),
-}))
+  '&:last-of-type': {
+    marginBottom: theme.spacing(0),
+  },
 
+  '&:first-of-type': {
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(6),
+  },
+}))
 export const StyledSectionHeader = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(6),
   color: theme.palette.rfDisabledDark,

@@ -1,14 +1,11 @@
 import React from 'react'
 
 import type { DataSectionProps } from './DataSection.types'
-import { StyledHeaderWrapper, StyledSectionHeader, StyledStack, StyledFunctionsignature, StyledContentWrapper } from './styles'
+import { StyledSectionHeader, StyledStack, StyledContentWrapper } from './styles'
 
-export const DataSection = ({ subtitle, title, children, ...props }: DataSectionProps) => (
+export const DataSection = ({ title, children, ...props }: DataSectionProps) => (
   <StyledStack {...props}>
-    <StyledHeaderWrapper>
-      <StyledSectionHeader>{title}</StyledSectionHeader>
-      {subtitle && <StyledFunctionsignature>{subtitle}</StyledFunctionsignature>}
-    </StyledHeaderWrapper>
+    <StyledSectionHeader>{title}</StyledSectionHeader>
     <StyledContentWrapper>{children}</StyledContentWrapper>
   </StyledStack>
 )

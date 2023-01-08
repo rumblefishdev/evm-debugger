@@ -1,19 +1,10 @@
 import React from 'react'
-import { Stack } from '@mui/system'
 
 import { useTypedSelector } from '../../../store/storeHooks'
 import { selectParsedActiveBlock } from '../../../store/activeBlock/activeBlock.selector'
 
 import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps, DefaultBlockSummaryProps } from './BlockSummary.types'
-import {
-  StyledFunctionsignature,
-  StyledInfoRow,
-  StyledInfoType,
-  StyledInfoValue,
-  StyledSectionHeader,
-  StyledStack,
-  StyleRawBytecode,
-} from './styles'
+import { StyledBlockWrapper, StyledInfoRow, StyledInfoType, StyledInfoValue, StyledStack, StyleRawBytecode } from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
@@ -41,7 +32,25 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         <StyledInfoType>Is contract</StyledInfoType>
         <StyledInfoValue>{isContract ? 'true' : 'false'}</StyledInfoValue>
       </StyledInfoRow>
-
+      {functionSignature && (
+        <StyledInfoRow>
+          <StyledInfoType>Function signature</StyledInfoType>
+          <StyledInfoValue>{functionSignature}</StyledInfoValue>
+        </StyledInfoRow>
+      )}
+      <StyledBlockWrapper>
+        {parsedInput && parsedInput.length > 0 && <ParamBlock title="Inputs" items={parsedInput} />}
+        {parsedOutput && parsedOutput.length > 0 && <ParamBlock title="Outputs" items={parsedOutput} />}
+        {parsedError && parsedError.length > 0 && <ParamBlock title="Error" items={parsedError} />}
+      </StyledBlockWrapper>
+      {parsedEvents && parsedEvents.length > 0 && (
+        <DataSection title="Events data">
+          <EventBlock eventLogs={parsedEvents} />
+        </DataSection>
+      )}
+      <DataSection title="Storage data">
+        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
+      </DataSection>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
         <StyleRawBytecode>{input}</StyleRawBytecode>
@@ -50,21 +59,6 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         <StyledInfoType>Raw output</StyledInfoType>
         <StyleRawBytecode>{output}</StyleRawBytecode>
       </StyledInfoRow>
-      {functionSignature && (
-        <StyledInfoRow>
-          <StyledInfoType>Function signature</StyledInfoType>
-          <StyledInfoValue>{functionSignature}</StyledInfoValue>
-        </StyledInfoRow>
-      )}
-      {parsedInput ? <ParamBlock title="Inputs" items={parsedInput} /> : null}
-      {parsedOutput ? <ParamBlock title="Outputs" items={parsedOutput} /> : null}
-      {parsedError ? <ParamBlock title="Error" items={parsedError} /> : null}
-      <DataSection title="Events data">
-        <EventBlock eventLogs={parsedEvents} />
-      </DataSection>
-      <DataSection title="Storage data">
-        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
-      </DataSection>
     </DataSection>
   )
 }

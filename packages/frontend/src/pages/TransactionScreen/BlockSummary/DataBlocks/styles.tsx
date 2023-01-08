@@ -2,11 +2,13 @@ import { Accordion, AccordionDetails, AccordionSummary, Stack, styled, Typograph
 
 export const StyledAccordion = styled(Accordion)(({ theme }) => ({
   padding: theme.spacing(0, 6),
-  outline: 'none',
+  outlineWidth: '1px',
+  outlineStyle: 'solid',
+  outlineOffset: '-1px',
+  outlineColor: theme.palette.rfLinesLight,
+
   boxShadow: 'none',
-  borderWidth: '1px 1px 0px 1px',
-  borderStyle: 'solid',
-  borderColor: theme.palette.rfLinesLight,
+
   backgroundColor: theme.palette.rfWhite,
 
   '&:before': {
@@ -14,9 +16,8 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
   },
 
   '&.Mui-expanded': {
+    outlineColor: theme.palette.rfButton,
     margin: 0,
-    borderWidth: '1px',
-    borderColor: theme.palette.rfButton,
   },
 }))
 
