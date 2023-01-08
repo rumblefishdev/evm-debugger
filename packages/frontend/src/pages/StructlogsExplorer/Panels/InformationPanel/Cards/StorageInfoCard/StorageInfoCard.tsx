@@ -1,9 +1,9 @@
 import React from 'react'
 import { Stack } from '@mui/material'
 
-import { selectStructlogStorage } from '../../../../../store/structlogs/structlogs.slice'
-import { useTypedSelector } from '../../../../../store/storeHooks'
-import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
+import { selectStructlogStorage } from '../../../../../../store/structlogs/structlogs.slice'
+import { useTypedSelector } from '../../../../../../store/storeHooks'
+import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecord, StyledRecordType, StyledRecordValue, StyledWrapper } from '../styles'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'

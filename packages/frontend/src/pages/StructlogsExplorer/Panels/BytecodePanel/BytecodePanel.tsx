@@ -3,11 +3,11 @@ import ViewportList from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
 import { ethers } from 'ethers'
 
-import { useTypedSelector } from '../../../store/storeHooks'
-import { bytecodesSelectors } from '../../../store/bytecodes/bytecodes.slice'
+import { useTypedSelector } from '../../../../store/storeHooks'
+import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.slice'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
-import { ExplorerListRow } from '../../../components/ExplorerListRow'
-import { convertOpcodeToName } from '../../../helpers/opcodesDictionary'
+import { ExplorerListRow } from '../../../../components/ExplorerListRow'
+import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 
 import { StyledDisabledBytecode } from './styles'
 

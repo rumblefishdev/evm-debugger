@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
-import { BytecodesManager, SighashesManager, SourcecodesManager } from '../../parts/Managers'
-
+import { BytecodesManager, SighashesManager, SourcecodesManager } from './Managers'
 import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledContentWrapper, StyledStack, StyledTab, StyledTabs } from './styles'
 

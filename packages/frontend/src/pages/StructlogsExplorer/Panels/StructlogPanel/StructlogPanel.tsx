@@ -7,11 +7,11 @@ import {
   loadNextStructlog,
   selectParsedStructLogs,
   loadActiveStructLog,
-} from '../../../store/structlogs/structlogs.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+} from '../../../../store/structlogs/structlogs.slice'
+import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
-import { ExplorerListRow } from '../../../components/ExplorerListRow'
-import type { IExtendedStructLog } from '../../../types'
+import { ExplorerListRow } from '../../../../components/ExplorerListRow'
+import type { IExtendedStructLog } from '../../../../types'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()

@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { bytecodesAdapter, updateBytecode } from '../../../store/bytecodes/bytecodes.slice'
-import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
-import { ManagerItem } from '../../../components/ManagerItem'
+import { bytecodesAdapter, updateBytecode } from '../../../../store/bytecodes/bytecodes.slice'
+import { useTypedSelector, useTypedDispatch } from '../../../../store/storeHooks'
+import { ManagerItem } from '../../../../components/ManagerItem'
 import { StyledHeading, StyledStack, StyledWrapper } from '../styles'
 
 import type { BytecodesManagerProps } from './BytecodesManager.types'

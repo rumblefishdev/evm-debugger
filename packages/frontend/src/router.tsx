@@ -1,13 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { SupportedChain } from './pages/SupportedChain'
-import { ManualUpload } from './pages/ManualUpload'
-import { AnalyzerProgressScreen } from './pages/AnalyzerProgressScreen'
-import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { StructlogsExplorer } from './pages/StructlogsExplorer'
-import { TranscationScreen } from './pages/TranscationScreen'
-import { AppNavigation } from './parts/AppNavigation'
-import { StartingScreen } from './pages/StartingScreen'
+import {
+  ManualUpload,
+  StartingScreen,
+  SupportedChain,
+  AnalyzeSummary,
+  AnalyzerProgressScreen,
+  StructlogsExplorer,
+  TranscationScreen,
+} from './pages'
+import { AppNavigation } from './pages/AppNavigation'
 
 export enum ROUTES {
   HOME = '/',

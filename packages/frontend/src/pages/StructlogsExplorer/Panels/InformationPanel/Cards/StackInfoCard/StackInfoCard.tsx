@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { useTypedSelector } from '../../../../../store/storeHooks'
-import { selectParsedStack } from '../../../../../store/structlogs/structlogs.slice'
-import { StructlogAcordionPanel } from '../../../../../components/StructlogAcordionPanel'
+import { useTypedSelector } from '../../../../../../store/storeHooks'
+import { selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
+import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'

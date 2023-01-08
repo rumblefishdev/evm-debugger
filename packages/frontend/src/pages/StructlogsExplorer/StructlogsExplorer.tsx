@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { BytecodePanel, StructlogPanel, InformationPanel } from '../../parts/StructlogExplorerPanels'
-
+import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper } from './styles'
 

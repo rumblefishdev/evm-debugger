@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material'
 import type { JsonFragment } from '@ethersproject/abi'
 
-import { sighashAdapter, updateSighash } from '../../../store/sighash/sighash.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
-import { ManagerItem } from '../../../components/ManagerItem'
+import { sighashAdapter, updateSighash } from '../../../../store/sighash/sighash.slice'
+import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
+import { ManagerItem } from '../../../../components/ManagerItem'
 import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from '../styles'
 
 import type { SighashesManagerProps } from './SighashesManager.types'

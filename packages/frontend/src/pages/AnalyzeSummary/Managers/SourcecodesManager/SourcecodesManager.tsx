@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { sourceCodesSelectors, updateSourceCode } from '../../../store/sourceCodes/sourceCodes.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
-import { ManagerItem } from '../../../components/ManagerItem'
+import { sourceCodesSelectors, updateSourceCode } from '../../../../store/sourceCodes/sourceCodes.slice'
+import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
+import { ManagerItem } from '../../../../components/ManagerItem'
 import { StyledHeading, StyledStack, StyledWrapper } from '../styles'
 
 import type { SourcecodesManagerProps } from './SourcecodesManager.types'
