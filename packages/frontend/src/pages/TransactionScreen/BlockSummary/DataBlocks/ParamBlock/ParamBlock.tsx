@@ -22,7 +22,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
       <StyledAccordionDetails>
         <List>
           {items.map((item, index) => {
-            if (typeof item.value === 'string')
+            if (typeof item.value === 'string' || typeof item.value === 'number')
               return (
                 <React.Fragment key={index}>
                   <StyledInfoRow key={index}>

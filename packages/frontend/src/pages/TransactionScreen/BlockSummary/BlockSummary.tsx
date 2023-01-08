@@ -21,7 +21,6 @@ import { DataSection } from './DataSection'
 
 const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   const {
-    errorSignature,
     functionSignature,
     isContract,
     parsedError,
