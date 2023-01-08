@@ -9,7 +9,7 @@ export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand
   padding: theme.spacing(0, 6),
   outline: 'none',
   boxShadow: 'none',
-  borderWidth: '1px 1px 0px 1px',
+  borderWidth: '1px',
   borderStyle: 'solid',
   borderColor: theme.palette.rfLinesLight,
   backgroundColor: theme.palette.rfWhite,
@@ -32,7 +32,6 @@ export const StyledAccordion = styled(Accordion)<TCanExpand>(({ theme, canExpand
   ...(expanded && {
     marginBottom: '1px',
     flexGrow: 1,
-    borderWidth: '1px 1px 0px 1px',
     borderColor: theme.palette.rfButton,
     backgroundColor: 'rgba(47, 87, 244, 0.05)',
     '& .MuiCollapse-root': {

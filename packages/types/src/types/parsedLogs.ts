@@ -51,6 +51,7 @@ export interface ICreateTypeTraceLog extends ITraceLog {
   isSuccess?: boolean
   isReverted?: boolean
   returnIndex?: number
+  isContract?: boolean
 
   address: string
   storageAddress?: string
