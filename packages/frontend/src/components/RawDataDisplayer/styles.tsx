@@ -1,17 +1,13 @@
 import { Dialog, Stack, styled, Typography } from '@mui/material'
 
 export const StyledDialog = styled(Dialog)(({ theme }) => ({
-  // paper
-
   '& .MuiDialog-paper': {
     overflow: 'hidden',
     maxWidth: 'unset',
     maxHeight: 'unset',
     margin: 'unset',
   },
-  // mui dialog
   '& .MuiDialog-container': {
-    // paper
     '& .MuiDialog-paper': {
       width: '684px',
       maxHeight: '680px',
