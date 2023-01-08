@@ -1,12 +1,10 @@
-import { Box, Stack } from '@mui/material'
 import type { JsonFragment } from '@ethersproject/abi'
 
-import { sighashAdapter, updateSighash } from '../../../../store/sighash/sighash.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
-import { ManagerItem } from '../../../../components/ManagerItem'
-import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from '../styles'
+import { sighashAdapter, updateSighash } from '../../../store/sighash/sighash.slice'
+import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+import { ManagerItem } from '../../../components/ManagerItem'
 
-import type { SighashesManagerProps } from './SighashesManager.types'
+import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from './styles'
 
 const addSighash = (id: string, value: string) => {
   const dispatch = useTypedDispatch()
@@ -17,11 +15,11 @@ function formatFragment(fragment: JsonFragment) {
   return `${fragment.name}(${fragment.inputs.map((input) => input.type).join(',')})`
 }
 
-export const SighashesManager = ({ ...props }: SighashesManagerProps) => {
+export const SighashesManager = () => {
   const sighashes = useTypedSelector((state) => sighashAdapter.getSelectors().selectAll(state.sighashes))
   const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
   return (
-    <StyledStack {...props}>
+    <StyledStack>
       <StyledHeading>Sighashes</StyledHeading>
       <StyledAbisWrapper>
         {contractAddresses.map((address) => {

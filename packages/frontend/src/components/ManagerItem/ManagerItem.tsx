@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
+import { RawDataDisplayer } from '../RawDataDisplayer'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
@@ -30,9 +31,7 @@ export const ManagerItem = ({ isFound, address, name, value, updateItem, ...prop
         </Button>
       )}
 
-      <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
-        <pre>{value}</pre>
-      </Dialog>
+      <RawDataDisplayer title={name} description={address} data={value} open={isDataVisible} onClose={() => setDataVisibility(false)} />
       <DataAdder
         open={isDataAdderVisible}
         submithandler={dataAdderHandler}

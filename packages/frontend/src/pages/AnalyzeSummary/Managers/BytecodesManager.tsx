@@ -1,13 +1,12 @@
 import React from 'react'
 
-import { bytecodesAdapter, updateBytecode } from '../../../../store/bytecodes/bytecodes.slice'
-import { useTypedSelector, useTypedDispatch } from '../../../../store/storeHooks'
-import { ManagerItem } from '../../../../components/ManagerItem'
-import { StyledHeading, StyledStack, StyledWrapper } from '../styles'
+import { bytecodesAdapter, updateBytecode } from '../../../store/bytecodes/bytecodes.slice'
+import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
+import { ManagerItem } from '../../../components/ManagerItem'
 
-import type { BytecodesManagerProps } from './BytecodesManager.types'
+import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
-export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
+export const BytecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addBytecode = (id: string, value: string) => {
     dispatch(updateBytecode({ id, changes: { bytecode: value } }))
@@ -16,7 +15,7 @@ export const BytecodesManager = ({ ...props }: BytecodesManagerProps) => {
   const data = useTypedSelector((state) => bytecodesAdapter.getSelectors().selectAll(state.bytecodes))
 
   return (
-    <StyledStack {...props}>
+    <StyledStack>
       <StyledHeading>Bytecodes</StyledHeading>
       <StyledWrapper>
         {data.map((item) => (

@@ -1,13 +1,12 @@
 import React from 'react'
 
-import { sourceCodesSelectors, updateSourceCode } from '../../../../store/sourceCodes/sourceCodes.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
-import { ManagerItem } from '../../../../components/ManagerItem'
-import { StyledHeading, StyledStack, StyledWrapper } from '../styles'
+import { sourceCodesSelectors, updateSourceCode } from '../../../store/sourceCodes/sourceCodes.slice'
+import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+import { ManagerItem } from '../../../components/ManagerItem'
 
-import type { SourcecodesManagerProps } from './SourcecodesManager.types'
+import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
-export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
+export const SourcecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addSourcecode = (id: string, value: string) => {
     dispatch(updateSourceCode({ id, changes: { sourceCode: value } }))
@@ -16,7 +15,7 @@ export const SourcecodesManager = ({ ...props }: SourcecodesManagerProps) => {
   const data = useTypedSelector((state) => sourceCodesSelectors.selectAll(state.sourceCodes))
 
   return (
-    <StyledStack {...props}>
+    <StyledStack>
       <StyledHeading>Source Codes</StyledHeading>
       <StyledWrapper>
         {data.map((item) => (

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
+import type { TTabType } from './AnalyzeSummary.types'
 import { BytecodesManager, SighashesManager, SourcecodesManager } from './Managers'
-import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
 import { StyledContentWrapper, StyledStack, StyledTab, StyledTabs } from './styles'
 
-export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
+export const AnalyzeSummary = () => {
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 
   const handleTabChange = (tabName: TTabType) => {
