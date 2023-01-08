@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 
 import type { TTabType } from './AnalyzeSummary.types'
-import {
-  BytecodesManager,
-  SighashesManager,
-  SourcecodesManager,
-} from './Managers'
+import { BytecodesManager, SighashesManager } from './Managers'
 import {
   StyledContentWrapper,
   StyledStack,
@@ -23,9 +19,9 @@ export const AnalyzeSummary = () => {
   const renderTab = () => {
     switch (activeTab) {
       // TODO: https://github.com/rumblefishdev/evm-debuger/issues/103
-      case 'sourcecodes': {
-        return <SourcecodesManager />
-      }
+      // case 'sourcecodes': {
+      //   return <SourcecodesManager />
+      // }
       case 'bytecodes': {
         return <BytecodesManager />
       }
