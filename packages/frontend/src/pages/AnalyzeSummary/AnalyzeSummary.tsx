@@ -1,8 +1,17 @@
 import React, { useState } from 'react'
 
 import type { TTabType } from './AnalyzeSummary.types'
-import { BytecodesManager, SighashesManager, SourcecodesManager } from './Managers'
-import { StyledContentWrapper, StyledStack, StyledTab, StyledTabs } from './styles'
+import {
+  BytecodesManager,
+  SighashesManager,
+  SourcecodesManager,
+} from './Managers'
+import {
+  StyledContentWrapper,
+  StyledStack,
+  StyledTab,
+  StyledTabs,
+} from './styles'
 
 export const AnalyzeSummary = () => {
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
@@ -32,9 +41,25 @@ export const AnalyzeSummary = () => {
   return (
     <StyledStack>
       <StyledTabs value={activeTab}>
-        <StyledTab disableRipple disabled label="Source Codes" value={'sourcecodes'} onClick={() => handleTabChange('sourcecodes')} />
-        <StyledTab disableRipple label="Bytecodes" value={'bytecodes'} onClick={() => handleTabChange('bytecodes')} />
-        <StyledTab disableRipple label="Abis" value={'sighashes'} onClick={() => handleTabChange('sighashes')} />
+        <StyledTab
+          disableRipple
+          disabled
+          label="Source Codes"
+          value={'sourcecodes'}
+          onClick={() => handleTabChange('sourcecodes')}
+        />
+        <StyledTab
+          disableRipple
+          label="Bytecodes"
+          value={'bytecodes'}
+          onClick={() => handleTabChange('bytecodes')}
+        />
+        <StyledTab
+          disableRipple
+          label="Abis"
+          value={'sighashes'}
+          onClick={() => handleTabChange('sighashes')}
+        />
       </StyledTabs>
       <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
     </StyledStack>

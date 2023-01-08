@@ -8,9 +8,24 @@ import { safeJsonParse } from '../../helpers/helpers'
 import { DataAdder } from '../DataAdder'
 
 import type { UploadStackProps } from './UploadBox.types'
-import { IconWrapper, StyledLabel, StyledStack, StyledTextWrapper, StyledTitle } from './styles'
+import {
+  IconWrapper,
+  StyledLabel,
+  StyledStack,
+  StyledTextWrapper,
+  StyledTitle,
+} from './styles'
 
-export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur, title, uploadInfo, ...props }: UploadStackProps) => {
+export const UploadBox = ({
+  isUploaded,
+  isError,
+  errorMessage,
+  onChange,
+  onBlur,
+  title,
+  uploadInfo,
+  ...props
+}: UploadStackProps) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
 
   const submitHandler = (data: string) => {
@@ -45,7 +60,12 @@ export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur,
       <Button variant="outlined" onClick={openHandler}>
         Add
       </Button>
-      <DataAdder title={title} submithandler={submitHandler} open={isOpen} onClose={onClose} />
+      <DataAdder
+        title={title}
+        submithandler={submitHandler}
+        open={isOpen}
+        onClose={onClose}
+      />
     </StyledStack>
   )
 }

@@ -1,4 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, List, Stack } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  List,
+  Stack,
+} from '@mui/material'
 import React from 'react'
 
 import {
@@ -36,7 +42,7 @@ export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
             </List>
           </StyledAccordionDetails>
         </StyledAccordion>
-      ) : null
+      ) : null,
     )}
   </Stack>
 )

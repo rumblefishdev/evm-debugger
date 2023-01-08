@@ -3,8 +3,20 @@ import React from 'react'
 import { useTypedSelector } from '../../../store/storeHooks'
 import { selectParsedActiveBlock } from '../../../store/activeBlock/activeBlock.selector'
 
-import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps, DefaultBlockSummaryProps } from './BlockSummary.types'
-import { StyledBlockWrapper, StyledInfoRow, StyledInfoType, StyledInfoValue, StyledStack, StyleRawBytecode } from './styles'
+import type {
+  BlockSummaryProps,
+  CallBlockSummaryProps,
+  CreateBlockSummaryProps,
+  DefaultBlockSummaryProps,
+} from './BlockSummary.types'
+import {
+  StyledBlockWrapper,
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyledStack,
+  StyleRawBytecode,
+} from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
@@ -39,9 +51,15 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         </StyledInfoRow>
       )}
       <StyledBlockWrapper>
-        {parsedInput && parsedInput.length > 0 && <ParamBlock title="Inputs" items={parsedInput} />}
-        {parsedOutput && parsedOutput.length > 0 && <ParamBlock title="Outputs" items={parsedOutput} />}
-        {parsedError && parsedError.length > 0 && <ParamBlock title="Error" items={parsedError} />}
+        {parsedInput && parsedInput.length > 0 && (
+          <ParamBlock title="Inputs" items={parsedInput} />
+        )}
+        {parsedOutput && parsedOutput.length > 0 && (
+          <ParamBlock title="Outputs" items={parsedOutput} />
+        )}
+        {parsedError && parsedError.length > 0 && (
+          <ParamBlock title="Error" items={parsedError} />
+        )}
       </StyledBlockWrapper>
       {parsedEvents && parsedEvents.length > 0 && (
         <DataSection title="Events data">
@@ -49,7 +67,10 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         </DataSection>
       )}
       <DataSection title="Storage data">
-        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
+        <StorageBlock
+          storageAddress={storageAddress}
+          storageLogs={storageLogs}
+        />
       </DataSection>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
@@ -76,14 +97,26 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
         <StyleRawBytecode>{input}</StyleRawBytecode>
       </StyledInfoRow>
       <DataSection title="Storage data">
-        <StorageBlock storageAddress={storageAddress} storageLogs={storageLogs} />
+        <StorageBlock
+          storageAddress={storageAddress}
+          storageLogs={storageLogs}
+        />
       </DataSection>
     </DataSection>
   )
 }
 
 const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
-  const { address, blockNumber, gasCost, passedGas, stackTrace, type, value, isSuccess } = data
+  const {
+    address,
+    blockNumber,
+    gasCost,
+    passedGas,
+    stackTrace,
+    type,
+    value,
+    isSuccess,
+  } = data
 
   return (
     <DataSection title="Trace Information">
@@ -132,7 +165,9 @@ export const BlockSummary: React.FC<BlockSummaryProps> = () => {
     <StyledStack>
       {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
       {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
-      {createSpecificData ? <CreateBlockSummary data={createSpecificData} /> : null}
+      {createSpecificData ? (
+        <CreateBlockSummary data={createSpecificData} />
+      ) : null}
     </StyledStack>
   )
 }

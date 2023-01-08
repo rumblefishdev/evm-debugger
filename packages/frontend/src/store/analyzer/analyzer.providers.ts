@@ -6,7 +6,12 @@ import { S3 } from 'aws-sdk'
 import { store } from '../store'
 
 import { analyzerActions } from './analyzer.slice'
-import type { IAbiProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from './analyzer.types'
+import type {
+  IAbiProvider,
+  IBytecodeProvider,
+  IStructLogProvider,
+  ITxInfoProvider,
+} from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
   constructor(private structLog: IStructLog[]) {}
@@ -28,11 +33,15 @@ export class EtherscanAbiFetcher implements IAbiProvider {
   constructor(private etherscanUrl: string, private etherscanKey: string) {}
 
   async getAbi(address: string) {
-    const response = await fetch(`${this.etherscanUrl}/api?module=contract&action=getabi&address=${address}&apikey=${this.etherscanKey}`)
-    if (response.status !== 200) throw new Error(`Etherscan returned ${response.status} response code`)
+    const response = await fetch(
+      `${this.etherscanUrl}/api?module=contract&action=getabi&address=${address}&apikey=${this.etherscanKey}`,
+    )
+    if (response.status !== 200)
+      throw new Error(`Etherscan returned ${response.status} response code`)
 
     const asJson = await response.json()
-    if (asJson.status !== '1') throw new Error(`${address} is not verified on Etherscan`)
+    if (asJson.status !== '1')
+      throw new Error(`${address} is not verified on Etherscan`)
 
     return JSON.parse(asJson.result)
   }
@@ -44,28 +53,45 @@ export const getTransactionTraceFromS3 = async (transactionTraceLocation) => {
     region: 'us-east-1',
     accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
   })
-  const s3Object = await s3.getObject({ Key: transactionTraceLocation, Bucket: 'transaction-trace-storage.rumblefish.dev' }).promise()
+  const s3Object = await s3
+    .getObject({
+      Key: transactionTraceLocation,
+      Bucket: 'transaction-trace-storage.rumblefish.dev',
+    })
+    .promise()
   return JSON.parse(s3Object.Body.toString()).structLogs
 }
 
 export class TransactionTraceFetcher implements IStructLogProvider {
-  constructor(private transactionTraceProviderUrl: string, public hash: string, private chainId: number) {}
+  constructor(
+    private transactionTraceProviderUrl: string,
+    public hash: string,
+    private chainId: number,
+  ) {}
 
   // eslint-disable-next-line id-denylist
   async getStructLog(): Promise<IStructLog[]> {
     let transactionTraceJson
     return new Promise((resolve) => {
       const transactionTraceInterval = setInterval(async () => {
-        const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
+        const response = await fetch(
+          `${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`,
+        )
         console.log(response)
         const asJson = await response.json()
         console.log('INVOKE:', asJson)
 
-        store.dispatch(analyzerActions.logMessage(`'Fetching structLogs status: ${asJson.status}`))
+        store.dispatch(
+          analyzerActions.logMessage(
+            `'Fetching structLogs status: ${asJson.status}`,
+          ),
+        )
 
         if (asJson.status === TransactionTracResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
-          throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
+          throw new Error(
+            `Cannot retrieve data for transaction with hash: ${this.hash}`,
+          )
         } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
           transactionTraceJson = await getTransactionTraceFromS3(asJson.output)
           console.log('TRACE:', transactionTraceJson)
@@ -86,9 +112,14 @@ export class JSONRpcBytecodeFetcher implements IBytecodeProvider {
 }
 
 export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
-  constructor(public hash: string, private provider: ethers.providers.JsonRpcProvider) {}
+  constructor(
+    public hash: string,
+    private provider: ethers.providers.JsonRpcProvider,
+  ) {}
 
-  private unifyTxInfo(tx: ethers.providers.TransactionResponse): TTransactionInfo {
+  private unifyTxInfo(
+    tx: ethers.providers.TransactionResponse,
+  ): TTransactionInfo {
     return {
       value: tx.value.toHexString(),
       to: tx.to,

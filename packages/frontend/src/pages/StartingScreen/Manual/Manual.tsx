@@ -33,14 +33,16 @@ export const Manual = () => {
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(data.txInfo),
-          structLogProvider: new StaticStructLogProvider(data.structLogs.structLogs),
+          structLogProvider: new StaticStructLogProvider(
+            data.structLogs.structLogs,
+          ),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
-        })
+        }),
       )
       navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)
     },
-    [dispatch, navigate]
+    [dispatch, navigate],
   )
 
   return (
@@ -50,7 +52,10 @@ export const Manual = () => {
         name="txInfo"
         render={({ field, fieldState }) => (
           <UploadBox
-            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+            isError={
+              fieldState.error?.type === 'schema' ||
+              fieldState.error?.type === 'required'
+            }
             errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of eth_getTransactionByHash"
             onChange={field.onChange}
@@ -72,7 +77,10 @@ export const Manual = () => {
         name="structLogs"
         render={({ field, fieldState }) => (
           <UploadBox
-            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+            isError={
+              fieldState.error?.type === 'schema' ||
+              fieldState.error?.type === 'required'
+            }
             errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of debug_traceTransaction"
             onChange={field.onChange}
@@ -88,7 +96,12 @@ export const Manual = () => {
           required: 'This field is required',
         }}
       />
-      <Button variant="contained" big={true} style={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
+      <Button
+        variant="contained"
+        big={true}
+        style={{ width: '200px', marginTop: '32px' }}
+        onClick={handleSubmit(submitHandler)}
+      >
         Process logs
       </Button>
     </StyledStack>

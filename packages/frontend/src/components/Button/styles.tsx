@@ -3,7 +3,9 @@ import { ButtonUnstyled } from '@mui/base'
 
 import type { TButtonVariant } from './Button.types'
 
-export const StyledButton = styled(ButtonUnstyled, { shouldForwardProp: (prop) => prop !== 'big' })<{
+export const StyledButton = styled(ButtonUnstyled, {
+  shouldForwardProp: (prop) => prop !== 'big',
+})<{
   variant: TButtonVariant
   big?: boolean
   disabled?: boolean

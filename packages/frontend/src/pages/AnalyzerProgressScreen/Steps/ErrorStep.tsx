@@ -4,7 +4,11 @@ import { Error } from '../../../icons'
 
 import type { AnalyzerStepProps } from './types'
 
-export const ErrorStep = ({ errorMessage, stepName, ...props }: AnalyzerStepProps) => {
+export const ErrorStep = ({
+  errorMessage,
+  stepName,
+  ...props
+}: AnalyzerStepProps) => {
   const theme = useTheme()
 
   const stepLabelProps = {

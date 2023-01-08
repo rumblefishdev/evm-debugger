@@ -6,9 +6,23 @@ import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 import { QuestionFilledBlue, QuestionOutlinedBlue } from '../../icons'
 
 import type { ExplorerListRowProps } from './ExplorerListRow.types'
-import { StyledChip, StyledChipText, StyledCounter, StyledStack, StyledType, StyledTypeWrapper } from './styles'
+import {
+  StyledChip,
+  StyledChipText,
+  StyledCounter,
+  StyledStack,
+  StyledType,
+  StyledTypeWrapper,
+} from './styles'
 
-export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...props }: ExplorerListRowProps) => {
+export const ExplorerListRow = ({
+  chipValue,
+  pc,
+  opCode,
+  isActive,
+  onClick,
+  ...props
+}: ExplorerListRowProps) => {
   const itemRef = useRef<HTMLDivElement>(null)
 
   const description = useMemo(() => {
@@ -16,11 +30,14 @@ export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, ...p
   }, [opCode])
 
   const counter = useMemo(() => {
-    return typeof pc === 'number' ? ethers.utils.hexlify(pc) : ethers.utils.hexlify(ethers.BigNumber.from(pc))
+    return typeof pc === 'number'
+      ? ethers.utils.hexlify(pc)
+      : ethers.utils.hexlify(ethers.BigNumber.from(pc))
   }, [pc])
 
   useEffect(() => {
-    if (isActive && itemRef.current) itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    if (isActive && itemRef.current)
+      itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }, [isActive, itemRef])
 
   return (

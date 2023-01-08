@@ -1,13 +1,20 @@
 import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../../../../store/activeBlock/activeBlock.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../../../store/storeHooks'
+import {
+  useTypedDispatch,
+  useTypedSelector,
+} from '../../../../../store/storeHooks'
 import { TreemapTooltip } from '../../TreemapTooltip'
 
 import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
-export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxProps) => {
+export const ItemBox = ({
+  treeMapItem,
+  parentHoverHandler,
+  ...props
+}: ItemBoxProps) => {
   const { type, stackTrace, gasCost, index, id } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimmensions
@@ -22,7 +29,7 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
       parentHoverHandler(true)
       event.stopPropagation()
     },
-    [parentHoverHandler]
+    [parentHoverHandler],
   )
 
   const notHovered = useCallback(
@@ -31,12 +38,14 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
       parentHoverHandler(false)
       event.stopPropagation()
     },
-    [parentHoverHandler]
+    [parentHoverHandler],
   )
 
   const dispatch = useTypedDispatch()
 
-  const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const setActiveBlock = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
     dispatch(loadActiveBlock(treeMapItem.item))
 
     event.stopPropagation()
@@ -50,11 +59,28 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
     height,
   }
 
-  const activeStyle = getActiveBlock?.id === id ? { border: '1px solid rgba(249, 39, 127, 1)', background: 'rgba(249, 39, 127, 0.5)' } : {}
+  const activeStyle =
+    getActiveBlock?.id === id
+      ? {
+          border: '1px solid rgba(249, 39, 127, 1)',
+          background: 'rgba(249, 39, 127, 0.5)',
+        }
+      : {}
 
   return (
-    <TreemapTooltip open={isHovered} type={type} stackTrace={stackTrace} gasCost={gasCost} onMouseOver={hovered} onMouseOut={notHovered}>
-      <StyledStack {...props} sx={{ ...styleDimension, ...activeStyle }} onClick={setActiveBlock}></StyledStack>
+    <TreemapTooltip
+      open={isHovered}
+      type={type}
+      stackTrace={stackTrace}
+      gasCost={gasCost}
+      onMouseOver={hovered}
+      onMouseOut={notHovered}
+    >
+      <StyledStack
+        {...props}
+        sx={{ ...styleDimension, ...activeStyle }}
+        onClick={setActiveBlock}
+      ></StyledStack>
     </TreemapTooltip>
   )
 }

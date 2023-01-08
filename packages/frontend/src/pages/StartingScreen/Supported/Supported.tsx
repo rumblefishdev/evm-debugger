@@ -8,7 +8,15 @@ import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { ROUTES } from '../../../router'
 import { Button } from '../../../components/Button'
 
-import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
+import {
+  StyledErrorLabel,
+  StyledInput,
+  StyledInputLabel,
+  StyledInputWrapper,
+  StyledMenuItem,
+  StyledSelect,
+  StyledStack,
+} from './styles'
 import type { IFormData } from './Supported.types'
 
 export const Supported = () => {
@@ -28,11 +36,11 @@ export const Supported = () => {
           structLogProvider: chainData.structLogProvider(data.transactionHash),
           bytecodeProvider: chainData.bytecodeProvider,
           abiProvider: chainData.abiProvider,
-        })
+        }),
       )
       navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)
     },
-    [dispatch, navigate]
+    [dispatch, navigate],
   )
 
   return (
@@ -49,7 +57,10 @@ export const Supported = () => {
               variant="outlined"
               value={field.value}
               onChange={field.onChange}
-              error={fieldState.error?.type === 'required' || fieldState.error?.type === 'pattern'}
+              error={
+                fieldState.error?.type === 'required' ||
+                fieldState.error?.type === 'pattern'
+              }
             />
             <StyledErrorLabel>{fieldState.error?.message}</StyledErrorLabel>
           </StyledInputWrapper>
@@ -89,7 +100,12 @@ export const Supported = () => {
           required: 'This field is required',
         }}
       />
-      <Button variant="contained" big={true} style={{ width: '200px', marginTop: '32px' }} onClick={handleSubmit(submitHandler)}>
+      <Button
+        variant="contained"
+        big={true}
+        style={{ width: '200px', marginTop: '32px' }}
+        onClick={handleSubmit(submitHandler)}
+      >
         Process logs
       </Button>
     </StyledStack>

@@ -10,7 +10,12 @@ import { StyledContentWrapper } from './styles'
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   const { isContract } = useTypedSelector((state) => state.activeBlock)
 
-  if (!isContract) return <Typography variant="headingUnknown">Selected Block is not a contract</Typography>
+  if (!isContract)
+    return (
+      <Typography variant="headingUnknown">
+        Selected Block is not a contract
+      </Typography>
+    )
 
   return (
     <>

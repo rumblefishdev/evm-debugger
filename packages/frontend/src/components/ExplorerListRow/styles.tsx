@@ -2,7 +2,9 @@ import { Box, Stack, styled, Typography } from '@mui/material'
 
 type TActive = { active?: boolean }
 
-export const StyledStack = styled(Stack, { shouldForwardProp: (prop) => prop !== 'active' })<TActive>(({ theme, active }) => ({
+export const StyledStack = styled(Stack, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<TActive>(({ theme, active }) => ({
   width: '100%',
   padding: theme.spacing(4.5, 6),
   minHeight: '64px',
@@ -23,7 +25,9 @@ export const StyledStack = styled(Stack, { shouldForwardProp: (prop) => prop !==
   }),
 }))
 
-export const StyledCounter = styled(Typography, { shouldForwardProp: (prop) => prop !== 'active' })<TActive>(({ theme, active }) => ({
+export const StyledCounter = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<TActive>(({ theme, active }) => ({
   width: '48px',
   ...theme.typography.bodySmall,
   marginRight: theme.spacing(4),
@@ -41,7 +45,9 @@ export const StyledTypeWrapper = styled(Stack)(() => ({
   alignItems: 'center',
 }))
 
-export const StyledType = styled(Typography, { shouldForwardProp: (prop) => prop !== 'active' })<TActive>(({ theme, active }) => ({
+export const StyledType = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<TActive>(({ theme, active }) => ({
   ...theme.typography.buttonSmall,
   textAlign: 'left',
   marginRight: theme.spacing(2),
@@ -53,7 +59,9 @@ export const StyledType = styled(Typography, { shouldForwardProp: (prop) => prop
   }),
 }))
 
-export const StyledChip = styled(Box, { shouldForwardProp: (prop) => prop !== 'active' })<TActive>(({ theme, active }) => ({
+export const StyledChip = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<TActive>(({ theme, active }) => ({
   padding: theme.spacing(1, 2),
   maxWidth: '72px',
   borderRadius: '21px',
@@ -63,7 +71,9 @@ export const StyledChip = styled(Box, { shouldForwardProp: (prop) => prop !== 'a
   }),
 }))
 
-export const StyledChipText = styled(Typography, { shouldForwardProp: (prop) => prop !== 'active' })<TActive>(({ theme, active }) => ({
+export const StyledChipText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<TActive>(({ theme, active }) => ({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   ...theme.typography.caption,

@@ -22,8 +22,16 @@ export const Navigation = ({ children }: React.PropsWithChildren) => {
   return (
     <StyledStack>
       <StyledTabs value={value} onChange={handleChange} centered>
-        <StyledTab label="Supported Chain" value={ROUTES.HOME} onClick={() => handleTabClick(ROUTES.HOME)} />
-        <StyledTab label="Manual Upload" value={ROUTES.MANUAL_UPLOAD} onClick={() => handleTabClick(ROUTES.MANUAL_UPLOAD)} />
+        <StyledTab
+          label="Supported Chain"
+          value={ROUTES.HOME}
+          onClick={() => handleTabClick(ROUTES.HOME)}
+        />
+        <StyledTab
+          label="Manual Upload"
+          value={ROUTES.MANUAL_UPLOAD}
+          onClick={() => handleTabClick(ROUTES.MANUAL_UPLOAD)}
+        />
       </StyledTabs>
       {children}
     </StyledStack>

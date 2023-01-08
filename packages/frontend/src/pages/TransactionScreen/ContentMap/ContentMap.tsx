@@ -32,14 +32,33 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [])
 
-  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height))
+  const traceLog = useTypedSelector((state) =>
+    selectMappedTraceLogs(state, width, height),
+  )
 
   const renderContent = (element: TTreeMapData) => {
-    if ('owningLog' in element.item) return <IntrinsicItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+    if ('owningLog' in element.item)
+      return (
+        <IntrinsicItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
 
-    if (element.nestedItems.length > 0) return <NestedItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+    if (element.nestedItems.length > 0)
+      return (
+        <NestedItemBox
+          treeMapItem={{ ...element, item: element.item }}
+          key={element.item.id}
+        />
+      )
 
-    return <ItemBox treeMapItem={{ ...element, item: element.item }} key={element.item.id} />
+    return (
+      <ItemBox
+        treeMapItem={{ ...element, item: element.item }}
+        key={element.item.id}
+      />
+    )
   }
 
   return (

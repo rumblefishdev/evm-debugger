@@ -18,11 +18,16 @@ import type { ParamBlockProps } from './ParamBlock.types'
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
     <StyledAccordion {...props}>
-      <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>{title}</StyledAccordionSummary>
+      <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>
+        {title}
+      </StyledAccordionSummary>
       <StyledAccordionDetails>
         <List>
           {items.map((item, index) => {
-            if (typeof item.value === 'string' || typeof item.value === 'number')
+            if (
+              typeof item.value === 'string' ||
+              typeof item.value === 'number'
+            )
               return (
                 <React.Fragment key={index}>
                   <StyledInfoRow key={index}>
@@ -62,7 +67,13 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 </React.Fragment>
               )
 
-            return <ParamBlock key={index} title={`${item.name} (${item.type})`} items={item.value} />
+            return (
+              <ParamBlock
+                key={index}
+                title={`${item.name} (${item.type})`}
+                items={item.value}
+              />
+            )
           })}
         </List>
       </StyledAccordionDetails>

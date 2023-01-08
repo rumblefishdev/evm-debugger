@@ -1,1 +1,1 @@
-export { ManagersNavigation } from './ManagersNavigation';
+export { ManagersNavigation } from './ManagersNavigation'

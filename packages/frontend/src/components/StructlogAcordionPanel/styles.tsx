@@ -1,4 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Stack, styled } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Stack,
+  styled,
+} from '@mui/material'
 
 type TCanExpand = {
   canExpand: boolean

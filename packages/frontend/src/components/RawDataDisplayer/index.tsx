@@ -1,1 +1,1 @@
-export { RawDataDisplayer } from './RawDataDisplayer';
+export { RawDataDisplayer } from './RawDataDisplayer'

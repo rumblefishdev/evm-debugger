@@ -8,7 +8,10 @@ import {
   selectParsedStructLogs,
   loadActiveStructLog,
 } from '../../../../store/structlogs/structlogs.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
+import {
+  useTypedDispatch,
+  useTypedSelector,
+} from '../../../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
@@ -16,7 +19,9 @@ import type { IExtendedStructLog } from '../../../../types'
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const activeStrucLog = useTypedSelector(
+    (state) => state.structLogs.activeStructLog,
+  )
 
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
@@ -25,9 +30,11 @@ export const StructlogPanel = (): JSX.Element => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
       event.preventDefault()
-      if (event.key === 'ArrowDown' && !event.repeat) dispatch(loadNextStructlog(structLogs))
+      if (event.key === 'ArrowDown' && !event.repeat)
+        dispatch(loadNextStructlog(structLogs))
 
-      if (event.key === 'ArrowUp' && !event.repeat) dispatch(loadPreviousStructlog(structLogs))
+      if (event.key === 'ArrowUp' && !event.repeat)
+        dispatch(loadPreviousStructlog(structLogs))
     }
 
     document.addEventListener('keydown', handleKeyDown)
@@ -39,7 +46,9 @@ export const StructlogPanel = (): JSX.Element => {
 
   useEffect(() => {
     if (!activeStrucLog) return
-    const index = structLogs.findIndex((structLog) => structLog.pc === activeStrucLog.pc)
+    const index = structLogs.findIndex(
+      (structLog) => structLog.pc === activeStrucLog.pc,
+    )
     if (index) listRef.current?.scrollToIndex(index)
   }, [activeStrucLog, structLogs])
 
@@ -51,7 +60,12 @@ export const StructlogPanel = (): JSX.Element => {
     <StyledSmallPanel>
       <StyledHeading>EVM steps</StyledHeading>
       <StyledListWrapper ref={ref}>
-        <ViewportList viewportRef={ref} ref={listRef} items={structLogs} withCache={true}>
+        <ViewportList
+          viewportRef={ref}
+          ref={listRef}
+          items={structLogs}
+          withCache={true}
+        >
           {(item) => {
             const { gasCost, op, pc, index } = item
 

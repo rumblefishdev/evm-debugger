@@ -10,7 +10,14 @@ export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
   return (
     <StyledStepper orientation="vertical" activeStep={activeStep} {...props}>
       {stages.map((stage, index) => {
-        if (error && currentIndex === index) return <ErrorStep key={stage.stageName} stepName={stage.stageName} errorMessage={error} />
+        if (error && currentIndex === index)
+          return (
+            <ErrorStep
+              key={stage.stageName}
+              stepName={stage.stageName}
+              errorMessage={error}
+            />
+          )
         return <DefaultStep key={stage.stageName} stepName={stage.stageName} />
       })}
     </StyledStepper>

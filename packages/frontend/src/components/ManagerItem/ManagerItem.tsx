@@ -6,9 +6,21 @@ import { DataAdder } from '../DataAdder'
 import { RawDataDisplayer } from '../RawDataDisplayer'
 
 import type { ManagerItemProps } from './ManagerItem.types'
-import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
+import {
+  StyledStack,
+  StyledName,
+  StyledStatusFound,
+  StyledStatusNotFound,
+} from './styles'
 
-export const ManagerItem = ({ isFound, address, name, value, updateItem, ...props }: ManagerItemProps) => {
+export const ManagerItem = ({
+  isFound,
+  address,
+  name,
+  value,
+  updateItem,
+  ...props
+}: ManagerItemProps) => {
   const [isDataVisible, setDataVisibility] = useState(false)
   const [isDataAdderVisible, setDataAdderVisibility] = useState(false)
 
@@ -19,7 +31,11 @@ export const ManagerItem = ({ isFound, address, name, value, updateItem, ...prop
 
   return (
     <StyledStack {...props}>
-      {isFound ? <StyledStatusFound>Found</StyledStatusFound> : <StyledStatusNotFound>Not found</StyledStatusNotFound>}
+      {isFound ? (
+        <StyledStatusFound>Found</StyledStatusFound>
+      ) : (
+        <StyledStatusNotFound>Not found</StyledStatusNotFound>
+      )}
       <StyledName>{name}</StyledName>
       {isFound ? (
         <Button variant="text" onClick={() => setDataVisibility(true)}>
@@ -31,7 +47,13 @@ export const ManagerItem = ({ isFound, address, name, value, updateItem, ...prop
         </Button>
       )}
 
-      <RawDataDisplayer title={name} description={address} data={value} open={isDataVisible} onClose={() => setDataVisibility(false)} />
+      <RawDataDisplayer
+        title={name}
+        description={address}
+        data={value}
+        open={isDataVisible}
+        onClose={() => setDataVisibility(false)}
+      />
       <DataAdder
         open={isDataAdderVisible}
         submithandler={dataAdderHandler}

@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/Button'
 import { TailProgressScreen } from '../../images'
 import { etherscanKey, etherscanUrl } from '../../config'
-import { EtherscanAbiFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
+import {
+  EtherscanAbiFetcher,
+  StaticStructLogProvider,
+  StaticTxInfoProvider,
+} from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { ROUTES } from '../../router'
@@ -19,14 +23,19 @@ export const AnalyzerProgressScreen = () => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
 
-  const { messages, isLoading, error, stages } = useTypedSelector((state) => state.analyzer)
+  const { messages, isLoading, error, stages } = useTypedSelector(
+    (state) => state.analyzer,
+  )
 
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
   useEffect(() => {
     if (!isLoading && !error) {
-      const timeout = setTimeout(() => navigate(ROUTES.TRANSACTION_SCREEN), 1000)
+      const timeout = setTimeout(
+        () => navigate(ROUTES.TRANSACTION_SCREEN),
+        1000,
+      )
       return () => clearTimeout(timeout)
     }
   }, [isLoading, error, navigate])
@@ -42,7 +51,7 @@ export const AnalyzerProgressScreen = () => {
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
-        })
+        }),
       )
   }, [dispatch, error, structLogs, txInfo])
 
@@ -65,10 +74,18 @@ export const AnalyzerProgressScreen = () => {
         <StyledImage src={TailProgressScreen} />
         {error && (
           <Stack direction="row" spacing={2}>
-            <Button style={buttonsStyle} variant="outlined" onClick={moveBackToStartingScreen}>
+            <Button
+              style={buttonsStyle}
+              variant="outlined"
+              onClick={moveBackToStartingScreen}
+            >
               Back
             </Button>
-            <Button style={buttonsStyle} variant="contained" onClick={restartHandler}>
+            <Button
+              style={buttonsStyle}
+              variant="contained"
+              onClick={restartHandler}
+            >
               Restart
             </Button>
           </Stack>

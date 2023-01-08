@@ -2,11 +2,21 @@ import { List } from '@mui/material'
 import React from 'react'
 
 import { StyledBlockWrapper } from '../../styles'
-import { StyledInfoRow, StyledInfoType, StyleRawBytecode, StyledAccordion, StyledAccordionSummary, StyledAccordionDetails } from '../styles'
+import {
+  StyledInfoRow,
+  StyledInfoType,
+  StyleRawBytecode,
+  StyledAccordion,
+  StyledAccordionSummary,
+  StyledAccordionDetails,
+} from '../styles'
 
 import type { StorageBlockProps } from './Storage.types'
 
-export const StorageBlock = ({ storageAddress, storageLogs }: StorageBlockProps) => {
+export const StorageBlock = ({
+  storageAddress,
+  storageLogs,
+}: StorageBlockProps) => {
   const { changedStorage, loadedStorage, returnedStorage } = storageLogs
 
   return (

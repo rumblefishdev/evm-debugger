@@ -3,19 +3,36 @@ import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 import { ethers } from 'ethers'
 
-import { getSignature, isArrayOfStrings, parseStackTrace } from '../../helpers/helpers'
+import {
+  getSignature,
+  isArrayOfStrings,
+  parseStackTrace,
+} from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
 import type { TRootState } from '../store'
 
-import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
+import type {
+  TBlockCallSpecificData,
+  TParsedActiveBlock,
+} from './activeBlock.types'
 
 const safeArgParse = (
-  arg: string | ethers.BigNumber | boolean | string[] | ethers.utils.BytesLike | ethers.BigNumber[] | number,
-  param: ethers.utils.ParamType
+  arg:
+    | string
+    | ethers.BigNumber
+    | boolean
+    | string[]
+    | ethers.utils.BytesLike
+    | ethers.BigNumber[]
+    | number,
+  param: ethers.utils.ParamType,
 ) => {
   if (typeof arg === 'string') return arg
 
-  if (ethers.BigNumber.isBigNumber(arg)) return `${ethers.utils.formatEther(ethers.BigNumber.from(arg).toString())} ETH`
+  if (ethers.BigNumber.isBigNumber(arg))
+    return `${ethers.utils.formatEther(
+      ethers.BigNumber.from(arg).toString(),
+    )} ETH`
 
   if (typeof arg === 'boolean') return arg ? 'true' : 'false'
 
@@ -26,7 +43,12 @@ const safeArgParse = (
   if (isArrayOfStrings(arg)) return arg
 
   if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
-    return arg.map((item) => `${ethers.utils.formatEther(ethers.BigNumber.from(item).toString())} ETH`)
+    return arg.map(
+      (item) =>
+        `${ethers.utils.formatEther(
+          ethers.BigNumber.from(item).toString(),
+        )} ETH`,
+    )
 
   const { components } = param
   return components.map((component, index) => {
@@ -40,7 +62,8 @@ const safeArgParse = (
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
-    if (!eventLog.eventDescription) return { signature: null, parsedArgs: null, name: null }
+    if (!eventLog.eventDescription)
+      return { signature: null, parsedArgs: null, name: null }
     const { eventDescription } = eventLog
     const { name, signature, args, eventFragment } = eventDescription
     const { inputs } = eventFragment
@@ -57,7 +80,10 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   })
 }
 
-const parseParams = (params: ethers.utils.ParamType[], result: ethers.utils.Result) => {
+const parseParams = (
+  params: ethers.utils.ParamType[],
+  result: ethers.utils.Result,
+) => {
   return params.map((paramItem, index) => {
     const value = result[index]
 
@@ -74,7 +100,16 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
     callSpecificData: null,
   }
 
-  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess } = block
+  const {
+    address,
+    gasCost,
+    passedGas,
+    stackTrace,
+    type,
+    value,
+    blockNumber,
+    isSuccess,
+  } = block
   result.defaultData = {
     value,
     type,
@@ -150,4 +185,7 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
   return result
 }
 
-export const selectParsedActiveBlock = createSelector((state: TRootState) => state.activeBlock, parseActiveBlock)
+export const selectParsedActiveBlock = createSelector(
+  (state: TRootState) => state.activeBlock,
+  parseActiveBlock,
+)

@@ -27,11 +27,11 @@ export const StyledLogRecord = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(2),
   flexDirection: 'row',
 }))
-export const StyledMessage = styled(Typography, { shouldForwardProp: (prop) => prop !== 'isError' })<{ isError: boolean }>(
-  ({ theme, isError }) => ({
-    color: isError ? theme.palette.rfBrandSecondary : theme.palette.rfSecondary,
-  })
-)
+export const StyledMessage = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isError',
+})<{ isError: boolean }>(({ theme, isError }) => ({
+  color: isError ? theme.palette.rfBrandSecondary : theme.palette.rfSecondary,
+}))
 export const StyledTimestamp = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rajdhani',
   color: theme.palette.rfDisabledDark,

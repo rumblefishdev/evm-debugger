@@ -1,13 +1,21 @@
 import React, { useEffect, useRef } from 'react'
 
-import { StyledHeading, StyledLogContiner, StyledLogPanel, StyledLogRecord, StyledMessage, StyledTimestamp } from './styles'
+import {
+  StyledHeading,
+  StyledLogContiner,
+  StyledLogPanel,
+  StyledLogRecord,
+  StyledMessage,
+  StyledTimestamp,
+} from './styles'
 import type { LoggerProps } from './types'
 
 export const Logger = ({ messages, ...props }: LoggerProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    if (scrollRef.current)
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
   }, [messages])
 
   return (
@@ -20,7 +28,9 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
 
           return (
             <StyledLogRecord key={index}>
-              <StyledTimestamp>{timestamp.toLocaleTimeString()}:</StyledTimestamp>
+              <StyledTimestamp>
+                {timestamp.toLocaleTimeString()}:
+              </StyledTimestamp>
               <StyledMessage isError={isError} variant="inputText">
                 {message}
               </StyledMessage>
