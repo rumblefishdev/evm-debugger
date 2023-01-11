@@ -93,15 +93,10 @@ export const checkIfJsonExistsOnS3 = (jsonS3Key: string) => {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const checkState = async (event: any, context: Context) => {
   context.callbackWaitsForEmptyEventLoop = true
-  const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(
-    event.pathParameters.txHash,
-  )
+  const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(event.pathParameters.txHash)
 
   if (!analyzerData) {
-    const taskArn = await runEcsTask(
-      event.pathParameters.txHash,
-      event.pathParameters.chainId,
-    )
+    const taskArn = await runEcsTask(event.pathParameters.txHash, event.pathParameters.chainId)
     await analyzerDataRepository.saveAnalyzerData({
       txHash: event.pathParameters.txHash,
       taskArn,
@@ -110,17 +105,11 @@ export const checkState = async (event: any, context: Context) => {
 
     return createResponse(ResponseStatus.RUNNING, null)
   }
-  const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
-    analyzerData.taskArn,
-  )
-  if (ecsTaskParameter.failures.length > 0)
-    return createResponse(ResponseStatus.FAILED, null)
+  const ecsTaskParameter = await getInfoAboutEcsTaskExecution(analyzerData.taskArn)
+  if (ecsTaskParameter.failures.length > 0) return createResponse(ResponseStatus.FAILED, null)
 
-  const currentTask = ecsTaskParameter.tasks.find(
-    (task) => task.taskArn === analyzerData.taskArn,
-  )
-  if (taskIsRunning(currentTask.lastStatus))
-    return createResponse(ResponseStatus.RUNNING, null)
+  const currentTask = ecsTaskParameter.tasks.find((task) => task.taskArn === analyzerData.taskArn)
+  if (taskIsRunning(currentTask.lastStatus)) return createResponse(ResponseStatus.RUNNING, null)
 
   const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
   const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)

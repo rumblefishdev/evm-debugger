@@ -46,5 +46,8 @@
     "eslint-plugin-unicorn": "^45.0.1",
     "lerna": "^6.0.3",
     "prettier": "^2.8.1"
+  },
+  "dependencies": {
+    "react-contentful": "^2.0.31"
   }
 }

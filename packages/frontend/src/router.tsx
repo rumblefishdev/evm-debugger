@@ -1,6 +1,7 @@
 import type { NavigateFunction, RouteObject } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 
+import { contentfulClient } from './importedComponents'
 import { AnalyzerProgressScreen } from './pages/AnalyzerProgressScreen'
 import { AnalyzeSummary } from './pages/AnalyzeSummary'
 import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
@@ -10,6 +11,14 @@ import { TranscationScreen } from './pages/TranscationScreen'
 export const routes: RouteObject[] = [
   {
     path: '/',
+    loader: async () => {
+      const entries = await contentfulClient.getEntries({
+        order: '-fields.pubDate',
+        content_type: 'blogPost',
+      })
+
+      return entries.items
+    },
     element: <SelectTransactionScreen />,
   },
   {
