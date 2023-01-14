@@ -1,5 +1,4 @@
-import { useTheme } from '@mui/material'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import arrowDownHover from '../../assets/svg/arrowDownHover.svg'
 import arrowDownIdle from '../../assets/svg/arrowDownIdle.svg'
@@ -18,7 +17,6 @@ export const MenuItemIcon = ({
   ...props
 }: MenuItemIconProps) => {
   const [isHovered, setHover] = useState(false)
-  const theme = useTheme()
 
   return (
     <StyledStack

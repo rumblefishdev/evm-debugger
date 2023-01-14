@@ -1,4 +1,5 @@
 import type { StackProps } from '@mui/material'
+import { IBlogPost } from '../../contentful-ui.types'
 
 export type TMenu = 'services' | 'resources' | 'careers'
 export interface IState {
@@ -8,7 +9,7 @@ export interface IState {
 }
 export interface IView {
   closeAll: () => void
-  blogs: any[]
+  blogs: IBlogPost[]
   display?: IState
   displayHandler?: (menu: TMenu) => void
 }
@@ -19,5 +20,5 @@ export interface AnimateIconProps {
 }
 
 export interface HeaderProps extends StackProps {
-  blogs: any[]
+  blogs: IBlogPost[]
 }

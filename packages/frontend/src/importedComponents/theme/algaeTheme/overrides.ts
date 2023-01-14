@@ -14,6 +14,8 @@ const headingStyle = {
   color: palette.colorBlack,
 }
 
+const root = process.env.PUBLIC_URL
+
 export const overrides: Components = {
   MuiTypography: {
     styleOverrides: {
@@ -83,7 +85,7 @@ export const overrides: Components = {
       font-weight: 300;
       src:
         local('Rajdhani-Light'),
-        url(/fonts/Rajdhani-Light.ttf)
+        url(${root}/fonts/Rajdhani-Light.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -92,7 +94,7 @@ export const overrides: Components = {
       font-weight: 400;
       src:
         local('Rajdhani-Regular'),
-        url(/fonts/Rajdhani-Regular.ttf)
+        url(${root}/fonts/Rajdhani-Regular.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -101,7 +103,7 @@ export const overrides: Components = {
       font-weight: 500;
       src:
         local('Rajdhani-Medium'),
-        url(/fonts/Rajdhani-Medium.ttf)
+        url(${root}/fonts/Rajdhani-Medium.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -110,7 +112,7 @@ export const overrides: Components = {
       font-weight: 600;
       src:
         local('Rajdhani-SemiBold'),
-        url(/fonts/Rajdhani-SemiBold.ttf)
+        url(${root}/fonts/Rajdhani-SemiBold.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -119,7 +121,7 @@ export const overrides: Components = {
       font-weight: 700;
       src:
         local('Rajdhani-Bold'),
-        url(/fonts/Rajdhani-Bold.ttf)
+        url(${root}/fonts/Rajdhani-Bold.ttf)
      }
     @font-face {
       font-family: Inter;
@@ -128,7 +130,7 @@ export const overrides: Components = {
       font-weight: 400;
       src:
         local('Inter-Regular'),
-        url(/fonts/Inter-Regular.otf)
+        url(${root}/fonts/Inter-Regular.otf)
      }
     @font-face {
       font-family: Inter;
@@ -137,7 +139,7 @@ export const overrides: Components = {
       font-weight: 700;
       src:
         local('Inter-Bold'),
-        url(/fonts/Inter-Bold.otf)
+        url(${root}/fonts/Inter-Bold.otf)
      }
     @font-face {
       font-family: Inter;
@@ -146,7 +148,7 @@ export const overrides: Components = {
       font-weight: 600;
       src:
         local('Inter-SemiBold'),
-        url(/fonts/Inter-SemiBold.otf)
+        url(${root}/fonts/Inter-SemiBold.otf)
      }
      `,
   },

@@ -1,6 +1,6 @@
 import { Stack, styled, Typography } from '@mui/material'
 
-export const StyledSmallPanel = styled(Stack)(({ theme }) => ({
+export const StyledSmallPanel = styled(Stack)(() => ({
   width: '100%',
   maxWidth: '378px',
   height: '100%',

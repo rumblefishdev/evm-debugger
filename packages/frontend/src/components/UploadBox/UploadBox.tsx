@@ -1,5 +1,4 @@
 import React from 'react'
-import { Stack } from '@mui/system'
 import { Tooltip } from '@mui/material'
 
 import { Button } from '../Button'

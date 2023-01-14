@@ -1,4 +1,4 @@
-import { Stack, Stepper, styled, Typography } from '@mui/material'
+import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledMainPanel = styled(Stack)(() => ({
   width: '524px',

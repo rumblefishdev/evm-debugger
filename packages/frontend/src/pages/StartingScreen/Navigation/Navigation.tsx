@@ -11,7 +11,7 @@ export const Navigation = ({ children }: React.PropsWithChildren) => {
 
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
 
-  const handleChange = (event: React.SyntheticEvent, nextValue: ROUTES) => {
+  const handleChange = (_event: React.SyntheticEvent, nextValue: ROUTES) => {
     setValue(nextValue)
   }
 

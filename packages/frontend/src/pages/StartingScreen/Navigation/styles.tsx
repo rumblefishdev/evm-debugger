@@ -12,7 +12,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
   width: '100%',
   paddingBottom: theme.spacing(12),
-  height: '48px',
+  minHeight: '48px',
 
   '& .MuiTabs-indicator': {
     height: '1px',
@@ -20,12 +20,12 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
   },
 }))
 export const StyledTab = styled(Tab)(({ theme }) => ({
-  ...theme.typography.buttonSmall,
-  width: '50%',
-  color: theme.palette.rfText,
-  borderBox: 'border-box',
-  borderBottom: `1px solid ${theme.palette.rfLines}`,
-  '&.Mui-selected': {
-    color: theme.palette.rfButton,
-  },
+  //  ...theme.typography.buttonSmall,
+  // width: '50%',
+  // color: theme.palette.rfText,
+  // borderBox: 'border-box',
+  // borderBottom: `1px solid ${theme.palette.rfLines}`,
+  // '&.Mui-selected': {
+  //   color: theme.palette.rfButton,
+  // },
 }))

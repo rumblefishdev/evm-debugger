@@ -1,4 +1,4 @@
-import { Stack, styled, Typography } from '@mui/material'
+import { Stack, styled } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
   transition: 'all 0.2s ease-in-out',

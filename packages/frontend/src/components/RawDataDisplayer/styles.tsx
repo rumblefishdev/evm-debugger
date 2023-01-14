@@ -1,6 +1,6 @@
 import { Dialog, Stack, styled, Typography } from '@mui/material'
 
-export const StyledDialog = styled(Dialog)(({ theme }) => ({
+export const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     overflow: 'hidden',
     maxWidth: 'unset',
@@ -53,7 +53,7 @@ export const StyledDataIndexesWrapper = styled(Stack)(({ theme }) => ({
   border: `1px solid ${theme.palette.rfLinesLight}`,
   backgroundColor: theme.palette.rfBackground,
 }))
-export const StyledDataIndex = styled(Typography)(({ theme }) => ({
+export const StyledDataIndex = styled(Typography)(() => ({
   width: '38px',
   textAlign: 'center',
   lineHeight: '22.5px',
@@ -80,6 +80,6 @@ export const StyledDataJson = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
 }))
 
-export const StyledBytecode = styled(StyledDataJson)(({ theme }) => ({
+export const StyledBytecode = styled(StyledDataJson)(() => ({
   fontFamily: 'Ibm Plex Mono',
 }))

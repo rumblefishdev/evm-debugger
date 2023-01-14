@@ -7,13 +7,13 @@ import { ROUTES } from '../../router'
 import type { AppNavigationProps } from './AppNavigation.types'
 import { StyledTab, StyledTabs } from './styles'
 
-export const AppNavigation = ({ ...props }: AppNavigationProps) => {
+export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
 
-  const handleChange = (event: React.SyntheticEvent, nextValue: ROUTES) => {
+  const handleChange = (_event: React.SyntheticEvent, nextValue: ROUTES) => {
     setValue(nextValue)
   }
 

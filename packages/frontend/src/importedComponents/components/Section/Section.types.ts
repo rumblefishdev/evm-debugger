@@ -1,5 +1,4 @@
 import type { ContainerProps } from '@mui/material'
-import type React from 'react'
 
 const prefix = 'Section'
 export interface SectionProps extends ContainerProps {

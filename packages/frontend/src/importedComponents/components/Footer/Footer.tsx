@@ -4,7 +4,6 @@ import React from 'react'
 import FacebookIcon from '../../assets/svg/facebook-white.svg'
 import LinkedinIcon from '../../assets/svg/linkedin-white.svg'
 import TwitterIcon from '../../assets/svg/twitter-white.svg'
-import { RenderWithAlgeaTheme } from '../../utils/RenderWithAlgeaTheme'
 import { Link } from '../Link'
 import { Section } from '../Section'
 
@@ -19,7 +18,6 @@ import {
   LeftContentWrapper,
   ContactWrapper,
   ContactDetailsWrapper,
-  StyledClutchBox,
 } from './styles'
 
 const Menu = () => {
@@ -145,37 +143,34 @@ const SocialMedia = () => {
 
 export const Footer = ({ ...props }: FooterProps) => {
   const theme = useTheme()
-
   return (
-    <RenderWithAlgeaTheme>
-      <Section
-        width="small"
-        positionRelativeOn
-        backgroundColor={theme.palette.colorBrand?.primary}
-      >
-        <StyledStack {...props}>
-          <LeftSideWrapper>
-            <Contact />
-            <Hidden smDown>
+    <Section
+      width="small"
+      positionRelativeOn
+      backgroundColor={theme.palette.colorBrand?.primary}
+    >
+      <StyledStack {...props}>
+        <LeftSideWrapper>
+          <Contact />
+          <Hidden smDown>
+            <Menu />
+            <Services />
+          </Hidden>
+          <Hidden smUp>
+            <Stack
+              flexDirection="row"
+              justifyContent="space-between"
+              width="100%"
+            >
               <Menu />
-              <Services />
-            </Hidden>
-            <Hidden smUp>
-              <Stack
-                flexDirection="row"
-                justifyContent="space-between"
-                width="100%"
-              >
-                <Menu />
-                <Services boxWidth="135px" />
-              </Stack>
-            </Hidden>
-          </LeftSideWrapper>
-          <RightSideWrapper>
-            <SocialMedia />
-          </RightSideWrapper>
-        </StyledStack>
-      </Section>
-    </RenderWithAlgeaTheme>
+              <Services boxWidth="135px" />
+            </Stack>
+          </Hidden>
+        </LeftSideWrapper>
+        <RightSideWrapper>
+          <SocialMedia />
+        </RightSideWrapper>
+      </StyledStack>
+    </Section>
   )
 }

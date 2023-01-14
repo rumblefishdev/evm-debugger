@@ -18,7 +18,6 @@ export const NestedItemBox = ({
   ...props
 }: NestedItemBoxProps) => {
   const [isTooltipActive, setIsTooltipActive] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
   const dispatch = useTypedDispatch()
 
   const getActiveBlock = useTypedSelector((state) => state.activeBlock)
@@ -26,7 +25,6 @@ export const NestedItemBox = ({
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsTooltipActive(true)
-      setIsHovered(true)
       event.stopPropagation()
     },
     [],
@@ -35,7 +33,6 @@ export const NestedItemBox = ({
   const notHovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsTooltipActive(false)
-      setIsHovered(false)
       event.stopPropagation()
     },
     [],
@@ -53,7 +50,6 @@ export const NestedItemBox = ({
     if ('owningLog' in element.item)
       return (
         <IntrinsicItemBox
-          parentHoverHandler={setIsHovered}
           treeMapItem={{ ...element, item: element.item }}
           key={element.item.id}
         />
@@ -69,7 +65,6 @@ export const NestedItemBox = ({
 
     return (
       <ItemBox
-        parentHoverHandler={setIsHovered}
         treeMapItem={{ ...element, item: element.item }}
         key={element.item.id}
       />

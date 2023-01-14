@@ -69,7 +69,7 @@ export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
 export type TParsedEventLogBody = {
   signature: string
   parsedArgs: {
-    value: any
+    value: string
     type: string
     name: string
   }[]

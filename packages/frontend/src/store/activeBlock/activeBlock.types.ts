@@ -7,8 +7,7 @@ import type {
 import type { TParsedEventLog } from '../../types'
 
 export type TParsedParams = {
-  // Todo change any to real type
-  value: any
+  value: string
   type: string
   name: string
 }

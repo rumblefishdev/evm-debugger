@@ -1,6 +1,6 @@
-import { Box, Stack, Tooltip } from '@mui/material'
+import { Stack, Tooltip } from '@mui/material'
 import { ethers } from 'ethers'
-import React, { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 import { QuestionFilledBlue, QuestionOutlinedBlue } from '../../icons'

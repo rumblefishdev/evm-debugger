@@ -24,7 +24,7 @@ export const StyledBlockWrapper = styled(Stack)(({ theme }) => ({
   margin: theme.spacing(4, 0),
 }))
 
-export const StyledFunctionsignature = styled(Typography)(({ theme }) => ({
+export const StyledFunctionsignature = styled(Typography)(() => ({
   textAlign: 'left',
   lineHeight: '21px',
   letterSpacing: '-0.01em',

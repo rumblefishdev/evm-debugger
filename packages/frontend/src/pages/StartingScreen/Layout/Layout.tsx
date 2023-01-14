@@ -1,20 +1,28 @@
-import { Box, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import React from 'react'
+
+import { Footer, Header } from '../../../importedComponents'
+import type { IBlogPost } from '../../../importedComponents/contentful-ui.types'
+import { RenderWithAlgeaTheme } from '../../../importedComponents/utils/RenderWithAlgeaTheme'
 
 import { StyledStack } from './styles'
 
-export const Layout = ({ children }: React.PropsWithChildren) => (
+export const Layout: React.FC<
+  React.PropsWithChildren<{ blogs: IBlogPost[] }>
+> = ({ children, blogs }) => (
   <StyledStack>
-    <Box sx={{ width: '100%', height: '80px', background: 'orange' }} />
+    <Header blogs={blogs} />
     <Stack
       sx={{
-        minHeight: '900px',
+        minHeight: '700px',
         flexGrow: 1,
         alignItems: 'center',
       }}
     >
       {children}
     </Stack>
-    <Box sx={{ width: '100%', height: '348px', background: 'blue' }} />
+    <RenderWithAlgeaTheme>
+      <Footer />
+    </RenderWithAlgeaTheme>
   </StyledStack>
 )

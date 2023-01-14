@@ -1,5 +1,3 @@
-import { Typography } from '@mui/material'
-
 import { useFileUploadHandler } from '../../hooks/useFileUpload'
 
 import type { DataAdderProps } from './DataAdder.types'

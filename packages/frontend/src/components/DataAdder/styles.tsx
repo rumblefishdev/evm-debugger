@@ -2,7 +2,7 @@ import { Dialog, Input, Stack, styled, Typography } from '@mui/material'
 
 import { Button } from '../Button'
 
-export const StyledDialog = styled(Dialog)(({ theme }) => ({}))
+export const StyledDialog = styled(Dialog)(() => ({}))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '448px',
@@ -71,7 +71,7 @@ export const StyledTextArea = styled(Input)(({ theme }) => ({
   },
 }))
 
-export const StyledButtonWrapper = styled(Stack)(({ theme }) => ({
+export const StyledButtonWrapper = styled(Stack)(() => ({
   width: '100%',
   justifyContent: 'space-between',
   flexDirection: 'row',

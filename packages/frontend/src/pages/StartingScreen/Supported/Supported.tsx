@@ -23,7 +23,7 @@ export const Supported = () => {
   const dispatch = useTypedDispatch()
   const navigate = useNavigate()
 
-  const { control, handleSubmit, formState } = useForm<IFormData>({
+  const { control, handleSubmit } = useForm<IFormData>({
     mode: 'onChange',
   })
 

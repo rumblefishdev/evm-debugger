@@ -1,11 +1,4 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  List,
-  Stack,
-} from '@mui/material'
-import React from 'react'
+import { List, Stack } from '@mui/material'
 
 import {
   StyledInfoRow,

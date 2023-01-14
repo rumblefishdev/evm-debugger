@@ -1,4 +1,4 @@
-import { Stack, styled, Tab, Tabs, Typography } from '@mui/material'
+import { Stack, styled, Tab, Tabs } from '@mui/material'
 
 export const StyledStack = styled(Stack)(() => ({
   width: '100%',
