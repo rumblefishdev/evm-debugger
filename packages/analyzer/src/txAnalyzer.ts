@@ -82,6 +82,7 @@ export class TxAnalyzer {
         if (nextStructLog.depth === depth + 1)
           return { ...item, isContract: true }
       }
+      if (checkIfOfCreateType(item)) return { ...item, isContract: true }
       return { ...item, isContract: false }
     })
   }

@@ -1,7 +1,7 @@
 import type { Context } from 'aws-lambda'
 import * as AWS from 'aws-sdk'
+import { TransactionTracResponseStatus } from '@evm-debuger/types'
 
-import { ResponseStatus } from './ResponseStatus'
 import { TaskStatus } from './TaskStatus'
 import { AnalyzerDataRepository } from './AnalyzerDataRepository'
 
@@ -97,6 +97,19 @@ export const checkState = async (event: any, context: Context) => {
     event.pathParameters.txHash,
   )
 
+  console.log('analyzerData', analyzerData)
+
+  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
+
+  console.log('jsonS3Key', jsonS3Key)
+
+  const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
+
+  console.log('jsonExists', jsonExists)
+
+  if (jsonExists)
+    return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
+
   if (!analyzerData) {
     const taskArn = await runEcsTask(
       event.pathParameters.txHash,
@@ -108,22 +121,26 @@ export const checkState = async (event: any, context: Context) => {
       chainId: event.pathParameters.chainId,
     })
 
-    return createResponse(ResponseStatus.RUNNING, null)
+    return createResponse(TransactionTracResponseStatus.RUNNING, null)
   }
+
   const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
     analyzerData.taskArn,
   )
+
+  console.log('ecsTaskParameter', ecsTaskParameter)
+
   if (ecsTaskParameter.failures.length > 0)
-    return createResponse(ResponseStatus.FAILED, null)
+    return createResponse(TransactionTracResponseStatus.FAILED, null)
 
   const currentTask = ecsTaskParameter.tasks.find(
     (task) => task.taskArn === analyzerData.taskArn,
   )
-  if (taskIsRunning(currentTask.lastStatus))
-    return createResponse(ResponseStatus.RUNNING, null)
 
-  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
-  const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
-  if (jsonExists) return createResponse(ResponseStatus.SUCCESS, jsonS3Key)
-  return createResponse(ResponseStatus.FAILED, null)
+  console.log('currentTask', currentTask)
+
+  if (taskIsRunning(currentTask.lastStatus))
+    return createResponse(TransactionTracResponseStatus.RUNNING, null)
+
+  return createResponse(TransactionTracResponseStatus.FAILED, null)
 }

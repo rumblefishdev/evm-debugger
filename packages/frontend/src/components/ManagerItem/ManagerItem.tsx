@@ -1,7 +1,9 @@
-import { Dialog, Button } from '@mui/material'
+import { Dialog } from '@mui/material'
 import React, { useState } from 'react'
 
+import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
+import { RawDataDisplayer } from '../RawDataDisplayer'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import {
@@ -13,6 +15,7 @@ import {
 
 export const ManagerItem = ({
   isFound,
+  address,
   name,
   value,
   updateItem,
@@ -28,30 +31,35 @@ export const ManagerItem = ({
 
   return (
     <StyledStack {...props}>
-      <StyledName>{name}</StyledName>
-      {isFound ? (
-        <Button onClick={() => setDataVisibility(true)}>Show</Button>
-      ) : (
-        <Button
-          variant="contained"
-          onClick={() => setDataAdderVisibility(true)}
-        >
-          Add
-        </Button>
-      )}
       {isFound ? (
         <StyledStatusFound>Found</StyledStatusFound>
       ) : (
         <StyledStatusNotFound>Not found</StyledStatusNotFound>
       )}
-      <Dialog open={isDataVisible} onClose={() => setDataVisibility(false)}>
-        <pre>{value}</pre>
-      </Dialog>
+      <StyledName>{name}</StyledName>
+      {isFound ? (
+        <Button variant="text" onClick={() => setDataVisibility(true)}>
+          Show
+        </Button>
+      ) : (
+        <Button variant="text" onClick={() => setDataAdderVisibility(true)}>
+          Add
+        </Button>
+      )}
+
+      <RawDataDisplayer
+        title={name}
+        description={address}
+        data={value}
+        open={isDataVisible}
+        onClose={() => setDataVisibility(false)}
+      />
       <DataAdder
         open={isDataAdderVisible}
         submithandler={dataAdderHandler}
-        title={name}
+        title={`Upload for ${name}`}
         onClose={() => setDataAdderVisibility(false)}
+        description={address}
       />
     </StyledStack>
   )

@@ -21,3 +21,15 @@ export interface IRunAnalyzerPayload {
   abiProvider?: IAbiProvider
   bytecodeProvider?: IBytecodeProvider
 }
+
+export type TAnalyzeStageName =
+  | 'Fetching transaction info'
+  | 'Fetching structlogs'
+  | 'Run analyzer'
+  | 'Trying to fetch missing data'
+  | 'ReRun analyzer'
+
+export type TAnalyzeStage = {
+  stageName: TAnalyzeStageName
+  isFinished: boolean
+}

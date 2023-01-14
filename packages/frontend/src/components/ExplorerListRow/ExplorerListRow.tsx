@@ -1,17 +1,18 @@
-import { Tooltip } from '@mui/material'
+import { Box, Stack, Tooltip } from '@mui/material'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useRef } from 'react'
 
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
+import { QuestionFilledBlue, QuestionOutlinedBlue } from '../../icons'
 
 import type { ExplorerListRowProps } from './ExplorerListRow.types'
 import {
   StyledChip,
   StyledChipText,
   StyledCounter,
-  StyledOpcodeDescriptionIcon,
   StyledStack,
   StyledType,
+  StyledTypeWrapper,
 } from './styles'
 
 export const ExplorerListRow = ({
@@ -39,23 +40,21 @@ export const ExplorerListRow = ({
       itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }, [isActive, itemRef])
 
-  const activeStyle: React.CSSProperties = isActive
-    ? { background: 'rgba(0, 0, 0, 0.12)' }
-    : {}
-
   return (
-    <StyledStack {...props} ref={itemRef} onClick={onClick} sx={activeStyle}>
-      <StyledCounter>{counter}</StyledCounter>
-      <StyledType>
-        {opCode}
+    <StyledStack active={isActive} {...props} ref={itemRef} onClick={onClick}>
+      <StyledTypeWrapper>
+        <StyledCounter active={isActive}>{counter}</StyledCounter>
         <Tooltip title={description}>
-          <StyledOpcodeDescriptionIcon />
+          <Stack flexDirection="row">
+            <StyledType active={isActive}>{opCode}</StyledType>
+            {isActive ? <QuestionOutlinedBlue /> : <QuestionFilledBlue />}
+          </Stack>
         </Tooltip>
-      </StyledType>
+      </StyledTypeWrapper>
       {chipValue ? (
         <Tooltip title={chipValue}>
-          <StyledChip>
-            <StyledChipText>{chipValue}</StyledChipText>
+          <StyledChip active={isActive}>
+            <StyledChipText active={isActive}>{chipValue}</StyledChipText>
           </StyledChip>
         </Tooltip>
       ) : null}

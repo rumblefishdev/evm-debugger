@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { Button } from '@mui/material'
 
-import { BytecodesManager, SighashesManager } from '../../components/Managers'
-import { Navigation } from '../../components/Navigation'
+import type { TTabType } from './AnalyzeSummary.types'
+import { BytecodesManager, SighashesManager } from './Managers'
+import {
+  StyledContentWrapper,
+  StyledStack,
+  StyledTab,
+  StyledTabs,
+} from './styles'
 
-import type { AnalyzeSummaryProps, TTabType } from './AnalyzeSummary.types'
-import { StyledButtonsWrapper, StyledContentWrapper } from './styles'
-
-export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
+export const AnalyzeSummary = () => {
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')
 
   const handleTabChange = (tabName: TTabType) => {
@@ -32,33 +34,30 @@ export const AnalyzeSummary: React.FC<AnalyzeSummaryProps> = () => {
     }
   }
 
-  // TODO: https://github.com/rumblefishdev/evm-debuger/issues/87
-
   return (
-    <>
-      <Navigation />
-      <StyledButtonsWrapper>
-        {/* <Button variant="contained" color="primary" sx={{ margin: '0 12px' }} onClick={() => handleTabChange('sourcecodes')}>
-          Source Codes
-        </Button> */}
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
+    <StyledStack>
+      <StyledTabs value={activeTab}>
+        <StyledTab
+          disableRipple
+          disabled
+          label="Source Codes"
+          value={'sourcecodes'}
+          onClick={() => handleTabChange('sourcecodes')}
+        />
+        <StyledTab
+          disableRipple
+          label="Bytecodes"
+          value={'bytecodes'}
           onClick={() => handleTabChange('bytecodes')}
-        >
-          Bytecodes
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ margin: '0 12px' }}
+        />
+        <StyledTab
+          disableRipple
+          label="Abis"
+          value={'sighashes'}
           onClick={() => handleTabChange('sighashes')}
-        >
-          Abis
-        </Button>
-      </StyledButtonsWrapper>
+        />
+      </StyledTabs>
       <StyledContentWrapper>{renderTab()}</StyledContentWrapper>
-    </>
+    </StyledStack>
   )
 }

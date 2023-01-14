@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { AccordionDetails } from '@mui/material'
 
 import type { StructlogAcordionPanelProps } from './StructlogAcordionPanel.types'
 import {
   StyledAccordion,
+  StyledAccordionDetails,
   StyledAccordionSummary,
   StyledContainer,
   StyledWrapper,
@@ -17,10 +17,6 @@ export const StructlogAcordionPanel = ({
 }: StructlogAcordionPanelProps) => {
   const [isExpanded, setExpanded] = useState(false)
 
-  const rootStyles = isExpanded && canExpand ? { flexGrow: 1 } : {}
-  const canExpandStyles = canExpand
-    ? { cursor: 'pointer' }
-    : { backgroundColor: 'rgba(0, 0, 0, 0.12)' }
   const handleExpand = useCallback(
     () => setExpanded(!isExpanded && canExpand),
     [isExpanded, canExpand],
@@ -29,17 +25,17 @@ export const StructlogAcordionPanel = ({
   return (
     <StyledAccordion
       {...props}
+      canExpand={canExpand}
       expanded={isExpanded && canExpand}
-      sx={{ ...rootStyles, ...canExpandStyles }}
     >
-      <StyledAccordionSummary onClick={handleExpand}>
+      <StyledAccordionSummary canExpand={canExpand} onClick={handleExpand}>
         {text}
       </StyledAccordionSummary>
-      <AccordionDetails>
+      <StyledAccordionDetails>
         <StyledWrapper>
           <StyledContainer>{children}</StyledContainer>
         </StyledWrapper>
-      </AccordionDetails>
+      </StyledAccordionDetails>
     </StyledAccordion>
   )
 }

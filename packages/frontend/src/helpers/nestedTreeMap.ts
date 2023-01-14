@@ -19,7 +19,7 @@ export class NestedMap {
     this.items = [...items]
   }
 
-  private margin = 12
+  private margin = 8
 
   private currentWidth = this.margin * 2
   private currentHeight = this.margin * 2
@@ -63,8 +63,8 @@ export class NestedMap {
     const blockData: TTreeMapItemWithoutNested = {
       item,
       dimmensions: {
-        y: this.currentHeight - this.margin,
-        x: this.currentWidth - this.margin,
+        y: this.currentHeight - this.margin * 1.25,
+        x: this.currentWidth - this.margin * 1.25,
         width: 0,
         height: 0,
       },
@@ -110,11 +110,11 @@ export class NestedMap {
     )
     if (this.isWorseRatio(currentAspect)) {
       if (isVertical) {
-        this.placedBlocks.at(-1).dimmensions.width -= this.margin / 2
+        this.placedBlocks.at(-1).dimmensions.width -= this.margin
         this.currentWidth += this.stageValue - this.margin
       }
       if (!isVertical) {
-        this.placedBlocks.at(-1).dimmensions.height -= this.margin / 2
+        this.placedBlocks.at(-1).dimmensions.height -= this.margin
         this.currentHeight += this.stageValue - this.margin
       }
 
@@ -148,7 +148,7 @@ export class NestedMap {
           dimmensions: {
             ...block.dimmensions,
             y,
-            width: blockData.dimmensions.width - this.margin / 2,
+            width: blockData.dimmensions.width - this.margin,
             height: innerHeight,
           },
         }
@@ -169,7 +169,7 @@ export class NestedMap {
             ...block.dimmensions,
             x,
             width: innerWidth,
-            height: blockData.dimmensions.height - this.margin / 2,
+            height: blockData.dimmensions.height - this.margin,
           },
         }
       }

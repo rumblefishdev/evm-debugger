@@ -1,19 +1,24 @@
+import { Typography } from '@mui/material'
 import React from 'react'
 
-import {
-  BytecodePanel,
-  StructlogPanel,
-  InformationPanel,
-} from '../../parts/StructlogExplorerPanels'
-import { Navigation } from '../../components/Navigation'
+import { useTypedSelector } from '../../store/storeHooks'
 
+import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper } from './styles'
 
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
+  const { isContract } = useTypedSelector((state) => state.activeBlock)
+
+  if (!isContract)
+    return (
+      <Typography variant="headingUnknown">
+        Selected Block is not a contract
+      </Typography>
+    )
+
   return (
     <>
-      <Navigation />
       <StyledContentWrapper {...props}>
         <StructlogPanel />
         <BytecodePanel />

@@ -66,3 +66,20 @@ export const getSignature = (fragment: ethers.utils.FunctionFragment) => {
 
   return `${name}(${inputs.map((inputItem) => inputItem.type).join(',')})`
 }
+
+export const safeJsonParse = (data: string): unknown => {
+  try {
+    return JSON.parse(data)
+  } catch {
+    return null
+  }
+}
+
+export const isJson = (str: string) => {
+  try {
+    JSON.parse(str)
+  } catch {
+    return false
+  }
+  return true
+}

@@ -113,7 +113,7 @@ export const getParsedStack = (stack: TExtendedStack) => {
 
 export const getParsedMemory = (memory: string[]) => {
   return memory.map((memoryItem, index) => {
-    const defaultString = '00000000'
+    const defaultString = '0000'
     const hexValue = (index * 32).toString(16)
     const paddedHexValue =
       defaultString.slice(

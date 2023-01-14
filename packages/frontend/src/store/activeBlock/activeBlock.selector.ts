@@ -23,7 +23,8 @@ const safeArgParse = (
     | boolean
     | string[]
     | ethers.utils.BytesLike
-    | ethers.BigNumber[],
+    | ethers.BigNumber[]
+    | number,
   param: ethers.utils.ParamType,
 ) => {
   if (typeof arg === 'string') return arg
@@ -36,6 +37,8 @@ const safeArgParse = (
   if (typeof arg === 'boolean') return arg ? 'true' : 'false'
 
   if (ethers.utils.isBytesLike(arg)) return arg.toString()
+
+  if (typeof arg === 'number') return arg
 
   if (isArrayOfStrings(arg)) return arg
 

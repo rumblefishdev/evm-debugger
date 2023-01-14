@@ -109,6 +109,7 @@ export function* runAnalyzer(
       txInfoProvider.getTxInfo,
       [],
     )
+
     yield* put(analyzerActions.logMessage('Success!'))
     yield* put(analyzerActions.updateStage('Fetching transaction info'))
     yield* put(setTxInfo(transactionInfo))

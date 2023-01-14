@@ -1,9 +1,10 @@
-import { Button, StepLabel, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React, { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Button } from '../../components/Button'
+import { TailProgressScreen } from '../../images'
 import { etherscanKey, etherscanUrl } from '../../config'
-import { typedNavigate } from '../../router'
 import {
   EtherscanAbiFetcher,
   StaticStructLogProvider,
@@ -11,47 +12,14 @@ import {
 } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import { ROUTES } from '../../router'
+import { AppContainer } from '../../components/AppContainer'
 
-import type {
-  AnalyzerProgressScreenProps,
-  AnalyzerStepProps,
-} from './AnalyzerProgressScreen.types'
-import {
-  StyledButtonsWrapper,
-  StyledMessage,
-  StyledMessageBox,
-  StyledMessegesFrame,
-  StyledStack,
-  StyledStep,
-  StyledStepper,
-  StyledTimeStamp,
-} from './styles'
+import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
+import { Stepper } from './Steps'
+import { Logger } from './Logger/Logger'
 
-const DefaultStep = ({ stepName, ...props }: AnalyzerStepProps) => {
-  return (
-    <StyledStep {...props} key={stepName}>
-      <StepLabel>{stepName}</StepLabel>
-    </StyledStep>
-  )
-}
-
-const ErrorStep = ({ errorMessage, stepName, ...props }: AnalyzerStepProps) => {
-  const stepLabelProps = {
-    optional: <Typography variant="caption">{errorMessage}</Typography>,
-  }
-
-  return (
-    <StyledStep {...props} key={stepName}>
-      <StepLabel error {...stepLabelProps}>
-        {stepName}
-      </StepLabel>
-    </StyledStep>
-  )
-}
-
-export const AnalyzerProgressScreen = ({
-  ...props
-}: AnalyzerProgressScreenProps) => {
+export const AnalyzerProgressScreen = () => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
 
@@ -65,22 +33,19 @@ export const AnalyzerProgressScreen = ({
   useEffect(() => {
     if (!isLoading && !error) {
       const timeout = setTimeout(
-        () => typedNavigate(navigate, '/transactionScreen'),
+        () => navigate(ROUTES.TRANSACTION_SCREEN),
         1000,
       )
       return () => clearTimeout(timeout)
     }
   }, [isLoading, error, navigate])
 
-  const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
-  const activeStep = currentIndex === -1 ? stages.length : currentIndex
-
   const moveBackToStartingScreen = useCallback(() => {
-    typedNavigate(navigate, '/')
+    navigate(ROUTES.HOME)
   }, [navigate])
 
   const restartHandler = useCallback(() => {
-    if (error && !isLoading)
+    if (error)
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
@@ -88,50 +53,45 @@ export const AnalyzerProgressScreen = ({
           abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         }),
       )
-  }, [dispatch, isLoading, error, structLogs, txInfo])
+  }, [dispatch, error, structLogs, txInfo])
+
+  const buttonsStyle: React.CSSProperties = {
+    width: '224px',
+  }
 
   return (
-    <StyledStack {...props}>
-      <StyledStepper activeStep={activeStep}>
-        {stages.map((stage, index) => {
-          if (error && currentIndex === index)
-            return (
-              <ErrorStep
-                key={stage.stageName}
-                stepName={stage.stageName}
-                errorMessage={error}
-              />
-            )
-          return (
-            <DefaultStep key={stage.stageName} stepName={stage.stageName} />
-          )
-        })}
-      </StyledStepper>
-
-      <StyledMessegesFrame>
-        {messages.map((message, index) => {
-          return (
-            <StyledMessageBox key={index}>
-              <StyledTimeStamp>
-                {message.timestamp.toLocaleTimeString()}:
-              </StyledTimeStamp>
-              <StyledMessage>{message.message}</StyledMessage>
-            </StyledMessageBox>
-          )
-        })}
-      </StyledMessegesFrame>
-      <StyledButtonsWrapper flexDirection="row">
-        {error ? (
-          <>
-            <Button variant="contained" onClick={moveBackToStartingScreen}>
+    <AppContainer>
+      <StyledMainPanel>
+        <Stack>
+          <Stack>
+            <StyledHeadlineCaption variant="uppercase" gutterBottom={true}>
+              EVM Debugger
+            </StyledHeadlineCaption>
+            <Typography variant="heading4">Fetching progress</Typography>
+          </Stack>
+          <Stepper stages={stages} error={error} />
+        </Stack>
+        <StyledImage src={TailProgressScreen} />
+        {error && (
+          <Stack direction="row" spacing={2}>
+            <Button
+              style={buttonsStyle}
+              variant="outlined"
+              onClick={moveBackToStartingScreen}
+            >
               Back
             </Button>
-            <Button variant="outlined" onClick={restartHandler}>
-              Try again
+            <Button
+              style={buttonsStyle}
+              variant="contained"
+              onClick={restartHandler}
+            >
+              Restart
             </Button>
-          </>
-        ) : null}
-      </StyledButtonsWrapper>
-    </StyledStack>
+          </Stack>
+        )}
+      </StyledMainPanel>
+      <Logger messages={messages} />
+    </AppContainer>
   )
 }

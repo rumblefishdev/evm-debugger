@@ -1,57 +1,25 @@
-import { Stack, Step, Stepper, styled, Typography } from '@mui/material'
+import { Stack, Stepper, styled, Typography } from '@mui/material'
 
-export const StyledStack = styled(Stack)(() => ({
-  width: '100%',
-  justifyContent: 'space-around',
-  height: '100%',
-  flexDirection: 'column',
-  alignItems: 'center',
-}))
-
-export const StyledStepper = styled(Stepper)(() => ({
-  width: '100%',
-  minHeight: '96px',
-  maxWidth: '1280px',
-}))
-
-export const StyledStep = styled(Step)(() => ({
-  maxWidth: '264px',
-}))
-
-export const StyledMessegesFrame = styled(Stack)(() => ({
-  width: '100%',
-  overflow: 'auto',
-  maxWidth: '1280px',
-  maxHeight: '720px',
-  height: '100%',
-  flexDirection: 'column',
-  borderRadius: '4px',
-  border: '1px solid rgba(0, 0, 0, 0.23)',
-}))
-
-export const StyledMessageBox = styled(Stack)(() => ({
-  width: '100%',
-  padding: '8px 24px',
-  justifyContent: 'flex-start',
-  flexDirection: 'row',
-}))
-
-export const StyledMessage = styled(Typography)(() => ({
-  fontSize: '16px',
-  fontFamily: 'monospace',
-}))
-
-export const StyledTimeStamp = styled(Typography)(() => ({
-  marginRight: '8px',
-  fontSize: '16px',
-  fontFamily: 'monospace',
-  color: 'rgba(0, 0, 0, 0.54)',
-}))
-
-export const StyledButtonsWrapper = styled(Stack)(() => ({
-  width: '256px',
+export const StyledMainPanel = styled(Stack)(() => ({
+  width: '524px',
+  position: 'relative',
   justifyContent: 'space-between',
-  height: '64px',
-  flexDirection: 'row',
-  alignItems: 'flex-start',
+  height: '100%',
+  flexDirection: 'column',
+}))
+
+export const StyledHeadline = styled(Typography)(({ theme }) => ({
+  color: theme.palette.rfText,
+}))
+export const StyledHeadlineCaption = styled(Typography)(({ theme }) => ({
+  color: theme.palette.rfBrandSecondary,
+}))
+
+export const StyledImage = styled('img')(() => ({
+  zIndex: -1,
+  width: 'auto',
+  top: '220px',
+  position: 'absolute',
+  left: '128px',
+  height: '756px',
 }))

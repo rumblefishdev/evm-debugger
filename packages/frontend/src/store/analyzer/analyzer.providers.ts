@@ -1,11 +1,16 @@
 import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import { TransactionTracResponseStatus } from '@evm-debuger/types'
+import { S3 } from 'aws-sdk'
 
+import { store } from '../store'
+
+import { analyzerActions } from './analyzer.slice'
 import type {
-  IStructLogProvider,
-  ITxInfoProvider,
   IAbiProvider,
   IBytecodeProvider,
+  IStructLogProvider,
+  ITxInfoProvider,
 } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
@@ -42,6 +47,62 @@ export class EtherscanAbiFetcher implements IAbiProvider {
   }
 }
 
+export const getTransactionTraceFromS3 = async (transactionTraceLocation) => {
+  const s3 = new S3({
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1',
+    accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  })
+  const s3Object = await s3
+    .getObject({
+      Key: transactionTraceLocation,
+      Bucket: 'transaction-trace-storage.rumblefish.dev',
+    })
+    .promise()
+  return JSON.parse(s3Object.Body.toString()).structLogs
+}
+
+export class TransactionTraceFetcher implements IStructLogProvider {
+  constructor(
+    private transactionTraceProviderUrl: string,
+    public hash: string,
+    private chainId: number,
+  ) {}
+
+  // eslint-disable-next-line id-denylist
+  async getStructLog(): Promise<IStructLog[]> {
+    let transactionTraceJson
+    return new Promise((resolve) => {
+      const transactionTraceInterval = setInterval(async () => {
+        const response = await fetch(
+          `${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`,
+        )
+        console.log(response)
+        const asJson = await response.json()
+        console.log('INVOKE:', asJson)
+
+        store.dispatch(
+          analyzerActions.logMessage(
+            `'Fetching structLogs status: ${asJson.status}`,
+          ),
+        )
+
+        if (asJson.status === TransactionTracResponseStatus.FAILED) {
+          clearInterval(transactionTraceInterval)
+          throw new Error(
+            `Cannot retrieve data for transaction with hash: ${this.hash}`,
+          )
+        } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
+          transactionTraceJson = await getTransactionTraceFromS3(asJson.output)
+          console.log('TRACE:', transactionTraceJson)
+          clearInterval(transactionTraceInterval)
+          resolve(transactionTraceJson)
+        }
+      }, 15_000)
+    })
+  }
+}
+
 export class JSONRpcBytecodeFetcher implements IBytecodeProvider {
   constructor(private provider: ethers.providers.JsonRpcProvider) {}
 
@@ -56,13 +117,24 @@ export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
     private provider: ethers.providers.JsonRpcProvider,
   ) {}
 
-  async getTxInfo() {
-    const tx = await this.provider.getTransaction(this.hash)
+  private unifyTxInfo(
+    tx: ethers.providers.TransactionResponse,
+  ): TTransactionInfo {
     return {
-      ...tx,
       value: tx.value.toHexString(),
+      to: tx.to,
+      input: tx.data,
+      hash: tx.hash,
+      from: tx.from,
       chainId: tx.chainId.toString(),
       blockNumber: tx.blockNumber.toString(),
+      blockHash: tx.blockHash,
     }
+  }
+
+  async getTxInfo() {
+    const tx = await this.provider.getTransaction(this.hash)
+
+    return this.unifyTxInfo(tx)
   }
 }
