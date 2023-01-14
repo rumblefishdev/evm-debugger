@@ -25,6 +25,19 @@ Parameters:
   Subnets:
     Type: String
 Resources:
+  Frontend:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: Frontend/template.yaml
+      Parameters:
+        CertificateArn:
+          Ref: CertificateArn
+        HostedZoneId:
+          Ref: HostedZoneId
+        DomainName:
+          Ref: JsonBucketName
+    Metadata:
+      SamResourceId: Frontend
   TransactionTraceService:
     Type: AWS::Serverless::Application
     Properties:

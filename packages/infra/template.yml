@@ -27,6 +27,15 @@ Parameters:
 
 Resources:
 
+  Frontend:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./frontend.yml
+      Parameters:
+        CertificateArn: !Ref CertificateArn
+        HostedZoneId: !Ref HostedZoneId
+        DomainName: !Ref JsonBucketName
+
   TransactionTraceService:
     Type: AWS::Serverless::Application
     Properties:

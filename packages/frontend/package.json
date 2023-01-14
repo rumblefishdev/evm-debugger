@@ -27,6 +27,7 @@
     "aws-sdk": "^2.1288.0",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
+    "react-contentful": "^2.0.31",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.41.1",
     "react-jsx-highcharts": "^5.0.0",

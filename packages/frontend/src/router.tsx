@@ -10,6 +10,7 @@ import {
   TranscationScreen,
 } from './pages'
 import { AppNavigation } from './pages/AppNavigation'
+import { contentfulClient } from './importedComponents'
 
 export enum ROUTES {
   HOME = '/',
@@ -32,7 +33,7 @@ export const appRouter = createBrowserRouter(
         })
 
         return { blogPosts: entries.items }
-      }
+      },
       element: <StartingScreen />,
       children: [
         {
@@ -68,40 +69,6 @@ export const appRouter = createBrowserRouter(
       ],
     },
   ],
-=======
-import { contentfulClient } from './importedComponents'
-import { AnalyzerProgressScreen } from './pages/AnalyzerProgressScreen'
-import { AnalyzeSummary } from './pages/AnalyzeSummary'
-import { SelectTransactionScreen } from './pages/SelectTransactionScreen'
-import { StructlogsExplorer } from './pages/StructlogsExplorer'
-import { TranscationScreen } from './pages/TranscationScreen'
-
-export const routes: RouteObject[] = [
-  {
-    path: '/',
-    loader: async () => {
-      const entries = await contentfulClient.getEntries({
-        order: '-fields.pubDate',
-        content_type: 'blogPost',
-      })
-
-      return entries.items
-    },
-    element: <SelectTransactionScreen />,
-  },
-  {
-    path: '/transactionScreen',
-    element: <TranscationScreen />,
-  },
-  {
-    path: '/dataManager',
-    element: <AnalyzeSummary />,
-  },
-  {
-    path: '/structlogsExplorer',
-    element: <StructlogsExplorer />,
-  },
->>>>>>> origin/117-import-header-footer
   {
     basename: process.env.PUBLIC_URL,
   },

@@ -127,13 +127,13 @@ export const checkState = async (event: any, context: Context) => {
     analyzerData.taskArn,
   )
   if (ecsTaskParameter.failures.length > 0)
-    return createResponse(ResponseStatus.FAILED, null)
+    return createResponse(TransactionTracResponseStatus.FAILED, null)
 
   const currentTask = ecsTaskParameter.tasks.find(
     (task) => task.taskArn === analyzerData.taskArn,
   )
   if (taskIsRunning(currentTask.lastStatus))
-    return createResponse(ResponseStatus.RUNNING, null)
+    return createResponse(TransactionTracResponseStatus.RUNNING, null)
 
   return createResponse(TransactionTracResponseStatus.FAILED, null)
 }
