@@ -1,7 +1,6 @@
 import { useLoaderData, Outlet } from 'react-router-dom'
 
 import type { IBlogPost } from '../../importedComponents/contentful-ui.types'
-import { Footer } from '../../importedComponents'
 
 import { Manual } from './Manual'
 import { Navigation } from './Navigation'
