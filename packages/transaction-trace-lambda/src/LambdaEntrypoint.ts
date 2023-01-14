@@ -75,9 +75,9 @@ export const getInfoAboutEcsTaskExecution = (taskArn: string) => {
   return new AWS.ECS().describeTasks(params).promise()
 }
 
-export const checkIfJsonExistsOnS3 = (jsonS3Key: string) => {
+export const checkIfJsonExistsOnS3 = async (jsonS3Key: string) => {
   try {
-    return new AWS.S3()
+    return await new AWS.S3()
       .getObjectAttributes({
         ObjectAttributes: ['ObjectParts'],
         Key: jsonS3Key,
@@ -85,7 +85,7 @@ export const checkIfJsonExistsOnS3 = (jsonS3Key: string) => {
       })
       .promise()
   } catch (error) {
-    console.error(error)
+    console.log(error)
     return null
   }
 }
@@ -96,44 +96,43 @@ export const checkState = async (event: any, context: Context) => {
   const analyzerData = await analyzerDataRepository.getAnalyzerDataByTxHash(
     event.pathParameters.txHash,
   )
+  if (analyzerData) {
+    console.log('analyzerData', analyzerData)
 
-  console.log('analyzerData', analyzerData)
+    const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
 
-  const jsonS3Key = `trace/${analyzerData.chainId}/${analyzerData.txHash}.json`
+    console.log('jsonS3Key', jsonS3Key)
 
-  console.log('jsonS3Key', jsonS3Key)
+    const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
 
-  const jsonExists = await checkIfJsonExistsOnS3(jsonS3Key)
+    console.log('jsonExists', jsonExists)
 
-  console.log('jsonExists', jsonExists)
+    if (jsonExists) {
+      return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
+    } else {
+      const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
+        analyzerData.taskArn,
+      )
+      if (ecsTaskParameter.failures.length > 0)
+        return createResponse(TransactionTracResponseStatus.FAILED, null)
 
-  if (jsonExists)
-    return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
-
-  if (!analyzerData) {
-    const taskArn = await runEcsTask(
-      event.pathParameters.txHash,
-      event.pathParameters.chainId,
-    )
-    await analyzerDataRepository.saveAnalyzerData({
-      txHash: event.pathParameters.txHash,
-      taskArn,
-      chainId: event.pathParameters.chainId,
-    })
-
-    return createResponse(TransactionTracResponseStatus.RUNNING, null)
+      const currentTask = ecsTaskParameter.tasks.find(
+        (task) => task.taskArn === analyzerData.taskArn,
+      )
+      if (taskIsRunning(currentTask?.lastStatus)) {
+        return createResponse(TransactionTracResponseStatus.RUNNING, null)
+      }
+    }
   }
-  const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
-    analyzerData.taskArn,
+  const taskArn = await runEcsTask(
+    event.pathParameters.txHash,
+    event.pathParameters.chainId,
   )
-  if (ecsTaskParameter.failures.length > 0)
-    return createResponse(TransactionTracResponseStatus.FAILED, null)
+  await analyzerDataRepository.saveAnalyzerData({
+    txHash: event.pathParameters.txHash,
+    taskArn,
+    chainId: event.pathParameters.chainId,
+  })
 
-  const currentTask = ecsTaskParameter.tasks.find(
-    (task) => task.taskArn === analyzerData.taskArn,
-  )
-  if (taskIsRunning(currentTask.lastStatus))
-    return createResponse(TransactionTracResponseStatus.RUNNING, null)
-
-  return createResponse(TransactionTracResponseStatus.FAILED, null)
+  return createResponse(TransactionTracResponseStatus.RUNNING, null)
 }

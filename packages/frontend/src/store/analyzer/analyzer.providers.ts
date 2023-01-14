@@ -66,7 +66,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
 
         store.dispatch(
           analyzerActions.logMessage(
-            `'Fetching structLogs status: ${asJson.status}`,
+            `Fetching structLogs status: ${asJson.status}`,
           ),
         )
 
@@ -81,7 +81,8 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           )
 
           clearInterval(transactionTraceInterval)
-          resolve(await transactionTrace.json())
+          const parsed = await transactionTrace.json()
+          resolve(parsed.structLogs)
         }
       }, 15_000)
     })
