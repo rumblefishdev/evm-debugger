@@ -26,7 +26,7 @@ export const ItemBox = ({
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsHovered(true)
-      parentHoverHandler(true)
+      if (parentHoverHandler) parentHoverHandler(true)
       event.stopPropagation()
     },
     [parentHoverHandler],
@@ -35,7 +35,7 @@ export const ItemBox = ({
   const notHovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsHovered(false)
-      parentHoverHandler(false)
+      if (parentHoverHandler) parentHoverHandler(false)
       event.stopPropagation()
     },
     [parentHoverHandler],
