@@ -186,6 +186,7 @@ export function* runAnalyzer(
     }
     yield* put(analyzerActions.setLoading(false))
   } catch (error) {
+    console.error(error)
     yield* put(analyzerActions.setLoading(false))
     yield* put(analyzerActions.logMessage('Failed!'))
     yield* put(analyzerActions.setError(error.toString()))
