@@ -1,6 +1,6 @@
 export const txInfoSchema = {
   type: 'object',
-  required: ['from', 'hash', 'input', 'nonce', 'to', 'value', 'chainId'],
+  required: ['from', 'hash', 'input', 'nonce', 'to', 'value'],
   properties: {
     value: { type: 'string' },
     to: { type: 'string' },
@@ -8,7 +8,6 @@ export const txInfoSchema = {
     input: { type: 'string' },
     hash: { type: 'string' },
     from: { type: 'string' },
-    chainId: { type: 'string' },
   },
   additionalProperties: true,
 }

@@ -40,7 +40,10 @@ export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
   return { topics: extractedTopics, logDataOffset, logDataLength }
 }
 
-export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {
+export const extractCallTypeArgsData = (
+  item: TCallTypeArgs,
+  memory: string[],
+) => {
   // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
   const rawValue = 'value' in item ? getSafeHex(item.value) : '0x0'
   const value = ethers.utils.formatEther(rawValue)
@@ -56,14 +59,20 @@ export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) =
   return { value, output, input, address: parsedAddress }
 }
 
-export const extractReturnTypeArgsData = (item: TReturnTypeArgs, memory: string[]) => {
+export const extractReturnTypeArgsData = (
+  item: TReturnTypeArgs,
+  memory: string[],
+) => {
   const { length, position } = item
   const output = getSafeHex(readMemory(memory, position, length))
 
   return { output }
 }
 
-export const extractCreateTypeArgsData = (item: TCreateTypeArgs, memory: string[]) => {
+export const extractCreateTypeArgsData = (
+  item: TCreateTypeArgs,
+  memory: string[],
+) => {
   const { value, byteCodeSize, byteCodePosition } = item
 
   const input = getSafeHex(readMemory(memory, byteCodePosition, byteCodeSize))

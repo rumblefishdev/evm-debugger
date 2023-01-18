@@ -11,7 +11,10 @@ const removeWhiteSpaces = (data: string) => {
 describe('TxAnalyzer', () => {
   describe('analyze transaction', () => {
     it('analyze transaction with revert', async () => {
-      const testData = await promises.readFile('./test/revertedTransactionLogs.json', 'utf8')
+      const testData = await promises.readFile(
+        './test/revertedTransactionLogs.json',
+        'utf8',
+      )
       const jsonTestData = JSON.parse(testData)
 
       const transactionData: TTransactionData = {
