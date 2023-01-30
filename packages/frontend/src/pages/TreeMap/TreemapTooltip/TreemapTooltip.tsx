@@ -3,9 +3,21 @@ import React from 'react'
 import { parseStackTrace } from '../../../helpers/helpers'
 
 import type { TreemapTooltipProps } from './TreemapTooltip.types'
-import { StyledTooltip, StyledInfoRow, StyledInfoType, StyledInfoValue, StyledWrapper } from './styles'
+import {
+  StyledTooltip,
+  StyledInfoRow,
+  StyledInfoType,
+  StyledInfoValue,
+  StyledWrapper,
+} from './styles'
 
-export const TreemapTooltip = ({ gasCost, stackTrace, type, signature, ...props }: TreemapTooltipProps) => (
+export const TreemapTooltip = ({
+  gasCost,
+  stackTrace,
+  type,
+  signature,
+  ...props
+}: TreemapTooltipProps) => (
   <StyledTooltip
     title={
       <StyledWrapper>

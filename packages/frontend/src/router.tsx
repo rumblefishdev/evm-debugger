@@ -77,5 +77,5 @@ export const appRouter = createBrowserRouter(
   ],
   {
     basename: process.env.PUBLIC_URL,
-  }
+  },
 )
