@@ -11,6 +11,7 @@ import {
 } from './pages'
 import { AppNavigation } from './pages/AppNavigation'
 import { contentfulClient } from './importedComponents'
+import { ContentMap } from './pages/TreeMap'
 
 export enum ROUTES {
   HOME = '/',
@@ -20,6 +21,7 @@ export enum ROUTES {
   DATA_MANAGER = '/app/dataManager',
   STRUCTLOGS_EXPLORER = '/app/structlogsExplorer',
   ANALYZER_PROGRESS_SCREEN = '/analyzerProgressScreen',
+  TREE_MAP = '/app/treeMap',
 }
 
 export const appRouter = createBrowserRouter(
@@ -66,10 +68,14 @@ export const appRouter = createBrowserRouter(
           path: ROUTES.STRUCTLOGS_EXPLORER,
           element: <StructlogsExplorer />,
         },
+        {
+          path: ROUTES.TREE_MAP,
+          element: <ContentMap />,
+        },
       ],
     },
   ],
   {
     basename: process.env.PUBLIC_URL,
-  },
+  }
 )

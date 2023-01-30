@@ -24,21 +24,14 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
   return (
     <React.Fragment>
       <StyledTabs value={value} onChange={handleChange} centered>
-        <StyledTab
-          label="Data Manager"
-          value={ROUTES.DATA_MANAGER}
-          onClick={() => handleTabClick(ROUTES.DATA_MANAGER)}
-        />
-        <StyledTab
-          label="Transaction screen"
-          value={ROUTES.TRANSACTION_SCREEN}
-          onClick={() => handleTabClick(ROUTES.TRANSACTION_SCREEN)}
-        />
+        <StyledTab label="Data Manager" value={ROUTES.DATA_MANAGER} onClick={() => handleTabClick(ROUTES.DATA_MANAGER)} />
+        <StyledTab label="Transaction screen" value={ROUTES.TRANSACTION_SCREEN} onClick={() => handleTabClick(ROUTES.TRANSACTION_SCREEN)} />
         <StyledTab
           label="Structlog Explorer"
           value={ROUTES.STRUCTLOGS_EXPLORER}
           onClick={() => handleTabClick(ROUTES.STRUCTLOGS_EXPLORER)}
         />
+        <StyledTab label="Transaction Map" value={ROUTES.TREE_MAP} onClick={() => handleTabClick(ROUTES.TREE_MAP)} />
       </StyledTabs>
       <AppContainer withNavbar>
         <Outlet />
