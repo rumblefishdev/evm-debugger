@@ -46,7 +46,7 @@ export const BytecodePanel = (): JSX.Element => {
 
   return (
     <StyledSmallPanel>
-      <StyledHeading>Dissasembled Bytecode</StyledHeading>
+      <StyledHeading>Disassembled Bytecode</StyledHeading>
       <StyledListWrapper ref={ref}>
         <ViewportList
           ref={listRef}

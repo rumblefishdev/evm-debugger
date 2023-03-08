@@ -73,7 +73,7 @@ export const NestedItemBox = ({
 
   const { gasCost, index, type, stackTrace, id } = treeMapItem.item
 
-  const { width, height, x, y } = treeMapItem.dimmensions
+  const { width, height, x, y } = treeMapItem.dimensions
 
   const styleDimension: React.CSSProperties = { width, height }
 

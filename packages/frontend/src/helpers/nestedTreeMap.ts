@@ -62,7 +62,7 @@ export class NestedMap {
 
     const blockData: TTreeMapItemWithoutNested = {
       item,
-      dimmensions: {
+      dimensions: {
         y: this.currentHeight - this.margin * 1.25,
         x: this.currentWidth - this.margin * 1.25,
         width: 0,
@@ -79,42 +79,42 @@ export class NestedMap {
         item.gasCost)
 
     if (isVertical) {
-      blockData.dimmensions.height =
+      blockData.dimensions.height =
         (this.height - this.currentHeight) * gasPercentage
-      blockData.dimmensions.width = itemArea / blockData.dimmensions.height
+      blockData.dimensions.width = itemArea / blockData.dimensions.height
     } else {
-      blockData.dimmensions.width =
+      blockData.dimensions.width =
         (this.width - this.currentWidth) * gasPercentage
-      blockData.dimmensions.height = itemArea / blockData.dimmensions.width
+      blockData.dimensions.height = itemArea / blockData.dimensions.width
     }
 
     if (this.stageBlocks.length === 0) {
       this.placedBlocks.push(blockData)
       this.stageBlocks.push(blockData)
       this.lastAspectRatio = this.calculateAspectRatio(
-        blockData.dimmensions.width,
-        blockData.dimmensions.height,
+        blockData.dimensions.width,
+        blockData.dimensions.height,
       )
       if (isVertical)
-        this.stageValue += blockData.dimmensions.width + this.margin
+        this.stageValue += blockData.dimensions.width + this.margin
 
       if (!isVertical)
-        this.stageValue += blockData.dimmensions.height + this.margin
+        this.stageValue += blockData.dimensions.height + this.margin
 
       return
     }
 
     const currentAspect = this.calculateAspectRatio(
-      blockData.dimmensions.width,
-      blockData.dimmensions.height,
+      blockData.dimensions.width,
+      blockData.dimensions.height,
     )
     if (this.isWorseRatio(currentAspect)) {
       if (isVertical) {
-        this.placedBlocks.at(-1).dimmensions.width -= this.margin
+        this.placedBlocks.at(-1).dimensions.width -= this.margin
         this.currentWidth += this.stageValue - this.margin
       }
       if (!isVertical) {
-        this.placedBlocks.at(-1).dimmensions.height -= this.margin
+        this.placedBlocks.at(-1).dimensions.height -= this.margin
         this.currentHeight += this.stageValue - this.margin
       }
 
@@ -140,15 +140,15 @@ export class NestedMap {
         const y =
           blockIndex === 0
             ? this.currentHeight - this.margin
-            : this.placedBlocks[blockIndex - 1].dimmensions.y +
-              this.placedBlocks[blockIndex - 1].dimmensions.height -
+            : this.placedBlocks[blockIndex - 1].dimensions.y +
+              this.placedBlocks[blockIndex - 1].dimensions.height -
               this.margin
         this.placedBlocks[rootIndex] = {
           ...block,
-          dimmensions: {
-            ...block.dimmensions,
+          dimensions: {
+            ...block.dimensions,
             y,
-            width: blockData.dimmensions.width - this.margin,
+            width: blockData.dimensions.width - this.margin,
             height: innerHeight,
           },
         }
@@ -160,42 +160,42 @@ export class NestedMap {
         const x =
           blockIndex === 0
             ? this.currentWidth - this.margin
-            : this.placedBlocks[blockIndex - 1].dimmensions.x +
-              this.placedBlocks[blockIndex - 1].dimmensions.width -
+            : this.placedBlocks[blockIndex - 1].dimensions.x +
+              this.placedBlocks[blockIndex - 1].dimensions.width -
               this.margin
         this.placedBlocks[rootIndex] = {
           ...block,
-          dimmensions: {
-            ...block.dimmensions,
+          dimensions: {
+            ...block.dimensions,
             x,
             width: innerWidth,
-            height: blockData.dimmensions.height - this.margin,
+            height: blockData.dimensions.height - this.margin,
           },
         }
       }
     })
 
     if (isVertical) {
-      if (this.placedBlocks.at(-1)!.dimmensions.x === blockData.dimmensions.x) {
-        blockData.dimmensions.y =
-          this.placedBlocks.at(-1)!.dimmensions.y +
-          this.placedBlocks.at(-1)!.dimmensions.height +
+      if (this.placedBlocks.at(-1)!.dimensions.x === blockData.dimensions.x) {
+        blockData.dimensions.y =
+          this.placedBlocks.at(-1)!.dimensions.y +
+          this.placedBlocks.at(-1)!.dimensions.height +
           this.margin
-        blockData.dimmensions.height =
-          this.height - blockData.dimmensions.y - this.margin
+        blockData.dimensions.height =
+          this.height - blockData.dimensions.y - this.margin
       }
-      this.stageValue = blockData.dimmensions.width + this.margin
+      this.stageValue = blockData.dimensions.width + this.margin
     }
     if (!isVertical) {
-      if (this.placedBlocks.at(-1)!.dimmensions.y === blockData.dimmensions.y) {
-        blockData.dimmensions.x =
-          this.placedBlocks.at(-1)!.dimmensions.x +
-          this.placedBlocks.at(-1)!.dimmensions.width +
+      if (this.placedBlocks.at(-1)!.dimensions.y === blockData.dimensions.y) {
+        blockData.dimensions.x =
+          this.placedBlocks.at(-1)!.dimensions.x +
+          this.placedBlocks.at(-1)!.dimensions.width +
           this.margin
-        blockData.dimmensions.width =
-          this.width - blockData.dimmensions.x - this.margin
+        blockData.dimensions.width =
+          this.width - blockData.dimensions.x - this.margin
       }
-      this.stageValue = blockData.dimmensions.height + this.margin
+      this.stageValue = blockData.dimensions.height + this.margin
     }
     this.placedBlocks.push(blockData)
     this.stageBlocks.push(blockData)

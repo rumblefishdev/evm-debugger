@@ -8,7 +8,7 @@ export type TMainTraceLogsWithId = TMainTraceLogs & {
   id: string
 }
 
-export type TDimmensions = {
+export type TDimensions = {
   width: number
   height: number
   x: number
@@ -28,7 +28,7 @@ export type TTreeMapItem = TIntrinsicLog | TMainTraceLogsWithId
 
 export type TTreeMapData = {
   item: TMainTraceLogsWithId | TIntrinsicLog
-  dimmensions: TDimmensions
+  dimensions: TDimensions
   nestedItems: TTreeMapData[]
 }
 

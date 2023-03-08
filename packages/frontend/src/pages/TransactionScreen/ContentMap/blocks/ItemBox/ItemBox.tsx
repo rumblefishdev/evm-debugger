@@ -17,7 +17,7 @@ export const ItemBox = ({
 }: ItemBoxProps) => {
   const { type, stackTrace, gasCost, index, id } = treeMapItem.item
 
-  const { width, height, x, y } = treeMapItem.dimmensions
+  const { width, height, x, y } = treeMapItem.dimensions
 
   const [isHovered, setIsHovered] = useState(false)
 

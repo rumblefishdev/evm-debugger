@@ -12,14 +12,14 @@ export const IntrinsicItemBox = ({
 }: IntrinsicItemBoxProps) => {
   const { gasCost, owningLog } = treeMapItem.item
 
-  const { width, height, x, y } = treeMapItem.dimmensions
+  const { width, height, x, y } = treeMapItem.dimensions
 
   const [isHovered, setIsHovered] = useState(false)
 
   const hovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsHovered(true)
-      parentHoverHandler(true)
+      parentHoverHandler?.(false)
       event.stopPropagation()
     },
     [parentHoverHandler],
@@ -28,7 +28,7 @@ export const IntrinsicItemBox = ({
   const notHovered = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       setIsHovered(false)
-      parentHoverHandler(false)
+      parentHoverHandler?.(false)
       event.stopPropagation()
     },
     [parentHoverHandler],
