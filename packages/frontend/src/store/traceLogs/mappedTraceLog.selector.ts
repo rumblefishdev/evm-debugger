@@ -67,8 +67,8 @@ const parseNestedArrayRecursive = (
     const childNestedItems = parseNestedArrayRecursive(
       { ...item, nestedItems: [] },
       state,
-      item.dimmensions.height,
-      item.dimmensions.width,
+      item.dimensions.height,
+      item.dimensions.width,
     )
     return { ...item, nestedItems: childNestedItems }
   })
@@ -79,12 +79,12 @@ const selectTraceAsNestedArrays = (
   width: number,
   height: number,
 ): TTreeMapData => {
-  const dimmensions = { y: 0, x: 0, width, height }
+  const dimensions = { y: 0, x: 0, width, height }
 
   const rootItem = {
     nestedItems: [],
     item: state[0],
-    dimmensions,
+    dimensions,
   }
 
   return {
