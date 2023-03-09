@@ -228,6 +228,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 0,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -333,6 +334,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 1,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -435,6 +437,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       "decodedOutput": [],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -503,6 +506,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -629,6 +633,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
@@ -715,6 +720,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
@@ -807,6 +813,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
@@ -894,6 +901,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       "decodedOutput": [],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -1065,6 +1073,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 3,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": false,
@@ -1418,6 +1427,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 3,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
@@ -1502,6 +1512,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 3,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
@@ -1586,6 +1597,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       ],
       "depth": 2,
       "errorDescription": null,
+      "events": [],
       "functionFragment": FunctionFragment {
         "_isFragment": true,
         "constant": true,
