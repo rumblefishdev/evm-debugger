@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material'
 import React from 'react'
 
+import { StructlogsList } from '../../components/StructlogsList'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
@@ -20,6 +21,7 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   return (
     <>
       <StyledContentWrapper {...props}>
+        <StructlogsList />
         <StructlogPanel />
         <BytecodePanel />
         <InformationPanel />
