@@ -1,1 +1,0 @@
-export { StructlogsList } from './StructlogsList'
