@@ -39,9 +39,9 @@ export const TraceLogsList = (): JSX.Element => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type, address, isContract } = traceLog
+            const { index, depth, type, input, isContract } = traceLog
             const isActive = activeBlock?.index === index
-            let signature: string = address
+            let signature: string = input.slice(10) // sighash
 
             if (checkIfOfCallType(traceLog) && isContract) {
               const { functionFragment } = traceLog
