@@ -8,25 +8,41 @@ const removeWhiteSpaces = (data: string) => {
   return data.replace(/\s/g, '')
 }
 
+async function runAnalyzerForTestDataFile(path: string) {
+  const testData = await promises.readFile(path, 'utf8')
+  const jsonTestData = JSON.parse(testData)
+
+  const transactionData: TTransactionData = {
+    transactionInfo: jsonTestData.transactionInfo,
+    structLogs: jsonTestData.structLogs,
+    abis: {},
+  }
+
+  const analyzer = await prepareAnalyzer(transactionData)
+
+  return analyzer.analyze()
+}
+
 describe('TxAnalyzer', () => {
   describe('analyze transaction', () => {
-    it('analyze transaction with revert', async () => {
-      const testData = await promises.readFile(
-        './test/revertedTransactionLogs.json',
-        'utf8',
+    it('analyzes simple mint transaction', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/simpleMintTransactionLogs.json',
       )
-      const jsonTestData = JSON.parse(testData)
+      expect(result).toMatchSnapshot()
+    }, 20_000)
 
-      const transactionData: TTransactionData = {
-        transactionInfo: jsonTestData.transactionInfo,
-        structLogs: jsonTestData.structLogs,
-        abis: {},
-      }
+    it('analyze transaction with revert', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/revertedTransactionLogs.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
 
-      const analyzer = await prepareAnalyzer(transactionData)
-
-      const result = analyzer.analyze()
-
+    it('analyzes failed transaction', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/failedTransactionLogs.json',
+      )
       expect(result).toMatchSnapshot()
     }, 20_000)
   })

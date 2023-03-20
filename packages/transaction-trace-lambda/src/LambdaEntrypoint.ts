@@ -107,23 +107,24 @@ export const checkState = async (event: any, context: Context) => {
 
     console.log('jsonExists', jsonExists)
 
-    if (jsonExists) {
+    if (jsonExists)
       return createResponse(TransactionTracResponseStatus.SUCCESS, jsonS3Key)
-    } else {
-      const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
-        analyzerData.taskArn,
-      )
-      if (ecsTaskParameter.failures.length > 0)
-        return createResponse(TransactionTracResponseStatus.FAILED, null)
 
-      const currentTask = ecsTaskParameter.tasks.find(
-        (task) => task.taskArn === analyzerData.taskArn,
-      )
-      if (taskIsRunning(currentTask?.lastStatus)) {
-        return createResponse(TransactionTracResponseStatus.RUNNING, null)
-      }
-    }
+    const ecsTaskParameter = await getInfoAboutEcsTaskExecution(
+      analyzerData.taskArn,
+    )
+    if (ecsTaskParameter.failures.length > 0)
+      return createResponse(TransactionTracResponseStatus.FAILED, null)
+
+    const currentTask = ecsTaskParameter.tasks.find(
+      (task) => task.taskArn === analyzerData.taskArn,
+    )
+    if (taskIsRunning(currentTask?.lastStatus))
+      return createResponse(TransactionTracResponseStatus.RUNNING, null)
+
+    return createResponse(TransactionTracResponseStatus.FAILED, null)
   }
+
   const taskArn = await runEcsTask(
     event.pathParameters.txHash,
     event.pathParameters.chainId,
