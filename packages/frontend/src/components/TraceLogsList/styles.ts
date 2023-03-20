@@ -16,6 +16,7 @@ export const Indent = styled('div')(({ theme }) => ({
 export const OpWrapper = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isActive',
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
+  whiteSpace: 'nowrap',
   display: 'flex',
   alignItems: 'center',
   ':before': {

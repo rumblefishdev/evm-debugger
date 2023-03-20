@@ -39,11 +39,11 @@ export const TraceLogsList = (): JSX.Element => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type } = traceLog
+            const { index, depth, type, address, isContract } = traceLog
             const isActive = activeBlock?.index === index
-            let signature: string = type
+            let signature: string = address
 
-            if (checkIfOfCallType(traceLog)) {
+            if (checkIfOfCallType(traceLog) && isContract) {
               const { functionFragment } = traceLog
               if (functionFragment) signature = getSignature(functionFragment)
             }
@@ -53,7 +53,9 @@ export const TraceLogsList = (): JSX.Element => {
                 {Array.from({ length: depth }).map((_, depthIndex) => (
                   <Indent key={depthIndex} />
                 ))}
-                <OpWrapper isActive={isActive}>{signature}</OpWrapper>
+                <OpWrapper isActive={isActive}>{`${type}${
+                  signature && ` ${signature}`
+                }`}</OpWrapper>
               </TraceLogElement>
             )
           }}
