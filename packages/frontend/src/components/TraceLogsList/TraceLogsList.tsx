@@ -41,7 +41,7 @@ export const TraceLogsList = (): JSX.Element => {
           {(traceLog) => {
             const { index, depth, type, input, isContract } = traceLog
             const isActive = activeBlock?.index === index
-            let signature: string = input.slice(10) // sighash
+            let signature: string = input.slice(0, 10) // sighash
 
             if (checkIfOfCallType(traceLog) && isContract) {
               const { functionFragment } = traceLog
