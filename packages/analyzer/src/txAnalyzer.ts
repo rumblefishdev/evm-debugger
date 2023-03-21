@@ -168,7 +168,12 @@ export class TxAnalyzer {
       this.fragmentReader.loadFragmentsFromAbi(abi)
 
     return mainTraceLogList.map((item) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input) {
+      if (
+        checkIfOfCallType(item) &&
+        item.isContract &&
+        item.input &&
+        item.output
+      ) {
         const result = this.fragmentReader.decodeFragment(
           item.isReverted,
           item.input,
@@ -280,23 +285,21 @@ export class TxAnalyzer {
         const { input, address, errorDescription, functionFragment } = traceLog
         const sighash = input.slice(0, 10)
 
-        if (functionFragment === null)
-          sighashStatues.add(address, sighash, null)
-        else
+        if (functionFragment)
           sighashStatues.add(
             address,
             sighash,
             JSON.parse(functionFragment.format(FormatTypes.json)),
           )
+        else sighashStatues.add(address, sighash, null)
 
-        if (errorDescription === null)
-          sighashStatues.add(address, sighash, null)
-        else
+        if (errorDescription)
           sighashStatues.add(
             address,
             sighash,
             JSON.parse(errorDescription.errorFragment.format(FormatTypes.json)),
           )
+        else sighashStatues.add(address, sighash, null)
       }
 
     return sighashStatues.sighashStatusList
