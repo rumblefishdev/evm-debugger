@@ -189,3 +189,13 @@ export const selectParsedActiveBlock = createSelector(
   (state: TRootState) => state.activeBlock,
   parseActiveBlock,
 )
+
+export const getReadableBlockOutput = (block: TMainTraceLogsWithId) => {
+  const output = JSON.stringify(
+    checkIfOfCallType(block)
+      ? block.decodedOutput?.[0] ?? block.output ?? null
+      : null,
+  )
+
+  return output === 'null' ? null : output
+}

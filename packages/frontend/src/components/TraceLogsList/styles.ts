@@ -28,3 +28,7 @@ export const OpWrapper = styled('div', {
   },
   ...(isActive && { color: theme.palette.rfButton }),
 }))
+
+export const StyledFailureIcon = styled('span')(({ theme }) => ({
+  paddingRight: theme.spacing(2),
+}))

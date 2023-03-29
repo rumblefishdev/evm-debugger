@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 import { checkIfOfCallType } from '@evm-debuger/analyzer'
+import { Tooltip } from '@mui/material'
 
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import {
@@ -12,8 +13,9 @@ import {
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import type { TMainTraceLogsWithId } from '../../types'
 import { getSignature } from '../../helpers/helpers'
+import { getReadableBlockOutput } from '../../store/activeBlock/activeBlock.selector'
 
-import { TraceLogElement, Indent, OpWrapper } from './styles'
+import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
 export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
@@ -53,9 +55,17 @@ export const TraceLogsList = (): JSX.Element => {
                 {Array.from({ length: depth }).map((_, depthIndex) => (
                   <Indent key={depthIndex} />
                 ))}
-                <OpWrapper isActive={isActive}>{`${type}${
-                  signature && ` ${signature}`
-                }`}</OpWrapper>
+                <OpWrapper isActive={isActive}>
+                  {traceLog.isReverted && (
+                    <Tooltip
+                      title={getReadableBlockOutput(traceLog)}
+                      followCursor
+                    >
+                      <StyledFailureIcon>❌</StyledFailureIcon>
+                    </Tooltip>
+                  )}
+                  {`${type} ${signature}`}
+                </OpWrapper>
               </TraceLogElement>
             )
           }}
