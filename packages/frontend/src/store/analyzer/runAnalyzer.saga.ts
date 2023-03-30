@@ -107,7 +107,9 @@ function* fetchAdditionalAbisAndSources(
   for (const address of addresses.values())
     try {
       yield* put(
-        analyzerActions.logMessage(`Trying to fetch data of ${address}`),
+        analyzerActions.logMessage(
+          `Trying to fetch abi and source code of ${address}`,
+        ),
       )
       const source = yield* apply(sourceProvider, sourceProvider.getSource, [
         address,
@@ -212,8 +214,8 @@ export function* runAnalyzer(
           sourceProvider,
           addresses,
         )
-        const additionalDataCount = Object.keys(additionalAbisAndSource).length
-        if (additionalDataCount === 0) {
+        const sourceCodesCount = Object.keys(additionalAbisAndSource).length
+        if (sourceCodesCount === 0) {
           yield* put(
             analyzerActions.logMessage('No additional data were fetched.'),
           )
@@ -226,7 +228,7 @@ export function* runAnalyzer(
           )
           yield* put(
             analyzerActions.logMessage(
-              `${additionalDataCount} were fetched. Calling analyzer again`,
+              `${sourceCodesCount} were fetched. Calling analyzer again`,
             ),
           )
           yield* callAnalyzerOnce(
