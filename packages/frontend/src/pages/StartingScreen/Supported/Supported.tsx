@@ -34,8 +34,8 @@ export const Supported = () => {
         analyzerActions.runAnalyzer({
           txInfoProvider: chainData.txInfoProvider(data.transactionHash),
           structLogProvider: chainData.structLogProvider(data.transactionHash),
+          sourceProvider: chainData.sourceProvider,
           bytecodeProvider: chainData.bytecodeProvider,
-          abiProvider: chainData.abiProvider,
         }),
       )
       navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)

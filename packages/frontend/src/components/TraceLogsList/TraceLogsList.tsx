@@ -21,6 +21,9 @@ export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const activeBlock = useTypedSelector((state) => state.activeBlock)
   const traceLogs = useTypedSelector((state) => state.traceLogs)
+  const contractNames = useTypedSelector(
+    (state) => state.contractNames.entities,
+  )
 
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
@@ -41,13 +44,15 @@ export const TraceLogsList = (): JSX.Element => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type, input, isContract } = traceLog
+            const { index, depth, type, input, isContract, address } = traceLog
             const isActive = activeBlock?.index === index
             let signature: string = input.slice(0, 10) // sighash
+            const contractName = contractNames[address]?.contractName
 
             if (checkIfOfCallType(traceLog) && isContract) {
               const { functionFragment } = traceLog
-              if (functionFragment) signature = getSignature(functionFragment)
+              if (functionFragment)
+                signature = `${contractName}.${getSignature(functionFragment)}`
             }
 
             return (

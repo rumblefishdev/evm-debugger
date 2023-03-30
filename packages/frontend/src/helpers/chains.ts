@@ -5,13 +5,13 @@ import {
   transactionTraceProviderUrl,
 } from '../config'
 import {
-  EtherscanAbiFetcher,
+  EtherscanSourceFetcher,
   JSONRpcBytecodeFetcher,
   JSONRpcTxInfoFetcher,
   TransactionTraceFetcher,
 } from '../store/analyzer/analyzer.providers'
 import type {
-  IAbiProvider,
+  ISourceProvider,
   IBytecodeProvider,
   IStructLogProvider,
   ITxInfoProvider,
@@ -21,7 +21,7 @@ type SupportedChain = {
   name: string
   txInfoProvider: (hash: string) => ITxInfoProvider
   structLogProvider: (hash: string) => IStructLogProvider
-  abiProvider?: IAbiProvider
+  sourceProvider?: ISourceProvider
   bytecodeProvider?: IBytecodeProvider
 }
 
@@ -33,8 +33,8 @@ export const supportedChains: Record<ChainId, SupportedChain> = {
       new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[1]),
     structLogProvider: (hash: string) =>
       new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 1),
+    sourceProvider: new EtherscanSourceFetcher(etherscanUrl, etherscanKey),
     name: 'Ethereum',
     bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
-    abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
   },
 }
