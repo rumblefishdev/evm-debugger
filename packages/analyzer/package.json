@@ -6,6 +6,7 @@
     "chain": "hardhat node",
     "build": "tsc -p tsconfig.build.json",
     "start:dev": "npx hardhat run scripts/script.ts --network localhost",
+    "test:fetch-abis": "npx tsx scripts/fetchAbisForTests.ts",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "lint:check": "eslint \"src/**/*.ts\"",
     "prettier:check": "prettier --config ../../prettierrc.json --ignore-path ../../prettierignore --check .",
