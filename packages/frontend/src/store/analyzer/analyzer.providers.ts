@@ -6,7 +6,7 @@ import { store } from '../store'
 
 import { analyzerActions } from './analyzer.slice'
 import type {
-  IAbiProvider,
+  ISourceProvider,
   IBytecodeProvider,
   IStructLogProvider,
   ITxInfoProvider,
@@ -28,21 +28,25 @@ export class StaticTxInfoProvider implements ITxInfoProvider {
   }
 }
 
-export class EtherscanAbiFetcher implements IAbiProvider {
+export class EtherscanSourceFetcher implements ISourceProvider {
   constructor(private etherscanUrl: string, private etherscanKey: string) {}
 
-  async getAbi(address: string) {
+  async getSource(address: string) {
     const response = await fetch(
-      `${this.etherscanUrl}/api?module=contract&action=getabi&address=${address}&apikey=${this.etherscanKey}`,
+      `${this.etherscanUrl}/api?module=contract&action=getsourcecode&address=${address}&apikey=${this.etherscanKey}`,
     )
     if (response.status !== 200)
       throw new Error(`Etherscan returned ${response.status} response code`)
 
     const asJson = await response.json()
-    if (asJson.status !== '1')
+    if (!asJson.result[0].SourceCode)
       throw new Error(`${address} is not verified on Etherscan`)
 
-    return JSON.parse(asJson.result)
+    return {
+      sourceCode: asJson.result[0].SourceCode,
+      contractName: asJson.result[0].ContractName,
+      abi: JSON.parse(asJson.result[0].ABI),
+    }
   }
 }
 

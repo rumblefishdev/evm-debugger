@@ -47,6 +47,7 @@ export type TBytecodes = {
   disassembled: TOpcodeDisassemled[] | null
 }
 export type TSourceCodes = { address: string; sourceCode: string | null }
+export type TContractNames = { address: string; contractName: string | null }
 
 export type TRawTxData = {
   txHash: string

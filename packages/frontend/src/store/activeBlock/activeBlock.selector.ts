@@ -9,6 +9,7 @@ import {
   parseStackTrace,
 } from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
+import { contractNamesSelectors } from '../contractNames/contractNames'
 import type { TRootState } from '../store'
 
 import type {
@@ -93,7 +94,10 @@ const parseParams = (
   })
 }
 
-const parseActiveBlock = (block: TMainTraceLogsWithId) => {
+const parseActiveBlock = ([block, contractName]: [
+  TMainTraceLogsWithId,
+  string | null,
+]) => {
   const result: TParsedActiveBlock = {
     defaultData: null,
     createSpecificData: null,
@@ -148,6 +152,7 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
       input,
       functionSignature: null,
       errorSignature: null,
+      contractName,
     }
 
     if (functionFragment) {
@@ -186,7 +191,12 @@ const parseActiveBlock = (block: TMainTraceLogsWithId) => {
 }
 
 export const selectParsedActiveBlock = createSelector(
-  (state: TRootState) => state.activeBlock,
+  ({ activeBlock, contractNames }: TRootState) => {
+    const contractName =
+      contractNamesSelectors.selectById(contractNames, activeBlock.address)
+        ?.contractName ?? null
+    return [activeBlock, contractName]
+  },
   parseActiveBlock,
 )
 

@@ -15,6 +15,8 @@ async function runAnalyzerForTestDataFile(path: string) {
   const transactionData: TTransactionData = {
     transactionInfo: jsonTestData.transactionInfo,
     structLogs: jsonTestData.structLogs,
+    sourceCodes: {},
+    contractNames: {},
     abis: {},
   }
 

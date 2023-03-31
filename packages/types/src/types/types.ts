@@ -58,9 +58,9 @@ export interface IErrorDescription {
 
 export type TFragmentStoreTypes = 'function' | 'event' | 'error'
 export type TFragmentStore = {
-  function: Record<string, ethers.utils.FunctionFragment>,
-  event: Record<string, ethers.utils.EventFragment>,
-  error: Record<string, ethers.utils.ErrorFragment>,
+  function: Record<string, ethers.utils.FunctionFragment>
+  event: Record<string, ethers.utils.EventFragment>
+  error: Record<string, ethers.utils.ErrorFragment>
 }
 
 export interface IFragmentDecodeResult {
@@ -78,11 +78,23 @@ export type TEventInfo = {
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
+export type TSourceCodesMap = Record<string, string>
+export type TContractNamesMap = Record<string, string>
+
+export type TContractData = {
+  abi: TAbi
+  sourceCode: string
+  contractName: string
+}
+
+export type TContractDataByAddress = Record<string, TContractData>
 
 export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
   abis: TAbis
+  sourceCodes: TSourceCodesMap
+  contractNames: TContractNamesMap
 }
 
 export type TSighashStatus = {

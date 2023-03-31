@@ -6,7 +6,7 @@ import { Button } from '../../components/Button'
 import { TailProgressScreen } from '../../images'
 import { etherscanKey, etherscanUrl } from '../../config'
 import {
-  EtherscanAbiFetcher,
+  EtherscanSourceFetcher,
   StaticStructLogProvider,
   StaticTxInfoProvider,
 } from '../../store/analyzer/analyzer.providers'
@@ -50,7 +50,10 @@ export const AnalyzerProgressScreen = () => {
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
-          abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
+          sourceProvider: new EtherscanSourceFetcher(
+            etherscanUrl,
+            etherscanKey,
+          ),
         }),
       )
   }, [dispatch, error, structLogs, txInfo])

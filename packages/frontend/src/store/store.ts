@@ -10,6 +10,7 @@ import { sighashReducer } from './sighash/sighash.slice'
 import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
 import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 import { rootSaga } from './root.saga'
+import { contractNamesReducer } from './contractNames/contractNames'
 
 const rootReducer = combineReducers({
   traceLogs: traceLogsReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   sourceCodes: sourceCodesReducer,
   sighashes: sighashReducer,
   rawTxData: rawTxDataReducer,
+  contractNames: contractNamesReducer,
   bytecodes: bytecodesReducer,
   analyzer: analyzerReducer,
   activeBlock: activeBlockReducer,

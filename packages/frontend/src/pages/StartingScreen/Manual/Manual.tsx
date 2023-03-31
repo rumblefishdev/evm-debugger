@@ -8,7 +8,7 @@ import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
 import { validateSchema } from '../../../helpers/validateSchema'
 import { ROUTES } from '../../../router'
 import {
-  EtherscanAbiFetcher,
+  EtherscanSourceFetcher,
   JSONRpcBytecodeFetcher,
   StaticStructLogProvider,
   StaticTxInfoProvider,
@@ -36,8 +36,11 @@ export const Manual = () => {
           structLogProvider: new StaticStructLogProvider(
             data.structLogs.structLogs,
           ),
+          sourceProvider: new EtherscanSourceFetcher(
+            etherscanUrl,
+            etherscanKey,
+          ),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
-          abiProvider: new EtherscanAbiFetcher(etherscanUrl, etherscanKey),
         }),
       )
       navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)

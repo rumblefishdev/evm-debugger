@@ -34,6 +34,7 @@ export type TBlockCallSpecificData = {
   errorSignature: null | string
   input: string
   output: string
+  contractName: string | null
 }
 export type TBlockCreateSpecificData = {
   storageLogs: TStorageLogs

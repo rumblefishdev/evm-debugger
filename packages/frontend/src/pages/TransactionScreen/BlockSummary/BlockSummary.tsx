@@ -34,6 +34,7 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
     storageLogs,
     input,
     output,
+    contractName,
   } = data
 
   if (!isContract) return null
@@ -44,6 +45,12 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         <StyledInfoType>Is contract</StyledInfoType>
         <StyledInfoValue>{isContract ? 'true' : 'false'}</StyledInfoValue>
       </StyledInfoRow>
+      {contractName && (
+        <StyledInfoRow>
+          <StyledInfoType>Contract name</StyledInfoType>
+          <StyledInfoValue>{contractName}</StyledInfoValue>
+        </StyledInfoRow>
+      )}
       {functionSignature && (
         <StyledInfoRow>
           <StyledInfoType>Function signature</StyledInfoType>

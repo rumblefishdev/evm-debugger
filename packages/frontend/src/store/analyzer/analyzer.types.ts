@@ -7,8 +7,12 @@ export interface ITxInfoProvider {
   getTxInfo: () => Promise<TTransactionInfo>
 }
 
-export interface IAbiProvider {
-  getAbi: (address: string) => Promise<TAbi | null>
+export interface ISourceProvider {
+  getSource: (address: string) => Promise<{
+    contractName: string
+    sourceCode: string
+    abi: TAbi
+  } | null>
 }
 
 export interface IBytecodeProvider {
@@ -18,7 +22,7 @@ export interface IBytecodeProvider {
 export interface IRunAnalyzerPayload {
   structLogProvider: IStructLogProvider
   txInfoProvider: ITxInfoProvider
-  abiProvider?: IAbiProvider
+  sourceProvider?: ISourceProvider
   bytecodeProvider?: IBytecodeProvider
 }
 
