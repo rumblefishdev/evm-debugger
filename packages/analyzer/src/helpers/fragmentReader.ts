@@ -40,9 +40,6 @@ export class FragmentReader {
     return this.fragmentStore['error'][sighash] || null
   }
   public loadFragmentsFromAbi(abiDefinition: TAbi): void {
-    console.log(
-      JSON.stringify({ loadFragmentsFromAbi: abiDefinition }, null, 2),
-    )
     const abiInterface = new ethers.utils.Interface(abiDefinition)
 
     const functionFragmentKeys = Object.keys(abiInterface.functions)
