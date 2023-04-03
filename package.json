@@ -33,7 +33,6 @@
     "transaction-trace-lambda:zip": "rf-lerna zipbundle @evm-debuger/transaction-trace-lambda --target ./packages/transaction-trace-lambda/transactionTraceService.zip"
   },
   "devDependencies": {
-    "@types/react-syntax-highlighter": "^15.5.6",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.28.0",
@@ -50,7 +49,6 @@
     "prettier": "^2.8.1"
   },
   "dependencies": {
-    "react-contentful": "^2.0.31",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-contentful": "^2.0.31"
   }
 }
