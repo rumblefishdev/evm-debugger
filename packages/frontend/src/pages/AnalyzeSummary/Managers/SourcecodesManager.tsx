@@ -6,6 +6,7 @@ import {
 } from '../../../store/sourceCodes/sourceCodes.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
+import { SourceCodeDisplayer } from '../../../components/SourceCodeDisplayer'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
@@ -30,6 +31,7 @@ export const SourcecodesManager = () => {
             value={item.sourceCode}
             isFound={item.sourceCode !== null}
             updateItem={addSourcecode}
+            displayer={SourceCodeDisplayer}
           />
         ))}
       </StyledWrapper>
