@@ -8,7 +8,7 @@ import { ContentMap } from './ContentMap'
 export const TranscationScreen: React.FC = () => (
   <>
     <TraceLogsList />
-    <ContentMap />
+    {/*<ContentMap />*/}
     <BlockSummary />
   </>
 )

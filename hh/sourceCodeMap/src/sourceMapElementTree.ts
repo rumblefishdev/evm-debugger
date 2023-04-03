@@ -1,0 +1,238 @@
+import { SourceMapElement } from "./sourceMapElement"
+import { OpCode } from "./opCode"
+
+export class SourceMapElementTreeNode {
+  public parent: SourceMapElementTreeNode;
+  public children: SourceMapElementTreeNode[];
+
+  constructor(
+    public readonly element: SourceMapElement
+  ) {
+    this.children = []
+  }
+
+  get opCodes(): OpCode[] {
+    return this.element.opCodes
+  }
+
+  addIds(ids: number[]) {
+    this.element.addIds(ids)
+  }
+
+  addChild(node: SourceMapElementTreeNode) {
+    this.children = [
+      ...this.children,
+      node
+    ]
+
+    if (node.parent) {
+      const idx = node.parent.children.findIndex(child => child.uniqueId === node.uniqueId)
+      if (idx !== -1) {
+        node.parent.children.splice(idx)
+      }
+    }
+
+    node.parent = this
+  }
+
+  removeChild(node: SourceMapElementTreeNode): SourceMapElementTreeNode | null {
+    const idx = this.children.findIndex(child => child.uniqueId === node.uniqueId)
+    if (idx > -1) {
+      const childNodeToRemove = this.children[idx]
+
+      this.children.splice(idx)
+      childNodeToRemove.parent = null
+      return childNodeToRemove
+    }
+
+    return null
+  }
+
+  isEqual(node: SourceMapElementTreeNode): boolean {
+    return (
+      this.element.start === node.element.start &&
+      this.element.end === node.element.end
+    )
+  }
+
+  isNodeParent(node: SourceMapElementTreeNode): boolean {
+    return !this.isEqual(node) && (
+      this.element.start <= node.element.start &&
+        this.element.end >= node.element.end
+    )
+  }
+
+  isNodeChild(node: SourceMapElementTreeNode): boolean {
+    return !this.isEqual(node) && (
+      this.element.start >= node.element.start &&
+      this.element.end <= node.element.end
+    )
+  }
+
+  get allSubNodesAndItself(): SourceMapElementTreeNode[] {
+    return [
+      this,
+      ...this.children.flatMap(
+        child => child.allSubNodesAndItself
+      )
+    ]
+  }
+
+  get uniqueId(): string {
+    return `${this.element.start}-${this.element.end}`
+  }
+
+  clone(): SourceMapElementTreeNode {
+    const clonedNode = new SourceMapElementTreeNode(
+      this.element
+    )
+
+    return clonedNode
+  }
+}
+
+export class SourceMapElementTree {
+  constructor(
+    public rootNode: SourceMapElementTreeNode
+  ) {
+  }
+
+  findClosestParentNode(node: SourceMapElementTreeNode): SourceMapElementTreeNode | null {
+    const parentNodes = this.rootNode.allSubNodesAndItself.filter(
+      subNode => {
+        return subNode.isNodeParent(node)
+      }
+    )
+    if (parentNodes.length === 0) {
+      return null
+    }
+
+    let bestParentNode = parentNodes[0]
+    for (const parentNode of parentNodes.slice(1)) {
+      if (bestParentNode.element.length > parentNode.element.length) {
+        bestParentNode = parentNode
+      }
+    }
+
+    return bestParentNode
+  }
+
+  addNewNode(nodeToAdd: SourceMapElementTreeNode) {
+    const directParent = this.findClosestParentNode(nodeToAdd)
+
+    if (directParent === null) {
+      if (this.rootNode.isNodeChild(nodeToAdd)) {
+        nodeToAdd.addChild(this.rootNode)
+        this.rootNode = nodeToAdd
+      } else if (this.rootNode.isEqual(nodeToAdd)) {
+        this.rootNode.addIds(nodeToAdd.element.ids)
+      }
+
+      return
+    }
+
+    let foundEqualNode = false
+    for (const directParentChild of directParent.children) {
+      if (directParentChild.isEqual(nodeToAdd)) {
+        directParentChild.addIds(nodeToAdd.element.ids)
+        foundEqualNode = true
+        break
+      }
+    }
+    if (!foundEqualNode) {
+      for (const child of directParent.children) {
+        if (nodeToAdd.isNodeParent(child) && child.parent) {
+          const removedChild = child.parent.removeChild(child)
+          nodeToAdd.addChild(removedChild)
+        }
+      }
+
+      directParent.addChild(nodeToAdd)
+    }
+  }
+
+  iterator(): Generator<SourceMapElementTreeNode> {
+    return this.nodeIterator(this.rootNode)
+  }
+
+  toString(): string {
+    return this.printChildren(this.rootNode, 1)
+  }
+
+  shrinkTree(): SourceMapElementTree {
+    // const newTree = new SourceMapElementTree(
+    //   this.rootNode.clone()
+    // )
+    // let uniqueIdsToSkip = []
+    // for (const node of this.iterator()) {
+    //   if (uniqueIdsToSkip.includes(node.uniqueId)) {
+    //     continue
+    //   }
+    //
+    //   const clonedNode = node.clone()
+    //   const lineRange = node.element.linesRange
+    //   if (lineRange[0] === lineRange[1]) {
+    //     for (const child of node.children) {
+    //       const descNodesToKill = Array.from(this.nodeIterator(child))
+    //
+    //       uniqueIdsToSkip = [
+    //         ...uniqueIdsToSkip,
+    //         ...descNodesToKill.map(
+    //           descNode => descNode.uniqueId
+    //         )
+    //       ]
+    //
+    //       console.log('m', descNodesToKill.flatMap(
+    //         descNodeToKill => descNodeToKill.element.ids
+    //       ))
+    //
+    //       clonedNode.addIds(descNodesToKill.flatMap(
+    //         descNodeToKill => descNodeToKill.element.ids
+    //       ))
+    //     }
+    //   }
+    //
+    //   newTree.addNewNode(clonedNode)
+    // }
+    //
+    // return newTree
+    return this
+  }
+
+  static fromElements(elements: SourceMapElement[]) {
+    const tree = new SourceMapElementTree(
+      new SourceMapElementTreeNode(
+        elements[0]
+      )
+    )
+
+    for(let i = 1; i < elements.length; i++) {
+      const newNode = new SourceMapElementTreeNode(
+        elements[i]
+      )
+      tree.addNewNode(newNode)
+    }
+
+    return tree
+  }
+
+  private printChildren(node: SourceMapElementTreeNode, tabsNumber: number): string {
+    const [startLine, endLine] = node.element.linesRange
+    let result = `|${"-".repeat(tabsNumber)}>${node.element.start}:${node.element.end} (${startLine}:${endLine})\n`+
+    `----- SOURCE CODE ------ \n ${node.element.sourceCodeFragment}\n` +
+    `----- OP CODES -------------\n${node.opCodes.map(opCode => opCode.toString()).join("\n")}\n`
+    for (const childNode of node.children) {
+      result += this.printChildren(childNode, tabsNumber + 2)
+    }
+
+    return result
+  }
+
+  private *nodeIterator(node: SourceMapElementTreeNode): Generator<SourceMapElementTreeNode> {
+    yield node;
+
+    for (const child of node.children) {
+      yield* this.nodeIterator(child)
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <title>
+            {{ title }}
+        </title>
+        <style>
+            table {
+              border-collapse: separate;
+              width: 100%;
+            }
+
+            thead {
+              text-align: center;
+              font-weight: bolder;
+            }
+
+            td:nth-child(1) {
+              width: 30%;
+              text-align: center;
+            }
+
+            td:nth-child(1) div {
+              display: inline-block;
+              text-align: left;
+              line-height: 150%;
+            }
+
+            td:nth-child(2) {
+              width: 70%;
+            }
+
+            td {
+              border: 1px solid black;
+            }
+
+            span.jumpDestLevel-0 {
+              color: red;
+            }
+
+            span.jumpDestLevel-1 {
+              color: blue;
+            }
+
+            span.jumpDestLevel-2 {
+              color: orange;
+            }
+
+            span.jumpDestLevel-3 {
+              color: green;
+            }
+
+            span.jumpDestLevel-4 {
+              color: darkblue;
+            }
+        </style>
+    </head>
+    <body>
+        <table style="border: 1px solid black; width: 100%;">
+            <thead>
+                <tr>
+                    <td>
+                        OpCode
+                    </td>
+                    <td>
+                        Solidity
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for element in elements %}
+                    <tr>
+                        <td>
+                            <div>
+                                {% for opCode in element.opCodes %}
+                                    <b>{{ opCode.line }} (<span class="jumpDestLevel-{{ jumpDestLevels[opCode.line] % 5 }}">{{ jumpDestLevels[opCode.line] }}</span>) :</b> {{ opCode.content }}  <br/>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <pre>
+                                {{ element.sourceCodeFragment }}
+                            </pre>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
