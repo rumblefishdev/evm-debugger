@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 
 import type { TTabType } from './AnalyzeSummary.types'
-import { BytecodesManager, SighashesManager } from './Managers'
+import {
+  BytecodesManager,
+  SighashesManager,
+  SourcecodesManager,
+} from './Managers'
 import {
   StyledContentWrapper,
   StyledStack,
@@ -18,10 +22,9 @@ export const AnalyzeSummary = () => {
 
   const renderTab = () => {
     switch (activeTab) {
-      // TODO: https://github.com/rumblefishdev/evm-debuger/issues/103
-      // case 'sourcecodes': {
-      //   return <SourcecodesManager />
-      // }
+      case 'sourcecodes': {
+        return <SourcecodesManager />
+      }
       case 'bytecodes': {
         return <BytecodesManager />
       }
@@ -39,7 +42,6 @@ export const AnalyzeSummary = () => {
       <StyledTabs value={activeTab}>
         <StyledTab
           disableRipple
-          disabled
           label="Source Codes"
           value={'sourcecodes'}
           onClick={() => handleTabChange('sourcecodes')}

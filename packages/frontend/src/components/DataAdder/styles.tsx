@@ -5,8 +5,8 @@ import { Button } from '../Button'
 export const StyledDialog = styled(Dialog)(() => ({}))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  width: '448px',
   padding: theme.spacing(6),
+  maxWidth: '80vw',
   height: '100%',
   boxSizing: 'border-box',
 }))
