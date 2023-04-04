@@ -1,8 +1,11 @@
 import { CircularProgress, styled } from '@mui/material'
 import type { CSSProperties, ReactElement } from 'react'
 import { memo } from 'react'
-import { Prism as ReactSyntaxHighlighter } from 'react-syntax-highlighter'
+import ReactSyntaxHighlighter from 'react-syntax-highlighter/dist/cjs/prism-light'
+import solidity from 'react-syntax-highlighter/dist/cjs/languages/prism/solidity'
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+
+ReactSyntaxHighlighter.registerLanguage('solidity', solidity)
 
 type ReactSyntaxHighlighterProps = {
   language: string
@@ -39,10 +42,14 @@ const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
 
 export const StyledSyntaxHighlighter = memo(SyntaxHighlighter)
 
-export const StyledSelectWrap = styled('div')(({ theme }) => ({
+export const StyledSelectWrapper = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }))
 
-export const StyledLoading = styled(CircularProgress)(({ theme }) => ({
-  margin: `${theme.spacing(40)} auto`,
+export const StyledLoading = styled(CircularProgress)<{
+  dimensions?: [number, number]
+}>(({ theme, dimensions }) => ({
+  margin: dimensions
+    ? `${dimensions[1] / 2}px ${dimensions[0] / 2}px`
+    : `${theme.spacing(40)} auto`,
 }))

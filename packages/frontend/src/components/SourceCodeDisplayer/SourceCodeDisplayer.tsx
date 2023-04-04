@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
 import {
@@ -16,7 +16,7 @@ import {
 
 import {
   StyledLoading,
-  StyledSelectWrap,
+  StyledSelectWrapper,
   StyledSyntaxHighlighter,
 } from './styles'
 
@@ -41,8 +41,13 @@ export const SourceCodeDisplayer = ({
   }, [data])
 
   const hasChoice = Object.keys(sources).length > 1
-  const [activeSource, setActiveSource] = useState(Object.keys(sources)[0])
+  const [activeSourceKey, setActiveSourceKey] = useState(
+    Object.keys(sources)[0],
+  )
   const [isLoading, setIsLoading] = useState(true)
+
+  const sizeRef = useRef<HTMLDivElement>(null)
+  const [prevSize, setPrevSize] = useState<[number, number] | null>(null)
 
   useEffect(() => {
     if (props.open && isLoading) {
@@ -50,17 +55,24 @@ export const SourceCodeDisplayer = ({
       return () => clearTimeout(timeout)
     }
     if (!props.open) {
-      const timeout = setTimeout(() => setIsLoading(true), 300)
+      const timeout = setTimeout(() => {
+        setActiveSourceKey(Object.keys(sources)[0])
+        setIsLoading(true)
+        setPrevSize(null)
+      }, 300)
       return () => clearTimeout(timeout)
     }
-  }, [isLoading, props.open])
+  }, [isLoading, props.open, sources])
 
   const handleChange = useCallback((event: SelectChangeEvent) => {
+    if (sizeRef.current)
+      setPrevSize([sizeRef.current.offsetWidth, sizeRef.current.offsetHeight])
+
     setIsLoading(true)
-    setActiveSource(event.target.value)
+    setActiveSourceKey(event.target.value)
   }, [])
 
-  const source = sources[activeSource]
+  const source = sources[activeSourceKey]
 
   return (
     <StyledDialog {...props}>
@@ -73,13 +85,13 @@ export const SourceCodeDisplayer = ({
         </StyledHeader>
 
         {hasChoice && (
-          <StyledSelectWrap>
+          <StyledSelectWrapper>
             <FormControl fullWidth>
               <InputLabel id={inputId}>File</InputLabel>
               <Select
                 label="File"
                 labelId={inputId}
-                value={activeSource}
+                value={activeSourceKey}
                 onChange={handleChange}
               >
                 {Object.keys(sources).map((key) => (
@@ -89,13 +101,13 @@ export const SourceCodeDisplayer = ({
                 ))}
               </Select>
             </FormControl>
-          </StyledSelectWrap>
+          </StyledSelectWrapper>
         )}
 
         {isLoading ? (
-          <StyledLoading />
+          <StyledLoading dimensions={prevSize} />
         ) : (
-          <StyledDataWrapper>
+          <StyledDataWrapper ref={sizeRef}>
             <StyledDataIndexesWrapper>
               {source.split('\n').map((_, index) => (
                 <StyledDataIndex key={index}>{index}</StyledDataIndex>
