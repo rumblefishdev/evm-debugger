@@ -29,12 +29,14 @@ export const StructlogPanel = (): JSX.Element => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
-      event.preventDefault()
-      if (event.key === 'ArrowDown' && !event.repeat)
+      if (event.key === 'ArrowDown' && !event.repeat) {
+        event.preventDefault()
         dispatch(loadNextStructlog(structLogs))
-
-      if (event.key === 'ArrowUp' && !event.repeat)
+      }
+      if (event.key === 'ArrowUp' && !event.repeat) {
+        event.preventDefault()
         dispatch(loadPreviousStructlog(structLogs))
+      }
     }
 
     document.addEventListener('keydown', handleKeyDown)
