@@ -22,11 +22,11 @@ module.exports = {
     },
     extends: [
         "eslint:recommended",
-        "prettier",
         "plugin:@typescript-eslint/recommended",
         "plugin:sonarjs/recommended",
         "plugin:unicorn/recommended",
-        "plugin:import/typescript"
+        "plugin:import/typescript",
+        "prettier"
     ],
     plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks"],
     overrides: [

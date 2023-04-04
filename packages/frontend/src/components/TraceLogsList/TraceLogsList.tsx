@@ -32,7 +32,27 @@ export const TraceLogsList = (): JSX.Element => {
     (traceLog: TMainTraceLogsWithId) => dispatch(loadActiveBlock(traceLog)),
     [dispatch],
   )
-
+  const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
+    let signature = ''
+    if (
+      traceLog.type === 'CALL' &&
+      traceLog.input === '0x' &&
+      traceLog.isContract !== null
+    )
+      signature = `Send ${traceLog.value} ETH to ${
+        traceLog.isContract ? 'SC' : 'EOA'
+      }`
+    else {
+      const contractName = contractNames[traceLog.address]?.contractName
+      signature = traceLog.input.slice(0, 10)
+      if (checkIfOfCallType(traceLog) && traceLog.isContract) {
+        const { functionFragment } = traceLog
+        if (functionFragment)
+          signature = `${contractName}.${getSignature(functionFragment)}`
+      }
+    }
+    return signature
+  }
   return (
     <StyledSmallPanel>
       <StyledHeading>Trace</StyledHeading>
@@ -44,17 +64,9 @@ export const TraceLogsList = (): JSX.Element => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type, input, isContract, address } = traceLog
+            const { index, depth, type } = traceLog
             const isActive = activeBlock?.index === index
-            let signature: string = input.slice(0, 10) // sighash
-            const contractName = contractNames[address]?.contractName
-
-            if (checkIfOfCallType(traceLog) && isContract) {
-              const { functionFragment } = traceLog
-              if (functionFragment)
-                signature = `${contractName}.${getSignature(functionFragment)}`
-            }
-
+            const signature = constructSignature(traceLog) // sighash
             return (
               <TraceLogElement key={index} onClick={() => activate(traceLog)}>
                 {Array.from({ length: depth }).map((_, depthIndex) => (

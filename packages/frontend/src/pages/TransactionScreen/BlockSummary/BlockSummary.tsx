@@ -131,10 +131,12 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
         <StyledInfoType>Address</StyledInfoType>
         <StyleRawBytecode>{address}</StyleRawBytecode>
       </StyledInfoRow>
-      <StyledInfoRow>
-        <StyledInfoType>Is Success</StyledInfoType>
-        <StyledInfoValue>{isSuccess ? 'true' : 'false'}</StyledInfoValue>
-      </StyledInfoRow>
+      {(isSuccess === true || isSuccess === false) && (
+        <StyledInfoRow>
+          <StyledInfoType>Is Success</StyledInfoType>
+          <StyledInfoValue>{isSuccess ? 'true' : 'false'}</StyledInfoValue>
+        </StyledInfoRow>
+      )}
       <StyledInfoRow>
         <StyledInfoType>Type</StyledInfoType>
         <StyledInfoValue>{type}</StyledInfoValue>
