@@ -13,7 +13,7 @@ import {
 import type { StackInfoCardProps } from './StackInfoCard.types'
 
 const skipLeadingZeroes = (value: string): string => {
-  return value.replace(/^0+/, '')
+  return `0x${value.replace(/^0+/, '')}`
 }
 
 export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {

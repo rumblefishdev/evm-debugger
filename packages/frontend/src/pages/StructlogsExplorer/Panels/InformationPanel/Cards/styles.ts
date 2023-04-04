@@ -51,6 +51,7 @@ export const StyledTableRow = styled(TableRow)(() => ({
 }))
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  width: 1,
   textAlign: 'left',
   padding: `0 ${theme.spacing(4)} ${theme.spacing(3)} 0`,
   marginRight: theme.spacing(4),
@@ -59,7 +60,6 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontFamily: 'IBM Plex Mono',
   color: theme.palette.rfSecondary,
   border: 'none',
-  width: 1,
 }))
 
 export const StyledTableValueCell = styled(TableCell)(({ theme }) => ({
