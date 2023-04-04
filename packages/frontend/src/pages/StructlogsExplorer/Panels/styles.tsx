@@ -8,6 +8,7 @@ export const StyledSmallPanel = styled(Stack)(() => ({
 
 export const StyledHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.headingUnknown,
+  position: 'relative',
   marginBottom: theme.spacing(6),
   color: theme.palette.rfSecondary,
 }))

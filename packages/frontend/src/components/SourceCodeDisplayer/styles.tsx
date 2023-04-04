@@ -21,6 +21,7 @@ const SyntaxHighlighterStyledComponent = styled(
   ReactSyntaxHighlighter as unknown as ReactSyntaxHighlighterComponent,
 )(({ theme }) => ({
   padding: `${theme.spacing(2)} ${theme.spacing(4)} !important`,
+  overflow: 'visible !important',
   margin: '0 !important',
   fontSize: '15px',
   borderRadius: '0 !important',
