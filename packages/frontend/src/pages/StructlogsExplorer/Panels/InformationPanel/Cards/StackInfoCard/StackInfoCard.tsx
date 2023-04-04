@@ -4,13 +4,17 @@ import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import {
-  StyledRecordType,
-  StyledRecordValue,
-  StyledWrapper,
-  StyledRecord,
+  StyledTable,
+  StyledTableCell,
+  StyledTableRow,
+  StyledTableValueCell,
 } from '../styles'
 
 import type { StackInfoCardProps } from './StackInfoCard.types'
+
+const skipLeadingZeroes = (value: string): string => {
+  return `0x${value.replace(/^0+/, '')}`
+}
 
 export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
   const stack = useTypedSelector(selectParsedStack)
@@ -20,7 +24,7 @@ export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
 
   return (
     <StructlogAcordionPanel text="Stack" canExpand={stack.length > 0}>
-      <StyledWrapper {...props}>
+      <StyledTable>
         {stack.map((stackItem, index) => {
           const isSelected: React.CSSProperties = stackItem.value.isSelected
             ? { background: 'rgba(0, 0, 0, 0.04)' }
@@ -31,13 +35,15 @@ export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
           const name = argName?.name ? `${argName.name}` : stackItem.index
 
           return (
-            <StyledRecord direction="row" sx={isSelected} key={index}>
-              <StyledRecordType>{name}</StyledRecordType>
-              <StyledRecordValue>{stackItem.value.value}</StyledRecordValue>
-            </StyledRecord>
+            <StyledTableRow sx={isSelected} key={index}>
+              <StyledTableCell>{name}</StyledTableCell>
+              <StyledTableValueCell>
+                {skipLeadingZeroes(stackItem.value.value)}
+              </StyledTableValueCell>
+            </StyledTableRow>
           )
         })}
-      </StyledWrapper>
+      </StyledTable>
     </StructlogAcordionPanel>
   )
 }
