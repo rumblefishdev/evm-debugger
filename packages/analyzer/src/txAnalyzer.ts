@@ -90,14 +90,17 @@ export class TxAnalyzer {
   private combineCallWithItsReturn(traceLogs: TReturnedTraceLog[]) {
     return traceLogs.map((item, rootIndex) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
-        if (checkIfOfCallType(item) && !item.isContract)
-          return {
+        if (checkIfOfCallType(item) && !item.isContract) {
+          const result = {
             ...item,
             returnIndex: item.startIndex,
             gasCost:
               item.passedGas -
               this.transactionData.structLogs[item.index + 1].gas,
           }
+          if (item.input === '0x') result.isSuccess = true
+          return result
+        }
 
         const lastItemInCallContext = getLastItemInCallTypeContext(
           traceLogs,

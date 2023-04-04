@@ -4564,6 +4564,7 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
       "index": 777,
       "input": "0x",
       "isContract": false,
+      "isSuccess": true,
       "output": "0x",
       "passedGas": 103493,
       "pc": 12728,
