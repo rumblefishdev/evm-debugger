@@ -21,6 +21,7 @@ import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
 import { DataSection } from './DataSection'
+import { EventBlockNew } from './DataBlocks/EventBlock/EventBlock'
 
 const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   const {
@@ -69,10 +70,16 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         )}
       </StyledBlockWrapper>
       {parsedEvents && parsedEvents.length > 0 && (
-        <DataSection title="Events data">
+        <DataSection title="Events data New">
+          <EventBlockNew eventLogs={parsedEvents} />
+        </DataSection>
+      )}
+      {parsedEvents && parsedEvents.length > 0 && (
+        <DataSection title="Events data Old">
           <EventBlock eventLogs={parsedEvents} />
         </DataSection>
       )}
+
       <DataSection title="Storage data">
         <StorageBlock
           storageAddress={storageAddress}

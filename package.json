@@ -18,6 +18,7 @@
     "analyzer:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/analyzer",
     "frontend:lint-check": "lerna run lint:check --scope @evm-debuger/frontend",
     "frontend:lint-fix": "lerna run lint:fix --scope @evm-debuger/frontend",
+    "frontend:test": "lerna run test --scope @evm-debuger/frontend",
     "frontend:prettier-check": "lerna run prettier:check --scope @evm-debuger/frontend",
     "frontend:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/frontend",
     "transaction-trace-lambda:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-lambda",

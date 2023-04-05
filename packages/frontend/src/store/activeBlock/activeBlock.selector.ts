@@ -16,50 +16,71 @@ import type {
   TBlockCallSpecificData,
   TParsedActiveBlock,
 } from './activeBlock.types'
+import { parseParameter } from './activeBlock.utils'
 
-const safeArgParse = (
-  arg:
-    | string
-    | ethers.BigNumber
-    | boolean
-    | string[]
-    | ethers.utils.BytesLike
-    | ethers.BigNumber[]
-    | number,
-  param: ethers.utils.ParamType,
-) => {
-  if (typeof arg === 'string') return arg
+// const safeArgParse = (
+//     arg:
+//         | string
+//         | ethers.BigNumber
+//         | boolean
+//         | string[]
+//         | ethers.utils.BytesLike
+//         | ethers.BigNumber[]
+//         | number,
+//     param: ethers.utils.ParamType,
+// ) => {
+//   if (typeof arg === 'string') return arg
+//
+//   if (ethers.BigNumber.isBigNumber(arg))
+//     return `${ethers.utils.formatEther(
+//         ethers.BigNumber.from(arg).toString(),
+//     )} ETH`
+//
+//   if (typeof arg === 'boolean') return arg ? 'true' : 'false'
+//
+//   if (ethers.utils.isBytesLike(arg)) return arg.toString()
+//
+//   if (typeof arg === 'number') return arg
+//
+//   if (isArrayOfStrings(arg)) return arg
+//
+//   if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
+//     return arg.map(
+//         (item) =>
+//             `${ethers.utils.formatEther(
+//                 ethers.BigNumber.from(item).toString(),
+//             )} ETH`,
+//     )
+//
+//   const { components } = param
+//   return components.map((component, index) => {
+//     const value = arg[index]
+//
+//     const parsedValue = safeArgParse(value, component)
+//
+//     return { value: parsedValue, type: component.type, name: component.name }
+//   })
+// }
 
-  if (ethers.BigNumber.isBigNumber(arg))
-    return `${ethers.utils.formatEther(
-      ethers.BigNumber.from(arg).toString(),
-    )} ETH`
-
-  if (typeof arg === 'boolean') return arg ? 'true' : 'false'
-
-  if (ethers.utils.isBytesLike(arg)) return arg.toString()
-
-  if (typeof arg === 'number') return arg
-
-  if (isArrayOfStrings(arg)) return arg
-
-  if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
-    return arg.map(
-      (item) =>
-        `${ethers.utils.formatEther(
-          ethers.BigNumber.from(item).toString(),
-        )} ETH`,
-    )
-
-  const { components } = param
-  return components.map((component, index) => {
-    const value = arg[index]
-
-    const parsedValue = safeArgParse(value, component)
-
-    return { value: parsedValue, type: component.type, name: component.name }
-  })
-}
+// const parseEventLogOld = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
+//   return eventLogs.map((eventLog) => {
+//     if (!eventLog.eventDescription)
+//       return { signature: null, parsedArgs: null, name: null }
+//     const { eventDescription } = eventLog
+//     const { name, signature, args, eventFragment } = eventDescription
+//     const { inputs } = eventFragment
+//
+//     const parsedArgs = inputs.map((input, index) => {
+//       const value = args[index]
+//
+//       const parsedValue = safeArgParse(value, input)
+//
+//       return { value: parsedValue, type: input.type, name: input.name }
+//     })
+//
+//     return { signature, parsedArgs, name }
+//   })
+// }
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
@@ -68,29 +89,22 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
     const { eventDescription } = eventLog
     const { name, signature, args, eventFragment } = eventDescription
     const { inputs } = eventFragment
-
-    const parsedArgs = inputs.map((input, index) => {
-      const value = args[index]
-
-      const parsedValue = safeArgParse(value, input)
-
-      return { value: parsedValue, type: input.type, name: input.name }
+    const parsedArgs = inputs.map((parameterType, index) => {
+      const parameterValue = args[index]
+      return parseParameter(parameterType, parameterValue)
     })
 
     return { signature, parsedArgs, name }
   })
 }
 
-const parseParams = (
+const parseParameters = (
   params: ethers.utils.ParamType[],
   result: ethers.utils.Result,
 ) => {
-  return params.map((paramItem, index) => {
-    const value = result[index]
-
-    const parsedValue = safeArgParse(value, paramItem)
-
-    return { value: parsedValue, type: paramItem.type, name: paramItem.name }
+  return params.map((parameterType, index) => {
+    const parameterValue = result[index]
+    return parseParameter(parameterType, parameterValue)
   })
 }
 
@@ -155,11 +169,12 @@ const parseActiveBlock = ([block, contractName]: [
       contractName,
     }
 
+    console.log(callResult.parsedEvents)
     if (functionFragment) {
       const { inputs, outputs } = functionFragment
 
-      const parsedInput = parseParams(inputs, decodedInput)
-      const parsedOutput = parseParams(outputs, decodedOutput)
+      const parsedInput = parseParameters(inputs, decodedInput)
+      const parsedOutput = parseParameters(outputs, decodedOutput)
 
       const signature = getSignature(functionFragment)
 
@@ -172,7 +187,7 @@ const parseActiveBlock = ([block, contractName]: [
       const { signature, errorFragment, args } = errorDescription
       const { inputs } = errorFragment
 
-      const parsedError = parseParams(inputs, args)
+      const parsedError = parseParameters(inputs, args)
 
       callResult.errorSignature = signature
       callResult.parsedError = parsedError

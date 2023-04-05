@@ -15,7 +15,7 @@ export const StyledContainer = styled(Stack, {
   width: '100%',
   padding: theme.spacing(6),
   overflow: 'hidden',
-  maxWidth: '1600px',
+  // maxWidth: '1600px',
   justifyContent: 'center',
   height: withNavbar ? 'calc(100vh - 48px)' : '100vh',
   gap: theme.spacing(6),
