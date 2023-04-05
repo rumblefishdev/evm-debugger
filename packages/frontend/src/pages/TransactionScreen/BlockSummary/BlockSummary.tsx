@@ -13,15 +13,13 @@ import {
   StyledBlockWrapper,
   StyledInfoRow,
   StyledInfoType,
-  StyledInfoValue,
   StyledStack,
-  StyleRawBytecode,
+  StyledInfoValue,
 } from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
 import { EventBlock } from './DataBlocks/EventBlock'
 import { DataSection } from './DataSection'
-import { EventBlockNew } from './DataBlocks/EventBlock/EventBlock'
 
 const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
   const {
@@ -70,12 +68,7 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
         )}
       </StyledBlockWrapper>
       {parsedEvents && parsedEvents.length > 0 && (
-        <DataSection title="Events data New">
-          <EventBlockNew eventLogs={parsedEvents} />
-        </DataSection>
-      )}
-      {parsedEvents && parsedEvents.length > 0 && (
-        <DataSection title="Events data Old">
+        <DataSection title="Events data">
           <EventBlock eventLogs={parsedEvents} />
         </DataSection>
       )}
@@ -88,11 +81,11 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
       </DataSection>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
-        <StyleRawBytecode>{input}</StyleRawBytecode>
+        <StyledInfoValue>{input}</StyledInfoValue>
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Raw output</StyledInfoType>
-        <StyleRawBytecode>{output}</StyleRawBytecode>
+        <StyledInfoValue>{output}</StyledInfoValue>
       </StyledInfoRow>
     </DataSection>
   )
@@ -108,7 +101,7 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
-        <StyleRawBytecode>{input}</StyleRawBytecode>
+        <StyledInfoValue>{input}</StyledInfoValue>
       </StyledInfoRow>
       <DataSection title="Storage data">
         <StorageBlock
@@ -136,7 +129,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
     <DataSection title="Trace Information">
       <StyledInfoRow>
         <StyledInfoType>Address</StyledInfoType>
-        <StyleRawBytecode>{address}</StyleRawBytecode>
+        <StyledInfoValue>{address}</StyledInfoValue>
       </StyledInfoRow>
       {(isSuccess === true || isSuccess === false) && (
         <StyledInfoRow>

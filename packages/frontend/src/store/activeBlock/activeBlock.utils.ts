@@ -1,5 +1,4 @@
 import { ethers } from 'ethers'
-import { TStorageLogs } from '@evm-debuger/types'
 
 import { isArrayOfStrings } from '../../helpers/helpers'
 

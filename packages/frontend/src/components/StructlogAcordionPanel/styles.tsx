@@ -69,6 +69,7 @@ export const StyledAccordionSummary = styled(AccordionSummary, {
 
   '&.Mui-expanded': {
     minHeight: 'unset',
+    margin: 0,
   },
 
   '& .MuiAccordionSummary-content': {
