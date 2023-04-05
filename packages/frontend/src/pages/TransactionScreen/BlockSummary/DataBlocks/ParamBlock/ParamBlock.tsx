@@ -32,7 +32,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                   <Tooltip title={item.type} arrow followCursor>
                     <StyledInfoRow key={index}>
                       <StyledInfoType>
-                        {item.name ? item.name : item.type}
+                        {item.name ? item.name : `(${item.type})`}
                       </StyledInfoType>
                       <StyledInfoValue>{item.value}</StyledInfoValue>
                     </StyledInfoRow>
