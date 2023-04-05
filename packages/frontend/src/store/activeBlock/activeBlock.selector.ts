@@ -5,7 +5,6 @@ import type { ethers } from 'ethers'
 
 import {
   getSignature,
-  isArrayOfStrings,
   parseStackTrace,
 } from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
