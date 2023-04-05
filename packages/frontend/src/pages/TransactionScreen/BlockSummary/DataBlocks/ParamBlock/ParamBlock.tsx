@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { List, Tooltip } from '@mui/material'
 import React from 'react'
 
 import { isArrayOfStrings } from '../../../../../helpers/helpers'
@@ -7,7 +7,6 @@ import {
   StyledInfoRow,
   StyledInfoType,
   StyledInfoValue,
-  StyleRawBytecode,
   StyledAccordion,
   StyledAccordionSummary,
   StyledAccordionDetails,
@@ -30,16 +29,14 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
             )
               return (
                 <React.Fragment key={index}>
-                  <StyledInfoRow key={index}>
-                    <StyledInfoType>
-                      {item.name} ({item.type})
-                    </StyledInfoType>
-                    {item.type === 'bytes' || item.type === 'address' ? (
-                      <StyleRawBytecode>{item.value}</StyleRawBytecode>
-                    ) : (
+                  <Tooltip title={item.type} arrow followCursor>
+                    <StyledInfoRow key={index}>
+                      <StyledInfoType>
+                        {item.name ? item.name : `(${item.type})`}
+                      </StyledInfoType>
                       <StyledInfoValue>{item.value}</StyledInfoValue>
-                    )}
-                  </StyledInfoRow>
+                    </StyledInfoRow>
+                  </Tooltip>
                 </React.Fragment>
               )
 
@@ -47,9 +44,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
               return (
                 <React.Fragment key={index}>
                   <StyledInfoRow key={index}>
-                    <StyledInfoType>
-                      {item.name} ({item.type})
-                    </StyledInfoType>
+                    <StyledInfoType>{item.name}</StyledInfoType>
                     <StyledInfoValue>
                       {item.value.length === 0
                         ? '[ ]'
@@ -70,7 +65,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
             return (
               <ParamBlock
                 key={index}
-                title={`${item.name} (${item.type})`}
+                title={item.name ? `${item.name}` : `[${index}] element`}
                 items={item.value}
               />
             )

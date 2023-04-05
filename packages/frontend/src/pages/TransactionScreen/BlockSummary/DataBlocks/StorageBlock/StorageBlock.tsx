@@ -5,7 +5,7 @@ import { StyledBlockWrapper } from '../../styles'
 import {
   StyledInfoRow,
   StyledInfoType,
-  StyleRawBytecode,
+  StyledInfoValue,
   StyledAccordion,
   StyledAccordionSummary,
   StyledAccordionDetails,
@@ -23,7 +23,7 @@ export const StorageBlock = ({
     <>
       <StyledInfoRow>
         <StyledInfoType>Storage address</StyledInfoType>
-        <StyleRawBytecode>{storageAddress}</StyleRawBytecode>
+        <StyledInfoValue>{storageAddress}</StyledInfoValue>
       </StyledInfoRow>
       <StyledBlockWrapper>
         {loadedStorage.length > 0 && (
@@ -36,11 +36,11 @@ export const StorageBlock = ({
                     <React.Fragment key={index}>
                       <StyledInfoRow>
                         <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                        <StyledInfoValue>{log.key}</StyledInfoValue>
                       </StyledInfoRow>
                       <StyledInfoRow>
                         <StyledInfoType>Value</StyledInfoType>
-                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
+                        <StyledInfoValue>{log.value}</StyledInfoValue>
                       </StyledInfoRow>
                     </React.Fragment>
                   )
@@ -59,15 +59,15 @@ export const StorageBlock = ({
                     <React.Fragment key={index}>
                       <StyledInfoRow>
                         <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                        <StyledInfoValue>{log.key}</StyledInfoValue>
                       </StyledInfoRow>
                       <StyledInfoRow>
                         <StyledInfoType>Initial Value</StyledInfoType>
-                        <StyleRawBytecode>{log.initialValue}</StyleRawBytecode>
+                        <StyledInfoValue>{log.initialValue}</StyledInfoValue>
                       </StyledInfoRow>
                       <StyledInfoRow>
                         <StyledInfoType>Updated Value</StyledInfoType>
-                        <StyleRawBytecode>{log.updatedValue}</StyleRawBytecode>
+                        <StyledInfoValue>{log.updatedValue}</StyledInfoValue>
                       </StyledInfoRow>
                     </React.Fragment>
                   )
@@ -86,11 +86,11 @@ export const StorageBlock = ({
                     <React.Fragment key={index}>
                       <StyledInfoRow>
                         <StyledInfoType>Key</StyledInfoType>
-                        <StyleRawBytecode>{log.key}</StyleRawBytecode>
+                        <StyledInfoValue>{log.key}</StyledInfoValue>
                       </StyledInfoRow>
                       <StyledInfoRow>
                         <StyledInfoType>Value</StyledInfoType>
-                        <StyleRawBytecode>{log.value}</StyleRawBytecode>
+                        <StyledInfoValue>{log.value}</StyledInfoValue>
                       </StyledInfoRow>
                     </React.Fragment>
                   )

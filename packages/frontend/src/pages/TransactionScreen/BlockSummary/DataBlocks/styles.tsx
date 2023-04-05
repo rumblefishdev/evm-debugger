@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 
 export const StyledAccordion = styled(Accordion)(({ theme }) => ({
-  padding: theme.spacing(0, 6),
+  padding: theme.spacing(1, 3),
   outlineWidth: '1px',
   outlineStyle: 'solid',
   outlineOffset: '-1px',
@@ -29,8 +29,9 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }))
 
 export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-  padding: theme.spacing(3, 0),
+  padding: theme.spacing(2, 0),
   minHeight: 'unset',
+  margin: 0,
   color: theme.palette.rfButton,
 
   '&.Mui-expanded': {
@@ -44,7 +45,7 @@ export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }))
 
 export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-  paddingTop: theme.spacing(4),
+  paddingTop: theme.spacing(2),
   marginTop: theme.spacing(1),
   borderTop: `1px solid ${theme.palette.rfLinesLight}`,
 }))
@@ -55,17 +56,16 @@ export const StyledInfoRow = styled(Stack)(() => ({
 }))
 
 export const StyledInfoType = styled(Typography)(({ theme }) => ({
-  width: '116px',
+  minWidth: '144px',
   ...theme.typography.bodySmallBold,
   color: theme.palette.rfDisabled,
 }))
 
 export const StyledInfoValue = styled(Typography)(({ theme }) => ({
   minWidth: '360px',
+  marginLeft: theme.spacing(2),
   ...theme.typography.bodySmall,
+  overflowWrap: 'anywhere',
   fontFamily: 'IBM Plex Mono',
   color: theme.palette.rfSecondary,
-}))
-export const StyleRawBytecode = styled(StyledInfoValue)(() => ({
-  overflowWrap: 'anywhere',
 }))

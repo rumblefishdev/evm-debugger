@@ -13,9 +13,8 @@ import {
   StyledBlockWrapper,
   StyledInfoRow,
   StyledInfoType,
-  StyledInfoValue,
   StyledStack,
-  StyleRawBytecode,
+  StyledInfoValue,
 } from './styles'
 import { ParamBlock } from './DataBlocks/ParamBlock'
 import { StorageBlock } from './DataBlocks/StorageBlock'
@@ -73,6 +72,7 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
           <EventBlock eventLogs={parsedEvents} />
         </DataSection>
       )}
+
       <DataSection title="Storage data">
         <StorageBlock
           storageAddress={storageAddress}
@@ -81,11 +81,11 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
       </DataSection>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
-        <StyleRawBytecode>{input}</StyleRawBytecode>
+        <StyledInfoValue>{input}</StyledInfoValue>
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Raw output</StyledInfoType>
-        <StyleRawBytecode>{output}</StyleRawBytecode>
+        <StyledInfoValue>{output}</StyledInfoValue>
       </StyledInfoRow>
     </DataSection>
   )
@@ -101,7 +101,7 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Raw input</StyledInfoType>
-        <StyleRawBytecode>{input}</StyleRawBytecode>
+        <StyledInfoValue>{input}</StyledInfoValue>
       </StyledInfoRow>
       <DataSection title="Storage data">
         <StorageBlock
@@ -129,7 +129,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
     <DataSection title="Trace Information">
       <StyledInfoRow>
         <StyledInfoType>Address</StyledInfoType>
-        <StyleRawBytecode>{address}</StyleRawBytecode>
+        <StyledInfoValue>{address}</StyledInfoValue>
       </StyledInfoRow>
       {(isSuccess === true || isSuccess === false) && (
         <StyledInfoRow>

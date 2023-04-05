@@ -28,12 +28,6 @@ export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     minHeight: '0',
     margin: 0,
   },
-  '& .MuiAccordionSummary-content': {
-    margin: 0,
-    '& .MuiTypography-root': {
-      margin: 0,
-    },
-  },
 }))
 
 export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
