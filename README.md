@@ -16,7 +16,7 @@ lerna bootstrap
 lerna link
 lerna run build
 npm i --legacy-peer-deps
-npm run frontend
+npm run frontend:start
 ```
 
 ### Testing
