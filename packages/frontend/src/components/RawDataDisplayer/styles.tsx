@@ -9,8 +9,8 @@ export const StyledDialog = styled(Dialog)(() => ({
   },
   '& .MuiDialog-container': {
     '& .MuiDialog-paper': {
-      width: '684px',
-      maxHeight: '680px',
+      maxWidth: '80vw',
+      maxHeight: '80vh',
       boxShadow: 'none',
     },
   },

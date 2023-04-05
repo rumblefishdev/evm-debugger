@@ -10,13 +10,11 @@ import {
   StyledTableValueCell,
 } from '../styles'
 
-import type { StackInfoCardProps } from './StackInfoCard.types'
-
 const skipLeadingZeroes = (value: string): string => {
   return `0x${value.replace(/^0+/, '')}`
 }
 
-export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
+export const StackInfoCard = () => {
   const stack = useTypedSelector(selectParsedStack)
   const activeStructlog = useTypedSelector(
     (state) => state.structLogs.activeStructLog,

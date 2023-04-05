@@ -8,14 +8,23 @@ import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.slice'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
+import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.slice'
 
-import { StyledDisabledBytecode } from './styles'
+import { StyledDisabledBytecode, StyledButton } from './styles'
+import { SourceCodePanel } from './SourceCodePanel'
 
 export const BytecodePanel = (): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
+  const [isSourceView, setSourceView] = React.useState(false)
+  const toggleSourceView = () => setSourceView((prev) => !prev)
+
   const activeBlock = useTypedSelector((state) => state.activeBlock)
+  const sourceCode = useTypedSelector((state) =>
+    sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address),
+  )?.sourceCode
+
   const activeStrucLog = useTypedSelector(
     (state) => state.structLogs.activeStructLog,
   )
@@ -35,6 +44,9 @@ export const BytecodePanel = (): JSX.Element => {
     }
   }, [activeStrucLog, activeBlockBytecode.disassembled])
 
+  if (isSourceView)
+    return <SourceCodePanel close={toggleSourceView} sourceCode={sourceCode} />
+
   if (!activeBlockBytecode?.disassembled)
     return (
       <StyledSmallPanel>
@@ -46,7 +58,15 @@ export const BytecodePanel = (): JSX.Element => {
 
   return (
     <StyledSmallPanel>
-      <StyledHeading>Disassembled Bytecode</StyledHeading>
+      <StyledHeading>
+        Disassembled Bytecode
+        {sourceCode ? (
+          <StyledButton variant="text" onClick={toggleSourceView}>
+            View source
+          </StyledButton>
+        ) : null}
+      </StyledHeading>
+
       <StyledListWrapper ref={ref}>
         <ViewportList
           ref={listRef}

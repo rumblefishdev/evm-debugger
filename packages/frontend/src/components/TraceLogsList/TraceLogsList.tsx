@@ -64,7 +64,7 @@ export const TraceLogsList = (): JSX.Element => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type } = traceLog
+            const { index, depth, type, isReverted } = traceLog
             const isActive = activeBlock?.index === index
             const signature = constructSignature(traceLog) // sighash
             return (
@@ -73,7 +73,7 @@ export const TraceLogsList = (): JSX.Element => {
                   <Indent key={depthIndex} />
                 ))}
                 <OpWrapper isActive={isActive}>
-                  {traceLog.isReverted && (
+                  {isReverted && (
                     <Tooltip
                       title={getReadableBlockOutput(traceLog)}
                       followCursor
