@@ -104,7 +104,6 @@ const parseActiveBlock = ([block, contractName]: [
       contractName,
     }
 
-    console.log(callResult.parsedEvents)
     if (functionFragment) {
       const { inputs, outputs } = functionFragment
 
