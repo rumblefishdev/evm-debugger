@@ -31,6 +31,7 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
 export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   padding: theme.spacing(2, 0),
   minHeight: 'unset',
+  margin: 0,
   color: theme.palette.rfButton,
 
   '&.Mui-expanded': {

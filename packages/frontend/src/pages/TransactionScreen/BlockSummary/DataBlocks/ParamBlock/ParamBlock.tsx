@@ -29,14 +29,14 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
             )
               return (
                 <React.Fragment key={index}>
-                  <StyledInfoRow key={index}>
-                    <Tooltip title={item.type}>
+                  <Tooltip title={item.type} arrow followCursor>
+                    <StyledInfoRow key={index}>
                       <StyledInfoType>
-                        {item.name ? item.name : ''}
+                        {item.name ? item.name : item.type}
                       </StyledInfoType>
-                    </Tooltip>
-                    <StyledInfoValue>{item.value}</StyledInfoValue>
-                  </StyledInfoRow>
+                      <StyledInfoValue>{item.value}</StyledInfoValue>
+                    </StyledInfoRow>
+                  </Tooltip>
                 </React.Fragment>
               )
 
