@@ -3,10 +3,7 @@ import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 import type { ethers } from 'ethers'
 
-import {
-  getSignature,
-  parseStackTrace,
-} from '../../helpers/helpers'
+import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
 import { contractNamesSelectors } from '../contractNames/contractNames'
 import type { TRootState } from '../store'
