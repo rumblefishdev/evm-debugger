@@ -15,12 +15,6 @@ import {
 import type { ParamBlockProps } from './ParamBlock.types'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
-  if (!items) {
-    console.log('HEY')
-    console.log(items)
-    console.log(title)
-    return <></>
-  }
   return (
     <StyledAccordion {...props}>
       <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>
