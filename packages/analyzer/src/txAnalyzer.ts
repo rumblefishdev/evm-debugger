@@ -297,11 +297,11 @@ export class TxAnalyzer {
         else sighashStatues.add(address, sighash, null)
 
         if (errorDescription)
-          sighashStatues.add(
-            address,
-            sighash,
-            JSON.parse(errorDescription.errorFragment.format(FormatTypes.json)),
-          )
+          sighashStatues.add(address, sighash, {
+            type: errorDescription.errorFragment.type,
+            name: errorDescription.errorFragment.name,
+            inputs: errorDescription.errorFragment.inputs,
+          })
         else sighashStatues.add(address, sighash, null)
       }
 
