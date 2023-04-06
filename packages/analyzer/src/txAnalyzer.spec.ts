@@ -47,5 +47,12 @@ describe('TxAnalyzer', () => {
       )
       expect(result).toMatchSnapshot()
     }, 20_000)
+
+    it('analyzes failed transaction with extended errors', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/failedTransactionLogs2.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
   })
 })
