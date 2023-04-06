@@ -13,10 +13,14 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
   outlineStyle: 'solid',
   outlineOffset: '-1px',
   outlineColor: theme.palette.rfLinesLight,
-
+  minHeight: '32px',
+  margin: theme.spacing(2, 0, 0, 0),
   boxShadow: 'none',
 
   backgroundColor: theme.palette.rfWhite,
+  '&:first-of-type': {
+    marginTop: '0px',
+  },
 
   '&:before': {
     display: 'none',
@@ -24,22 +28,25 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
   '&.Mui-expanded': {
     outlineColor: theme.palette.rfButton,
-    margin: 0,
+    margin: theme.spacing(2, 0, 0, 0),
+  },
+
+  '& .MuiAccordionSummary-root': {
+    minHeight: '32px',
   },
 }))
 
 export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   padding: theme.spacing(2, 0),
-  minHeight: 'unset',
+  minHeight: '32px',
   margin: 0,
   color: theme.palette.rfButton,
 
-  '&.Mui-expanded': {
-    minHeight: 'unset',
+  '& .MuiAccordionSummary-content': {
     margin: 0,
   },
 
-  '& .MuiAccordionSummary-content': {
+  '& .Mui-expanded': {
     margin: 0,
   },
 }))
