@@ -21,6 +21,7 @@ tsconfig.build.tsbuildinfo
 packages/infra/.aws-sam/
 packages/infra/main.zip
 packages/infra/main.yml
+.idea
 .idea/evm-debuger.iml
 .idea/misc.xml
 .idea/modules.xml
