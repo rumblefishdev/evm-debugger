@@ -60,7 +60,7 @@ describe('TxAnalyzer', () => {
         runAnalyzerForTestDataFile(
           './test/transactionWithEmptyStructLogs.json',
         ),
-      ).rejects.toThrow('To primitive transaction without stack calls.')
+      ).rejects.toThrow('Too primitive transaction without stack calls.')
     }, 20_000)
   })
 })

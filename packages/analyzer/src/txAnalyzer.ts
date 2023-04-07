@@ -33,7 +33,7 @@ import { SigHashStatuses } from './sigHashes'
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
     if (transactionData.structLogs.length === 0)
-      throw new Error(`To primitive transaction without stack calls.`)
+      throw new Error(`Too primitive transaction without stack calls.`)
   }
 
   private readonly storageHandler = new StorageHandler()
