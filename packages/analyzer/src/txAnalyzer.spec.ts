@@ -54,5 +54,13 @@ describe('TxAnalyzer', () => {
       )
       expect(result).toMatchSnapshot()
     }, 20_000)
+
+    it('Transaction with empty struct log', async () => {
+      await expect(
+        runAnalyzerForTestDataFile(
+          './test/transactionWithEmptyStructLogs.json',
+        ),
+      ).rejects.toThrow('To primitive transaction without stack calls.')
+    }, 20_000)
   })
 })

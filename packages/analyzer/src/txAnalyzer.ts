@@ -31,7 +31,10 @@ import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
 
 export class TxAnalyzer {
-  constructor(public readonly transactionData: TTransactionData) {}
+  constructor(public readonly transactionData: TTransactionData) {
+    if (transactionData.structLogs.length === 0)
+      throw new Error(`To primitive transaction without stack calls.`)
+  }
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
@@ -211,8 +214,17 @@ export class TxAnalyzer {
               readMemory(memory, logDataOffset, logDataLength),
             )
 
+            if (
+              logData ===
+              '0x0000000000000000000000000000000000000000000000b8695e0ba4edbaa941'
+            ) {
+              console.log('decode1')
+              console.log(logData)
+              console.log(topics)
+            }
             const eventResult = this.fragmentReader.decodeEvent(logData, topics)
-
+            console.log(eventResult)
+            console.log('decode2')
             events.push(eventResult)
           })
         }
@@ -341,11 +353,15 @@ export class TxAnalyzer {
       traceLogsListWithSuccessFlag,
     )
 
+    // console.log(1)
     mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
+    // console.log(2)
     mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
+    // console.log(3)
     mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
+    // console.log(4)
     mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
-
+    // console.log(5)
     const contractAddresses =
       this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
