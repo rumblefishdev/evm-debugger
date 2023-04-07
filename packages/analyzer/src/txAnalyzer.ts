@@ -31,7 +31,10 @@ import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
 
 export class TxAnalyzer {
-  constructor(public readonly transactionData: TTransactionData) {}
+  constructor(public readonly transactionData: TTransactionData) {
+    if (transactionData.structLogs.length === 0)
+      throw new Error(`Too primitive transaction without stack calls.`)
+  }
 
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter = new StackCounter()
@@ -212,7 +215,6 @@ export class TxAnalyzer {
             )
 
             const eventResult = this.fragmentReader.decodeEvent(logData, topics)
-
             events.push(eventResult)
           })
         }
