@@ -343,15 +343,11 @@ export class TxAnalyzer {
       traceLogsListWithSuccessFlag,
     )
 
-    // console.log(1)
     mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
-    // console.log(2)
     mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
-    // console.log(3)
     mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
-    // console.log(4)
     mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
-    // console.log(5)
+
     const contractAddresses =
       this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
