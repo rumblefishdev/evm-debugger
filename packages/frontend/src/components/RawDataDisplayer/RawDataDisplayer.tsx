@@ -18,6 +18,8 @@ import {
 } from './styles'
 
 export const RawDataDisplayer = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- need to exclude from ...props
+  address,
   data,
   title,
   description,

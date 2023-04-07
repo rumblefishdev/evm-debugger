@@ -1,43 +1,73 @@
 import { CircularProgress, styled } from '@mui/material'
-import type { CSSProperties, ReactElement } from 'react'
-import { memo } from 'react'
-import ReactSyntaxHighlighter from 'react-syntax-highlighter/dist/cjs/prism-light'
-import solidity from 'react-syntax-highlighter/dist/cjs/languages/prism/solidity'
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { useId, memo } from 'react'
+import type { IAceEditorProps } from 'react-ace'
+import AceEditor from 'react-ace'
 
-ReactSyntaxHighlighter.registerLanguage('solidity', solidity)
+import 'ace-mode-solidity'
+import 'ace-builds/src-noconflict/theme-dawn'
 
-type ReactSyntaxHighlighterProps = {
-  language: string
-  style: Record<string, CSSProperties>
-  renderer?: (props: unknown) => ReactElement
-  children: string
-}
-type ReactSyntaxHighlighterComponent = (
-  props: ReactSyntaxHighlighterProps,
-) => ReactElement
+type AceProps = IAceEditorProps & { aceTheme: IAceEditorProps['theme'] }
+const Ace = ({ aceTheme, ...props }: AceProps) => (
+  <AceEditor {...props} theme={aceTheme} />
+)
 
-const SyntaxHighlighterStyledComponent = styled(
-  ReactSyntaxHighlighter as unknown as ReactSyntaxHighlighterComponent,
-)(({ theme }) => ({
-  padding: `${theme.spacing(2)} ${theme.spacing(4)} !important`,
-  overflow: 'visible !important',
-  margin: '0 !important',
-  fontSize: '15px',
-  borderRadius: '0 !important',
-  borderLeft: 'none !important',
+const StyledAceEditor = styled(Ace)(({ theme }) => ({
+  textarea: {
+    display: 'none',
+  },
+  boxSizing: 'border-box',
   border: `1px solid ${theme.palette.rfLinesLight}`,
+  '.ace_gutter-active-line': {
+    background: 'unset',
+  },
+  '.ace_fold-widget': {
+    display: 'none !important',
+  },
+  '.ace_cursor-layer': {
+    display: 'none',
+  },
+  '.ace_active-line': {
+    display: 'none',
+  },
 }))
 
 type SyntaxHighlighterProps = {
   source: string
 }
 
+const ACE_CHAR_WIDTH = 7.2
+const ACE_LINE_HEIGHT = 16
+const ACE_GUTTER_PADDING = 32
+const ACE_MARGIN = 8
+const BORDER = 2
+
 const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
+  const lines = source.split('\n')
+  const textWidth = lines.reduce(
+    (max, line) => (line.length > max ? line.length : max),
+    0,
+  )
+  const textHeight = lines.length
+  const gutterWidth = Math.ceil(
+    Math.floor(Math.log10(textHeight) + 1) * ACE_CHAR_WIDTH +
+      ACE_GUTTER_PADDING,
+  )
+
+  const height = textHeight * ACE_LINE_HEIGHT + BORDER
+  const width =
+    Math.ceil(textWidth * ACE_CHAR_WIDTH) + gutterWidth + ACE_MARGIN + BORDER
+
   return (
-    <SyntaxHighlighterStyledComponent language="solidity" style={oneLight}>
-      {source}
-    </SyntaxHighlighterStyledComponent>
+    <StyledAceEditor
+      width={`${width}px`}
+      height={`${height}px`}
+      mode="solidity"
+      aceTheme="dawn"
+      name={useId()}
+      value={source}
+      readOnly
+      editorProps={{ $blockScrolling: true }}
+    />
   )
 }
 

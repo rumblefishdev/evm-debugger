@@ -51,6 +51,7 @@ export const ManagerItem = ({
         <Displayer
           title={name}
           description={address}
+          address={address}
           data={value}
           open={isDataVisible}
           onClose={() => setDataVisibility(false)}

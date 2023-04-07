@@ -1,17 +1,18 @@
 import { usePreviousProps } from '@mui/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import {
-  StyledDataIndex,
-  StyledDataIndexesWrapper,
-  StyledDataWrapper,
-} from '../../../../components/RawDataDisplayer/styles'
+import { useSources } from '../../../../components/SourceCodeDisplayer'
 import {
   StyledLoading,
   StyledSyntaxHighlighter,
 } from '../../../../components/SourceCodeDisplayer/styles'
+import { StyledListWrapper } from '../styles'
 
-import { NoSourceCodeHero } from './styles'
+import {
+  NoSourceCodeHero,
+  StyledSourceSection,
+  StyledSourceSectionHeading,
+} from './styles'
 
 export type SourceCodeDebuggerProps = {
   source?: string
@@ -19,6 +20,16 @@ export type SourceCodeDebuggerProps = {
 
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
+
+  const sources = useSources(source)
+  const sourceItems = useMemo(
+    () =>
+      Object.entries(sources).map(([name, sourceCode]) => ({
+        sourceCode,
+        name,
+      })),
+    [sources],
+  )
 
   const { source: prevSource } = usePreviousProps({ source }) as {
     source?: string
@@ -37,14 +48,19 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     isLoading || didSourceChange ? (
       <StyledLoading />
     ) : (
-      <StyledDataWrapper>
-        <StyledDataIndexesWrapper>
-          {source.split('\n').map((_, index) => (
-            <StyledDataIndex key={index}>{index}</StyledDataIndex>
-          ))}
-        </StyledDataIndexesWrapper>
-        <StyledSyntaxHighlighter source={source} />
-      </StyledDataWrapper>
+      <StyledListWrapper>
+        {sourceItems.map(({ sourceCode, name }) => (
+          <>
+            <StyledSourceSectionHeading variant="headingUnknown">
+              {name}
+            </StyledSourceSectionHeading>
+
+            <StyledSourceSection>
+              <StyledSyntaxHighlighter source={sourceCode} />
+            </StyledSourceSection>
+          </>
+        ))}
+      </StyledListWrapper>
     )
   ) : (
     <NoSourceCodeHero variant="headingUnknown">
