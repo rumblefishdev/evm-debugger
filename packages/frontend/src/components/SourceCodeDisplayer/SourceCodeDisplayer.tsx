@@ -1,11 +1,10 @@
 import type { SelectChangeEvent } from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 
+import { useTypedSelector } from '../../store/storeHooks'
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
 import {
-  StyledDataIndex,
-  StyledDataIndexesWrapper,
   StyledDataWrapper,
   StyledDescription,
   StyledDialog,
@@ -13,22 +12,14 @@ import {
   StyledStack,
   StyledTitle,
 } from '../RawDataDisplayer/styles'
+import { contractNamesSelectors } from '../../store/contractNames/contractNames'
 
-import {
-  StyledLoading,
-  StyledSelectWrapper,
-  StyledSyntaxHighlighter,
-} from './styles'
+import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
 
-export const SourceCodeDisplayer = ({
-  data,
-  title,
-  description,
-  ...props
-}: RawDataDisplayerProps) => {
-  const inputId = useId()
+export function useSources(data?: string) {
+  return useMemo(() => {
+    if (!data) return {}
 
-  const sources = useMemo(() => {
     if (data.startsWith('{{') && data.endsWith('}}')) {
       const { sources: parsed } = JSON.parse(data.slice(1, -1)) as {
         sources: Record<string, { content: string }>
@@ -39,36 +30,45 @@ export const SourceCodeDisplayer = ({
     }
     return { '': data }
   }, [data])
+}
+
+export const SourceCodeDisplayer = ({
+  data,
+  title,
+  address,
+  description,
+  ...props
+}: RawDataDisplayerProps) => {
+  const contractName = useTypedSelector(
+    ({ contractNames }) =>
+      contractNamesSelectors.selectById(contractNames, address)?.contractName ??
+      null,
+  )
+
+  const inputId = useId()
+
+  const sources = useSources(data)
+
+  const defaultSourceKey =
+    (contractName &&
+      Object.keys(sources).find((key) =>
+        new RegExp(`(^|/)${contractName}.sol`, 'u').test(key),
+      )) ||
+    Object.keys(sources)[0]
 
   const hasChoice = Object.keys(sources).length > 1
-  const [activeSourceKey, setActiveSourceKey] = useState(
-    Object.keys(sources)[0],
-  )
-  const [isLoading, setIsLoading] = useState(true)
-
-  const sizeRef = useRef<HTMLDivElement>(null)
-  const [prevSize, setPrevSize] = useState<[number, number] | null>(null)
+  const [activeSourceKey, setActiveSourceKey] = useState(defaultSourceKey)
 
   useEffect(() => {
-    if (props.open && isLoading) {
-      const timeout = setTimeout(() => setIsLoading(false), 100)
-      return () => clearTimeout(timeout)
-    }
     if (!props.open) {
       const timeout = setTimeout(() => {
-        setActiveSourceKey(Object.keys(sources)[0])
-        setIsLoading(true)
-        setPrevSize(null)
+        setActiveSourceKey(defaultSourceKey)
       }, 300)
       return () => clearTimeout(timeout)
     }
-  }, [isLoading, props.open, sources])
+  }, [props.open, defaultSourceKey])
 
   const handleChange = useCallback((event: SelectChangeEvent) => {
-    if (sizeRef.current)
-      setPrevSize([sizeRef.current.offsetWidth, sizeRef.current.offsetHeight])
-
-    setIsLoading(true)
     setActiveSourceKey(event.target.value)
   }, [])
 
@@ -103,21 +103,9 @@ export const SourceCodeDisplayer = ({
             </FormControl>
           </StyledSelectWrapper>
         )}
-
-        {isLoading ? (
-          <StyledLoading dimensions={prevSize} />
-        ) : (
-          <StyledDataWrapper ref={sizeRef}>
-            <StyledDataIndexesWrapper>
-              {source.split('\n').map((_, index) => (
-                <StyledDataIndex key={index}>{index}</StyledDataIndex>
-              ))}
-            </StyledDataIndexesWrapper>
-            <div>
-              <StyledSyntaxHighlighter source={source} />
-            </div>
-          </StyledDataWrapper>
-        )}
+        <StyledDataWrapper>
+          <StyledSyntaxHighlighter source={source} />
+        </StyledDataWrapper>
       </StyledStack>
     </StyledDialog>
   )
