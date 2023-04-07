@@ -28,6 +28,7 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
   '&.Mui-expanded': {
     outlineColor: theme.palette.rfButton,
+    minHeight: '32px',
     margin: theme.spacing(2, 0, 0, 0),
   },
 
