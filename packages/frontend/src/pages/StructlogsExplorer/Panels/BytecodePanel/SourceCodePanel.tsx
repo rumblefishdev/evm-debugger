@@ -13,7 +13,14 @@ export const SourceCodePanel = ({
   sourceCode,
 }: SourceCodePanelProps): JSX.Element => {
   return (
-    <StyledSmallPanel>
+    <StyledSmallPanel
+      style={{
+        marginBottom: '2rem',
+        height: 'calc(50vh - 3rem)',
+        gridRow: 1,
+        gridColumn: 'span 3',
+      }}
+    >
       <StyledHeading>
         Source Code
         <StyledButton variant="text" onClick={close}>
