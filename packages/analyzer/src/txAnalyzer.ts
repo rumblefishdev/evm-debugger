@@ -214,17 +214,7 @@ export class TxAnalyzer {
               readMemory(memory, logDataOffset, logDataLength),
             )
 
-            if (
-              logData ===
-              '0x0000000000000000000000000000000000000000000000b8695e0ba4edbaa941'
-            ) {
-              console.log('decode1')
-              console.log(logData)
-              console.log(topics)
-            }
             const eventResult = this.fragmentReader.decodeEvent(logData, topics)
-            console.log(eventResult)
-            console.log('decode2')
             events.push(eventResult)
           })
         }
