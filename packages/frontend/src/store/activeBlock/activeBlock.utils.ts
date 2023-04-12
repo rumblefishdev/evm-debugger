@@ -57,3 +57,21 @@ export const parseParameter = (parameterType, parameterValue) => {
     name: parameterType.name,
   }
 }
+
+export const parseParameters = (
+  params: ethers.utils.ParamType[],
+  result: ethers.utils.Result,
+) => {
+  return params.map((parameterType, index) => {
+    if (result) {
+      const parameterValue = result[index]
+      return parseParameter(parameterType, parameterValue)
+    }
+
+    return {
+      value: 'Failed to decode',
+      type: parameterType.type,
+      name: parameterType.name,
+    }
+  })
+}

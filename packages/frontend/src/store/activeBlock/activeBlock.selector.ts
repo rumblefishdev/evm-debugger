@@ -1,7 +1,6 @@
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
-import type { ethers } from 'ethers'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
@@ -12,7 +11,7 @@ import type {
   TBlockCallSpecificData,
   TParsedActiveBlock,
 } from './activeBlock.types'
-import { parseParameter } from './activeBlock.utils'
+import { parseParameter, parseParameters } from './activeBlock.utils'
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
@@ -27,16 +26,6 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
     })
 
     return { signature, parsedArgs, name }
-  })
-}
-
-const parseParameters = (
-  params: ethers.utils.ParamType[],
-  result: ethers.utils.Result,
-) => {
-  return params.map((parameterType, index) => {
-    const parameterValue = result[index]
-    return parseParameter(parameterType, parameterValue)
   })
 }
 
