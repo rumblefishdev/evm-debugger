@@ -63,7 +63,7 @@ describe('TxAnalyzer', () => {
       ).rejects.toThrow('Too primitive transaction without stack calls.')
     }, 20_000)
 
-    it('analyzes transaction with invalid output to type outputType', async () => {
+    it('analyzes transaction with invalid function with the same sighash as cached abis', async () => {
       // Analyzer is trying 1st decode using cached ABIs. In this tx 'transferFrom' have not standard(erc20) output.
       const result = await runAnalyzerForTestDataFile(
         './test/txWithInvalidOutputToDecode.json',

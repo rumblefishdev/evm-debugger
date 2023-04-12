@@ -201,8 +201,6 @@ export class FragmentReader {
       { topics, data: eventData },
     )
 
-    console.log(eventDescription)
-    console.log(decodedEvent)
     return { eventDescription, decodedEvent }
   }
 }

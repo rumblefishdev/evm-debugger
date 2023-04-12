@@ -7713,7 +7713,7 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
 }
 `;
 
-exports[`TxAnalyzer analyze transaction analyzes transaction with invalid output to type outputType 1`] = `
+exports[`TxAnalyzer analyze transaction analyzes transaction with invalid function with the same sighash as cached abis 1`] = `
 {
   "analyzeSummary": {
     "contractAddresses": [
