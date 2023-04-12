@@ -115,10 +115,17 @@ export class FragmentReader {
       functionFragment.name,
       inputData,
     )
-    const decodedOutput = abiInterface.decodeFunctionResult(
-      functionFragment.name,
-      outputData,
-    )
+    let decodedOutput
+    try {
+      decodedOutput = abiInterface.decodeFunctionResult(
+        functionFragment.name,
+        outputData,
+      )
+    } catch {
+      decodedOutput = Array.from({
+        length: functionFragment.outputs.length,
+      }).fill('Failed to decode')
+    }
 
     return {
       functionFragment,

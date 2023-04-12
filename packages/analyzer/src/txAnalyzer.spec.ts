@@ -62,5 +62,13 @@ describe('TxAnalyzer', () => {
         ),
       ).rejects.toThrow('Too primitive transaction without stack calls.')
     }, 20_000)
+
+    it('analyzes transaction with invalid output to type outputType', async () => {
+      // Analyzer is trying 1st decode using cached ABIs. In this method 'transferFrom' have not standard output.
+      const result = await runAnalyzerForTestDataFile(
+        './test/txWithInvalidOutputToDecode.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
   })
 })
