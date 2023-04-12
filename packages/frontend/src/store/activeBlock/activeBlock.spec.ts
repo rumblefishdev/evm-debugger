@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from 'ethers'
 
-import { parseParameter } from './activeBlock.utils'
+import { parseParameter, parseParameters } from './activeBlock.utils'
 
 const ADDRESS_TYPE = ethers.utils.ParamType.fromObject({
   type: 'address',
@@ -90,6 +90,32 @@ const ARRAY_TYPE = {
   arrayChildren: TUPLE_TYPE,
   _isParamType: true,
 }
+
+describe('parseParameters tests', () => {
+  describe('Exceptions', () => {
+    it('Address exist but not with failed to decode output', () => {
+      const result = parseParameters([ADDRESS_TYPE], null)
+      expect(result).toStrictEqual([
+        {
+          value: 'Failed to decode',
+          type: 'address',
+          name: 'recipient',
+        },
+      ])
+    })
+
+    it('Tuple parameter exist but not with failed to decode output', () => {
+      const result = parseParameters([TUPLE_TYPE], null)
+      expect(result).toStrictEqual([
+        {
+          value: 'Failed to decode',
+          type: 'tuple',
+          name: 'desc',
+        },
+      ])
+    })
+  })
+})
 
 describe('parseParameter tests', () => {
   describe('Basic types', () => {
