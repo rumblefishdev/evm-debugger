@@ -122,9 +122,7 @@ export class FragmentReader {
         outputData,
       )
     } catch {
-      decodedOutput = Array.from({
-        length: functionFragment.outputs.length,
-      }).fill('Failed to decode')
+      decodedOutput = null
     }
 
     return {
@@ -188,15 +186,23 @@ export class FragmentReader {
 
     const abiInterface = new ethers.utils.Interface([eventFragment])
 
-    const decodedEvent = abiInterface.decodeEventLog(
-      eventFragment.name,
-      eventData,
-      topics,
-    )
+    let decodedEvent
+
+    try {
+      decodedEvent = abiInterface.decodeEventLog(
+        eventFragment.name,
+        eventData,
+        topics,
+      )
+    } catch {
+      return { eventDescription: null, decodedEvent: null }
+    }
     const eventDescription: ethers.utils.LogDescription = abiInterface.parseLog(
       { topics, data: eventData },
     )
 
+    console.log(eventDescription)
+    console.log(decodedEvent)
     return { eventDescription, decodedEvent }
   }
 }
