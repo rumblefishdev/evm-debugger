@@ -94,8 +94,6 @@ const parseActiveBlock = ([block, contractName]: [
       const { inputs, outputs } = functionFragment
 
       const parsedInput = parseParameters(inputs, decodedInput)
-      console.log(outputs)
-      console.log(decodedOutput)
       const parsedOutput = parseParameters(outputs, decodedOutput)
 
       const signature = getSignature(functionFragment)
