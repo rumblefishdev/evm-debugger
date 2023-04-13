@@ -20,11 +20,7 @@ import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
-export const AnalyzerProgressScreen = ({
-  type = null,
-  props = null,
-  children = null,
-}) => {
+export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()

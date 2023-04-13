@@ -24,34 +24,20 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
         <List>
           {items &&
             items.map((item, index) => {
-            if (
-              typeof item.value === 'string' ||
-              typeof item.value === 'number'
-            )
-              return (
-                <React.Fragment key={index}>
-                  <Tooltip title={item.type} arrow followCursor>
-                    <StyledInfoRow key={index}>
-                      <StyledInfoType>
-                        {item.name ? item.name : `(${item.type})`}
-                      </StyledInfoType>
-                      <StyledInfoValue>{item.value}</StyledInfoValue>
-                    </StyledInfoRow>
-                  </Tooltip>
-                </React.Fragment>
+              if (
+                typeof item.value === 'string' ||
+                typeof item.value === 'number'
               )
                 return (
                   <React.Fragment key={index}>
-                    <StyledInfoRow key={index}>
-                      <StyledInfoType>
-                        {item.name} ({item.type})
-                      </StyledInfoType>
-                      {item.type === 'bytes' || item.type === 'address' ? (
-                        <StyleRawBytecode>{item.value}</StyleRawBytecode>
-                      ) : (
+                    <Tooltip title={item.type} arrow followCursor>
+                      <StyledInfoRow key={index}>
+                        <StyledInfoType>
+                          {item.name ? item.name : `(${item.type})`}
+                        </StyledInfoType>
                         <StyledInfoValue>{item.value}</StyledInfoValue>
-                      )}
-                    </StyledInfoRow>
+                      </StyledInfoRow>
+                    </Tooltip>
                   </React.Fragment>
                 )
 
@@ -59,9 +45,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 return (
                   <React.Fragment key={index}>
                     <StyledInfoRow key={index}>
-                      <StyledInfoType>
-                        {item.name} ({item.type})
-                      </StyledInfoType>
+                      <StyledInfoType>{item.name}</StyledInfoType>
                       <StyledInfoValue>
                         {item.value.length === 0
                           ? '[ ]'
@@ -80,34 +64,13 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 )
 
               return (
-                <React.Fragment key={index}>
-                  <StyledInfoRow key={index}>
-                    <StyledInfoType>{item.name}</StyledInfoType>
-                    <StyledInfoValue>
-                      {item.value.length === 0
-                        ? '[ ]'
-                        : item.value.map((value, nestedIndex) => {
-                            return (
-                              <>
-                                <StyledInfoRow key={nestedIndex}>
-                                  <StyledInfoValue>{value}</StyledInfoValue>
-                                </StyledInfoRow>
-                              </>
-                            )
-                          })}
-                    </StyledInfoValue>
-                  </StyledInfoRow>
-                </React.Fragment>
+                <ParamBlock
+                  key={index}
+                  title={item.name ? `${item.name}` : `[${index}] element`}
+                  items={item.value}
+                />
               )
-
-            return (
-              <ParamBlock
-                key={index}
-                title={item.name ? `${item.name}` : `[${index}] element`}
-                items={item.value}
-              />
-            )
-          })}
+            })}
         </List>
       </StyledAccordionDetails>
     </StyledAccordion>
