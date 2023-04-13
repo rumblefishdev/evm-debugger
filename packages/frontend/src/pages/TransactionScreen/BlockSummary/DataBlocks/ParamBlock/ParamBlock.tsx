@@ -12,7 +12,7 @@ import {
   StyledAccordionDetails,
 } from '../styles'
 
-import type { ParamBlockProps } from './ParamBlock.types'
+import type { ParamBlockProps, TItem } from './ParamBlock.types'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
@@ -25,8 +25,8 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
           {items &&
             items.map((item, index) => {
               if (
-                typeof item.value === 'string' ||
-                typeof item.value === 'number'
+                (item && typeof item.value === 'string') ||
+                (item && typeof item.value === 'number')
               )
                 return (
                   <React.Fragment key={index}>
@@ -41,7 +41,7 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                   </React.Fragment>
                 )
 
-              if (isArrayOfStrings(item.value))
+              if (item && isArrayOfStrings(item.value))
                 return (
                   <React.Fragment key={index}>
                     <StyledInfoRow key={index}>
@@ -62,14 +62,14 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                     </StyledInfoRow>
                   </React.Fragment>
                 )
-
-              return (
-                <ParamBlock
-                  key={index}
-                  title={item.name ? `${item.name}` : `[${index}] element`}
-                  items={item.value}
-                />
-              )
+              if (item)
+                return (
+                  <ParamBlock
+                    key={index}
+                    title={item.name ? `${item.name}` : `[${index}] element`}
+                    items={item.value as TItem[]}
+                  />
+                )
             })}
         </List>
       </StyledAccordionDetails>

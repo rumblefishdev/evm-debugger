@@ -17,7 +17,7 @@ import { contractNamesReducer } from './contractNames/contractNames'
 import SetTransform from './transformers'
 
 const getKey = (): string => {
-  let key = 'root'
+  let key = 'manual'
   const pathname = window.location.pathname.match(/[^/]+/g)
   const regex = new RegExp(/^0x([\dA-Fa-f]{64})$/)
   if (
