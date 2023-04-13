@@ -2,12 +2,13 @@ import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledSmallPanel = styled(Stack)(() => ({
   width: '100%',
-  maxWidth: '378px',
+  overflow: 'auto',
   height: '100%',
 }))
 
 export const StyledHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.headingUnknown,
+  position: 'relative',
   marginBottom: theme.spacing(6),
   color: theme.palette.rfSecondary,
 }))

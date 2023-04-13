@@ -4,7 +4,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: theme.spacing(0, 2, 0, 0),
   overflow: 'auto',
-  maxWidth: '508px',
+  maxWidth: '728px',
   height: '100%',
   ...theme.customStyles.scrollbar,
 }))
@@ -33,14 +33,11 @@ export const StyledFunctionsignature = styled(Typography)(() => ({
   fontFamily: 'Inter',
 }))
 export const StyledInfoValue = styled(Typography)(({ theme }) => ({
-  width: '372px',
+  width: '100%',
   ...theme.typography.bodySmall,
+  overflowWrap: 'anywhere',
   fontFamily: 'IBM Plex Mono',
   color: theme.palette.rfSecondary,
-}))
-
-export const StyleRawBytecode = styled(StyledInfoValue)(() => ({
-  overflowWrap: 'anywhere',
 }))
 
 export const StyledSectionHeader = styled(Typography)(({ theme }) => ({

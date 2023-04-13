@@ -47,5 +47,28 @@ describe('TxAnalyzer', () => {
       )
       expect(result).toMatchSnapshot()
     }, 20_000)
+
+    it('analyzes failed transaction with extended errors', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/failedTransactionLogs2.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
+
+    it('Transaction with empty struct log', async () => {
+      await expect(
+        runAnalyzerForTestDataFile(
+          './test/transactionWithEmptyStructLogs.json',
+        ),
+      ).rejects.toThrow('Too primitive transaction without stack calls.')
+    }, 20_000)
+
+    it('analyzes transaction with invalid function with the same sighash as cached abis', async () => {
+      // Analyzer is trying 1st decode using cached ABIs. In this tx 'transferFrom' have not standard(erc20) output.
+      const result = await runAnalyzerForTestDataFile(
+        './test/txWithInvalidOutputToDecode.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
   })
 })

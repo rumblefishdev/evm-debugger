@@ -9,8 +9,8 @@ export const StyledDialog = styled(Dialog)(() => ({
   },
   '& .MuiDialog-container': {
     '& .MuiDialog-paper': {
-      width: '684px',
-      maxHeight: '680px',
+      maxWidth: '80vw',
+      maxHeight: '80vh',
       boxShadow: 'none',
     },
   },
@@ -49,7 +49,7 @@ export const StyledDataWrapper = styled(Stack)(({ theme }) => ({
 }))
 export const StyledDataIndexesWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2, 0),
-  height: '100%',
+  height: 'min-content',
   border: `1px solid ${theme.palette.rfLinesLight}`,
   backgroundColor: theme.palette.rfBackground,
 }))

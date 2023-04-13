@@ -1,12 +1,12 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.1.1-alpha.33",
+  "version": "0.1.1-alpha.41",
   "private": true,
   "dependencies": {
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@evm-debuger/analyzer": "^0.0.2",
+    "@evm-debuger/analyzer": "^0.0.3-alpha.1",
     "@evm-debuger/types": "^0.0.2",
     "@fontsource/ibm-plex-mono": "^4.5.13",
     "@fontsource/inter": "^4.5.14",
@@ -24,10 +24,12 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "ace-mode-solidity": "^0.1.1",
     "ajv": "^6.12.6",
     "aws-sdk": "^2.1288.0",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
+    "react-ace": "^10.1.0",
     "react-contentful": "^2.0.31",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.41.1",
@@ -74,6 +76,7 @@
     "blueprint-templates-cli": "^0.1.13",
     "eslint": "^8.28.0",
     "jest": "^29.3.1",
+    "ts-jest": "^29.1.0",
     "webpack-dev-server": "^4.3.1"
   }
 }

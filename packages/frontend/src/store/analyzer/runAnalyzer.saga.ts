@@ -16,10 +16,16 @@ import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
-import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
+import {
+  addSourceCodes,
+  updateSourceCode,
+} from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
-import { addContractNames } from '../contractNames/contractNames'
+import {
+  addContractNames,
+  updateContractName,
+} from '../contractNames/contractNames'
 
 import { analyzerActions } from './analyzer.slice'
 import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
@@ -72,29 +78,11 @@ function* callAnalyzerOnce(
   )
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
 
-  yield* put(
-    addSourceCodes(
-      Object.entries(sourceCodes).reduce(
-        (accumulator, [address, sourceCode]) => [
-          ...accumulator,
-          { sourceCode, address },
-        ],
-        [],
-      ),
-    ),
-  )
+  for (const [address, sourceCode] of Object.entries(sourceCodes))
+    yield* put(updateSourceCode({ id: address, changes: { sourceCode } }))
 
-  yield* put(
-    addContractNames(
-      Object.entries(contractNames).reduce(
-        (accumulator, [address, contractName]) => [
-          ...accumulator,
-          { contractName, address },
-        ],
-        [],
-      ),
-    ),
-  )
+  for (const [address, contractName] of Object.entries(contractNames))
+    yield* put(updateContractName({ id: address, changes: { contractName } }))
 
   return analyzeSummary
 }
@@ -198,6 +186,22 @@ export function* runAnalyzer(
         })),
       ),
     )
+    yield* put(
+      addSourceCodes(
+        analyzeSummary.contractAddresses.map((address) => ({
+          sourceCode: null,
+          address,
+        })),
+      ),
+    )
+    yield* put(
+      addContractNames(
+        analyzeSummary.contractAddresses.map((address) => ({
+          contractName: null,
+          address,
+        })),
+      ),
+    )
 
     if (bytecodeProvider) yield* fetchBytecodes(bytecodeProvider)
 
@@ -214,6 +218,7 @@ export function* runAnalyzer(
           sourceProvider,
           addresses,
         )
+
         const sourceCodesCount = Object.keys(additionalAbisAndSource).length
         if (sourceCodesCount === 0) {
           yield* put(

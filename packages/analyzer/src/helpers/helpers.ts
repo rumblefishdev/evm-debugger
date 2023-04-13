@@ -204,7 +204,7 @@ export const convertTxInfoToTraceLog = (
   const defaultFields = {
     value: ethers.utils.formatEther(value),
     type: 'CALL',
-    startIndex: 1,
+    startIndex: 0,
     stackTrace: [] as number[],
     pc: 0,
     passedGas: firstNestedStructLog.gas,

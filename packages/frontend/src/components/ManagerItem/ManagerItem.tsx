@@ -18,6 +18,7 @@ export const ManagerItem = ({
   name,
   value,
   updateItem,
+  displayer: Displayer = RawDataDisplayer,
   ...props
 }: ManagerItemProps) => {
   const [isDataVisible, setDataVisibility] = useState(false)
@@ -46,20 +47,24 @@ export const ManagerItem = ({
         </Button>
       )}
 
-      <RawDataDisplayer
-        title={name}
-        description={address}
-        data={value}
-        open={isDataVisible}
-        onClose={() => setDataVisibility(false)}
-      />
-      <DataAdder
-        open={isDataAdderVisible}
-        submithandler={dataAdderHandler}
-        title={`Upload for ${name}`}
-        onClose={() => setDataAdderVisibility(false)}
-        description={address}
-      />
+      {isFound ? (
+        <Displayer
+          title={name}
+          description={address}
+          address={address}
+          data={value}
+          open={isDataVisible}
+          onClose={() => setDataVisibility(false)}
+        />
+      ) : (
+        <DataAdder
+          open={isDataAdderVisible}
+          submithandler={dataAdderHandler}
+          title={`Upload for ${name}`}
+          onClose={() => setDataAdderVisibility(false)}
+          description={address}
+        />
+      )}
     </StyledStack>
   )
 }

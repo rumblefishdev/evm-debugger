@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { List, Tooltip } from '@mui/material'
 import React from 'react'
 
 import { isArrayOfStrings } from '../../../../../helpers/helpers'
@@ -7,7 +7,6 @@ import {
   StyledInfoRow,
   StyledInfoType,
   StyledInfoValue,
-  StyleRawBytecode,
   StyledAccordion,
   StyledAccordionSummary,
   StyledAccordionDetails,
@@ -25,9 +24,21 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
         <List>
           {items &&
             items.map((item, index) => {
-              if (
-                typeof item.value === 'string' ||
-                typeof item.value === 'number'
+            if (
+              typeof item.value === 'string' ||
+              typeof item.value === 'number'
+            )
+              return (
+                <React.Fragment key={index}>
+                  <Tooltip title={item.type} arrow followCursor>
+                    <StyledInfoRow key={index}>
+                      <StyledInfoType>
+                        {item.name ? item.name : `(${item.type})`}
+                      </StyledInfoType>
+                      <StyledInfoValue>{item.value}</StyledInfoValue>
+                    </StyledInfoRow>
+                  </Tooltip>
+                </React.Fragment>
               )
                 return (
                   <React.Fragment key={index}>
@@ -69,13 +80,34 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
                 )
 
               return (
-                <ParamBlock
-                  key={index}
-                  title={`${item.name} (${item.type})`}
-                  items={item.value}
-                />
+                <React.Fragment key={index}>
+                  <StyledInfoRow key={index}>
+                    <StyledInfoType>{item.name}</StyledInfoType>
+                    <StyledInfoValue>
+                      {item.value.length === 0
+                        ? '[ ]'
+                        : item.value.map((value, nestedIndex) => {
+                            return (
+                              <>
+                                <StyledInfoRow key={nestedIndex}>
+                                  <StyledInfoValue>{value}</StyledInfoValue>
+                                </StyledInfoRow>
+                              </>
+                            )
+                          })}
+                    </StyledInfoValue>
+                  </StyledInfoRow>
+                </React.Fragment>
               )
-            })}
+
+            return (
+              <ParamBlock
+                key={index}
+                title={item.name ? `${item.name}` : `[${index}] element`}
+                items={item.value}
+              />
+            )
+          })}
         </List>
       </StyledAccordionDetails>
     </StyledAccordion>

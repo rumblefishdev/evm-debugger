@@ -115,10 +115,15 @@ export class FragmentReader {
       functionFragment.name,
       inputData,
     )
-    const decodedOutput = abiInterface.decodeFunctionResult(
-      functionFragment.name,
-      outputData,
-    )
+    let decodedOutput
+    try {
+      decodedOutput = abiInterface.decodeFunctionResult(
+        functionFragment.name,
+        outputData,
+      )
+    } catch {
+      decodedOutput = null
+    }
 
     return {
       functionFragment,
@@ -181,11 +186,17 @@ export class FragmentReader {
 
     const abiInterface = new ethers.utils.Interface([eventFragment])
 
-    const decodedEvent = abiInterface.decodeEventLog(
-      eventFragment.name,
-      eventData,
-      topics,
-    )
+    let decodedEvent
+
+    try {
+      decodedEvent = abiInterface.decodeEventLog(
+        eventFragment.name,
+        eventData,
+        topics,
+      )
+    } catch {
+      return { eventDescription: null, decodedEvent: null }
+    }
     const eventDescription: ethers.utils.LogDescription = abiInterface.parseLog(
       { topics, data: eventData },
     )
