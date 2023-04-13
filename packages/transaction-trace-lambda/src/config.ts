@@ -5,7 +5,7 @@ export const forkingUrlMap = {
   5: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
   137: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
   80001: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
-  11155111: 'https://rpc.sepolia.org',
+  11155111: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
   42161: 'https://arb1.arbitrum.io/rpc',
   421613: 'https://goerli-rollup.arbitrum.io/rpc',
 }

@@ -9,22 +9,31 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: process.env.HARDHAT_FORKING_URL,
-        ignoreUnknownTxType: true,
       },
       chains: {
         137: {
           hardforkHistory: {
-            london: 23850000,
+            london: 40400000,
           },
         },
         80001: {
           hardforkHistory: {
-            london: 23850000,
+            london: 33130000,
+          },
+        },
+        11155111: {
+          hardforkHistory: {
+            london: 3100000,
           },
         },
         42161: {
           hardforkHistory: {
-            london: 23850000,
+            london: 70000000,
+          },
+        },
+        421613: {
+          hardforkHistory: {
+            london: 11500000,
           },
         },
       },

@@ -84,19 +84,19 @@ export const supportedChains: Record<ChainId, SupportedChain> = {
     bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[80001]),
   },
 
-  // /** sepolia */
-  // 11155111: {
-  //   txInfoProvider: (hash: string) =>
-  //     new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[11155111]),
-  //   structLogProvider: (hash: string) =>
-  //     new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 11155111),
-  //   sourceProvider: new EtherscanSourceFetcher(
-  //     etherscanUrls[11155111].url,
-  //     etherscanUrls[11155111].key,
-  //   ),
-  //   name: 'Sepolia',
-  //   bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[11155111]),
-  // },
+  /** sepolia */
+  11155111: {
+    txInfoProvider: (hash: string) =>
+      new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[11155111]),
+    structLogProvider: (hash: string) =>
+      new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 11155111),
+    sourceProvider: new EtherscanSourceFetcher(
+      etherscanUrls[11155111].url,
+      etherscanUrls[11155111].key,
+    ),
+    name: 'Sepolia',
+    bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[11155111]),
+  },
 
   // /** arbitrum one */
   // 42161: {
