@@ -43,22 +43,31 @@ const safeArgParse = (
 
   if (isArrayOfStrings(arg)) return arg
 
-  if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
-    return arg.map(
-      (item) =>
-        `${ethers.utils.formatEther(
-          ethers.BigNumber.from(item).toString(),
-        )} ETH`,
-    )
-
+  try {
+    if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
+      return arg.map(
+        (item) =>
+          `${ethers.utils.formatEther(
+            ethers.BigNumber.from(item).toString(),
+          )} ETH`,
+      )
+  } catch (error) {
+    console.log({ argIsEmpty: error })
+  }
   const { components } = param
-  return components.map((component, index) => {
-    const value = arg[index]
+  return components
+    ? components.map((component, index) => {
+        const value = arg[index]
 
-    const parsedValue = safeArgParse(value, component)
+        const parsedValue = safeArgParse(value, component)
 
-    return { value: parsedValue, type: component.type, name: component.name }
-  })
+        return {
+          value: parsedValue,
+          type: component.type,
+          name: component.name,
+        }
+      })
+    : null
 }
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {

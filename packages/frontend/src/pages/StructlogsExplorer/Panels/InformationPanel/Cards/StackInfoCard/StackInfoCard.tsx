@@ -25,24 +25,26 @@ export const StackInfoCard = ({ ...props }: StackInfoCardProps) => {
   return (
     <StructlogAcordionPanel text="Stack" canExpand={stack.length > 0}>
       <StyledTable>
-        {stack.map((stackItem, index) => {
-          const isSelected: React.CSSProperties = stackItem.value.isSelected
-            ? { background: 'rgba(0, 0, 0, 0.04)' }
-            : {}
+        <tbody>
+          {stack.map((stackItem, index) => {
+            const isSelected: React.CSSProperties = stackItem.value.isSelected
+              ? { background: 'rgba(0, 0, 0, 0.04)' }
+              : {}
 
-          const argName = activeStructlog.args[index]
+            const argName = activeStructlog.args[index]
 
-          const name = argName?.name ? `${argName.name}` : stackItem.index
+            const name = argName?.name ? `${argName.name}` : stackItem.index
 
-          return (
-            <StyledTableRow sx={isSelected} key={index}>
-              <StyledTableCell>{name}</StyledTableCell>
-              <StyledTableValueCell>
-                {skipLeadingZeroes(stackItem.value.value)}
-              </StyledTableValueCell>
-            </StyledTableRow>
-          )
-        })}
+            return (
+              <StyledTableRow sx={isSelected} key={index}>
+                <StyledTableCell>{name}</StyledTableCell>
+                <StyledTableValueCell>
+                  {skipLeadingZeroes(stackItem.value.value)}
+                </StyledTableValueCell>
+              </StyledTableRow>
+            )
+          })}
+        </tbody>
       </StyledTable>
     </StructlogAcordionPanel>
   )

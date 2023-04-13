@@ -13,12 +13,16 @@ import { AppNavigation } from './pages/AppNavigation'
 import { contentfulClient } from './importedComponents'
 
 export enum ROUTES {
+  BASE = 'evmDebugger',
   HOME = '/',
   MANUAL_UPLOAD = '/manualUpload',
-  APP = '/app',
-  TRANSACTION_SCREEN = '/app/transactionScreen',
-  DATA_MANAGER = '/app/dataManager',
-  STRUCTLOGS_EXPLORER = '/app/structlogsExplorer',
+  APP = '/tx',
+  TRANSACTION_SCREEN = '/tx/:chainId/:txHash',
+  TRANSACTION_SCREEN_MANUAL = '/tx/manual',
+  DATA_MANAGER = '/tx/:chainId/:txHash/dataManager',
+  DATA_MANAGER_MANUAL = '/tx/manual/dataManager',
+  STRUCTLOGS_EXPLORER = '/tx/:chainId/:txHash/structlogsExplorer',
+  STRUCTLOGS_EXPLORER_MANUAL = '/tx/manual/structlogsExplorer',
   ANALYZER_PROGRESS_SCREEN = '/analyzerProgressScreen',
 }
 
@@ -56,15 +60,27 @@ export const appRouter = createBrowserRouter(
       children: [
         {
           path: ROUTES.TRANSACTION_SCREEN,
-          element: <TranscationScreen />,
+          element: (
+            <AnalyzerProgressScreen>
+              <TranscationScreen />
+            </AnalyzerProgressScreen>
+          ),
         },
         {
           path: ROUTES.DATA_MANAGER,
-          element: <AnalyzeSummary />,
+          element: (
+            <AnalyzerProgressScreen>
+              <AnalyzeSummary />
+            </AnalyzerProgressScreen>
+          ),
         },
         {
           path: ROUTES.STRUCTLOGS_EXPLORER,
-          element: <StructlogsExplorer />,
+          element: (
+            <AnalyzerProgressScreen>
+              <StructlogsExplorer />
+            </AnalyzerProgressScreen>
+          ),
         },
       ],
     },

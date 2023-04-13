@@ -957,3 +957,5 @@ export const numberToOpcode: Map<number, string> = new Map(
 export const convertOpcodeToName = (opcode: number): string => {
   return numberToOpcode.get(opcode) ?? 'INVALID'
 }
+
+export type OpcodesDictionary = keyof typeof opcodesDictionary
