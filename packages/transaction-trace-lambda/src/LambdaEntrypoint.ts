@@ -4,6 +4,7 @@ import { TransactionTracResponseStatus } from '@evm-debuger/types'
 
 import { TaskStatus } from './TaskStatus'
 import { AnalyzerDataRepository } from './AnalyzerDataRepository'
+import { forkingUrlMap } from './config'
 
 const s3BucketName = process.env.TRANSACTION_TRACE_BUCKET
 const analyzerDataRepository = new AnalyzerDataRepository(new AWS.DynamoDB())
@@ -25,7 +26,7 @@ export const runEcsTask = async (txHash, chainId) => {
               name: 'CHAIN_ID',
             },
             {
-              value: process.env.HARDHAT_FORKING_URL,
+              value: forkingUrlMap[chainId],
               name: 'HARDHAT_FORKING_URL',
             },
             {
