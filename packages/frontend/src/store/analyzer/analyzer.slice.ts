@@ -57,6 +57,9 @@ export const analyzerSlice = createSlice({
 
 export const analyzerActions = {
   runAnalyzer: createAction<IRunAnalyzerPayload>('analyzer/runAnalyzer'),
+  regenerateAnalyzer: createAction<IRunAnalyzerPayload>(
+    'analyzer/regenerateAnalyzer',
+  ),
   ...analyzerSlice.actions,
 }
 

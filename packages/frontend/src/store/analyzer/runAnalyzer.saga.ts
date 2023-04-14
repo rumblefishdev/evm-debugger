@@ -150,6 +150,16 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
     }
 }
 
+export function regenerateAnalyzer(
+  action: ReturnType<typeof analyzerActions.runAnalyzer>,
+) {
+  const { sourceProvider } = action.payload
+  console.log('regenerateAnalyzer', {
+    sourceProvider,
+    payload: action.payload,
+  })
+}
+
 export function* runAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
 ) {

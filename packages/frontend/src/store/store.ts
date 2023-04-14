@@ -34,6 +34,7 @@ const persistConfig = {
   transforms: [SetTransform],
   storage: indexedDbStorage('evmDebugger') as Storage,
   key: getKey(),
+  blacklist: [],
 }
 
 const rootReducer = combineReducers({

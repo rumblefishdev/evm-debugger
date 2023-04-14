@@ -32,8 +32,8 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
   useEffect(() => {
-    if (chainId && txHash && !stages.every((stage) => stage.isFinished)) {
-      const chainData = supportedChains[chainId]
+    const chainData = supportedChains[chainId]
+    if (chainId && txHash && !stages.every((stage) => stage.isFinished))
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: chainData.txInfoProvider(txHash),
@@ -42,7 +42,15 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
           bytecodeProvider: chainData.bytecodeProvider,
         }),
       )
-    }
+    else if (chainId && txHash && stages.every((stage) => stage.isFinished))
+      dispatch(
+        analyzerActions.regenerateAnalyzer({
+          txInfoProvider: chainData.txInfoProvider(txHash),
+          structLogProvider: chainData.structLogProvider(txHash),
+          sourceProvider: chainData.sourceProvider,
+          bytecodeProvider: chainData.bytecodeProvider,
+        }),
+      )
   }, [dispatch, txHash, chainId, stages])
 
   useEffect(() => {

@@ -10,6 +10,12 @@ import {
 } from './styles'
 import type { LoggerProps } from './types'
 
+const getDate = (timestamp: Date | string): string => {
+  return typeof timestamp === 'object'
+    ? (timestamp as Date).toLocaleTimeString()
+    : timestamp
+}
+
 export const Logger = ({ messages, ...props }: LoggerProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -28,9 +34,7 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
 
           return (
             <StyledLogRecord key={index}>
-              <StyledTimestamp>
-                {timestamp.toLocaleTimeString()}:
-              </StyledTimestamp>
+              <StyledTimestamp>{getDate(timestamp)}:</StyledTimestamp>
               <StyledMessage isError={isError} variant="inputText">
                 {message}
               </StyledMessage>
