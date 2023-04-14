@@ -1,5 +1,3 @@
-DEV_REGION=us-east-1
-DEV_ECR_ARN=045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider
 
 transaction-trace-provider.zip:
 	lerna run build --scope @evm-debuger/types
