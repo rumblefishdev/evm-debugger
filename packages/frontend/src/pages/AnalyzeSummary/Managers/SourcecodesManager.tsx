@@ -27,6 +27,7 @@ export const SourcecodesManager = () => {
         {data.map((item) => (
           <ManagerItem
             key={item.address}
+            address={item.address}
             name={item.address}
             value={item.sourceCode}
             isFound={item.sourceCode !== null}

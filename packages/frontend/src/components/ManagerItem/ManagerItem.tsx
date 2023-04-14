@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { Tooltip } from '@mui/material'
 
 import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
 import { RawDataDisplayer } from '../RawDataDisplayer'
+import { useTypedSelector } from '../../store/storeHooks'
+import { contractNamesSelectors } from '../../store/contractNames/contractNames'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import {
@@ -29,6 +32,9 @@ export const ManagerItem = ({
     setDataAdderVisibility(false)
   }
 
+  const contract = useTypedSelector((state) =>
+    contractNamesSelectors.selectById(state.contractNames, address),
+  )
   return (
     <StyledStack {...props}>
       {isFound ? (
@@ -36,7 +42,9 @@ export const ManagerItem = ({
       ) : (
         <StyledStatusNotFound>Not found</StyledStatusNotFound>
       )}
-      <StyledName>{name}</StyledName>
+      <Tooltip title={contract.address} arrow followCursor>
+        <StyledName>{contract.contractName}</StyledName>
+      </Tooltip>
       {isFound ? (
         <Button variant="text" onClick={() => setDataVisibility(true)}>
           Show
@@ -49,7 +57,7 @@ export const ManagerItem = ({
 
       {isFound ? (
         <Displayer
-          title={name}
+          title={contract.contractName}
           description={address}
           address={address}
           data={value}

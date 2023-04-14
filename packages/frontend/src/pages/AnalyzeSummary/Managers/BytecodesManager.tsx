@@ -27,6 +27,7 @@ export const BytecodesManager = () => {
           <ManagerItem
             key={item.address}
             name={item.address}
+            address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}
             updateItem={addBytecode}
