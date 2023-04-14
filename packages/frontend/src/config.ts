@@ -1,45 +1,39 @@
 /* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
+import { ChainId } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 
 export const etherscanUrls = {
-  /** mainnet */
-  1: {
+  [ChainId.mainnet]: {
     url: 'https://api.etherscan.io',
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
 
-  /** goerli */
-  5: {
+  [ChainId.goerli]: {
     url: 'https://api-goerli.etherscan.io',
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
 
-  /** polygon */
-  137: {
+  [ChainId.polygon]: {
     url: 'https://api.polygonscan.com',
     key: process.env.REACT_APP_POLYGONSCAN_KEY,
   },
 
-  /** mumbai */
-  80001: {
+  [ChainId.mumbai]: {
     url: 'https://api-mumbai.polygonscan.com',
     key: process.env.REACT_APP_POLYGONSCAN_KEY,
   },
 
-  /** sepolia */
-  11155111: {
+  [ChainId.sepolia]: {
     url: 'https://sepolia.etherscan.io',
     key: process.env.REACT_APP_SEPOLIA_KEY,
   },
 
-  /** arbitrum one */
-  42161: {
+  [ChainId.arbitrum]: {
     url: 'https://api.arbiscan.io',
     key: process.env.REACT_APP_ARBITRUMSCAN_KEY,
   },
 
-  /** arbitrum goerli */
-  421613: {
+  [ChainId.arbitrumGoerli]: {
     url: 'https://api-goerli.arbiscan.io',
     key: process.env.REACT_APP_ARBITRUMSCAN_KEY,
   },
@@ -47,45 +41,48 @@ export const etherscanUrls = {
 
 export const transactionTraceProviderUrl = 'https://evm-debugger.rumblefish.dev'
 export const jsonRpcProvider = {
-  /** mainnet */
-  1: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_MAINNET_JSONRPC,
     'mainnet',
   ),
 
-  /** goerli */
-  5: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.goerli]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_GOERLI_JSONRPC,
     'goerli',
   ),
 
-  /** polygon */
-  137: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_POLYGON_JSONRPC,
     'polygon',
   ),
 
-  /** mumbai */
-  80001: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.mumbai]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_MUMBAI_JSONRPC,
     'mumbai',
   ),
 
-  /** sepolia */
-  11155111: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.sepolia]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_SEPOLIA_JSONRPC,
     'sepolia',
   ),
 
-  /** arbitrum one */
-  42161: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.arbitrum]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_ARBITRUM_ONE_JSONRPC,
     'arbitrum-one',
   ),
 
-  /** arbitrum goerli */
-  421613: new ethers.providers.StaticJsonRpcProvider(
+  [ChainId.arbitrumGoerli]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC,
     'arbitrum-goerli',
   ),
+}
+
+export const chainNames = {
+  [ChainId.mainnet]: 'Ethereum',
+  [ChainId.goerli]: 'Goerli',
+  [ChainId.polygon]: 'Polygon',
+  [ChainId.mumbai]: 'Mumbai',
+  [ChainId.sepolia]: 'Sepolia',
+  [ChainId.arbitrum]: 'Arbitrum One',
+  [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
 }

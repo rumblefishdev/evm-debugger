@@ -1,4 +1,5 @@
 import type { HardhatUserConfig } from 'hardhat/config'
+import { ChainId } from '@evm-debuger/types'
 
 const config: HardhatUserConfig = {
   solidity: '0.8.9',
@@ -17,27 +18,27 @@ const config: HardhatUserConfig = {
         // CAUTION:
         // we shouldn't fork from too old blocks, because of getting errors of
         // too many requests per second
-        137: {
+        [ChainId.polygon]: {
           hardforkHistory: {
-            london: 40400000,
+            london: 0,
           },
         },
-        80001: {
+        [ChainId.mumbai]: {
           hardforkHistory: {
             london: 33130000,
           },
         },
-        11155111: {
+        [ChainId.sepolia]: {
           hardforkHistory: {
             london: 3100000,
           },
         },
-        42161: {
+        [ChainId.arbitrum]: {
           hardforkHistory: {
             london: 70000000,
           },
         },
-        421613: {
+        [ChainId.arbitrumGoerli]: {
           hardforkHistory: {
             london: 11500000,
           },
