@@ -236,7 +236,7 @@ export class TxAnalyzer {
     for (let index = 0; index < transactionList.length; index++) {
       const traceLog = transactionList[index]
 
-      if (checkIfOfCallType(traceLog) && traceLog.isContract) {
+      if (checkIfOfCreateOrCallType(traceLog) && traceLog.isContract) {
         const storageLogs = this.storageHandler.getParsedStorageLogs(
           traceLog,
           this.transactionData.structLogs,
