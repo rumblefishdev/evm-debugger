@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '../../../components/Button'
 import { UploadBox } from '../../../components/UploadBox'
-import { etherscanKey, etherscanUrl, jsonRpcProvider } from '../../../config'
+import { etherscanUrls, jsonRpcProvider } from '../../../config'
 import { validateSchema } from '../../../helpers/validateSchema'
 import { ROUTES } from '../../../router'
 import {
@@ -37,8 +37,8 @@ export const Manual = () => {
             data.structLogs.structLogs,
           ),
           sourceProvider: new EtherscanSourceFetcher(
-            etherscanUrl,
-            etherscanKey,
+            etherscanUrls[data.txInfo.chainId].url,
+            etherscanUrls[data.txInfo.chainId].key,
           ),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
         }),
