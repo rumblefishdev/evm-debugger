@@ -1,20 +1,28 @@
+type StackInformation = { storageAddress: string }
+
 export class StackCounter {
   private stackCount: number[] = []
+  private stackInformation: StackInformation[] = []
 
-  public visitDepth = (depth: number): number[] => {
+  public getParentStorageAddress = (
+    depth: number = this.stackCount.length - 1,
+  ): string => {
+    const parentDepth = depth - 1
+    return this.stackInformation.at(parentDepth).storageAddress
+  }
+  public visitDepth = (depth: number, address: string): number[] => {
     let copiedStackCount = [...this.stackCount]
 
-    const index = depth - 1
-
     // eslint-disable-next-line no-undefined
-    if (copiedStackCount[index] === undefined) copiedStackCount[index] = 0
+    if (copiedStackCount[depth] === undefined) copiedStackCount[depth] = 0
     else {
-      copiedStackCount[index] = copiedStackCount[index] + 1
-      copiedStackCount = copiedStackCount.slice(0, depth)
+      copiedStackCount[depth] += 1
+      copiedStackCount = copiedStackCount.slice(0, depth + 1)
     }
 
+    this.stackInformation[depth] = { storageAddress: address }
     this.stackCount = copiedStackCount
 
-    return copiedStackCount
+    return copiedStackCount.slice(1)
   }
 }

@@ -4,6 +4,8 @@ import type { TTransactionData } from '@evm-debuger/types'
 
 import { prepareAnalyzer } from '../scripts/scriptHelper'
 
+import { TxAnalyzer } from './txAnalyzer'
+
 const removeWhiteSpaces = (data: string) => {
   return data.replace(/\s/g, '')
 }
@@ -67,6 +69,13 @@ describe('TxAnalyzer', () => {
       // Analyzer is trying 1st decode using cached ABIs. In this tx 'transferFrom' have not standard(erc20) output.
       const result = await runAnalyzerForTestDataFile(
         './test/txWithInvalidOutputToDecode.json',
+      )
+      expect(result).toMatchSnapshot()
+    }, 20_000)
+
+    it('analyze transaction with contract deployment', async () => {
+      const result = await runAnalyzerForTestDataFile(
+        './test/createContract.json',
       )
       expect(result).toMatchSnapshot()
     }, 20_000)

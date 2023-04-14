@@ -30,6 +30,7 @@ export type TTransactionInfo = {
   to?: string
   value: string
   chainId: string
+  nonce: number
 }
 
 export type TTransactionTraceResult = {
