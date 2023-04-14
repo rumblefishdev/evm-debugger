@@ -70,6 +70,7 @@ function* callAnalyzerOnce(
       ),
     }),
   )
+  console.log('loadActiveBlock addSighashes contractSighashesInfo')
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
 
   yield* put(
@@ -150,14 +151,43 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
     }
 }
 
-export function regenerateAnalyzer(
+export function* regenerateAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
 ) {
-  const { sourceProvider } = action.payload
+  const { sourceProvider, txInfoProvider, structLogProvider } = action.payload
   console.log('regenerateAnalyzer', {
     sourceProvider,
     payload: action.payload,
   })
+  const transactionInfo = yield* apply(
+    txInfoProvider,
+    txInfoProvider.getTxInfo,
+    [],
+  )
+  const structLogs = yield* apply(
+    structLogProvider,
+    structLogProvider.getStructLog,
+    [],
+  )
+  const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+  yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+  yield* put(
+    addBytecodes(
+      analyzeSummary.contractAddresses.map((address) => ({
+        error: null,
+        disassembled: null,
+        bytecode: null,
+        address,
+      })),
+    ),
+  )
+  const addresses = yield* select(sighashSelectors.allAddresses)
+  const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(
+    sourceProvider,
+    addresses,
+  )
+  console.log('callAnalyzerOnce')
+  yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbisAndSource)
 }
 
 export function* runAnalyzer(
