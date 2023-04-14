@@ -20,15 +20,23 @@ export function useSources(data?: string) {
   return useMemo(() => {
     if (!data) return {}
 
-    if (data.startsWith('{{') && data.endsWith('}}')) {
-      const { sources: parsed } = JSON.parse(data.slice(1, -1)) as {
-        sources: Record<string, { content: string }>
-      }
-      return Object.fromEntries(
-        Object.entries(parsed).map(([key, value]) => [key, value.content]),
-      )
-    }
-    return { '': data }
+    const parsed: Record<string, { content: string }> | null =
+      data.startsWith('{"') && !/\n/u.test(data)
+        ? JSON.parse(data)
+        : data.startsWith('{{') && data.endsWith('}}')
+        ? (
+            JSON.parse(data.slice(1, -1)) as {
+              sources: Record<string, { content: string }>
+            }
+          ).sources
+        : null
+
+    if (parsed)
+      return parsed
+        ? Object.fromEntries(
+            Object.entries(parsed).map(([key, value]) => [key, value.content]),
+          )
+        : { '': data }
   }, [data])
 }
 
