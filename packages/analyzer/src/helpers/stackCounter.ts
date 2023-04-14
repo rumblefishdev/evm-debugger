@@ -7,7 +7,7 @@ export class StackCounter {
   public getParentStorageAddress = (
     depth: number = this.stackCount.length - 1,
   ): string => {
-    const parentDepth = depth - 1
+    const parentDepth = Math.max(0, depth - 1)
     return this.stackInformation.at(parentDepth).storageAddress
   }
   public visitDepth = (depth: number, address: string): number[] => {
