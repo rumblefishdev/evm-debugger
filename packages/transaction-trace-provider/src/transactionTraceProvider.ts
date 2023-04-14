@@ -20,10 +20,14 @@ const uploadJson = async (json: string, url: string) => {
 
 const main = async () => {
   try {
-    const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER)
+    const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
+      chainId,
+    })
+
     const traceResult = await hardhatProvider.send('debug_traceTransaction', [
       txHash,
     ])
+
     await uploadJson(JSON.stringify(traceResult), `trace/${chainId}/${txHash}`)
   } catch (error) {
     console.log('err:', error)
