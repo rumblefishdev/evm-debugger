@@ -32,9 +32,6 @@ export const ManagerItem = ({
     setDataAdderVisibility(false)
   }
 
-  const contract = useTypedSelector((state) =>
-    contractNamesSelectors.selectById(state.contractNames, address),
-  )
   return (
     <StyledStack {...props}>
       {isFound ? (
@@ -42,8 +39,8 @@ export const ManagerItem = ({
       ) : (
         <StyledStatusNotFound>Not found</StyledStatusNotFound>
       )}
-      <Tooltip title={contract.address} arrow followCursor>
-        <StyledName>{contract.contractName}</StyledName>
+      <Tooltip title={address} arrow followCursor>
+        <StyledName>{name || address}</StyledName>
       </Tooltip>
       {isFound ? (
         <Button variant="text" onClick={() => setDataVisibility(true)}>
@@ -57,7 +54,7 @@ export const ManagerItem = ({
 
       {isFound ? (
         <Displayer
-          title={contract.contractName}
+          title={name}
           description={address}
           address={address}
           data={value}

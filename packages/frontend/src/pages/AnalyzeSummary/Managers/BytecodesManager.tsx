@@ -6,6 +6,7 @@ import {
 } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
@@ -19,6 +20,10 @@ export const BytecodesManager = () => {
     bytecodesAdapter.getSelectors().selectAll(state.bytecodes),
   )
 
+  const contractNames = useTypedSelector((state) =>
+    contractNamesSelectors.selectEntities(state.contractNames),
+  )
+
   return (
     <StyledStack>
       <StyledHeading>Bytecodes</StyledHeading>
@@ -26,7 +31,7 @@ export const BytecodesManager = () => {
         {data.map((item) => (
           <ManagerItem
             key={item.address}
-            name={item.address}
+            name={contractNames[item.address].contractName}
             address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}
