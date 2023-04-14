@@ -53,12 +53,12 @@ export const jsonRpcProvider = {
 
   [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_POLYGON_JSONRPC,
-    'polygon',
+    'matic',
   ),
 
   [ChainId.mumbai]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_MUMBAI_JSONRPC,
-    'mumbai',
+    'maticmum',
   ),
 
   [ChainId.sepolia]: new ethers.providers.StaticJsonRpcProvider(
@@ -68,7 +68,7 @@ export const jsonRpcProvider = {
 
   [ChainId.arbitrum]: new ethers.providers.StaticJsonRpcProvider(
     process.env.REACT_APP_ARBITRUM_ONE_JSONRPC,
-    'arbitrum-one',
+    'arbitrum',
   ),
 
   [ChainId.arbitrumGoerli]: new ethers.providers.StaticJsonRpcProvider(
