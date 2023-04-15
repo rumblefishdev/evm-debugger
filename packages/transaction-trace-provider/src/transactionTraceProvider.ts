@@ -35,7 +35,7 @@ const main = async () => {
     ])
 
     console.log(
-      `Uploading result to s3 path s3://${s3BucketName}/trace/${chainId}/${txHash}`,
+      `Uploading result to s3 path s3://${s3BucketName}/trace/${chainId}/${txHash}.json`,
     )
 
     await uploadJson(JSON.stringify(traceResult), `trace/${chainId}/${txHash}`)
