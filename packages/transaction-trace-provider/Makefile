@@ -1,5 +1,5 @@
 
-transaction-trace-provider.zip:
+transaction-trace-provider.zip: ${shell git ls-files '*.ts' 'patches'}
 	lerna run build --scope @evm-debuger/types
 	lerna run build --scope @evm-debuger/transaction-trace-provider
 	rf-lerna zipbundle @evm-debuger/transaction-trace-provider --target transaction-trace-provider.zip

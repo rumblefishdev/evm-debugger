@@ -4,7 +4,7 @@ import hardhat from 'hardhat'
 
 const s3BucketName = process.env.TRANSACTION_TRACE_BUCKET
 const txHash = process.env.TX_HASH
-const chainId = process.env.CHAIN_ID
+const chainId = Number(process.env.CHAIN_ID)
 
 const uploadJson = async (json: string, url: string) => {
   // eslint-disable-next-line no-return-await
@@ -24,9 +24,19 @@ const main = async () => {
       chainId,
     })
 
+    console.log(
+      `Calling debug_traceTransaction for txHash ${txHash} on chainId 0x${chainId.toString(
+        16,
+      )}`,
+    )
+
     const traceResult = await hardhatProvider.send('debug_traceTransaction', [
       txHash,
     ])
+
+    console.log(
+      `Uploading result to s3 path s3://${s3BucketName}/trace/${chainId}/${txHash}`,
+    )
 
     await uploadJson(JSON.stringify(traceResult), `trace/${chainId}/${txHash}`)
   } catch (error) {

@@ -12,5 +12,6 @@ COPY --from=build /usr/src/app /usr/src/app
 
 COPY ./dist/hardhat.config.js .
 COPY patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js
+COPY patches/node_modules/hardhat/internal/hardhat-network/provider/node.js node_modules/hardhat/internal/hardhat-network/provider/node.js
 
 CMD [ "node", "dist/transactionTraceProvider.js" ]
