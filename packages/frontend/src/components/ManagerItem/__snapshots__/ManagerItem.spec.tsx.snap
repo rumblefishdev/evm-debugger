@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ManagerItem tests simpel render 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": ".css-5bbpg0{width:100%;padding:28px 32px;max-width:764px;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;gap:32px;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box;border:1px solid undefined;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}",
+      }
+    }
+    data-emotion="css 5bbpg0"
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": ".css-1xwjwa8-MuiStack-root{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;width:100%;padding:28px 32px;max-width:764px;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;gap:32px;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box;border:1px solid undefined;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}",
+      }
+    }
+    data-emotion="css 1xwjwa8-MuiStack-root"
+  />,
+  <div
+    className="css-1xwjwa8-MuiStack-root"
+  >
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-3hfi54{padding:8px 16px;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
+        }
+      }
+      data-emotion="css 3hfi54"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-amio4c-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;padding:8px 16px;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
+        }
+      }
+      data-emotion="css amio4c-MuiTypography-root"
+    />
+    <p
+      className="MuiTypography-root MuiTypography-body1 css-amio4c-MuiTypography-root"
+    >
+      Not found
+    </p>
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-1us7b4i{width:100%;max-width:585px;}",
+        }
+      }
+      data-emotion="css 1us7b4i"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-9tbx7m-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;width:100%;max-width:585px;}",
+        }
+      }
+      data-emotion="css 9tbx7m-MuiTypography-root"
+    />
+    <p
+      aria-label="0x2"
+      aria-labelledby={null}
+      className="MuiTypography-root MuiTypography-body1  css-9tbx7m-MuiTypography-root"
+      data-mui-internal-clone-element={true}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+    >
+      sampleName
+    </p>
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-pnutvq-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
+        }
+      }
+      data-emotion="css pnutvq-MuiTooltip-popper"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-viryjt-MuiPopper-root-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
+        }
+      }
+      data-emotion="css viryjt-MuiPopper-root-MuiTooltip-popper"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-1dkn99d{outline:none;cursor:pointer;border:none;font-weight:600;font-size:14px;font-family:Rajdhani;background-color:unset;}",
+        }
+      }
+      data-emotion="css 1dkn99d"
+    />
+    <button
+      className="MuiButton-root css-1dkn99d"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      variant="text"
+    >
+      Add
+    </button>
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": "@media print{.css-1pivxxs-MuiDialog-root{position:absolute!important;}}",
+        }
+      }
+      data-emotion="css 1pivxxs-MuiDialog-root"
+    />
+  </div>,
+]
+`;
