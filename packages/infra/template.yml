@@ -20,13 +20,12 @@ Parameters:
     Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   TransactionTraceProviderImage:
     Type: String
-  HardhatForkingUrl:
+  AlchemyKey:
     Type: String
   Subnets:
     Type: String
 
 Resources:
-
   Frontend:
     Type: AWS::Serverless::Application
     Properties:
@@ -50,5 +49,5 @@ Resources:
         TaskCpu: !Ref TaskCpu
         TaskMemory: !Ref TaskMemory
         TransactionTraceProviderImage: !Ref TransactionTraceProviderImage
-        HardhatForkingUrl: !Ref HardhatForkingUrl
+        AlchemyKey: !Ref AlchemyKey
         Subnets: !Ref Subnets

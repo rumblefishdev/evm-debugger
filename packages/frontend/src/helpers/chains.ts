@@ -1,6 +1,9 @@
+/* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
+import { ChainId } from '@evm-debuger/types'
+
 import {
-  etherscanKey,
-  etherscanUrl,
+  chainNames,
+  etherscanUrls,
   jsonRpcProvider,
   transactionTraceProviderUrl,
 } from '../config'
@@ -25,16 +28,28 @@ type SupportedChain = {
   bytecodeProvider?: IBytecodeProvider
 }
 
-type ChainId = number
-
-export const supportedChains: Record<ChainId, SupportedChain> = {
-  1: {
-    txInfoProvider: (hash: string) =>
-      new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[1]),
-    structLogProvider: (hash: string) =>
-      new TransactionTraceFetcher(transactionTraceProviderUrl, hash, 1),
-    sourceProvider: new EtherscanSourceFetcher(etherscanUrl, etherscanKey),
-    name: 'Ethereum',
-    bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
-  },
-}
+export const supportedChains = Object.fromEntries(
+  [
+    ChainId.mainnet,
+    ChainId.goerli,
+    ChainId.polygon,
+    ChainId.mumbai,
+    ChainId.sepolia,
+    // ChainId.arbitrum, // TODO
+    // ChainId.arbitrumGoerli, // TODO
+  ].map((chainId): [ChainId, SupportedChain] => [
+    chainId,
+    {
+      txInfoProvider: (hash: string) =>
+        new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[chainId]),
+      structLogProvider: (hash: string) =>
+        new TransactionTraceFetcher(transactionTraceProviderUrl, hash, chainId),
+      sourceProvider: new EtherscanSourceFetcher(
+        etherscanUrls[chainId].url,
+        etherscanUrls[chainId].key,
+      ),
+      name: chainNames[chainId],
+      bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[chainId]),
+    },
+  ]),
+) as unknown as Record<ChainId, SupportedChain>

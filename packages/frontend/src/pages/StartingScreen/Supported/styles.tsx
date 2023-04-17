@@ -91,6 +91,4 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     backgroundColor: theme.palette.rfBrandPrimary,
   },
 }))
-export const StyledMenuItem = styled(MenuItem)(() => ({
-  background: 'red',
-}))
+export const StyledMenuItem = styled(MenuItem)(() => ({}))

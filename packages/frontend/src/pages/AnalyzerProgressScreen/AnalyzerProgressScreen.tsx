@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '../../components/Button'
 import { TailProgressScreen } from '../../images'
-import { etherscanKey, etherscanUrl } from '../../config'
+import { etherscanUrls } from '../../config'
 import {
   EtherscanSourceFetcher,
   StaticStructLogProvider,
@@ -73,8 +73,8 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
           sourceProvider: new EtherscanSourceFetcher(
-            etherscanUrl,
-            etherscanKey,
+            etherscanUrls[txInfo.chainId].url,
+            etherscanUrls[txInfo.chainId].key,
           ),
         }),
       )
