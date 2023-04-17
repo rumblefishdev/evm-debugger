@@ -31,7 +31,7 @@ export const BytecodesManager = () => {
         {data.map((item) => (
           <ManagerItem
             key={item.address}
-            name={contractNames[item.address].contractName}
+            name={contractNames[item.address]?.contractName}
             address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}

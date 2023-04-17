@@ -33,7 +33,7 @@ export const SourcecodesManager = () => {
           <ManagerItem
             key={item.address}
             address={item.address}
-            name={contractNames[item.address].contractName}
+            name={contractNames[item.address]?.contractName}
             value={item.sourceCode}
             isFound={item.sourceCode !== null}
             updateItem={addSourcecode}

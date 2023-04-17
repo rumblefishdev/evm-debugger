@@ -4,8 +4,6 @@ import { Tooltip } from '@mui/material'
 import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
 import { RawDataDisplayer } from '../RawDataDisplayer'
-import { useTypedSelector } from '../../store/storeHooks'
-import { contractNamesSelectors } from '../../store/contractNames/contractNames'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import {
