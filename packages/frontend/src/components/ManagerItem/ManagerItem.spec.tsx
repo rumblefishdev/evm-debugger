@@ -5,7 +5,7 @@ import { ManagerItem } from './ManagerItem'
 import { StyledName } from './styles'
 
 describe('ManagerItem tests', () => {
-  it('simpel render', () => {
+  it('simple render', () => {
     const expectedText = 'sampleName'
     const render = renderer.create(
       <ManagerItem
@@ -22,7 +22,7 @@ describe('ManagerItem tests', () => {
     expect(render.toJSON()).toMatchSnapshot()
   })
 
-  it('display address instead', () => {
+  it('display address if name not exist', () => {
     const expectedText = '0x2'
     const render = renderer.create(
       <ManagerItem
