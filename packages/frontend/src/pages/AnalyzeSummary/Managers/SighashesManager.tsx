@@ -1,4 +1,5 @@
 import type { JsonFragment } from '@ethersproject/abi'
+import Tooltip from '@mui/material/Tooltip'
 
 import {
   sighashAdapter,
@@ -6,6 +7,7 @@ import {
 } from '../../../store/sighash/sighash.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
 
 import {
   StyledStack,
@@ -34,6 +36,11 @@ export const SighashesManager = () => {
   const contractAddresses = useTypedSelector(
     (state) => state.rawTxData.contractAddresses,
   )
+
+  const contractNames = useTypedSelector((state) =>
+    contractNamesSelectors.selectEntities(state.contractNames),
+  )
+
   return (
     <StyledStack>
       <StyledHeading>Sighashes</StyledHeading>
@@ -44,7 +51,11 @@ export const SighashesManager = () => {
           )
           return (
             <StyledSighashesWrapper key={address}>
-              <StyledAddress>{address}</StyledAddress>
+              <Tooltip title={address} arrow followCursor>
+                <StyledAddress>
+                  {contractNames[address]?.contractName || address}
+                </StyledAddress>
+              </Tooltip>
               <StyledWrapper>
                 {filteredSighashes.map((sighash) => (
                   <ManagerItem
