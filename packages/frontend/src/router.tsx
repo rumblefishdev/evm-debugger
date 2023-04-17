@@ -13,7 +13,7 @@ import { AppNavigation } from './pages/AppNavigation'
 import { contentfulClient } from './importedComponents'
 
 export enum ROUTES {
-  BASE = 'evmDebugger',
+  BASE = 'evm-debugger',
   HOME = '/',
   MANUAL_UPLOAD = '/manualUpload',
   APP = '/tx',

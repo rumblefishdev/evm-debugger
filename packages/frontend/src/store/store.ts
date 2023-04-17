@@ -22,7 +22,7 @@ const getKey = (): string => {
   const regex = new RegExp(/^0x([\dA-Fa-f]{64})$/)
   if (
     pathname.length >= 4 &&
-    pathname[0] === 'evmDebugger' &&
+    pathname[0] === 'evm-debugger' &&
     pathname[1] === 'tx' &&
     regex.test(pathname[3])
   )
