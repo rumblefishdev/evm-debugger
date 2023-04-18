@@ -18,10 +18,12 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
     setValue(nextValue)
   }
 
-  const handleTabClick = (tabName: ROUTES) => {
-    navigate(tabName.replace(':txHash', txHash).replace(':chainId', chainId))
+  const convertNav = (tabName: ROUTES): string => {
+    return tabName.replace(':txHash', txHash).replace(':chainId', chainId)
   }
-
+  const handleTabClick = (tabName: ROUTES) => {
+    navigate(convertNav(tabName))
+  }
   return (
     <React.Fragment>
       {stages.every((stage) => stage.isFinished) && (
@@ -31,7 +33,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
               label="Data Manager"
               value={
                 chainId && txHash
-                  ? ROUTES.DATA_MANAGER
+                  ? convertNav(ROUTES.DATA_MANAGER)
                   : ROUTES.DATA_MANAGER_MANUAL
               }
               onClick={() =>
@@ -46,7 +48,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
               label="Transaction screen"
               value={
                 chainId && txHash
-                  ? ROUTES.TRANSACTION_SCREEN
+                  ? convertNav(ROUTES.TRANSACTION_SCREEN)
                   : ROUTES.TRANSACTION_SCREEN_MANUAL
               }
               onClick={() =>
@@ -61,7 +63,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
               label="Structlog Explorer"
               value={
                 chainId && txHash
-                  ? ROUTES.STRUCTLOGS_EXPLORER
+                  ? convertNav(ROUTES.STRUCTLOGS_EXPLORER)
                   : ROUTES.STRUCTLOGS_EXPLORER_MANUAL
               }
               onClick={() =>
