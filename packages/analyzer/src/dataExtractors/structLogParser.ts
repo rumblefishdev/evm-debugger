@@ -14,7 +14,11 @@ import type {
   IStructLog,
 } from '@evm-debuger/types'
 
-import { getNextItemOnSameDepth, getSafeHex } from '../helpers/helpers'
+import {
+  checkIfOfDelegateCallType,
+  getNextItemOnSameDepth,
+  getSafeHex,
+} from '../helpers/helpers'
 import type { StackCounter } from '../helpers/stackCounter'
 
 import {
@@ -37,8 +41,8 @@ export class StructLogParser {
     return { type: op, pc, passedGas: gas, index, gasCost, depth } as ITraceLog
   }
 
-  private createStackTrace(depth: number): number[] {
-    return this.stackCounter.visitDepth(depth)
+  private createStackTrace(depth: number, address: string): number[] {
+    return this.stackCounter.visitDepth(depth, address)
   }
 
   public parseStopStructLog() {
@@ -50,14 +54,21 @@ export class StructLogParser {
       .filteredStructLog as ICallTypeStructLogs
 
     const opCodeArguments = extractArgsFromStack(stack, op) as TCallTypeArgs
-
+    const callTypeArgsData = extractCallTypeArgsData(opCodeArguments, memory)
     const nextStructLog = this.structLogs[index + 1]
 
+    const storageAddress = checkIfOfDelegateCallType(this.filteredStructLog)
+      ? this.stackCounter.getParentStorageAddress(depth)
+      : callTypeArgsData.address
+
+    const stackTrace = this.createStackTrace(depth, storageAddress)
+
     return {
-      ...extractCallTypeArgsData(opCodeArguments, memory),
+      ...callTypeArgsData,
       ...this.extractDefaultData(),
+      storageAddress,
       startIndex: index + 1,
-      stackTrace: this.createStackTrace(depth),
+      stackTrace,
       passedGas: nextStructLog.depth === depth ? gas : nextStructLog.gas,
     } as ICallTypeTraceLog
   }
@@ -76,8 +87,9 @@ export class StructLogParser {
     return {
       ...extractCreateTypeArgsData(opCodeArguments, memory),
       ...this.extractDefaultData(),
+      storageAddress: contractAddress,
       startIndex: index + 1,
-      stackTrace: this.createStackTrace(depth),
+      stackTrace: this.createStackTrace(depth, contractAddress),
       passedGas: this.structLogs[index + 1].gas,
       address: contractAddress,
     } as ICreateTypeTraceLog

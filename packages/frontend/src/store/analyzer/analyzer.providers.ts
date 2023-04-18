@@ -113,6 +113,7 @@ export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
     return {
       value: tx.value.toHexString(),
       to: tx.to,
+      nonce: tx.nonce,
       input: tx.data,
       hash: tx.hash,
       from: tx.from,

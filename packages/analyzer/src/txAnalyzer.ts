@@ -16,6 +16,7 @@ import {
   checkIfOfReturnType,
   convertTxInfoToTraceLog,
   getFilteredStructLogs,
+  getStorageAddressFromTransactionInfo,
   getLastItemInCallTypeContext,
   getLastLogWithRevertType,
   getSafeHex,
@@ -34,10 +35,16 @@ export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
     if (transactionData.structLogs.length === 0)
       throw new Error(`Too primitive transaction without stack calls.`)
+    this.stackCounter = new StackCounter()
+
+    const storageAddress = getStorageAddressFromTransactionInfo(
+      transactionData.transactionInfo,
+    )
+    this.stackCounter.visitDepth(0, storageAddress)
   }
 
   private readonly storageHandler = new StorageHandler()
-  private readonly stackCounter = new StackCounter()
+  private readonly stackCounter
   private fragmentReader: FragmentReader
 
   private getParsedTraceLogs(
@@ -229,18 +236,12 @@ export class TxAnalyzer {
     for (let index = 0; index < transactionList.length; index++) {
       const traceLog = transactionList[index]
 
-      if (checkIfOfCallType(traceLog) && traceLog.isContract) {
+      if (checkIfOfCreateOrCallType(traceLog) && traceLog.isContract) {
         const storageLogs = this.storageHandler.getParsedStorageLogs(
           traceLog,
           this.transactionData.structLogs,
         )
-        const storageAddress = this.storageHandler.resolveStorageAddress(
-          traceLog,
-          transactionList[index - 1] as ICallTypeTraceLog,
-          this.transactionData.structLogs,
-        )
-
-        transactionList[index] = { ...traceLog, storageLogs, storageAddress }
+        transactionList[index] = { ...traceLog, storageLogs }
       }
     }
 

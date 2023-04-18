@@ -195,15 +195,25 @@ export const getLastLogWithRevertType = (
   ) as IReturnTypeTraceLog
 }
 
+export const getStorageAddressFromTransactionInfo = (
+  txInfo: TTransactionInfo,
+) => {
+  const { nonce, to, from } = txInfo
+  return to || ethers.utils.getContractAddress({ nonce, from })
+}
+
 export const convertTxInfoToTraceLog = (
   firstNestedStructLog: IStructLog,
   txInfo: TTransactionInfo,
 ) => {
   const { to, input, value, blockNumber } = txInfo
 
+  const storageAddress = getStorageAddressFromTransactionInfo(txInfo)
+
   const defaultFields = {
     value: ethers.utils.formatEther(value),
     type: 'CALL',
+    storageAddress,
     startIndex: 0,
     stackTrace: [] as number[],
     pc: 0,
@@ -215,7 +225,14 @@ export const convertTxInfoToTraceLog = (
     blockNumber,
   } as ICallTypeTraceLog | ICreateTypeTraceLog
 
-  if (to) return { ...defaultFields, address: to } as ICallTypeTraceLog
+  if (to)
+    return {
+      ...defaultFields,
+      address: to,
+    } as ICallTypeTraceLog
 
-  return { ...defaultFields, type: 'CREATE' } as ICreateTypeTraceLog
+  return {
+    ...defaultFields,
+    type: 'CREATE',
+  } as ICreateTypeTraceLog
 }

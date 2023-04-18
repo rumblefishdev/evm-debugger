@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Tooltip } from '@mui/material'
 
 import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
@@ -36,7 +37,9 @@ export const ManagerItem = ({
       ) : (
         <StyledStatusNotFound>Not found</StyledStatusNotFound>
       )}
-      <StyledName>{name}</StyledName>
+      <Tooltip title={address} arrow followCursor>
+        <StyledName>{name || address}</StyledName>
+      </Tooltip>
       {isFound ? (
         <Button variant="text" onClick={() => setDataVisibility(true)}>
           Show
