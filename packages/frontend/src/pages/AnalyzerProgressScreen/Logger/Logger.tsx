@@ -11,9 +11,7 @@ import {
 import type { LoggerProps } from './types'
 
 const getDate = (timestamp: Date | string): string => {
-  return typeof timestamp === 'object'
-    ? (timestamp as Date).toLocaleTimeString()
-    : timestamp
+  return timestamp instanceof Date ? timestamp.toLocaleDateString() : timestamp
 }
 
 export const Logger = ({ messages, ...props }: LoggerProps) => {
