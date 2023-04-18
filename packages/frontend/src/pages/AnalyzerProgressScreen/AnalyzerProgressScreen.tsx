@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '../../components/Button'
@@ -24,6 +24,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()
+  const [isRunOnce, setIsRunOnce] = useState(false)
   const { messages, isLoading, error, stages } = useTypedSelector(
     (state) => state.analyzer,
   )
@@ -31,18 +32,26 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
 
+  const isStagesFinished = useMemo(() => {
+    return stages.every((stage) => stage.isFinished)
+  }, [stages])
+
   useEffect(() => {
     const chainData = supportedChains[chainId]
-    if (chainId && txHash && !stages.every((stage) => stage.isFinished))
-      dispatch(
-        analyzerActions.runAnalyzer({
-          txInfoProvider: chainData.txInfoProvider(txHash),
-          structLogProvider: chainData.structLogProvider(txHash),
-          sourceProvider: chainData.sourceProvider,
-          bytecodeProvider: chainData.bytecodeProvider,
-        }),
-      )
-    else if (chainId && txHash && stages.every((stage) => stage.isFinished))
+    if (chainId && txHash && !isStagesFinished) {
+      if (!isRunOnce) {
+        setIsRunOnce(true)
+        dispatch(
+          analyzerActions.runAnalyzer({
+            txInfoProvider: chainData.txInfoProvider(txHash),
+            structLogProvider: chainData.structLogProvider(txHash),
+            sourceProvider: chainData.sourceProvider,
+            bytecodeProvider: chainData.bytecodeProvider,
+          }),
+        )
+      }
+    } else if (chainId && txHash && !isRunOnce) {
+      setIsRunOnce(true)
       dispatch(
         analyzerActions.regenerateAnalyzer({
           txInfoProvider: chainData.txInfoProvider(txHash),
@@ -51,7 +60,8 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
           bytecodeProvider: chainData.bytecodeProvider,
         }),
       )
-  }, [dispatch, txHash, chainId, stages])
+    }
+  }, [dispatch, txHash, chainId, stages, isRunOnce, isStagesFinished])
 
   useEffect(() => {
     if (!isLoading && !error) {
@@ -89,7 +99,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
       {(isLoading || error) && (
         <>
           <AppContainer>
-            <StyledMainPanel>
+            <StyledMainPanel style={{ paddingTop: 24 }}>
               <Stack>
                 <Stack>
                   <StyledHeadlineCaption
@@ -122,11 +132,11 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 </Stack>
               )}
             </StyledMainPanel>
-            <Logger messages={messages} />
+            <Logger messages={messages} style={{ marginTop: 24 }} />
           </AppContainer>
         </>
       )}
-      {stages.every((stage) => stage.isFinished) && children}
+      {isStagesFinished && children}
     </>
   )
 }
