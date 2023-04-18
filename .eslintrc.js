@@ -24,11 +24,11 @@ module.exports = {
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:sonarjs/recommended",
-        "plugin:unicorn/recommended",
         "plugin:import/typescript",
+        "plugin:unicorn/recommended",
         "prettier"
     ],
-    plugins: ["unicorn", "@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks"],
+    plugins: ["@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks", "unicorn"],
     overrides: [
         {
             files: ["*slice.ts"],

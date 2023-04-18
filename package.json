@@ -51,8 +51,6 @@
     "prettier": "^2.8.1"
   },
   "dependencies": {
-    "react-contentful": "^2.0.31",
-    "redux-persist": "^6.0.0",
-    "redux-persist-indexeddb-storage": "^1.0.4"
+    "react-contentful": "^2.0.31"
   }
 }
