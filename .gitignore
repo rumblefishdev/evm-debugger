@@ -28,3 +28,4 @@ packages/infra/main.yml
 .idea/vcs.xml
 .idea/workspace.xml
 .idea/libraries/transactionTraceService.xml
+transaction-trace-provider.zip
