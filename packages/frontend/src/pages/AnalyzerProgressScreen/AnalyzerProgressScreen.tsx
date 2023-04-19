@@ -99,7 +99,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
       {(isLoading || error) && (
         <>
           <AppContainer>
-            <StyledMainPanel style={{ paddingTop: 24 }}>
+            <StyledMainPanel>
               <Stack>
                 <Stack>
                   <StyledHeadlineCaption
