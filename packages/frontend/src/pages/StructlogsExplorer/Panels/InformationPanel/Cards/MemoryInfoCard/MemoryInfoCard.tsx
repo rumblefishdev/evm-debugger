@@ -25,12 +25,6 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
     offset: string,
     index: number,
   ): React.CSSProperties => {
-    const highlight: React.CSSProperties = {
-      background: 'yellow',
-    }
-    const underline: React.CSSProperties = {
-      borderBottom: '1px solid red',
-    }
     const cssProperties: React.CSSProperties = {}
     switch (activeStructlog.op) {
       case 'MLOAD': {
