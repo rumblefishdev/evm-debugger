@@ -3,6 +3,7 @@ import { Stack, styled, Typography } from '@mui/material'
 export const StyledMainPanel = styled(Stack)(() => ({
   width: '524px',
   position: 'relative',
+  paddingTop: 24,
   justifyContent: 'space-between',
   height: '100%',
   flexDirection: 'column',

@@ -25,22 +25,22 @@ const config: HardhatUserConfig = {
         },
         [ChainId.mumbai]: {
           hardforkHistory: {
-            london: 33130000,
+            london: 33_130_000,
           },
         },
         [ChainId.sepolia]: {
           hardforkHistory: {
-            london: 3100000,
+            london: 3_100_000,
           },
         },
         [ChainId.arbitrum]: {
           hardforkHistory: {
-            london: 70000000,
+            london: 70_000_000,
           },
         },
         [ChainId.arbitrumGoerli]: {
           hardforkHistory: {
-            london: 11500000,
+            london: 11_500_000,
           },
         },
       },

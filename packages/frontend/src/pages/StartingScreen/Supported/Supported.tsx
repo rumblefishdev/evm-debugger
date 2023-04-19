@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 
-import { useTypedDispatch } from '../../../store/storeHooks'
 import { supportedChains } from '../../../helpers/chains'
-import { analyzerActions } from '../../../store/analyzer/analyzer.slice'
 import { ROUTES } from '../../../router'
 import { Button } from '../../../components/Button'
 
@@ -20,28 +17,18 @@ import {
 import type { IFormData } from './Supported.types'
 
 export const Supported = () => {
-  const dispatch = useTypedDispatch()
-  const navigate = useNavigate()
-
   const { control, handleSubmit } = useForm<IFormData>({
     mode: 'onChange',
   })
 
-  const submitHandler = useCallback(
-    (data: IFormData) => {
-      const chainData = supportedChains[data.chainId]
-      dispatch(
-        analyzerActions.runAnalyzer({
-          txInfoProvider: chainData.txInfoProvider(data.transactionHash),
-          structLogProvider: chainData.structLogProvider(data.transactionHash),
-          sourceProvider: chainData.sourceProvider,
-          bytecodeProvider: chainData.bytecodeProvider,
-        }),
-      )
-      navigate(ROUTES.ANALYZER_PROGRESS_SCREEN)
-    },
-    [dispatch, navigate],
-  )
+  const submitHandler = useCallback((data: IFormData) => {
+    window.location.replace(
+      `${ROUTES.BASE}${ROUTES.TRANSACTION_SCREEN.replace(
+        ':txHash',
+        data.transactionHash,
+      ).replace(':chainId', data.chainId as unknown as string)}`,
+    )
+  }, [])
 
   return (
     <StyledStack>

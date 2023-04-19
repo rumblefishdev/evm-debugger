@@ -27,7 +27,10 @@ export const safeArgParse = (
 
   if (isArrayOfStrings(arg)) return arg
 
-  if (arg.every((item) => ethers.BigNumber.isBigNumber(item)))
+  if (
+    Array.isArray(arg) &&
+    arg.every((item) => ethers.BigNumber.isBigNumber(item))
+  )
     return arg.map(
       (item) =>
         `${ethers.utils.formatEther(

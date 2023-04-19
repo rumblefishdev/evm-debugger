@@ -16,16 +16,10 @@ import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
-import {
-  addSourceCodes,
-  updateSourceCode,
-} from '../sourceCodes/sourceCodes.slice'
+import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
-import {
-  addContractNames,
-  updateContractName,
-} from '../contractNames/contractNames'
+import { addContractNames } from '../contractNames/contractNames'
 
 import { analyzerActions } from './analyzer.slice'
 import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
@@ -76,13 +70,32 @@ function* callAnalyzerOnce(
       ),
     }),
   )
+  console.log('loadActiveBlock addSighashes contractSighashesInfo')
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
 
-  for (const [address, sourceCode] of Object.entries(sourceCodes))
-    yield* put(updateSourceCode({ id: address, changes: { sourceCode } }))
+  yield* put(
+    addSourceCodes(
+      Object.entries(sourceCodes).reduce(
+        (accumulator, [address, sourceCode]) => [
+          ...accumulator,
+          { sourceCode, address },
+        ],
+        [],
+      ),
+    ),
+  )
 
-  for (const [address, contractName] of Object.entries(contractNames))
-    yield* put(updateContractName({ id: address, changes: { contractName } }))
+  yield* put(
+    addContractNames(
+      Object.entries(contractNames).reduce(
+        (accumulator, [address, contractName]) => [
+          ...accumulator,
+          { contractName, address },
+        ],
+        [],
+      ),
+    ),
+  )
 
   return analyzeSummary
 }
@@ -138,6 +151,45 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
     }
 }
 
+export function* regenerateAnalyzer(
+  action: ReturnType<typeof analyzerActions.runAnalyzer>,
+) {
+  const { sourceProvider, txInfoProvider, structLogProvider } = action.payload
+  console.log('regenerateAnalyzer', {
+    sourceProvider,
+    payload: action.payload,
+  })
+  const transactionInfo = yield* apply(
+    txInfoProvider,
+    txInfoProvider.getTxInfo,
+    [],
+  )
+  const structLogs = yield* apply(
+    structLogProvider,
+    structLogProvider.getStructLog,
+    [],
+  )
+  const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+  yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+  yield* put(
+    addBytecodes(
+      analyzeSummary.contractAddresses.map((address) => ({
+        error: null,
+        disassembled: null,
+        bytecode: null,
+        address,
+      })),
+    ),
+  )
+  const addresses = yield* select(sighashSelectors.allAddresses)
+  const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(
+    sourceProvider,
+    addresses,
+  )
+  console.log('callAnalyzerOnce')
+  yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbisAndSource)
+}
+
 export function* runAnalyzer(
   action: ReturnType<typeof analyzerActions.runAnalyzer>,
 ) {
@@ -186,22 +238,6 @@ export function* runAnalyzer(
         })),
       ),
     )
-    yield* put(
-      addSourceCodes(
-        analyzeSummary.contractAddresses.map((address) => ({
-          sourceCode: null,
-          address,
-        })),
-      ),
-    )
-    yield* put(
-      addContractNames(
-        analyzeSummary.contractAddresses.map((address) => ({
-          contractName: null,
-          address,
-        })),
-      ),
-    )
 
     if (bytecodeProvider) yield* fetchBytecodes(bytecodeProvider)
 
@@ -218,7 +254,6 @@ export function* runAnalyzer(
           sourceProvider,
           addresses,
         )
-
         const sourceCodesCount = Object.keys(additionalAbisAndSource).length
         if (sourceCodesCount === 0) {
           yield* put(

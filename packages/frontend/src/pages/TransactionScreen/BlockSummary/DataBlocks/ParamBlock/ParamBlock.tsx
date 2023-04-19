@@ -12,7 +12,7 @@ import {
   StyledAccordionDetails,
 } from '../styles'
 
-import type { ParamBlockProps } from './ParamBlock.types'
+import type { ParamBlockProps, TItem } from './ParamBlock.types'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
@@ -22,54 +22,55 @@ export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
       </StyledAccordionSummary>
       <StyledAccordionDetails>
         <List>
-          {items.map((item, index) => {
-            if (
-              typeof item.value === 'string' ||
-              typeof item.value === 'number'
-            )
-              return (
-                <React.Fragment key={index}>
-                  <Tooltip title={item.type} arrow followCursor>
+          {items &&
+            items.map((item, index) => {
+              if (
+                (item && typeof item.value === 'string') ||
+                (item && typeof item.value === 'number')
+              )
+                return (
+                  <React.Fragment key={index}>
+                    <Tooltip title={item.type} arrow followCursor>
+                      <StyledInfoRow key={index}>
+                        <StyledInfoType>
+                          {item.name ? item.name : `(${item.type})`}
+                        </StyledInfoType>
+                        <StyledInfoValue>{item.value}</StyledInfoValue>
+                      </StyledInfoRow>
+                    </Tooltip>
+                  </React.Fragment>
+                )
+
+              if (item && isArrayOfStrings(item.value))
+                return (
+                  <React.Fragment key={index}>
                     <StyledInfoRow key={index}>
-                      <StyledInfoType>
-                        {item.name ? item.name : `(${item.type})`}
-                      </StyledInfoType>
-                      <StyledInfoValue>{item.value}</StyledInfoValue>
+                      <StyledInfoType>{item.name}</StyledInfoType>
+                      <StyledInfoValue>
+                        {item.value.length === 0
+                          ? '[ ]'
+                          : item.value.map((value, nestedIndex) => {
+                              return (
+                                <>
+                                  <StyledInfoRow key={nestedIndex}>
+                                    <StyledInfoValue>{value}</StyledInfoValue>
+                                  </StyledInfoRow>
+                                </>
+                              )
+                            })}
+                      </StyledInfoValue>
                     </StyledInfoRow>
-                  </Tooltip>
-                </React.Fragment>
-              )
-
-            if (isArrayOfStrings(item.value))
-              return (
-                <React.Fragment key={index}>
-                  <StyledInfoRow key={index}>
-                    <StyledInfoType>{item.name}</StyledInfoType>
-                    <StyledInfoValue>
-                      {item.value.length === 0
-                        ? '[ ]'
-                        : item.value.map((value, nestedIndex) => {
-                            return (
-                              <>
-                                <StyledInfoRow key={nestedIndex}>
-                                  <StyledInfoValue>{value}</StyledInfoValue>
-                                </StyledInfoRow>
-                              </>
-                            )
-                          })}
-                    </StyledInfoValue>
-                  </StyledInfoRow>
-                </React.Fragment>
-              )
-
-            return (
-              <ParamBlock
-                key={index}
-                title={item.name ? `${item.name}` : `[${index}] element`}
-                items={item.value}
-              />
-            )
-          })}
+                  </React.Fragment>
+                )
+              if (item)
+                return (
+                  <ParamBlock
+                    key={index}
+                    title={item.name ? `${item.name}` : `[${index}] element`}
+                    items={item.value as TItem[]}
+                  />
+                )
+            })}
         </List>
       </StyledAccordionDetails>
     </StyledAccordion>
