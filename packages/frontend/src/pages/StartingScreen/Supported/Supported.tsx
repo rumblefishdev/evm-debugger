@@ -23,7 +23,7 @@ export const Supported = () => {
 
   const submitHandler = useCallback((data: IFormData) => {
     window.location.replace(
-      `${ROUTES.BASE}${ROUTES.TRANSACTION_SCREEN.replace(
+      `${ROUTES.TRANSACTION_SCREEN.replace(
         ':txHash',
         data.transactionHash,
       ).replace(':chainId', data.chainId as unknown as string)}`,
