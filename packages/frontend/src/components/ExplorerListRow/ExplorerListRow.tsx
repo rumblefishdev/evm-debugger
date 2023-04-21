@@ -1,6 +1,6 @@
 import { Stack, Tooltip } from '@mui/material'
 import { ethers } from 'ethers'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
 import { QuestionFilledBlue, QuestionOutlinedBlue } from '../../icons'
@@ -26,7 +26,7 @@ export const ExplorerListRow = ({
   const itemRef = useRef<HTMLDivElement>(null)
 
   const description = useMemo(() => {
-    return opcodesDictionary[opCode].description ?? 'No description'
+    return opcodesDictionary[opCode]?.description ?? 'No description'
   }, [opCode])
 
   const counter = useMemo(() => {
@@ -34,11 +34,6 @@ export const ExplorerListRow = ({
       ? ethers.utils.hexlify(pc)
       : ethers.utils.hexlify(ethers.BigNumber.from(pc))
   }, [pc])
-
-  useEffect(() => {
-    if (isActive && itemRef.current)
-      itemRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
-  }, [isActive, itemRef])
 
   return (
     <StyledStack active={isActive} {...props} ref={itemRef} onClick={onClick}>

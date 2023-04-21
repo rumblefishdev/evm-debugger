@@ -15,6 +15,7 @@ import {
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
+import { isInView } from '../../../../helpers/dom'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
@@ -51,7 +52,21 @@ export const StructlogPanel = (): JSX.Element => {
     const index = structLogs.findIndex(
       (structLog) => structLog.pc === activeStrucLog.pc,
     )
-    if (index) listRef.current?.scrollToIndex(index)
+    if (typeof index === 'number') {
+      const element = document.querySelector(
+        `#structlogItem_${index}`,
+      ) as HTMLElement
+
+      if ((!element || !isInView(element)) && ref.current) {
+        const { scrollTop, clientHeight } = ref.current
+        const offset = index * 64
+
+        const target =
+          offset > scrollTop ? offset - clientHeight + 84 : offset - 20
+
+        ref.current.scrollTo({ top: target, behavior: 'smooth' })
+      }
+    }
   }, [activeStrucLog, structLogs])
 
   const handleClick = (structLog: IExtendedStructLog) => {
@@ -73,6 +88,7 @@ export const StructlogPanel = (): JSX.Element => {
 
             return (
               <ExplorerListRow
+                id={`structlogItem_${index}`}
                 key={index}
                 chipValue={`gas: ${gasCost}`}
                 opCode={op}

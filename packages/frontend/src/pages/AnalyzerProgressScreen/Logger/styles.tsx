@@ -17,16 +17,15 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
+  rowGap: theme.spacing(4),
   overflow: 'auto',
   marginTop: theme.spacing(8),
-  gap: theme.spacing(4),
+  gridTemplateColumns: 'auto 1fr',
+  display: 'grid',
+  columnGap: theme.spacing(2),
   ...theme.customStyles.scrollbar,
 }))
 
-export const StyledLogRecord = styled(Stack)(({ theme }) => ({
-  gap: theme.spacing(2),
-  flexDirection: 'row',
-}))
 export const StyledMessage = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'isError',
 })<{ isError: boolean }>(({ theme, isError }) => ({
