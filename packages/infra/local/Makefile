@@ -1,4 +1,4 @@
-`STACK_NAME=test-transaction-trace-local
+STACK_NAME=test-transaction-trace-local
 
 start:
 	lerna bootstrap
