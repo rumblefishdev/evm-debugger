@@ -35,31 +35,15 @@ type SyntaxHighlighterProps = {
   source: string
 }
 
-const ACE_CHAR_WIDTH = 7.2
 const ACE_LINE_HEIGHT = 16
-const ACE_GUTTER_PADDING = 32
-const ACE_MARGIN = 8
 const BORDER = 2
 
 const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
   const lines = source.split('\n')
-  const textWidth = lines.reduce(
-    (max, line) => (line.length > max ? line.length : max),
-    0,
-  )
   const textHeight = lines.length
-  const gutterWidth = Math.ceil(
-    Math.floor(Math.log10(textHeight) + 1) * ACE_CHAR_WIDTH +
-      ACE_GUTTER_PADDING,
-  )
-
   const height = textHeight * ACE_LINE_HEIGHT + BORDER
-  const width =
-    Math.ceil(textWidth * ACE_CHAR_WIDTH) + gutterWidth + ACE_MARGIN + BORDER
-
   return (
     <StyledAceEditor
-      width={`${width}px`}
       height={`${height}px`}
       mode="solidity"
       aceTheme="dawn"

@@ -1,25 +1,71 @@
 import { usePreviousProps } from '@mui/utils'
 import { useEffect, useMemo, useState } from 'react'
+import TreeItem from '@mui/lab/TreeItem'
 
+import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
 import {
   StyledLoading,
   StyledSyntaxHighlighter,
 } from '../../../../components/SourceCodeDisplayer/styles'
-import { StyledListWrapper } from '../styles'
 
 import {
   NoSourceCodeHero,
   StyledSourceSection,
   StyledSourceSectionHeading,
+  StyledSourceWrapper,
+  StyledTreeView,
 } from './styles'
 
-export type SourceCodeDebuggerProps = {
+type SourceCodeDebuggerProps = {
   source?: string
 }
 
+interface RenderTree {
+  id: string
+  name: string
+  children?: readonly RenderTree[]
+  index?: number
+  isFile?: boolean
+}
+
+const parseToTree = (paths): RenderTree[] => {
+  const result = []
+  const level = { result }
+
+  paths
+    .map((elem) => elem.name)
+    .forEach((path, index) => {
+      path.split('/').reduce((r, name) => {
+        if (!r[name]) {
+          r[name] = { result: [] }
+          const treeElem: RenderTree = {
+            name,
+            isFile: `${path.split('/').slice(-1)}` === name,
+            index,
+            id: `${path}-${name}`,
+            children: r[name].result,
+          }
+          r.result.push(treeElem)
+        }
+        return r[name]
+      }, level)
+    })
+  return result
+}
+
+const parseDefaultExpanded = (sourceItems): string[] => {
+  const defaultExpanded: string[] = ['-1']
+  const { name } = sourceItems[0]
+  const items: string[] = name.split('/')
+  for (let index = 2; index <= items.length; index++)
+    defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
+
+  return defaultExpanded
+}
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [activeFile, setActiveFile] = useState<number>(0)
 
   const sources = useSources(source)
   const sourceItems = useMemo(
@@ -29,6 +75,11 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
         name,
       })),
     [sources],
+  )
+
+  const getSourceCode = useMemo(
+    () => sourceItems[activeFile].sourceCode,
+    [activeFile, sourceItems],
   )
 
   const { source: prevSource } = usePreviousProps({ source }) as {
@@ -44,23 +95,49 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     }
   }, [isLoading, didSourceChange])
 
+  const clickAction = (index: number, isFile: boolean) => {
+    if (isFile) setActiveFile(index)
+  }
+  const renderTree = (nodes: RenderTree) => (
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id}
+      label={nodes.name}
+      onClick={() => clickAction(nodes.index, nodes.isFile)}
+    >
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
+  )
+
   return source ? (
     isLoading || didSourceChange ? (
       <StyledLoading />
     ) : (
-      <StyledListWrapper>
-        {sourceItems.map(({ sourceCode, name }) => (
-          <>
-            <StyledSourceSectionHeading variant="headingUnknown">
-              {name}
-            </StyledSourceSectionHeading>
-
-            <StyledSourceSection>
-              <StyledSyntaxHighlighter source={sourceCode} />
-            </StyledSourceSection>
-          </>
-        ))}
-      </StyledListWrapper>
+      <StyledSourceWrapper>
+        <StyledTreeView
+          className="file-list-tree"
+          defaultCollapseIcon={<ArrowDownBlack />}
+          defaultExpandIcon={<ArrowDownBlack />}
+          defaultExpanded={parseDefaultExpanded(sourceItems)}
+          defaultSelected={`${sourceItems[0].name}-${sourceItems[0].name
+            .split('/')
+            .slice(-1)}`}
+        >
+          {renderTree({
+            name: 'files',
+            id: '-1',
+            children: parseToTree(sourceItems),
+          })}
+        </StyledTreeView>
+        <StyledSourceSection>
+          <StyledSourceSectionHeading variant="headingUnknown">
+            {sourceItems[activeFile].name}
+          </StyledSourceSectionHeading>
+          <StyledSyntaxHighlighter source={getSourceCode} />
+        </StyledSourceSection>
+      </StyledSourceWrapper>
     )
   ) : (
     <NoSourceCodeHero variant="headingUnknown">
