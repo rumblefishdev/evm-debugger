@@ -39,17 +39,17 @@ export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   background: 'white',
 }))
 
-export const StyledSourceSection = styled('div')(({ theme }) => ({
+export const StyledSourceSection = styled('div')(() => ({
   width: '70%',
   '> div': {
     width: '100% !important',
   },
 }))
 
-export const StyledTreeView = styled(TreeView)(({ theme }) => ({
+export const StyledTreeView = styled(TreeView)(() => ({
   width: '30%',
-  position: 'sticky',
   top: 0,
+  position: 'sticky',
 }))
 
 export const StyledSourceWrapper = styled('div')(({ theme }) => ({
