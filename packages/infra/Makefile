@@ -14,10 +14,8 @@ ARTIFACT_NAME=main.zip
 
 .PHONY: deploy-dev
 
-transactionTraceService.zip:
-	rf-lerna zipbundle @evm-debuger/transaction-trace-lambda --target transactionTraceService.zip
-
-build-dev: transactionTraceService.zip
+build-dev:
+	lerna bootstrap
 	sam build
 
 upload-dev: build-dev

@@ -21,7 +21,7 @@ Parameters:
     Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   TransactionTraceProviderImage:
     Type: String
-  HardhatForkingUrl:
+  AlchemyKey:
     Type: String
   Subnets:
     Type: String
@@ -30,13 +30,17 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName:
-        Fn::Sub: ${AWS::StackName}-analyzerStore
+        Fn::Sub: ${AWS::StackName}-analyzer-store
       AttributeDefinitions:
       - AttributeName: txHash
+        AttributeType: S
+      - AttributeName: type#time
         AttributeType: S
       KeySchema:
       - AttributeName: txHash
         KeyType: HASH
+      - AttributeName: type#time
+        KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
@@ -66,33 +70,39 @@ Resources:
         Route53:
           HostedZoneId:
             Ref: HostedZoneId
-  TransactionTraceService:
+  TransactionTraceSqsDeadLetter:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub: ${AWS::StackName}-sqs-dead-letter
+  TransactionTraceSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub: ${AWS::StackName}-sqs
+      VisibilityTimeout: 910
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+          - TransactionTraceSqsDeadLetter
+          - Arn
+        maxReceiveCount: 1
+  TransactionTraceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Tracing: Active
-      CodeUri: ../../../transactionTraceService.zip
-      Handler: dist/LambdaEntrypoint.checkState
-      Runtime: nodejs16.x
+      CodeUri: TransactionTraceFunction
+      Handler: txTraceApi.analyzeTransactionHandler
+      Runtime: nodejs18.x
       Timeout: 30
-      MemorySize: 512
-      AutoPublishAlias: TransactionTraceService
+      MemorySize: 128
+      Architectures:
+      - x86_64
       Environment:
         Variables:
           ANALYZER_DATA_TABLE_NAME:
             Ref: AnalyzerDataTable
-          TMPDIR: /tmp
-          ECS_TASK_DEFINITION:
-            Ref: RetrieveTransactionTraceTaskDefinition
-          CLUSTER_ARN:
-            Fn::GetAtt:
-            - ECSCluster
-            - Arn
-          SUBNETS:
-            Ref: Subnets
-          HARDHAT_FORKING_URL:
-            Ref: HardhatForkingUrl
-          TRANSACTION_TRACE_BUCKET:
-            Ref: JsonBucketName
+          SQS_ANALYZER_URL:
+            Ref: TransactionTraceSqs
       Events:
         TransactionTraceApiEvent:
           Type: Api
@@ -100,28 +110,9 @@ Resources:
             RestApiId:
               Ref: Api
             Path: /analyzerData/{txHash}/{chainId}
-            Method: GET
+            Method: get
       Policies:
       - Statement:
-        - Effect: Allow
-          Action:
-          - states:*
-          Resource: '*'
-        - Action:
-          - s3:*
-          Effect: Allow
-          Resource:
-          - '*'
-        - Effect: Allow
-          Action:
-          - ecs:RunTask
-          Resource:
-          - Ref: RetrieveTransactionTraceTaskDefinition
-        - Effect: Allow
-          Action:
-          - ecs:DescribeTasks
-          Resource:
-          - '*'
         - Effect: Allow
           Action:
           - iam:PassRole
@@ -131,80 +122,126 @@ Resources:
           Action:
           - dynamodb:GetItem
           - dynamodb:PutItem
+          - dynamodb:Query
           Resource:
           - Fn::GetAtt:
             - AnalyzerDataTable
             - Arn
           - Fn::Sub: ${AnalyzerDataTable.Arn}/**
-  ECSCluster:
-    Type: AWS::ECS::Cluster
+        - Effect: Allow
+          Action:
+          - sqs:SendMessage
+          Resource:
+          - Fn::GetAtt:
+            - TransactionTraceSqs
+            - Arn
+    Metadata:
+      BuildMethod: makefile
+      SamResourceId: TransactionTraceFunction
+  TransactionTraceProviderFunctionDepLayer:
+    Type: AWS::Serverless::LayerVersion
     Properties:
-      ClusterName: TransactionTraceProviderCluster
-  RetrieveTransactionTraceTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
+      LayerName: transaction-trace-provider-dependencies
+      Description: Dependencies for transaction-trace-provider
+      ContentUri: TransactionTraceProviderFunctionDepLayer
+      CompatibleRuntimes:
+      - nodejs18.x
+      LicenseInfo: MIT
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: makefile
+      SamResourceId: TransactionTraceProviderFunctionDepLayer
+  TransactionTraceSqsHandlerFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      Family:
-        Fn::Sub: ${AWS::StackName}-transactionTraceData
-      TaskRoleArn:
-        Fn::GetAtt:
-        - TaskRole
-        - Arn
-      ExecutionRoleArn:
-        Fn::GetAtt:
-        - TaskRole
-        - Arn
-      RequiresCompatibilities:
-      - FARGATE
-      Memory:
-        Ref: TaskMemory
-      Cpu:
-        Ref: TaskCpu
-      NetworkMode: awsvpc
-      ContainerDefinitions:
-      - Image:
-          Ref: TransactionTraceProviderImage
-        Essential: true
-        Memory:
-          Ref: TaskMemory
-        Name: transactionTraceProvider
-        LogConfiguration:
-          LogDriver: awslogs
-          Options:
-            awslogs-group:
-              Ref: LogGroup
-            awslogs-region:
-              Ref: AWS::Region
-            awslogs-stream-prefix: hardhat
-  TaskRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: /
-      AssumeRolePolicyDocument:
-        Statement:
-        - Action: sts:AssumeRole
-          Effect: Allow
-          Principal:
-            Service: ecs-tasks.amazonaws.com
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      CodeUri: TransactionTraceSqsHandlerFunction
+      Handler: src/sqsConsumer.consumeSqsAnalyzeTx
+      Runtime: nodejs18.x
+      Layers:
+      - Ref: TransactionTraceProviderFunctionDepLayer
+      Timeout: 900
+      ReservedConcurrentExecutions: 2
+      MemorySize: 4096
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          HARDHAT_MAX_MEMORY: 1782
+          ALCHEMY_KEY: PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ
+          ANALYZER_DATA_TABLE_NAME:
+            Ref: AnalyzerDataTable
+          ANALYZER_DATA_BUCKET_NAME:
+            Ref: JsonBucketName
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - TransactionTraceSqs
+              - Arn
+            BatchSize: 1
       Policies:
-      - PolicyName: AmazonECSTaskExecutionRolePolicy
-        PolicyDocument:
-          Statement:
-          - Effect: Allow
-            Action:
-            - ecr:GetAuthorizationToken
-            - ecr:BatchCheckLayerAvailability
-            - ecr:GetDownloadUrlForLayer
-            - ecr:BatchGetImage
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            - ec2:DescribeNetworkInterfaces
-            - ecs:DescribeTasks
-            - s3:*
-            Resource: '*'
-  LogGroup:
-    Type: AWS::Logs::LogGroup
+      - Statement:
+        - Effect: Allow
+          Action:
+          - iam:PassRole
+          Resource:
+          - '*'
+        - Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          Resource:
+          - Fn::GetAtt:
+            - AnalyzerDataTable
+            - Arn
+          - Fn::Sub: ${AnalyzerDataTable.Arn}/**
+        - Action:
+          - s3:*
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:aws:s3:::${JsonBucketName}
+          - Fn::Sub: arn:aws:s3:::${JsonBucketName}/**
+    Metadata:
+      BuildMethod: makefile
+      SamResourceId: TransactionTraceSqsHandlerFunction
+  TransactionTraceSqsDeadLetterHandlerFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      LogGroupName:
-        Fn::Sub: ${AWS::StackName}/hardhat
+      CodeUri: TransactionTraceSqsDeadLetterHandlerFunction
+      Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxError
+      Runtime: nodejs18.x
+      ReservedConcurrentExecutions: 5
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          ANALYZER_DATA_TABLE_NAME:
+            Ref: AnalyzerDataTable
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - TransactionTraceSqsDeadLetter
+              - Arn
+            BatchSize: 1
+      Policies:
+      - Statement:
+        - Effect: Allow
+          Action:
+          - iam:PassRole
+          Resource:
+          - '*'
+        - Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          Resource:
+          - Fn::GetAtt:
+            - AnalyzerDataTable
+            - Arn
+          - Fn::Sub: ${AnalyzerDataTable.Arn}/**
+    Metadata:
+      BuildMethod: makefile
+      SamResourceId: TransactionTraceSqsDeadLetterHandlerFunction

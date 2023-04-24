@@ -1,6 +1,6 @@
 import type ethers from 'ethers'
 import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
-import { TransactionTracResponseStatus } from '@evm-debuger/types'
+import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 
 import { store } from '../store'
 
@@ -74,14 +74,14 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           ),
         )
 
-        if (asJson.status === TransactionTracResponseStatus.FAILED) {
+        if (asJson.status === TransactionTraceResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
           throw new Error(
             `Cannot retrieve data for transaction with hash: ${this.hash}`,
           )
-        } else if (asJson.status === TransactionTracResponseStatus.SUCCESS) {
+        } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(
-            `https://transaction-trace-storage.rumblefish.dev/${asJson.output}`,
+            `https://transaction-trace-storage.rumblefish.dev/${asJson.s3Location}`,
           )
 
           clearInterval(transactionTraceInterval)

@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit test for api already in progress, return status 1`] = `
+{
+  "chainId": "1",
+  "status": "RUNNING",
+  "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+}
+`;
+
+exports[`Unit test for api analyze success 1`] = `
+{
+  "chainId": "1",
+  "s3Location": "trace/1/0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+  "status": "SUCCESS",
+  "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+}
+`;
+
+exports[`Unit test for api create analyze if 1st time 1`] = `
+{
+  "DelaySeconds": 0,
+  "MessageAttributes": {
+    "chainId": {
+      "DataType": "String",
+      "StringValue": "1",
+    },
+    "hardhatForkingUrl": {
+      "DataType": "String",
+      "StringValue": "https://eth-mainnet.alchemyapi.io/v2/",
+    },
+    "txHash": {
+      "DataType": "String",
+      "StringValue": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+    },
+  },
+  "MessageBody": "Transaction 0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+  "QueueUrl": undefined,
+}
+`;
+
+exports[`Unit test for api create analyze if 1st time 2`] = `
+{
+  "chainId": "1",
+  "status": "PENDING",
+  "timestamp": "1388534400000",
+  "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+  "type#time": "TRANSACTION",
+}
+`;
+
+exports[`Unit test for api rerun analyze on failed tx 1`] = `
+{
+  "chainId": "1",
+  "status": "FAILED",
+  "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
+}
+`;

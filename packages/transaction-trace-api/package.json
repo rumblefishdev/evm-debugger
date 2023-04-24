@@ -1,5 +1,5 @@
 {
-  "name": "@evm-debuger/transaction-trace-provider",
+  "name": "@evm-debuger/transaction-trace-api",
   "version": "1.0.0",
   "description": "hello world sample for NodeJS",
   "main": "./src/sqsConsumer.ts",
@@ -8,12 +8,10 @@
   "license": "MIT",
   "dependencies": {
     "@evm-debuger/types": "^0.0.2",
-    "hardhat": "^2.14.0",
-    "esbuild": "^0.14.14",
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.8"
+    "esbuild": "^0.14.14"
   },
   "scripts": {
-    "build": "esbuild hardhat.config.ts src/* --bundle --external:hardhat --loader:.node=file --sourcemap --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
+    "build": "esbuild src/* --sourcemap --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",
     "lint": "eslint '*.ts' --quiet --fix",
@@ -23,6 +21,7 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.315.0",
     "@aws-sdk/client-dynamodb": "^3.315.0",
+    "@aws-sdk/client-sqs": "^3.315.0",
     "@aws-sdk/lib-dynamodb": "^3.315.0",
     "@babel/preset-typescript": "^7.21.4",
     "@types/aws-lambda": "^8.10.92",

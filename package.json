@@ -25,6 +25,10 @@
     "transaction-trace-lambda:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-lambda",
     "transaction-trace-lambda:prettier-check": "lerna run prettier:check --scope @evm-debuger/transaction-trace-lambda",
     "transaction-trace-lambda:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-api:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-api:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-api:prettier-check": "lerna run prettier:check --scope @evm-debuger/transaction-trace-lambda",
+    "transaction-trace-api:prettier-fix": "lerna run prettier:fix --scope @evm-debuger/transaction-trace-lambda",
     "transaction-trace-provider:dev": "lerna run start:dev --scope @evm-debuger/transaction-trace-provider",
     "transaction-trace-provider:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-provider",
     "transaction-trace-provider:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-provider",
@@ -51,6 +55,7 @@
     "prettier": "^2.8.1"
   },
   "dependencies": {
+    "node-jq": "^2.3.5",
     "react-contentful": "^2.0.31"
   }
 }

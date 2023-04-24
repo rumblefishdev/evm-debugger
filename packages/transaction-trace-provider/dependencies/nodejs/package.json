@@ -1,0 +1,8 @@
+{
+    "dependencies": {
+      "hardhat": "^2.14.0"
+    },
+  "scripts": {
+    "postinstall": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js"
+  }
+}
