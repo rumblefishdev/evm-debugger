@@ -36,5 +36,4 @@ Resources:
         CertificateArn: !Ref CertificateArn
         JsonBucketName: !Ref JsonBucketName
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
-        TransactionTraceProviderImage: !Ref TransactionTraceProviderImage
         AlchemyKey: !Ref AlchemyKey
