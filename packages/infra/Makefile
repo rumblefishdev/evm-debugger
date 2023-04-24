@@ -22,9 +22,13 @@ build-dev:
 upload-dev: build-dev
 	sam package --output-template-file $(TEMPLATE_FILE) --s3-bucket $(DEV_ARTIFACTS_BUCKET_NAME) --s3-prefix $(DEV_ARTIFACTS_S3_PREFIX)/$(VERSION) --region $(DEV_REGION)
 	zip $(ARTIFACT_NAME) $(TEMPLATE_FILE) $(DEV_PARAMETERS_FILE) Makefile
-	aws s3 cp $(ARTIFACT_NAME) s3://$(DEV_ARTIFACTS_BUCKET_NAME)/$(DEV_ARTIFACTS_S3_PREFIX)/$(VERSION)/ --region $(DEV_REGION)
 
 deploy-dev: upload-dev
 	sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(DEV_STACK_NAME) --capabilities $(CAPABILITIES)  --region $(DEV_REGION) --parameter-overrides $(DEV_PARAMETERS)
 
+logs-dev:
+	sam logs --stack-name $(DEV_STACK_NAME) --tail
+
+logs-sqs-dev:
+	sam logs -n TransactionTraceSqsHandlerFunction --stack-name ${DEV_STACK_NAME} --tail
 
