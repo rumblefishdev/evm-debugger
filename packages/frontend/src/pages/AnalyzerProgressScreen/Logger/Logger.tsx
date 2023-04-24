@@ -9,7 +9,7 @@ import {
 } from './styles'
 import type { LoggerProps } from './types'
 
-const getTime = (timestamp: Date | string): string => {
+const getTime = (timestamp: Date | string | number): string => {
   const ts = typeof timestamp === 'number' ? new Date(timestamp) : timestamp
   return ts instanceof Date ? ts.toLocaleTimeString() : ts
 }

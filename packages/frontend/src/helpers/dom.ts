@@ -20,12 +20,5 @@ export function isInView(element: HTMLElement): boolean {
   const elementBottom = elementRect.bottom
   const parentBottom = parentRect.bottom
 
-  console.log({
-    parentTop,
-    elementTop,
-    elementBottom,
-    parentBottom, // eslint-disable-line sort-keys-fix/sort-keys-fix
-  })
-
   return elementTop >= parentTop && elementBottom <= parentBottom
 }
