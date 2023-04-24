@@ -29,3 +29,5 @@ packages/infra/main.yml
 .idea/workspace.xml
 .idea/libraries/transactionTraceService.xml
 transaction-trace-provider.zip
+
+.aws-sam
