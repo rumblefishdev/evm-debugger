@@ -16,6 +16,7 @@ ARTIFACT_NAME=main.zip
 
 build-dev:
 	lerna bootstrap
+	lerna link
 	sam build
 
 upload-dev: build-dev
