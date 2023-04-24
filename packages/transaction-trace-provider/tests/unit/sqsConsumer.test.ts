@@ -59,4 +59,34 @@ describe('Unit test for sqs consumer', function () {
       TransactionTraceResponseStatus.SUCCESS,
     )
   })
+
+  it('Add fail event in case of the rror', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    hardhat.run = () => ({
+      send: jest.fn().mockRejectedValue('Sample error during hardhat run'),
+    })
+    const TX_HASH =
+      '0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9'
+    const CHAIN_ID = '1'
+    const HARDHAT_FORKING_URL = ' https://eth-mainnet.alchemyapi.io/v2/abcd'
+    const testEvent = createSQSRecordEvent(
+      TX_HASH,
+      CHAIN_ID,
+      HARDHAT_FORKING_URL,
+    )
+
+    await consumeSqsAnalyzeTx(testEvent, {} as Context, {} as Callback)
+
+    expect(s3ClientMock.calls().length).toEqual(0)
+    expect(ddbMock.calls().length).toEqual(2)
+
+    expect(getMockCalledInputItem(ddbMock, 0).status).toEqual(
+      TransactionTraceResponseStatus.RUNNING,
+    )
+
+    expect(getMockCalledInputItem(ddbMock, 1).status).toEqual(
+      TransactionTraceResponseStatus.FAILED,
+    )
+  })
 })

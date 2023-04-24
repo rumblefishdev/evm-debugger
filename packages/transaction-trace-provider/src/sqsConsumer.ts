@@ -31,9 +31,14 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
     const hardhatForkingUrl =
       records[0].messageAttributes.hardhatForkingUrl.stringValue!
     await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
-    const s3TracePath = await processTx(txHash, chainId, hardhatForkingUrl)
-    await putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, {
-      s3Location: s3TracePath,
-    })
+    try {
+      const s3TracePath = await processTx(txHash, chainId, hardhatForkingUrl)
+      await putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, {
+        s3Location: s3TracePath,
+      })
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message)
+      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
+    }
   }
 }

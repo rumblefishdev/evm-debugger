@@ -2,10 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Test stack for evmDebugger/TransactionTrace
 
-Globals:
-  Function:
-    Timeout: 3
-    MemorySize: 128
 
 Resources:
   AnalyzerDataTable:
@@ -108,13 +104,12 @@ Resources:
       Layers:
           - !Ref TransactionTraceProviderFunctionDepLayer
       Timeout: 900
-      ReservedConcurrentExecutions: 2
+      ReservedConcurrentExecutions: 5
       MemorySize: 4096
       Architectures:
         - x86_64
       Environment:
         Variables:
-          HARDHAT_MAX_MEMORY: 1782
           ALCHEMY_KEY: PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref TransactionTraceBucket
