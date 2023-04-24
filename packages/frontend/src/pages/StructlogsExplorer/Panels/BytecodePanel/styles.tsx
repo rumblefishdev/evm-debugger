@@ -48,6 +48,8 @@ export const StyledSourceSection = styled('div')(({ theme }) => ({
 
 export const StyledTreeView = styled(TreeView)(({ theme }) => ({
   width: '30%',
+  position: 'sticky',
+  top: 0,
 }))
 
 export const StyledSourceWrapper = styled('div')(({ theme }) => ({
