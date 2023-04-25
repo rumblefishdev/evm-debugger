@@ -12,17 +12,7 @@ Parameters:
     Type: String
   ApiGatewayAllowOrigin:
     Type: String
-  TaskCpu:
-    Type: String
-    Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  TaskMemory:
-    Type: String
-    Description: See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  TransactionTraceProviderImage:
-    Type: String
   AlchemyKey:
-    Type: String
-  Subnets:
     Type: String
 
 Resources:
@@ -46,8 +36,4 @@ Resources:
         CertificateArn: !Ref CertificateArn
         JsonBucketName: !Ref JsonBucketName
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
-        TaskCpu: !Ref TaskCpu
-        TaskMemory: !Ref TaskMemory
-        TransactionTraceProviderImage: !Ref TransactionTraceProviderImage
         AlchemyKey: !Ref AlchemyKey
-        Subnets: !Ref Subnets

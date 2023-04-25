@@ -1,27 +1,13 @@
-Transform: AWS::Serverless-2016-10-31
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test stack for evmDebugger/TransactionTrace
 
-Parameters:
-  Environment:
-    Type: String
-  HostedZoneId:
-    Type: String
-  Domain:
-    Type: String
-  CertificateArn:
-    Type: String
-  JsonBucketName:
-    Type: String
-  ApiGatewayAllowOrigin:
-    Type: String
-  AlchemyKey:
-    Type: String
 
 Resources:
   AnalyzerDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${AWS::StackName}-analyzer-store
+      TableName: !Sub ${AWS::StackName}-analyzerStore
       AttributeDefinitions:
         - AttributeName: txHash
           AttributeType: S
@@ -36,46 +22,12 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  Api:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: !Ref Environment
-      Cors:
-        AllowMethods: "'POST, GET, OPTIONS'"
-        AllowOrigin: !Join ['', ["'", !Ref ApiGatewayAllowOrigin, "'"]]
-        AllowHeaders: "'content-type, x-api-key'"
-        AllowCredentials: false
-      MethodSettings:
-        - ResourcePath: '/*'
-          HttpMethod: '*'
-      Domain:
-        CertificateArn: !Ref CertificateArn
-        DomainName: !Ref Domain
-        Route53:
-          HostedZoneId: !Ref HostedZoneId
-
-  TransactionTraceSqsDeadLetter:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-dead-letter
-
-  TransactionTraceSqs:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs
-      VisibilityTimeout: 910
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
-        maxReceiveCount: 1
-
   TransactionTraceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../transaction-trace-api
+      CodeUri: ../../transaction-trace-api
       Handler: txTraceApi.analyzeTransactionHandler
       Runtime: nodejs18.x
-      Timeout: 30
-      MemorySize: 128
       Architectures:
         - x86_64
       Environment:
@@ -86,7 +38,6 @@ Resources:
         TransactionTraceApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref Api
             Path: /analyzerData/{txHash}/{chainId}
             Method: get
       Policies:
@@ -112,12 +63,31 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  TransactionTraceSqsDeadLetter:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${AWS::StackName}-sqs-dead-letter
+
+  TransactionTraceSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${AWS::StackName}-sqs
+      VisibilityTimeout: 910
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
+        maxReceiveCount: 1
+
+  TransactionTraceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-transaction-trace-bucket
+
   TransactionTraceProviderFunctionDepLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: transaction-trace-provider-dependencies
       Description: Dependencies for transaction-trace-provider
-      ContentUri: ../transaction-trace-provider/dependencies/
+      ContentUri: ../../transaction-trace-provider/dependencies/
       CompatibleRuntimes:
         - nodejs18.x
       LicenseInfo: 'MIT'
@@ -128,20 +98,20 @@ Resources:
   TransactionTraceSqsHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../transaction-trace-provider
+      CodeUri: ../../transaction-trace-provider
       Handler: src/sqsConsumer.consumeSqsAnalyzeTx
       Runtime: nodejs18.x
       Layers:
-        - !Ref TransactionTraceProviderFunctionDepLayer
+          - !Ref TransactionTraceProviderFunctionDepLayer
       Timeout: 900
       MemorySize: 4096
       Architectures:
         - x86_64
       Environment:
         Variables:
-          ALCHEMY_KEY: !Ref AlchemyKey
+          ALCHEMY_KEY: PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
-          ANALYZER_DATA_BUCKET_NAME: !Ref JsonBucketName
+          ANALYZER_DATA_BUCKET_NAME: !Ref TransactionTraceBucket
       Events:
         SqsEvent:
           Type: SQS
@@ -167,16 +137,15 @@ Resources:
                 - s3:*
               Effect: Allow
               Resource:
-                - !Sub arn:aws:s3:::${JsonBucketName}
-                - !Sub arn:aws:s3:::${JsonBucketName}/**
-
+                - !GetAtt TransactionTraceBucket.Arn
+                - !Sub ${TransactionTraceBucket.Arn}/**
     Metadata:
       BuildMethod: makefile
 
   TransactionTraceSqsDeadLetterHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../transaction-trace-provider
+      CodeUri: ../../transaction-trace-provider
       Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxError
       Runtime: nodejs18.x
       Architectures:
@@ -206,3 +175,8 @@ Resources:
                 - !Sub ${AnalyzerDataTable.Arn}/**
     Metadata:
       BuildMethod: makefile
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for test evm debugger stack"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/analyzerData/0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9/1"

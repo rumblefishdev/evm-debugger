@@ -1,30 +1,40 @@
-# Push docker container to dev
+# Description
 
-```
-export AWS_PROFILE=rf # assumign this is how you name the profile
-make login-ecr
-make deploy-dev
-```
+Package contain handlers to SQS.
+Main consumer lambda is responsible for fetching trace logs, putting them into S3 bucket and generating proper DDB event.
+Dead Letter lambda is only consuming message and putting `FAILED` DDB event.
 
+# Building
 
-# Run container on a local machine for testing purpose
+Package is built by `esbuild` bundler.
 
+`npm run build`
 
-## Build container
+## Hardhat
 
-```
-make build-dev
-```
+Due to `hardhat` internal tricks it is impossible to keep it as bundled package. Due to it, is attached to infrastructure as 
+a dependency lambda layer with source in the `dependecies` directory.
 
-## Run it
+### Retry/API rate limit bug
 
-```
-docker run \
-    -e TX_HASH=0xcbed2a2785f14ff75d5b251c4d2e260f07d60e1352123f7d1de80b13c0483873 \
-    -e CHAIN_ID=1 \
-    -e HARDHAT_FORKING_URL=https://eth-mainnet.alchemyapi.io/v2/PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ \
-    -e TRANSACTION_TRACE_BUCKET=transaction-trace-storage.rumblefish.dev \
-    -e AWS_PROFILE=rf \
-    -v $HOME/.aws:/root/.aws \
-    045028348791.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider
-```
+Due to [issue](https://github.com/NomicFoundation/hardhat/issues/3501) we are forced to make manual patch in `postinstall` step.
+
+# Tests
+
+`npm run test`
+
+`npm run unit`
+
+`npm run unit-watch`
+
+# Development
+
+To provide full flow experience please use `packages/infra/local` stack.
+
+`make start`
+
+`make logs`
+
+`make clean`
+
+Stack output contain url to API and lambdas are in the sync with life code thanks to SAM configuration.
