@@ -1,13 +1,13 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.1.1-alpha.46",
+  "version": "0.1.1-alpha.47",
   "private": true,
   "dependencies": {
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@evm-debuger/analyzer": "^0.0.3-alpha.1",
-    "@evm-debuger/types": "^0.0.2",
+    "@evm-debuger/analyzer": "^0.0.3-alpha.2",
+    "@evm-debuger/types": "^0.0.3-alpha.0",
     "@fontsource/ibm-plex-mono": "^4.5.13",
     "@fontsource/inter": "^4.5.14",
     "@fontsource/rajdhani": "^4.5.10",
