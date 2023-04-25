@@ -1,8 +1,7 @@
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs'
 import { forkingUrlMap } from '@evm-debuger/types'
 
-const REGION = 'us-east-1'
-const sqsClient = new SQSClient({ region: REGION })
+const sqsClient = new SQSClient({ region: process.env.AWS_REGION })
 
 export const putTxDetailsToSqs = async (txHash: string, chainId: string) => {
   const params = {

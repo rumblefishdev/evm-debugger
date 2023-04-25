@@ -6,10 +6,8 @@ import {
 } from '@aws-sdk/lib-dynamodb'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 
-const REGION = 'us-east-1'
-
 const ddbClient = new DynamoDBClient({
-  region: REGION,
+  region: process.env.AWS_REGION,
 })
 
 const dynamoDbClient = DynamoDBDocumentClient.from(ddbClient)
