@@ -222,4 +222,15 @@ describe('parseParameter tests', () => {
       expect(result).toMatchSnapshot()
     })
   })
+  describe('Exceptions', () => {
+    it('uint256 array with Too little received', () => {
+      const exception = 'Too little received'
+      const result = parseParameter(UNIT256_ARRAY_TYPE, exception)
+      expect(result).toStrictEqual({
+        value: exception,
+        type: 'uint256[]',
+        name: 'srcAmounts',
+      })
+    })
+  })
 })

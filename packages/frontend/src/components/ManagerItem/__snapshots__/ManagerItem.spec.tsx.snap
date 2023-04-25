@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ManagerItem tests simpel render 1`] = `
+exports[`ManagerItem tests simple render 1`] = `
 [
   <style
     dangerouslySetInnerHTML={
