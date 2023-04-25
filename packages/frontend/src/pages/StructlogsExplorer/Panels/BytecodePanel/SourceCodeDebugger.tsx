@@ -1,5 +1,5 @@
 import { usePreviousProps } from '@mui/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import TreeItem from '@mui/lab/TreeItem'
 
 import { ArrowDownBlack } from '../../../../icons'
@@ -55,13 +55,16 @@ const parseToTree = (paths): RenderTree[] => {
 }
 
 const parseDefaultExpanded = (sourceItems): string[] => {
-  const defaultExpanded: string[] = ['-1']
-  const { name } = sourceItems[0]
-  const items: string[] = name.split('/')
-  for (let index = 2; index <= items.length; index++)
-    defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
+  if (sourceItems && sourceItems[0]) {
+    const defaultExpanded: string[] = ['-1']
+    const { name } = sourceItems[0]
+    const items: string[] = name.split('/')
+    for (let index = 2; index <= items.length; index++)
+      defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
 
-  return defaultExpanded
+    return defaultExpanded
+  }
+  return null
 }
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -70,17 +73,32 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const sources = useSources(source)
   const sourceItems = useMemo(
     () =>
-      Object.entries(sources).map(([name, sourceCode]) => ({
-        sourceCode,
-        name,
-      })),
+      sources
+        ? Object.entries(sources).map(([name, sourceCode]) => ({
+            sourceCode,
+            name,
+          }))
+        : [],
     [sources],
   )
 
   const getSourceCode = useMemo(
-    () => sourceItems[activeFile].sourceCode,
+    () =>
+      sourceItems && sourceItems[activeFile]
+        ? sourceItems[activeFile].sourceCode
+        : null,
     [activeFile, sourceItems],
   )
+
+  const defaultSelected = useMemo(
+    () =>
+      sourceItems && sourceItems[0]
+        ? `${sourceItems[0].name}-${sourceItems[0].name.split('/').slice(-1)}`
+        : null,
+    [sourceItems],
+  )
+
+  const sourceItemsTree = useMemo(() => parseToTree(sourceItems), [sourceItems])
 
   const { source: prevSource } = usePreviousProps({ source }) as {
     source?: string
@@ -95,9 +113,10 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     }
   }, [isLoading, didSourceChange])
 
-  const clickAction = (index: number, isFile: boolean) => {
+  const clickAction = useCallback((index: number, isFile: boolean) => {
     if (isFile) setActiveFile(index)
-  }
+  }, [])
+
   const renderTree = (nodes: RenderTree) => (
     <TreeItem
       key={nodes.id}
@@ -111,7 +130,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     </TreeItem>
   )
 
-  return source ? (
+  return source && sourceItems && sourceItems[activeFile] ? (
     isLoading || didSourceChange ? (
       <StyledLoading />
     ) : (
@@ -121,14 +140,12 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
           defaultCollapseIcon={<ArrowDownBlack />}
           defaultExpandIcon={<ArrowDownBlack />}
           defaultExpanded={parseDefaultExpanded(sourceItems)}
-          defaultSelected={`${sourceItems[0].name}-${sourceItems[0].name
-            .split('/')
-            .slice(-1)}`}
+          defaultSelected={defaultSelected}
         >
           {renderTree({
             name: 'files',
             id: '-1',
-            children: parseToTree(sourceItems),
+            children: sourceItemsTree,
           })}
         </StyledTreeView>
         <StyledSourceSection>
