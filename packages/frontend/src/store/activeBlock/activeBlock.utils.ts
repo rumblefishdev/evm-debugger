@@ -42,7 +42,9 @@ export const safeArgParse = (
 export const parseParameter = (parameterType, parameterValue) => {
   let parsedValues
 
-  if (parameterType.type === 'tuple[]')
+  if (typeof parameterValue === 'string')
+    parsedValues = safeArgParse(parameterValue)
+  else if (parameterType.type === 'tuple[]')
     parsedValues = parameterValue.map((value) =>
       parseParameter(parameterType.arrayChildren, value),
     )
