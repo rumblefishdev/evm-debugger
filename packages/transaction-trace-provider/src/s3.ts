@@ -18,8 +18,9 @@ export const pushTraceToS3 = async (
     Bucket: process.env.ANALYZER_DATA_BUCKET_NAME,
     Body: json,
   }
-  console.log(`Pushing ${fileName} to ${process.env.ANALYZER_DATA_BUCKET_NAME}`)
+  const filePath = `${process.env.ANALYZER_DATA_BUCKET_NAME}/${fileName}`
+  console.log(`Pushing ${fileName} to ${filePath}`)
   const command = new PutObjectCommand(params)
   await s3Client.send(command)
-  return fileName
+  return filePath
 }
