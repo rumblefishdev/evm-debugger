@@ -1,10 +1,4 @@
-import type {
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
-  IStorageTypeStructLogs,
-  IStructLog,
-  TStorage,
-} from '@evm-debuger/types'
+import type { ICallTypeTraceLog, ICreateTypeTraceLog, IStorageTypeStructLogs, IStructLog, TStorage } from '@evm-debuger/types'
 
 import {
   checkIfOfCallOrStaticCallType,
@@ -15,23 +9,15 @@ import {
 } from '../helpers/helpers'
 
 export class StorageHandler {
-  public getParsedStorageLogs(
-    traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
-    structLogs: IStructLog[],
-  ) {
+  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
     const { returnIndex, isSuccess, index } = traceLog
 
-    const callContextStructLogs = this.getCallContextStructLogs(
-      traceLog,
-      structLogs,
-    )
+    const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
     const storageLogs = this.extractStorageLogs(callContextStructLogs, index)
 
-    const { loadedStorage, changedStorage } =
-      this.getLoadedAndChangedStorage(storageLogs)
+    const { loadedStorage, changedStorage } = this.getLoadedAndChangedStorage(storageLogs)
 
-    const storageData =
-      typeof returnIndex === 'number' ? structLogs[returnIndex].storage : {}
+    const storageData = typeof returnIndex === 'number' ? structLogs[returnIndex].storage : {}
     let returnedStorage = this.mapStorageData(storageData)
 
     if (!isSuccess) returnedStorage = loadedStorage
@@ -44,8 +30,7 @@ export class StorageHandler {
     previousTransactionLog: ICallTypeTraceLog,
     structLogs: IStructLog[],
   ) {
-    if (checkIfOfDelegateCallType(traceLog))
-      return previousTransactionLog.address
+    if (checkIfOfDelegateCallType(traceLog)) return previousTransactionLog.address
     if (checkIfOfCallOrStaticCallType(traceLog)) return traceLog.address
     if (checkIfOfCreateType(traceLog)) return traceLog.address
   }
@@ -58,30 +43,19 @@ export class StorageHandler {
       if (loadStorageElement) loadedStorage.push(loadStorageElement)
 
       const previousStructLog = storageLogs[rootIndex - 1]
-      const changeStorageElement = this.getChangeStorageElement(
-        element,
-        previousStructLog,
-      )
+      const changeStorageElement = this.getChangeStorageElement(element, previousStructLog)
       if (changeStorageElement) changedStorage.push(changeStorageElement)
     })
 
     return { loadedStorage, changedStorage }
   }
 
-  private getCallContextStructLogs(
-    traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
-    structLogs: IStructLog[],
-  ) {
+  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
     const { startIndex, returnIndex, depth } = traceLog
-    return structLogs
-      .slice(startIndex, returnIndex)
-      .filter((item) => item.depth === depth + 1)
+    return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
   }
 
-  private extractStorageLogs(
-    callContextStructLogs: IStructLog[],
-    traceLogIndex: number,
-  ) {
+  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLogIndex: number) {
     const storageLogs = []
     callContextStructLogs.forEach((log, index) => {
       const isStorage = log.op === 'SSTORE' || log.op === 'SLOAD'
@@ -100,18 +74,13 @@ export class StorageHandler {
     }
   }
 
-  private getChangeStorageElement(
-    item: IStorageTypeStructLogs,
-    previousStructLog: IStorageTypeStructLogs,
-  ) {
+  private getChangeStorageElement(item: IStorageTypeStructLogs, previousStructLog: IStorageTypeStructLogs) {
     const { op, stack, index } = item
 
     if (op === 'SSTORE') {
       const key = stack.at(-1)
       const value = stack.at(-2)
-      const initialValue = previousStructLog
-        ? previousStructLog.storage[key]
-        : 'unknown'
+      const initialValue = previousStructLog ? previousStructLog.storage[key] : 'unknown'
 
       return { updatedValue: value, key, initialValue, index }
     }

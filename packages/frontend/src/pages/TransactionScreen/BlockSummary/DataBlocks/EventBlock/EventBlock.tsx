@@ -6,7 +6,10 @@ import { ParamBlock } from '../ParamBlock'
 import type { EventBlockProps } from './EventBlock.types'
 
 export const EventBlock = ({ eventLogs, ...props }: EventBlockProps) => (
-  <Stack sx={{ marginBottom: '12px' }} {...props}>
+  <Stack
+    sx={{ marginBottom: '12px' }}
+    {...props}
+  >
     {eventLogs.map((event, rootIndex) =>
       event.signature ? (
         <ParamBlock

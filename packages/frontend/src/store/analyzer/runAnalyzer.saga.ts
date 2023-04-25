@@ -1,12 +1,5 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type {
-  IStructLog,
-  TAbis,
-  TContractDataByAddress,
-  TContractNamesMap,
-  TSourceCodesMap,
-  TTransactionInfo,
-} from '@evm-debuger/types'
+import type { IStructLog, TAbis, TContractDataByAddress, TContractNamesMap, TSourceCodesMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
@@ -24,16 +17,10 @@ import { addContractNames } from '../contractNames/contractNames'
 import { analyzerActions } from './analyzer.slice'
 import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
 
-function* callAnalyzerOnce(
-  transactionInfo: TTransactionInfo,
-  structLogs: IStructLog[],
-  additionalData: TContractDataByAddress = {},
-) {
+function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], additionalData: TContractDataByAddress = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
   const abis = yield* select(sighashSelectors.abis)
-  const { additionalAbis, sourceCodes, contractNames } = Object.entries(
-    additionalData,
-  ).reduce(
+  const { additionalAbis, sourceCodes, contractNames } = Object.entries(additionalData).reduce(
     (accumulator, [address, { abi, sourceCode, contractName }]) => {
       accumulator.additionalAbis[address] = abi
       accumulator.sourceCodes[address] = sourceCode
@@ -54,20 +41,13 @@ function* callAnalyzerOnce(
     contractNames,
     abis: { ...abis, ...additionalAbis },
   })
-  const { mainTraceLogList, analyzeSummary } = yield* apply(
-    analyzer,
-    analyzer.analyze,
-    [],
-  )
+  const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
   yield* put(addTraceLogs(mainTraceLogList))
   yield* put(
     loadActiveBlock({
       ...mainTraceLogList[0],
-      id: createCallIdentifier(
-        mainTraceLogList[0].stackTrace,
-        mainTraceLogList[0].type,
-      ),
+      id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].type),
     }),
   )
   console.log('loadActiveBlock addSighashes contractSighashesInfo')
@@ -75,46 +55,25 @@ function* callAnalyzerOnce(
 
   yield* put(
     addSourceCodes(
-      Object.entries(sourceCodes).reduce(
-        (accumulator, [address, sourceCode]) => [
-          ...accumulator,
-          { sourceCode, address },
-        ],
-        [],
-      ),
+      Object.entries(sourceCodes).reduce((accumulator, [address, sourceCode]) => [...accumulator, { sourceCode, address }], []),
     ),
   )
 
   yield* put(
     addContractNames(
-      Object.entries(contractNames).reduce(
-        (accumulator, [address, contractName]) => [
-          ...accumulator,
-          { contractName, address },
-        ],
-        [],
-      ),
+      Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
 
   return analyzeSummary
 }
 
-function* fetchAdditionalAbisAndSources(
-  sourceProvider: ISourceProvider,
-  addresses: Set<string>,
-) {
+function* fetchAdditionalAbisAndSources(sourceProvider: ISourceProvider, addresses: Set<string>) {
   const info = {}
   for (const address of addresses.values())
     try {
-      yield* put(
-        analyzerActions.logMessage(
-          `Trying to fetch abi and source code of ${address}`,
-        ),
-      )
-      const source = yield* apply(sourceProvider, sourceProvider.getSource, [
-        address,
-      ])
+      yield* put(analyzerActions.logMessage(`Trying to fetch abi and source code of ${address}`))
+      const source = yield* apply(sourceProvider, sourceProvider.getSource, [address])
       if (!source) throw new Error(`No data for ${address}`)
 
       info[address] = source
@@ -127,22 +86,13 @@ function* fetchAdditionalAbisAndSources(
 }
 
 export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
-  yield* put(
-    analyzerActions.logMessage('Fetching bytecode of involved contracts'),
-  )
-  const addresses = yield* select(
-    bytecodesSelectors.addressesWithMissingBytecode,
-  )
+  yield* put(analyzerActions.logMessage('Fetching bytecode of involved contracts'))
+  const addresses = yield* select(bytecodesSelectors.addressesWithMissingBytecode)
   for (const address of addresses)
     try {
       yield* put(analyzerActions.logMessage(`Fetching bytecode of ${address}`))
-      const bytecode = yield* apply(
-        bytecodeProvider,
-        bytecodeProvider.getBytecode,
-        [address],
-      )
-      if (!bytecode)
-        throw new Error(`Bytecode of address ${address} not found!`)
+      const bytecode = yield* apply(bytecodeProvider, bytecodeProvider.getBytecode, [address])
+      if (!bytecode) throw new Error(`Bytecode of address ${address} not found!`)
 
       yield* put(analyzerActions.logMessage('Success!'))
       yield* put(updateBytecode({ id: address, changes: { bytecode } }))
@@ -151,24 +101,14 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
     }
 }
 
-export function* regenerateAnalyzer(
-  action: ReturnType<typeof analyzerActions.runAnalyzer>,
-) {
+export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyzer>) {
   const { sourceProvider, txInfoProvider, structLogProvider } = action.payload
   console.log('regenerateAnalyzer', {
     sourceProvider,
     payload: action.payload,
   })
-  const transactionInfo = yield* apply(
-    txInfoProvider,
-    txInfoProvider.getTxInfo,
-    [],
-  )
-  const structLogs = yield* apply(
-    structLogProvider,
-    structLogProvider.getStructLog,
-    [],
-  )
+  const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
+  const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
   const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
   yield* put(setContractAddresses(analyzeSummary.contractAddresses))
   yield* put(
@@ -182,44 +122,26 @@ export function* regenerateAnalyzer(
     ),
   )
   const addresses = yield* select(sighashSelectors.allAddresses)
-  const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(
-    sourceProvider,
-    addresses,
-  )
+  const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(sourceProvider, addresses)
   console.log('callAnalyzerOnce')
   yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbisAndSource)
 }
 
-export function* runAnalyzer(
-  action: ReturnType<typeof analyzerActions.runAnalyzer>,
-) {
-  const {
-    txInfoProvider,
-    structLogProvider,
-    sourceProvider,
-    bytecodeProvider,
-  } = action.payload
+export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyzer>) {
+  const { txInfoProvider, structLogProvider, sourceProvider, bytecodeProvider } = action.payload
   yield* put(analyzerActions.reset())
   yield* put(analyzerActions.setLoading(true))
 
   try {
     yield* put(analyzerActions.logMessage('Fetching txInfo'))
-    const transactionInfo = yield* apply(
-      txInfoProvider,
-      txInfoProvider.getTxInfo,
-      [],
-    )
+    const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
 
     yield* put(analyzerActions.logMessage('Success!'))
     yield* put(analyzerActions.updateStage('Fetching transaction info'))
     yield* put(setTxInfo(transactionInfo))
 
     yield* put(analyzerActions.logMessage('Fetching structLogs'))
-    const structLogs = yield* apply(
-      structLogProvider,
-      structLogProvider.getStructLog,
-      [],
-    )
+    const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
     yield* put(analyzerActions.logMessage('Success!'))
     yield* put(analyzerActions.updateStage('Fetching structlogs'))
     yield* put(loadStructLogs(structLogs))
@@ -242,40 +164,21 @@ export function* runAnalyzer(
     if (bytecodeProvider) yield* fetchBytecodes(bytecodeProvider)
 
     if (sourceProvider) {
-      yield* put(
-        analyzerActions.logMessage('Calculating address to fetch ABIs!'),
-      )
+      yield* put(analyzerActions.logMessage('Calculating address to fetch ABIs!'))
       const addresses = yield* select(sighashSelectors.allAddresses)
       if (addresses.size === 0) {
         yield* put(analyzerActions.logMessage('No more data to fetch.'))
         yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
       } else {
-        const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(
-          sourceProvider,
-          addresses,
-        )
+        const additionalAbisAndSource = yield* fetchAdditionalAbisAndSources(sourceProvider, addresses)
         const sourceCodesCount = Object.keys(additionalAbisAndSource).length
         if (sourceCodesCount === 0) {
-          yield* put(
-            analyzerActions.logMessage('No additional data were fetched.'),
-          )
-          yield* put(
-            analyzerActions.updateStage('Trying to fetch missing data'),
-          )
+          yield* put(analyzerActions.logMessage('No additional data were fetched.'))
+          yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
         } else {
-          yield* put(
-            analyzerActions.updateStage('Trying to fetch missing data'),
-          )
-          yield* put(
-            analyzerActions.logMessage(
-              `${sourceCodesCount} were fetched. Calling analyzer again`,
-            ),
-          )
-          yield* callAnalyzerOnce(
-            transactionInfo,
-            structLogs,
-            additionalAbisAndSource,
-          )
+          yield* put(analyzerActions.updateStage('Trying to fetch missing data'))
+          yield* put(analyzerActions.logMessage(`${sourceCodesCount} were fetched. Calling analyzer again`))
+          yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbisAndSource)
         }
       }
       yield* put(analyzerActions.updateStage('ReRun analyzer'))

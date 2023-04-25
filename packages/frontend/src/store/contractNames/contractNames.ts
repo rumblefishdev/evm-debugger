@@ -16,7 +16,6 @@ export const contractNamesSlice = createSlice({
   initialState: contractNamesAdapter.getInitialState(),
 })
 
-export const { updateContractName, addContractNames } =
-  contractNamesSlice.actions
+export const { updateContractName, addContractNames } = contractNamesSlice.actions
 export const contractNamesReducer = contractNamesSlice.reducer
 export const contractNamesSelectors = contractNamesAdapter.getSelectors()

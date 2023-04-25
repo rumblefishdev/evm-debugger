@@ -18,11 +18,12 @@ import {
   StyledMarginTypography,
 } from './styles'
 
-const Link: React.FC<
-  { to: string; noIcon?: boolean } & React.PropsWithChildren
-> = ({ to, children, noIcon }) => {
+const Link: React.FC<{ to: string; noIcon?: boolean } & React.PropsWithChildren> = ({ to, children, noIcon }) => {
   return (
-    <StyledMenuItemIconLink noIcon={noIcon} to={to}>
+    <StyledMenuItemIconLink
+      noIcon={noIcon}
+      to={to}
+    >
       {children}
     </StyledMenuItemIconLink>
   )
@@ -31,9 +32,7 @@ const Link: React.FC<
 const EbooksSection = () => {
   return (
     <>
-      <StyledMarginTypography variant="bodySmall">
-        Check out our ebooks
-      </StyledMarginTypography>
+      <StyledMarginTypography variant="bodySmall">Check out our ebooks</StyledMarginTypography>
       <Hidden lgUp>
         <StyledDivider />
       </Hidden>
@@ -53,10 +52,7 @@ const EbooksSection = () => {
   )
 }
 
-export const ResourcesSubmenu = ({
-  blogs,
-  ...props
-}: ResourcesSubmenuProps) => {
+export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => {
   const firstSixBlogs = blogs.slice(0, 6)
 
   const adjustedBlogsData = firstSixBlogs.map((blog) => {
@@ -69,7 +65,10 @@ export const ResourcesSubmenu = ({
   })
 
   return (
-    <Section backgroundColor="unset" width="small">
+    <Section
+      backgroundColor="unset"
+      width="small"
+    >
       <StyledStack
         direction="row"
         alignItems="flex-start"
@@ -83,7 +82,10 @@ export const ResourcesSubmenu = ({
           </Hidden>
           <StyledBlogSectionWrapper>
             {adjustedBlogsData.map((item, index) => (
-              <StyledMenuBoxImage key={index} {...item} />
+              <StyledMenuBoxImage
+                key={index}
+                {...item}
+              />
             ))}
           </StyledBlogSectionWrapper>
         </StyledSectionWrapper>

@@ -1,64 +1,19 @@
-import type {
-  TCallTypeOpcodes,
-  TCreateTypeOpcodes,
-  TReturnTypeOpcodes,
-} from './opcodes'
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TReturnTypeOpcodes } from './opcodes'
 
-export type TCallArgsNames =
-  | 'gas'
-  | 'address'
-  | 'value'
-  | 'inputOffset'
-  | 'inputLength'
-  | 'returnOffset'
-  | 'returnLength'
-export type TCallCodeArgsNames =
-  | 'gas'
-  | 'address'
-  | 'value'
-  | 'inputOffset'
-  | 'inputLength'
-  | 'returnOffset'
-  | 'returnLength'
-export type TDelegateCallArgsNames =
-  | 'gas'
-  | 'address'
-  | 'inputOffset'
-  | 'inputLength'
-  | 'returnOffset'
-  | 'returnLength'
-export type TStaticCallArgsNames =
-  | 'gas'
-  | 'address'
-  | 'inputOffset'
-  | 'inputLength'
-  | 'returnOffset'
-  | 'returnLength'
+export type TCallArgsNames = 'gas' | 'address' | 'value' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
+export type TCallCodeArgsNames = 'gas' | 'address' | 'value' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
+export type TDelegateCallArgsNames = 'gas' | 'address' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
+export type TStaticCallArgsNames = 'gas' | 'address' | 'inputOffset' | 'inputLength' | 'returnOffset' | 'returnLength'
 export type TCreateArgsNames = 'value' | 'byteCodePosition' | 'byteCodeSize'
-export type TCreate2ArgsNames =
-  | 'value'
-  | 'byteCodePosition'
-  | 'byteCodeSize'
-  | 'salt'
+export type TCreate2ArgsNames = 'value' | 'byteCodePosition' | 'byteCodeSize' | 'salt'
 export type TReturnArgsNames = 'position' | 'length'
 export type TRevertArgsNames = 'position' | 'length'
 
 export type TLog0ArgsNames = 'dataOffset' | 'dataLength'
 export type TLog1ArgsNames = 'dataOffset' | 'dataLength' | 'topic1'
 export type TLog2ArgsNames = 'dataOffset' | 'dataLength' | 'topic1' | 'topic2'
-export type TLog3ArgsNames =
-  | 'dataOffset'
-  | 'dataLength'
-  | 'topic1'
-  | 'topic2'
-  | 'topic3'
-export type TLog4ArgsNames =
-  | 'dataOffset'
-  | 'dataLength'
-  | 'topic1'
-  | 'topic2'
-  | 'topic3'
-  | 'topic4'
+export type TLog3ArgsNames = 'dataOffset' | 'dataLength' | 'topic1' | 'topic2' | 'topic3'
+export type TLog4ArgsNames = 'dataOffset' | 'dataLength' | 'topic1' | 'topic2' | 'topic3' | 'topic4'
 
 export type TLog0Args = {
   [item in TLog0ArgsNames]: string
@@ -112,11 +67,7 @@ export type TRevertArgs = {
   [item in TRevertArgsNames]: string
 }
 
-export type TCallTypeArgs =
-  | TCallArgs
-  | TCallCodeArgs
-  | TDelegateCallArgs
-  | TStaticCallArgs
+export type TCallTypeArgs = TCallArgs | TCallCodeArgs | TDelegateCallArgs | TStaticCallArgs
 export type TCreateTypeArgs = TCreateArgs | TCreate2Args
 export type TReturnTypeArgs = TReturnArgs | TRevertArgs
 
@@ -140,10 +91,7 @@ export type TLogArgs = {
 }
 
 export type TOpCodesArgsArray = {
-  [item in
-    | TReturnTypeOpcodes
-    | TCallTypeOpcodes
-    | TCreateTypeOpcodes]: (keyof TOpCodesArgs[item])[]
+  [item in TReturnTypeOpcodes | TCallTypeOpcodes | TCreateTypeOpcodes]: (keyof TOpCodesArgs[item])[]
 }
 
 export type TLogArgsArray = {

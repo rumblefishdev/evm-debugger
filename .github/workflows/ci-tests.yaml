@@ -28,18 +28,14 @@ jobs:
           npm i
           node_modules/.bin/lerna bootstrap
 
-      - name: 'Build types'
+      - name: Build types
         run: |
           npm run types:build
 
       - name: Run analyzer lint
         run: |
-          npm run analyzer:lint-check
+          npm run lint:check
 
-      - name: Run analyzer tests
+      - name: Run tests
         run: |
-          npm run analyzer:test
-
-      - name: Run frontend linter
-        run: |
-          npm run frontend:lint-check
+          npm run test

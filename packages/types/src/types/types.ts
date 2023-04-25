@@ -41,9 +41,7 @@ export type TTransactionTraceResult = {
 }
 
 export interface TDataProvider {
-  getTransactionTrace: (
-    transactionHash: string,
-  ) => Promise<TTransactionTraceResult>
+  getTransactionTrace: (transactionHash: string) => Promise<TTransactionTraceResult>
   getTransactionByHash: (transactionHash: string) => Promise<TTransactionInfo>
   getContractCode: (address: string) => Promise<string>
   fetchAbiCode: (address: string) => Promise<string>

@@ -4,23 +4,9 @@ import React, { useState } from 'react'
 import { Link } from '../Link'
 
 import type { MenuBoxIconProps } from './MenuBoxIcon.types'
-import {
-  StyledHeader,
-  StyledStack,
-  StyledText,
-  StyledTextWrapper,
-  StyledImage,
-  StyledImageWrapper,
-} from './styles'
+import { StyledHeader, StyledStack, StyledText, StyledTextWrapper, StyledImage, StyledImageWrapper } from './styles'
 
-export const MenuBoxIcon: React.FC<MenuBoxIconProps> = ({
-  iconIdle,
-  iconHover,
-  headline,
-  text,
-  link,
-  ...props
-}) => {
+export const MenuBoxIcon: React.FC<MenuBoxIconProps> = ({ iconIdle, iconHover, headline, text, link, ...props }) => {
   const [isHovered, setHover] = useState(false)
 
   return (

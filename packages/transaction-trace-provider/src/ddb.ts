@@ -7,11 +7,7 @@ const ddbClient = new DynamoDBClient({
 
 const dynamoDbClient = DynamoDBDocumentClient.from(ddbClient)
 
-export const putTxEventToDdb = async (
-  event: string,
-  txHash: string,
-  additionalData: object = {},
-) => {
+export const putTxEventToDdb = async (event: string, txHash: string, additionalData: object = {}) => {
   console.log(`Adding event ${event} - ${txHash}`)
   const currentTimestamp = Date.now().toString()
   const params = {

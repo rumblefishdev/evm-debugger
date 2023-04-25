@@ -21,7 +21,11 @@ export const Navigation = ({ children }: React.PropsWithChildren) => {
 
   return (
     <StyledStack>
-      <StyledTabs value={value} onChange={handleChange} centered>
+      <StyledTabs
+        value={value}
+        onChange={handleChange}
+        centered
+      >
         <StyledTab
           label="Supported Chain"
           value={ROUTES.HOME}

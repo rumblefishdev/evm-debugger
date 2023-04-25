@@ -82,9 +82,7 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
         <StyledItem variant="caption">Workshops</StyledItem>
       </Link>
       <Link to="/services/dedicated-teams-and-specialists/">
-        <StyledItem variant="caption">
-          Dedicated Teams and Specialists
-        </StyledItem>
+        <StyledItem variant="caption">Dedicated Teams and Specialists</StyledItem>
       </Link>
     </LeftContentWrapper>
   )
@@ -93,9 +91,7 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
 const Contact = () => {
   return (
     <ContactWrapper>
-      <StyledHeading variant="overline">
-        RUMBLE FISH POLAND SP Z O. O.
-      </StyledHeading>
+      <StyledHeading variant="overline">RUMBLE FISH POLAND SP Z O. O.</StyledHeading>
       <ContactDetailsWrapper>
         <Typography
           variant="caption"
@@ -117,7 +113,10 @@ const Contact = () => {
 const SocialMedia = () => {
   return (
     <>
-      <Stack direction="row" alignItems="center">
+      <Stack
+        direction="row"
+        alignItems="center"
+      >
         <Typography
           sx={{ width: '68px', opacity: 0.5, marginTop: '-2px' }}
           variant="overline"
@@ -125,18 +124,25 @@ const SocialMedia = () => {
           Follow us
         </Typography>
         <Link to="https://www.facebook.com/rumblefishsoftwaredevelopment">
-          <StyledImg src={FacebookIcon} alt="facebook" />
+          <StyledImg
+            src={FacebookIcon}
+            alt="facebook"
+          />
         </Link>
         <Link to="https://www.linkedin.com/company/rumblefishdev/">
-          <StyledImg src={LinkedinIcon} alt="linkedin" />
+          <StyledImg
+            src={LinkedinIcon}
+            alt="linkedin"
+          />
         </Link>
         <Link to="https://twitter.com/rumblefishdev">
-          <StyledImg src={TwitterIcon} alt="twitter" />
+          <StyledImg
+            src={TwitterIcon}
+            alt="twitter"
+          />
         </Link>
       </Stack>
-      <StyledItem variant="caption">
-        Copyright © {new Date().getFullYear()} Rumblefish
-      </StyledItem>
+      <StyledItem variant="caption">Copyright © {new Date().getFullYear()} Rumblefish</StyledItem>
     </>
   )
 }

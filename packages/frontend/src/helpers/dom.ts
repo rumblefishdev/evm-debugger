@@ -1,7 +1,6 @@
 export function getScrollParent(element: HTMLElement): HTMLElement | null {
   if (element.parentElement) {
-    if (element.parentElement.scrollHeight > element.parentElement.clientHeight)
-      return element.parentElement
+    if (element.parentElement.scrollHeight > element.parentElement.clientHeight) return element.parentElement
 
     return getScrollParent(element.parentElement)
   }

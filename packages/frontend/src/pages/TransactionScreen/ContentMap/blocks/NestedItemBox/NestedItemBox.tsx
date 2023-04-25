@@ -1,10 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../../../../store/activeBlock/activeBlock.slice'
-import {
-  useTypedDispatch,
-  useTypedSelector,
-} from '../../../../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../../../../store/storeHooks'
 import type { TTreeMapData } from '../../../../../types'
 import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
@@ -13,30 +10,21 @@ import { TreemapTooltip } from '../../TreemapTooltip'
 import type { NestedItemBoxProps } from './NestedItemBox.types'
 import { StyledBox, StyledNestedItemsBox } from './styles'
 
-export const NestedItemBox = ({
-  treeMapItem,
-  ...props
-}: NestedItemBoxProps) => {
+export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => {
   const [isTooltipActive, setIsTooltipActive] = useState(false)
   const dispatch = useTypedDispatch()
 
   const getActiveBlock = useTypedSelector((state) => state.activeBlock)
 
-  const hovered = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      setIsTooltipActive(true)
-      event.stopPropagation()
-    },
-    [],
-  )
+  const hovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setIsTooltipActive(true)
+    event.stopPropagation()
+  }, [])
 
-  const notHovered = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      setIsTooltipActive(false)
-      event.stopPropagation()
-    },
-    [],
-  )
+  const notHovered = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setIsTooltipActive(false)
+    event.stopPropagation()
+  }, [])
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -106,9 +94,7 @@ export const NestedItemBox = ({
         onClick={setActiveBlock}
       >
         <StyledNestedItemsBox sx={{ ...styleDimension, zIndex: index }}>
-          {treeMapItem.nestedItems.map((nestedItem) =>
-            renderContent(nestedItem),
-          )}
+          {treeMapItem.nestedItems.map((nestedItem) => renderContent(nestedItem))}
         </StyledNestedItemsBox>
       </StyledBox>
     </TreemapTooltip>

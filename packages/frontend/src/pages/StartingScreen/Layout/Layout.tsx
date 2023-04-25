@@ -7,9 +7,7 @@ import { RenderWithAlgeaTheme } from '../../../importedComponents/utils/RenderWi
 
 import { StyledStack } from './styles'
 
-export const Layout: React.FC<
-  React.PropsWithChildren<{ blogs: IBlogPost[] }>
-> = ({ children, blogs }) => (
+export const Layout: React.FC<React.PropsWithChildren<{ blogs: IBlogPost[] }>> = ({ children, blogs }) => (
   <StyledStack>
     <Header blogs={blogs} />
     <Stack

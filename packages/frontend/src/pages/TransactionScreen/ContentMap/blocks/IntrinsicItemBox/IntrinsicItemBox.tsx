@@ -5,11 +5,7 @@ import { TreemapTooltip } from '../../TreemapTooltip'
 import { StyledBox } from './styles'
 import type { IntrinsicItemBoxProps } from './IntrinsicItemBox.types'
 
-export const IntrinsicItemBox = ({
-  treeMapItem,
-  parentHoverHandler,
-  ...props
-}: IntrinsicItemBoxProps) => {
+export const IntrinsicItemBox = ({ treeMapItem, parentHoverHandler, ...props }: IntrinsicItemBoxProps) => {
   const { gasCost, owningLog } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimensions
@@ -50,7 +46,10 @@ export const IntrinsicItemBox = ({
       onMouseOver={hovered}
       onMouseOut={notHovered}
     >
-      <StyledBox {...props} sx={styleDimension}></StyledBox>
+      <StyledBox
+        {...props}
+        sx={styleDimension}
+      ></StyledBox>
     </TreemapTooltip>
   )
 }

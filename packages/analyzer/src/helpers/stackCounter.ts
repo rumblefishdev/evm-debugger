@@ -4,9 +4,7 @@ export class StackCounter {
   private stackCount: number[] = []
   private stackInformation: StackInformation[] = []
 
-  public getParentStorageAddress = (
-    depth: number = this.stackCount.length - 1,
-  ): string => {
+  public getParentStorageAddress = (depth: number = this.stackCount.length - 1): string => {
     const parentDepth = Math.max(0, depth - 1)
     return this.stackInformation.at(parentDepth).storageAddress
   }

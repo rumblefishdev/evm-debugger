@@ -1,5 +1,5 @@
 import type { HardhatUserConfig } from 'hardhat/config'
-import { ChainId } from "@evm-debuger/types";
+import { ChainId } from '@evm-debuger/types'
 
 export const config: HardhatUserConfig = {
   solidity: '0.8.9',

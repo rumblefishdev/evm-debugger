@@ -5,15 +5,7 @@ import { supportedChains } from '../../../helpers/chains'
 import { ROUTES } from '../../../router'
 import { Button } from '../../../components/Button'
 
-import {
-  StyledErrorLabel,
-  StyledInput,
-  StyledInputLabel,
-  StyledInputWrapper,
-  StyledMenuItem,
-  StyledSelect,
-  StyledStack,
-} from './styles'
+import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
 import type { IFormData } from './Supported.types'
 
 export const Supported = () => {
@@ -23,12 +15,10 @@ export const Supported = () => {
 
   const submitHandler = useCallback((data: IFormData) => {
     window.location.replace(
-      `${location.protocol}//${location.host}/${
-        ROUTES.BASE
-      }${ROUTES.TRANSACTION_SCREEN.replace(
-        ':txHash',
-        data.transactionHash,
-      ).replace(':chainId', data.chainId as unknown as string)}`,
+      `${location.protocol}//${location.host}/${ROUTES.BASE}${ROUTES.TRANSACTION_SCREEN.replace(':txHash', data.transactionHash).replace(
+        ':chainId',
+        data.chainId as unknown as string,
+      )}`,
     )
   }, [])
 
@@ -46,10 +36,7 @@ export const Supported = () => {
               variant="outlined"
               value={field.value}
               onChange={field.onChange}
-              error={
-                fieldState.error?.type === 'required' ||
-                fieldState.error?.type === 'pattern'
-              }
+              error={fieldState.error?.type === 'required' || fieldState.error?.type === 'pattern'}
             />
             <StyledErrorLabel>{fieldState.error?.message}</StyledErrorLabel>
           </StyledInputWrapper>
@@ -78,7 +65,10 @@ export const Supported = () => {
               error={fieldState.error?.type === 'required'}
             >
               {Object.entries(supportedChains).map(([chainId, chainData]) => (
-                <StyledMenuItem key={chainId.toString()} value={chainId}>
+                <StyledMenuItem
+                  key={chainId.toString()}
+                  value={chainId}
+                >
                   {chainData.name}
                 </StyledMenuItem>
               ))}

@@ -2,11 +2,10 @@
   "name": "@evm-debuger/types",
   "version": "0.0.3-alpha.0",
   "main": "dist/index.js",
-  "devDependencies": {
-    "typescript": "^4.9.3"
-  },
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "lint:check": "eslint --quiet 'src/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts'"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",

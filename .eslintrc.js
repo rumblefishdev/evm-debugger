@@ -26,6 +26,7 @@ module.exports = {
         "plugin:sonarjs/recommended",
         "plugin:import/typescript",
         "plugin:unicorn/recommended",
+        "plugin:react/recommended",
         "prettier"
     ],
     plugins: ["@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks", "unicorn"],

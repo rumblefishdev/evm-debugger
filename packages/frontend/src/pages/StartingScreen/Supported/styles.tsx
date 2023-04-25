@@ -1,11 +1,4 @@
-import {
-  MenuItem,
-  Select,
-  Stack,
-  styled,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { MenuItem, Select, Stack, styled, TextField, Typography } from '@mui/material'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',

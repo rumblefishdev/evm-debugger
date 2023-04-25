@@ -1,20 +1,13 @@
 import React, { useCallback, useState } from 'react'
 
 import { loadActiveBlock } from '../../../../../store/activeBlock/activeBlock.slice'
-import {
-  useTypedDispatch,
-  useTypedSelector,
-} from '../../../../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../../../../store/storeHooks'
 import { TreemapTooltip } from '../../TreemapTooltip'
 
 import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
-export const ItemBox = ({
-  treeMapItem,
-  parentHoverHandler,
-  ...props
-}: ItemBoxProps) => {
+export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxProps) => {
   const { type, stackTrace, gasCost, index, id } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimensions
@@ -43,9 +36,7 @@ export const ItemBox = ({
 
   const dispatch = useTypedDispatch()
 
-  const setActiveBlock = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
+  const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch(loadActiveBlock(treeMapItem.item))
 
     event.stopPropagation()

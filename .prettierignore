@@ -1,0 +1,12 @@
+dist
+.github
+node_modules
+build
+
+cache
+results
+templates
+
+.aws-sam
+
+packages/analyzer/test

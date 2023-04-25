@@ -87,12 +87,19 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               <MenuItem to="/team">About us</MenuItem>
             </StyledTextContainer>
             <Link to="/contact">
-              <Button variant="contained" size="medium">
+              <Button
+                variant="contained"
+                size="medium"
+              >
                 Contact
               </Button>
             </Link>
           </StyledWrapper>
-          <Submenu isOpen={servicesHover} closeMenu={closeAll} noPadding>
+          <Submenu
+            isOpen={servicesHover}
+            closeMenu={closeAll}
+            noPadding
+          >
             <div
               onMouseEnter={() => setServicesHover(true)}
               onMouseLeave={() => setServicesHover(false)}
@@ -100,7 +107,11 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               <ServicesSubmenu />
             </div>
           </Submenu>
-          <Submenu isOpen={resourceHover} closeMenu={closeAll} noPadding>
+          <Submenu
+            isOpen={resourceHover}
+            closeMenu={closeAll}
+            noPadding
+          >
             <div
               onMouseEnter={() => setResourceHover(true)}
               onMouseLeave={() => setResourceHover(false)}
@@ -108,7 +119,11 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               <ResourcesSubmenu blogs={blogs} />
             </div>
           </Submenu>
-          <Submenu isOpen={careersHover} closeMenu={closeAll} noPadding>
+          <Submenu
+            isOpen={careersHover}
+            closeMenu={closeAll}
+            noPadding
+          >
             <div
               onMouseEnter={() => setCareersHover(true)}
               onMouseLeave={() => setCareersHover(false)}
@@ -131,7 +146,11 @@ export const Header = ({ blogs }: HeaderProps) => {
 
   return (
     <RenderWithAlgeaTheme>
-      <DesktopView closeAll={closeAll} blogs={blogs} display={display} />
+      <DesktopView
+        closeAll={closeAll}
+        blogs={blogs}
+        display={display}
+      />
     </RenderWithAlgeaTheme>
   )
 }

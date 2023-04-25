@@ -32,9 +32,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [])
 
-  const traceLog = useTypedSelector((state) =>
-    selectMappedTraceLogs(state, width, height),
-  )
+  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height))
 
   const renderContent = (element: TTreeMapData) => {
     if ('owningLog' in element.item)
@@ -63,7 +61,10 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
 
   return (
     <StyledWrapper>
-      <StyledCard {...props} ref={rootRef}>
+      <StyledCard
+        {...props}
+        ref={rootRef}
+      >
         {width && height ? renderContent(traceLog) : null}
       </StyledCard>
     </StyledWrapper>

@@ -1,30 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import type {
-  TMainTraceLogsWithId,
-  TIntrinsicLog,
-  TTreeMapData,
-} from '../../types'
+import type { TMainTraceLogsWithId, TIntrinsicLog, TTreeMapData } from '../../types'
 import { sumReducer } from '../../helpers/helpers'
 import { NestedMap } from '../../helpers/nestedTreeMap'
 import type { TRootState } from '../store'
 
 import { selectAllTraceLogs } from './traceLogs.slice'
 
-const lastItemInContext = (
-  rootItem: TMainTraceLogsWithId,
-  state: TMainTraceLogsWithId[],
-) => {
-  const lastItem = state.findIndex(
-    (item) => item.index > rootItem.index && item.depth === rootItem.depth,
-  )
+const lastItemInContext = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]) => {
+  const lastItem = state.findIndex((item) => item.index > rootItem.index && item.depth === rootItem.depth)
   return lastItem === -1 ? state.length : lastItem
 }
 
-const getNestedItems = (
-  rootItem: TMainTraceLogsWithId,
-  state: TMainTraceLogsWithId[],
-): TMainTraceLogsWithId[] => {
+const getNestedItems = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]): TMainTraceLogsWithId[] => {
   return state
     .slice(
       state.findIndex((item) => item.index === rootItem.index),
@@ -45,9 +33,7 @@ const parseNestedArrayRecursive = (
 
   if (nestedItems.length === 0) return []
 
-  const gasSum =
-    rootItem.item.gasCost -
-    nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
+  const gasSum = rootItem.item.gasCost - nestedItems.map((item) => item.gasCost).reduce(sumReducer, 0)
 
   const intrinsicLog: TIntrinsicLog = {
     owningLog: {
@@ -58,27 +44,15 @@ const parseNestedArrayRecursive = (
     gasCost: gasSum,
   }
 
-  const mappedItems = new NestedMap(width, height, [
-    ...nestedItems,
-    intrinsicLog,
-  ]).mapItems()
+  const mappedItems = new NestedMap(width, height, [...nestedItems, intrinsicLog]).mapItems()
 
   return mappedItems.map((item) => {
-    const childNestedItems = parseNestedArrayRecursive(
-      { ...item, nestedItems: [] },
-      state,
-      item.dimensions.height,
-      item.dimensions.width,
-    )
+    const childNestedItems = parseNestedArrayRecursive({ ...item, nestedItems: [] }, state, item.dimensions.height, item.dimensions.width)
     return { ...item, nestedItems: childNestedItems }
   })
 }
 
-const selectTraceAsNestedArrays = (
-  state: TMainTraceLogsWithId[],
-  width: number,
-  height: number,
-): TTreeMapData => {
+const selectTraceAsNestedArrays = (state: TMainTraceLogsWithId[], width: number, height: number): TTreeMapData => {
   const dimensions = { y: 0, x: 0, width, height }
 
   const rootItem = {

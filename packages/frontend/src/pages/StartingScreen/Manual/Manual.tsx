@@ -33,13 +33,8 @@ export const Manual = () => {
       dispatch(
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(data.txInfo),
-          structLogProvider: new StaticStructLogProvider(
-            data.structLogs.structLogs,
-          ),
-          sourceProvider: new EtherscanSourceFetcher(
-            etherscanUrls[data.txInfo.chainId].url,
-            etherscanUrls[data.txInfo.chainId].key,
-          ),
+          structLogProvider: new StaticStructLogProvider(data.structLogs.structLogs),
+          sourceProvider: new EtherscanSourceFetcher(etherscanUrls[data.txInfo.chainId].url, etherscanUrls[data.txInfo.chainId].key),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
         }),
       )
@@ -55,10 +50,7 @@ export const Manual = () => {
         name="txInfo"
         render={({ field, fieldState }) => (
           <UploadBox
-            isError={
-              fieldState.error?.type === 'schema' ||
-              fieldState.error?.type === 'required'
-            }
+            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
             errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of eth_getTransactionByHash"
             onChange={field.onChange}
@@ -80,10 +72,7 @@ export const Manual = () => {
         name="structLogs"
         render={({ field, fieldState }) => (
           <UploadBox
-            isError={
-              fieldState.error?.type === 'schema' ||
-              fieldState.error?.type === 'required'
-            }
+            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
             errorMessage={fieldState.error?.message}
             uploadInfo="Upload result of debug_traceTransaction"
             onChange={field.onChange}

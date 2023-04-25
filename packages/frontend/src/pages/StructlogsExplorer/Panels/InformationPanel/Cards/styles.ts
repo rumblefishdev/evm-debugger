@@ -1,11 +1,4 @@
-import {
-  Stack,
-  styled,
-  Table,
-  TableCell,
-  TableRow,
-  Typography,
-} from '@mui/material'
+import { Stack, styled, Table, TableCell, TableRow, Typography } from '@mui/material'
 
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',

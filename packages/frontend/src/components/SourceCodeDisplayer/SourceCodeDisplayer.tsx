@@ -4,14 +4,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 
 import { useTypedSelector } from '../../store/storeHooks'
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
-import {
-  StyledDataWrapper,
-  StyledDescription,
-  StyledDialog,
-  StyledHeader,
-  StyledStack,
-  StyledTitle,
-} from '../RawDataDisplayer/styles'
+import { StyledDataWrapper, StyledDescription, StyledDialog, StyledHeader, StyledStack, StyledTitle } from '../RawDataDisplayer/styles'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames'
 
 import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
@@ -31,26 +24,13 @@ export function useSources(data?: string) {
           ).sources
         : null
 
-    if (parsed)
-      return parsed
-        ? Object.fromEntries(
-            Object.entries(parsed).map(([key, value]) => [key, value.content]),
-          )
-        : { '': data }
+    if (parsed) return parsed ? Object.fromEntries(Object.entries(parsed).map(([key, value]) => [key, value.content])) : { '': data }
   }, [data])
 }
 
-export const SourceCodeDisplayer = ({
-  data,
-  title,
-  address,
-  description,
-  ...props
-}: RawDataDisplayerProps) => {
+export const SourceCodeDisplayer = ({ data, title, address, description, ...props }: RawDataDisplayerProps) => {
   const contractName = useTypedSelector(
-    ({ contractNames }) =>
-      contractNamesSelectors.selectById(contractNames, address)?.contractName ??
-      null,
+    ({ contractNames }) => contractNamesSelectors.selectById(contractNames, address)?.contractName ?? null,
   )
 
   const inputId = useId()
@@ -58,11 +38,7 @@ export const SourceCodeDisplayer = ({
   const sources = useSources(data)
 
   const defaultSourceKey =
-    (contractName &&
-      Object.keys(sources).find((key) =>
-        new RegExp(`(^|/)${contractName}.sol`, 'u').test(key),
-      )) ||
-    Object.keys(sources)[0]
+    (contractName && Object.keys(sources).find((key) => new RegExp(`(^|/)${contractName}.sol`, 'u').test(key))) || Object.keys(sources)[0]
 
   const hasChoice = Object.keys(sources).length > 1
   const [activeSourceKey, setActiveSourceKey] = useState(defaultSourceKey)
@@ -87,9 +63,7 @@ export const SourceCodeDisplayer = ({
       <StyledStack>
         <StyledHeader>
           <StyledTitle>Result for {title}</StyledTitle>
-          {description ? (
-            <StyledDescription>{description}</StyledDescription>
-          ) : null}
+          {description ? <StyledDescription>{description}</StyledDescription> : null}
         </StyledHeader>
 
         {hasChoice && (
@@ -103,7 +77,10 @@ export const SourceCodeDisplayer = ({
                 onChange={handleChange}
               >
                 {Object.keys(sources).map((key) => (
-                  <MenuItem key={key} value={key}>
+                  <MenuItem
+                    key={key}
+                    value={key}
+                  >
                     {key}
                   </MenuItem>
                 ))}

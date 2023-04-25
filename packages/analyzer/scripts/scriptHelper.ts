@@ -11,12 +11,7 @@ import { TxAnalyzer } from '../src'
 const TEST_TRANSACTIONS_DIR = join(__dirname, '../test')
 
 export const prepareAnalyzer = async (transactionData: TTransactionData) => {
-  const abisAndSources = JSON.parse(
-    await readFile(
-      `${TEST_TRANSACTIONS_DIR}/abis/${transactionData.transactionInfo.hash}.json`,
-      'utf8',
-    ),
-  )
+  const abisAndSources = JSON.parse(await readFile(`${TEST_TRANSACTIONS_DIR}/abis/${transactionData.transactionInfo.hash}.json`, 'utf8'))
 
   transactionData.abis = { ...transactionData.abis, ...abisAndSources.abis }
   transactionData.sourceCodes = {
@@ -36,15 +31,9 @@ export const fetchAbisForTestTransactions = async () => {
 
   for (const file of testTransactions)
     if (file.endsWith('.json')) {
-      const transactionData = JSON.parse(
-        await readFile(`${TEST_TRANSACTIONS_DIR}/${file}`, 'utf8'),
-      )
+      const transactionData = JSON.parse(await readFile(`${TEST_TRANSACTIONS_DIR}/${file}`, 'utf8'))
 
-      if (
-        existsSync(
-          `${TEST_TRANSACTIONS_DIR}/abis/${transactionData.transactionInfo.hash}.json`,
-        )
-      ) {
+      if (existsSync(`${TEST_TRANSACTIONS_DIR}/abis/${transactionData.transactionInfo.hash}.json`)) {
         console.log(`Abis for ${file} already fetched.`)
         continue
       }
@@ -68,9 +57,7 @@ export const fetchAbisForTestTransactions = async () => {
         }
       }
 
-      console.log(
-        `Saving into test/abis/${analyzer.transactionData.transactionInfo.hash}.json...`,
-      )
+      console.log(`Saving into test/abis/${analyzer.transactionData.transactionInfo.hash}.json...`)
 
       await writeFile(
         `${TEST_TRANSACTIONS_DIR}/abis/${analyzer.transactionData.transactionInfo.hash}.json`,

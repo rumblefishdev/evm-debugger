@@ -1,17 +1,8 @@
 import React, { useState } from 'react'
 
 import type { TTabType } from './AnalyzeSummary.types'
-import {
-  BytecodesManager,
-  SighashesManager,
-  SourcecodesManager,
-} from './Managers'
-import {
-  StyledContentWrapper,
-  StyledStack,
-  StyledTab,
-  StyledTabs,
-} from './styles'
+import { BytecodesManager, SighashesManager, SourcecodesManager } from './Managers'
+import { StyledContentWrapper, StyledStack, StyledTab, StyledTabs } from './styles'
 
 export const AnalyzeSummary = () => {
   const [activeTab, setActiveTab] = useState<TTabType>('bytecodes')

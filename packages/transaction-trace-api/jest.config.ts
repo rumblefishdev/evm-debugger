@@ -4,23 +4,16 @@
  */
 
 export default {
-    "moduleFileExtensions": [
-        "js",
-        "json",
-        "ts"
-    ],
-    "rootDir": ".",
-    "collectCoverageFrom": [
-        "**/*.ts"
-    ],
-    "testEnvironment": "node",
-    transform: {
-        '^.+\\.ts?$': 'esbuild-jest',
-    },
-    clearMocks: true,
-    collectCoverage: false,
-    "coverageDirectory": "../coverage",
-    coverageProvider: 'v8',
-    testMatch: ['**/tests/unit/*.test.ts'],
-};
-
+  moduleFileExtensions: ['js', 'json', 'ts'],
+  rootDir: '.',
+  collectCoverageFrom: ['**/*.ts'],
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.ts?$': 'esbuild-jest',
+  },
+  clearMocks: true,
+  collectCoverage: false,
+  coverageDirectory: '../coverage',
+  coverageProvider: 'v8',
+  testMatch: ['**/tests/unit/*.test.ts'],
+}

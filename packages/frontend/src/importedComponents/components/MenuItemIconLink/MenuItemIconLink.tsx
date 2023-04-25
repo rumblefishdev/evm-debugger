@@ -5,19 +5,9 @@ import arrowDownIdle from '../../assets/svg/arrowDownIdle.svg'
 import { Link } from '../Link'
 
 import type { MenuItemIconLinkProps } from './MenuItemIconLink.types'
-import {
-  StyledIcon,
-  StyledIconWrapper,
-  StyledStack,
-  StyledTypography,
-} from './styles'
+import { StyledIcon, StyledIconWrapper, StyledStack, StyledTypography } from './styles'
 
-export const MenuItemIconLink = ({
-  to,
-  children,
-  noIcon,
-  ...props
-}: MenuItemIconLinkProps) => {
+export const MenuItemIconLink = ({ to, children, noIcon, ...props }: MenuItemIconLinkProps) => {
   const [isHover, setHover] = useState(false)
 
   return (

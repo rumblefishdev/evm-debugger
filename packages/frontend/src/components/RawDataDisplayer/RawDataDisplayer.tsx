@@ -28,18 +28,14 @@ export const RawDataDisplayer = ({
   const isJsonString = isJson(data)
 
   const Body = isJsonString ? StyledDataJson : StyledBytecode
-  const lines = isJsonString
-    ? data.split('\n')
-    : Array.from({ length: data.length / 67 + 1 })
+  const lines = isJsonString ? data.split('\n') : Array.from({ length: data.length / 67 + 1 })
 
   return (
     <StyledDialog {...props}>
       <StyledStack>
         <StyledHeader>
           <StyledTitle>Result for {title}</StyledTitle>
-          {description ? (
-            <StyledDescription>{description}</StyledDescription>
-          ) : null}
+          {description ? <StyledDescription>{description}</StyledDescription> : null}
         </StyledHeader>
         <StyledDataWrapper>
           <StyledDataIndexesWrapper>

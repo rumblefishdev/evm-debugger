@@ -14,18 +14,15 @@ function safeJsonParse(data: string): unknown {
   }
 }
 
-export const UploadJsonFile = ({
-  label,
-  onChange,
-  onBlur,
-  title,
-  buttonLabel = 'Add',
-}: UploadJsonFileProps) => {
+export const UploadJsonFile = ({ label, onChange, onBlur, title, buttonLabel = 'Add' }: UploadJsonFileProps) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
   return (
     <>
       <Typography variant="h4">{label}</Typography>
-      <Button variant="contained" onClick={() => setOpen(true)}>
+      <Button
+        variant="contained"
+        onClick={() => setOpen(true)}
+      >
         {buttonLabel}
       </Button>
       <DataAdder
