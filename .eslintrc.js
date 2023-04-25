@@ -200,6 +200,10 @@ module.exports = {
         //Sort keys fix
         "sort-keys-fix/sort-keys-fix": ["error", "desc", { "caseSensitive": false, "natural": true }],
 
+        //React
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-first-prop-new-line": [2, "multiline"],
+
         //Import
         "import/no-unresolved": "off",
         "import/named": "error",

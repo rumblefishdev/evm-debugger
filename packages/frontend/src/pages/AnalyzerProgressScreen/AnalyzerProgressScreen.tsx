@@ -16,6 +16,7 @@ import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
+// eslint-disable-next-line react/prop-types
 export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
