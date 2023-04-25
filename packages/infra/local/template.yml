@@ -158,7 +158,6 @@ Resources:
           Type: SQS
           Properties:
             Queue: !GetAtt TransactionTraceSqsDeadLetter.Arn
-            BatchSize: 1
             ScalingConfig:
               MaximumConcurrency: 5
       Policies:
