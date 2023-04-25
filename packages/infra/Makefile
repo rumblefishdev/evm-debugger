@@ -16,7 +16,6 @@ ARTIFACT_NAME=main.zip
 
 build-dev:
 	lerna bootstrap
-	lerna link
 	sam build
 
 upload-dev: build-dev
@@ -30,5 +29,5 @@ logs-dev:
 	sam logs --stack-name $(DEV_STACK_NAME) --tail
 
 logs-sqs-dev:
-	sam logs -n TransactionTraceSqsHandlerFunction --stack-name ${DEV_STACK_NAME} --tail
+	sam logs -n TransactionTraceService/TransactionTraceSqsHandlerFunction --stack-name ${DEV_STACK_NAME} --tail
 

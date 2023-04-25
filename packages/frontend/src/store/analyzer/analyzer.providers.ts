@@ -80,7 +80,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
             `Cannot retrieve data for transaction with hash: ${this.hash}`,
           )
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
-          const transactionTrace = await fetch(asJson.s3Location)
+          const transactionTrace = await fetch(`https://${asJson.s3Location}`)
 
           clearInterval(transactionTraceInterval)
           const parsed = await transactionTrace.json()

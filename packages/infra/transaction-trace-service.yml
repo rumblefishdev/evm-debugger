@@ -133,7 +133,7 @@ Resources:
       Runtime: nodejs18.x
       Layers:
         - !Ref TransactionTraceProviderFunctionDepLayer
-      Timeout: 5
+      Timeout: 900
       ReservedConcurrentExecutions: 5
       MemorySize: 4096
       Architectures:
