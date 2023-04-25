@@ -104,7 +104,6 @@ Resources:
       Layers:
           - !Ref TransactionTraceProviderFunctionDepLayer
       Timeout: 900
-      ReservedConcurrentExecutions: 5
       MemorySize: 4096
       Architectures:
         - x86_64
@@ -119,6 +118,8 @@ Resources:
           Properties:
             Queue: !GetAtt TransactionTraceSqs.Arn
             BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 5
       Policies:
         - Statement:
             - Effect: Allow
@@ -147,7 +148,6 @@ Resources:
       CodeUri: ../../transaction-trace-provider
       Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxError
       Runtime: nodejs18.x
-      ReservedConcurrentExecutions: 5
       Architectures:
         - x86_64
       Environment:
@@ -159,6 +159,8 @@ Resources:
           Properties:
             Queue: !GetAtt TransactionTraceSqsDeadLetter.Arn
             BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 5
       Policies:
         - Statement:
             - Effect: Allow
