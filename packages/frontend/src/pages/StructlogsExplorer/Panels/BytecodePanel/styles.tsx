@@ -1,3 +1,4 @@
+import TreeView from '@mui/lab/TreeView/TreeView'
 import { Button, Stack, styled, Typography } from '@mui/material'
 
 export const StyledDisabledBytecode = styled(Stack)(() => ({
@@ -26,18 +27,6 @@ export const NoSourceCodeHero = styled(Typography)(({ theme }) => ({
   alignItems: 'center',
 }))
 
-export const StyledSourceSection = styled('div')(({ theme }) => ({
-  width: '100%',
-  flexDirection: 'column',
-  display: 'flex',
-  '> div': {
-    width: '100% !important',
-  },
-  '& + span': {
-    marginTop: theme.spacing(2),
-  },
-}))
-
 export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   zIndex: 10,
   top: 0,
@@ -48,4 +37,25 @@ export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
   boxShadow: `0 1px 0 0 ${theme.palette.rfLinesLight}`,
   background: 'white',
+}))
+
+export const StyledSourceSection = styled('div')(() => ({
+  width: '70%',
+  '> div': {
+    width: '100% !important',
+  },
+}))
+
+export const StyledTreeView = styled(TreeView)(() => ({
+  width: '30%',
+  top: 0,
+  position: 'sticky',
+}))
+
+export const StyledSourceWrapper = styled('div')(({ theme }) => ({
+  width: '100%',
+  overflowY: 'scroll',
+  height: '100%',
+  display: 'flex',
+  columnGap: theme.spacing(2),
 }))
