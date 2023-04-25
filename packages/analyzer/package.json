@@ -7,8 +7,8 @@
     "build": "tsc -p tsconfig.build.json",
     "start:dev": "npx hardhat run scripts/script.ts --network localhost",
     "test:fetch-abis": "npx tsx scripts/fetchAbisForTests.ts",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
-    "lint:check": "eslint \"src/**/*.ts\"",
+    "lint:check": "eslint --quiet 'src/**/*.ts'",
+    "lint:fix": "eslint --quiet 'src/**/*.ts' --fix",
     "type-check": "tsc --noEmit",
     "test": "jest"
   },

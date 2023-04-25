@@ -24,6 +24,7 @@
     "@aws-sdk/client-sqs": "^3.315.0",
     "@aws-sdk/lib-dynamodb": "^3.315.0",
     "@types/aws-lambda": "^8.10.92",
-    "aws-sdk-client-mock": "^2.1.1"
+    "aws-sdk-client-mock": "^2.1.1",
+    "timekeeper":"^2.2.0"
   }
 }
