@@ -9,6 +9,7 @@ import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.slice'
+import { isInView } from '../../../../helpers/dom'
 
 import { StyledDisabledBytecode, StyledButton } from './styles'
 import { SourceCodePanel } from './SourceCodePanel'
@@ -40,7 +41,21 @@ export const BytecodePanel = (): JSX.Element => {
       const index = activeBlockBytecode.disassembled.findIndex(
         (opcode) => opcode.pc === pcFormatted,
       )
-      if (index) listRef.current?.scrollToIndex(index)
+      if (typeof index === 'number') {
+        const element = document.querySelector(
+          `#bytecodeItem_${index}`,
+        ) as HTMLElement
+
+        if ((!element || !isInView(element)) && ref.current) {
+          const { scrollTop, clientHeight } = ref.current
+          const offset = index * 64
+
+          const target =
+            offset > scrollTop ? offset - clientHeight + 84 : offset - 20
+
+          ref.current.scrollTo({ top: target, behavior: 'smooth' })
+        }
+      }
     }
   }, [activeStrucLog, activeBlockBytecode.disassembled])
 
@@ -66,7 +81,6 @@ export const BytecodePanel = (): JSX.Element => {
           </StyledButton>
         ) : null}
       </StyledHeading>
-
       <StyledListWrapper ref={ref}>
         <ViewportList
           ref={listRef}
@@ -74,12 +88,13 @@ export const BytecodePanel = (): JSX.Element => {
           items={activeBlockBytecode.disassembled}
           withCache={true}
         >
-          {(item) => {
+          {(item, index) => {
             const { opcode, operand, pc } = item
             const isActive =
               activeStrucLog?.pc === ethers.BigNumber.from(pc).toNumber()
             return (
               <ExplorerListRow
+                id={`bytecodeItem_${index}`}
                 key={pc}
                 chipValue={operand}
                 isActive={isActive}

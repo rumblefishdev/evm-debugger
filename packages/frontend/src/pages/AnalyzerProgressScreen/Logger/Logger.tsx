@@ -4,14 +4,14 @@ import {
   StyledHeading,
   StyledLogContiner,
   StyledLogPanel,
-  StyledLogRecord,
   StyledMessage,
   StyledTimestamp,
 } from './styles'
 import type { LoggerProps } from './types'
 
-const getDate = (timestamp: Date | string): string => {
-  return timestamp instanceof Date ? timestamp.toLocaleDateString() : timestamp
+const getTime = (timestamp: Date | string | number): string => {
+  const ts = typeof timestamp === 'number' ? new Date(timestamp) : timestamp
+  return ts instanceof Date ? ts.toLocaleTimeString() : ts
 }
 
 export const Logger = ({ messages, ...props }: LoggerProps) => {
@@ -31,12 +31,12 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
           const isError = message.includes('Error')
 
           return (
-            <StyledLogRecord key={index}>
-              <StyledTimestamp>{getDate(timestamp)}:</StyledTimestamp>
+            <React.Fragment key={index}>
+              <StyledTimestamp>{getTime(timestamp)}:</StyledTimestamp>
               <StyledMessage isError={isError} variant="inputText">
                 {message}
               </StyledMessage>
-            </StyledLogRecord>
+            </React.Fragment>
           )
         })}
       </StyledLogContiner>
