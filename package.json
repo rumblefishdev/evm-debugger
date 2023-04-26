@@ -15,7 +15,7 @@
     "analyzer:lint-fix": "lerna run lint:fix --scope @evm-debuger/analyzer",
     "frontend:lint-check": "lerna run lint:check --scope @evm-debuger/frontend",
     "frontend:lint-fix": "lerna run lint:fix --scope @evm-debuger/frontend",
-    "frontend:test": "lerna run test --scope @evm-debuger/frontend",
+    "frontend:test": "lerna run test --scope @evm-deKbuger/frontend",
     "transaction-trace-api:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-api",
     "transaction-trace-api:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-api",
     "transaction-trace-provider:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-provider",

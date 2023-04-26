@@ -26,7 +26,6 @@ module.exports = {
         "plugin:sonarjs/recommended",
         "plugin:import/typescript",
         "plugin:unicorn/recommended",
-        "plugin:react/recommended",
         "prettier"
     ],
     plugins: ["@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks", "unicorn"],
@@ -199,10 +198,6 @@ module.exports = {
 
         //Sort keys fix
         "sort-keys-fix/sort-keys-fix": ["error", "desc", { "caseSensitive": false, "natural": true }],
-
-        //React
-        "react/react-in-jsx-scope": "off",
-        "react/jsx-first-prop-new-line": [2, "multiline"],
 
         //Import
         "import/no-unresolved": "off",
