@@ -1,13 +1,13 @@
 {
   "name": "@evm-debuger/transaction-trace-api",
-  "version": "1.0.1-alpha.0",
+  "version": "1.0.1-alpha.1",
   "description": "hello world sample for NodeJS",
   "main": "./src/sqsConsumer.ts",
   "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
-    "@evm-debuger/types": "^0.0.3-alpha.0"
+    "@evm-debuger/types": "^0.0.3-alpha.1"
   },
   "scripts": {
     "build": "esbuild src/* --sourcemap --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
@@ -25,6 +25,6 @@
     "@aws-sdk/lib-dynamodb": "^3.315.0",
     "@types/aws-lambda": "^8.10.92",
     "aws-sdk-client-mock": "^2.1.1",
-    "timekeeper":"^2.2.0"
+    "timekeeper": "^2.2.0"
   }
 }
