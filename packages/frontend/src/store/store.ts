@@ -29,7 +29,7 @@ const persistConfig = {
   transforms: [SetTransform],
   storage: indexedDbStorage('evmDebugger') as Storage,
   key: getKey(),
-  blacklist: [],
+  blacklist: ['structLogsReducer'],
 }
 
 const rootReducer = combineReducers({
@@ -57,8 +57,11 @@ const tempStore = configureStore({
 const persistedReducer = persistReducer<ReturnType<typeof tempStore.getState>>(persistConfig, rootReducer)
 
 // eslint-disable-next-line import/exports-last
+export const isPersistOn = document.cookie.replace(/(?:(?:^|.*;\s*)store_persist\s*=\s*([^;]*).*$)|^.*$/, '$1') === 'true'
+
+// eslint-disable-next-line import/exports-last
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: isPersistOn ? persistedReducer : rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
