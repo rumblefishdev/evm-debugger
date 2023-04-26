@@ -1,11 +1,4 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Stack,
-  styled,
-  Typography,
-} from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Stack, styled, Typography } from '@mui/material'
 
 export const StyledAccordion = styled(Accordion)(({ theme }) => ({
   padding: theme.spacing(1, 3),

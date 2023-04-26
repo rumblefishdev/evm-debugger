@@ -8,10 +8,7 @@ export type SourceCodePanelProps = {
   sourceCode?: string
 }
 
-export const SourceCodePanel = ({
-  close,
-  sourceCode,
-}: SourceCodePanelProps): JSX.Element => {
+export const SourceCodePanel = ({ close, sourceCode }: SourceCodePanelProps): JSX.Element => {
   return (
     <StyledSmallPanel
       style={{
@@ -23,7 +20,10 @@ export const SourceCodePanel = ({
     >
       <StyledHeading>
         Source Code
-        <StyledButton variant="text" onClick={close}>
+        <StyledButton
+          variant="text"
+          onClick={close}
+        >
           View bytecode
         </StyledButton>
       </StyledHeading>

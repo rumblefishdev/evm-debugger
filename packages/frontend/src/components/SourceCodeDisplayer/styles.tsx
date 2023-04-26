@@ -8,7 +8,10 @@ import 'ace-builds/src-noconflict/theme-dawn'
 
 type AceProps = IAceEditorProps & { aceTheme: IAceEditorProps['theme'] }
 const Ace = ({ aceTheme, ...props }: AceProps) => (
-  <AceEditor {...props} theme={aceTheme} />
+  <AceEditor
+    {...props}
+    theme={aceTheme}
+  />
 )
 
 const StyledAceEditor = styled(Ace)(({ theme }) => ({
@@ -64,7 +67,5 @@ export const StyledSelectWrapper = styled('div')(({ theme }) => ({
 export const StyledLoading = styled(CircularProgress)<{
   dimensions?: [number, number]
 }>(({ theme, dimensions }) => ({
-  margin: dimensions
-    ? `${dimensions[1] / 2}px ${dimensions[0] / 2}px`
-    : `${theme.spacing(40)} auto`,
+  margin: dimensions ? `${dimensions[1] / 2}px ${dimensions[0] / 2}px` : `${theme.spacing(40)} auto`,
 }))

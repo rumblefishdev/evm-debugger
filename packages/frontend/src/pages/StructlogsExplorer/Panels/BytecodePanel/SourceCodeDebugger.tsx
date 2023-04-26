@@ -4,18 +4,9 @@ import TreeItem from '@mui/lab/TreeItem'
 
 import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
-import {
-  StyledLoading,
-  StyledSyntaxHighlighter,
-} from '../../../../components/SourceCodeDisplayer/styles'
+import { StyledLoading, StyledSyntaxHighlighter } from '../../../../components/SourceCodeDisplayer/styles'
 
-import {
-  NoSourceCodeHero,
-  StyledSourceSection,
-  StyledSourceSectionHeading,
-  StyledSourceWrapper,
-  StyledTreeView,
-} from './styles'
+import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
 type SourceCodeDebuggerProps = {
   source?: string
@@ -59,8 +50,7 @@ const parseDefaultExpanded = (sourceItems): string[] => {
     const defaultExpanded: string[] = ['-1']
     const { name } = sourceItems[0]
     const items: string[] = name.split('/')
-    for (let index = 2; index <= items.length; index++)
-      defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
+    for (let index = 2; index <= items.length; index++) defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
 
     return defaultExpanded
   }
@@ -83,18 +73,12 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   )
 
   const getSourceCode = useMemo(
-    () =>
-      sourceItems && sourceItems[activeFile]
-        ? sourceItems[activeFile].sourceCode
-        : null,
+    () => (sourceItems && sourceItems[activeFile] ? sourceItems[activeFile].sourceCode : null),
     [activeFile, sourceItems],
   )
 
   const defaultSelected = useMemo(
-    () =>
-      sourceItems && sourceItems[0]
-        ? `${sourceItems[0].name}-${sourceItems[0].name.split('/').slice(-1)}`
-        : null,
+    () => (sourceItems && sourceItems[0] ? `${sourceItems[0].name}-${sourceItems[0].name.split('/').slice(-1)}` : null),
     [sourceItems],
   )
 
@@ -124,9 +108,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
       label={nodes.name}
       onClick={() => clickAction(nodes.index, nodes.isFile)}
     >
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node) => renderTree(node))
-        : null}
+      {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
     </TreeItem>
   )
 
@@ -149,16 +131,12 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
           })}
         </StyledTreeView>
         <StyledSourceSection>
-          <StyledSourceSectionHeading variant="headingUnknown">
-            {sourceItems[activeFile].name}
-          </StyledSourceSectionHeading>
+          <StyledSourceSectionHeading variant="headingUnknown">{sourceItems[activeFile].name}</StyledSourceSectionHeading>
           <StyledSyntaxHighlighter source={getSourceCode} />
         </StyledSourceSection>
       </StyledSourceWrapper>
     )
   ) : (
-    <NoSourceCodeHero variant="headingUnknown">
-      No source code available for this contract
-    </NoSourceCodeHero>
+    <NoSourceCodeHero variant="headingUnknown">No source code available for this contract</NoSourceCodeHero>
   )
 }

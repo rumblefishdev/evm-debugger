@@ -8,10 +8,7 @@ import {
   selectParsedStructLogs,
   loadActiveStructLog,
 } from '../../../../store/structlogs/structlogs.slice'
-import {
-  useTypedDispatch,
-  useTypedSelector,
-} from '../../../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
@@ -20,9 +17,7 @@ import { isInView } from '../../../../helpers/dom'
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector(
-    (state) => state.structLogs.activeStructLog,
-  )
+  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
@@ -49,20 +44,15 @@ export const StructlogPanel = (): JSX.Element => {
 
   useEffect(() => {
     if (!activeStrucLog) return
-    const index = structLogs.findIndex(
-      (structLog) => structLog.pc === activeStrucLog.pc,
-    )
+    const index = structLogs.findIndex((structLog) => structLog.pc === activeStrucLog.pc)
     if (typeof index === 'number') {
-      const element = document.querySelector(
-        `#structlogItem_${index}`,
-      ) as HTMLElement
+      const element = document.querySelector(`#structlogItem_${index}`) as HTMLElement
 
       if ((!element || !isInView(element)) && ref.current) {
         const { scrollTop, clientHeight } = ref.current
         const offset = index * 64
 
-        const target =
-          offset > scrollTop ? offset - clientHeight + 84 : offset - 20
+        const target = offset > scrollTop ? offset - clientHeight + 84 : offset - 20
 
         ref.current.scrollTo({ top: target, behavior: 'smooth' })
       }

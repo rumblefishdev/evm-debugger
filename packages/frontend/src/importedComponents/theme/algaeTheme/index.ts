@@ -13,9 +13,7 @@ import { typography2 } from './typography2'
 import { fluidFont } from './utilis'
 
 declare module '@mui/material/Typography' {
-  interface TypographyPropsVariantOverrides
-    extends ExtendedTypographyPropsVariantOverrides1,
-      ExtendedTypographyPropsVariantOverrides2 {}
+  interface TypographyPropsVariantOverrides extends ExtendedTypographyPropsVariantOverrides1, ExtendedTypographyPropsVariantOverrides2 {}
 }
 declare module '@mui/material/styles' {
   interface Theme {

@@ -5,11 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/Button'
 import { TailProgressScreen } from '../../images'
 import { etherscanUrls } from '../../config'
-import {
-  EtherscanSourceFetcher,
-  StaticStructLogProvider,
-  StaticTxInfoProvider,
-} from '../../store/analyzer/analyzer.providers'
+import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { ROUTES } from '../../router'
@@ -20,14 +16,13 @@ import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
+// eslint-disable-next-line react/prop-types
 export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()
   const [isRunOnce, setIsRunOnce] = useState(false)
-  const { messages, isLoading, error, stages } = useTypedSelector(
-    (state) => state.analyzer,
-  )
+  const { messages, isLoading, error, stages } = useTypedSelector((state) => state.analyzer)
 
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
   const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
@@ -82,10 +77,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
-          sourceProvider: new EtherscanSourceFetcher(
-            etherscanUrls[txInfo.chainId].url,
-            etherscanUrls[txInfo.chainId].key,
-          ),
+          sourceProvider: new EtherscanSourceFetcher(etherscanUrls[txInfo.chainId].url, etherscanUrls[txInfo.chainId].key),
         }),
       )
   }, [dispatch, error, structLogs, txInfo])
@@ -110,11 +102,17 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                   </StyledHeadlineCaption>
                   <Typography variant="heading4">Fetching progress</Typography>
                 </Stack>
-                <Stepper stages={stages} error={error} />
+                <Stepper
+                  stages={stages}
+                  error={error}
+                />
               </Stack>
               <StyledImage src={TailProgressScreen} />
               {error && (
-                <Stack direction="row" spacing={2}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                >
                   <Button
                     style={buttonsStyle}
                     variant="outlined"
@@ -132,7 +130,10 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 </Stack>
               )}
             </StyledMainPanel>
-            <Logger messages={messages} style={{ marginTop: 24 }} />
+            <Logger
+              messages={messages}
+              style={{ marginTop: 24 }}
+            />
           </AppContainer>
         </>
       )}

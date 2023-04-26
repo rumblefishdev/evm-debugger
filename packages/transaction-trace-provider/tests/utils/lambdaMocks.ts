@@ -1,8 +1,4 @@
-export const createSQSRecordEvent = (
-  txHash: string,
-  chainId: string,
-  hardhatForkingUrl: string,
-) => {
+export const createSQSRecordEvent = (txHash: string, chainId: string, hardhatForkingUrl: string) => {
   return {
     Records: [
       {

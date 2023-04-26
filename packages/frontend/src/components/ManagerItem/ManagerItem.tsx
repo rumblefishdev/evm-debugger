@@ -6,12 +6,7 @@ import { DataAdder } from '../DataAdder'
 import { RawDataDisplayer } from '../RawDataDisplayer'
 
 import type { ManagerItemProps } from './ManagerItem.types'
-import {
-  StyledStack,
-  StyledName,
-  StyledStatusFound,
-  StyledStatusNotFound,
-} from './styles'
+import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
 export const ManagerItem = ({
   isFound,
@@ -32,20 +27,26 @@ export const ManagerItem = ({
 
   return (
     <StyledStack {...props}>
-      {isFound ? (
-        <StyledStatusFound>Found</StyledStatusFound>
-      ) : (
-        <StyledStatusNotFound>Not found</StyledStatusNotFound>
-      )}
-      <Tooltip title={address} arrow followCursor>
+      {isFound ? <StyledStatusFound>Found</StyledStatusFound> : <StyledStatusNotFound>Not found</StyledStatusNotFound>}
+      <Tooltip
+        title={address}
+        arrow
+        followCursor
+      >
         <StyledName>{name || address}</StyledName>
       </Tooltip>
       {isFound ? (
-        <Button variant="text" onClick={() => setDataVisibility(true)}>
+        <Button
+          variant="text"
+          onClick={() => setDataVisibility(true)}
+        >
           Show
         </Button>
       ) : (
-        <Button variant="text" onClick={() => setDataAdderVisibility(true)}>
+        <Button
+          variant="text"
+          onClick={() => setDataAdderVisibility(true)}
+        >
           Add
         </Button>
       )}

@@ -3,9 +3,7 @@ import React from 'react'
 
 import { theme } from '../theme/algaeTheme'
 
-export const RenderWithAlgeaTheme: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const RenderWithAlgeaTheme: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

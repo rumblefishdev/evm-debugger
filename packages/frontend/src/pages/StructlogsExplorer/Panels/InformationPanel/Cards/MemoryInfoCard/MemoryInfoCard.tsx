@@ -2,29 +2,16 @@ import React from 'react'
 
 import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
-import {
-  selectParsedMemory,
-  selectParsedStack,
-} from '../../../../../../store/structlogs/structlogs.slice'
-import {
-  StyledRecordType,
-  StyledRecordValue,
-  StyledWrapper,
-  StyledRecord,
-} from '../styles'
+import { selectParsedMemory, selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
+import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useTypedSelector(selectParsedMemory)
   const stack = useTypedSelector(selectParsedStack)
-  const activeStructlog = useTypedSelector(
-    (state) => state.structLogs.activeStructLog,
-  )
-  const decorateBytes = (
-    offset: string,
-    index: number,
-  ): React.CSSProperties => {
+  const activeStructlog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     const cssProperties: React.CSSProperties = {}
     switch (activeStructlog.op) {
       case 'MLOAD': {
@@ -44,11 +31,17 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
     return cssProperties
   }
   return (
-    <StructlogAcordionPanel text="Memory" canExpand={memory.length > 0}>
+    <StructlogAcordionPanel
+      text="Memory"
+      canExpand={memory.length > 0}
+    >
       <StyledWrapper {...props}>
         {memory.map((memoryItem) => {
           return (
-            <StyledRecord direction="row" key={memoryItem.index}>
+            <StyledRecord
+              direction="row"
+              key={memoryItem.index}
+            >
               <StyledRecordType>{memoryItem.index}</StyledRecordType>
               {memoryItem.value.map((value, index) => {
                 return (

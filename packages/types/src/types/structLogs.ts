@@ -1,10 +1,4 @@
-import type {
-  TCallTypeOpcodes,
-  TCreateTypeOpcodes,
-  TLogOpcodes,
-  TReturnTypeOpcodes,
-  TStorageOpCodes,
-} from './opcodes'
+import type { TCallTypeOpcodes, TCreateTypeOpcodes, TLogOpcodes, TReturnTypeOpcodes, TStorageOpCodes } from './opcodes'
 import type { TAllOpCodes } from './opcodesNames'
 import type { TStorage } from './types'
 

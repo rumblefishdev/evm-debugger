@@ -28,51 +28,25 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
     <React.Fragment>
       {stages.every((stage) => stage.isFinished) && (
         <>
-          <StyledTabs value={value} onChange={handleChange} centered>
+          <StyledTabs
+            value={value}
+            onChange={handleChange}
+            centered
+          >
             <StyledTab
               label="Data Manager"
-              value={
-                chainId && txHash
-                  ? convertNav(ROUTES.DATA_MANAGER)
-                  : ROUTES.DATA_MANAGER_MANUAL
-              }
-              onClick={() =>
-                handleTabClick(
-                  chainId && txHash
-                    ? ROUTES.DATA_MANAGER
-                    : ROUTES.DATA_MANAGER_MANUAL,
-                )
-              }
+              value={chainId && txHash ? convertNav(ROUTES.DATA_MANAGER) : ROUTES.DATA_MANAGER_MANUAL}
+              onClick={() => handleTabClick(chainId && txHash ? ROUTES.DATA_MANAGER : ROUTES.DATA_MANAGER_MANUAL)}
             />
             <StyledTab
               label="Transaction screen"
-              value={
-                chainId && txHash
-                  ? convertNav(ROUTES.TRANSACTION_SCREEN)
-                  : ROUTES.TRANSACTION_SCREEN_MANUAL
-              }
-              onClick={() =>
-                handleTabClick(
-                  chainId && txHash
-                    ? ROUTES.TRANSACTION_SCREEN
-                    : ROUTES.TRANSACTION_SCREEN_MANUAL,
-                )
-              }
+              value={chainId && txHash ? convertNav(ROUTES.TRANSACTION_SCREEN) : ROUTES.TRANSACTION_SCREEN_MANUAL}
+              onClick={() => handleTabClick(chainId && txHash ? ROUTES.TRANSACTION_SCREEN : ROUTES.TRANSACTION_SCREEN_MANUAL)}
             />
             <StyledTab
               label="Structlog Explorer"
-              value={
-                chainId && txHash
-                  ? convertNav(ROUTES.STRUCTLOGS_EXPLORER)
-                  : ROUTES.STRUCTLOGS_EXPLORER_MANUAL
-              }
-              onClick={() =>
-                handleTabClick(
-                  chainId && txHash
-                    ? ROUTES.STRUCTLOGS_EXPLORER
-                    : ROUTES.STRUCTLOGS_EXPLORER_MANUAL,
-                )
-              }
+              value={chainId && txHash ? convertNav(ROUTES.STRUCTLOGS_EXPLORER) : ROUTES.STRUCTLOGS_EXPLORER_MANUAL}
+              onClick={() => handleTabClick(chainId && txHash ? ROUTES.STRUCTLOGS_EXPLORER : ROUTES.STRUCTLOGS_EXPLORER_MANUAL)}
             />
           </StyledTabs>
         </>

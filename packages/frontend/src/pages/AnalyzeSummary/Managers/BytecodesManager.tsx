@@ -1,9 +1,6 @@
 import React from 'react'
 
-import {
-  bytecodesAdapter,
-  updateBytecode,
-} from '../../../store/bytecodes/bytecodes.slice'
+import { bytecodesAdapter, updateBytecode } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
@@ -16,13 +13,9 @@ export const BytecodesManager = () => {
     dispatch(updateBytecode({ id, changes: { bytecode: value } }))
   }
 
-  const data = useTypedSelector((state) =>
-    bytecodesAdapter.getSelectors().selectAll(state.bytecodes),
-  )
+  const data = useTypedSelector((state) => bytecodesAdapter.getSelectors().selectAll(state.bytecodes))
 
-  const contractNames = useTypedSelector((state) =>
-    contractNamesSelectors.selectEntities(state.contractNames),
-  )
+  const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))
 
   return (
     <StyledStack>

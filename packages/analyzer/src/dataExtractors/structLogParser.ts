@@ -14,19 +14,10 @@ import type {
   IStructLog,
 } from '@evm-debuger/types'
 
-import {
-  checkIfOfDelegateCallType,
-  getNextItemOnSameDepth,
-  getSafeHex,
-} from '../helpers/helpers'
+import { checkIfOfDelegateCallType, getNextItemOnSameDepth, getSafeHex } from '../helpers/helpers'
 import type { StackCounter } from '../helpers/stackCounter'
 
-import {
-  extractArgsFromStack,
-  extractCallTypeArgsData,
-  extractCreateTypeArgsData,
-  extractReturnTypeArgsData,
-} from './argsExtractors'
+import { extractArgsFromStack, extractCallTypeArgsData, extractCreateTypeArgsData, extractReturnTypeArgsData } from './argsExtractors'
 
 export class StructLogParser {
   constructor(
@@ -50,8 +41,7 @@ export class StructLogParser {
   }
 
   public parseCallStructLog() {
-    const { depth, memory, index, op, stack, gas } = this
-      .filteredStructLog as ICallTypeStructLogs
+    const { depth, memory, index, op, stack, gas } = this.filteredStructLog as ICallTypeStructLogs
 
     const opCodeArguments = extractArgsFromStack(stack, op) as TCallTypeArgs
     const callTypeArgsData = extractCallTypeArgsData(opCodeArguments, memory)
@@ -74,15 +64,10 @@ export class StructLogParser {
   }
 
   public parseCreateStructLog() {
-    const { depth, memory, index, stack, op } = this
-      .filteredStructLog as ICreateTypeStructLogs
+    const { depth, memory, index, stack, op } = this.filteredStructLog as ICreateTypeStructLogs
 
     const opCodeArguments = extractArgsFromStack(stack, op) as TCreateTypeArgs
-    const contractAddress = getSafeHex(
-      getNextItemOnSameDepth(this.structLogs, index, depth)
-        .stack.at(-1)
-        .slice(-40),
-    )
+    const contractAddress = getSafeHex(getNextItemOnSameDepth(this.structLogs, index, depth).stack.at(-1).slice(-40))
 
     return {
       ...extractCreateTypeArgsData(opCodeArguments, memory),
@@ -96,8 +81,7 @@ export class StructLogParser {
   }
 
   public parseReturnStructLog() {
-    const { memory, stack, op } = this
-      .filteredStructLog as IReturnTypeStructLogs
+    const { memory, stack, op } = this.filteredStructLog as IReturnTypeStructLogs
 
     const opCodeArguments = extractArgsFromStack(stack, op) as TReturnTypeArgs
 

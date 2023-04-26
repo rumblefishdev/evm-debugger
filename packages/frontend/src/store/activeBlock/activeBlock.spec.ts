@@ -61,13 +61,7 @@ const TUPLE_TYPE = ethers.utils.ParamType.fromObject({
   type: 'tuple',
   name: 'desc',
   indexed: null,
-  components: [
-    ADDRESS_TYPE,
-    UINT256_TYPE,
-    BYTES_TYPE,
-    ADDRESS_ARRAY_TYPE,
-    UNIT256_ARRAY_TYPE,
-  ],
+  components: [ADDRESS_TYPE, UINT256_TYPE, BYTES_TYPE, ADDRESS_ARRAY_TYPE, UNIT256_ARRAY_TYPE],
   baseType: 'tuple',
   arrayLength: null,
   arrayChildren: null,
@@ -78,13 +72,7 @@ const ARRAY_TYPE = {
   type: 'tuple[]',
   name: 'consideration',
   indexed: false,
-  components: [
-    ADDRESS_TYPE,
-    UINT256_TYPE,
-    BYTES_TYPE,
-    ADDRESS_ARRAY_TYPE,
-    UNIT256_ARRAY_TYPE,
-  ],
+  components: [ADDRESS_TYPE, UINT256_TYPE, BYTES_TYPE, ADDRESS_ARRAY_TYPE, UNIT256_ARRAY_TYPE],
   baseType: 'array',
   arrayLength: -1,
   arrayChildren: TUPLE_TYPE,
@@ -121,10 +109,7 @@ describe('parseParameter tests', () => {
   describe('Basic types', () => {
     it('Address type', () => {
       const value = '0xd45C07b37538e94cf0dC768A56491EeC14Ce898B'
-      const result = parseParameter(
-        ADDRESS_TYPE,
-        '0xd45C07b37538e94cf0dC768A56491EeC14Ce898B',
-      )
+      const result = parseParameter(ADDRESS_TYPE, '0xd45C07b37538e94cf0dC768A56491EeC14Ce898B')
       expect(result).toStrictEqual({
         value,
         type: 'address',
@@ -183,10 +168,7 @@ describe('parseParameter tests', () => {
         '0x30dcBa0405004cF124045793E1933C798Af9E66a',
         BigNumber.from('1'),
         bytes,
-        [
-          '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-          '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        ],
+        ['0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'],
         [BigNumber.from('2'), BigNumber.from('3')],
       ]
       const result = parseParameter(TUPLE_TYPE, values)
@@ -201,20 +183,14 @@ describe('parseParameter tests', () => {
           '0x30dcBa0405004cF124045793E1933C798Af9E66a',
           BigNumber.from('1'),
           bytes,
-          [
-            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-          ],
+          ['0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'],
           [BigNumber.from('2'), BigNumber.from('3')],
         ],
         [
           '0xbbbBa0405004cF124045793E1933C798Af9E66a',
           BigNumber.from('5'),
           bytes,
-          [
-            '0xEeeeeEeeeEeEeeEeEeEeeffffffffffFAFFFfffE',
-            '0xEaaaaaEeEeeEeEeEeeEffffffffffffffffffff',
-          ],
+          ['0xEeeeeEeeeEeEeeEeEeEeeffffffffffFAFFFfffE', '0xEaaaaaEeEeeEeEeEeeEffffffffffffffffffff'],
           [BigNumber.from('62'), BigNumber.from('33')],
         ],
       ]

@@ -214,14 +214,10 @@ export interface IBusinessVerticalFields {
   mainDescription?: string | undefined
 
   /** ServicesBlockHeaderRichDescriptionPhoto */
-  servicesBlockHeaderRichDescriptionPhoto?:
-    | IServicesBlockHeaderRichDescriptionPhoto[]
-    | undefined
+  servicesBlockHeaderRichDescriptionPhoto?: IServicesBlockHeaderRichDescriptionPhoto[] | undefined
 
   /** ServicesBlockHeaderDescriptionPhoto */
-  servicesBlockHeaderDescriptionPhoto?:
-    | IServicesBlockHeaderDescriptionPhoto[]
-    | undefined
+  servicesBlockHeaderDescriptionPhoto?: IServicesBlockHeaderDescriptionPhoto[] | undefined
 
   /** ServicesBlockHeaderDescription */
   servicesBlockHeaderDescription?: IServicesBlockHeaderDescription[] | undefined
@@ -366,8 +362,7 @@ export interface ICaseStudyTestimonialFields {
 
 /** Testimonial to be included inline into CaseStudy Rich text areas */
 
-export interface ICaseStudyTestimonial
-  extends Entry<ICaseStudyTestimonialFields> {
+export interface ICaseStudyTestimonial extends Entry<ICaseStudyTestimonialFields> {
   sys: {
     id: string
     type: string
@@ -651,8 +646,7 @@ export interface IIconCardsCollectionFields {
   items?: IIconCard[] | undefined
 }
 
-export interface IIconCardsCollection
-  extends Entry<IIconCardsCollectionFields> {
+export interface IIconCardsCollection extends Entry<IIconCardsCollectionFields> {
   sys: {
     id: string
     type: string
@@ -680,8 +674,7 @@ export interface IIconHeadlineDescriptionFields {
   description?: string | undefined
 }
 
-export interface IIconHeadlineDescription
-  extends Entry<IIconHeadlineDescriptionFields> {
+export interface IIconHeadlineDescription extends Entry<IIconHeadlineDescriptionFields> {
   sys: {
     id: string
     type: string
@@ -789,8 +782,7 @@ export interface IInstagramPostReferenceFields {
   uri: string
 }
 
-export interface IInstagramPostReference
-  extends Entry<IInstagramPostReferenceFields> {
+export interface IInstagramPostReference extends Entry<IInstagramPostReferenceFields> {
   sys: {
     id: string
     type: string
@@ -1006,8 +998,7 @@ export interface INumberHeadlineDescriptionFields {
   description?: string | undefined
 }
 
-export interface INumberHeadlineDescription
-  extends Entry<INumberHeadlineDescriptionFields> {
+export interface INumberHeadlineDescription extends Entry<INumberHeadlineDescriptionFields> {
   sys: {
     id: string
     type: string
@@ -1177,14 +1168,10 @@ export interface IServicesFields {
   mainDescription?: string | undefined
 
   /** ServicesBlockHeaderRichDescriptionPhoto */
-  servicesBlockHeaderRichDescriptionPhoto?:
-    | IServicesBlockHeaderRichDescriptionPhoto[]
-    | undefined
+  servicesBlockHeaderRichDescriptionPhoto?: IServicesBlockHeaderRichDescriptionPhoto[] | undefined
 
   /** ServicesBlockHeaderDescriptionPhoto */
-  servicesBlockHeaderDescriptionPhoto?:
-    | IServicesBlockHeaderDescriptionPhoto[]
-    | undefined
+  servicesBlockHeaderDescriptionPhoto?: IServicesBlockHeaderDescriptionPhoto[] | undefined
 
   /** ServicesBlockHeaderDescription */
   servicesBlockHeaderDescription?: IServicesBlockHeaderDescription[] | undefined
@@ -1249,8 +1236,7 @@ export interface IServicesTechnologiesElementFields {
 
 /** single technology displayed in Services */
 
-export interface IServicesTechnologiesElement
-  extends Entry<IServicesTechnologiesElementFields> {
+export interface IServicesTechnologiesElement extends Entry<IServicesTechnologiesElementFields> {
   sys: {
     id: string
     type: string
@@ -1331,8 +1317,7 @@ export interface IServicesBlockHeaderDescriptionFields {
   description?: string | undefined
 }
 
-export interface IServicesBlockHeaderDescription
-  extends Entry<IServicesBlockHeaderDescriptionFields> {
+export interface IServicesBlockHeaderDescription extends Entry<IServicesBlockHeaderDescriptionFields> {
   sys: {
     id: string
     type: string
@@ -1360,8 +1345,7 @@ export interface IServicesBlockHeaderDescriptionPhotoFields {
   photo?: Asset | undefined
 }
 
-export interface IServicesBlockHeaderDescriptionPhoto
-  extends Entry<IServicesBlockHeaderDescriptionPhotoFields> {
+export interface IServicesBlockHeaderDescriptionPhoto extends Entry<IServicesBlockHeaderDescriptionPhotoFields> {
   sys: {
     id: string
     type: string
@@ -1392,8 +1376,7 @@ export interface IServicesBlockHeaderRichDescriptionPhotoFields {
   descriptionExtended?: Document | undefined
 }
 
-export interface IServicesBlockHeaderRichDescriptionPhoto
-  extends Entry<IServicesBlockHeaderRichDescriptionPhotoFields> {
+export interface IServicesBlockHeaderRichDescriptionPhoto extends Entry<IServicesBlockHeaderRichDescriptionPhotoFields> {
   sys: {
     id: string
     type: string

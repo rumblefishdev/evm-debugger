@@ -5,13 +5,7 @@ import { MenuItemIconLink } from '../MenuItemIconLink'
 import { Section } from '../Section'
 
 import { data } from './data.mock'
-import {
-  StyledDivider,
-  StyledStack,
-  StyledWrapper,
-  StyledMenuBoxIcon,
-  StyledLinkWrapper,
-} from './styles'
+import { StyledDivider, StyledStack, StyledWrapper, StyledMenuBoxIcon, StyledLinkWrapper } from './styles'
 
 const Link = ({ children }: React.PropsWithChildren) => {
   return (
@@ -23,7 +17,10 @@ const Link = ({ children }: React.PropsWithChildren) => {
 
 export const ServicesSubmenu = ({ ...props }: StackProps) => {
   return (
-    <Section backgroundColor="unset" width="small">
+    <Section
+      backgroundColor="unset"
+      width="small"
+    >
       <StyledStack {...props}>
         <Link>All Services</Link>
         <StyledDivider />

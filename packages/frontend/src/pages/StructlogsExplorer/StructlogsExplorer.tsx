@@ -21,9 +21,7 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
             <InformationPanel />
           </>
         ) : (
-          <NotAContractHero variant="headingUnknown">
-            Selected Block is not a contract
-          </NotAContractHero>
+          <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
         )}
       </StyledContentWrapper>
     </>

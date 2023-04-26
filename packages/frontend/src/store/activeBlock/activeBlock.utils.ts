@@ -3,21 +3,11 @@ import { ethers } from 'ethers'
 import { isArrayOfStrings } from '../../helpers/helpers'
 
 export const safeArgParse = (
-  arg:
-    | string
-    | ethers.BigNumber
-    | boolean
-    | string[]
-    | ethers.utils.BytesLike
-    | ethers.BigNumber[]
-    | number,
+  arg: string | ethers.BigNumber | boolean | string[] | ethers.utils.BytesLike | ethers.BigNumber[] | number,
 ) => {
   if (typeof arg === 'string') return arg
 
-  if (ethers.BigNumber.isBigNumber(arg))
-    return `${ethers.utils.formatEther(
-      ethers.BigNumber.from(arg).toString(),
-    )} ETH`
+  if (ethers.BigNumber.isBigNumber(arg)) return `${ethers.utils.formatEther(ethers.BigNumber.from(arg).toString())} ETH`
 
   if (typeof arg === 'boolean') return arg ? 'true' : 'false'
 
@@ -27,29 +17,17 @@ export const safeArgParse = (
 
   if (isArrayOfStrings(arg)) return arg
 
-  if (
-    Array.isArray(arg) &&
-    arg.every((item) => ethers.BigNumber.isBigNumber(item))
-  )
-    return arg.map(
-      (item) =>
-        `${ethers.utils.formatEther(
-          ethers.BigNumber.from(item).toString(),
-        )} ETH`,
-    )
+  if (Array.isArray(arg) && arg.every((item) => ethers.BigNumber.isBigNumber(item)))
+    return arg.map((item) => `${ethers.utils.formatEther(ethers.BigNumber.from(item).toString())} ETH`)
 }
 
 export const parseParameter = (parameterType, parameterValue) => {
   let parsedValues
 
-  if (typeof parameterValue === 'string')
-    parsedValues = safeArgParse(parameterValue)
+  if (typeof parameterValue === 'string') parsedValues = safeArgParse(parameterValue)
   else if (parameterType.type === 'tuple[]')
-    parsedValues = parameterValue.map((value) =>
-      parseParameter(parameterType.arrayChildren, value),
-    )
-  else if (parameterType.baseType === 'array')
-    parsedValues = parameterValue.map((value) => safeArgParse(value))
+    parsedValues = parameterValue.map((value) => parseParameter(parameterType.arrayChildren, value))
+  else if (parameterType.baseType === 'array') parsedValues = parameterValue.map((value) => safeArgParse(value))
   else if (parameterType.baseType === 'tuple')
     parsedValues = parameterType.components.map((component, index) => {
       return parseParameter(component, parameterValue[index])
@@ -63,10 +41,7 @@ export const parseParameter = (parameterType, parameterValue) => {
   }
 }
 
-export const parseParameters = (
-  params: ethers.utils.ParamType[],
-  result: ethers.utils.Result,
-) => {
+export const parseParameters = (params: ethers.utils.ParamType[], result: ethers.utils.Result) => {
   return params.map((parameterType, index) => {
     if (result) {
       const parameterValue = result[index]

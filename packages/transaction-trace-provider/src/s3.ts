@@ -4,11 +4,7 @@ const s3Client = new S3Client({
   region: process.env.AWS_REGION,
 })
 
-export const pushTraceToS3 = async (
-  txHash: string,
-  chainId: string,
-  json: string,
-) => {
+export const pushTraceToS3 = async (txHash: string, chainId: string, json: string) => {
   const fileName = `trace/${chainId}/${txHash}.json`
   const params = {
     Key: fileName,

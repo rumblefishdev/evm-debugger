@@ -7,16 +7,12 @@ import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
 import { contractNamesSelectors } from '../contractNames/contractNames'
 import type { TRootState } from '../store'
 
-import type {
-  TBlockCallSpecificData,
-  TParsedActiveBlock,
-} from './activeBlock.types'
+import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
-    if (!eventLog.eventDescription)
-      return { signature: null, parsedArgs: null, name: null }
+    if (!eventLog.eventDescription) return { signature: null, parsedArgs: null, name: null }
     const { eventDescription } = eventLog
     const { name, signature, args, eventFragment } = eventDescription
     const { inputs } = eventFragment
@@ -29,26 +25,14 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   })
 }
 
-const parseActiveBlock = ([block, contractName]: [
-  TMainTraceLogsWithId,
-  string | null,
-]) => {
+const parseActiveBlock = ([block, contractName]: [TMainTraceLogsWithId, string | null]) => {
   const result: TParsedActiveBlock = {
     defaultData: null,
     createSpecificData: null,
     callSpecificData: null,
   }
 
-  const {
-    address,
-    gasCost,
-    passedGas,
-    stackTrace,
-    type,
-    value,
-    blockNumber,
-    isSuccess,
-  } = block
+  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess } = block
   result.defaultData = {
     value,
     type,
@@ -125,22 +109,13 @@ const parseActiveBlock = ([block, contractName]: [
   return result
 }
 
-export const selectParsedActiveBlock = createSelector(
-  ({ activeBlock, contractNames }: TRootState) => {
-    const contractName =
-      contractNamesSelectors.selectById(contractNames, activeBlock.address)
-        ?.contractName ?? null
-    return [activeBlock, contractName]
-  },
-  parseActiveBlock,
-)
+export const selectParsedActiveBlock = createSelector(({ activeBlock, contractNames }: TRootState) => {
+  const contractName = contractNamesSelectors.selectById(contractNames, activeBlock.address)?.contractName ?? null
+  return [activeBlock, contractName]
+}, parseActiveBlock)
 
 export const getReadableBlockOutput = (block: TMainTraceLogsWithId) => {
-  const output = JSON.stringify(
-    checkIfOfCallType(block)
-      ? block.decodedOutput?.[0] ?? block.output ?? null
-      : null,
-  )
+  const output = JSON.stringify(checkIfOfCallType(block) ? block.decodedOutput?.[0] ?? block.output ?? null : null)
 
   return output === 'null' ? null : output
 }

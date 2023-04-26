@@ -4,18 +4,9 @@ import arrowDownHover from '../../assets/svg/arrowDownHover.svg'
 import arrowDownIdle from '../../assets/svg/arrowDownIdle.svg'
 
 import type { MenuItemIconProps } from './MenuItemIcon.types'
-import {
-  StyledIcon,
-  StyledIconWrapper,
-  StyledStack,
-  StyledTypography,
-} from './styles'
+import { StyledIcon, StyledIconWrapper, StyledStack, StyledTypography } from './styles'
 
-export const MenuItemIcon = ({
-  children,
-  open,
-  ...props
-}: MenuItemIconProps) => {
+export const MenuItemIcon = ({ children, open, ...props }: MenuItemIconProps) => {
   const [isHovered, setHover] = useState(false)
 
   return (
@@ -25,7 +16,10 @@ export const MenuItemIcon = ({
       onMouseLeave={() => setHover(false)}
       open={open}
     >
-      <StyledTypography open={open} variant="buttonSmall">
+      <StyledTypography
+        open={open}
+        variant="buttonSmall"
+      >
         {children}
       </StyledTypography>
       <StyledIconWrapper>

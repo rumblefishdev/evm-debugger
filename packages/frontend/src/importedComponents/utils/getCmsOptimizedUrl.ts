@@ -9,12 +9,7 @@ type CmsOptimized = {
 // https://www.contentful.com/developers/docs/references/images-api/#/reference/image-manipulation/quality
 // https://www.contentful.com/developers/docs/references/images-api/#/reference/resizing-&-cropping/change-the-resizing-behavior
 
-export const getCmsOptimizedUrl = ({
-  url,
-  quality = 60,
-  width,
-  height,
-}: CmsOptimized): string => {
+export const getCmsOptimizedUrl = ({ url, quality = 60, width, height }: CmsOptimized): string => {
   let baseUrl = `${url}?fm=jpg&q=${quality}`
 
   if (width) baseUrl += `&w=${width.toString(10)}`

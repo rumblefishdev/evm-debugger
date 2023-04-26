@@ -15,7 +15,11 @@ export const Link = ({ children, to, ...props }: LinkProps) => {
   // So to prevent this we set overflow to auto when user click on link
 
   return (
-    <StyledLink {...props} onClick={fixScroll} href={to}>
+    <StyledLink
+      {...props}
+      onClick={fixScroll}
+      href={to}
+    >
       {children}
     </StyledLink>
   )

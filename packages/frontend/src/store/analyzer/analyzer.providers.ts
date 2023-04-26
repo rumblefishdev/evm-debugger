@@ -5,12 +5,7 @@ import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { store } from '../store'
 
 import { analyzerActions } from './analyzer.slice'
-import type {
-  ISourceProvider,
-  IBytecodeProvider,
-  IStructLogProvider,
-  ITxInfoProvider,
-} from './analyzer.types'
+import type { ISourceProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from './analyzer.types'
 
 export class StaticStructLogProvider implements IStructLogProvider {
   constructor(private structLog: IStructLog[]) {}
@@ -35,12 +30,10 @@ export class EtherscanSourceFetcher implements ISourceProvider {
     const response = await fetch(
       `${this.etherscanUrl}/api?module=contract&action=getsourcecode&address=${address}&apikey=${this.etherscanKey}`,
     )
-    if (response.status !== 200)
-      throw new Error(`Etherscan returned ${response.status} response code`)
+    if (response.status !== 200) throw new Error(`Etherscan returned ${response.status} response code`)
 
     const asJson = await response.json()
-    if (!asJson.result[0].SourceCode)
-      throw new Error(`${address} is not verified on Etherscan`)
+    if (!asJson.result[0].SourceCode) throw new Error(`${address} is not verified on Etherscan`)
 
     return {
       sourceCode: asJson.result[0].SourceCode,
@@ -51,34 +44,22 @@ export class EtherscanSourceFetcher implements ISourceProvider {
 }
 
 export class TransactionTraceFetcher implements IStructLogProvider {
-  constructor(
-    private transactionTraceProviderUrl: string,
-    public hash: string,
-    private chainId: number,
-  ) {}
+  constructor(private transactionTraceProviderUrl: string, public hash: string, private chainId: number) {}
 
   // eslint-disable-next-line id-denylist
   async getStructLog(): Promise<IStructLog[]> {
     return new Promise((resolve) => {
       const transactionTraceInterval = setInterval(async () => {
-        const response = await fetch(
-          `${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`,
-        )
+        const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         console.log(response)
         const asJson = await response.json()
         console.log('INVOKE:', asJson)
 
-        store.dispatch(
-          analyzerActions.logMessage(
-            `Fetching structLogs status: ${asJson.status}`,
-          ),
-        )
+        store.dispatch(analyzerActions.logMessage(`Fetching structLogs status: ${asJson.status}`))
 
         if (asJson.status === TransactionTraceResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
-          throw new Error(
-            `Cannot retrieve data for transaction with hash: ${this.hash}`,
-          )
+          throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
 
@@ -100,14 +81,9 @@ export class JSONRpcBytecodeFetcher implements IBytecodeProvider {
 }
 
 export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
-  constructor(
-    public hash: string,
-    private provider: ethers.providers.JsonRpcProvider,
-  ) {}
+  constructor(public hash: string, private provider: ethers.providers.JsonRpcProvider) {}
 
-  private unifyTxInfo(
-    tx: ethers.providers.TransactionResponse,
-  ): TTransactionInfo {
+  private unifyTxInfo(tx: ethers.providers.TransactionResponse): TTransactionInfo {
     return {
       value: tx.value.toHexString(),
       to: tx.to,

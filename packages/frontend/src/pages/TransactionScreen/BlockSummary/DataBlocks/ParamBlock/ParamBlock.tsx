@@ -3,38 +3,28 @@ import React from 'react'
 
 import { isArrayOfStrings } from '../../../../../helpers/helpers'
 import { ArrowDownBlue } from '../../../../../icons'
-import {
-  StyledInfoRow,
-  StyledInfoType,
-  StyledInfoValue,
-  StyledAccordion,
-  StyledAccordionSummary,
-  StyledAccordionDetails,
-} from '../styles'
+import { StyledInfoRow, StyledInfoType, StyledInfoValue, StyledAccordion, StyledAccordionSummary, StyledAccordionDetails } from '../styles'
 
 import type { ParamBlockProps, TItem } from './ParamBlock.types'
 
 export const ParamBlock = ({ items, title, ...props }: ParamBlockProps) => {
   return (
     <StyledAccordion {...props}>
-      <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>
-        {title}
-      </StyledAccordionSummary>
+      <StyledAccordionSummary expandIcon={<ArrowDownBlue />}>{title}</StyledAccordionSummary>
       <StyledAccordionDetails>
         <List>
           {items &&
             items.map((item, index) => {
-              if (
-                (item && typeof item.value === 'string') ||
-                (item && typeof item.value === 'number')
-              )
+              if ((item && typeof item.value === 'string') || (item && typeof item.value === 'number'))
                 return (
                   <React.Fragment key={index}>
-                    <Tooltip title={item.type} arrow followCursor>
+                    <Tooltip
+                      title={item.type}
+                      arrow
+                      followCursor
+                    >
                       <StyledInfoRow key={index}>
-                        <StyledInfoType>
-                          {item.name ? item.name : `(${item.type})`}
-                        </StyledInfoType>
+                        <StyledInfoType>{item.name ? item.name : `(${item.type})`}</StyledInfoType>
                         <StyledInfoValue>{item.value}</StyledInfoValue>
                       </StyledInfoRow>
                     </Tooltip>

@@ -31,6 +31,5 @@ export const sighashSlice = createSlice({
   initialState: sighashAdapter.getInitialState(),
 })
 
-export const { addSighashes, setAsFoundByAddress, updateSighash } =
-  sighashSlice.actions
+export const { addSighashes, setAsFoundByAddress, updateSighash } = sighashSlice.actions
 export const sighashReducer = sighashSlice.reducer

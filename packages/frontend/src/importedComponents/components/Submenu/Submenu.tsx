@@ -4,12 +4,7 @@ import React from 'react'
 import { PaperStyles, StyledBox } from './styles'
 import type { SubmenuProps } from './Submenu.types'
 
-export const Submenu: React.FC<SubmenuProps> = ({
-  children,
-  isOpen,
-  closeMenu,
-  noPadding,
-}) => {
+export const Submenu: React.FC<SubmenuProps> = ({ children, isOpen, closeMenu, noPadding }) => {
   return (
     <Drawer
       anchor="top"

@@ -35,13 +35,11 @@ export const StyledInputLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
 }))
 
-export const StyledInputLabelStar = styled(Typography)<{ component?: 'span' }>(
-  ({ theme }) => ({
-    ...theme.typography.label,
-    display: 'inline',
-    color: theme.palette.rfBrandSecondary,
-  }),
-)
+export const StyledInputLabelStar = styled(Typography)<{ component?: 'span' }>(({ theme }) => ({
+  ...theme.typography.label,
+  display: 'inline',
+  color: theme.palette.rfBrandSecondary,
+}))
 
 export const StyledTextArea = styled(Input)(({ theme }) => ({
   width: '100%',

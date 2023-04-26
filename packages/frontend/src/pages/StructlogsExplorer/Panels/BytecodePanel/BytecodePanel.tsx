@@ -22,36 +22,25 @@ export const BytecodePanel = (): JSX.Element => {
   const toggleSourceView = () => setSourceView((prev) => !prev)
 
   const activeBlock = useTypedSelector((state) => state.activeBlock)
-  const sourceCode = useTypedSelector((state) =>
-    sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address),
-  )?.sourceCode
+  const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address))?.sourceCode
 
-  const activeStrucLog = useTypedSelector(
-    (state) => state.structLogs.activeStructLog,
-  )
+  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
   const currentAddress = activeBlock.address
-  const activeBlockBytecode = useTypedSelector((state) =>
-    bytecodesSelectors.selectById(state.bytecodes, currentAddress),
-  )
+  const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectById(state.bytecodes, currentAddress))
 
   useEffect(() => {
     if (!activeBlockBytecode?.disassembled) return
     if (activeStrucLog) {
       const pcFormatted = `0x${activeStrucLog.pc.toString(16)}`
-      const index = activeBlockBytecode.disassembled.findIndex(
-        (opcode) => opcode.pc === pcFormatted,
-      )
+      const index = activeBlockBytecode.disassembled.findIndex((opcode) => opcode.pc === pcFormatted)
       if (typeof index === 'number') {
-        const element = document.querySelector(
-          `#bytecodeItem_${index}`,
-        ) as HTMLElement
+        const element = document.querySelector(`#bytecodeItem_${index}`) as HTMLElement
 
         if ((!element || !isInView(element)) && ref.current) {
           const { scrollTop, clientHeight } = ref.current
           const offset = index * 64
 
-          const target =
-            offset > scrollTop ? offset - clientHeight + 84 : offset - 20
+          const target = offset > scrollTop ? offset - clientHeight + 84 : offset - 20
 
           ref.current.scrollTo({ top: target, behavior: 'smooth' })
         }
@@ -60,14 +49,17 @@ export const BytecodePanel = (): JSX.Element => {
   }, [activeStrucLog, activeBlockBytecode.disassembled])
 
   if (isSourceView)
-    return <SourceCodePanel close={toggleSourceView} sourceCode={sourceCode} />
+    return (
+      <SourceCodePanel
+        close={toggleSourceView}
+        sourceCode={sourceCode}
+      />
+    )
 
   if (!activeBlockBytecode?.disassembled)
     return (
       <StyledSmallPanel>
-        <StyledDisabledBytecode>
-          Bytecode is not available for this Item. Please try again later.
-        </StyledDisabledBytecode>
+        <StyledDisabledBytecode>Bytecode is not available for this Item. Please try again later.</StyledDisabledBytecode>
       </StyledSmallPanel>
     )
 
@@ -76,7 +68,10 @@ export const BytecodePanel = (): JSX.Element => {
       <StyledHeading>
         Disassembled Bytecode
         {sourceCode ? (
-          <StyledButton variant="text" onClick={toggleSourceView}>
+          <StyledButton
+            variant="text"
+            onClick={toggleSourceView}
+          >
             View source
           </StyledButton>
         ) : null}
@@ -90,8 +85,7 @@ export const BytecodePanel = (): JSX.Element => {
         >
           {(item, index) => {
             const { opcode, operand, pc } = item
-            const isActive =
-              activeStrucLog?.pc === ethers.BigNumber.from(pc).toNumber()
+            const isActive = activeStrucLog?.pc === ethers.BigNumber.from(pc).toNumber()
             return (
               <ExplorerListRow
                 id={`bytecodeItem_${index}`}

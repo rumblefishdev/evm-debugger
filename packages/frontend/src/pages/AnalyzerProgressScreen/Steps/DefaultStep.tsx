@@ -4,16 +4,13 @@ import { TickFilledBlue } from '../../../icons'
 
 import type { AnalyzerStepProps } from './types'
 
-export const DefaultStep = ({
-  stepName,
-  completed,
-  ...props
-}: AnalyzerStepProps) => {
+export const DefaultStep = ({ stepName, completed, ...props }: AnalyzerStepProps) => {
   return (
-    <Step {...props} key={stepName}>
-      <StepLabel icon={completed ? <TickFilledBlue /> : null}>
-        {stepName}
-      </StepLabel>
+    <Step
+      {...props}
+      key={stepName}
+    >
+      <StepLabel icon={completed ? <TickFilledBlue /> : null}>{stepName}</StepLabel>
     </Step>
   )
 }
