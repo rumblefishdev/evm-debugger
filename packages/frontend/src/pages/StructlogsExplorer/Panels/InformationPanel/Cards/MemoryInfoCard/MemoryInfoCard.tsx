@@ -49,10 +49,10 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       case 'DELEGATECALL':
       case 'STATICCALL':
       case 'CALL': {
+        const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
         if (params.argsOffset && params.inSize) {
           const highlightFrom = Number.parseInt(skipLeadingZeroes(params.inSize), 16)
           const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(params.inSize), 16)
-          const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
         }
         if (params.retOffset && params.outSize) {
