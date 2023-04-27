@@ -1,4 +1,4 @@
-import { Stack, styled, Typography } from '@mui/material'
+import { Stack, Button, styled, Typography } from '@mui/material'
 
 export const StyledSmallPanel = styled(Stack)(() => ({
   width: '100%',
@@ -28,4 +28,11 @@ export const StyledBigPanel = styled(Stack)(() => ({
   width: '100%',
   maxWidth: '764px',
   height: '100%',
+}))
+
+export const StyledButton = styled(Button)(({ theme }) => ({
+  whiteSpace: 'nowrap',
+  transform: `translate(${theme.spacing(2)}, -50%)`,
+  top: '50%',
+  position: 'absolute',
 }))

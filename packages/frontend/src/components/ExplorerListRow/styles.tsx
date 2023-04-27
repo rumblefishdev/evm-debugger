@@ -8,17 +8,21 @@ export const StyledStack = styled(Stack, {
   width: '100%',
   padding: theme.spacing(4.5, 6),
   minHeight: '64px',
+  maxHeight: '64px',
   justifyContent: 'flex-start',
   flexDirection: 'row',
   cursor: 'pointer',
   boxSizing: 'border-box',
-  borderWidth: '1px 1px 0px 1px',
+  borderWidth: '1px',
   borderStyle: 'solid',
   borderColor: theme.palette.rfLinesLight,
   alignItems: 'center',
 
-  // active styles
+  '& + &': {
+    borderWidth: '0px 1px 1px 1px',
+  },
 
+  // active styles
   ...(active && {
     border: `1px solid ${theme.palette.rfButton}`,
     backgroundColor: 'rgba(47, 87, 244, 0.05)',
