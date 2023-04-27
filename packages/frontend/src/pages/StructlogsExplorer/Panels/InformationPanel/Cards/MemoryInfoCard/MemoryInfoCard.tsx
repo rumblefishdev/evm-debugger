@@ -38,10 +38,11 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       case 'CREATE2':
       case 'REVERT':
       case 'RETURN': {
-        if (params.offset && params['length']) {
+        if (params.offset) {
           const highlightFrom = Number.parseInt(skipLeadingZeroes(params.offset), 16)
-          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(params['length']), 16)
+          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(params['length'] || params['size']), 16)
           const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
+          console.log({currElem, highlightFrom, highlightTo})
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
         }
         break
