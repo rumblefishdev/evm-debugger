@@ -1,10 +1,10 @@
 {
   "Parameters": {
     "Domain": "evm-debugger.rumblefish.dev",
-    "Environment": "stage",
+    "Environment": "prod",
     "HostedZoneId": "Z1AXAHZLKLTXED",
     "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
-    "JsonBucketName": "transaction-trace-storage-stage.rumblefish.dev",
+    "JsonBucketName": "transaction-trace-storage-prod.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
     "AlchemyKey": "PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ"
   }
