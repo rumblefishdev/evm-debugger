@@ -134,7 +134,7 @@ Resources:
       Layers:
         - !Ref TransactionTraceProviderFunctionDepLayer
       Timeout: 900
-      MemorySize: 4096
+      MemorySize: 6144
       Architectures:
         - x86_64
       Environment:
