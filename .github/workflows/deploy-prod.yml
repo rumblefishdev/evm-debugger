@@ -1,9 +1,12 @@
 name: 'Deploy to prod'
 
+#on:
+#  release:
+#    types:
+#      - created
+
 on:
-  release:
-    types:
-      - created
+  pull_request:
 
 env:
   NODE_VERSION: 16.18.0
@@ -17,9 +20,9 @@ jobs:
       BUCKET_NAME: www.rumblefish.dev.evmdebugger
       PREFIX: evm-debugger
 
-    if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
-      !contains(github.ref, '-alpha.')
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+#      !contains(github.ref, '-alpha.')
 
     steps:
       - name: 'Checkout'
@@ -48,6 +51,8 @@ jobs:
           npm run types:build
           npm run analyzer:build
           npm run frontend:build
+        env:
+          REACT_APP_EVM_DEBUGGER_URL: https://evm-debugger-stage.rumblefish.dev
 
       - name: 'Deploy'
         run: |

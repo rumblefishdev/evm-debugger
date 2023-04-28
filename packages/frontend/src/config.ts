@@ -39,7 +39,8 @@ export const etherscanUrls = {
   },
 }
 
-export const transactionTraceProviderUrl = 'https://evm-debugger.rumblefish.dev'
+export const transactionTraceProviderUrl = process.env.EVM_DEBUGGER_URL
+
 export const jsonRpcProvider = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
 
