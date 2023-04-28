@@ -39,7 +39,7 @@ export const etherscanUrls = {
   },
 }
 
-export const transactionTraceProviderUrl = process.env.EVM_DEBUGGER_URL
+export const transactionTraceProviderUrl = process.env.REACT_APP_EVM_DEBUGGER_URL
 
 export const jsonRpcProvider = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
