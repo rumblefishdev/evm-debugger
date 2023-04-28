@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
-import { selectParsedMemory, selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
+import { selectParsedMemory } from '../../../../../../store/structlogs/structlogs.slice'
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
