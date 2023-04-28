@@ -38,6 +38,7 @@ Resources:
 
   Api:
     Type: AWS::Serverless::Api
+    Name: !Sub ${AWS::StackName}-api
     Properties:
       StageName: !Ref Environment
       Cors:
