@@ -11,7 +11,6 @@ import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useTypedSelector(selectParsedMemory)
-  const stack = useTypedSelector(selectParsedStack)
   const activeStructlog = useTypedSelector((state) => state.structLogs.activeStructLog)
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}
