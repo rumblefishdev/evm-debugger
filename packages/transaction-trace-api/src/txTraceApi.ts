@@ -47,10 +47,7 @@ export const analyzeTransactionHandler = async (
   } catch (error) {
     if (error instanceof Error) {
       console.log(error)
-      return createResponse(
-        TransactionTraceResponseStatus.FAILED,
-        error?.message,
-      )
+      return createResponse(TransactionTraceResponseStatus.FAILED)
     }
   }
   return createResponse(TransactionTraceResponseStatus.FAILED)
