@@ -49,6 +49,7 @@
   "scripts": {
     "start": "PUBLIC_URL=/evm-debugger react-scripts start",
     "build": "PUBLIC_URL=/evm-debugger react-scripts build",
+    "build:staging": "REACT_APP_ENV=staging PUBLIC_URL=/evm-debugger react-scripts build",
     "test": "jest",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",

@@ -1,9 +1,12 @@
 name: 'Deploy to staging'
 
+#on:
+#  release:
+#    types:
+#      - created
+
 on:
-  release:
-    types:
-      - created
+  pull_request:
 
 env:
   NODE_VERSION: 16.18.0
@@ -17,9 +20,9 @@ jobs:
       BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
       PREFIX: evm-debugger
 
-    if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
-      contains(github.ref, '-alpha.')
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+#      contains(github.ref, '-alpha.')
 
     steps:
       - name: 'Checkout'
@@ -47,7 +50,7 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build
+          npm run frontend:build:staging
 
       - name: 'Deploy'
         run: |

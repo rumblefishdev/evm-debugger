@@ -9,6 +9,7 @@ const PROD_URL = 'www.rumblefish.dev'
 
 const onProd = () => typeof window !== 'undefined' && window.location.hostname === PROD_URL
 export const GAnalyticsInit = () => {
+  console.log(process.env.REACT_APP_EVM_DEBUGGER_URL)
   if (onProd()) {
     ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     TagManager.initialize({ gtmId: process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID })
