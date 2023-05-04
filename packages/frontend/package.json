@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.1.1-alpha.51",
+  "version": "0.1.1-alpha.52",
   "private": true,
   "dependencies": {
     "@contentful/rich-text-types": "^15.11.1",
@@ -75,11 +75,11 @@
     ]
   },
   "devDependencies": {
-    "dotenv-cli": "^7.2.1",
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "@types/react-gtm-module": "^2.0.1",
     "blueprint-templates-cli": "^0.1.13",
+    "dotenv-cli": "^7.2.1",
     "react-test-renderer": "^18.2.0",
     "webpack-dev-server": "^4.3.1"
   }
