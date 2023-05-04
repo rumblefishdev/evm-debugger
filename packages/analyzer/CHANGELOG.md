@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1-alpha.0](https://github.com/rumblefishdev/evm-debuger/compare/@evm-debuger/analyzer@0.1.0...@evm-debuger/analyzer@0.1.1-alpha.0) (2023-05-04)
+
+**Note:** Version bump only for package @evm-debuger/analyzer
+
 # [0.1.0](https://github.com/rumblefishdev/evm-debuger/compare/@evm-debuger/analyzer@0.0.3-alpha.3...@evm-debuger/analyzer@0.1.0) (2023-05-04)
 
 **Note:** Version bump only for package @evm-debuger/analyzer
