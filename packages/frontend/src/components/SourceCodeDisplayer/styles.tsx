@@ -42,8 +42,8 @@ const ACE_LINE_HEIGHT = 16
 const BORDER = 2
 
 const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
-  const lines = source.split('\n')
-  const textHeight = lines.length
+  const lines = source ? source.split('\n') : source
+  const textHeight = lines ? lines.length : 0
   const height = textHeight * ACE_LINE_HEIGHT + BORDER
   return (
     <StyledAceEditor
