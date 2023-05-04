@@ -9,15 +9,21 @@ import {
   loadActiveStructLog,
 } from '../../../../store/structlogs/structlogs.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
-import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
+import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { isInView } from '../../../../helpers/dom'
+
+import { QuickLinks } from './QuickLinks'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
   const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
+
+  const [isQuickLinksOpen, setQuickLinksOpen] = React.useState(false)
+
+  const toggleQuickLinks = React.useCallback(() => setQuickLinksOpen((v) => !v), [])
 
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
@@ -65,7 +71,19 @@ export const StructlogPanel = (): JSX.Element => {
 
   return (
     <StyledSmallPanel>
-      <StyledHeading>EVM steps</StyledHeading>
+      <StyledHeading>
+        EVM steps
+        <StyledButton
+          variant="text"
+          onClick={toggleQuickLinks}
+        >
+          Quick links
+        </StyledButton>
+      </StyledHeading>
+      <QuickLinks
+        isOpen={isQuickLinksOpen}
+        selectStructLog={handleClick}
+      />
       <StyledListWrapper ref={ref}>
         <ViewportList
           viewportRef={ref}

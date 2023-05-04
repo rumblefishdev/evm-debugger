@@ -1,5 +1,5 @@
 import TreeView from '@mui/lab/TreeView/TreeView'
-import { Button, Stack, styled, Typography } from '@mui/material'
+import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledDisabledBytecode = styled(Stack)(() => ({
   width: '100%',
@@ -10,13 +10,6 @@ export const StyledDisabledBytecode = styled(Stack)(() => ({
   flexDirection: 'column',
   background: 'rgba(0, 0, 0, 0.38)',
   alignItems: 'center',
-}))
-
-export const StyledButton = styled(Button)(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  transform: `translate(${theme.spacing(2)}, -50%)`,
-  top: '50%',
-  position: 'absolute',
 }))
 
 export const NoSourceCodeHero = styled(Typography)(({ theme }) => ({

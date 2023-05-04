@@ -39,19 +39,21 @@ export const readMemory = (memory: string[], rawStart: string, rawLength: string
   return memoryString.slice(readStartIndex, readEndIndex)
 }
 
-export const checkIfOfCallType = (item: TReturnedTraceLog | IStructLog): item is ICallTypeTraceLog | ICallTypeStructLogs => {
+export const checkIfOfCallType = (item: TReturnedTraceLog | Omit<IStructLog, 'stack'>): item is ICallTypeTraceLog | ICallTypeStructLogs => {
   if ('type' in item) return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
 
   return item.op === 'CALL' || item.op === 'CALLCODE' || item.op === 'DELEGATECALL' || item.op === 'STATICCALL'
 }
 
-export const checkIfOfCreateType = (item: TReturnedTraceLog | IStructLog): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
+export const checkIfOfCreateType = (
+  item: TReturnedTraceLog | Omit<IStructLog, 'stack'>,
+): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
   if ('type' in item) return item.type === 'CREATE' || item.type === 'CREATE2'
 
   return item.op === 'CREATE' || item.op === 'CREATE2'
 }
 
-export const checkIfOfCreateOrCallType = (item: TReturnedTraceLog): item is TMainTraceLogs => {
+export const checkIfOfCreateOrCallType = (item: TReturnedTraceLog | Omit<IStructLog, 'stack'>): item is TMainTraceLogs => {
   return checkIfOfCallType(item) || checkIfOfCreateType(item)
 }
 

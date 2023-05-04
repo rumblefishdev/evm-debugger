@@ -5,13 +5,13 @@ import { ethers } from 'ethers'
 
 import { useTypedSelector } from '../../../../store/storeHooks'
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.slice'
-import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
+import { StyledHeading, StyledListWrapper, StyledSmallPanel, StyledButton } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.slice'
 import { isInView } from '../../../../helpers/dom'
 
-import { StyledDisabledBytecode, StyledButton } from './styles'
+import { StyledDisabledBytecode } from './styles'
 import { SourceCodePanel } from './SourceCodePanel'
 
 export const BytecodePanel = (): JSX.Element => {

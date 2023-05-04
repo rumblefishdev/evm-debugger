@@ -1,6 +1,5 @@
-import { StyledHeading, StyledSmallPanel } from '../styles'
+import { StyledHeading, StyledSmallPanel, StyledButton } from '../styles'
 
-import { StyledButton } from './styles'
 import { SourceCodeDebugger } from './SourceCodeDebugger'
 
 export type SourceCodePanelProps = {
