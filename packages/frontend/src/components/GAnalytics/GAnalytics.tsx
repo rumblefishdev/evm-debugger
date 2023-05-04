@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import React from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import TagManager from 'react-gtm-module'
 
 import { ROUTES } from '../../router'
@@ -21,7 +21,7 @@ export const GAnalytics = () => {
     React.useEffect(() => {
       const path = `${ROUTES.BASE}${location.pathname}`
       ReactGA.set({ page: path })
-      ReactGA.pageview(path)
+      ReactGA.send({ page: path, hitType: 'pageview' })
     }, [location])
 
   return <div></div>
