@@ -5,7 +5,7 @@ import { selectParsedStack } from '../../../../../../store/structlogs/structlogs
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledTable, StyledTableCell, StyledTableRow, StyledTableValueCell } from '../styles'
 
-const skipLeadingZeroes = (value: string): string => {
+export const skipLeadingZeroes = (value: string): string => {
   return `0x${value.replace(/^0+/, '')}`
 }
 

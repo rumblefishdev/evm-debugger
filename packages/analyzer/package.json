@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/analyzer",
-  "version": "0.0.3-alpha.3",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
     "chain": "hardhat node",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
-    "@evm-debuger/types": "^0.0.3-alpha.1",
+    "@evm-debuger/types": "^0.1.0",
     "evm": "^0.2.0",
     "hardhat": "^2.12.0",
     "node-fetch": "2.6.6"

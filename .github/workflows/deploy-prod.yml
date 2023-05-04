@@ -1,4 +1,4 @@
-name: 'Deploy to staging'
+name: 'Deploy to prod'
 
 on:
   release:
@@ -7,19 +7,19 @@ on:
 
 env:
   NODE_VERSION: 16.18.0
-  ENV: staging
+  ENV: production
   AWS_EC2_METADATA_DISABLED: true
 
 jobs:
-  frontend_deploy_stage:
+  frontend_deploy_prod:
     runs-on: ubuntu-20.04
     env:
-      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
+      BUCKET_NAME: www.rumblefish.dev.evmdebugger
       PREFIX: evm-debugger
 
     if: |
       startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
-      contains(github.ref, '-alpha.')
+      !contains(github.ref, '-alpha.')
 
     steps:
       - name: 'Checkout'
@@ -47,12 +47,12 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build:staging
+          npm run frontend:build:production
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
           aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-          DISTRIBUTION_ID: E1TRXMZGQSBIBH
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+          DISTRIBUTION_ID: E3IK5XITYN78AJ

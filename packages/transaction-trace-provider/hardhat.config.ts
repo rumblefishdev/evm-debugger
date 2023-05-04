@@ -9,7 +9,7 @@ export const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://eth-mainnet.alchemyapi.io/v2/PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ',
+        url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
       },
       chains: {
         // chains are configured to fork from blocks around the time of
