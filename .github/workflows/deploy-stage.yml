@@ -47,8 +47,7 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build
-
+          npm run frontend:build:staging
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
