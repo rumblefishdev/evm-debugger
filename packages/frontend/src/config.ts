@@ -41,7 +41,8 @@ export const sentryDsn = process.env.REACT_APP_EVM_SENTRY_DSN
 
 export const environment = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT
 
-export const version = process.env.npm_package_version
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+export const { version } = require('../package.json')
 
 export const jsonRpcProvider = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
