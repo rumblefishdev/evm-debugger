@@ -51,8 +51,6 @@ jobs:
           npm run types:build
           npm run analyzer:build
           npm run frontend:build:staging
-#        env:
-#          REACT_APP_EVM_DEBUGGER_URL: https://evm-debugger-stage.rumblefish.dev
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
