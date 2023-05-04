@@ -1,13 +1,13 @@
 {
   "name": "@evm-debuger/transaction-trace-provider",
-  "version": "1.0.1-alpha.2",
+  "version": "1.1.0",
   "description": "hello world sample for NodeJS",
   "main": "./src/sqsConsumer.ts",
   "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
-    "@evm-debuger/types": "^0.0.3-alpha.1",
+    "@evm-debuger/types": "^0.1.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "esbuild": "^0.14.14",
     "hardhat": "^2.14.0"
