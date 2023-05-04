@@ -3,6 +3,7 @@ import type { ReactElement } from 'react'
 import ViewportList from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
 import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/helpers'
+import type { TReturnedTraceLog } from '@evm-debuger/types'
 
 import { StyledListWrapper } from '../styles'
 import { useTypedSelector } from '../../../../store/storeHooks'
@@ -17,7 +18,7 @@ export type QuickLinksProps = {
   selectStructLog: (structLog: IExtendedStructLog) => void
 }
 
-export function QuickLinks({ selectStructLog, isOpen }): ReactElement {
+export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactElement {
   const [gasThreshold, setGasThreshold] = useState(1000)
 
   const ref = useRef<HTMLDivElement>(null)
@@ -27,7 +28,7 @@ export function QuickLinks({ selectStructLog, isOpen }): ReactElement {
   const structLogs = useTypedSelector(selectParsedStructLogs)
   const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
-  const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog))
+  const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
 
   const expensiveOps = gasThreshold ? structLogs.filter(({ gasCost }) => gasCost >= gasThreshold) : []
 
