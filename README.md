@@ -44,6 +44,7 @@ This will create a release with alpha, that CI deploys to staging environment.
 
 ```bash
 lerna version minor --conventional-prerelease=@evm-debuger/frontend
+lerna version patch --conventional-prerelease=@evm-debuger/frontend --force-publish
 ```
 
 This will create a release, that CI deploys to production environment.
