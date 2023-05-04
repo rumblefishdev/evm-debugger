@@ -7,6 +7,7 @@
     "frontend:start": "lerna run start --scope @evm-debuger/frontend",
     "frontend:build": "lerna run build --scope @evm-debuger/frontend",
     "frontend:build:staging": "lerna run build:staging --scope @evm-debuger/frontend",
+    "frontend:build:production": "lerna run build:production --scope @evm-debuger/frontend",
     "types:build": "lerna run build --scope @evm-debuger/types",
     "analyzer:build": "lerna run build --scope @evm-debuger/analyzer",
     "test": "lerna run test",
