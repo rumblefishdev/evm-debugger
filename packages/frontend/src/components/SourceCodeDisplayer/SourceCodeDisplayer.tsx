@@ -36,9 +36,10 @@ export const SourceCodeDisplayer = ({ data, title, address, description, ...prop
   const inputId = useId()
 
   const sources = useSources(data)
-
   const defaultSourceKey =
-    (contractName && Object.keys(sources).find((key) => new RegExp(`(^|/)${contractName}.sol`, 'u').test(key))) || Object.keys(sources)[0]
+    contractName &&
+    sources &&
+    (Object.keys(sources).find((key) => new RegExp(`(^|/)${contractName}.sol`, 'u').test(key)) || Object.keys(sources)[0])
 
   const hasChoice = Object.keys(sources).length > 1
   const [activeSourceKey, setActiveSourceKey] = useState(defaultSourceKey)
