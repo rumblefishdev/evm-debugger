@@ -6,7 +6,7 @@ name: 'Deploy to prod'
 #      - created
 
 on:
-  pull_request
+  pull_request:
 
 
 env:
