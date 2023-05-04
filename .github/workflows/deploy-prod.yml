@@ -51,7 +51,7 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build
+          npm run frontend:build:production
         env:
           REACT_APP_EVM_DEBUGGER_URL: https://evm-debugger.rumblefish.dev
       - name: 'Deploy'
