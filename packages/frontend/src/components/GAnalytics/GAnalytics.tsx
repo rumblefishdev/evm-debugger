@@ -21,7 +21,6 @@ export const GAnalytics = () => {
     React.useEffect(() => {
       const path = `${ROUTES.BASE}${location.pathname}`
       ReactGA.set({ page: path })
-      ReactGA.send({ page: path, hitType: 'pageview' })
     }, [location])
 
   return <div></div>
