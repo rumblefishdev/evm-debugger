@@ -3,9 +3,20 @@ import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { AWSLambda } from '@sentry/serverless'
+
+import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
 import { pushTraceToS3 } from './s3'
+
+AWSLambda.init({
+  tracesSampleRate: 1,
+  release: version,
+  environment: process.env.ENVIRONMENT,
+  dsn: process.env.SENTRY_DSN,
+})
+AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
 export const processTx = async (txHash: string, chainId: string, hardhatForkingUrl: string) => {
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
@@ -35,3 +46,5 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
     }
   }
 }
+
+export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)

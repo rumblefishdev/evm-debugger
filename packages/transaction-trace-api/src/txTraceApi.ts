@@ -1,5 +1,8 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { AWSLambda } from '@sentry/serverless'
+
+import { version } from '../package.json'
 
 import {
   getTransactionDetails,
@@ -7,6 +10,14 @@ import {
   putTxEventToDdb,
 } from './ddb'
 import { putTxDetailsToSqs } from './sqs'
+
+AWSLambda.init({
+  tracesSampleRate: 1,
+  release: version,
+  environment: process.env.ENVIRONMENT,
+  dsn: process.env.SENTRY_DSN,
+})
+AWSLambda.setTag('lambda_name', 'transaction-trace-api')
 
 export const createResponse = (status: string, output = {}) => {
   return {
@@ -52,3 +63,7 @@ export const analyzeTransactionHandler = async (
   }
   return createResponse(TransactionTraceResponseStatus.FAILED)
 }
+
+export const analyzeTransactionEntrypoint = AWSLambda.wrapHandler(
+  analyzeTransactionHandler,
+)

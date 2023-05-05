@@ -14,6 +14,8 @@ Parameters:
     Type: String
   AlchemyKey:
     Type: String
+  SentryDsn:
+    Type: String
 
 Resources:
   Frontend:
@@ -37,3 +39,4 @@ Resources:
         JsonBucketName: !Ref JsonBucketName
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
         AlchemyKey: !Ref AlchemyKey
+        SentryDsn: !Ref SentryDsn

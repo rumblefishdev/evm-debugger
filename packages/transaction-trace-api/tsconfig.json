@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*", "custom.d.ts", "./.eslintrc.js", "tests/**/*"]
 }

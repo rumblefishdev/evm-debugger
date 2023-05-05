@@ -1,8 +1,11 @@
 STACK_NAME=test-transaction-trace-local
+PARAMETERS_FILE=template-config.local.json
+
+PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
 
 start:
 	lerna bootstrap
-	sam sync --stack-name ${STACK_NAME} --watch
+	sam sync --stack-name ${STACK_NAME} --parameter-overrides $(PARAMETERS) --watch
 
 logs:
 	sam logs --stack-name ${STACK_NAME} --tail
