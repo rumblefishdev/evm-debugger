@@ -1,7 +1,18 @@
 import type { Handler, SQSEvent } from 'aws-lambda'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { AWSLambda } from '@sentry/serverless'
+
+import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
+
+AWSLambda.init({
+  tracesSampleRate: 1,
+  release: version,
+  environment: process.env.ENVIRONMENT,
+  dsn: process.env.SENTRY_DSN,
+})
+AWSLambda.setTag('lambda_name', 'transaction-trace-provider-dlq')
 
 export const consumeSqsAnalyzeTxError: Handler = async (event: SQSEvent) => {
   for (const record of event.Records) {
@@ -9,3 +20,5 @@ export const consumeSqsAnalyzeTxError: Handler = async (event: SQSEvent) => {
     await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
   }
 }
+
+export const consumeSqsAnalyzeTxErrorEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTxError)

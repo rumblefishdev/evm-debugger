@@ -73,7 +73,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../transaction-trace-api
-      Handler: txTraceApi.analyzeTransactionHandler
+      Handler: txTraceApi.analyzeTransactionEntrypoint
       Runtime: nodejs18.x
       Timeout: 30
       MemorySize: 128
@@ -83,6 +83,8 @@ Resources:
         Variables:
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           SQS_ANALYZER_URL: !Ref TransactionTraceSqs
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
       Events:
         TransactionTraceApiEvent:
           Type: Api
@@ -130,7 +132,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../transaction-trace-provider
-      Handler: src/sqsConsumer.consumeSqsAnalyzeTx
+      Handler: src/sqsConsumer.consumeSqsAnalyzeTxEntrypoint
       Runtime: nodejs18.x
       Layers:
         - !Ref TransactionTraceProviderFunctionDepLayer
@@ -143,6 +145,8 @@ Resources:
           ALCHEMY_KEY: !Ref AlchemyKey
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref JsonBucketName
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
       Events:
         SqsEvent:
           Type: SQS
@@ -178,7 +182,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../transaction-trace-provider
-      Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxError
+      Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxErrorEntrypoint
       Runtime: nodejs18.x
       Architectures:
         - x86_64
