@@ -16,6 +16,8 @@ Parameters:
     Type: String
   AlchemyKey:
     Type: String
+  SentryDsn:
+    Type: String
 
 Resources:
   AnalyzerDataTable:
@@ -189,6 +191,8 @@ Resources:
       Environment:
         Variables:
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
       Events:
         SqsEvent:
           Type: SQS
