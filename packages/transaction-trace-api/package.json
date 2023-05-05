@@ -16,7 +16,7 @@
     "unit-watch": "jest --watch",
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts' --fix",
-    "compile": "tsc --resolveJsonModule",
+    "compile": "tsc",
     "test": "npm run compile && npm run unit"
   },
   "devDependencies": {

@@ -5,10 +5,8 @@ Description: Test stack for evmDebugger/TransactionTrace
 Parameters:
   Environment:
     Type: String
-    Default: local
   SentryDsn:
     Type: String
-    Default: https://8176811a1c53456aa4669573596c0f07@o4505125543477248.ingest.sentry.io/4505130540990464
 
 Resources:
   AnalyzerDataTable:
