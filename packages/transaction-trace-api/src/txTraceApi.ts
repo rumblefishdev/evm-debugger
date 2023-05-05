@@ -1,6 +1,6 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-import { AWSLambda } from '@sentry/serverless'
+import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
@@ -58,6 +58,7 @@ export const analyzeTransactionHandler = async (
   } catch (error) {
     if (error instanceof Error) {
       console.log(error)
+      captureException(error)
       return createResponse(TransactionTraceResponseStatus.FAILED)
     }
   }

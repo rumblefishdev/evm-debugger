@@ -3,7 +3,7 @@ import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-import { AWSLambda } from '@sentry/serverless'
+import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
@@ -41,7 +41,10 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
         s3Location: s3TracePath,
       })
     } catch (error) {
-      if (error instanceof Error) console.log(error.message)
+      if (error instanceof Error) {
+        console.log(error.message)
+        captureException(error)
+      }
       await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
     }
   }
