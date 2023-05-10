@@ -89,7 +89,6 @@ jobs:
         run: |
           npm i
           lerna bootstrap
-          lerna
           ./node_modules/.bin/esbuild
           esbuild
 
