@@ -91,8 +91,8 @@ jobs:
           npm install --save-exact esbuild
           lerna bootstrap
           ./node_modules/.bin/esbuild --version
-          esbuild
-          lerna exac esbuild
+
+          lerna exec esbuild
 
       - name: 'Build'
         run: |
