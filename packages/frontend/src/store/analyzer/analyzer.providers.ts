@@ -48,7 +48,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
 
   // eslint-disable-next-line id-denylist
   async getStructLog(): Promise<IStructLog[]> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         console.log(response)
@@ -59,7 +59,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
 
         if (asJson.status === TransactionTraceResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
-          throw new Error(`Cannot retrieve data for transaction with hash: ${this.hash}`)
+          reject(`Cannot retrieve data for transaction with hash: ${this.hash}`)
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
 
