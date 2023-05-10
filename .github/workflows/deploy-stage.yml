@@ -96,6 +96,7 @@ jobs:
       - name: 'Deploy'
         working-directory: ./packages/infra
         run: |
+          npm list
           make upload-stage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}

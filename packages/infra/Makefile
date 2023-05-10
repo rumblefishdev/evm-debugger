@@ -7,7 +7,6 @@ VERSION=current
 ARTIFACT_NAME=main.zip
 
 build:
-	lerna bootstrap
 	sam build
 
 upload-stage: ARTIFACTS_S3_PREFIX=stage/infrastructure
