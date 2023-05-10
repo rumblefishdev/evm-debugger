@@ -1,9 +1,10 @@
 name: 'Deploy to staging'
 
 on:
-  release:
-    types:
-      - created
+  pull-request:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 16.18.0
@@ -11,14 +12,60 @@ env:
   AWS_EC2_METADATA_DISABLED: true
 
 jobs:
-  frontend_deploy_stage:
+#  frontend_deploy_stage:
+#    runs-on: ubuntu-20.04
+#    env:
+#      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
+#      PREFIX: evm-debugger
+#
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+#      contains(github.ref, '-alpha.')
+#
+#    steps:
+#      - name: 'Checkout'
+#        uses: actions/checkout@v2.3.1
+#
+#      - uses: actions/setup-node@master
+#        with:
+#          node-version: ${{ env.NODE_VERSION }}
+#
+#      - name: 'Cache NPM dependencies'
+#        uses: pat-s/always-upload-cache@v2.1.5
+#        with:
+#          path: |
+#            **/node_modules
+#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+#          restore-keys: |
+#            ${{ runner.OS }}-npm-cache-
+#
+#      - name: Install dependencies
+#        run: |
+#          npm i
+#          node_modules/.bin/lerna bootstrap
+#
+#      - name: 'Build'
+#        run: |
+#          npm run types:build
+#          npm run analyzer:build
+#          npm run frontend:build:staging
+#      - name: 'Deploy'
+#        run: |
+#          aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
+#          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+#          DISTRIBUTION_ID: E1TRXMZGQSBIBH
+
+  transaction_trace_api_deploy_stage:
     runs-on: ubuntu-20.04
     env:
-      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
-      PREFIX: evm-debugger
+#      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
+#      PREFIX: evm-debugger
 
     if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+      startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace-api') &&
       contains(github.ref, '-alpha.')
 
     steps:
@@ -46,13 +93,11 @@ jobs:
       - name: 'Build'
         run: |
           npm run types:build
-          npm run analyzer:build
-          npm run frontend:build:staging
       - name: 'Deploy'
+        working-directory: ./packages/infra
         run: |
-          aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
-          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
+          make upload-stage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-          DISTRIBUTION_ID: E1TRXMZGQSBIBH
+#          DISTRIBUTION_ID: E1TRXMZGQSBIBH
