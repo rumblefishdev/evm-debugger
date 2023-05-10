@@ -60,7 +60,7 @@ jobs:
 
   transaction_trace_api_deploy_stage:
     runs-on: ubuntu-20.04
-    env:
+#    env:
 #      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
 #      PREFIX: evm-debugger
 #
