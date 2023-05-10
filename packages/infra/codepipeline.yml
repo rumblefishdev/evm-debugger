@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Environment:
+    Type: String
+  JsonBucketName:
+    Type: String
+
+Resources:
+  S3ArtefactsRoleUpload:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - arn:aws:iam::053160724612:root # Github
+            Action:
+              - sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: rumblefishdev/evm-debugger
+      Path: "/"
+      Policies:
+        - PolicyName: upload-to-s3-bucket
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - s3:PutObject
+                Resource:
+                  - !Sub arn:aws:s3:::${JsonBucketName}
+                  - !Sub arn:aws:s3:::${JsonBucketName}/**
+                Effect: Allow

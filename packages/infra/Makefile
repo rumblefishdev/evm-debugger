@@ -14,7 +14,7 @@ upload-stage: PARAMETERS_FILE=template-config.stage.json
 upload-stage: build
 	sam package --output-template-file $(TEMPLATE_FILE) --s3-bucket $(ARTIFACTS_BUCKET_NAME) --s3-prefix $(ARTIFACTS_S3_PREFIX)/$(VERSION) --region $(REGION)
 	zip $(ARTIFACT_NAME) $(TEMPLATE_FILE) $(PARAMETERS_FILE) Makefile
-	aws s3 cp $(ARTIFACT_NAME) s3://$(ARTIFACTS_BUCKET_NAME)/$(ARTIFACTS_S3_PREFIX)/$(VERSION)/ --region $(DEV_REGION)
+#	aws s3 cp $(ARTIFACT_NAME) s3://$(ARTIFACTS_BUCKET_NAME)/$(ARTIFACTS_S3_PREFIX)/$(VERSION)/ --region $(REGION)
 
 deploy-stage: STACK_NAME=evm-transaction-trace-stage
 deploy-stage: PARAMETERS_FILE=template-config.stage.json

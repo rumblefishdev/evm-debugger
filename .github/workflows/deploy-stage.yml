@@ -93,13 +93,17 @@ jobs:
       - name: 'Build'
         run: |
           npm run types:build
+      - name: Configure AWS Credentials
+        uses: fuller-inc/actions-aws-assume-role@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::045028348791:role/evm-transaction-trace-stage-S3ArtefactsRoleUpload-N74XB2VM6BBA
 
       - name: 'Deploy'
         working-directory: ./packages/infra
         run: |
           npm list
           make upload-stage
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-#          DISTRIBUTION_ID: E1TRXMZGQSBIBH
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}

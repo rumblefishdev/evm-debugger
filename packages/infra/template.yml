@@ -40,3 +40,11 @@ Resources:
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
         AlchemyKey: !Ref AlchemyKey
         SentryDsn: !Ref SentryDsn
+
+  CodePipeline:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./codepipeline.yml
+      Parameters:
+        Environment: !Ref Environment
+        JsonBucketName: !Ref JsonBucketName
