@@ -9,6 +9,7 @@ import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
 import { pushTraceToS3 } from './s3'
+import { knowErrors } from './errors'
 
 AWSLambda.init({
   tracesSampleRate: 1,
