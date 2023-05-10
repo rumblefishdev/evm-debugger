@@ -98,7 +98,7 @@ jobs:
         working-directory: ./packages/infra
         run: |
           npm list
-          ls node_modules/.bin/
+#          ls node_modules/.bin
           esbuild
           make upload-stage
         env:
