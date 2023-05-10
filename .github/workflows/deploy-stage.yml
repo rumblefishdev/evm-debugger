@@ -88,7 +88,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm i
-          node_modules/.bin/lerna bootstrap
+          lerna bootstrap
+#          node_modules/.bin/lerna bootstrap
 
       - name: 'Build'
         run: |
