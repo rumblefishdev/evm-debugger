@@ -90,7 +90,7 @@ jobs:
           npm i
           lerna bootstrap
           ./node_modules/.bin/esbuild
-          esbuild
+#          esbuild
 
       - name: 'Build'
         run: |
