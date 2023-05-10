@@ -88,11 +88,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm i
-          npm install --save-exact esbuild
           lerna bootstrap
-          ./node_modules/.bin/esbuild --version
-
-          lerna exec esbuild
 
       - name: 'Build'
         run: |
