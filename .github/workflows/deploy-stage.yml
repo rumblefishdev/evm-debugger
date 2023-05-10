@@ -93,6 +93,7 @@ jobs:
       - name: 'Build'
         run: |
           npm run types:build
+
       - name: 'Deploy'
         working-directory: ./packages/infra
         run: |
