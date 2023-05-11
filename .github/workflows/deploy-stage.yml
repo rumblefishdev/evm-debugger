@@ -93,10 +93,10 @@ jobs:
       - name: 'Build'
         run: |
           npm run types:build
-      - name: Configure AWS credentials from Test account
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/evm-transaction-trace-stage-S3ArtefactsRoleUpload-N74XB2VM6BBA
+          role-to-assume: arn:aws:iam::045028348791:role/evm-transaction-trace-stage-S3ArtefactsRoleUpload-DLPBWCTB9E4X
           aws-region: us-east-1
 
       - name: 'Deploy'
