@@ -98,6 +98,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::045028348791:role/evm-transaction-trace-stage-S3ArtefactsRoleUpload-N74XB2VM6BBA
           aws-region: us-east-1
+
       - name: 'Deploy'
         working-directory: ./packages/infra
         run: |
