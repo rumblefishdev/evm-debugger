@@ -40,4 +40,6 @@ Resources:
                 Resource:
                   - !Ref ArtefactsBucketArn
                   - !Sub ${ArtefactsBucketArn}/**
+                  - arn:aws:s3:::artifacts.evm-transaction-trace.rumblefish.com
+                  - arn:aws:s3:::artifacts.evm-transaction-trace.rumblefish.com/**
                 Effect: Allow
