@@ -4,7 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   Environment:
     Type: String
-  JsonBucketName:
+  ArtefactsBucketArn:
     Type: String
   OIDCProviderArn:
     Description: Arn for the GitHub OIDC Provider.
@@ -16,6 +16,7 @@ Resources:
   S3ArtefactsRoleUpload:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub evm-debugger-frontend-github-workflow-${Environment}
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -37,6 +38,6 @@ Resources:
               - Action:
                   - s3:PutObject
                 Resource:
-                  - !Sub arn:aws:s3:::${JsonBucketName}
-                  - !Sub arn:aws:s3:::${JsonBucketName}/**
+                  - !Ref ArtefactsBucketArn
+                  - !Sub ${ArtefactsBucketArn}/**
                 Effect: Allow

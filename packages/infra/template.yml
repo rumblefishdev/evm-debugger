@@ -47,4 +47,4 @@ Resources:
       Location: ./codepipeline.yml
       Parameters:
         Environment: !Ref Environment
-        JsonBucketName: !Ref JsonBucketName
+        ArtefactsBucketArn: !GetAtt Frontend.Outputs.FrontendBucketArn
