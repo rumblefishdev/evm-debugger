@@ -6,6 +6,11 @@ Parameters:
     Type: String
   JsonBucketName:
     Type: String
+  OIDCProviderArn:
+    Description: Arn for the GitHub OIDC Provider.
+    Default: "arn:aws:iam::045028348791:oidc-provider/token.actions.githubusercontent.com"
+    Type: String
+
 
 Resources:
   S3ArtefactsRoleUpload:
@@ -14,14 +19,15 @@ Resources:
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
             Principal:
-              AWS:
-                - arn:aws:iam::053160724612:root # Github
-            Action:
-              - sts:AssumeRole
+              Federated:
+                - !Ref OIDCProviderArn
             Condition:
               StringEquals:
-                sts:ExternalId: rumblefishdev/evm-debugger
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: repo:rumblefishdev/evm-debugger
       Path: "/"
       Policies:
         - PolicyName: upload-to-s3-bucket
