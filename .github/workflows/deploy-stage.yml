@@ -79,23 +79,23 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-#      - name: 'Cache NPM dependencies'
-#        uses: pat-s/always-upload-cache@v2.1.5
-#        with:
-#          path: |
-#            **/node_modules
-#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
-#          restore-keys: |
-#            ${{ runner.OS }}-npm-cache-
-#
-#      - name: Install dependencies
-#        run: |
-#          npm i
-#          lerna bootstrap
-#
-#      - name: 'Build'
-#        run: |
-#          npm run types:build
+      - name: 'Cache NPM dependencies'
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
+
+      - name: Install dependencies
+        run: |
+          npm i
+          lerna bootstrap
+
+      - name: 'Build'
+        run: |
+          npm run types:build
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
