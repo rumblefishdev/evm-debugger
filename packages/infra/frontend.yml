@@ -12,6 +12,8 @@ Parameters:
     Type: String
     Default: ""
     Description: Limit serving files only to specified prefix
+  GhOIDCProviderArn:
+    Type: String
 
 Resources:
   FrontendBucket:
@@ -134,6 +136,36 @@ Resources:
       HostedZoneId: !Ref HostedZoneId
       Name: !Ref DomainName
       Type: A
+
+  S3ArtefactsRoleUpload:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${DomainName}-github-workflow
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GhOIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              ForAnyValue:StringLike:
+                token.actions.githubusercontent.com:sub:
+                  - repo:rumblefishdev/evm-debugger:*
+      Path: "/"
+      Policies:
+        - PolicyName: upload-to-s3-bucket
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - s3:PutObject
+                Resource:
+                  - arn:aws:s3:::www-staging-aldnr.rumblefish.dev.evmdebugger
+                  - arn:aws:s3:::www-staging-aldnr.rumblefish.dev.evmdebugger/**
+                Effect: Allow
 
 Outputs:
   CloudFrontDistributionId:
