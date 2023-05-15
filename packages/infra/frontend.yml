@@ -12,8 +12,6 @@ Parameters:
     Type: String
     Default: ""
     Description: Limit serving files only to specified prefix
-  GhOIDCProviderArn:
-    Type: String
 
 Resources:
   FrontendBucket:

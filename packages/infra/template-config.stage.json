@@ -1,6 +1,5 @@
 {
   "Parameters": {
-    "GhOIDCProviderArn": "arn:aws:iam::045028348791:oidc-provider/token.actions.githubusercontent.com",
     "Domain": "evm-debugger-stage.rumblefish.dev",
     "Environment": "stage",
     "HostedZoneId": "Z1AXAHZLKLTXED",
