@@ -1,41 +1,41 @@
-#name: Run analyzer tests on push
-#
-#on:
-#  pull_request:
-#
-#jobs:
-#  tests:
-#    runs-on: ubuntu-20.04
-#
-#    steps:
-#      - uses: actions/checkout@v1
-#
-#      - uses: actions/setup-node@master
-#        with:
-#          node-version: ${{ env.NODE_VERSION }}
-#
-#      - name: 'Cache NPM dependencies'
-#        uses: pat-s/always-upload-cache@v2.1.5
-#        with:
-#          path: |
-#            **/node_modules
-#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
-#          restore-keys: |
-#            ${{ runner.OS }}-npm-cache-
-#
-#      - name: Install dependencies
-#        run: |
-#          npm i
-#          node_modules/.bin/lerna bootstrap
-#
-#      - name: Build types
-#        run: |
-#          npm run types:build
-#
-#      - name: Run lint
-#        run: |
-#          npm run lint:check
-#
-#      - name: Run tests
-#        run: |
-#          npm run test
+name: Run analyzer tests on push
+
+on:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 'Cache NPM dependencies'
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
+
+      - name: Install dependencies
+        run: |
+          npm i
+          node_modules/.bin/lerna bootstrap
+
+      - name: Build types
+        run: |
+          npm run types:build
+
+      - name: Run lint
+        run: |
+          npm run lint:check
+
+      - name: Run tests
+        run: |
+          npm run test
