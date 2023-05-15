@@ -8,7 +8,7 @@ Parameters:
     Type: String
   Domain:
     Type: String
-  JsonBucketName:
+  TraceBucketName:
     Type: String
   ApiGatewayAllowOrigin:
     Type: String
@@ -20,6 +20,8 @@ Parameters:
     Type: String
   CloudfrontDistributionArn:
     Type: String
+  FrontendBucket:
+    Type: String
 
 Resources:
   Frontend:
@@ -29,9 +31,8 @@ Resources:
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
-        DomainName: !Ref JsonBucketName
+        DomainName: !Ref TraceBucketName
         GhOIDCProviderArn: !Ref GhOIDCProviderArn
-        CloudfrontDistributionArn: !Ref CloudfrontDistributionArn
 
   TransactionTraceService:
     Type: AWS::Serverless::Application
@@ -42,7 +43,7 @@ Resources:
         HostedZoneId: !Ref HostedZoneId
         Domain: !Ref Domain
         CertificateArn: !Ref CertificateArn
-        JsonBucketName: !Ref JsonBucketName
+        JsonBucketName: !Ref TraceBucketName
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
         AlchemyKey: !Ref AlchemyKey
         SentryDsn: !Ref SentryDsn

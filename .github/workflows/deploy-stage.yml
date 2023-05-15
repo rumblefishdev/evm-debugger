@@ -1,9 +1,10 @@
 name: 'Deploy to staging'
 
 on:
-  release:
-    types:
-      - created
+  pull_request:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 16.18.0
@@ -17,9 +18,9 @@ jobs:
       BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
       PREFIX: evm-debugger
 
-    if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
-      contains(github.ref, '-alpha.')
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+#      contains(github.ref, '-alpha.')
 
     permissions:
       id-token: write
@@ -56,7 +57,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/transaction-trace-storage-stage.rumblefish.dev-github-workflow
+          role-to-assume: arn:aws:iam::045028348791:role/www-staging-aldnr.rumblefish.dev.evmdebugger-github-workflow
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 
@@ -66,3 +67,53 @@ jobs:
           aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
           DISTRIBUTION_ID: E1TRXMZGQSBIBH
+
+#  transaction_trace_api_deploy_stage:
+#    runs-on: ubuntu-20.04
+##    env:
+##      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
+##      PREFIX: evm-debugger
+##
+##    if: |
+##      startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace-api') &&
+##      contains(github.ref, '-alpha.')
+#
+#    permissions:
+#      id-token: write
+#      contents: read
+#    steps:
+#      - name: 'Checkout'
+#        uses: actions/checkout@v2.3.1
+#
+#      - uses: actions/setup-node@master
+#        with:
+#          node-version: ${{ env.NODE_VERSION }}
+#
+#      - name: 'Cache NPM dependencies'
+#        uses: pat-s/always-upload-cache@v2.1.5
+#        with:
+#          path: |
+#            **/node_modules
+#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+#          restore-keys: |
+#            ${{ runner.OS }}-npm-cache-
+#
+#      - name: Install dependencies
+#        run: |
+#          npm i
+#          lerna bootstrap
+#
+#      - name: 'Build'
+#        run: |
+#          npm run types:build
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-frontend-github-workflow-stage
+#          aws-region: us-east-1
+#          role-session-name: evm-debugger-trace-api-github-workflow-session
+#
+#      - name: 'Upload'
+#        working-directory: ./packages/infra
+#        run: |
+#          make upload-stage
