@@ -10,7 +10,7 @@ Parameters:
     Type: String
   CertificateArn:
     Type: String
-  JsonBucketName:
+  TraceBucketName:
     Type: String
   ApiGatewayAllowOrigin:
     Type: String
@@ -146,7 +146,7 @@ Resources:
         Variables:
           ALCHEMY_KEY: !Ref AlchemyKey
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
-          ANALYZER_DATA_BUCKET_NAME: !Ref JsonBucketName
+          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
       Events:
@@ -174,8 +174,8 @@ Resources:
                 - s3:*
               Effect: Allow
               Resource:
-                - !Sub arn:aws:s3:::${JsonBucketName}
-                - !Sub arn:aws:s3:::${JsonBucketName}/**
+                - !Sub arn:aws:s3:::${TraceBucketName}
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
 
     Metadata:
       BuildMethod: makefile

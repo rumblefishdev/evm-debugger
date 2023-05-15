@@ -1,13 +1,12 @@
 REGION=us-east-1
 ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
 TEMPLATE_FILE=main.yml
-CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 
 VERSION=current
 ARTIFACT_NAME=main.zip
 
 build:
-	lerna bootstrap
 	sam build
 
 upload-stage: ARTIFACTS_S3_PREFIX=stage/infrastructure
