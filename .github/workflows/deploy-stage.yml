@@ -1,10 +1,9 @@
 name: 'Deploy to staging'
 
 on:
-  pull_request:
-#  release:
-#    types:
-#      - created
+  release:
+    types:
+      - created
 
 env:
   NODE_VERSION: 16.18.0
