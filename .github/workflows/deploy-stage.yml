@@ -102,7 +102,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm i
-          npm install node-jq 
+          npm install jq.node
           lerna bootstrap
 
       - name: 'Build'
