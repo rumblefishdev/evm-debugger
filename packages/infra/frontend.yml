@@ -160,8 +160,12 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource: arn:aws:cloudfront::045028348791:distribution/E1TRXMZGQSBIBH
               - Action:
-                  - s3:PutObject
+                  - s3:*
                 Resource:
                   - arn:aws:s3:::www-staging-aldnr.rumblefish.dev.evmdebugger
                   - arn:aws:s3:::www-staging-aldnr.rumblefish.dev.evmdebugger/**
