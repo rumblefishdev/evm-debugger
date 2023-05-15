@@ -18,6 +18,8 @@ Parameters:
     Type: String
   GhOIDCProviderArn:
     Type: String
+  CloudfrontDistributionArn:
+    Type: String
 
 Resources:
   Frontend:
@@ -29,6 +31,7 @@ Resources:
         HostedZoneId: !Ref HostedZoneId
         DomainName: !Ref JsonBucketName
         GhOIDCProviderArn: !Ref GhOIDCProviderArn
+        CloudfrontDistributionArn: !Ref CloudfrontDistributionArn
 
   TransactionTraceService:
     Type: AWS::Serverless::Application

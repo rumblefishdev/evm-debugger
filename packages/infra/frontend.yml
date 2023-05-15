@@ -14,6 +14,8 @@ Parameters:
     Description: Limit serving files only to specified prefix
   GhOIDCProviderArn:
     Type: String
+  CloudfrontDistributionArn:
+    Type: String
 
 Resources:
   FrontendBucket:
@@ -163,7 +165,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudfront:CreateInvalidation
-                Resource: arn:aws:cloudfront::045028348791:distribution/E1TRXMZGQSBIBH
+                Resource: !Ref CloudfrontDistributionArn
               - Action:
                   - s3:*
                 Resource:
