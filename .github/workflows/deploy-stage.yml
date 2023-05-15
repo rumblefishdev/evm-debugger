@@ -1,9 +1,10 @@
 name: 'Deploy to staging'
 
 on:
-  release:
-    types:
-      - created
+  pull_request:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 16.18.0
@@ -106,14 +107,14 @@ jobs:
       - name: 'Build'
         run: |
           npm run types:build
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v2
-#        with:
-#          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-frontend-github-workflow-stage
-#          aws-region: us-east-1
-#          role-session-name: evm-debugger-trace-api-github-workflow-session
-#
-#      - name: 'Upload'
-#        working-directory: ./packages/infra
-#        run: |
-#          make upload-stage
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-stage.rumblefish.dev-github-workflow
+          aws-region: us-east-1
+          role-session-name: evm-debugger-trace-api-github-workflow-session
+
+      - name: 'Upload'
+        working-directory: ./packages/infra
+        run: |
+          make upload-stage
