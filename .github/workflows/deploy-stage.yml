@@ -117,4 +117,4 @@ jobs:
       - name: 'Upload'
         working-directory: ./packages/infra
         run: |
-          make upload-stage
+          make deploy-stage
