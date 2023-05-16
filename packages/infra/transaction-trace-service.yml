@@ -260,6 +260,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudformation:*
+                  - iam:GetRole
                 Resource: "*"
                 Condition:
                   StringEquals:
