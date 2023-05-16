@@ -19,7 +19,7 @@ deploy-stage: STACK_NAME=evm-transaction-trace-stage
 deploy-stage: PARAMETERS_FILE=template-config.stage.json
 deploy-stage: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
 deploy-stage: upload-stage
-	sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(STACK_NAME) --capabilities $(CAPABILITIES)  --region $(REGION) --parameter-overrides $(PARAMETERS) --tags ${TAGS}
+	sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(STACK_NAME) --capabilities $(CAPABILITIES)  --region $(REGION) --parameter-overrides $(PARAMETERS) --tags $(TAGS)
 
 logs-stage: STACK_NAME=evm-transaction-trace-stage
 logs-stage:
@@ -41,7 +41,7 @@ deploy-prod: STACK_NAME=evm-transaction-trace-prod
 deploy-prod: PARAMETERS_FILE=template-config.prod.json
 deploy-prod: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
 deploy-prod: upload-prod
-	sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(STACK_NAME) --capabilities $(CAPABILITIES)  --region $(REGION) --parameter-overrides $(PARAMETERS)
+	sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(STACK_NAME) --capabilities $(CAPABILITIES)  --region $(REGION) --parameter-overrides $(PARAMETERS)  --tags $(TAGS)
 
 logs-prod: STACK_NAME=evm-transaction-trace-prod
 logs-prod:
