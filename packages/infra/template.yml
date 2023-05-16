@@ -18,8 +18,13 @@ Parameters:
     Type: String
   GhOIDCProviderArn:
     Type: String
+  StackArtifactsBucketName:
+    Type: String
+  RepositoryName:
+    Type: String
 
 Resources:
+
   Frontend:
     Type: AWS::Serverless::Application
     Properties:
@@ -42,4 +47,46 @@ Resources:
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
         AlchemyKey: !Ref AlchemyKey
         SentryDsn: !Ref SentryDsn
-        GhOIDCProviderArn: !Ref GhOIDCProviderArn
+
+  CIUploadRoleEvmDebugger:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RepositoryName}-github-workflow-${Environment}
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref  GhOIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:rumblefishdev/${RepositoryName}:*
+      Path: "/"
+      Policies:
+        - PolicyName: allow-ci-to-update-stack-packages
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                  - iam:GetRole
+                  - lambda:UpdateFunctionCode
+                  - lambda:ListTags
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/Owner: !Ref RepositoryName
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource: arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31

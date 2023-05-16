@@ -111,9 +111,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-stage.rumblefish.dev-github-workflow
+          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-github-workflow-stage
           aws-region: us-east-1
-          role-session-name: evm-debugger-trace-api-github-workflow-session
+          role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 
       - name: Deploy stack
         working-directory: ./packages/infra

@@ -18,11 +18,6 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
-  GhOIDCProviderArn:
-    Type: String
-  EvmDebuggerArtifactsBucketName:
-    Type: String
-    Default: artifacts.evm-transaction-trace.rumblefish.com
 
 Resources:
   AnalyzerDataTable:
@@ -220,55 +215,3 @@ Resources:
                 - !Sub ${AnalyzerDataTable.Arn}/**
     Metadata:
       BuildMethod: makefile
-
-  CIUploadRoleEvmDebugger:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub ${Domain}-github-workflow
-#      ManagedPolicyArns:
-#        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
-##        - arn:aws:iam::aws:policy/IAMFullAccess
-#        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-#        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
-#        - arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator
-#        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
-#        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Action: sts:AssumeRoleWithWebIdentity
-            Principal:
-              Federated:
-                - !Ref  GhOIDCProviderArn
-            Condition:
-              StringEquals:
-                token.actions.githubusercontent.com:aud: sts.amazonaws.com
-              StringLike:
-                token.actions.githubusercontent.com:sub: repo:rumblefishdev/evm-debugger:*
-      Path: "/"
-      Policies:
-        - PolicyName: allow-ci-to-update-sam-packages
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:*
-                Resource:
-                  - !Sub arn:aws:s3:::${EvmDebuggerArtifactsBucketName}
-                  - !Sub arn:aws:s3:::${EvmDebuggerArtifactsBucketName}/*
-              - Effect: Allow
-                Action:
-                  - cloudformation:*
-                  - iam:GetRole
-                  - lambda:UpdateFunctionCode
-                  - lambda:ListTags
-                Resource: "*"
-                Condition:
-                  StringEquals:
-                    aws:ResourceTag/Owner: evm-debugger
-              - Effect: Allow
-                Action:
-                  - cloudformation:*
-                Resource: arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31
-
