@@ -1,5 +1,8 @@
 {
   "Parameters": {
+    "RepositoryName": "evm-debugger",
+    "StackArtifactsBucketName": "artifacts.evm-transaction-trace.rumblefish.com",
+    "GhOIDCProviderArn": "arn:aws:iam::045028348791:oidc-provider/token.actions.githubusercontent.com",
     "Domain": "evm-debugger.rumblefish.dev",
     "Environment": "prod",
     "HostedZoneId": "Z1AXAHZLKLTXED",
