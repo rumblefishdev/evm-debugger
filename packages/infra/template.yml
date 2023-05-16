@@ -79,6 +79,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudformation:*
+                  - sqs:Get*
+                  - sqs:List*
                   - iam:GetRole
                   - lambda:UpdateFunctionCode
                   - lambda:ListTags
