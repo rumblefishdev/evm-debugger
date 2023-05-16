@@ -41,7 +41,7 @@ export const analyzeTransactionHandler = async (
       TransactionTraceResponseStatus.FAILED,
       'Invalid params',
     )
-  console.log('rafasl')
+  console.log('rafasld')
   try {
     let txDetails = await getTransactionDetails(txHash)
 

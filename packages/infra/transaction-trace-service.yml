@@ -261,6 +261,7 @@ Resources:
                 Action:
                   - cloudformation:*
                   - iam:GetRole
+                  - lambda:UpdateFunctionCode
                 Resource: "*"
                 Condition:
                   StringEquals:
