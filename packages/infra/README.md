@@ -1,8 +1,11 @@
 # Description
 
-AWS cloudformation templates for project resources. Lambda source code is managed by github actions.
+AWS cloudformation templates for project resources. 
 
-Resources configuration, IAM permissions etc. must be handled by manual operation - github is provided with minimal permissions.
+Lambda source code is managed by github actions.
+
+Resources configuration, IAM permissions etc. must be handled by manual operation - github is provided with minimal permissions and
+can not make that type of change.
 
 # Commands
 
