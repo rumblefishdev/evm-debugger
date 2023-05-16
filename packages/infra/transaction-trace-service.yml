@@ -261,6 +261,6 @@ Resources:
                 Action:
                   - cloudformation:*
                 Resource: "*"
-#                Condition:
-#                  StringEquals:
-#                    aws:ResourceTag/Owner: evm-debugger
+                Condition:
+                  StringEquals:
+                    aws:ResourceTag/Owner: evm-debugger
