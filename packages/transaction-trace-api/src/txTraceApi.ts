@@ -35,7 +35,7 @@ export const createResponse = (status: string, output = {}) => {
 export const analyzeTransactionHandler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
-  console.log('RAFAL test')
+
   const { txHash, chainId } = event.pathParameters!
   if (!txHash || !chainId)
     return createResponse(

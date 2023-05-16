@@ -30,6 +30,7 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
 }
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
+  console.log('sqs test')
   const records = event.Records
   if (records && records.length > 0) {
     const txHash = records[0].messageAttributes.txHash.stringValue!
