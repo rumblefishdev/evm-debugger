@@ -1,9 +1,10 @@
 name: 'Deploy to staging'
 
 on:
-  release:
-    types:
-      - created
+  pull_request:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 16.18.0
@@ -71,9 +72,9 @@ jobs:
   transaction_trace_deploy_stage:
     runs-on: ubuntu-20.04
 
-    if: |
-      (startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
-      contains(github.ref, '-alpha.')
+#    if: |
+#      (startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
+#      contains(github.ref, '-alpha.')
 
     permissions:
       id-token: write
