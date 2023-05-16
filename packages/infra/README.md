@@ -22,5 +22,7 @@ make logs-stage-sqs
 
 # Local
 
-Enter `local` directory and use `make start`. It will create sample stack and generate sample endpoint in output that
+Enter `local` directory and use `make start`. It will create sample stack and generate endpoint that
 can be used to work with.
+
+Remember to clean your work at the end of the work with `make clean`
