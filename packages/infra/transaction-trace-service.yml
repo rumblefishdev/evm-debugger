@@ -225,6 +225,14 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub ${Domain}-github-workflow
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+        - arn:aws:iam::aws:policy/IAMFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -249,3 +257,15 @@ Resources:
                 Resource:
                   - !Sub arn:aws:s3:::${EvmDebuggerArtifactsBucketName}
                   - !Sub arn:aws:s3:::${EvmDebuggerArtifactsBucketName}/*
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:DescribeStackEvents
+                Resource: "*"
