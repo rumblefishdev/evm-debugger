@@ -1,6 +1,7 @@
 # Description
 
-Directory contain responsible for AWS stacks. 
+AWS cloudformation stack resources. Lambda source code is managed by github actions.
+
 
 # Commands
 
