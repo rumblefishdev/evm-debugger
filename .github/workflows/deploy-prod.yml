@@ -1,9 +1,10 @@
 name: 'Deploy to prod'
 
 on:
-  release:
-    types:
-      - created
+  pull_request:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 16.18.0
