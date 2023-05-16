@@ -105,7 +105,7 @@ jobs:
           npm install jq.node -g
           lerna bootstrap
 
-      - name: 'Build'
+      - name: Build
         run: |
           npm run types:build
       - name: Configure AWS Credentials
@@ -115,7 +115,7 @@ jobs:
           aws-region: us-east-1
           role-session-name: evm-debugger-trace-api-github-workflow-session
 
-      - name: 'Upload'
+      - name: Deploy stack
         working-directory: ./packages/infra
         run: |
           make deploy-stage

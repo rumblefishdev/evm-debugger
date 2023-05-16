@@ -264,3 +264,8 @@ Resources:
                 Condition:
                   StringEquals:
                     aws:ResourceTag/Owner: evm-debugger
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource: arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31
+
