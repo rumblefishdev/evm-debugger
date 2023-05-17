@@ -59,9 +59,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
 
         if (asJson.status === TransactionTraceResponseStatus.FAILED) {
           clearInterval(transactionTraceInterval)
-          reject(
-            `Cannot retrieve data for transaction with hash: ${this.hash}. Please check if transaction hash is valid (keep in mind that new txs need around ~60s to be indexed)`,
-          )
+          reject(`Cannot retrieve data for transaction with hash: ${this.hash}. Reason: ${asJson.errorDetails}`)
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
 

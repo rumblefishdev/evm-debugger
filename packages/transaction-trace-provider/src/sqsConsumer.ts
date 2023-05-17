@@ -46,7 +46,9 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
         console.log(error.message)
         if (!knownErrors.includes(error.message)) captureException(error)
       }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
+      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, {
+        errorDetails: error.message,
+      })
     }
   }
 }
