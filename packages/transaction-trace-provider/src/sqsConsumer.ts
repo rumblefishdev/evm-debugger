@@ -9,7 +9,7 @@ import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
 import { pushTraceToS3 } from './s3'
-import { knownErrors } from './errors'
+import { DEFAULT_ERROR, knownErrors } from './errors'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -42,7 +42,7 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
         s3Location: s3TracePath,
       })
     } catch (error) {
-      const errorMessage = { errorDetails: 'Critical error' }
+      const errorMessage = { errorDetails: DEFAULT_ERROR }
       if (error instanceof Error) {
         console.log(error.message)
         errorMessage['errorDetails'] = error.message
