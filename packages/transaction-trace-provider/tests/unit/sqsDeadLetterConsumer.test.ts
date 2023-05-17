@@ -6,6 +6,7 @@ import type { Callback, Context } from 'aws-lambda'
 import { consumeSqsAnalyzeTxError } from '../../src/sqsDeadLetterConsumer'
 import { createSQSRecordEvent } from '../utils/lambdaMocks'
 import { getMockCalledInputItem } from '../utils/awsMocksHelper'
+import { DEFAULT_ERROR } from '../../src/errors'
 
 const ddbMock = mockClient(DynamoDBDocumentClient)
 
@@ -21,5 +22,6 @@ describe('Unit test for dead letter sqs consumer', function () {
     const testEvent = createSQSRecordEvent(TX_HASH, CHAIN_ID, HARDHAT_FORKING_URL)
     await consumeSqsAnalyzeTxError(testEvent, {} as Context, {} as Callback)
     expect(getMockCalledInputItem(ddbMock, 0).status).toEqual(TransactionTraceResponseStatus.FAILED)
+    expect(getMockCalledInputItem(ddbMock, 0).errorDetails).toEqual(DEFAULT_ERROR)
   })
 })
