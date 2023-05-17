@@ -84,6 +84,7 @@ Resources:
                   - iam:GetRole
                   - lambda:UpdateFunctionCode
                   - lambda:ListTags
+                  - lambda:PublishLayerVersion
                 Resource: "*"
                 Condition:
                   StringEquals:
