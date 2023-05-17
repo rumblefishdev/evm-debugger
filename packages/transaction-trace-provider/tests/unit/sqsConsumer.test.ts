@@ -50,11 +50,12 @@ describe('Unit test for sqs consumer', function () {
     expect(getMockCalledInputItem(ddbMock, 1).s3Location).toEqual(`${bucketName}/trace/${CHAIN_ID}/${TX_HASH}.json`)
   })
 
-  it('Add fail event in case of the rror', async () => {
+  it('Add fail event in case of the error', async () => {
+    const ERROR_MSG = 'Sample error during hardhat run'
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     hardhat.run = () => ({
-      send: jest.fn().mockRejectedValue('Sample error during hardhat run'),
+      send: jest.fn().mockRejectedValue(new Error(ERROR_MSG)),
     })
     const TX_HASH = '0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9'
     const CHAIN_ID = '1'
@@ -69,5 +70,6 @@ describe('Unit test for sqs consumer', function () {
     expect(getMockCalledInputItem(ddbMock, 0).status).toEqual(TransactionTraceResponseStatus.RUNNING)
 
     expect(getMockCalledInputItem(ddbMock, 1).status).toEqual(TransactionTraceResponseStatus.FAILED)
+    expect(getMockCalledInputItem(ddbMock, 1).errorDetails).toEqual(ERROR_MSG)
   })
 })
