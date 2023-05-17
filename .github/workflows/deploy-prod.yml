@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     if: |
-      (startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
+      startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
       !contains(github.ref, '-alpha.')
 
     permissions:
