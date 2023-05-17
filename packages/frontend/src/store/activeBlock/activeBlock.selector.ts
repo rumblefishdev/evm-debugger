@@ -114,8 +114,8 @@ export const selectParsedActiveBlock = createSelector(({ activeBlock, contractNa
   return [activeBlock, contractName]
 }, parseActiveBlock)
 
-export const getReadableBlockOutput = (block: TMainTraceLogsWithId) => {
-  const output = JSON.stringify(checkIfOfCallType(block) ? block.decodedOutput?.[0] ?? block.output ?? null : null)
+export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
+  const errorSignature = checkIfOfCallType(block) ? block.errorDescription?.signature : null
 
-  return output === 'null' ? null : output
+  return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }

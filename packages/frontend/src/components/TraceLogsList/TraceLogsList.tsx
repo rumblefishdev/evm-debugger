@@ -9,7 +9,7 @@ import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import type { TMainTraceLogsWithId } from '../../types'
 import { getSignature } from '../../helpers/helpers'
-import { getReadableBlockOutput } from '../../store/activeBlock/activeBlock.selector'
+import { getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
@@ -62,7 +62,7 @@ export const TraceLogsList = (): JSX.Element => {
                 <OpWrapper isActive={isActive}>
                   {isReverted && (
                     <Tooltip
-                      title={getReadableBlockOutput(traceLog)}
+                      title={getTraceLogErrorOutput(traceLog)}
                       followCursor
                     >
                       <StyledFailureIcon>❌</StyledFailureIcon>
