@@ -42,13 +42,13 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
         s3Location: s3TracePath,
       })
     } catch (error) {
+      const errorMessage = { errorDetails: 'Critical error' }
       if (error instanceof Error) {
         console.log(error.message)
+        errorMessage['errorDetails'] = error.message
         if (!knownErrors.includes(error.message)) captureException(error)
       }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, {
-        errorDetails: error.message,
-      })
+      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
     }
   }
 }
