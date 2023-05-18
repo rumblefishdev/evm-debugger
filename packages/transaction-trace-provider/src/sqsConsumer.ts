@@ -9,6 +9,7 @@ import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
 import { pushTraceToS3 } from './s3'
+import { DEFAULT_ERROR, knownErrors } from './errors'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -41,11 +42,13 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
         s3Location: s3TracePath,
       })
     } catch (error) {
+      const errorMessage = { errorDetails: DEFAULT_ERROR }
       if (error instanceof Error) {
         console.log(error.message)
-        captureException(error)
+        errorMessage['errorDetails'] = error.message
+        if (!knownErrors.includes(error.message)) captureException(error)
       }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
+      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
     }
   }
 }

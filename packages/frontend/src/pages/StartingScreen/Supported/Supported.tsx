@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { Link } from '@mui/material'
 
 import { supportedChains } from '../../../helpers/chains'
 import { ROUTES } from '../../../router'
 import { Button } from '../../../components/Button'
+import { reportIssuePageUrl } from '../../../config'
 
 import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
 import type { IFormData } from './Supported.types'
@@ -87,6 +89,14 @@ export const Supported = () => {
       >
         Process logs
       </Button>
+      <b>
+        <Link
+          variant={'caption'}
+          href={reportIssuePageUrl}
+        >
+          Found a bug? Click to raise an issue.
+        </Link>
+      </b>
     </StyledStack>
   )
 }

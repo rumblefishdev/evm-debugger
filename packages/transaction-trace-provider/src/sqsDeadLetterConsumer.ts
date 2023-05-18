@@ -5,6 +5,7 @@ import { AWSLambda } from '@sentry/serverless'
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
+import { DEFAULT_ERROR } from './errors'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -17,7 +18,9 @@ AWSLambda.setTag('lambda_name', 'transaction-trace-provider-dlq')
 export const consumeSqsAnalyzeTxError: Handler = async (event: SQSEvent) => {
   for (const record of event.Records) {
     const txHash = record.messageAttributes.txHash.stringValue!
-    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash)
+    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, {
+      errorDetails: DEFAULT_ERROR,
+    })
   }
 }
 
