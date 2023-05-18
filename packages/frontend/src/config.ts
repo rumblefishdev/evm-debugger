@@ -69,3 +69,5 @@ export const chainNames = {
   [ChainId.arbitrum]: 'Arbitrum One',
   [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
 }
+
+export const reportIssuePageUrl = 'https://github.com/rumblefishdev/evm-debugger-issues/issues/new/choose'
