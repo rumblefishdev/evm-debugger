@@ -94,7 +94,7 @@ export const Supported = () => {
           variant={'caption'}
           href={reportIssuePageUrl}
         >
-          Found a bug? Click to raise an issue
+          Found a bug? Click to raise an issue.
         </Link>
       </b>
     </StyledStack>
