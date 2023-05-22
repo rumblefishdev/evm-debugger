@@ -37,7 +37,7 @@ describe('Unit test for sqs consumer', function () {
     process.env.ANALYZER_DATA_BUCKET_NAME = bucketName
     await consumeSqsAnalyzeTx(testEvent, {} as Context, {} as Callback)
     const expectedS3CallStructure = {
-      Key: '1/0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9/trace.json',
+      Key: 'trace/1/0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9.json',
       ContentType: 'application/json',
       Bucket: bucketName,
       Body: '{"structLogs":[{"storage":{},"stack":[],"pc":0,"op":"PUSH1","memory":[],"gasCost":3,"gas":296346,"depth":1}]}',
@@ -47,7 +47,7 @@ describe('Unit test for sqs consumer', function () {
 
     expect(getMockCalledInputItem(ddbMock, 0).status).toEqual(TransactionTraceResponseStatus.RUNNING)
     expect(getMockCalledInputItem(ddbMock, 1).status).toEqual(TransactionTraceResponseStatus.SUCCESS)
-    expect(getMockCalledInputItem(ddbMock, 1).s3Location).toEqual(`${bucketName}/${CHAIN_ID}/${TX_HASH}/trace.json`)
+    expect(getMockCalledInputItem(ddbMock, 1).s3Location).toEqual(`${bucketName}/trace/${CHAIN_ID}/${TX_HASH}.json`)
   })
 
   it('Add fail event in case of the error', async () => {
