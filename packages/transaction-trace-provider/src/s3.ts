@@ -5,7 +5,7 @@ const s3Client = new S3Client({
 })
 
 export const pushTraceToS3 = async (txHash: string, chainId: string, json: string) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = `${chainId}/${txHash}/trace.json`
   const params = {
     Key: fileName,
     ContentType: 'application/json',
