@@ -76,6 +76,7 @@ Resources:
       CodeUri: ../../srcmap-api
       Handler: srcMapApi.srcmapApiEntrypoint
       Runtime: nodejs18.x
+      Timeout: 180
       Architectures:
         - x86_64
       Environment:
