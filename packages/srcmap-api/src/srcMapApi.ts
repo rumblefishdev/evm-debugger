@@ -32,14 +32,12 @@ export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
     const responseContainer = await Promise.all(
       addresses.map((address) => parseS3File(address)),
     )
-    console.log({ responseContainer })
     return createResponse(
       TransactionTraceResponseStatus.SUCCESS,
       responseContainer,
     )
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error)
       captureException(error)
       return createResponse(
         TransactionTraceResponseStatus.FAILED,

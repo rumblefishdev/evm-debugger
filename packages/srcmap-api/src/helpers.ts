@@ -65,10 +65,6 @@ const extractFiles = async (files: string, params: PutObjectRequest) => {
     uploaded = await Promise.all(
       splited.map((file) => parseFiles(file, params)),
     )
-    console.log({
-      uploaded: uploaded.filter(Boolean),
-      params,
-    })
   }
   return uploaded.filter(Boolean)
 }
@@ -123,7 +119,7 @@ export const constructFiles = async (
         ContractName: content.ContractName,
         ConstructorArguments: content.ConstructorArguments,
         CompilerVersion: content.CompilerVersion,
-        ABI: content.ABI,
+        ABI: JSON.parse(content.ABI),
       }
       await s3upload({
         ...params,
