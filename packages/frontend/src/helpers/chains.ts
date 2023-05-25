@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
-import { ChainId } from '@evm-debuger/types'
+import { ChainId, etherscanUrls } from '@evm-debuger/types'
 
-import { chainNames, etherscanUrls, jsonRpcProvider, transactionTraceProviderUrl } from '../config'
+import { chainNames, jsonRpcProvider, transactionTraceProviderUrl } from '../config'
 import {
   EtherscanSourceFetcher,
   JSONRpcBytecodeFetcher,

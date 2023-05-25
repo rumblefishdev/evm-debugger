@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { etherscanUrls } from '@evm-debuger/types'
 
 import { Button } from '../../../components/Button'
 import { UploadBox } from '../../../components/UploadBox'
-import { etherscanUrls, jsonRpcProvider } from '../../../config'
+import { jsonRpcProvider } from '../../../config'
 import { validateSchema } from '../../../helpers/validateSchema'
 import { ROUTES } from '../../../router'
 import {

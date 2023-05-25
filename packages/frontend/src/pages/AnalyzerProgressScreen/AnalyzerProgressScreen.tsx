@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '../../components/Button'
 import { TailProgressScreen } from '../../images'
-import { etherscanUrls } from '../../config'
 import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
@@ -15,6 +14,7 @@ import { supportedChains } from '../../helpers/chains'
 import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
+import { etherscanUrls } from '@evm-debuger/types'
 
 // eslint-disable-next-line react/prop-types
 export const AnalyzerProgressScreen = ({ children = null }) => {

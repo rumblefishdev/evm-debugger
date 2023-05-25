@@ -1,5 +1,5 @@
 {
-  "name": "@evm-debuger/srcmap-api",
+  "name": "@evm-debuger/srcmap-compiler",
   "version": "1.0.0",
   "description": "hello world sample for NodeJS",
   "main": "./src/srcMapApi.ts",

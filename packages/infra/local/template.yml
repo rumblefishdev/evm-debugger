@@ -70,6 +70,44 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  SrcMapApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../srcmap-api
+      Handler: srcMapApi.srcmapApiEntrypoint
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref TransactionTraceBucket
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          REACT_APP_ETHERSCAN_KEY: VTCZHIZD7SD7EP2TMQRDINFV8HWHM243MY
+          REACT_APP_POLYGONSCAN_KEY: 93Q76PDC9677CUYFQMHR7S6MI12YKPPVHH
+          REACT_APP_ARBITRUMSCAN_KEY: EF6I9YQHU46455ABCHI9EZMR848D38CZK4
+      Events:
+        SrcMapApiEvent:
+          Type: Api
+          Properties:
+            Path: /srcmap
+            Method: post
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - !GetAtt TransactionTraceBucket.Arn
+                - !Sub ${TransactionTraceBucket.Arn}/**
+    Metadata:
+      BuildMethod: makefile
+
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
     Properties:
