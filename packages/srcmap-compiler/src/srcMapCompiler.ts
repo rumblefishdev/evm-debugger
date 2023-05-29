@@ -1,13 +1,15 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable import/exports-last */
 /* eslint-disable no-await-in-loop */
-import childProcess from 'node:child_process'
-
 import type { APIGatewayProxyEvent } from 'aws-lambda'
+import { AWSLambda } from '@sentry/serverless'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
+
+import { createResponse } from './wrappers'
+import { compileFiles } from './helpers'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -17,46 +19,34 @@ AWSLambda.init({
 })
 AWSLambda.setTag('lambda_name', 'srcmap-compiler')
 
-async function getSolcModule(solcVersion: string) {
-  let solc = null
+function getSolcModule(solcVersion: string) {
   try {
-    solc = require(`solc${solcVersion}`)
+    console.log(`Reqire solc ${solcVersion}`)
+    const solc = require(`solc${solcVersion}`)
+    console.log(`Using solc ${solcVersion}`)
+    return solc
   } catch (error) {
     console.log('Cant find solc', error)
+    return null
   }
-
-  if (!solc) {
-    console.log(`Installing solc ${solcVersion}...`)
-    await new Promise<void>((resolve, reject) => {
-      childProcess.exec(
-        `npm i --save solc${solcVersion}@npm:solc@${solcVersion}`,
-        function (error, stdout, stderr) {
-          if (error) {
-            reject(error)
-            return
-          }
-
-          console.log(stdout)
-          console.log(stderr)
-          resolve()
-        },
-      )
-    })
-
-    solc = require(`solc${solcVersion}`)
-    console.log(`Installation done solc ${solcVersion}`)
-  }
-
-  return solc
 }
 
 export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
   if (event.body) {
-    const payload = JSON.parse(event.body)?.payload
+    const payload = JSON.parse(event.body)?.data[0]
     const solc = await getSolcModule(payload.CompilerVersion.split('+')[0])
     console.log('solc', solc)
+    try {
+      const response = await compileFiles(payload, solc)
+      return createResponse(TransactionTraceResponseStatus.SUCCESS, {
+        response,
+      })
+    } catch (error) {
+      console.log(error)
+      return createResponse(TransactionTraceResponseStatus.FAILED, { error })
+    }
   }
-  return null
+  return createResponse(TransactionTraceResponseStatus.FAILED)
 }
 
 export const srcmapCompilerEntrypoint = AWSLambda.wrapHandler(
