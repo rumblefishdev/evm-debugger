@@ -74,7 +74,7 @@ const SyntaxHighlighter = ({ source, highlightStartLine, highlightEndLine }: Syn
       aceTheme="dawn"
       name={useId()}
       value={source}
-      readOnly={false}
+      readOnly
       markers={[highlightMarker]}
       editorProps={{ $blockScrolling: true }}
     />
