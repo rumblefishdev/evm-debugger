@@ -5068,6 +5068,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with contract deploy
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "blockNumber": "13217349",
@@ -5601,6 +5602,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
@@ -7622,6 +7624,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "address": "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
@@ -10274,6 +10277,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction with extende
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
@@ -12414,6 +12418,7 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "address": "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
@@ -13218,6 +13223,7 @@ exports[`TxAnalyzer analyze transaction analyzes transaction with invalid functi
       },
     ],
   },
+  "instructionsMap": {},
   "mainTraceLogList": [
     {
       "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
