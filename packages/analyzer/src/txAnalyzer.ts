@@ -263,7 +263,6 @@ export class TxAnalyzer {
         const instructions = decodeInstructions(bytecode, sourceMaps, fileIdToSourceFile, false)
         instructionsMap[address] = {}
         instructions.forEach((instruction) => (instructionsMap[address][instruction.pc] = instruction))
-        console.log(instructions)
       }
     })
     return instructionsMap
