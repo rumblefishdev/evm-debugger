@@ -19,6 +19,32 @@ export type TContractsSources = Record<
 export interface IContractSourceProvider {
   getSources: (addresses: Set<string>) => Promise<TContractsSources | null>
 }
+export enum JumpType {
+  NOT_JUMP,
+  INTO_FUNCTION,
+  OUTOF_FUNCTION,
+  INTERNAL_JUMP,
+}
+
+export interface SourceMapLocation {
+  offset: number
+  length: number
+  file: number
+}
+
+export interface SourceMap {
+  location: SourceMapLocation
+  jumpType: JumpType
+}
+
+export interface ISourceProvider {
+  getSource: (address: string) => Promise<{
+    contractName: string
+    sourceCode: string
+    abi: TAbi
+    sourceMap: SourceMap[]
+  } | null>
+}
 
 export interface IBytecodeProvider {
   getBytecode: (address: string) => Promise<string | null>

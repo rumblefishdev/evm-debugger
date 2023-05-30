@@ -1,6 +1,9 @@
 import type { IFilteredStructLog, TEventInfo, TMainTraceLogs, TReturnedTraceLog, TTransactionData } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
+import { decodeInstructions } from 'hardhat/internal/hardhat-network/stack-traces/source-maps'
+import { Instruction, SourceFile, SourceLocation } from 'hardhat/internal/hardhat-network/stack-traces/model'
+import { toBuffer } from '@nomicfoundation/ethereumjs-util'
 
 import {
   checkIfOfCallType,
@@ -241,6 +244,31 @@ export class TxAnalyzer {
     return this.getTraceLogsContractAddresses(mainTraceLogList)
   }
 
+  public getContractsInstructions() {
+    const instructionsMap = {}
+
+    Object.keys(this.transactionData.sourceCodes).forEach((address) => {
+      if (
+        this.transactionData.sourceCodes[address] &&
+        this.transactionData.bytecodeMaps[address] &&
+        this.transactionData.sourceMaps[address]
+      ) {
+        const bytecode = Buffer.from(this.transactionData.bytecodeMaps[address])
+        const sourceMaps = this.transactionData.sourceMaps[address]
+        const fileIdToSourceFile: Map<number, SourceFile> = new Map()
+
+        Object.entries(this.transactionData.sourceCodes[address]).forEach(([contractName, contractSource], fileId) => {
+          fileIdToSourceFile.set(fileId, new SourceFile(contractName, contractSource))
+        })
+        const instructions = decodeInstructions(bytecode, sourceMaps, fileIdToSourceFile, false)
+        instructionsMap[address] = {}
+        instructions.forEach((instruction) => (instructionsMap[address][instruction.pc] = instruction))
+        console.log(instructions)
+      }
+    })
+    return instructionsMap
+  }
+
   public analyze() {
     this.fragmentReader = new FragmentReader()
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
@@ -259,8 +287,11 @@ export class TxAnalyzer {
     const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
 
+    const instructionsMap = this.getContractsInstructions()
+
     return {
       mainTraceLogList,
+      instructionsMap,
       analyzeSummary: { contractSighashesInfo, contractAddresses },
     }
   }

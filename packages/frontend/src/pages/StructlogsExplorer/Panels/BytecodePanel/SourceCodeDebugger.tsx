@@ -1,10 +1,14 @@
 import { usePreviousProps } from '@mui/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import TreeItem from '@mui/lab/TreeItem'
+import getLineFromPos from 'get-line-from-pos'
 
 import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
 import { StyledLoading, StyledSyntaxHighlighter } from '../../../../components/SourceCodeDisplayer/styles'
+import { useTypedSelector } from '../../../../store/storeHooks'
+import { contractNamesSelectors } from '../../../../store/contractNames/contractNames'
+import { instructionsSelectors } from '../../../../store/instructions/instructions.slice'
 
 import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
@@ -59,8 +63,25 @@ const parseDefaultExpanded = (sourceItems): string[] => {
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [activeFile, setActiveFile] = useState<number>(0)
+  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
-  const sources = useSources(source)
+  const activeBlock = useTypedSelector((state) => state.activeBlock)
+
+  const instructions = useTypedSelector((state) => instructionsSelectors.selectById(state.instructions, activeBlock.address))?.instructions
+
+  const contractName =
+    useTypedSelector((state) => contractNamesSelectors.selectById(state.contractNames, activeBlock.address))?.contractName ??
+    activeBlock.address
+
+  let highlightStartLine, highlightEndLine
+  if (activeStrucLog && instructions) {
+    const currentInstruction = instructions[activeStrucLog.pc]
+    const codeLocation = currentInstruction.location
+    highlightStartLine = getLineFromPos(codeLocation.file.content, codeLocation.offset)
+    highlightEndLine = getLineFromPos(codeLocation.file.content, codeLocation.offset + codeLocation.length)
+  }
+  const sources = useSources(contractName, source)
+
   const sourceItems = useMemo(
     () =>
       sources
@@ -132,7 +153,11 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
         </StyledTreeView>
         <StyledSourceSection>
           <StyledSourceSectionHeading variant="headingUnknown">{sourceItems[activeFile].name}</StyledSourceSectionHeading>
-          <StyledSyntaxHighlighter source={getSourceCode} />
+          <StyledSyntaxHighlighter
+            source={getSourceCode}
+            highlightStartLine={highlightStartLine}
+            highlightEndLine={highlightEndLine}
+          />
         </StyledSourceSection>
       </StyledSourceWrapper>
     )

@@ -15,6 +15,7 @@ import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 import { rootSaga } from './root.saga'
 import { contractNamesReducer } from './contractNames/contractNames'
 import SetTransform from './transformers'
+import { instructionsReducer } from './instructions/instructions.slice'
 
 const getKey = (): string => {
   let key = 'manual'
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   sourceCodes: sourceCodesReducer,
   sighashes: sighashReducer,
   rawTxData: rawTxDataReducer,
+  instructions: instructionsReducer,
   contractNames: contractNamesReducer,
   bytecodes: bytecodesReducer,
   analyzer: analyzerReducer,

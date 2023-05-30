@@ -23,27 +23,6 @@ export class StaticTxInfoProvider implements ITxInfoProvider {
   }
 }
 
-// TODO Leaving for now as a reference - REMOVE LATER
-// export class EtherscanSourceFetcher implements ISourceProvider {
-//   constructor(private etherscanUrl: string, private etherscanKey: string) {}
-
-//   async getSource(address: string) {
-//     const response = await fetch(
-//       `${this.etherscanUrl}/api?module=contract&action=getsourcecode&address=${address}&apikey=${this.etherscanKey}`,
-//     )
-//     if (response.status !== 200) throw new Error(`Etherscan returned ${response.status} response code`)
-
-//     const asJson = await response.json()
-//     if (!asJson.result[0].SourceCode) throw new Error(`${address} is not verified on Etherscan`)
-
-//     return {
-//       sourceCode: asJson.result[0].SourceCode,
-//       contractName: asJson.result[0].ContractName,
-//       abi: JSON.parse(asJson.result[0].ABI),
-//     }
-//   }
-// }
-
 export class ContractSourceFetcher implements IContractSourceProvider {
   constructor(private srcMapProviderUrl: string, private chainId: ChainId) {}
 
