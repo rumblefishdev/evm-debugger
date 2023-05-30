@@ -71,7 +71,7 @@ describe('TxAnalyzer', () => {
   })
 
   describe('analyze source maps', () => {
-    it.only('analyzes simple source map', async () => {
+    it('analyzes simple source map', async () => {
       const sourceFilesPath = {
         UQ112x112: './test/contracts/libraries/UQ112x112.sol',
         UniswapV2Pair: './test/contracts/UniswapV2Pair.sol',
