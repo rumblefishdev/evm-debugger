@@ -6,9 +6,10 @@ import getLineFromPos from 'get-line-from-pos'
 import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
 import { StyledLoading, StyledSyntaxHighlighter } from '../../../../components/SourceCodeDisplayer/styles'
-import { useTypedSelector } from '../../../../store/storeHooks'
+import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
 import { contractNamesSelectors } from '../../../../store/contractNames/contractNames'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.slice'
+import { setActiveSourceFile } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
@@ -62,7 +63,8 @@ const parseDefaultExpanded = (sourceItems): string[] => {
 }
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [activeFile, setActiveFile] = useState<number>(0)
+  const dispatch = useTypedDispatch()
+  const activeSourceFile = useTypedSelector((state) => state.activeSourceFile)
   const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
 
   const activeBlock = useTypedSelector((state) => state.activeBlock)
@@ -75,6 +77,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
 
   let highlightStartLine, highlightEndLine
   if (activeStrucLog && instructions) {
+    // TODO: This code need to be adjusted after sync with backend
     const currentInstruction = instructions[activeStrucLog.pc]
     const codeLocation = currentInstruction.location
     highlightStartLine = getLineFromPos(codeLocation.file.content, codeLocation.offset)
@@ -94,8 +97,8 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   )
 
   const getSourceCode = useMemo(
-    () => (sourceItems && sourceItems[activeFile] ? sourceItems[activeFile].sourceCode : null),
-    [activeFile, sourceItems],
+    () => (sourceItems && sourceItems[activeSourceFile] ? sourceItems[activeSourceFile].sourceCode : null),
+    [activeSourceFile, sourceItems],
   )
 
   const defaultSelected = useMemo(
@@ -118,9 +121,12 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     }
   }, [isLoading, didSourceChange])
 
-  const clickAction = useCallback((index: number, isFile: boolean) => {
-    if (isFile) setActiveFile(index)
-  }, [])
+  const clickAction = useCallback(
+    (index: number, isFile: boolean) => {
+      if (isFile) dispatch(setActiveSourceFile(index))
+    },
+    [dispatch],
+  )
 
   const renderTree = (nodes: RenderTree) => (
     <TreeItem
@@ -133,7 +139,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     </TreeItem>
   )
 
-  return source && sourceItems && sourceItems[activeFile] ? (
+  return source && sourceItems && sourceItems[activeSourceFile] ? (
     isLoading || didSourceChange ? (
       <StyledLoading />
     ) : (
@@ -152,7 +158,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
           })}
         </StyledTreeView>
         <StyledSourceSection>
-          <StyledSourceSectionHeading variant="headingUnknown">{sourceItems[activeFile].name}</StyledSourceSectionHeading>
+          <StyledSourceSectionHeading variant="headingUnknown">{sourceItems[activeSourceFile].name}</StyledSourceSectionHeading>
           <StyledSyntaxHighlighter
             source={getSourceCode}
             highlightStartLine={highlightStartLine}
