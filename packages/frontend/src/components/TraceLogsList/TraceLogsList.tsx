@@ -10,9 +10,9 @@ import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import type { TMainTraceLogsWithId } from '../../types'
 import { getSignature } from '../../helpers/helpers'
 import { getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
+import { setActiveSourceFile } from '../../store/activeSourceFile/activeSourceFile.slice'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
-import { setActiveSourceFile } from '../../store/activeSourceFile/activeSourceFile.slice'
 
 export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
@@ -23,11 +23,13 @@ export const TraceLogsList = (): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
-  const activate = useCallback((traceLog: TMainTraceLogsWithId) => {
-    dispatch(loadActiveBlock(traceLog))
-    dispatch(setActiveSourceFile(0))
-
-  } , [dispatch])
+  const activate = useCallback(
+    (traceLog: TMainTraceLogsWithId) => {
+      dispatch(loadActiveBlock(traceLog))
+      dispatch(setActiveSourceFile(0))
+    },
+    [dispatch],
+  )
   const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
     let signature = ''
     if (traceLog.type === 'CALL' && traceLog.input === '0x' && traceLog.isContract !== null)
