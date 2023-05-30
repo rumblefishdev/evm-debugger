@@ -1,8 +1,8 @@
 import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
+import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import type { IStructLog } from './structLogs'
-import { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 export type TStorage = Record<string, string>
 
