@@ -23,8 +23,6 @@ export const BytecodePanel = (): JSX.Element => {
 
   const activeBlock = useTypedSelector((state) => state.activeBlock)
   const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address))?.sourceCode
-  const sourceCode2 = useTypedSelector((state) => sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address))
-  console.log(sourceCode2)
 
   const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
   const currentAddress = activeBlock.address
