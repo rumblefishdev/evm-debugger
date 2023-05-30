@@ -13,6 +13,7 @@ import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 import { addContractNames } from '../contractNames/contractNames'
+import { addInstructions } from '../instructions/instructions.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
@@ -37,11 +38,13 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const analyzer = new TxAnalyzer({
     transactionInfo,
     structLogs,
+    sourceMaps: {},
     sourceCodes,
     contractNames,
+    bytecodeMaps: {},
     abis: { ...abis, ...additionalAbis },
   })
-  const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+  const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
   yield* put(addTraceLogs(mainTraceLogList))
   yield* put(
@@ -62,6 +65,12 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   yield* put(
     addContractNames(
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
+    ),
+  )
+
+  yield* put(
+    addInstructions(
+      Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => [...accumulator, { instructions, address }], []),
     ),
   )
 

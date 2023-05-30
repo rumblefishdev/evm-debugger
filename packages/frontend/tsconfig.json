@@ -9,7 +9,7 @@
     "downlevelIteration": true,
     "sourceMap": false
   },
-  "include": ["src/**/*", "custom.d.ts"],
+  "include": ["src/**/*", "src/**/*.json", "custom.d.ts"],
   "references": [
     {
       "path": "../types"

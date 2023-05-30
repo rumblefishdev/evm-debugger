@@ -7,11 +7,30 @@ export interface ITxInfoProvider {
   getTxInfo: () => Promise<TTransactionInfo>
 }
 
+export enum JumpType {
+  NOT_JUMP,
+  INTO_FUNCTION,
+  OUTOF_FUNCTION,
+  INTERNAL_JUMP,
+}
+
+export interface SourceMapLocation {
+  offset: number
+  length: number
+  file: number
+}
+
+export interface SourceMap {
+  location: SourceMapLocation
+  jumpType: JumpType
+}
+
 export interface ISourceProvider {
   getSource: (address: string) => Promise<{
     contractName: string
     sourceCode: string
     abi: TAbi
+    sourceMap: SourceMap[]
   } | null>
 }
 

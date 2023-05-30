@@ -1,6 +1,6 @@
 import { CircularProgress, styled } from '@mui/material'
 import { useId, memo } from 'react'
-import type { IAceEditorProps } from 'react-ace'
+import type { IAceEditorProps, IMarker } from 'react-ace'
 import AceEditor from 'react-ace'
 
 import 'ace-mode-solidity'
@@ -19,7 +19,13 @@ const StyledAceEditor = styled(Ace)(({ theme }) => ({
     display: 'none',
   },
   boxSizing: 'border-box',
+
   border: `1px solid ${theme.palette.rfLinesLight}`,
+
+  '.highlightMarker': {
+    position: 'absolute',
+    backgroundColor: 'yellow',
+  },
   '.ace_gutter-active-line': {
     background: 'unset',
   },
@@ -29,6 +35,7 @@ const StyledAceEditor = styled(Ace)(({ theme }) => ({
   '.ace_cursor-layer': {
     display: 'none',
   },
+
   '.ace_active-line': {
     display: 'none',
   },
@@ -36,15 +43,30 @@ const StyledAceEditor = styled(Ace)(({ theme }) => ({
 
 type SyntaxHighlighterProps = {
   source: string
+  highlightStartLine?: number
+  highlightEndLine?: number
 }
 
 const ACE_LINE_HEIGHT = 16
 const BORDER = 2
 
-const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
+const SyntaxHighlighter = ({ source, highlightStartLine, highlightEndLine }: SyntaxHighlighterProps) => {
   const lines = source ? source.split('\n') : source
   const textHeight = lines ? lines.length : 0
   const height = textHeight * ACE_LINE_HEIGHT + BORDER
+
+  console.log(highlightStartLine)
+  console.log(highlightEndLine)
+  const highlightMarker: IMarker = {
+    type: 'fullLine',
+    startRow: highlightStartLine,
+    startCol: 0,
+    endRow: highlightEndLine,
+    endCol: 1,
+    // eslint-disable-next-line unicorn/no-keyword-prefix -- Ace require to provide className in that form
+    className: 'highlightMarker',
+  }
+
   return (
     <StyledAceEditor
       height={`${height}px`}
@@ -52,7 +74,8 @@ const SyntaxHighlighter = ({ source }: SyntaxHighlighterProps) => {
       aceTheme="dawn"
       name={useId()}
       value={source}
-      readOnly
+      readOnly={false}
+      markers={[highlightMarker]}
       editorProps={{ $blockScrolling: true }}
     />
   )
