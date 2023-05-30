@@ -16,6 +16,7 @@ import { rootSaga } from './root.saga'
 import { contractNamesReducer } from './contractNames/contractNames'
 import SetTransform from './transformers'
 import { instructionsReducer } from './instructions/instructions.slice'
+import { activeSourceFileReducer } from './activeSourceFile/activeSourceFile.slice'
 
 const getKey = (): string => {
   let key = 'manual'
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   contractNames: contractNamesReducer,
   bytecodes: bytecodesReducer,
   analyzer: analyzerReducer,
+  activeSourceFile: activeSourceFileReducer,
   activeBlock: activeBlockReducer,
 })
 

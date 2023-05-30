@@ -42,7 +42,6 @@ export interface ISourceProvider {
     contractName: string
     sourceCode: string
     abi: TAbi
-    sourceMap: SourceMap[]
   } | null>
 }
 
