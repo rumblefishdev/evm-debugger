@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Source code parser Parse based string source code 1`] = `
-"// File: contracts/interfaces/IUniswapV2Pair.sol
+{
+  "UniswapV2": "// File: contracts/interfaces/IUniswapV2Pair.sol
 
 pragma solidity >=0.5.0;
 
@@ -496,7 +497,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     function sync() external lock {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }
-}"
+}",
+}
 `;
 
 exports[`Source code parser Parse json based string source code 1`] = `
