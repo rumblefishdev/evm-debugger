@@ -1,15 +1,18 @@
+/* eslint-disable unicorn/no-keyword-prefix */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
+import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 
-import { SourceMapElement } from './sourceMapElement'
-import { addNewPotentialOpcodes, getLastOpcodeFile } from './opcodesFile'
 import type { EntryType, SolcOutput } from './types'
+import { SourceMapElement } from './sourceMapElement'
+import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
-import { s3download } from './s3'
+import { s3download, s3upload } from './s3'
 
-const { BUCKET_NAME, AWS_REGION } = process.env
+const { BUCKET_NAME } = process.env
 
 const formatOpcodes = async (opcodesRaw: string): Promise<string> => {
   const opcodeFile = await getLastOpcodeFile()
@@ -71,11 +74,11 @@ const getInternals = async (
 ) => {
   const input = {
     sources: fileList.reduce((accumulator, current, index) => {
-      const fileContent = JSON.parse(fileConents[index]).parsed
+      const key: string = current.split('contract_files/').pop() || ''
       return {
         ...accumulator,
-        [current]: {
-          content: fileContent,
+        [key]: {
+          content: fileConents[index],
         },
       }
     }, {}),
@@ -88,46 +91,39 @@ const getInternals = async (
     },
     language: 'Solidity',
   }
-
   const output: SolcOutput = JSON.parse(
     solc.compile(JSON.stringify(input)),
   ) as SolcOutput
-  console.log(output)
-  const allEntries: EntryType[] = []
-  // for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
-  //   const newEntries: EntryType[] = await Promise.all(
-  //     Object.entries(fileInternals).map(
-  //       async ([contractName, contractInternals]) => {
-  //         const formattedOpcodes = await formatOpcodes(
-  //           contractInternals.evm.deployedBytecode.opcodes,
-  //         )
-  //         const formattedOpcodesArr = formattedOpcodes.split('\n')
 
-  //         formattedOpcodesArr.shift()
+  let allEntries: EntryType[] = []
+  for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
+    const newEntries: EntryType[] = await Promise.all(
+      Object.entries(fileInternals).map(
+        async ([contractName, contractInternals]) => {
+          const formattedOpcodes = await formatOpcodes(
+            contractInternals.evm.deployedBytecode.opcodes,
+          )
+          const formattedOpcodesArr = formattedOpcodes.split('\n')
 
-  //         console.log({
-  //           test: formatSourceMap(
-  //             contractInternals.evm.deployedBytecode.sourceMap,
-  //             contractCode,
-  //             formattedOpcodesArr,
-  //           ).shrinkTree().rootNode.element,
-  //         })
-  //         return {
-  //           sourceMap: formatSourceMap(
-  //             contractInternals.evm.deployedBytecode.sourceMap,
-  //             contractCode,
-  //             formattedOpcodesArr,
-  //           ).shrinkTree(),
-  //           opcodesRaw: contractInternals.evm.deployedBytecode.opcodes,
-  //           opcodes: formattedOpcodes,
-  //           fileName,
-  //           contractName,
-  //         }
-  //       },
-  //     ),
-  //   )
-
-  return allEntries // [...allEntries, ...newEntries]
+          formattedOpcodesArr.shift()
+          return {
+            rawSourceMap: contractInternals.evm.deployedBytecode.sourceMap,
+            // sourceMap: formatSourceMap(
+            //   contractInternals.evm.deployedBytecode.sourceMap,
+            //   input.sources[fileName].content,
+            //   formattedOpcodesArr,
+            // ).shrinkTree(),
+            // opcodesRaw: contractInternals.evm.deployedBytecode.opcodes,
+            // opcodes: formattedOpcodes,
+            fileName,
+            contractName,
+          }
+        },
+      ),
+    )
+    allEntries = [...allEntries, ...newEntries]
+  }
+  return allEntries
 }
 
 export const compileFiles = async (payload: any, solc: any) => {
@@ -138,9 +134,27 @@ export const compileFiles = async (payload: any, solc: any) => {
         Bucket: BUCKET_NAME,
       }
       const resp = await s3download(params)
-      const parsed = await resp.Body?.transformToString('utf8')
-      return JSON.stringify({ parsed })
+      return await resp.Body?.transformToString('utf8')
     }),
   )
-  return await getInternals(payload.files, files, solc)
+  const internals = await getInternals(payload.files, files, solc)
+  const params: PutObjectRequest = {
+    Key: `contracts/${payload.chainId}/${payload.address}/payload.json`,
+    Bucket: BUCKET_NAME,
+  }
+  try {
+    const resp = await s3download(params)
+    const existingResponse = JSON.parse(
+      (await resp.Body?.transformToString('utf8')) || '',
+    )
+    existingResponse.status = TransactionTraceResponseStatus.SUCCESS
+    existingResponse.srcmap = internals
+    await s3upload({
+      ...params,
+      Body: JSON.stringify(existingResponse),
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  return internals
 }

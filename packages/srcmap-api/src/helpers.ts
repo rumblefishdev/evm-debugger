@@ -36,36 +36,37 @@ const s3download = function (params: GetObjectCommandInput) {
   return s3.send(command)
 }
 
-const parseFiles = async (file: string, params: PutObjectRequest) => {
-  const regexPattern = /^[^\r\\]*/
-  const parsed = {
-    filename: regexPattern.test(file) ? file.match(regexPattern)[0] : null,
-    body: `// File: ${file}`,
-  }
-  if (parsed.filename) {
+const parseFiles = async (
+  filename: string,
+  body: string,
+  params: PutObjectRequest,
+) => {
+  if (filename) {
     const key = params.Key?.replace(
       'payload.json',
-      `contract_files/${parsed.filename}`,
+      `contract_files/${filename}`,
     )
     await s3upload({
       Key: key,
       Bucket: params.Bucket,
-      Body: parsed.body,
+      Body: body,
     })
     return key
   }
   return null
 }
 
-const extractFiles = async (files: string, params: PutObjectRequest) => {
+const extractFiles = async (files: any, params: PutObjectRequest) => {
   let uploaded: (string | null | undefined)[] = []
-  if (files && files.length > 0) {
-    const splited = files.split('// File: ')
+  if (files)
+    uploaded = await (typeof files === 'string' || files instanceof String
+      ? Promise.all([parseFiles('main.sol', files as string, params)])
+      : Promise.all(
+          files.map((file: any) =>
+            parseFiles(file.filename, file.content, params),
+          ),
+        ))
 
-    uploaded = await Promise.all(
-      splited.map((file) => parseFiles(file, params)),
-    )
-  }
   return uploaded.filter(Boolean)
 }
 
@@ -119,6 +120,8 @@ export const constructFiles = async (
         ContractName: content.ContractName,
         ConstructorArguments: content.ConstructorArguments,
         CompilerVersion: content.CompilerVersion,
+        chainId: address.chainId,
+        address: address.address,
         ABI: JSON.parse(content.ABI),
       }
       await s3upload({

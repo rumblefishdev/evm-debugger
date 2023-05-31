@@ -5,7 +5,6 @@
 import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { AWSLambda } from '@sentry/serverless'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-
 import { version } from '../package.json'
 
 import { createResponse } from './wrappers'
@@ -22,7 +21,7 @@ AWSLambda.setTag('lambda_name', 'srcmap-compiler')
 function getSolcModule(solcVersion: string) {
   try {
     console.log(`Reqire solc ${solcVersion}`)
-    const solc = require(`solc${solcVersion}`)
+    const solc = require(`./solc${solcVersion}`).default
     console.log(`Using solc ${solcVersion}`)
     return solc
   } catch (error) {
@@ -35,7 +34,6 @@ export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
   if (event.body) {
     const payload = JSON.parse(event.body)?.data[0]
     const solc = await getSolcModule(payload.CompilerVersion.split('+')[0])
-    console.log('solc', solc)
     try {
       const response = await compileFiles(payload, solc)
       return createResponse(TransactionTraceResponseStatus.SUCCESS, {
