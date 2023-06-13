@@ -1,21 +1,31 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { Box } from '@mui/material'
-import React, { useState } from 'react'
+import { Hidden, Stack, Box, useTheme } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 
+import CrossIcon from '../../assets/svg/cross.svg'
+import HamburgerIcon from '../../assets/svg/hamburger.svg'
 import { Logo } from '../Logo'
 import { Button } from '../Button'
 import { CareersSubmenu } from '../CareersSubmenu'
-import { Link } from '../Link'
+import { MenuItem } from '../MenuItem'
 import { MenuItemIcon } from '../MenuItemIcon'
 import { ResourcesSubmenu } from '../ResourcesSubmenu'
 import { Section } from '../Section'
 import { ServicesSubmenu } from '../ServicesSubmenu'
 import { Submenu } from '../Submenu'
-import { MenuItem } from '../MenuItem'
-import { RenderWithAlgeaTheme } from '../../utils/RenderWithAlgeaTheme'
+import { Link } from '../Link'
 
-import type { HeaderProps, IState, IView } from './Header.types'
-import { StyledHeader, StyledTextContainer, StyledWrapper } from './styles'
+import type { AnimateIconProps, HeaderProps, IState, IView, TMenu } from './Header.types'
+import {
+  StyledHeader,
+  StyledTextContainer,
+  StyledWrapper,
+  StyledImg,
+  StyledCollapse,
+  StyledMenuItem,
+  StyledMenuItemIcon,
+  StyledButtonWrapper,
+  StyledButtonAnimationWrapper,
+} from './styles'
 
 const defaultState: IState = {
   services: false,
@@ -23,16 +33,195 @@ const defaultState: IState = {
   careers: false,
 }
 
-const DesktopView = ({ closeAll, blogs }: IView) => {
-  const [servicesHover, setServicesHover] = useState(false)
-  const [careersHover, setCareersHover] = useState(false)
-  const [resourceHover, setResourceHover] = useState(false)
+const AnimatedIcon = ({ displayMobile, mobileDisplayHandler }: AnimateIconProps) => {
+  return (
+    <StyledButtonAnimationWrapper>
+      <StyledImg
+        src={CrossIcon}
+        onClick={mobileDisplayHandler}
+        sx={displayMobile ? { transform: 'scale(1)', opacity: 1 } : {}}
+      />
+      <StyledImg
+        src={HamburgerIcon}
+        onClick={mobileDisplayHandler}
+        sx={displayMobile ? {} : { transform: 'scale(1)', opacity: 1 }}
+      />
+    </StyledButtonAnimationWrapper>
+  )
+}
+
+const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IView) => {
+  const [isDisplayMobile, setDisplayMobile] = useState(false)
+  const mobileDisplayHandler = () => {
+    if (isDisplayMobile) {
+      setDisplayMobile(false)
+      closeAll()
+      document.body.style.overflow = 'auto'
+    } else {
+      setDisplayMobile(true)
+      document.body.style.overflow = 'hidden'
+    }
+  }
+
+  const theme = useTheme()
+  const isDarkMode: boolean = theme.palette.type === 'dark'
+  const isNavyMode: boolean = theme.palette.type === 'navy'
+  return (
+    <>
+      <Box height="80px" />
+      <StyledHeader background={background}>
+        <Section
+          width="normal"
+          backgroundColor={background ?? '#fff'}
+        >
+          <StyledWrapper
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Logo algeaTheme />
+            <Stack
+              direction="row"
+              spacing={2}
+            >
+              {!isDarkMode || !isNavyMode ? (
+                <Hidden
+                  mdUp={theme.palette.type === 'navy'}
+                  smDown={theme.palette.type !== 'navy'}
+                >
+                  <Link to="/contact">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{ maxWidth: '288px' }}
+                    >
+                      Contact
+                    </Button>
+                  </Link>
+                </Hidden>
+              ) : (
+                <Link to="/contact">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{ maxWidth: '288px' }}
+                  >
+                    Contact
+                  </Button>
+                </Link>
+              )}
+              <AnimatedIcon
+                displayMobile={isDisplayMobile}
+                mobileDisplayHandler={mobileDisplayHandler}
+              />
+            </Stack>
+          </StyledWrapper>
+          <Submenu
+            isOpen={isDisplayMobile}
+            closeMenu={mobileDisplayHandler}
+          >
+            <Box height="84px" />
+            <Stack
+              sx={{ height: '90%' }}
+              justifyContent="space-between"
+            >
+              <StyledTextContainer>
+                <StyledMenuItemIcon
+                  onClick={() => displayHandler && displayHandler('services')}
+                  open={display?.services}
+                >
+                  Services
+                </StyledMenuItemIcon>
+                <StyledCollapse
+                  in={display?.services}
+                  timeout={500}
+                  unmountOnExit
+                >
+                  <ServicesSubmenu />
+                </StyledCollapse>
+                <StyledMenuItem
+                  to="/case-studies"
+                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+                >
+                  Case Studies
+                </StyledMenuItem>
+                <StyledMenuItemIcon
+                  onClick={() => displayHandler && displayHandler('careers')}
+                  open={display?.careers}
+                >
+                  Careers
+                </StyledMenuItemIcon>
+                <StyledCollapse
+                  in={display?.careers}
+                  timeout={500}
+                  unmountOnExit
+                >
+                  <CareersSubmenu />
+                </StyledCollapse>
+                <StyledMenuItemIcon
+                  onClick={() => displayHandler && displayHandler('resources')}
+                  open={display?.resources}
+                >
+                  Resources
+                </StyledMenuItemIcon>
+                <StyledCollapse
+                  in={display?.resources}
+                  timeout={500}
+                  unmountOnExit
+                >
+                  <ResourcesSubmenu blogs={blogs} />
+                </StyledCollapse>
+                <StyledMenuItem
+                  to="/team"
+                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+                >
+                  About us
+                </StyledMenuItem>
+              </StyledTextContainer>
+              <Hidden
+                lgDown={theme.palette.type === 'navy'}
+                smUp={theme.palette.type !== 'navy'}
+              >
+                <StyledButtonWrapper>
+                  <Link
+                    to="/contact"
+                    sx={{
+                      width: '100%',
+                      maxWidth: '288px',
+                      marginBottom: '24px',
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      sx={{ width: '100%', maxWidth: '288px' }}
+                    >
+                      Contact
+                    </Button>
+                  </Link>
+                </StyledButtonWrapper>
+              </Hidden>
+            </Stack>
+          </Submenu>
+        </Section>
+      </StyledHeader>
+    </>
+  )
+}
+
+const DesktopView = ({ closeAll, blogs, background }: IView) => {
+  const [isServicesHover, setServicesHover] = useState(false)
+  const [isCareersHover, setCareersHover] = useState(false)
+  const [isResourceHover, setResourceHover] = useState(false)
 
   return (
     <>
       <Box height="100px"></Box>
-      <StyledHeader>
-        <Section width="normal">
+      <StyledHeader background={background}>
+        <Section
+          width="normal"
+          backgroundColor={background ?? '#fff'}
+        >
           <StyledWrapper
             direction="row"
             justifyContent="space-between"
@@ -50,13 +239,14 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               >
                 <MenuItemIcon
                   onTouchStart={() => {
-                    setServicesHover(!servicesHover)
+                    setServicesHover(!isServicesHover)
                   }}
-                  open={servicesHover}
+                  open={isServicesHover}
                 >
                   Services
                 </MenuItemIcon>
               </div>
+              <MenuItem to="/evm-debugger">Products</MenuItem>
               <MenuItem to="/case-studies">Case Studies</MenuItem>
               <div
                 onMouseEnter={() => setCareersHover(true)}
@@ -64,9 +254,9 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               >
                 <MenuItemIcon
                   onTouchStart={() => {
-                    setCareersHover(!careersHover)
+                    setCareersHover(!isCareersHover)
                   }}
-                  open={careersHover}
+                  open={isCareersHover}
                 >
                   Careers
                 </MenuItemIcon>
@@ -77,9 +267,9 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
               >
                 <MenuItemIcon
                   onTouchStart={() => {
-                    setResourceHover(!resourceHover)
+                    setResourceHover(!isResourceHover)
                   }}
-                  open={resourceHover}
+                  open={isResourceHover}
                 >
                   Resources
                 </MenuItemIcon>
@@ -96,7 +286,7 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
             </Link>
           </StyledWrapper>
           <Submenu
-            isOpen={servicesHover}
+            isOpen={isServicesHover}
             closeMenu={closeAll}
             noPadding
           >
@@ -108,7 +298,7 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
             </div>
           </Submenu>
           <Submenu
-            isOpen={resourceHover}
+            isOpen={isResourceHover}
             closeMenu={closeAll}
             noPadding
           >
@@ -120,7 +310,7 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
             </div>
           </Submenu>
           <Submenu
-            isOpen={careersHover}
+            isOpen={isCareersHover}
             closeMenu={closeAll}
             noPadding
           >
@@ -137,20 +327,47 @@ const DesktopView = ({ closeAll, blogs }: IView) => {
   )
 }
 
-export const Header = ({ blogs }: HeaderProps) => {
+export const Header = ({ blogs, background }: HeaderProps) => {
+  const theme = useTheme()
   const [display, setDisplay] = useState(defaultState)
+  const [isMobile, setMobile] = useState<boolean>(false)
+
+  useEffect(() => {
+    setMobile(window.innerWidth <= theme.breakpoints.values.md)
+    const handleWindowResize = () => setMobile(window.innerWidth <= theme.breakpoints.values.md)
+    window.addEventListener('resize', handleWindowResize)
+  }, [theme.breakpoints.values.md])
+
+  const displayHandler = (menu: TMenu) => {
+    setDisplay({
+      ...defaultState,
+      [menu]: !display[menu],
+    })
+  }
 
   const closeAll = () => {
     setDisplay(defaultState)
   }
 
   return (
-    <RenderWithAlgeaTheme>
-      <DesktopView
-        closeAll={closeAll}
-        blogs={blogs}
-        display={display}
-      />
-    </RenderWithAlgeaTheme>
+    <>
+      {isMobile ? (
+        <MobileView
+          displayHandler={displayHandler}
+          closeAll={closeAll}
+          display={display}
+          blogs={blogs}
+          background={background}
+        />
+      ) : (
+        <DesktopView
+          closeAll={closeAll}
+          blogs={blogs}
+          display={display}
+          displayHandler={displayHandler}
+          background={background}
+        />
+      )}
+    </>
   )
 }

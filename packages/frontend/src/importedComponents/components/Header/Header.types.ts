@@ -13,6 +13,7 @@ export interface IView {
   blogs: IBlogPost[]
   display?: IState
   displayHandler?: (menu: TMenu) => void
+  background?: string
 }
 
 export interface AnimateIconProps {
@@ -22,4 +23,5 @@ export interface AnimateIconProps {
 
 export interface HeaderProps extends StackProps {
   blogs: IBlogPost[]
+  background?: string
 }

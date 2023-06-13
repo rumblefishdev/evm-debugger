@@ -3,7 +3,7 @@ import React from 'react'
 import ReactGA from 'react-ga4'
 import TagManager from 'react-gtm-module'
 
-import { ROUTES } from '../../router'
+import { ROUTES } from '../../routes'
 
 const PROD_URL = 'www.rumblefish.dev'
 

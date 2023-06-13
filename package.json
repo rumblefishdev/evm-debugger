@@ -53,6 +53,7 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.0.3",
     "ethers": "^5.7.2",
     "hardhat": "^2.14.1",
     "node-jq": "^2.3.5",
