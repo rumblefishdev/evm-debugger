@@ -48,6 +48,20 @@ Resources:
         AlchemyKey: !Ref AlchemyKey
         SentryDsn: !Ref SentryDsn
 
+  SrcMapService:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./srcmap-service.yml
+      Parameters:
+        Environment: !Ref Environment
+        HostedZoneId: !Ref HostedZoneId
+        Domain: !Ref Domain
+        CertificateArn: !Ref CertificateArn
+        TraceBucketName: !Ref TraceBucketName
+        ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
+        AlchemyKey: !Ref AlchemyKey
+        SentryDsn: !Ref SentryDsn
+
   CIUploadRoleEvmDebugger:
     Type: AWS::IAM::Role
     Properties:
