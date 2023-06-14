@@ -1,28 +1,48 @@
 import { Dialog, Input, Stack, styled, Typography } from '@mui/material'
 
 import { Button } from '../Button'
-
-export const StyledDialog = styled(Dialog)(() => ({}))
+/* eslint-disable */
+export const StyledDialog = styled(Dialog)(() => ({
+  background: 'rgba(1,25,111,0.9)',
+}))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  /* eslint-disable */
-  // background:"#071D5A ",
-  padding: theme.spacing(6),
-  maxWidth: '80vw',
-  height: '100%',
-  boxSizing: 'border-box',
+display:"flex",
+flexDirection:"column",
+gap:theme.spacing(3),
+padding:theme.spacing(3)
 
 }))
 
 export const StyledHeader = styled(Stack)(({ theme }) => ({
   width: '100%',
-  marginBottom: theme.spacing(6),
+  // marginBottom: theme.spacing(6),
   gap: theme.spacing(1),
+}))
+
+export const StyledTextAreaWrapper = styled(Stack)(({ theme }) => ({
+  width: '100%',
+display:"flex",
+flexDirection:"column",
+
 }))
 
 export const StyledTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.headingUnknown,
   color: theme.palette.rfSecondary,
+  fontFamily:"Rajdhani",
+  fontStyle:"normal",
+  fontWeight:700,
+  fontSize:"32px",
+  lineHeight:"115%",
+  letterSpacing:"-0.02em",
+  background:'linear-gradient(180deg, #FFFFFF 0%, rgba(217, 217, 217, 0.8) 100%)',
+  WebkitBackgroundClip:'text',
+  WebkitTextFillColor:"transparent",
+  backgroundClip:"text",
+
+
+
 }))
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
@@ -33,9 +53,15 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
 
 export const StyledInputLabel = styled(Typography)(({ theme }) => ({
   ...theme.typography.label,
-  marginBottom: theme.spacing(1),
   display: 'inline',
   color: theme.palette.rfSecondary,
+  textAlign: 'left',
+  opacity: 0.5,
+  lineHeight: '100%',
+  fontWeight: 600,
+  fontSize: '12px',
+  fontFamily: 'Rajdhani',
+
 }))
 
 export const StyledInputLabelStar = styled(Typography)<{ component?: 'span' }>(({ theme }) => ({
@@ -50,15 +76,13 @@ export const StyledTextArea = styled(Input)(({ theme }) => ({
   overflow: 'auto',
   minHeight: '224px',
   maxHeight: '424px',
-  marginBottom: theme.spacing(6),
-  height: '100%',
+  height: '172px',
   boxSizing: 'border-box',
-  background:"rgba(255,255,255,0.7)",
-  color:"black",
+  background:theme.palette.type==="navy"?"rgba(255, 255, 255, 0.15)": "rgba(255,255,255,0.7)",
   ...theme.customStyles.scrollbar,
   // ...theme.typography.bodySmall,
 
-  borderRadius: '3px',
+  borderRadius: '16px',
   border: `1px solid ${theme.palette.rfLines}`,
 
   // remove after and before

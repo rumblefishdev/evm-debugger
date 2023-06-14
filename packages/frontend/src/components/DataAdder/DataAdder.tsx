@@ -1,4 +1,5 @@
 import { useFileUploadHandler } from '../../hooks/useFileUpload'
+import { Button } from '../../importedComponents/components/Button'
 
 import type { DataAdderProps } from './DataAdder.types'
 import {
@@ -12,6 +13,7 @@ import {
   StyledDialog,
   StyledInputLabel,
   StyledInputLabelStar,
+  StyledTextAreaWrapper,
 } from './styles'
 
 export const DataAdder = ({ submithandler, onClose, title, description, ...props }: DataAdderProps) => {
@@ -23,12 +25,11 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
     <StyledDialog
       PaperProps={{
         style: {
+          overflow: 'hidden',
           boxShadow: 'none',
+          borderRadius: '24px',
           background:
-            ' radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)',
-
-          // background: " radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)",
-          backdropFilter: 'blur(12px)',
+            'radial-gradient(102.78% 104.72% at -0.77% 0%, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(255, 255, 255, 0.01)',
         },
       }}
       {...props}
@@ -39,19 +40,21 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
           <StyledTitle>{title}</StyledTitle>
           {description ? <StyledDescription>{description}</StyledDescription> : null}
         </StyledHeader>
-        <StyledInputLabel>
-          Code<StyledInputLabelStar component="span">*</StyledInputLabelStar>
-        </StyledInputLabel>
-        <StyledTextArea
-          multiline
-          minRows={12}
-          value={inputValue}
-          onChange={(event) => setFileValue(event.target.value)}
-        />
+        <StyledTextAreaWrapper>
+          <StyledInputLabel>
+            Code<StyledInputLabelStar component="span">*</StyledInputLabelStar>
+          </StyledInputLabel>
+          <StyledTextArea
+            multiline
+            minRows={12}
+            value={inputValue}
+            onChange={(event) => setFileValue(event.target.value)}
+          />
+        </StyledTextAreaWrapper>
+
         <StyledButtonWrapper>
-          <StyledButton
+          <Button
             variant="outlined"
-            component="label"
             sx={{ textAlign: 'center', paddingRight: 0, paddingLeft: 0 }}
           >
             Upload file
@@ -60,7 +63,7 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
               hidden
               onChange={uploadFile}
             />
-          </StyledButton>
+          </Button>
           <StyledButton
             variant="contained"
             onClick={() => submithandler(fileValue)}
