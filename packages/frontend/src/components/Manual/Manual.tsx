@@ -44,51 +44,53 @@ export const Manual = () => {
   )
 
   return (
-    <StyledStack>
-      <Controller
-        control={control}
-        name="txInfo"
-        render={({ field, fieldState }) => (
-          <UploadBox
-            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
-            errorMessage={fieldState.error?.message}
-            uploadInfo="Upload result of eth_getTransactionByHash"
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            title="Transaction info"
-            isUploaded={Boolean(field.value)}
-          />
-        )}
-        rules={{
-          validate: {
-            schema: validateSchema(txInfoSchema),
-          },
-          required: 'This field is required',
-        }}
-      />
-      <StyledLine />
-      <Controller
-        control={control}
-        name="structLogs"
-        render={({ field, fieldState }) => (
-          <UploadBox
-            isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
-            errorMessage={fieldState.error?.message}
-            uploadInfo="Upload result of debug_traceTransaction"
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            title="Struct logs"
-            isUploaded={Boolean(field.value)}
-          />
-        )}
-        rules={{
-          validate: {
-            schema: validateSchema(traceTransactionSchema),
-          },
-          required: 'This field is required',
-        }}
-      />
+    <>
+      <StyledStack>
+        <Controller
+          control={control}
+          name="txInfo"
+          render={({ field, fieldState }) => (
+            <UploadBox
+              isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+              errorMessage={fieldState.error?.message}
+              uploadInfo="Upload result of eth_getTransactionByHash"
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              title="Transaction info"
+              isUploaded={Boolean(field.value)}
+            />
+          )}
+          rules={{
+            validate: {
+              schema: validateSchema(txInfoSchema),
+            },
+            required: 'This field is required',
+          }}
+        />
+        <StyledLine />
+        <Controller
+          control={control}
+          name="structLogs"
+          render={({ field, fieldState }) => (
+            <UploadBox
+              isError={fieldState.error?.type === 'schema' || fieldState.error?.type === 'required'}
+              errorMessage={fieldState.error?.message}
+              uploadInfo="Upload result of debug_traceTransaction"
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              title="Struct logs"
+              isUploaded={Boolean(field.value)}
+            />
+          )}
+          rules={{
+            validate: {
+              schema: validateSchema(traceTransactionSchema),
+            },
+            required: 'This field is required',
+          }}
+        />
+      </StyledStack>
       <DebuggerProcessButton onClick={handleSubmit(submitHandler)} />
-    </StyledStack>
+    </>
   )
 }

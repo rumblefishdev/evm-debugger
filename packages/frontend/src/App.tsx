@@ -1,14 +1,17 @@
-import { ThemeProvider } from '@mui/material'
-import React from 'react'
+import { ThemeProvider, Stack } from '@mui/material'
 import { RouterProvider } from 'react-router-dom'
 
-import { theme, themeDark } from './theme/algaeTheme'
+import { theme } from './theme/algaeTheme'
 import { appRouter } from './router'
 import { GAnalyticsInit } from './components/GAnalytics'
 
 function App() {
   GAnalyticsInit()
-  return <RouterProvider router={appRouter} />
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={appRouter} />
+    </ThemeProvider>
+  )
 }
 
 export default App

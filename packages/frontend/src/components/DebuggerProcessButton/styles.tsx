@@ -5,6 +5,7 @@ import type { LinkProps } from '@mui/material'
 
 
 export const IssueTextContainer = styled(Typography)(({ theme }) => ({
+  marginTop:theme.spacing(1),
   width: '100%',
   textAlign: "center",
   lineHeight: '150%',

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { supportedChains } from '../../helpers/chains'
-import { ROUTES } from '../../router'
+import { ROUTES } from '../../routes'
 import { DebuggerProcessButton } from '../DebuggerProcessButton'
 
 import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
@@ -35,100 +35,102 @@ export const Supported = () => {
   }, [])
 
   return (
-    <StyledStack>
-      <Controller
-        control={control}
-        defaultValue=""
-        name="transactionHash"
-        render={({ field, fieldState }) => (
-          <StyledInputWrapper>
-            <StyledInputLabel>Transaction hash</StyledInputLabel>
-            <StyledInput
-              fullWidth
-              variant="outlined"
-              value={field.value}
-              onChange={field.onChange}
-              error={fieldState.error?.type === 'required' || fieldState.error?.type === 'pattern'}
-            />
-            <StyledErrorLabel>{fieldState.error?.message}</StyledErrorLabel>
-          </StyledInputWrapper>
-        )}
-        rules={{
-          required: 'This field is required',
-          pattern: {
-            value: /^0x([\dA-Fa-f]{64})$/,
+    <>
+      <StyledStack>
+        <Controller
+          control={control}
+          defaultValue=""
+          name="transactionHash"
+          render={({ field, fieldState }) => (
+            <StyledInputWrapper>
+              <StyledInputLabel>Transaction hash</StyledInputLabel>
+              <StyledInput
+                fullWidth
+                variant="outlined"
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.type === 'required' || fieldState.error?.type === 'pattern'}
+              />
+              <StyledErrorLabel>{fieldState.error?.message}</StyledErrorLabel>
+            </StyledInputWrapper>
+          )}
+          rules={{
+            required: 'This field is required',
+            pattern: {
+              value: /^0x([\dA-Fa-f]{64})$/,
 
-            message: 'invalid transaction hash',
-          },
-        }}
-      />
-      <Controller
-        control={control}
-        defaultValue={1}
-        name="chainId"
-        render={({ field, fieldState }) => (
-          <StyledInputWrapper>
-            <StyledInputLabel>Network</StyledInputLabel>
-            <StyledSelect
-              open={isOpen}
-              onOpen={() => {
-                setIsOpen(true)
-              }}
-              onClose={() => {
-                setIsOpen(false)
-              }}
-              variant="outlined"
-              labelId="demo-simple-select-label"
-              value={field.value}
-              onChange={field.onChange}
-              error={fieldState.error?.type === 'required'}
-              MenuProps={{
-                // autoFocus: false,
-                // disableAutoFocusItem: true,
-                // disableEnforceFocus: true,
-                // disableAutoFocus: true,
+              message: 'invalid transaction hash',
+            },
+          }}
+        />
+        <Controller
+          control={control}
+          defaultValue={1}
+          name="chainId"
+          render={({ field, fieldState }) => (
+            <StyledInputWrapper>
+              <StyledInputLabel>Network</StyledInputLabel>
+              <StyledSelect
+                open={isOpen}
+                onOpen={() => {
+                  setIsOpen(true)
+                }}
+                onClose={() => {
+                  setIsOpen(false)
+                }}
+                variant="outlined"
+                labelId="demo-simple-select-label"
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.type === 'required'}
+                MenuProps={{
+                  // autoFocus: false,
+                  // disableAutoFocusItem: true,
+                  // disableEnforceFocus: true,
+                  // disableAutoFocus: true,
 
-                transitionDuration: 0,
-                transformOrigin: {
-                  vertical: 'top',
-                  horizontal: 'left',
-                },
-                style: {
-                  zIndex: 10,
-                },
-
-                // style: { zIndex: 10 },
-                PaperProps: {
-                  sx: {
-                    height: 'auto',
-                    borderRadius: '16px',
-                    backgroundColor: '#344579',
+                  transitionDuration: 0,
+                  transformOrigin: {
+                    vertical: 'top',
+                    horizontal: 'left',
                   },
-                },
+                  style: {
+                    zIndex: 10,
+                  },
 
-                disableScrollLock: true,
-                anchorOrigin: {
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                },
-              }}
-            >
-              {Object.entries(supportedChains).map(([chainId, chainData]) => (
-                <StyledMenuItem
-                  key={chainId.toString()}
-                  value={chainId}
-                >
-                  {chainData.name}
-                </StyledMenuItem>
-              ))}
-            </StyledSelect>
-          </StyledInputWrapper>
-        )}
-        rules={{
-          required: 'This field is required',
-        }}
-      />
+                  // style: { zIndex: 10 },
+                  PaperProps: {
+                    sx: {
+                      height: 'auto',
+                      borderRadius: '16px',
+                      backgroundColor: '#344579',
+                    },
+                  },
+
+                  disableScrollLock: true,
+                  anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  },
+                }}
+              >
+                {Object.entries(supportedChains).map(([chainId, chainData]) => (
+                  <StyledMenuItem
+                    key={chainId.toString()}
+                    value={chainId}
+                  >
+                    {chainData.name}
+                  </StyledMenuItem>
+                ))}
+              </StyledSelect>
+            </StyledInputWrapper>
+          )}
+          rules={{
+            required: 'This field is required',
+          }}
+        />
+      </StyledStack>
       <DebuggerProcessButton onClick={handleSubmit(submitHandler)} />
-    </StyledStack>
+    </>
   )
 }

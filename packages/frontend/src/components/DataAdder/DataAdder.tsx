@@ -14,6 +14,7 @@ import {
   StyledInputLabel,
   StyledInputLabelStar,
   StyledTextAreaWrapper,
+  StyledButtonText,
 } from './styles'
 
 export const DataAdder = ({ submithandler, onClose, title, description, ...props }: DataAdderProps) => {
@@ -53,22 +54,30 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
         </StyledTextAreaWrapper>
 
         <StyledButtonWrapper>
-          <Button
+          <StyledButton
             variant="outlined"
-            sx={{ textAlign: 'center', paddingRight: 0, paddingLeft: 0 }}
+            component="label"
+            // sx={{ textAlign: 'center', paddingRight: 0, paddingLeft: 0 }}
           >
-            Upload file
+            <StyledButtonText>Upload file</StyledButtonText>
             <input
               type="file"
               hidden
               onChange={uploadFile}
             />
-          </Button>
+          </StyledButton>
           <StyledButton
-            variant="contained"
             onClick={() => submithandler(fileValue)}
+            variant="outlined"
+            component="label"
+            sx={{ color: '#070706', backgroundColor: '#FFFFFF' }}
           >
-            Submit
+            <StyledButtonText>Submit</StyledButtonText>
+            <input
+              type="file"
+              hidden
+              onChange={uploadFile}
+            />
           </StyledButton>
         </StyledButtonWrapper>
       </StyledStack>

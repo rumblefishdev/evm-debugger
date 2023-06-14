@@ -4,7 +4,7 @@ import React from 'react'
 import { StyledBox } from './styles'
 import type { SubmenuProps } from './Submenu.types'
 
-export const Submenu: React.FC<SubmenuProps> = ({ children, isOpen, closeMenu, noPadding }) => {
+export const Submenu: React.FC<SubmenuProps> = ({ children, isOpen, closeMenu }) => {
   const isDarkMode: boolean = useTheme().palette.type === 'dark'
   const isNavyMode: boolean = useTheme().palette.type === 'navy'
   const isDarkOrNavy = Boolean(isDarkMode || isNavyMode)

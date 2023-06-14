@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 
 import { Supported } from '../Supported'
 import { Manual } from '../Manual'

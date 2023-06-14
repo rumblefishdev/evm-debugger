@@ -1,6 +1,7 @@
 import { Hidden, Stack, Typography, useTheme } from '@mui/material'
 // import Script from 'next/dist/client/script'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 
 import FacebookIcon from '../../assets/svg/facebook-white.svg'
 import LinkedinIcon from '../../assets/svg/linkedin-white.svg'
@@ -54,7 +55,15 @@ const Menu = () => {
 const ClutchReviews: React.FC = () => {
   return (
     <StyledClutchBox>
-      {/* <Script src="https://widget.clutch.co/static/js/widget.js" /> */}
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Widget</title>
+        <link
+          rel="canonical"
+          href="https://widget.clutch.co/static/js/widget.js"
+        />
+      </Helmet>
+
       <div
         className="clutch-widget"
         data-url="https://widget.clutch.co"

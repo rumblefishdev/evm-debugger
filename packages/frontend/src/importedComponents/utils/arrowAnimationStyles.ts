@@ -1,5 +1,3 @@
-export type TDirection = 'left' | 'top' | 'right' | 'down'
-
 const arrowHiddenMouseOn = {
   transform: 'translate(0px)',
 }
@@ -7,6 +5,8 @@ const arrowVisibleMouseOff = {
   transition: 'none',
   transform: 'translate(0px)',
 }
+// eslint-disable-next-line import/exports-last
+export type TDirection = 'left' | 'top' | 'right' | 'down'
 
 const generateArrowHiddenMouseOff = (direction: TDirection, pixels: string) => {
   switch (direction) {
@@ -34,6 +34,9 @@ const generateArrowHiddenMouseOff = (direction: TDirection, pixels: string) => {
         transform: `translateX(${pixels})`,
       }
     }
+    default: {
+      return { transition: 'none' }
+    }
   }
 }
 const generateArrowVisibleMouseOn = (direction: TDirection, pixels: string) => {
@@ -57,6 +60,9 @@ const generateArrowVisibleMouseOn = (direction: TDirection, pixels: string) => {
       return {
         transform: `translateX(-${pixels})`,
       }
+    }
+    default: {
+      return { transform: 'translateX(0px)' }
     }
   }
 }

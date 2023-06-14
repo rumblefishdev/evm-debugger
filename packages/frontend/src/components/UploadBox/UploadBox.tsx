@@ -31,14 +31,14 @@ export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur,
     <StyledStack {...props}>
       <IconWrapper>
         <StyledTextWrapper>
-          <Stack sx={{ gap: '6px', flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-            {isUploaded && !isError && <TickFilledBlue />}
+          <Stack sx={{ flexDirection: 'row', display: 'flex' }}>
+            <StyledLabel>Upload Result of</StyledLabel>
+            {isUploaded && !isError && <TickFilledBlue style={{ height: '12px' }} />}
             {isError && (
               <Tooltip title={errorMessage}>
-                <Error />
+                <Error style={{ height: '10px' }} />
               </Tooltip>
             )}
-            <StyledLabel>Upload Result of</StyledLabel>
           </Stack>
 
           <StyledTitle>{uploadInfo}</StyledTitle>
@@ -48,7 +48,7 @@ export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur,
         onClick={openHandler}
         variant="contained"
         size="small"
-        sx={{ maxWidth: '288px', fontWeight: 300, borderRadius: '16px' }}
+        sx={{ maxWidth: '288px', fontWeight: 400, borderRadius: '16px' }}
       >
         Add
       </Button>

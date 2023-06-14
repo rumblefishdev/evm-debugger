@@ -1,8 +1,11 @@
 import { Divider, Stack, styled, Typography } from '@mui/material'
 /* eslint-disable */
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  gap: theme.spacing(4),
+  height:"144px",
+  width: '100%',
+  gap: theme.spacing(1),
   flexDirection: 'column',
+  display: 'flex',
   alignItems: 'center',
 }))
 

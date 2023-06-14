@@ -13,7 +13,7 @@ const headingStyle = {
   fontFamily: 'Rajdhani',
   color: palette.colorBlack,
 }
-const root = process.env.PUBLIC_URL
+
 export const overrides: Components = {
   MuiTypography: {
     styleOverrides: {
@@ -90,7 +90,7 @@ export const overrides: Components = {
       font-weight: 300;
       src:
         local('Rajdhani-Light'),
-        url(/fonts/Rajdhani-Light.ttf)
+        url(/evm-debugger/fonts/Rajdhani-Light.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -99,7 +99,7 @@ export const overrides: Components = {
       font-weight: 400;
       src:
         local('Rajdhani-Regular'),
-        url(/fonts/Rajdhani-Regular.ttf)
+        url(/evm-debugger/fonts/Rajdhani-Regular.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -108,7 +108,7 @@ export const overrides: Components = {
       font-weight: 500;
       src:
         local('Rajdhani-Medium'),
-        url(/fonts/Rajdhani-Medium.ttf)
+        url(/evm-debugger/fonts/Rajdhani-Medium.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -117,7 +117,7 @@ export const overrides: Components = {
       font-weight: 600;
       src:
         local('Rajdhani-SemiBold'),
-        url(/fonts/Rajdhani-SemiBold.ttf)
+        url(/evm-debugger/fonts/Rajdhani-SemiBold.ttf)
      }
     @font-face {
       font-family: Rajdhani;
@@ -126,7 +126,7 @@ export const overrides: Components = {
       font-weight: 700;
       src:
         local('Rajdhani-Bold'),
-        url(/fonts/Rajdhani-Bold.ttf)
+        url(/evm-debugger/fonts/Rajdhani-Bold.ttf)
      }
     @font-face {
       font-family: Inter;

@@ -6,11 +6,11 @@ import { Button } from '../../importedComponents/components/Button'
 import type { ButtonProps } from './DebuggerProcessButton.types'
 import { IssueTextContainer, StyledLink, StyledBtnText } from './styles'
 
-export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick, ...props }) => {
+export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
   return (
     <>
       <Button
-        sx={{ width: '100%', borderRadius: '16px' }}
+        sx={{ width: '100%', marginTop: '40px', borderRadius: '16px' }}
         size="large"
         variant="contained"
         onClick={onClick}

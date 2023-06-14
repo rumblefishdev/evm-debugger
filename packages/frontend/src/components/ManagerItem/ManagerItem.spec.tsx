@@ -19,6 +19,7 @@ describe('ManagerItem tests', () => {
     )
     const testInstance = render.root.findByType(StyledName)
     expect(testInstance.props.children).toEqual(expectedText)
+    console.log(render.toJSON())
     expect(render.toJSON()).toMatchSnapshot()
   })
 

@@ -45,6 +45,16 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
 
 }))
 
+export const StyledButtonText = styled(Typography)(({ theme }) => ({
+  fontFamily:"Rajdhani",
+  fontStyle:"normal",
+  fontWeight:500,
+  fontSize:"20px",
+  lineHeight:"100%",
+  letterSpacing:"-0.01em",
+
+}))
+
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   ...theme.typography.caption,
   textAlign: 'left',
@@ -71,11 +81,9 @@ export const StyledInputLabelStar = styled(Typography)<{ component?: 'span' }>((
 }))
 
 export const StyledTextArea = styled(Input)(({ theme }) => ({
-  width: '100%',
+  width: '416px',
   padding: theme.spacing(2, 3),
   overflow: 'auto',
-  minHeight: '224px',
-  maxHeight: '424px',
   height: '172px',
   boxSizing: 'border-box',
   background:theme.palette.type==="navy"?"rgba(255, 255, 255, 0.15)": "rgba(255,255,255,0.7)",
@@ -104,6 +112,17 @@ export const StyledButtonWrapper = styled(Stack)(() => ({
   flexDirection: 'row',
 }))
 
-export const StyledButton = styled(Button)<{ component?: 'label' }>(() => ({
-  width: '196px',
+export const StyledButton = styled(Button)<{ component?: 'label' }>(({ theme }) => ({
+  textAlign: 'center',
+  padding:theme.spacing(2),
+  width: '48%', 
+  color: "#FFFFFF",
+  backgroundColor: "transaparent",
+  // boxShadow:'0px 8px 24px rgba(255, 255, 255, 0.15)',
+  border:'4px solid rgba(255, 255, 255, 0.25)',
+  backgroundClip:'padding-box',
+  borderRadius: "16px",
+  '&:hover': {
+    backgroundColor: theme.palette.primaryButtonHoverBgColor,
+  },
 }))
