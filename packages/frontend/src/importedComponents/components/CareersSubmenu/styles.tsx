@@ -44,6 +44,9 @@ export const StyledDivider = styled(Box)(({ theme }) => ({
 }))
 export const StyledMenuBoxBigIcon = styled(MenuBoxBigIcon)(({ theme }) => ({
   margin: theme.spacing(0, 0, 1, 3),
+  '&:hover': {
+    background: theme.palette.type === 'dark' ? '#000000b8' : theme.palette.type === 'navy' && 'rgba(255, 255, 255, 0.1);',
+  },
   [theme.breakpoints.down('md')]: {
     margin: theme.spacing(2, 0),
   },

@@ -5,10 +5,13 @@ import { Button } from '../Button'
 export const StyledDialog = styled(Dialog)(() => ({}))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
+  /* eslint-disable */
+  // background:"#071D5A ",
   padding: theme.spacing(6),
   maxWidth: '80vw',
   height: '100%',
   boxSizing: 'border-box',
+
 }))
 
 export const StyledHeader = styled(Stack)(({ theme }) => ({
@@ -50,8 +53,10 @@ export const StyledTextArea = styled(Input)(({ theme }) => ({
   marginBottom: theme.spacing(6),
   height: '100%',
   boxSizing: 'border-box',
+  background:"rgba(255,255,255,0.7)",
+  color:"black",
   ...theme.customStyles.scrollbar,
-  ...theme.typography.bodySmall,
+  // ...theme.typography.bodySmall,
 
   borderRadius: '3px',
   border: `1px solid ${theme.palette.rfLines}`,

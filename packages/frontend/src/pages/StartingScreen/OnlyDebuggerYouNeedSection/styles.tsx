@@ -1,145 +1,152 @@
 import { Stack, styled, Typography } from '@mui/material'
 
 import centerEllipse from '../../../assets/png/centerEllipse.png'
-
+/* eslint-disable */
+  
 export const CenterEllipse = styled('div')(({ theme }) => ({
-  '&:before': {
-    width: `100%`,
-    top: '-10%',
-    position: 'absolute',
-    left: '0%',
-    height: `100%`,
-    content: "''",
-    backgroundSize: `120% 120%, 100%, 100%`,
-    backgroundRepeat: `no-repeat`,
-    backgroundPositionX: `20%, 100%, 70%`,
-    backgroundImage: `url(${centerEllipse})`,
-    // backgroundPositionY: `10%, 2%`,
-    // [theme.breakpoints.down('lg')]: {
-    //     backgroundSize: `130% 55%`,
-    //     width: `100vw`,
-    //     backgroundPositionX: `40%, 100%, 70%`,
-    //     top: '-25%'
-    // },
-    [theme.breakpoints.down('lg')]: {
-      top: '-20%',
-      backgroundSize: `auto 120%`,
-      backgroundPositionX: `50%, 100%, 70%`,
-    },
-    [theme.breakpoints.down('md')]: {
-      top: '-30%',
-      backgroundSize: `auto 110%`,
-      backgroundPositionX: `50%, 100%, 70%`,
-    },
-    // [theme.breakpoints.down('sm')]: {
-    //     backgroundSize: `129% 129%, 100%, 100%`,
-    //     backgroundPositionX: `50%, 100%, 70%`,
 
-    // },
+  ['&:before']: {
+      content: "''",
+      height: `100%`,
+      width: `100%`,
+      left: '0%',
+      top: '-10%',
+      position: 'absolute',
+      backgroundImage: `url(${centerEllipse})`,
+      backgroundSize: `120% 120%, 100%, 100%`,
+      backgroundRepeat: `no-repeat`,
+      backgroundPositionX: `20%, 100%, 70%`,
+      // backgroundPositionY: `10%, 2%`,
+      // [theme.breakpoints.down('lg')]: {
+      //     backgroundSize: `130% 55%`,
+      //     width: `100vw`,
+      //     backgroundPositionX: `40%, 100%, 70%`,
+      //     top: '-25%'
+      // },
+      [theme.breakpoints.down('lg')]: {
+          backgroundSize: `auto 120%`,
+          backgroundPositionX: `50%, 100%, 70%`,
+          top: "-20%"
+      },
+      [theme.breakpoints.down('md')]: {
+          backgroundSize: `auto 110%`,
+          backgroundPositionX: `50%, 100%, 70%`,
+          top: "-30%"
+      },
+      // [theme.breakpoints.down('sm')]: {
+      //     backgroundSize: `129% 129%, 100%, 100%`,
+      //     backgroundPositionX: `50%, 100%, 70%`,
+
+      // },
   },
-}))
+}));
 
 export const Line = styled('div')(({ theme }) => ({
-  width: '100%',
+  height: "1px",
+  width: "100%",
+  backgroundColor: "#FFFFFF",
   opacity: 0.15,
   marginTop: theme.spacing(10),
-  height: '1px',
-  backgroundColor: '#FFFFFF',
   [theme.breakpoints.down('sm')]: {
-    display: 'none',
+      display: "none"
   },
-}))
+}));
 
 export const StyledBlocksStack = styled(Stack)(({ theme }) => ({
-  width: '100%',
-  justifyContent: 'space-evenly',
-  gap: '1rem',
-  flexWrap: 'wrap',
-  flexDirection: 'row',
-  display: 'flex',
-}))
+  width: "100%",
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  gap: "1rem",
+  justifyContent: "space-evenly"
+}));
 export const Block = styled(Stack)(({ theme }) => ({
-  width: '392px',
-  padding: theme.spacing(5),
-  display: 'flex',
-  borderRadius: '8px',
-
-  background:
-    ' radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)',
-
-  // background: " radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)",
-  backdropFilter: 'blur(12px)',
-
+  width: "392px",
+  display: "flex",
   alignItems: 'flex-start',
+  padding: theme.spacing(5),
+  // background: " radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)",
+
+  backdropFilter: "blur(12px)",
+  borderRadius: "8px",
+  background: " radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)",
   [theme.breakpoints.down('md')]: {
-    width: '350px',
+      width: "350px"
   },
-}))
+
+}));
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  margin: theme.spacing(0, 0, 8, 0),
+  flexDirection: "column",
   justifyContent: 'center',
-  gap: theme.spacing(5),
-  flexDirection: 'column',
-  display: 'flex',
   alignItems: 'center',
+  display: "flex",
+  gap: theme.spacing(5),
+  margin: theme.spacing(0, 0, 8, 0),
   [theme.breakpoints.down('md')]: {
-    margin: theme.spacing(6, 0, 0, 0),
-    gap: theme.spacing(4),
+      margin: theme.spacing(6, 0, 0, 0),
+      gap: theme.spacing(4),
   },
-}))
+
+}));
 
 export const StyledBlocksText = styled(Typography)(({ theme }) => ({
-  textAlign: 'left',
-  slant: 0,
-  lineHeight: '30px',
-  letterSpacing: '-1%',
+
   fontWeight: '650',
+  lineHeight: '30px',
   fontSize: '24px',
-  color: '#FFFFFF',
+  letterSpacing: '-1%',
+  textAlign: "left",
+  slant: 0,
+  color: "#FFFFFF",
 
   [theme.breakpoints.down('sm')]: {
-    textAlign: 'center',
-    lineHeight: '36.8px',
-    fontSize: '30px',
+      lineHeight: '36.8px',
+      fontSize: '30px',
+      textAlign: "center",
   },
-}))
+}));
+
+
 
 export const StyledHeading = styled(Typography)(({ theme }) => ({
-  /* eslint-disable */
   background: "-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
-  zIndex: 10,
-    /* eslint-enable */
-
-  textAlign: 'center',
-  margin: theme.spacing(0, 0, 5, 0),
-  lineHeight: '64px',
-  letterSpacing: '-2%',
   fontWeight: '700',
+  lineHeight: '64px',
   fontSize: '64px',
+  letterSpacing: '-2%',
+  textAlign: "center",
   backgroundClip: 'text',
+  zIndex: 10,
+  margin: theme.spacing(0, 0, 5, 0),
 
   [theme.breakpoints.down('md')]: {
-    margin: theme.spacing(0, 0, 1, 0),
+      margin: theme.spacing(0, 0, 1, 0),
   },
   [theme.breakpoints.down('sm')]: {
-    lineHeight: '36.8px',
-    fontSize: '32px',
+      fontSize: '32px',
+      lineHeight: '36.8px',
   },
-}))
+}));
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  lineHeight: '27.6px',
-  letterSpacing: '-2%',
+  color: "#FFFFFF",
   fontWeight: '700',
+  lineHeight: '27.6px',
   fontSize: '22px',
-  color: '#FFFFFF',
+  textAlign: "center",
+  letterSpacing: '-2%',
+
 
   [theme.breakpoints.down('sm')]: {
-    lineHeight: '27.6px',
-    fontSize: '20px',
+      lineHeight: '27.6px',
+      fontSize: '20px',
   },
-}))
+}));
+
+
+
+
+

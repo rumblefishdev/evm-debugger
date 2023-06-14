@@ -38,12 +38,14 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     },
   },
   '&.MuiButton-contained': {
-    color: theme.palette.colorWhite,
-    boxShadow: 'none',
+    color: theme.palette.primaryTextButtonColor,
+    boxShadow: theme.palette.type === 'dark' || theme.palette.type === 'navy' ? '0px 8px 24px rgba(255, 255, 255, 0.15)' : 'none',
+    borderRadius: theme.palette.type === 'dark' ? '16px' : 'none',
+    border: theme.palette.type === 'dark' || theme.palette.type === 'navy' ? '4px solid rgba(255, 255, 255, 0.25)' : 'none',
     backgroundColor: theme.palette.colorLink,
-
+    backgroundClip: (theme.palette.type === 'dark' || theme.palette.type === 'navy') && 'padding-box',
     '&:hover': {
-      backgroundColor: theme.palette.colorBrand?.primary,
+      backgroundColor: theme.palette.primaryButtonHoverBgColor,
     },
   },
 }))

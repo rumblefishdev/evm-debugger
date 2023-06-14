@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
-import { Button } from '../Button'
-// import { DebuggerSupportedChain } from '../DebuggerSupportedChain'
+import { Supported } from '../Supported'
+import { Manual } from '../Manual'
 
-import { reportIssuePageUrl } from './config'
-import { StyledTabs, StyledTab, DebuggerStack, IssueTextContainer, StyledLink, ContentStack, StyledBtnText } from './styles'
+import { StyledTabs, StyledTab, DebuggerStack, ContentStack } from './styles'
 
 export enum SCREENS {
   SUPPORTED_CHAIN = 'supportedChain',
@@ -16,7 +15,6 @@ export const Debugger = React.forwardRef(function Ref() {
   const handleChange = (_event: React.SyntheticEvent, nextValue: SCREENS) => {
     setCurrentScreen(nextValue)
   }
-
   return (
     <DebuggerStack>
       <StyledTabs
@@ -35,41 +33,9 @@ export const Debugger = React.forwardRef(function Ref() {
       </StyledTabs>
 
       <ContentStack>
-        {/* {currentScreen === SCREENS.SUPPORTED_CHAIN && <DebuggerSupportedChain />} */}
-        {/* {currentScreen === SCREENS.MANUAL_UPLOAD && (<DebuggerManualUpload />)} */}
+        {currentScreen === SCREENS.SUPPORTED_CHAIN && <Supported />}
+        {currentScreen === SCREENS.MANUAL_UPLOAD && <Manual />}
       </ContentStack>
-
-      <Button
-        sx={{ width: '100%', borderRadius: '16px' }}
-        big={true}
-        variant="contained"
-        onClick={() => console.log('click')}
-      >
-        <StyledBtnText>Process logs</StyledBtnText>
-      </Button>
-
-      <IssueTextContainer>
-        Found a bug? &nbsp;
-        <StyledLink
-          variant={'caption'}
-          href={reportIssuePageUrl}
-          sx={{
-            textDecoration: 'none',
-            position: 'relative',
-            '&::after': {
-              width: '100%',
-              position: 'absolute',
-              left: 0,
-              height: '1px',
-              content: '""',
-              bottom: -2,
-              background: 'linear-gradient(152.46deg, #FFFFFF -22.85%, rgba(255, 255, 255, 0) 100%), #F47AFF',
-            },
-          }}
-        >
-          Click to raise an issue.
-        </StyledLink>
-      </IssueTextContainer>
     </DebuggerStack>
   )
 })

@@ -1,4 +1,5 @@
 import { Hidden, Stack, Typography, useTheme } from '@mui/material'
+// import Script from 'next/dist/client/script'
 import React from 'react'
 
 import FacebookIcon from '../../assets/svg/facebook-white.svg'
@@ -18,6 +19,7 @@ import {
   LeftContentWrapper,
   ContactWrapper,
   ContactDetailsWrapper,
+  StyledClutchBox,
 } from './styles'
 
 const Menu = () => {
@@ -49,24 +51,24 @@ const Menu = () => {
   )
 }
 
-// const ClutchReviews: React.FC = () => {
-//   return (
-//     <StyledClutchBox>
-//       <Script src="https://widget.clutch.co/static/js/widget.js" />
-//       <div
-//         className="clutch-widget"
-//         data-url="https://widget.clutch.co"
-//         data-widget-type="2"
-//         data-height="45"
-//         data-nofollow="true"
-//         data-expandifr="true"
-//         data-theme="white"
-//         data-scale="100"
-//         data-clutchcompany-id="577137"
-//       />
-//     </StyledClutchBox>
-//   )
-// }
+const ClutchReviews: React.FC = () => {
+  return (
+    <StyledClutchBox>
+      {/* <Script src="https://widget.clutch.co/static/js/widget.js" /> */}
+      <div
+        className="clutch-widget"
+        data-url="https://widget.clutch.co"
+        data-widget-type="2"
+        data-height="45"
+        data-nofollow="true"
+        data-expandifr="true"
+        data-theme="white"
+        data-scale="100"
+        data-clutchcompany-id="577137"
+      />
+    </StyledClutchBox>
+  )
+}
 
 const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
   return (
@@ -89,23 +91,40 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
 }
 
 const Contact = () => {
+  const theme = useTheme()
+  const isDarkMode: boolean = theme.palette.type === 'dark'
+  const isNavyMode: boolean = theme.palette.type === 'navy'
+  const isDarkOrNavy = Boolean(isDarkMode || isNavyMode)
   return (
     <ContactWrapper>
-      <StyledHeading variant="overline">RUMBLE FISH POLAND SP Z O. O.</StyledHeading>
-      <ContactDetailsWrapper>
+      <StyledHeading variant="overline">Rumblefish sp z o.o.</StyledHeading>
+      <ContactDetailsWrapper
+        sx={{
+          span: {
+            fontFamily: isDarkOrNavy ? 'Inter' : 'default',
+          },
+        }}
+      >
         <Typography
           variant="caption"
-          sx={{ whiteSpace: 'pre-line', marginBottom: '24px' }}
+          sx={{
+            whiteSpace: 'pre-line',
+            marginBottom: '24px',
+          }}
         >
           {'Filipa Eisenberga 11/3 \n31-523 Kraków, Poland \nPL6772425725'}
         </Typography>
         <Stack>
           <Typography variant="caption">P: +48 737 455 594</Typography>
           <Typography variant="caption">E: hello@rumblefish.dev</Typography>
-          <Hidden smDown>{/* <ClutchReviews /> */}</Hidden>
+          <Hidden smDown>
+            <ClutchReviews />
+          </Hidden>
         </Stack>
       </ContactDetailsWrapper>
-      <Hidden smUp>{/* <ClutchReviews /> */}</Hidden>
+      <Hidden smUp>
+        <ClutchReviews />
+      </Hidden>
     </ContactWrapper>
   )
 }
@@ -149,11 +168,13 @@ const SocialMedia = () => {
 
 export const Footer = ({ ...props }: FooterProps) => {
   const theme = useTheme()
+  const isDarkMode: boolean = theme.palette.type === 'dark'
+  const isNavyMode: boolean = theme.palette.type === 'navy'
   return (
     <Section
       width="small"
       positionRelativeOn
-      backgroundColor={theme.palette.colorBrand?.primary}
+      backgroundColor={isDarkMode || isNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
     >
       <StyledStack {...props}>
         <LeftSideWrapper>

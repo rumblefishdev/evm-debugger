@@ -21,6 +21,16 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
 
   return (
     <StyledDialog
+      PaperProps={{
+        style: {
+          boxShadow: 'none',
+          background:
+            ' radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)',
+
+          // background: " radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)",
+          backdropFilter: 'blur(12px)',
+        },
+      }}
       {...props}
       onClose={onClose}
     >

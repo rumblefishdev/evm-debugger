@@ -13,7 +13,7 @@ const headingStyle = {
   fontFamily: 'Rajdhani',
   color: palette.colorBlack,
 }
-
+const root = process.env.PUBLIC_URL
 export const overrides: Components = {
   MuiTypography: {
     styleOverrides: {
@@ -135,7 +135,7 @@ export const overrides: Components = {
       font-weight: 400;
       src:
         local('Inter-Regular'),
-        url(/fonts/Inter-Regular.otf)
+        url(/evm-debugger/fonts/Inter-Regular.otf)
      }
     @font-face {
       font-family: Inter;
@@ -144,7 +144,7 @@ export const overrides: Components = {
       font-weight: 700;
       src:
         local('Inter-Bold'),
-        url(/fonts/Inter-Bold.otf)
+        url(/evm-debugger/fonts/Inter-Bold.otf)
      }
     @font-face {
       font-family: Inter;
@@ -153,7 +153,7 @@ export const overrides: Components = {
       font-weight: 600;
       src:
         local('Inter-SemiBold'),
-        url(/fonts/Inter-SemiBold.otf)
+        url(/evm-debugger/fonts/Inter-SemiBold.otf)
      }
      `,
   },

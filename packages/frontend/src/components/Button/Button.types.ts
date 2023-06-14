@@ -5,6 +5,6 @@ export type TButtonVariant = 'text' | 'outlined' | 'contained'
 export interface ButtonProps extends Omit<ButtonUnstyledProps, 'component'> {
   variant: TButtonVariant
   big?: boolean
-  sx: object
+  sx?: object
   component?: 'button' | 'label'
 }

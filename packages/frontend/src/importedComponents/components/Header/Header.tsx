@@ -66,6 +66,7 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
   const theme = useTheme()
   const isDarkMode: boolean = theme.palette.type === 'dark'
   const isNavyMode: boolean = theme.palette.type === 'navy'
+  const isNotDarkOrNavy = Boolean(!isDarkMode || !isNavyMode)
   return (
     <>
       <Box height="80px" />
@@ -84,7 +85,7 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
               direction="row"
               spacing={2}
             >
-              {!isDarkMode || !isNavyMode ? (
+              {isNotDarkOrNavy ? (
                 <Hidden
                   mdUp={theme.palette.type === 'navy'}
                   smDown={theme.palette.type !== 'navy'}

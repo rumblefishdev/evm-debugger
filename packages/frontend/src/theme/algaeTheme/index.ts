@@ -4,6 +4,7 @@ import { createTheme } from '@mui/material/styles'
 
 import noiseBg from '../../importedComponents/assets/png/noise.png'
 
+import { scrollbar } from './customScrollbar'
 import { breakpoints } from './breakpoints'
 import { mixins } from './mixins'
 import { overrides as components } from './overrides'
@@ -96,6 +97,9 @@ export const themeNavy = createTheme({
     },
     flexColumnStartStart: mixins.flexColumnStartStart,
     defaultTransition: mixins.defaultTransition,
+  },
+  customStyles: {
+    scrollbar,
   },
   components: {
     MuiTypography: {
