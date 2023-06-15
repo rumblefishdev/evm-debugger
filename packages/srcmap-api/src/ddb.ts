@@ -12,14 +12,14 @@ const ddbClient = new DynamoDBClient({
 
 const dynamoDbClient = DynamoDBDocumentClient.from(ddbClient)
 
-export const getTransactionDetails = async (txHash: string) => {
+export const getStatus = async (address: string) => {
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.SRCMAP_TABLE_NAME,
     ScanIndexForward: false,
     Limit: 2,
-    KeyConditionExpression: 'txHash = :txHash',
+    KeyConditionExpression: 'address = :address',
     ExpressionAttributeValues: {
-      ':txHash': txHash,
+      ':address': address,
     },
   }
   const command = new QueryCommand(params)
@@ -35,36 +35,36 @@ export const getTransactionDetails = async (txHash: string) => {
   return null
 }
 
-export const putTxDetailsToDdb = async (txHash: string, chainId: string) => {
-  const initTxDetails = {
+export const putStatusToDdb = async (address: string, chainId: string) => {
+  const initDetails = {
     'type#time': 'TRANSACTION',
-    txHash,
     timestamp: Date.now().toString(),
     status: SrcMapResponseStatus.PENDING,
     chainId,
+    address,
   }
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
-    Item: initTxDetails,
+    TableName: process.env.SRCMAP_TABLE_NAME,
+    Item: initDetails,
   }
   const command = new PutCommand(params)
   await dynamoDbClient.send(command)
-  return initTxDetails
+  return initDetails
 }
 
 export const putTxEventToDdb = async (
   event: string,
-  txHash: string,
+  address: string,
   additionalData: object = {},
 ) => {
   const currentTimestamp = Date.now().toString()
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.SRCMAP_TABLE_NAME,
     Item: {
       'type#time': `EVENT#${currentTimestamp}`,
-      txHash,
       timestamp: currentTimestamp,
       status: event,
+      address,
       ...additionalData,
     },
   }
