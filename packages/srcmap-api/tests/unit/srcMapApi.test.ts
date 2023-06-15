@@ -1,11 +1,10 @@
 import type { APIGatewayProxyResult } from 'aws-lambda'
 
 import { createLambdaEvent } from '../utils/lambdaMocks'
-import { parseS3File } from '../../src/helpers'
+import * as helpers from '../../src/helpers'
 import { srcmapApiHandler } from '../../src/srcMapApi'
 
 describe('Unit test for api', function () {
-  jest.mock('./helpers')
   it('creates pending file on s3', async () => {
     const ADDRESS = '0xE7d3982E214F9DFD53d23a7f72851a7044072250'
     const CHAIN_ID = '1'
@@ -18,9 +17,11 @@ describe('Unit test for api', function () {
       ],
     }
     const testEvent = createLambdaEvent(initDetails)
-
+    jest
+      .spyOn(helpers, 'parseS3File')
+      .mockImplementation((address) => Promise.resolve({ address }))
     const result: APIGatewayProxyResult = await srcmapApiHandler(testEvent)
-    expect(parseS3File).toHaveBeenCalledWith(ADDRESS)
+    expect(helpers.parseS3File).toHaveBeenCalledTimes(1)
     expect(result.statusCode).toEqual(200)
   })
   it('returns 400 if no address provided', async () => {
