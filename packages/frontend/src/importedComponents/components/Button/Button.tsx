@@ -27,6 +27,5 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'outlined', 
     >
       {children}
     </StyledButton>
-    // <button>{children}</button>
   )
 }

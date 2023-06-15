@@ -10,11 +10,12 @@ export enum SCREENS {
   MANUAL_UPLOAD = 'manualUpload',
 }
 
-export const Debugger = React.forwardRef(function Ref() {
+export const Debugger = () => {
   const [currentScreen, setCurrentScreen] = useState<SCREENS>(SCREENS.SUPPORTED_CHAIN)
   const handleChange = (_event: React.SyntheticEvent, nextValue: SCREENS) => {
     setCurrentScreen(nextValue)
   }
+
   return (
     <DebuggerStack>
       <StyledTabs
@@ -38,4 +39,4 @@ export const Debugger = React.forwardRef(function Ref() {
       </ContentStack>
     </DebuggerStack>
   )
-})
+}

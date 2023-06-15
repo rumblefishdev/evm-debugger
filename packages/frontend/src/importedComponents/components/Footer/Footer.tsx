@@ -3,6 +3,7 @@ import { Hidden, Stack, Typography, useTheme } from '@mui/material'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
 import FacebookIcon from '../../assets/svg/facebook-white.svg'
 import LinkedinIcon from '../../assets/svg/linkedin-white.svg'
 import TwitterIcon from '../../assets/svg/twitter-white.svg'
@@ -100,17 +101,17 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
 }
 
 const Contact = () => {
-  const theme = useTheme()
-  const isDarkMode: boolean = theme.palette.type === 'dark'
-  const isNavyMode: boolean = theme.palette.type === 'navy'
-  const isDarkOrNavy = Boolean(isDarkMode || isNavyMode)
+  const useIsDarkOrNavyMode = (): boolean => {
+    const theme = useTheme()
+    return isDarkOrNavy(theme)
+  }
   return (
     <ContactWrapper>
       <StyledHeading variant="overline">Rumblefish sp z o.o.</StyledHeading>
       <ContactDetailsWrapper
         sx={{
           span: {
-            fontFamily: isDarkOrNavy ? 'Inter' : 'default',
+            fontFamily: useIsDarkOrNavyMode ? 'Inter' : 'default',
           },
         }}
       >
@@ -177,13 +178,14 @@ const SocialMedia = () => {
 
 export const Footer = ({ ...props }: FooterProps) => {
   const theme = useTheme()
-  const isDarkMode: boolean = theme.palette.type === 'dark'
-  const isNavyMode: boolean = theme.palette.type === 'navy'
+  const useIsDarkOrNavyMode = (): boolean => {
+    return isDarkOrNavy(theme)
+  }
   return (
     <Section
       width="small"
       positionRelativeOn
-      backgroundColor={isDarkMode || isNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
+      backgroundColor={useIsDarkOrNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
     >
       <StyledStack {...props}>
         <LeftSideWrapper>

@@ -84,11 +84,6 @@ export const Supported = () => {
                 onChange={field.onChange}
                 error={fieldState.error?.type === 'required'}
                 MenuProps={{
-                  // autoFocus: false,
-                  // disableAutoFocusItem: true,
-                  // disableEnforceFocus: true,
-                  // disableAutoFocus: true,
-
                   transitionDuration: 0,
                   transformOrigin: {
                     vertical: 'top',

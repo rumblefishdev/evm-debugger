@@ -1,3 +1,4 @@
+/* eslint sort-keys-fix/sort-keys-fix:0*/ // eslint reorders css styles, causing it to not work properly. So this rule is off.
 import React from 'react'
 
 import { reportIssuePageUrl } from '../../config'
@@ -22,7 +23,6 @@ export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
         <StyledLink
           variant={'caption'}
           href={reportIssuePageUrl}
-          /* eslint-disable */
           sx={{
             position: 'relative',
             textDecoration: 'none',
@@ -33,11 +33,9 @@ export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
               bottom: -2,
               width: '100%',
               height: '1px',
-              background:
-                'linear-gradient(152.46deg, #FFFFFF -22.85%, rgba(255, 255, 255, 0) 100%), #F47AFF',
+              background: 'linear-gradient(152.46deg, #FFFFFF -22.85%, rgba(255, 255, 255, 0) 100%), #F47AFF',
             },
           }}
-          /* eslint-enable */
         >
           Click to raise an issue.
         </StyledLink>

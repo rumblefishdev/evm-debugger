@@ -99,13 +99,6 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     border: `1px solid ${theme.palette.colorLines}`,
     backgroundColor: theme.palette.colorBrand.primary,
   },
-
-  // // override paper styles
-  // '& .MuiPaper-root': {
-  //   borderRadius: "16px",
-  //   border: `1px solid ${theme.palette.colorLines}`,
-  //   backgroundColor: theme.palette.colorBrand.primary,
-  // },
 }))
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({

@@ -1,13 +1,19 @@
 import { Drawer, useTheme } from '@mui/material'
 import React from 'react'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
+
 import { StyledBox } from './styles'
 import type { SubmenuProps } from './Submenu.types'
 
 export const Submenu: React.FC<SubmenuProps> = ({ children, isOpen, closeMenu }) => {
   const isDarkMode: boolean = useTheme().palette.type === 'dark'
   const isNavyMode: boolean = useTheme().palette.type === 'navy'
-  const isDarkOrNavy = Boolean(isDarkMode || isNavyMode)
+
+  const useIsDarkOrNavyMode = (): boolean => {
+    const theme = useTheme()
+    return isDarkOrNavy(theme)
+  }
 
   return (
     <Drawer
@@ -23,12 +29,12 @@ export const Submenu: React.FC<SubmenuProps> = ({ children, isOpen, closeMenu })
           width: '100%',
           top: '97px',
           span: {
-            color: isDarkOrNavy && 'white',
+            color: useIsDarkOrNavyMode && 'white',
           },
           overflow: 'auto',
           img: {
             filter:
-              isDarkOrNavy &&
+              useIsDarkOrNavyMode &&
               'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)',
           },
           boxShadow: '0 2px 8px rgba(0,0,0,0.15)',

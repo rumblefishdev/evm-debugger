@@ -1,5 +1,5 @@
 import { Stack, styled, Typography } from '@mui/material'
-
+/* eslint sort-keys-fix/sort-keys-fix:0*/
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   justifyContent: 'space-between',
@@ -8,7 +8,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
 }))
-/* eslint-disable */
+
 export const StyledLabel = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   lineHeight: '100%',
@@ -21,17 +21,17 @@ export const StyledLabel = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledTitle = styled(Typography)(({ theme }) => ({
-  overflow: "hidden",
-textOverflow: "ellipsis",
-whiteSpace: "nowrap",
-  fontVariationSettings: "slnt 0",
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  fontVariationSettings: 'slnt 0',
   fontWeight: 300,
   fontSize: '13px',
   fontFamily: 'Inter',
   color: theme.palette.colorWhite,
-  letterSpacing: "-0.01em",
+  letterSpacing: '-0.01em',
 }))
-  /* eslint-enable */
+
 export const StyledTextWrapper = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(0.3),
 }))

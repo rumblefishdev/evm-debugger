@@ -5,7 +5,6 @@ import type { StackProps } from '@mui/material'
 import downArrow from '../../../importedComponents/assets/svg/arrow-down-white.svg'
 import { Section } from '../../../importedComponents/components/Section'
 import { Debugger } from '../../../components/Debugger'
-// import { usePageContext } from '../context';
 import { generateArrowAnimation } from '../../../importedComponents/utils/arrowAnimationStyles'
 
 import {
