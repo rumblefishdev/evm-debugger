@@ -23,26 +23,17 @@ export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
   if (event.body) addresses = JSON.parse(event.body)?.addresses
 
   if (!addresses || addresses.length === 0)
-    return createResponse(
-      SrcMapResponseStatus.FAILED,
-      'Invalid params',
-    )
+    return createResponse(SrcMapResponseStatus.FAILED, 'Invalid params')
 
   try {
     const responseContainer = await Promise.all(
       addresses.map((address) => parseS3File(address)),
     )
-    return createResponse(
-      SrcMapResponseStatus.SUCCESS,
-      responseContainer,
-    )
+    return createResponse(SrcMapResponseStatus.SUCCESS, responseContainer)
   } catch (error) {
     if (error instanceof Error) {
       captureException(error)
-      return createResponse(
-        SrcMapResponseStatus.FAILED,
-        JSON.stringify(error),
-      )
+      return createResponse(SrcMapResponseStatus.FAILED, JSON.stringify(error))
     }
   }
   return createResponse(SrcMapResponseStatus.FAILED)

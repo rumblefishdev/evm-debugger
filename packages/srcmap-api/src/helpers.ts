@@ -11,10 +11,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3'
 import type { ChainId } from '@evm-debuger/types'
-import {
-  etherscanUrls,
-  SrcMapResponseStatus,
-} from '@evm-debuger/types'
+import { etherscanUrls, SrcMapResponseStatus } from '@evm-debuger/types'
 
 const { BUCKET_NAME, AWS_REGION } = process.env
 
