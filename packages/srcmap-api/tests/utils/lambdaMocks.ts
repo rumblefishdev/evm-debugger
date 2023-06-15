@@ -1,11 +1,8 @@
-import type {
-  APIGatewayProxyEvent,
-  APIGatewayProxyEventPathParameters,
-} from 'aws-lambda'
+import type { APIGatewayProxyEvent } from 'aws-lambda'
 
-export const createLambdaEvent = (
-  pathParameters: APIGatewayProxyEventPathParameters | null,
-): APIGatewayProxyEvent => {
+export const createLambdaEvent = (bodyParameters: {
+  addresses: { chainId: string; address: string }[]
+}): APIGatewayProxyEvent => {
   return {
     stageVariables: {},
     resource: '',
@@ -46,13 +43,13 @@ export const createLambdaEvent = (
       accountId: '123456789012',
     },
     queryStringParameters: {},
-    pathParameters,
+    pathParameters: null,
     path: '/hello',
     multiValueQueryStringParameters: {},
     multiValueHeaders: {},
     isBase64Encoded: false,
     httpMethod: 'get',
     headers: {},
-    body: '',
+    body: JSON.stringify(bodyParameters),
   }
 }

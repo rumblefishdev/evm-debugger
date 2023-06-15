@@ -5,7 +5,7 @@ export const createResponse = (status: string, output = {}) => {
     statusCode: [
       SrcMapResponseStatus.SUCCESS,
       SrcMapResponseStatus.PENDING,
-    ].includes(status)
+    ].includes(status as SrcMapResponseStatus)
       ? 200
       : 400,
     headers: {
