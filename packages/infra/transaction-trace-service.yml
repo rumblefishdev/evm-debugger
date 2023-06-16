@@ -18,6 +18,8 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
+  ApiArn:
+    Type: String
 
 Resources:
   AnalyzerDataTable:
@@ -37,25 +39,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-
-  Api:
-    Type: AWS::Serverless::Api
-    Name: !Sub ${AWS::StackName}-api
-    Properties:
-      StageName: !Ref Environment
-      Cors:
-        AllowMethods: "'POST, GET, OPTIONS'"
-        AllowOrigin: !Join ['', ["'", !Ref ApiGatewayAllowOrigin, "'"]]
-        AllowHeaders: "'content-type, x-api-key'"
-        AllowCredentials: false
-      MethodSettings:
-        - ResourcePath: '/*'
-          HttpMethod: '*'
-      Domain:
-        CertificateArn: !Ref CertificateArn
-        DomainName: !Ref Domain
-        Route53:
-          HostedZoneId: !Ref HostedZoneId
 
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
@@ -91,7 +74,7 @@ Resources:
         TransactionTraceApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref Api
+            RestApiId: !Ref ApiArn
             Path: /analyzerData/{txHash}/{chainId}
             Method: get
       Policies:

@@ -18,19 +18,21 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
+  ApiArn:
+    Type: String
 
 Resources:
-  AnalyzerDataTable:
+  SrcMapDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${AWS::StackName}-analyzer-store
+      TableName: !Sub ${AWS::StackName}-srcmap-actions
       AttributeDefinitions:
-        - AttributeName: txHash
+        - AttributeName: address
           AttributeType: S
         - AttributeName: type#time
           AttributeType: S
       KeySchema:
-        - AttributeName: txHash
+        - AttributeName: address
           KeyType: HASH
         - AttributeName: type#time
           KeyType: RANGE
@@ -38,62 +40,28 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  Api:
-    Type: AWS::Serverless::Api
-    Name: !Sub ${AWS::StackName}-api
-    Properties:
-      StageName: !Ref Environment
-      Cors:
-        AllowMethods: "'POST, GET, OPTIONS'"
-        AllowOrigin: !Join ['', ["'", !Ref ApiGatewayAllowOrigin, "'"]]
-        AllowHeaders: "'content-type, x-api-key'"
-        AllowCredentials: false
-      MethodSettings:
-        - ResourcePath: '/*'
-          HttpMethod: '*'
-      Domain:
-        CertificateArn: !Ref CertificateArn
-        DomainName: !Ref Domain
-        Route53:
-          HostedZoneId: !Ref HostedZoneId
-
-  TransactionTraceSqsDeadLetter:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-dead-letter
-
-  TransactionTraceSqs:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs
-      VisibilityTimeout: 910
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
-        maxReceiveCount: 1
-
-  TransactionTraceFunction:
+  SrcMapApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../transaction-trace-api
-      Handler: txTraceApi.analyzeTransactionEntrypoint
+      CodeUri: ../srcmap-api
+      Handler: srcMapApi.srcmapApiEntrypoint
       Runtime: nodejs18.x
-      Timeout: 30
-      MemorySize: 128
+      Timeout: 180
+      MemorySize: 256
       Architectures:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
-          SQS_ANALYZER_URL: !Ref TransactionTraceSqs
+          ANALYZER_DATA_TABLE_NAME: !Ref SrcMapDataTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
       Events:
         TransactionTraceApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref Api
-            Path: /analyzerData/{txHash}/{chainId}
-            Method: get
+            RestApiId: !Ref ApiArn
+            Path: /srcmap-api
+            Method: post
       Policies:
         - Statement:
             - Effect: Allow
@@ -107,111 +75,7 @@ Resources:
                 - dynamodb:PutItem
                 - dynamodb:Query
               Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
-            - Effect: Allow
-              Action:
-                - sqs:SendMessage
-              Resource:
-                - !GetAtt TransactionTraceSqs.Arn
-    Metadata:
-      BuildMethod: makefile
-
-  TransactionTraceProviderFunctionDepLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: transaction-trace-provider-dependencies
-      Description: Dependencies for transaction-trace-provider
-      ContentUri: ../transaction-trace-provider/dependencies/
-      CompatibleRuntimes:
-        - nodejs18.x
-      LicenseInfo: 'MIT'
-      RetentionPolicy: Retain
-    Metadata:
-      BuildMethod: makefile
-
-  TransactionTraceSqsHandlerFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../transaction-trace-provider
-      Handler: src/sqsConsumer.consumeSqsAnalyzeTxEntrypoint
-      Runtime: nodejs18.x
-      Layers:
-        - !Ref TransactionTraceProviderFunctionDepLayer
-      Timeout: 900
-      MemorySize: 6144
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          ALCHEMY_KEY: !Ref AlchemyKey
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
-          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
-          ENVIRONMENT: !Ref Environment
-          SENTRY_DSN: !Ref SentryDsn
-      Events:
-        SqsEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt TransactionTraceSqs.Arn
-            BatchSize: 1
-            ScalingConfig:
-              MaximumConcurrency: 5
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - iam:PassRole
-              Resource:
-                - '*'
-            - Effect: Allow
-              Action:
-                - dynamodb:PutItem
-              Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
-            - Action:
-                - s3:*
-              Effect: Allow
-              Resource:
-                - !Sub arn:aws:s3:::${TraceBucketName}
-                - !Sub arn:aws:s3:::${TraceBucketName}/**
-
-    Metadata:
-      BuildMethod: makefile
-
-  TransactionTraceSqsDeadLetterHandlerFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../transaction-trace-provider
-      Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxErrorEntrypoint
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
-          ENVIRONMENT: !Ref Environment
-          SENTRY_DSN: !Ref SentryDsn
-      Events:
-        SqsEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt TransactionTraceSqsDeadLetter.Arn
-            ScalingConfig:
-              MaximumConcurrency: 5
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - iam:PassRole
-              Resource:
-                - '*'
-            - Effect: Allow
-              Action:
-                - dynamodb:PutItem
-              Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
+                - !GetAtt SrcMapDataTable.Arn
+                - !Sub ${SrcMapDataTable.Arn}/**
     Metadata:
       BuildMethod: makefile
