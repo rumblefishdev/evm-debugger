@@ -246,7 +246,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref SrcMapDataTable
+          SRCMAP_TABLE_NAME: !Ref SrcMapDataTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           BUCKET_NAME: !Ref TraceBucketName
