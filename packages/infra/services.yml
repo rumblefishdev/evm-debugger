@@ -249,6 +249,8 @@ Resources:
           ANALYZER_DATA_TABLE_NAME: !Ref SrcMapDataTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
+          BUCKET_NAME: !Ref TraceBucketName
+          AWS_REGION: !Ref "AWS::Region"
       Events:
         TransactionTraceApiEvent:
           Type: Api
@@ -271,5 +273,11 @@ Resources:
               Resource:
                 - !GetAtt SrcMapDataTable.Arn
                 - !Sub ${SrcMapDataTable.Arn}/**
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:s3:::${TraceBucketName}
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile
