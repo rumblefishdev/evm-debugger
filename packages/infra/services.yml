@@ -18,10 +18,27 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
-  ApiArn:
-    Type: String
 
 Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Name: !Sub ${AWS::StackName}-api
+    Properties:
+      StageName: !Ref Environment
+      Cors:
+        AllowMethods: "'POST, GET, OPTIONS'"
+        AllowOrigin: !Join ['', ["'", !Ref ApiGatewayAllowOrigin, "'"]]
+        AllowHeaders: "'content-type, x-api-key'"
+        AllowCredentials: false
+      MethodSettings:
+        - ResourcePath: '/*'
+          HttpMethod: '*'
+      Domain:
+        CertificateArn: !Ref CertificateArn
+        DomainName: !Ref Domain
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+        
   AnalyzerDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -33,6 +50,24 @@ Resources:
           AttributeType: S
       KeySchema:
         - AttributeName: txHash
+          KeyType: HASH
+        - AttributeName: type#time
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  SrcMapDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-srcmap-actions
+      AttributeDefinitions:
+        - AttributeName: address
+          AttributeType: S
+        - AttributeName: type#time
+          AttributeType: S
+      KeySchema:
+        - AttributeName: address
           KeyType: HASH
         - AttributeName: type#time
           KeyType: RANGE
@@ -74,7 +109,7 @@ Resources:
         TransactionTraceApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref ApiArn
+            RestApiId: !Ref Api
             Path: /analyzerData/{txHash}/{chainId}
             Method: get
       Policies:
@@ -196,5 +231,45 @@ Resources:
               Resource:
                 - !GetAtt AnalyzerDataTable.Arn
                 - !Sub ${AnalyzerDataTable.Arn}/**
+    Metadata:
+      BuildMethod: makefile
+
+  SrcMapApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../srcmap-api
+      Handler: srcMapApi.srcmapApiEntrypoint
+      Runtime: nodejs18.x
+      Timeout: 180
+      MemorySize: 256
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ANALYZER_DATA_TABLE_NAME: !Ref SrcMapDataTable
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+      Events:
+        TransactionTraceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /srcmap-api
+            Method: post
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt SrcMapDataTable.Arn
+                - !Sub ${SrcMapDataTable.Arn}/**
     Metadata:
       BuildMethod: makefile

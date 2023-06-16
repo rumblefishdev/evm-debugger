@@ -34,44 +34,10 @@ Resources:
         HostedZoneId: !Ref HostedZoneId
         DomainName: !Ref TraceBucketName
 
-  Api:
-    Type: AWS::Serverless::Api
-    Name: !Sub ${AWS::StackName}-api
-    Properties:
-      StageName: !Ref Environment
-      Cors:
-        AllowMethods: "'POST, GET, OPTIONS'"
-        AllowOrigin: !Join ['', ["'", !Ref ApiGatewayAllowOrigin, "'"]]
-        AllowHeaders: "'content-type, x-api-key'"
-        AllowCredentials: false
-      MethodSettings:
-        - ResourcePath: '/*'
-          HttpMethod: '*'
-      Domain:
-        CertificateArn: !Ref CertificateArn
-        DomainName: !Ref Domain
-        Route53:
-          HostedZoneId: !Ref HostedZoneId
-
   TransactionTraceService:
     Type: AWS::Serverless::Application
     Properties:
-      Location: ./transaction-trace-service.yml
-      Parameters:
-        Environment: !Ref Environment
-        HostedZoneId: !Ref HostedZoneId
-        Domain: !Ref Domain
-        CertificateArn: !Ref CertificateArn
-        TraceBucketName: !Ref TraceBucketName
-        ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
-        AlchemyKey: !Ref AlchemyKey
-        SentryDsn: !Ref SentryDsn
-        ApiArn: !Ref Api
-
-  SrcMapService:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: ./srcmap-service.yml
+      Location: ./services.yml
       Parameters:
         Environment: !Ref Environment
         HostedZoneId: !Ref HostedZoneId
