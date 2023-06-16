@@ -250,7 +250,6 @@ Resources:
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           BUCKET_NAME: !Ref TraceBucketName
-          AWS_REGION: !Ref "AWS::Region"
       Events:
         TransactionTraceApiEvent:
           Type: Api
