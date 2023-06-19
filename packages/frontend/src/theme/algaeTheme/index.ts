@@ -22,14 +22,14 @@ declare module '@mui/material/Typography' {
 declare module '@mui/material/styles' {
   interface Theme {
     utilis: {
-      // isMobile: boolean
+      isMobile: boolean
       fluidFont: (min: number, max: number) => string
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-shadow
   interface ThemeOptions {
     utilis?: {
-      // isMobile: boolean
+      isMobile: boolean
       fluidFont: (min: number, max: number) => string
     }
   }
