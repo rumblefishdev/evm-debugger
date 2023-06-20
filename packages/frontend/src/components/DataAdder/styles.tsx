@@ -18,7 +18,7 @@ export const StyledHeader = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(1),
 }))
 
-export const StyledTextAreaWrapper = styled(Stack)(({ theme }) => ({
+export const StyledTextAreaWrapper = styled(Stack)(() => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -39,7 +39,7 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
   backgroundClip: 'text',
 }))
 
-export const StyledButtonText = styled(Typography)(({ theme }) => ({
+export const StyledButtonText = styled(Typography)(() => ({
   fontFamily: 'Rajdhani',
   fontStyle: 'normal',
   fontWeight: 500,

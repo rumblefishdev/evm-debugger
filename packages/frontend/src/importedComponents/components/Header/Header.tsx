@@ -333,7 +333,7 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
 export const Header = ({ blogs, background }: HeaderProps) => {
   const theme = useTheme()
   const [display, setDisplay] = useState(defaultState)
-  const [isMobile, setMobile] = useState<boolean>(false)
+  const [, setMobile] = useState<boolean>(false)
 
   useEffect(() => {
     setMobile(window.innerWidth <= theme.breakpoints.values.md)

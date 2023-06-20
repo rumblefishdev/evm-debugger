@@ -7,8 +7,6 @@ import { theme } from './theme/algaeTheme'
 import { appRouter } from './router'
 import { GAnalyticsInit } from './components/GAnalytics'
 
-const isPrerender = navigator.userAgent.toLowerCase().indexOf('prerender') === -1
-
 const emotionCache = createCache({
   speedy: false,
   key: 'emotion-cache',
