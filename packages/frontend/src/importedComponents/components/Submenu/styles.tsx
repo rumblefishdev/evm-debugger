@@ -1,4 +1,3 @@
-import type { SxProps, Theme } from '@mui/material'
 import { Box, styled } from '@mui/material'
 
 export const StyledBox = styled(Box, {
@@ -11,15 +10,3 @@ export const StyledBox = styled(Box, {
     boxShadow: 'unset',
   },
 }))
-
-export const PaperStyles: SxProps<Theme> = (theme) => ({
-  width: '100%',
-  top: '97px',
-  overflow: 'auto',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-  [theme.breakpoints.down('md')]: {
-    top: 0,
-    height: '100vh',
-    boxShadow: 'unset',
-  },
-})

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { ROUTES } from '../../../router'
+import { ROUTES } from '../../../routes'
 
 import { StyledStack, StyledTab, StyledTabs } from './styles'
 

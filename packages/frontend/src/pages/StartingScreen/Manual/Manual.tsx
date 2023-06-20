@@ -6,7 +6,7 @@ import { Button } from '../../../components/Button'
 import { UploadBox } from '../../../components/UploadBox'
 import { etherscanUrls, jsonRpcProvider } from '../../../config'
 import { validateSchema } from '../../../helpers/validateSchema'
-import { ROUTES } from '../../../router'
+import { ROUTES } from '../../../routes'
 import {
   EtherscanSourceFetcher,
   JSONRpcBytecodeFetcher,

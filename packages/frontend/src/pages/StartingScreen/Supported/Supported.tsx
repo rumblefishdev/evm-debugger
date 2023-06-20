@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Link } from '@mui/material'
 
 import { supportedChains } from '../../../helpers/chains'
-import { ROUTES } from '../../../router'
+import { ROUTES } from '../../../routes'
 import { Button } from '../../../components/Button'
 import { reportIssuePageUrl } from '../../../config'
 

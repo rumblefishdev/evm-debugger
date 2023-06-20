@@ -19,4 +19,7 @@ export const StyledRoot = styled(Container)(({ theme }) => ({
       width: '95%',
     },
   },
+  [`&.${sectionClasses.mobilePadding}`]: {
+    ...theme.mixins.mobilePadding(),
+  },
 }))

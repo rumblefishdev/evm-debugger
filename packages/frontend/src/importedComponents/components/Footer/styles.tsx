@@ -49,7 +49,9 @@ export const ContactWrapper = styled(Stack)(({ theme }) => ({
   },
 }))
 export const ContactDetailsWrapper = styled(Stack)(({ theme }) => ({
+  opacity: theme.palette.type === 'dark' ? 0.5 : 1,
   height: '100%',
+  fontFamily: 'Inter',
   flexDirection: 'column',
   [theme.breakpoints.down('md')]: {
     margin: theme.spacing(2, 0),
@@ -75,14 +77,17 @@ export const RightSideWrapper = styled(Stack)(({ theme }) => ({
   },
 }))
 export const StyledHeading = styled(Typography)(({ theme }) => ({
-  opacity: 0.5,
+  opacity: theme.palette.type === 'dark' ? 1 : 0.5,
   marginBottom: theme.spacing(3.5),
+  fontFamily: theme.palette.type === 'dark' ? 'Inter' : 'inherit',
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(1.5),
   },
 }))
 export const StyledItem = styled(Typography)(({ theme }) => ({
+  opacity: theme.palette.type === 'dark' ? 0.5 : 1,
   margin: theme.spacing(1, 0),
+  fontFamily: theme.palette.type === 'dark' ? 'Inter' : 'inherit',
 }))
 export const StyledImg = styled(`img`)(({ theme }) => ({
   width: '20px',

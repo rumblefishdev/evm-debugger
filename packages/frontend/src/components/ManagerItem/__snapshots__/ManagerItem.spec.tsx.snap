@@ -107,6 +107,7 @@ exports[`ManagerItem tests simple render 1`] = `
       onMouseDown={[Function]}
       onMouseLeave={[Function]}
       onMouseUp={[Function]}
+      sx={{}}
       variant="text"
     >
       Add
@@ -114,10 +115,18 @@ exports[`ManagerItem tests simple render 1`] = `
     <style
       dangerouslySetInnerHTML={
         {
-          "__html": "@media print{.css-1pivxxs-MuiDialog-root{position:absolute!important;}}",
+          "__html": ".css-1wdzqm1{background:rgba(1,25,111,0.9);}",
         }
       }
-      data-emotion="css 1pivxxs-MuiDialog-root"
+      data-emotion="css 1wdzqm1"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-dqe6ny-MuiDialog-root{background:rgba(1,25,111,0.9);}@media print{.css-dqe6ny-MuiDialog-root{position:absolute!important;}}",
+        }
+      }
+      data-emotion="css dqe6ny-MuiDialog-root"
     />
   </div>,
 ]

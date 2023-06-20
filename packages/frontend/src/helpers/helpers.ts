@@ -1,5 +1,6 @@
 import type { TOpCodes } from '@evm-debuger/types'
 import type { ethers } from 'ethers'
+import type { Theme } from '@mui/material'
 
 import type { TExtendedStack } from '../types'
 
@@ -10,7 +11,9 @@ export const itemSpacePercentageByGasCost = (gasCost: number, parentGasCost: num
   // eslint-disable-next-line no-magic-numbers
   return Number.parseInt(((gasCost / parentGasCost) * MAX_SPACE).toFixed(ROUNDING))
 }
-
+export const isDarkOrNavy = (theme: Theme) => {
+  return ['dark', 'navy'].includes(theme.palette.type)
+}
 export const zoom = (event: WheelEvent, element: HTMLDivElement) => {
   const { deltaY } = event
   const { clientX, clientY } = event

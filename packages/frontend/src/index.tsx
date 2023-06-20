@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom'
+import { hydrateRoot } from 'react-dom/client'
 import './index.css'
 import './fonts'
 import { Provider } from 'react-redux'
@@ -22,22 +23,34 @@ if (sentryDsn)
     dsn: sentryDsn,
   })
 
-const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      {isPersistOn && (
-        <PersistGate
-          loading={true}
-          persistor={persistor}
-        >
-          <App />
-        </PersistGate>
-      )}
-      {!isPersistOn && <App />}
-    </Provider>
-  </React.StrictMode>,
-)
+// const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
+const rootElement = document.getElementById('root')
+
+const RenderApp = () => {
+  return (
+    <div>
+      <React.StrictMode>
+        <Provider store={store}>
+          {isPersistOn && (
+            <PersistGate
+              loading={true}
+              persistor={persistor}
+            >
+              <App />
+            </PersistGate>
+          )}
+          {!isPersistOn && <App />}
+        </Provider>
+      </React.StrictMode>
+    </div>
+  )
+}
+
+if (rootElement.hasChildNodes())
+  setTimeout(() => {
+    hydrateRoot(rootElement, <RenderApp />)
+  }, 3000)
+else ReactDOM.render(<RenderApp />, rootElement)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
