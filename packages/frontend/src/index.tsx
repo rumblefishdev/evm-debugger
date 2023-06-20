@@ -23,7 +23,6 @@ if (sentryDsn)
     dsn: sentryDsn,
   })
 
-// const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
 const rootElement = document.getElementById('root')
 
 const RenderApp = () => {

@@ -1,5 +1,4 @@
 import { useFileUploadHandler } from '../../hooks/useFileUpload'
-import { Button } from '../../importedComponents/components/Button'
 
 import type { DataAdderProps } from './DataAdder.types'
 import {
