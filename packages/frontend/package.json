@@ -50,8 +50,8 @@
   "scripts": {
     "start": "PUBLIC_URL=/evm-debugger react-scripts start",
     "build": "PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
-    "build:production": "dotenv -e .env.production react-scripts build",
-    "build:staging": " dotenv -e .env.staging react-scripts build",
+    "build:production": "PUBLIC_URL=/evm-debugger dotenv -e .env.production react-scripts build && bash prerender.sh",
+    "build:staging": "PUBLIC_URL=/evm-debugger dotenv -e .env.staging react-scripts build && bash prerender.sh",
     "test": "jest",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",
