@@ -11,7 +11,7 @@ export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
   return (
     <>
       <Button
-        sx={{ width: '100%', marginTop: '40px', borderRadius: '16px' }}
+        sx={{ width: '100%', marginTop: '20px', borderRadius: '16px' }}
         size="large"
         variant="contained"
         onClick={onClick}

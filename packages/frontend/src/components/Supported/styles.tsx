@@ -2,7 +2,7 @@ import { MenuItem, Select, Stack, styled, TextField, Typography } from '@mui/mat
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
-  height: '144px',
+  height: '160px',
   gap: theme.spacing(1),
   flexDirection: 'column',
   display: 'flex',

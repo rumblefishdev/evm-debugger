@@ -87,6 +87,7 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
             >
               {isNotDarkOrNavy ? (
                 <Hidden
+                  implementation="css"
                   mdUp={theme.palette.type === 'navy'}
                   smDown={theme.palette.type !== 'navy'}
                 >
@@ -180,6 +181,7 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
                 </StyledMenuItem>
               </StyledTextContainer>
               <Hidden
+                implementation="css"
                 lgDown={theme.palette.type === 'navy'}
                 smUp={theme.palette.type !== 'navy'}
               >
@@ -352,7 +354,10 @@ export const Header = ({ blogs, background }: HeaderProps) => {
 
   return (
     <>
-      {isMobile ? (
+      <Hidden
+        implementation="css"
+        mdUp
+      >
         <MobileView
           displayHandler={displayHandler}
           closeAll={closeAll}
@@ -360,7 +365,11 @@ export const Header = ({ blogs, background }: HeaderProps) => {
           blogs={blogs}
           background={background}
         />
-      ) : (
+      </Hidden>
+      <Hidden
+        implementation="css"
+        mdDown
+      >
         <DesktopView
           closeAll={closeAll}
           blogs={blogs}
@@ -368,7 +377,7 @@ export const Header = ({ blogs, background }: HeaderProps) => {
           displayHandler={displayHandler}
           background={background}
         />
-      )}
+      </Hidden>
     </>
   )
 }

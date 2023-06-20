@@ -1,0 +1,10 @@
+{
+    "routes": [
+        "/evm-debugger"
+    ],
+    "engine": {
+        "gotoOptions": {
+            "waitUntil": "networkidle2"
+        }
+    }
+}

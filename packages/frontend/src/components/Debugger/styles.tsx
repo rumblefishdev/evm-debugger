@@ -18,10 +18,12 @@ export const DebuggerStack = styled(Stack)(({ theme }) => ({
     width: '50%',
   },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(5),
     gap: theme.spacing(2),
+    width: '75%',
   },
   [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
     width: '100%',
   },
 }))

@@ -48,7 +48,7 @@ export const StyledBlocksStack = styled(Stack)(() => ({
   justifyContent: 'space-evenly',
 }))
 export const Block = styled(Stack)(({ theme }) => ({
-  width: '392px',
+  width: '32%',
   display: 'flex',
   alignItems: 'flex-start',
   padding: theme.spacing(5),
@@ -57,7 +57,10 @@ export const Block = styled(Stack)(({ theme }) => ({
   background:
     ' radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) , rgba(255, 255, 255, 0.01)',
   [theme.breakpoints.down('md')]: {
-    width: '350px',
+    width: '48%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
   },
 }))
 
@@ -84,8 +87,8 @@ export const StyledBlocksText = styled(Typography)(({ theme }) => ({
   color: '#FFFFFF',
 
   [theme.breakpoints.down('sm')]: {
-    lineHeight: '36.8px',
-    fontSize: '30px',
+    lineHeight: '30px',
+    fontSize: '24px',
     textAlign: 'center',
   },
 }))
@@ -113,6 +116,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
+  zIndex: 1,
   color: '#FFFFFF',
   fontWeight: '700',
   lineHeight: '27.6px',

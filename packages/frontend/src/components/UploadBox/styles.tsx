@@ -3,8 +3,10 @@ import { Stack, styled, Typography } from '@mui/material'
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   justifyContent: 'space-between',
-  height: '40px',
-  gap: theme.spacing(3),
+  gap: theme.spacing(0.5),
+  // display: 'flex',
+  flexWrap: 'wrap',
+  height: '50%',
   flexDirection: 'row',
   alignItems: 'center',
 }))
@@ -37,6 +39,7 @@ export const StyledTextWrapper = styled(Stack)(({ theme }) => ({
 }))
 
 export const IconWrapper = styled(Stack)(({ theme }) => ({
+  minWidth: '265px',
   gap: theme.spacing(4),
   flexDirection: 'row',
   alignItems: 'center',

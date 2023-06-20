@@ -8,7 +8,7 @@ import { etherscanUrls } from '../../config'
 import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
-import { ROUTES } from '../../router'
+import { ROUTES } from '../../routes'
 import { AppContainer } from '../../components/AppContainer'
 import { supportedChains } from '../../helpers/chains'
 

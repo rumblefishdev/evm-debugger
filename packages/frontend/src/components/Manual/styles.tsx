@@ -1,7 +1,7 @@
 import { Divider, Stack, styled, Typography } from '@mui/material'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  height: '144px',
+  height: '160px',
   width: '100%',
   gap: theme.spacing(1),
   flexDirection: 'column',

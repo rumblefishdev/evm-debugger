@@ -48,7 +48,7 @@ export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur,
         onClick={openHandler}
         variant="contained"
         size="small"
-        sx={{ maxWidth: '288px', fontWeight: 400, borderRadius: '16px' }}
+        sx={{ fontWeight: 400, borderRadius: '16px' }}
       >
         Add
       </Button>

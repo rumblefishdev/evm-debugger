@@ -10,7 +10,7 @@ export const Chequered = styled('div')(({ theme }) => ({
   '&:before': {
     content: "''",
     height: `113%`,
-    width: `99.24vw`,
+    width: `100%`,
     left: '0%',
     top: `0%`,
     position: 'absolute',
@@ -21,7 +21,7 @@ export const Chequered = styled('div')(({ theme }) => ({
     backgroundPositionX: `10%, 100%, 70%`,
     backgroundPositionY: `10%, 2%`,
     [theme.breakpoints.down('xl')]: {
-      width: `100vw`,
+      // width: `100vw`,
     },
     [theme.breakpoints.down('lg')]: {
       backgroundSize: `100% 55%`,
@@ -36,7 +36,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
   '&:before': {
     content: "''",
     height: `113%`,
-    width: `99.24vw`,
+    width: `100%`,
     left: '0%',
     top: `10%`,
     position: 'absolute',
@@ -47,7 +47,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
     backgroundPositionY: `10%, 2%`,
     [theme.breakpoints.down('xl')]: {
       top: '0%',
-      width: `100vw`,
+      // width: `100vw`,
     },
     [theme.breakpoints.down('lg')]: {
       backgroundSize: `auto 85%`,
@@ -67,7 +67,7 @@ export const RightEllipse = styled('div')(({ theme }) => ({
   '&:before': {
     content: "''",
     height: `113%`,
-    width: `99.24vw`,
+    width: `100%`,
     left: '0%',
     top: `0%`,
     position: 'absolute',
@@ -77,13 +77,12 @@ export const RightEllipse = styled('div')(({ theme }) => ({
     backgroundPositionX: `10%, 100%, 70%`,
     backgroundPositionY: `10%, 2%`,
     [theme.breakpoints.down('xl')]: {
-      width: `100vw`,
+      // width: `100vw`,
     },
-    [theme.breakpoints.down('lg')]: {
-      backgroundSize: `100% 55%`,
-    },
+
     [theme.breakpoints.down('md')]: {
-      backgroundSize: `auto 40%`,
+      // backgroundSize: `40%`,
+      height: `40%`,
       backgroundPositionX: `100%`,
     },
     [theme.breakpoints.down('sm')]: {
@@ -96,7 +95,7 @@ export const WaveVector = styled('div')(({ theme }) => ({
   '&:before': {
     content: "''",
     height: `113%`,
-    width: `99.24vw`,
+    width: `100%`,
     left: '0%',
     top: `50%`,
     position: 'absolute',
@@ -106,7 +105,7 @@ export const WaveVector = styled('div')(({ theme }) => ({
     backgroundPositionX: `10%, 100%, 70%`,
     backgroundPositionY: `10%, 2%`,
     [theme.breakpoints.down('xl')]: {
-      width: `100vw`,
+      // width: `100vw`,
     },
     [theme.breakpoints.down('lg')]: {
       backgroundSize: `100% 55%`,
@@ -125,7 +124,7 @@ export const ArrowScrollContainer = styled('div')(({ theme }) => ({
   width: '100%',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginTop: theme.spacing(10),
+  marginTop: theme.spacing(8),
   [theme.breakpoints.down('sm')]: {
     display: 'none',
   },
@@ -167,7 +166,8 @@ export const StyledDiversionStack = styled(Stack)(({ theme }) => ({
   gap: '5rem',
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(0),
-    gap: '1rem',
+    flexDirection: 'column',
+    gap: '2rem',
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0),
@@ -193,7 +193,7 @@ export const StyledTextSpace = styled('div')(({ theme }) => ({
   zIndex: 5,
   height: 'auto',
   width: '50%',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     width: '100%',
   },
 }))
@@ -212,11 +212,13 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   zIndex: 100,
 
+  [theme.breakpoints.down('md')]: {
+    textAlign: 'center',
+    justifyContent: 'center',
+  },
   [theme.breakpoints.down('sm')]: {
     lineHeight: '36.8px',
     fontSize: '30px',
-    textAlign: 'center',
-    justifyContent: 'center',
   },
 }))
 
@@ -231,10 +233,11 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
   },
   letterSpacing: '-0.01em',
   textAlign: 'left',
-
+  [theme.breakpoints.down('md')]: {
+    textAlign: 'center',
+  },
   [theme.breakpoints.down('sm')]: {
     lineHeight: '27px',
     fontSize: '18px',
-    textAlign: 'center',
   },
 }))
