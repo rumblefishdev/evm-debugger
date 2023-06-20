@@ -16,6 +16,9 @@ logs-api:
 logs-srcmap:
 	sam logs -n SrcMapApiFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
 
+logs-srcmapcompiler:
+	sam logs -n SrcMapCompilerFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
+
 logs-sqs:
 	sam logs -n TransactionTraceSqsHandlerFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
 

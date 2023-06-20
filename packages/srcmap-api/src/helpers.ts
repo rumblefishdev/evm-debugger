@@ -11,10 +11,19 @@ import {
 } from '@aws-sdk/client-s3'
 import type { ChainId } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapResponseStatus } from '@evm-debuger/types'
+import { SSM, Lambda } from 'aws-sdk'
 
-const { BUCKET_NAME, AWS_REGION } = process.env
+const { BUCKET_NAME, AWS_REGION, ENVIRONMENT } = process.env
 
 const s3 = new S3Client({
+  region: AWS_REGION,
+})
+
+const ssm = new SSM({
+  region: AWS_REGION,
+})
+
+const lambda = new Lambda({
   region: AWS_REGION,
 })
 
@@ -86,6 +95,24 @@ const extractFiles = async (files: any, params: PutObjectRequest) => {
   return uploaded.filter(Boolean)
 }
 
+const triggerCompiler = async (data: any) => {
+  const compilerVersion = data.CompilerVersion.split('+')[0]
+  const parameterName = `/evm-debugger/${ENVIRONMENT}/${compilerVersion}`
+  console.log({ parameterName, compilerVersion })
+  const ssmResponse = await ssm.getParameter({
+    Name: parameterName,
+  })
+  console.log({ssmResponse})
+  // const ssmParameter = response?.Parameters?.shift()?.Value
+  // if (ssmParameter) {
+  //   const command = {
+  //     Payload: JSON.stringify(data),
+  //     FunctionName: ssmParameter,
+  //   }
+  //   const { Payload, LogResult } = await command.send(command)
+  // }
+}
+
 export type Address = {
   address: string
   chainId: ChainId
@@ -144,6 +171,7 @@ export const constructFiles = async (
         ...params,
         Body: JSON.stringify(body),
       })
+      await triggerCompiler(body)
     } catch (error) {
       body = {
         status: SrcMapResponseStatus.FAILED,
