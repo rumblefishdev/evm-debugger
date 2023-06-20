@@ -46,6 +46,9 @@ export const theme = createTheme({
   spacing,
   palette,
   mixins,
+  customStyles: {
+    scrollbar,
+  },
   components,
   breakpoints,
 } as ThemeOptions)
@@ -59,6 +62,9 @@ export const themeDark = createTheme({
   spacing,
   palette: paletteDark,
   mixins,
+  customStyles: {
+    scrollbar,
+  },
   components: {
     MuiTypography: {
       styleOverrides: { ...components.MuiTypography },
