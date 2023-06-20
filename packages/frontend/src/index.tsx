@@ -45,10 +45,7 @@ const RenderApp = () => {
   )
 }
 
-if (rootElement.hasChildNodes())
-  setTimeout(() => {
-    hydrateRoot(rootElement, <RenderApp />)
-  }, 3000)
+if (rootElement.hasChildNodes()) hydrateRoot(rootElement, <RenderApp />)
 else ReactDOM.render(<RenderApp />, rootElement)
 
 // If you want to start measuring performance in your app, pass a function
