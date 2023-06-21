@@ -127,12 +127,18 @@ const Contact = () => {
         <Stack>
           <Typography variant="caption">P: +48 737 455 594</Typography>
           <Typography variant="caption">E: hello@rumblefish.dev</Typography>
-          <Hidden smDown>
+          <Hidden
+            smDown
+            implementation="css"
+          >
             <ClutchReviews />
           </Hidden>
         </Stack>
       </ContactDetailsWrapper>
-      <Hidden smUp>
+      <Hidden
+        smUp
+        implementation="css"
+      >
         <ClutchReviews />
       </Hidden>
     </ContactWrapper>
@@ -171,7 +177,7 @@ const SocialMedia = () => {
           />
         </Link>
       </Stack>
-      <StyledItem variant="caption">Copyright © {new Date().getFullYear()} Rumblefish</StyledItem>
+      <StyledItem variant="caption">Copyright © 2023 Rumblefish</StyledItem>
     </>
   )
 }
@@ -190,11 +196,17 @@ export const Footer = ({ ...props }: FooterProps) => {
       <StyledStack {...props}>
         <LeftSideWrapper>
           <Contact />
-          <Hidden smDown>
+          <Hidden
+            smDown
+            implementation="css"
+          >
             <Menu />
             <Services />
           </Hidden>
-          <Hidden smUp>
+          <Hidden
+            smUp
+            implementation="css"
+          >
             <Stack
               flexDirection="row"
               justifyContent="space-between"

@@ -36,6 +36,7 @@ export const StyledTabs = styled(Tabs)(() => ({
     height: '1px',
     backgroundColor: 'white',
   },
+  '& .MuiButtonBase-root': {},
 }))
 
 export const StyledTab = styled(Tab)(() => ({

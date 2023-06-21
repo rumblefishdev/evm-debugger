@@ -57,7 +57,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
             </StyledDescription>
           </StyledTextSpace>
 
-          <Debugger />
+          {<Debugger />}
         </StyledDiversionStack>
 
         <ArrowScrollContainer
