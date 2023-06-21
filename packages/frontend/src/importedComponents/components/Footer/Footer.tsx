@@ -127,12 +127,18 @@ const Contact = () => {
         <Stack>
           <Typography variant="caption">P: +48 737 455 594</Typography>
           <Typography variant="caption">E: hello@rumblefish.dev</Typography>
-          <Hidden smDown>
+          <Hidden
+            smDown
+            implementation="css"
+          >
             <ClutchReviews />
           </Hidden>
         </Stack>
       </ContactDetailsWrapper>
-      <Hidden smUp>
+      <Hidden
+        smUp
+        implementation="css"
+      >
         <ClutchReviews />
       </Hidden>
     </ContactWrapper>
@@ -171,7 +177,7 @@ const SocialMedia = () => {
           />
         </Link>
       </Stack>
-      <StyledItem variant="caption">Copyright © {new Date().getFullYear()} Rumblefish</StyledItem>
+      <StyledItem variant="caption">Copyright © 2023 Rumblefish</StyledItem>
     </>
   )
 }
@@ -188,23 +194,35 @@ export const Footer = ({ ...props }: FooterProps) => {
       backgroundColor={useIsDarkOrNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
     >
       <StyledStack {...props}>
-        <LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.down('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
           <Contact />
-          <Hidden smDown>
-            <Menu />
-            <Services />
-          </Hidden>
-          <Hidden smUp>
-            <Stack
-              flexDirection="row"
-              justifyContent="space-between"
-              width="100%"
-            >
-              <Menu />
-              <Services boxWidth="135px" />
-            </Stack>
-          </Hidden>
+          <Menu />
+          <Services />
         </LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
+          <Contact />
+          <Stack
+            flexDirection="row"
+            justifyContent="space-between"
+            width="100%"
+          >
+            <Menu />
+            <Services boxWidth="135px" />
+          </Stack>
+        </LeftSideWrapper>
+
         <RightSideWrapper>
           <SocialMedia />
         </RightSideWrapper>

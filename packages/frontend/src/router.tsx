@@ -10,7 +10,6 @@ import {
   TranscationScreen,
 } from './pages'
 import { AppNavigation } from './pages/AppNavigation'
-import { contentfulClient } from './importedComponents'
 import { ROUTES as ORIG_ROUTES } from './routes'
 
 export const ROUTES = ORIG_ROUTES
@@ -19,14 +18,6 @@ export const appRouter = createBrowserRouter(
   [
     {
       path: ROUTES.HOME,
-      loader: async () => {
-        const entries = await contentfulClient.getEntries({
-          order: '-fields.pubDate',
-          content_type: 'blogPost',
-        })
-
-        return { blogPosts: entries.items }
-      },
       element: <StartingScreen />,
       children: [
         {

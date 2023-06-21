@@ -3,16 +3,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '../../components/Button'
-import { TailProgressScreen } from '../../images'
 import { etherscanUrls } from '../../config'
 import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { ROUTES } from '../../routes'
-import { AppContainer } from '../../components/AppContainer'
 import { supportedChains } from '../../helpers/chains'
+import { Section } from '../../importedComponents/components/Section'
 
-import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
+import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
@@ -89,53 +88,52 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   return (
     <>
       {(isLoading || error) && (
-        <>
-          <AppContainer>
-            <StyledMainPanel>
+        <Section
+          sx={{ height: '90vh' }}
+          width="full"
+          backgroundColor="transparent"
+        >
+          <StyledStack>
+            <Stack sx={{ width: '30%' }}>
               <Stack>
-                <Stack>
-                  <StyledHeadlineCaption
-                    variant="uppercase"
-                    gutterBottom={true}
-                  >
-                    EVM Debugger
-                  </StyledHeadlineCaption>
-                  <Typography variant="heading4">Fetching progress</Typography>
-                </Stack>
-                <Stepper
-                  stages={stages}
-                  error={error}
-                />
-              </Stack>
-              <StyledImage src={TailProgressScreen} />
-              {error && (
-                <Stack
-                  direction="row"
-                  spacing={2}
+                <StyledHeadlineCaption
+                  variant="uppercase"
+                  gutterBottom={true}
                 >
-                  <Button
-                    style={buttonsStyle}
-                    variant="outlined"
-                    onClick={moveBackToStartingScreen}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    style={buttonsStyle}
-                    variant="contained"
-                    onClick={restartHandler}
-                  >
-                    Restart
-                  </Button>
-                </Stack>
-              )}
-            </StyledMainPanel>
-            <Logger
-              messages={messages}
-              style={{ marginTop: 24 }}
-            />
-          </AppContainer>
-        </>
+                  EVM Debugger
+                </StyledHeadlineCaption>
+                <Typography variant="heading4">Fetching progress</Typography>
+              </Stack>
+              <Stepper
+                stages={stages}
+                error={error}
+              />
+            </Stack>
+            {error && (
+              <Stack
+                direction="row"
+                spacing={2}
+              >
+                <Button
+                  style={buttonsStyle}
+                  variant="outlined"
+                  onClick={moveBackToStartingScreen}
+                >
+                  Back
+                </Button>
+                <Button
+                  style={buttonsStyle}
+                  variant="contained"
+                  onClick={restartHandler}
+                >
+                  Restart
+                </Button>
+              </Stack>
+            )}
+
+            <Logger messages={messages} />
+          </StyledStack>
+        </Section>
       )}
       {isStagesFinished && children}
     </>

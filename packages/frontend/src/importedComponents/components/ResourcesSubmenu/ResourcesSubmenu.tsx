@@ -33,7 +33,10 @@ const EbooksSection = () => {
   return (
     <>
       <StyledMarginTypography variant="bodySmall">Check out our ebooks</StyledMarginTypography>
-      <Hidden lgUp>
+      <Hidden
+        lgUp
+        implementation="css"
+      >
         <StyledDivider />
       </Hidden>
       <StyledEbookSectionWrapper>
@@ -77,7 +80,10 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
       >
         <StyledSectionWrapper sx={{ width: 'auto' }}>
           <Link to="/blog">Visit our blog</Link>
-          <Hidden lgUp>
+          <Hidden
+            lgUp
+            implementation="css"
+          >
             <StyledDivider />
           </Hidden>
           <StyledBlogSectionWrapper>
@@ -89,7 +95,10 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
             ))}
           </StyledBlogSectionWrapper>
         </StyledSectionWrapper>
-        <Hidden lgDown>
+        <Hidden
+          lgDown
+          implementation="css"
+        >
           <StyledDivider />
         </Hidden>
         <StyledSectionWrapper sx={{ width: '100%' }}>

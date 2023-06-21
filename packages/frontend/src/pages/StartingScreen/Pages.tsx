@@ -1,10 +1,9 @@
-import { useLoaderData } from 'react-router-dom'
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
 import type { IBlogPost } from '../../importedComponents/contentful-ui.types'
-import { Header, Footer } from '../../importedComponents'
+import { Header, Footer, contentfulClient } from '../../importedComponents'
 import { themeNavy } from '../../theme/algaeTheme'
 
 import { DebuggerFormSection } from './DebuggerFormSection'
@@ -13,19 +12,35 @@ import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 import { Manual } from './Manual'
 import { Supported } from './Supported'
 
+const getPosts = async () => {
+  const entries = await contentfulClient.getEntries({
+    order: '-fields.pubDate',
+    content_type: 'blogPost',
+  })
+
+  return { blogPosts: entries.items }
+}
 export const ManualUpload: () => JSX.Element = () => <Manual />
 
 export const SupportedChain: () => JSX.Element = () => <Supported />
 
 export const StartingScreen: () => JSX.Element = () => {
-  const { blogPosts } = useLoaderData() as { blogPosts: IBlogPost[] }
+  const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const { blogPosts } = (await getPosts()) as { blogPosts: IBlogPost[] }
+      setFetchedBlogPosts(blogPosts)
+    }
+    fetchData().catch(console.error)
+  }, [])
+
   const offerRef = useRef<HTMLDivElement>(null)
   return (
     <>
       <ThemeProvider theme={themeNavy}>
         <CssBaseline>
           <Header
-            blogs={blogPosts}
+            blogs={fetchedBlogPosts}
             background={'transparent'}
           />
           <DebuggerFormSection ref={offerRef} />
