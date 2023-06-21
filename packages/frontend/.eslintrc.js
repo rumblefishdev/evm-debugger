@@ -12,7 +12,6 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/jsx-first-prop-new-line": [2, "multiline"],
     // "import/no-cycle": "off"
-
   },
   overrides: [
     {
