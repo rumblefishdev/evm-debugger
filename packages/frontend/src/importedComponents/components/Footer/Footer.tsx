@@ -194,29 +194,35 @@ export const Footer = ({ ...props }: FooterProps) => {
       backgroundColor={useIsDarkOrNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
     >
       <StyledStack {...props}>
-        <LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.down('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
           <Contact />
-          <Hidden
-            smDown
-            implementation="css"
+          <Menu />
+          <Services />
+        </LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
+          <Contact />
+          <Stack
+            flexDirection="row"
+            justifyContent="space-between"
+            width="100%"
           >
             <Menu />
-            <Services />
-          </Hidden>
-          <Hidden
-            smUp
-            implementation="css"
-          >
-            <Stack
-              flexDirection="row"
-              justifyContent="space-between"
-              width="100%"
-            >
-              <Menu />
-              <Services boxWidth="135px" />
-            </Stack>
-          </Hidden>
+            <Services boxWidth="135px" />
+          </Stack>
         </LeftSideWrapper>
+
         <RightSideWrapper>
           <SocialMedia />
         </RightSideWrapper>

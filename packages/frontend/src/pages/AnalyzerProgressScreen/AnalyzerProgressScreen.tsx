@@ -109,7 +109,6 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 error={error}
               />
             </Stack>
-            {/* <StyledImage src={TailProgressScreen} /> */}
             {error && (
               <Stack
                 direction="row"

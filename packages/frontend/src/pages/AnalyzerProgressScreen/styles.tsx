@@ -35,8 +35,6 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   backgroundPositionX: `20%, 100%, 70%`,
 
   backgroundImage: `url(${TailProgressScreen})`,
-  // justifyContent: 'center',
-  // alignItems: 'center',
   [theme.breakpoints.down('md')]: {
     margin: theme.spacing(8, 0, 4, 0),
     gap: theme.spacing(3),
