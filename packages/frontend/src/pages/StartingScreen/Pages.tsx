@@ -29,7 +29,7 @@ export const SupportedChain: () => JSX.Element = () => <Supported />
 export const StartingScreen: () => JSX.Element = () => {
   const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])
   useEffect(() => {
-    if (!isPrerender) return
+    if (isPrerender) return
     const fetchData = async () => {
       const { blogPosts } = (await getPosts()) as { blogPosts: IBlogPost[] }
       setFetchedBlogPosts(blogPosts)
