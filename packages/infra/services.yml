@@ -20,24 +20,6 @@ Parameters:
     Type: String
 
 Resources:
-  AnalyzerDataTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub ${AWS::StackName}-analyzer-store
-      AttributeDefinitions:
-        - AttributeName: txHash
-          AttributeType: S
-        - AttributeName: type#time
-          AttributeType: S
-      KeySchema:
-        - AttributeName: txHash
-          KeyType: HASH
-        - AttributeName: type#time
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-
   Api:
     Type: AWS::Serverless::Api
     Name: !Sub ${AWS::StackName}-api
@@ -56,6 +38,42 @@ Resources:
         DomainName: !Ref Domain
         Route53:
           HostedZoneId: !Ref HostedZoneId
+        
+  AnalyzerDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-analyzer-store
+      AttributeDefinitions:
+        - AttributeName: txHash
+          AttributeType: S
+        - AttributeName: type#time
+          AttributeType: S
+      KeySchema:
+        - AttributeName: txHash
+          KeyType: HASH
+        - AttributeName: type#time
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  SrcMapDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-srcmap-actions
+      AttributeDefinitions:
+        - AttributeName: address
+          AttributeType: S
+        - AttributeName: type#time
+          AttributeType: S
+      KeySchema:
+        - AttributeName: address
+          KeyType: HASH
+        - AttributeName: type#time
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
@@ -213,5 +231,55 @@ Resources:
               Resource:
                 - !GetAtt AnalyzerDataTable.Arn
                 - !Sub ${AnalyzerDataTable.Arn}/**
+    Metadata:
+      BuildMethod: makefile
+
+  SrcMapApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../srcmap-api
+      Handler: srcMapApi.srcmapApiEntrypoint
+      Runtime: nodejs18.x
+      Timeout: 180
+      MemorySize: 256
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SRCMAP_TABLE_NAME: !Ref SrcMapDataTable
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          BUCKET_NAME: !Ref TraceBucketName
+          REACT_APP_ETHERSCAN_KEY: VTCZHIZD7SD7EP2TMQRDINFV8HWHM243MY
+          REACT_APP_POLYGONSCAN_KEY: 93Q76PDC9677CUYFQMHR7S6MI12YKPPVHH
+          REACT_APP_ARBITRUMSCAN_KEY: EF6I9YQHU46455ABCHI9EZMR848D38CZK4
+      Events:
+        TransactionTraceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /srcmap-api
+            Method: post
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt SrcMapDataTable.Arn
+                - !Sub ${SrcMapDataTable.Arn}/**
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:s3:::${TraceBucketName}
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile

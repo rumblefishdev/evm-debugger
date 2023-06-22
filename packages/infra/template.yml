@@ -37,7 +37,7 @@ Resources:
   TransactionTraceService:
     Type: AWS::Serverless::Application
     Properties:
-      Location: ./transaction-trace-service.yml
+      Location: ./services.yml
       Parameters:
         Environment: !Ref Environment
         HostedZoneId: !Ref HostedZoneId

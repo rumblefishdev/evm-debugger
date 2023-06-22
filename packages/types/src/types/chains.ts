@@ -18,3 +18,36 @@ export const forkingUrlMap = {
   [ChainId.arbitrum]: `https://arb-mainnet.g.alchemy.com/v2`,
   [ChainId.arbitrumGoerli]: `https://arb-goerli.g.alchemy.com/v2`,
 }
+
+export const etherscanUrls = {
+  [ChainId.mainnet]: {
+    url: 'https://api.etherscan.io',
+    key: process.env.REACT_APP_ETHERSCAN_KEY,
+  },
+  [ChainId.goerli]: {
+    url: 'https://api-goerli.etherscan.io',
+    key: process.env.REACT_APP_ETHERSCAN_KEY,
+  },
+  [ChainId.sepolia]: {
+    url: 'https://sepolia.etherscan.io',
+    key: process.env.REACT_APP_ETHERSCAN_KEY,
+  },
+
+  [ChainId.polygon]: {
+    url: 'https://api.polygonscan.com',
+    key: process.env.REACT_APP_POLYGONSCAN_KEY,
+  },
+  [ChainId.mumbai]: {
+    url: 'https://api-mumbai.polygonscan.com',
+    key: process.env.REACT_APP_POLYGONSCAN_KEY,
+  },
+
+  [ChainId.arbitrum]: {
+    url: 'https://api.arbiscan.io',
+    key: process.env.REACT_APP_ARBITRUMSCAN_KEY,
+  },
+  [ChainId.arbitrumGoerli]: {
+    url: 'https://api-goerli.arbiscan.io',
+    key: process.env.REACT_APP_ARBITRUMSCAN_KEY,
+  },
+}
