@@ -28,7 +28,6 @@ export const StyledImage = styled('img')(() => ({
 }))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
-  margin: theme.spacing(12, 0, 6, 0),
   height: '100%',
   flexDirection: 'row',
   backgroundRepeat: `no-repeat`,
@@ -45,6 +44,6 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0),
-    margin: theme.spacing(7, 0, 2, 0),
+    margin: theme.spacing(0),
   },
 }))

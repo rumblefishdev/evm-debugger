@@ -23,7 +23,7 @@ export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
   zIndex: 10,
   padding: theme.spacing(1),
-  maxWidth: '484px',
+  // maxWidth: '484px',
   borderRadius: '99px',
   backgroundColor: theme.palette.rfLinesLight,
 
@@ -31,22 +31,21 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& .MuiTabs-indicator': {
     zIndex: 20,
     top: 2,
-    height: '44px',
+    height: '95%',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)',
     borderRadius: '99px',
     backgroundColor: theme.palette.rfWhite,
   },
 }))
 export const StyledTab = styled(Tab)(({ theme }) => ({
-  padding: theme.spacing(4, 9),
+  padding: theme.spacing(2.5, 9),
   margin: theme.spacing(0, 2),
   ...theme.typography.label,
   zIndex: 30,
   minWidth: '128px',
   borderRadius: '37px',
-
   // selected
   '&.Mui-selected': {
-    color: theme.palette.rfSecondary,
+    color: theme.palette.colorWhite,
   },
 }))
