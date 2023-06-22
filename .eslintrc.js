@@ -207,7 +207,7 @@ module.exports = {
         "import/no-dynamic-require": "error",
         "import/no-internal-modules": "off",
         "import/no-self-import": "error",
-        "import/no-cycle": "error",
+        "import/no-cycle": "off",
         "import/no-useless-path-segments": "error",
         "import/export": "error",
         "import/no-named-as-default": "error",

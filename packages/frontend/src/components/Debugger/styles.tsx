@@ -13,7 +13,7 @@ export const DebuggerStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '40%',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
   [theme.breakpoints.down('lg')]: {
     width: '50%',
   },
@@ -57,7 +57,19 @@ export const StyledTab = styled(Tab)(() => ({
     opacity: 1,
   },
 }))
-
+export const StyledTitle = styled(Typography)(() => ({
+  textTransform: 'none',
+  lineHeight: '100%',
+  fontWeight: 600,
+  fontStyle: 'normal',
+  fontFamily: 'Rajdhani',
+  color: 'white',
+  opacity: 1,
+  letterSpacing: '-0,01em',
+  fontSize: '20px',
+  width: '100%',
+  textAlign: 'center',
+}))
 export const ContentStack = styled(Stack)(() => ({
   width: '100%',
   alignItems: 'center',

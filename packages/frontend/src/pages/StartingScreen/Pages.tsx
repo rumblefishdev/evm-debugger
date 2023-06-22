@@ -12,7 +12,10 @@ import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 import { Manual } from './Manual'
 import { Supported } from './Supported'
 
+const shouldStartRender = process.env.REACT_APP_RENDER_COMPONENTS === 'true'
+
 const getPosts = async () => {
+  console.log(shouldStartRender)
   const entries = await contentfulClient.getEntries({
     order: '-fields.pubDate',
     content_type: 'blogPost',
@@ -27,6 +30,7 @@ export const SupportedChain: () => JSX.Element = () => <Supported />
 export const StartingScreen: () => JSX.Element = () => {
   const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])
   useEffect(() => {
+    if (!shouldStartRender) return
     const fetchData = async () => {
       const { blogPosts } = (await getPosts()) as { blogPosts: IBlogPost[] }
       setFetchedBlogPosts(blogPosts)

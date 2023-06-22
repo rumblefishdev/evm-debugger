@@ -48,15 +48,15 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "PUBLIC_URL=/evm-debugger react-scripts start",
-    "build": "PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
+    "start": "REACT_APP_RENDER_COMPONENTS=true PUBLIC_URL=/evm-debugger react-scripts start",
+    "build": "REACT_APP_RENDER_COMPONENTS=false PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
     "build:production": "dotenv -e .env.production react-scripts build",
     "build:staging": " dotenv -e .env.staging react-scripts build",
     "test": "jest",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "postbuild": "bash prerender.sh"
+    "postbuild": "REACT_APP_RENDER_COMPONENTS=true bash prerender.sh"
   },
   "eslintConfig": {
     "extends": [
