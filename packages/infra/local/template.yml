@@ -110,7 +110,7 @@ Resources:
                 - !GetAtt TransactionTraceBucket.Arn
                 - !Sub ${TransactionTraceBucket.Arn}/**
             - Action:
-                - ssm:GetParameters
+                - ssm:GetParameter
               Effect: Allow
               Resource:
                 - '*'

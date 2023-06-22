@@ -7,10 +7,12 @@ export default {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   collectCoverageFrom: ['**/*.ts'],
+  preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.ts?$': 'esbuild-jest',
+    '^.+\\.ts?$': 'ts-jest',
   },
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
   clearMocks: true,
   collectCoverage: false,
   coverageDirectory: '../coverage',

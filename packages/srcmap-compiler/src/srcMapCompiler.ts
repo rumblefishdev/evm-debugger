@@ -22,9 +22,7 @@ AWSLambda.setTag('lambda_name', 'srcmap-compiler')
 function getSolcModule(solcVersion: string) {
   try {
     console.log(`Reqire solc ${solcVersion}`)
-    const solc = require(`./solc${solcVersion}`).default
-    console.log(`Using solc ${solcVersion}`)
-    return solc
+    return require('./solc').default
   } catch (error) {
     console.log('Cant find solc', error)
     return null
@@ -32,9 +30,8 @@ function getSolcModule(solcVersion: string) {
 }
 
 export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
-  console.log({ event })
-  if (event.body) {
-    const payload = JSON.parse(event.body)?.data[0]
+  if (event && Object.keys(event).length > 0) {
+    const payload = event as any
     const solc = await getSolcModule(payload.CompilerVersion.split('+')[0])
     try {
       const response = await compileFiles(payload, solc)
@@ -42,7 +39,7 @@ export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
         response,
       })
     } catch (error) {
-      console.log(error)
+      console.log({ error })
       return createResponse(TransactionTraceResponseStatus.FAILED, { error })
     }
   }

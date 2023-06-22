@@ -1,0 +1,3 @@
+import * as solc from 'solc{{version}}'
+
+export default solc

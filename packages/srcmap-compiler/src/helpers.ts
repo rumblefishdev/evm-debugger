@@ -53,8 +53,11 @@ const gatherSameSourceCodeElements = (
         return [item]
       }
 
-      // console.log('reduce', idx, acc.length, { start: lastItem.start, end: lastItem.end, sourceSt: lastItem.sourceString, ids: lastItem.ids }, {start: item.start, end: item.end, sourceSt: lastItem.sourceString })
-      if (lastItem.start === item.start && item.end === lastItem.end) {
+      if (
+        lastItem &&
+        lastItem.start === item.start &&
+        item.end === lastItem.end
+      ) {
         const lastItemClone = lastItem.clone()
         lastItemClone.addIds(item.ids)
         accumulator.splice(-1)
@@ -108,13 +111,6 @@ const getInternals = async (
           formattedOpcodesArr.shift()
           return {
             rawSourceMap: contractInternals.evm.deployedBytecode.sourceMap,
-            // sourceMap: formatSourceMap(
-            //   contractInternals.evm.deployedBytecode.sourceMap,
-            //   input.sources[fileName].content,
-            //   formattedOpcodesArr,
-            // ).shrinkTree(),
-            // opcodesRaw: contractInternals.evm.deployedBytecode.opcodes,
-            // opcodes: formattedOpcodes,
             fileName,
             contractName,
           }

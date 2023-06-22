@@ -5,7 +5,7 @@ import type { SourceMapElement } from './sourceMapElement'
 import type { OpCode } from './opCode'
 
 export class SourceMapElementTreeNode {
-  public parent: SourceMapElementTreeNode
+  public parent: SourceMapElementTreeNode | null | undefined
   public children: SourceMapElementTreeNode[]
 
   constructor(public readonly element: SourceMapElement) {
@@ -132,7 +132,7 @@ export class SourceMapElementTree {
         if (nodeToAdd.isNodeParent(child) && child.parent) {
           // eslint-disable-next-line unicorn/prefer-dom-node-remove
           const removedChild = child.parent.removeChild(child)
-          nodeToAdd.addChild(removedChild)
+          nodeToAdd.addChild(removedChild as SourceMapElementTreeNode)
         }
 
       directParent.addChild(nodeToAdd)
@@ -148,42 +148,6 @@ export class SourceMapElementTree {
   }
 
   shrinkTree(): SourceMapElementTree {
-    // const newTree = new SourceMapElementTree(
-    //   this.rootNode.clone()
-    // )
-    // let uniqueIdsToSkip = []
-    // for (const node of this.iterator()) {
-    //   if (uniqueIdsToSkip.includes(node.uniqueId)) {
-    //     continue
-    //   }
-    //
-    //   const clonedNode = node.clone()
-    //   const lineRange = node.element.linesRange
-    //   if (lineRange[0] === lineRange[1]) {
-    //     for (const child of node.children) {
-    //       const descNodesToKill = Array.from(this.nodeIterator(child))
-    //
-    //       uniqueIdsToSkip = [
-    //         ...uniqueIdsToSkip,
-    //         ...descNodesToKill.map(
-    //           descNode => descNode.uniqueId
-    //         )
-    //       ]
-    //
-    //       console.log('m', descNodesToKill.flatMap(
-    //         descNodeToKill => descNodeToKill.element.ids
-    //       ))
-    //
-    //       clonedNode.addIds(descNodesToKill.flatMap(
-    //         descNodeToKill => descNodeToKill.element.ids
-    //       ))
-    //     }
-    //   }
-    //
-    //   newTree.addNewNode(clonedNode)
-    // }
-    //
-    // return newTree
     return this
   }
 

@@ -20,7 +20,8 @@ export type SolcOutput = Record<
 export type EntryType = {
   fileName: string
   contractName: string
-  opcodes: string
-  opcodesRaw: string
-  sourceMap: SourceMapElementTree
+  opcodes?: string
+  opcodesRaw?: string
+  sourceMap?: SourceMapElementTree
+  rawSourceMap: string
 }

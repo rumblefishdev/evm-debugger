@@ -1,10 +1,24 @@
-import type {
-  APIGatewayProxyEvent,
-  APIGatewayProxyEventPathParameters,
-} from 'aws-lambda'
+import type { APIGatewayProxyEvent } from 'aws-lambda'
 
 export const createLambdaEvent = (
-  pathParameters: APIGatewayProxyEventPathParameters | null,
+  bodyParameters: {
+    SwarmSource: string
+    status: string
+    Runs: string
+    Proxy: string
+    OptimizationUsed: string
+    LicenseType: string
+    Library: string
+    Implementation: string
+    files: string[]
+    EVMVersion: string
+    ContractName: string
+    ConstructorArguments: string
+    CompilerVersion: string
+    chainId: number
+    address: string
+    ABI: string
+  } | null,
 ): APIGatewayProxyEvent => {
   return {
     stageVariables: {},
@@ -46,13 +60,13 @@ export const createLambdaEvent = (
       accountId: '123456789012',
     },
     queryStringParameters: {},
-    pathParameters,
+    pathParameters: null,
     path: '/hello',
     multiValueQueryStringParameters: {},
     multiValueHeaders: {},
     isBase64Encoded: false,
     httpMethod: 'get',
     headers: {},
-    body: '',
+    body: JSON.stringify(bodyParameters),
   }
 }

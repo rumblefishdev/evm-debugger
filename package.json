@@ -24,8 +24,10 @@
     "transaction-trace-provider:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-provider",
     "srcmap-api:lint-check": "lerna run lint:check --scope @evm-debuger/srcmap-api",
     "srcmap-api:lint-fix": "lerna run lint:fix --scope @evm-debuger/srcmap-api",
+    "srcmap-api:test": "lerna run test --scope @evm-debuger/srcmap-api",
     "srcmap-compiler:lint-check": "lerna run lint:check --scope @evm-debuger/srcmap-compiler",
     "srcmap-compiler:lint-fix": "lerna run lint:fix --scope @evm-debuger/srcmap-compiler",
+    "srcmap-compiler:test": "lerna run test --scope @evm-debuger/srcmap-compiler",
     "analyzer:test": "lerna run test --scope @evm-debuger/analyzer",
     "analyzer:test:fetch-abis": "lerna run test:fetch-abis --scope @evm-debuger/analyzer"
   },

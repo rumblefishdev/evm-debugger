@@ -14,8 +14,6 @@ type SourceMapElementProperties =
 export class SourceMapElement {
   public ids: number[]
 
-  private readonly _opCodes: OpCode[]
-
   constructor(
     private readonly _offset: number,
     public readonly _length: number,
@@ -28,9 +26,6 @@ export class SourceMapElement {
     private readonly _sourceString: string,
   ) {
     this.ids = Array.isArray(id) ? id : [id]
-
-    // if (this.opCodes) {
-    // }
   }
 
   get length(): number {

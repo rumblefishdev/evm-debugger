@@ -9,9 +9,10 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
+import { InvokeCommand, LambdaClient, LogType } from '@aws-sdk/client-lambda'
+import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
 import type { ChainId } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapResponseStatus } from '@evm-debuger/types'
-import { SSM, Lambda } from 'aws-sdk'
 
 const { BUCKET_NAME, AWS_REGION, ENVIRONMENT } = process.env
 
@@ -19,11 +20,11 @@ const s3 = new S3Client({
   region: AWS_REGION,
 })
 
-const ssm = new SSM({
+const ssm = new SSMClient({
   region: AWS_REGION,
 })
 
-const lambda = new Lambda({
+const lambda = new LambdaClient({
   region: AWS_REGION,
 })
 
@@ -99,18 +100,20 @@ const triggerCompiler = async (data: any) => {
   const compilerVersion = data.CompilerVersion.split('+')[0]
   const parameterName = `/evm-debugger/${ENVIRONMENT}/${compilerVersion}`
   console.log({ parameterName, compilerVersion })
-  const ssmResponse = await ssm.getParameter({
+  const getParameterParams = new GetParameterCommand({
+    WithDecryption: false,
     Name: parameterName,
   })
-  console.log({ssmResponse})
-  // const ssmParameter = response?.Parameters?.shift()?.Value
-  // if (ssmParameter) {
-  //   const command = {
-  //     Payload: JSON.stringify(data),
-  //     FunctionName: ssmParameter,
-  //   }
-  //   const { Payload, LogResult } = await command.send(command)
-  // }
+  const parameterValue = await ssm.send(getParameterParams)
+  console.log('lambda to trigger', parameterValue.Parameter?.Value)
+  if (parameterValue.Parameter?.Value) {
+    const command = new InvokeCommand({
+      Payload: new TextEncoder().encode(JSON.stringify(data)),
+      LogType: LogType.Tail,
+      FunctionName: parameterValue.Parameter?.Value,
+    })
+    lambda.send(command)
+  }
 }
 
 export type Address = {
