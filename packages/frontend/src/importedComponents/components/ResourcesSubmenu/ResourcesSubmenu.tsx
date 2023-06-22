@@ -76,6 +76,11 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
         direction="row"
         alignItems="flex-start"
         justifyContent="space-between"
+        sx={{
+          img: {
+            filter: 'none',
+          },
+        }}
         {...props}
       >
         <StyledSectionWrapper sx={{ width: 'auto' }}>
