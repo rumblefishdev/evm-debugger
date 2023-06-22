@@ -48,8 +48,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-
-    "start": "REACT_APP_IS_PRERENDER=true PUBLIC_URL=/evm-debugger react-scripts start",
+    "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger react-scripts start",
     "build": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
     "build:production": "dotenv -e .env.production react-scripts build",
     "build:staging": " dotenv -e .env.staging react-scripts build",
