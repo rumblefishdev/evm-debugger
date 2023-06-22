@@ -23,7 +23,6 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
   rowGap: theme.spacing(2),
-  // overflow: 'auto',
   marginTop: theme.spacing(4),
   gridTemplateColumns: 'auto 1fr',
   display: 'grid',
