@@ -101,7 +101,6 @@
     "build": "esbuild src/* --sourcemap --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",
-    "prebuild": "node ./bin/prebuild.js",
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts' --fix",
     "compile": "tsc",

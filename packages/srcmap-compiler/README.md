@@ -1,6 +1,6 @@
 # Description
 
-Simple API handler that initialize lifecycle of tx analyze.
+Solc compiler lambda
 
 
 # Building

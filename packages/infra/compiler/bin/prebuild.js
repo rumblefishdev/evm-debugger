@@ -18,14 +18,14 @@ filesToDelete.forEach(file => {
 
 const toReplace = '{{version}}'
 
-const filesToCreate = [`${prefix}/src/solc.template`, `${prefix}/types/solc.d.template`]
+const filesToCreate = [`./src/solc.template`, `./types/solc.d.template`]
 filesToCreate.forEach(file => {
     fs.readFile(file, 'utf8', (error, content) => {
         if (error) {
         console.error(error);
         return;
         }
-        const fileName = file.replace('template', 'ts')
+        const fileName = file.replace('template', 'ts').replace('.', prefix)
         fs.writeFile(fileName, content.replace(toReplace, solcVersion), error => {
             if (error) 
             console.error(error);

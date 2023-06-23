@@ -4,38 +4,43 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
-
 Resources:
   SrcMapCompilerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: /../../srcmap-compiler
+      CodeUri: s3://artifacts.evm-transaction-trace.rumblefish.com/stage/infrastructure/compiler/current/bc3337b27ceb4134bae83ed5dac4226f
       Handler: srcMapCompiler.srcmapCompilerEntrypoint
       Runtime: nodejs18.x
       Timeout: 180
       MemorySize: 512
       Architectures:
-        - x86_64
+      - x86_64
       Environment:
         Variables:
-          BUCKET_NAME: !Ref TransactionTraceBucket
-          ENVIRONMENT: !Ref Environment
-          SENTRY_DSN: !Ref SentryDsn
+          BUCKET_NAME:
+            Ref: TransactionTraceBucket
+          ENVIRONMENT:
+            Ref: Environment
+          SENTRY_DSN:
+            Ref: SentryDsn
           REACT_APP_ETHERSCAN_KEY: VTCZHIZD7SD7EP2TMQRDINFV8HWHM243MY
           REACT_APP_POLYGONSCAN_KEY: 93Q76PDC9677CUYFQMHR7S6MI12YKPPVHH
           REACT_APP_ARBITRUMSCAN_KEY: EF6I9YQHU46455ABCHI9EZMR848D38CZK4
       Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - iam:PassRole
-              Resource:
-                - '*'
-            - Action:
-                - s3:*
-              Effect: Allow
-              Resource:
-                - !GetAtt TransactionTraceBucket.Arn
-                - !Sub ${TransactionTraceBucket.Arn}/**
+      - Statement:
+        - Effect: Allow
+          Action:
+          - iam:PassRole
+          Resource:
+          - '*'
+        - Action:
+          - s3:*
+          Effect: Allow
+          Resource:
+          - Fn::GetAtt:
+            - TransactionTraceBucket
+            - Arn
+          - Fn::Sub: ${TransactionTraceBucket.Arn}/**
     Metadata:
       BuildMethod: makefile
+      SamResourceId: SrcMapCompilerFunction
