@@ -19,6 +19,12 @@ export const StyledRoot = styled(Container)(({ theme }) => ({
       width: '95%',
     },
   },
+  [`&.${sectionClasses.fullHeight}`]: {
+    height: '100%',
+  },
+  [`&.${sectionClasses.autoHeight}`]: {
+    height: 'auto',
+  },
   [`&.${sectionClasses.mobilePadding}`]: {
     ...theme.mixins.mobilePadding(),
   },

@@ -4,7 +4,7 @@ export const StyledLogPanel = styled(Stack)(({ theme }) => ({
   width: '70%',
   padding: theme.spacing(6),
   overflowY: 'auto',
-  height: '90%',
+  height: '100%',
   boxSizing: 'border-box',
   borderRadius: '16px',
   border: `1px solid ${theme.palette.rfLinesLight}`,
@@ -22,9 +22,8 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
-  rowGap: theme.spacing(4),
-  overflow: 'auto',
-  marginTop: theme.spacing(8),
+  rowGap: theme.spacing(2),
+  marginTop: theme.spacing(4),
   gridTemplateColumns: 'auto 1fr',
   display: 'grid',
   columnGap: theme.spacing(2),

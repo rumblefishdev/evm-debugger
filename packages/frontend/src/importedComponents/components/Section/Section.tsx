@@ -8,6 +8,7 @@ import { StyledRoot } from './styles'
 
 export const Section = ({
   width = 'full',
+  height = 'autoHeight',
   children,
   backgroundColor = '#FFF',
   mobilePadding = true,
@@ -20,6 +21,7 @@ export const Section = ({
         width: '100%',
         position: positionRelativeOn ? 'relative' : 'static',
         overflowX: 'clip',
+        height: height === 'fullHeight' ? '100%' : 'auto',
         background: backgroundColor,
       }}
     >
@@ -27,7 +29,7 @@ export const Section = ({
         {...props}
         maxWidth={false}
         disableGutters
-        className={clsx(sectionClasses[width], {
+        className={clsx(sectionClasses[width], sectionClasses[height], {
           [sectionClasses.mobilePadding]: mobilePadding,
         })}
       >

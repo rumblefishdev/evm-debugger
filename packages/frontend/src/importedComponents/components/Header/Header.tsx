@@ -142,6 +142,12 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
                   <ServicesSubmenu />
                 </StyledCollapse>
                 <StyledMenuItem
+                  to="/evm-debugger"
+                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+                >
+                  Products
+                </StyledMenuItem>
+                <StyledMenuItem
                   to="/case-studies"
                   linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
                 >

@@ -2,7 +2,7 @@ import { Stepper, styled } from '@mui/material'
 
 export const StyledStepper = styled(Stepper)(({ theme }) => ({
   width: '364px',
-  marginTop: theme.spacing(7),
+  marginTop: theme.spacing(3),
   // MuiStepLabel-label
   '& .MuiStepLabel-label': {
     color: theme.palette.rfDisabledDark,

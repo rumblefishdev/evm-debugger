@@ -1,4 +1,4 @@
-import { Tabs, Tab, Stack, styled, Typography, Link } from '@mui/material'
+import { Stack, styled, Typography, Link } from '@mui/material'
 import type { LinkProps } from '@mui/material'
 
 /* eslint sort-keys-fix/sort-keys-fix:0*/
@@ -13,7 +13,7 @@ export const DebuggerStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '40%',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
   [theme.breakpoints.down('lg')]: {
     width: '50%',
   },
@@ -25,36 +25,6 @@ export const DebuggerStack = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2),
     width: '100%',
-  },
-}))
-
-export const StyledTabs = styled(Tabs)(() => ({
-  width: '100%',
-  minHeight: '48px',
-
-  '& .MuiTabs-indicator': {
-    height: '1px',
-    backgroundColor: 'white',
-  },
-  '& .MuiButtonBase-root': {},
-}))
-
-export const StyledTab = styled(Tab)(() => ({
-  textTransform: 'none',
-  lineHeight: '100%',
-  fontWeight: 600,
-  fontStyle: 'normal',
-  fontFamily: 'Rajdhani',
-  color: 'white',
-  opacity: 0.5,
-  letterSpacing: '-0,01em',
-  fontSize: '15px',
-  width: '50%',
-  borderBox: 'border-box',
-  borderBottom: `1px solid rgba(193, 199, 205, 0.15)`,
-  '&.Mui-selected': {
-    color: 'white',
-    opacity: 1,
   },
 }))
 

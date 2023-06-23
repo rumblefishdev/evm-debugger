@@ -12,6 +12,8 @@ import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 import { Manual } from './Manual'
 import { Supported } from './Supported'
 
+const isPrerender = process.env.REACT_APP_IS_PRERENDER === 'true'
+
 const getPosts = async () => {
   const entries = await contentfulClient.getEntries({
     order: '-fields.pubDate',
@@ -27,6 +29,7 @@ export const SupportedChain: () => JSX.Element = () => <Supported />
 export const StartingScreen: () => JSX.Element = () => {
   const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])
   useEffect(() => {
+    if (isPrerender) return
     const fetchData = async () => {
       const { blogPosts } = (await getPosts()) as { blogPosts: IBlogPost[] }
       setFetchedBlogPosts(blogPosts)
