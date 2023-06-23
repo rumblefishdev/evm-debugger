@@ -22,11 +22,11 @@ deploy-stage: VERSIONS=$(shell cat $(VERSIONS_FILE) | jqn 'join(" ")')
 deploy-stage: ARTIFACTS_S3_PREFIX=stage/infrastructure/compiler
 deploy-stage:
 deploy-stage: 
-	for version in ${VERSIONS}; do \
+	for version in $(VERSIONS); do \
 		echo "Running for: $${version};"; \
 		node ./bin/prebuild.js $${version}; \
-		echo "Stack: ${STACK_NAME}-$${version}"; \
-		pwd; \
+		stack="$(STACK_NAME)-$${version}"; \
+		echo "Stack: $${stack}"; \
 		sam build; \
 		sam package --output-template-file $(TEMPLATE_FILE) --s3-bucket $(ARTIFACTS_BUCKET_NAME) --s3-prefix $(ARTIFACTS_S3_PREFIX)/$(VERSION) --region $(REGION); \
 		sam deploy --template-file $(TEMPLATE_FILE) --stack-name $(STACK_NAME)-$${version} --capabilities $(CAPABILITIES)  --region $(REGION) --parameter-overrides $(PARAMETERS)  --tags $(TAGS); \
