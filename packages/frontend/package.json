@@ -49,15 +49,19 @@
   },
   "scripts": {
     "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger react-scripts start",
-    "build": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
-    "build:production": "dotenv -e .env.production react-scripts build",
-    "build:staging": " dotenv -e .env.staging react-scripts build",
-
+    "build": "bash build.sh build",
+    "build:production": "bash build.sh build production",
+    "build:staging": " bash build.sh build staging",
     "test": "jest",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "postbuild": "REACT_APP_IS_PRERENDER=true bash prerender.sh"
+    "postbuild": "bash build.sh prerender",
+    "postbuild:staging": " bash build.sh prerender staging",
+    "postbuild:production": "bash build.sh prerender production",
+    "serve-prerender": "bash build.sh serve-prerender",
+    "serve-prerender:staging": "bash build.sh serve-prerender staging",
+    "serve-prerender:production": "bash build.sh serve-prerender production"
   },
   "eslintConfig": {
     "extends": [
