@@ -58,7 +58,10 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "postbuild": "bash build.sh prerender",
     "postbuild:staging": " bash build.sh prerender staging",
-    "postbuild:production": "bash build.sh prerender production"
+    "postbuild:production": "bash build.sh prerender production",
+    "serve-prerender": "bash build.sh serve-prerender",
+    "serve-prerender:staging": "bash build.sh serve-prerender staging",
+    "serve-prerender:production": "bash build.sh serve-prerender production"
   },
   "eslintConfig": {
     "extends": [
