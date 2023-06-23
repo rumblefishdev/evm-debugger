@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from 'react'
 import type { IBlogPost } from '../../importedComponents/contentful-ui.types'
 import { Header, Footer, contentfulClient } from '../../importedComponents'
 import { themeNavy } from '../../theme/algaeTheme'
+import { GAnalytics } from '../../components/GAnalytics'
 
 import { DebuggerFormSection } from './DebuggerFormSection'
 import { AnalyzeTransactionSection } from './AnalyzeTransactionSection'
@@ -46,6 +47,7 @@ export const StartingScreen: () => JSX.Element = () => {
             blogs={fetchedBlogPosts}
             background={'transparent'}
           />
+          <GAnalytics />
           <DebuggerFormSection ref={offerRef} />
           <OnlyDebuggerYouNeedSection ref={offerRef} />
           <AnalyzeTransactionSection />
