@@ -1,7 +1,8 @@
-import { Stack, Typography, useTheme } from '@mui/material'
+import { Stack, Typography, ThemeProvider } from '@mui/material'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { theme } from '../../theme/default'
 import { Button } from '../../importedComponents/components/Button'
 import { etherscanUrls } from '../../config'
 import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
@@ -81,73 +82,74 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
       )
   }, [dispatch, error, structLogs, txInfo])
 
-  const theme = useTheme()
   return (
     <>
-      {(isLoading || error) && (
-        <Section
-          mobilePadding={false}
-          height="fullHeight"
-          width="full"
-          backgroundColor="transparent"
-        >
-          <StyledStack>
-            <Stack
-              sx={{
-                width: '30%',
-                [theme.breakpoints.down('md')]: {
-                  width: '100%',
-                },
-                gap: '20px',
-                flexDirection: 'column',
-                display: 'flex',
-              }}
-            >
-              <Stack>
-                <StyledHeadlineCaption
-                  variant="uppercase"
-                  gutterBottom={true}
-                >
-                  EVM Debugger
-                </StyledHeadlineCaption>
-                <Typography variant="heading4">Fetching progress</Typography>
-              </Stack>
-              <Stepper
-                stages={stages}
-                error={error}
-              />
-              {error && (
-                <Stack
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  width={'100%'}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    variant="outlined"
-                    sx={{ width: '45%', backgroundColor: 'white' }}
-                    onClick={moveBackToStartingScreen}
+      <ThemeProvider theme={theme}>
+        {(isLoading || error) && (
+          <Section
+            mobilePadding={false}
+            height="fullHeight"
+            width="full"
+            backgroundColor="transparent"
+          >
+            <StyledStack>
+              <Stack
+                sx={{
+                  width: '30%',
+                  [theme.breakpoints.down('md')]: {
+                    width: '100%',
+                  },
+                  gap: '20px',
+                  flexDirection: 'column',
+                  display: 'flex',
+                }}
+              >
+                <Stack>
+                  <StyledHeadlineCaption
+                    variant="uppercase"
+                    gutterBottom={true}
                   >
-                    Back
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    sx={{ width: '45%', backgroundColor: 'white' }}
-                    onClick={restartHandler}
-                  >
-                    Restart
-                  </Button>
+                    EVM Debugger
+                  </StyledHeadlineCaption>
+                  <Typography variant="heading4">Fetching progress</Typography>
                 </Stack>
-              )}
-            </Stack>
+                <Stepper
+                  stages={stages}
+                  error={error}
+                />
+                {error && (
+                  <Stack
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    width={'100%'}
+                    direction="row"
+                    spacing={2}
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{ width: '45%', backgroundColor: 'white' }}
+                      onClick={moveBackToStartingScreen}
+                    >
+                      Back
+                    </Button>
 
-            <Logger messages={messages} />
-          </StyledStack>
-        </Section>
-      )}
-      {isStagesFinished && children}
+                    <Button
+                      variant="contained"
+                      sx={{ width: '45%', backgroundColor: 'white' }}
+                      onClick={restartHandler}
+                    >
+                      Restart
+                    </Button>
+                  </Stack>
+                )}
+              </Stack>
+
+              <Logger messages={messages} />
+            </StyledStack>
+          </Section>
+        )}
+        {isStagesFinished && children}
+      </ThemeProvider>
     </>
   )
 }
