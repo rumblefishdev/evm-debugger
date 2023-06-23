@@ -1,3 +1,3 @@
-import * as solc from 'solcv0.8.17'
+import * as solc from 'solcv0.8.20'
 
 export default solc

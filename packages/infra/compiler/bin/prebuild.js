@@ -2,10 +2,11 @@
 const solcVersion = process.argv.slice(2)
 
 console.log(`Prebuild for solc: solcVersion`)
+const prefix = '../../srcmap-compiler'
+const fs = require('node:fs')
 
-const fs = require('fs')
-const filePath = './src/solc.ts'
-const typeFilePath = './types/solc.d.ts'
+const filePath = `${prefix}/src/solc.ts`
+const typeFilePath = `${prefix}/types/solc.d.ts`
 
 const filesToDelete = [filePath, typeFilePath]
 
@@ -17,18 +18,18 @@ filesToDelete.forEach(file => {
 
 const toReplace = '{{version}}'
 
-const filesToCreate = ['./src/solc.template', './types/solc.d.template']
+const filesToCreate = [`${prefix}/src/solc.template`, `${prefix}/types/solc.d.template`]
 filesToCreate.forEach(file => {
-    fs.readFile(file, 'utf8', (err, content) => {
-        if (err) {
-        console.error(err);
+    fs.readFile(file, 'utf8', (error, content) => {
+        if (error) {
+        console.error(error);
         return;
         }
         const fileName = file.replace('template', 'ts')
-        fs.writeFile(fileName, content.replace(toReplace, solcVersion), err => {
-            if (err) {
-            console.error(err);
-            }
+        fs.writeFile(fileName, content.replace(toReplace, solcVersion), error => {
+            if (error) 
+            console.error(error);
+            
             console.log(`Created file ${fileName} for solc ${solcVersion}`)
         });
         
