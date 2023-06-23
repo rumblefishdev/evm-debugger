@@ -34,7 +34,7 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
     height: '90%',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)',
     borderRadius: '99px',
-    backgroundColor: theme.palette.colorWhite,
+    backgroundColor: theme.palette.rfWhite,
   },
 }))
 export const StyledTab = styled(Tab)(({ theme }) => ({

@@ -58,7 +58,7 @@ const ClutchReviews: React.FC = () => {
     <StyledClutchBox>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Widget</title>
+        <title>EVM Debugger by Rumble Fish - the ultimate tool for EVM smart contract analysis</title>
         <link
           rel="canonical"
           href="https://widget.clutch.co/static/js/widget.js"

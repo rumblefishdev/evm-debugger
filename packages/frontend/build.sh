@@ -73,7 +73,7 @@ function serve_prerender() {
   print_msg "Serving application"
 
   swap_to_evm_debugger_dir build
-  cd build && http-server -o /evm-debugger
+  cd build && http-server -o /evm-debugger --proxy http://localhost:8080/evm-debugger/non-static.html?
 }
 
 if [[ "$1" == "build" ]]; then
