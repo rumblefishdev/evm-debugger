@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.2.8-alpha.7",
+  "version": "0.2.8-alpha.8",
   "private": true,
   "dependencies": {
     "@contentful/rich-text-types": "^15.11.1",
@@ -48,15 +48,20 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "PUBLIC_URL=/evm-debugger react-scripts start",
-    "build": "PUBLIC_URL=/evm-debugger EXTEND_ESLINT=true react-scripts build",
-    "build:production": "PUBLIC_URL=/evm-debugger dotenv -e .env.production react-scripts build && bash prerender.sh",
-    "build:staging": "PUBLIC_URL=/evm-debugger dotenv -e .env.staging react-scripts build && bash prerender.sh",
+    "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger react-scripts start",
+    "build": "bash build.sh build",
+    "build:production": "bash build.sh build production",
+    "build:staging": " bash build.sh build staging",
     "test": "jest",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "postbuild": "REACT_APP_IS_PRERENDER=true bash prerender.sh"
+    "postbuild": "bash build.sh prerender",
+    "postbuild:staging": " bash build.sh prerender staging",
+    "postbuild:production": "bash build.sh prerender production",
+    "serve-prerender": "bash build.sh serve-prerender",
+    "serve-prerender:staging": "bash build.sh serve-prerender staging",
+    "serve-prerender:production": "bash build.sh serve-prerender production"
   },
   "eslintConfig": {
     "extends": [
