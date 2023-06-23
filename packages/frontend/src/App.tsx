@@ -12,8 +12,20 @@ const emotionCache = createCache({
   key: 'emotion-cache',
 })
 
-function App() {
+type AppProps = {
+  shouldUseCacheProvider: boolean
+}
+
+function App(props: AppProps) {
   GAnalyticsInit()
+
+  if (!props.shouldUseCacheProvider)
+    return (
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
+    )
+
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>

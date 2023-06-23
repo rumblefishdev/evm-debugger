@@ -25,7 +25,9 @@ if (sentryDsn)
 
 const rootElement = document.getElementById('root')
 
-const RenderApp = () => {
+const RenderApp = (props: { isHydrated?: boolean }) => {
+  const shouldUseCacheProvider = process.env.REACT_APP_IS_PRERENDER === 'true' || Boolean(props.isHydrated)
+
   return (
     <div>
       <React.StrictMode>
@@ -35,17 +37,17 @@ const RenderApp = () => {
               loading={true}
               persistor={persistor}
             >
-              <App />
+              <App shouldUseCacheProvider={shouldUseCacheProvider} />
             </PersistGate>
           )}
-          {!isPersistOn && <App />}
+          {!isPersistOn && <App shouldUseCacheProvider={shouldUseCacheProvider} />}
         </Provider>
       </React.StrictMode>
     </div>
   )
 }
 
-if (rootElement.hasChildNodes()) hydrateRoot(rootElement, <RenderApp />)
+if (rootElement.hasChildNodes()) hydrateRoot(rootElement, <RenderApp isHydrated />)
 else ReactDOM.render(<RenderApp />, rootElement)
 
 // If you want to start measuring performance in your app, pass a function
