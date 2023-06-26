@@ -17,11 +17,11 @@ export const GAnalyticsInit = () => {
 
 export const GAnalytics = () => {
   const location = useLocation()
-  if (onProd())
-    React.useEffect(() => {
-      const path = `${ROUTES.BASE}${location.pathname}`
-      ReactGA.set({ page: path })
-    }, [location])
+  // if (onProd())
+  //   React.useEffect(() => {
+  //     const path = `${ROUTES.BASE}${location.pathname}`
+  //     ReactGA.set({ page: path })
+  //   }, [location])
 
   return <div></div>
 }
