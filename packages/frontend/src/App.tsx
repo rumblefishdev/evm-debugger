@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material'
 import { RouterProvider } from 'react-router-dom'
 import { CacheProvider } from '@emotion/react'
 import createCache from '@emotion/cache'
+import { useEffect } from 'react'
 
 import { theme } from './theme/algaeTheme'
 import { appRouter } from './router'
@@ -17,7 +18,9 @@ type AppProps = {
 }
 
 function App(props: AppProps) {
-  GAnalyticsInit()
+  useEffect(() => {
+    GAnalyticsInit()
+  }, [])
 
   if (!props.shouldUseCacheProvider)
     return (
