@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ReactGA from 'react-ga4'
 import TagManager from 'react-gtm-module'
 
