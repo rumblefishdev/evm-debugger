@@ -1,9 +1,9 @@
-// import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import React from 'react'
 import ReactGA from 'react-ga4'
 // import TagManager from 'react-gtm-module'
 
-// import { ROUTES } from '../../routes'
+import { ROUTES } from '../../routes'
 
 const PROD_URL = 'www.rumblefish.dev'
 
@@ -18,13 +18,13 @@ export const GAnalyticsInit = () => {
 }
 
 export const GAnalytics = () => {
-  // const location = useLocation()
-  // console.log('onProd value in GAnalytics:', onProd())
-  // if (onProd())
-  //   React.useEffect(() => {
-  //     const path = `${ROUTES.BASE}${location.pathname}`
-  //     ReactGA.set({ page: path })
-  //   }, [location])
+  const location = useLocation()
+  console.log('onProd value in GAnalytics:', onProd())
+  if (onProd())
+    React.useEffect(() => {
+      const path = `${ROUTES.BASE}${location.pathname}`
+      ReactGA.set({ page: path })
+    }, [location])
 
   return <div></div>
 }
