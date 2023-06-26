@@ -48,7 +48,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger REACT_APP_GOOGLE_ANALYTICS_ID=UA-113878119-1 REACT_APP_GOOGLE_TAG_MANAGER_ID=GTM-MX72HCB react-scripts start",
+    "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger react-scripts start",
     "build": "bash build.sh build",
     "build:production": "bash build.sh build production",
     "build:staging": " bash build.sh build staging",
