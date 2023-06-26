@@ -135,7 +135,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
 
                     <Button
                       variant="contained"
-                      sx={{ width: '45%', backgroundColor: 'white' }}
+                      sx={{ width: '45%' }}
                       onClick={restartHandler}
                     >
                       Restart

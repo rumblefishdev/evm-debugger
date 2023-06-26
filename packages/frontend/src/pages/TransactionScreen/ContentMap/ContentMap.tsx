@@ -17,8 +17,16 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setWidth(rootRef.current?.clientWidth || 0)
-    setHeight(rootRef.current?.clientHeight || 0)
+    const intervalId = setInterval(() => {
+      if (rootRef.current && rootRef.current.clientWidth !== width && rootRef.current.clientHeight !== height) {
+        setWidth(rootRef.current?.clientWidth)
+        setHeight(rootRef.current?.clientHeight)
+      }
+    }, 200)
+
+    return () => {
+      clearInterval(intervalId)
+    }
 
     // TODO: https://github.com/rumblefishdev/evm-debuger/issues/104
     // if (rootRef.current) {
@@ -30,7 +38,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     //     document.removeEventListener('wheel', zoomFunction)
     //   }
     // }
-  }, [])
+  }, [rootRef, width, height])
 
   const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height))
 
@@ -62,10 +70,12 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
   return (
     <StyledWrapper>
       <StyledCard
-        {...props}
         ref={rootRef}
+        {...props}
       >
-        {width && height ? renderContent(traceLog) : null}
+        {/* {width && height ? renderContent(traceLog) : null} */}
+        {renderContent(traceLog)}
+        {/* <div style={{ width: '100%', height, background: 'blue' }}></div> */}
       </StyledCard>
     </StyledWrapper>
   )
