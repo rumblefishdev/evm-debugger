@@ -1,11 +1,11 @@
-import { useLocation } from 'react-router-dom'
+// import { useLocation } from 'react-router-dom'
 import React from 'react'
 // import ReactGA from 'react-ga4'
 // import TagManager from 'react-gtm-module'
 
 // import { ROUTES } from '../../routes'
 
-const PROD_URL = 'www.rumblefish.dev'
+// const PROD_URL = 'www.rumblefish.dev'
 
 // const onProd = () => typeof window !== 'undefined' && window.location.hostname === PROD_URL
 export const GAnalyticsInit = () => {
