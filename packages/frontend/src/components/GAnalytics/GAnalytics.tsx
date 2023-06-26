@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import React from 'react'
 import ReactGA from 'react-ga4'
-import TagManager from 'react-gtm-module'
+// import TagManager from 'react-gtm-module'
 
 import { ROUTES } from '../../routes'
 
