@@ -31,6 +31,7 @@ function build() {
   export REACT_APP_IS_PRERENDER=$prerender
 
   if [[ "$ENV" != "" ]]; then
+     echo ".env.$ENV"
      dotenv -e ".env.$ENV" react-scripts build
   else
      react-scripts build
