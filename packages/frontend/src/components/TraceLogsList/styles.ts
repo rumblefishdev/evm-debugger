@@ -1,8 +1,8 @@
 import { styled } from '@mui/material'
 
 export const TraceLogElement = styled('div')(({ theme }) => ({
-  minHeight: theme.spacing(12),
-  height: theme.spacing(12),
+  minHeight: theme.spacing(6),
+  height: theme.spacing(6),
   display: 'flex',
   cursor: 'pointer',
 }))
