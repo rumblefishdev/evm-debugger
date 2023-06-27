@@ -1,7 +1,9 @@
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { useRef, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 
+import FacebookLogo from '../../importedComponents/assets/socialDebuggerLogo.png'
 import type { IBlogPost } from '../../importedComponents/contentful-ui.types'
 import { Header, Footer, contentfulClient } from '../../importedComponents'
 import { themeNavy } from '../../theme/algaeTheme'
@@ -41,6 +43,25 @@ export const StartingScreen: () => JSX.Element = () => {
   const offerRef = useRef<HTMLDivElement>(null)
   return (
     <>
+      <Helmet>
+        <meta
+          property="og:image"
+          content={FacebookLogo}
+        />
+
+        <meta
+          property="og:image:type"
+          content="image/png"
+        />
+        <meta
+          property="og:image:width"
+          content="1024"
+        />
+        <meta
+          property="og:image:height"
+          content="1024"
+        />
+      </Helmet>
       <ThemeProvider theme={themeNavy}>
         <CssBaseline>
           <Header
