@@ -98,7 +98,10 @@ const extractFiles = async (files: any, params: PutObjectRequest) => {
 
 const triggerCompiler = async (data: any) => {
   const compilerVersion = data.CompilerVersion.split('+')[0]
-  const parameterName = `/evm-debugger/${ENVIRONMENT}/${compilerVersion}`
+  const parameterName = `/evm-debugger/${ENVIRONMENT}/${compilerVersion.replaceAll(
+    '.',
+    '-',
+  )}`
   console.log({ parameterName, compilerVersion })
   const getParameterParams = new GetParameterCommand({
     WithDecryption: false,

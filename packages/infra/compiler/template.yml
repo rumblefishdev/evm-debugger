@@ -4,6 +4,10 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
+  TraceBucketName:
+    Type: String
+  CompilerVersion:
+    Type: String
 Resources:
   SrcMapCompilerFunction:
     Type: AWS::Serverless::Function
@@ -18,7 +22,7 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME:
-            Ref: TransactionTraceBucket
+            Ref: TraceBucketName
           ENVIRONMENT:
             Ref: Environment
           SENTRY_DSN:
@@ -37,10 +41,17 @@ Resources:
           - s3:*
           Effect: Allow
           Resource:
-          - Fn::GetAtt:
-            - TransactionTraceBucket
-            - Arn
-          - Fn::Sub: ${TransactionTraceBucket.Arn}/**
+          - Fn::Sub: arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile
       SamResourceId: SrcMapCompilerFunction
+  SrcMapCompiler:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name:
+        Fn::Sub: /evm-debugger/${Environment}/${CompilerVersion}
+      Type: String
+      Value:
+        Ref: SrcMapCompilerFunction
+    Metadata:
+      SamResourceId: SrcMapCompiler
