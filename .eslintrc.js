@@ -25,8 +25,9 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:sonarjs/recommended",
         "plugin:import/typescript",
-        "plugin:unicorn/recommended",
-        "prettier"
+        // "plugin:unicorn/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
     ],
     plugins: ["@typescript-eslint", "prettier", "sort-keys-fix", "import", "jest", "sonarjs", "react-hooks", "unicorn"],
     overrides: [
@@ -124,7 +125,6 @@ module.exports = {
     rules: {
         //Eslint rules
         //Rules that prevents possible logic errors
-
         "no-await-in-loop": "warn",
         "no-constant-binary-expression": "error",
         "no-promise-executor-return": "error",
@@ -207,7 +207,7 @@ module.exports = {
         "import/no-dynamic-require": "error",
         "import/no-internal-modules": "off",
         "import/no-self-import": "error",
-        "import/no-cycle": "error",
+        "import/no-cycle": "off",
         "import/no-useless-path-segments": "error",
         "import/export": "error",
         "import/no-named-as-default": "error",

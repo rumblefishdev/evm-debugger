@@ -1,14 +1,19 @@
 import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledLogPanel = styled(Stack)(({ theme }) => ({
-  width: '1003px',
+  width: '70%',
   padding: theme.spacing(6),
+  overflowY: 'auto',
   height: '100%',
   boxSizing: 'border-box',
   borderRadius: '16px',
   border: `1px solid ${theme.palette.rfLinesLight}`,
   backgroundColor: 'rgba(245, 246, 248, 0.9)',
   backdropFilter: 'blur(8px)',
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+    padding: theme.spacing(2),
+  },
 }))
 
 export const StyledHeading = styled(Typography)(({ theme }) => ({
@@ -17,9 +22,8 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
-  rowGap: theme.spacing(4),
-  overflow: 'auto',
-  marginTop: theme.spacing(8),
+  rowGap: theme.spacing(2),
+  marginTop: theme.spacing(4),
   gridTemplateColumns: 'auto 1fr',
   display: 'grid',
   columnGap: theme.spacing(2),

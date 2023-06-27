@@ -1,6 +1,9 @@
 import { Hidden, Stack, Typography, useTheme } from '@mui/material'
+// import Script from 'next/dist/client/script'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
 import FacebookIcon from '../../assets/svg/facebook-white.svg'
 import LinkedinIcon from '../../assets/svg/linkedin-white.svg'
 import TwitterIcon from '../../assets/svg/twitter-white.svg'
@@ -18,6 +21,7 @@ import {
   LeftContentWrapper,
   ContactWrapper,
   ContactDetailsWrapper,
+  StyledClutchBox,
 } from './styles'
 
 const Menu = () => {
@@ -49,63 +53,112 @@ const Menu = () => {
   )
 }
 
-// const ClutchReviews: React.FC = () => {
-//   return (
-//     <StyledClutchBox>
-//       <Script src="https://widget.clutch.co/static/js/widget.js" />
-//       <div
-//         className="clutch-widget"
-//         data-url="https://widget.clutch.co"
-//         data-widget-type="2"
-//         data-height="45"
-//         data-nofollow="true"
-//         data-expandifr="true"
-//         data-theme="white"
-//         data-scale="100"
-//         data-clutchcompany-id="577137"
-//       />
-//     </StyledClutchBox>
-//   )
-// }
+const ClutchReviews: React.FC = () => {
+  return (
+    <StyledClutchBox>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>EVM Debugger by Rumble Fish - the ultimate tool for EVM smart contract analysis</title>
+        <link
+          rel="canonical"
+          href="https://widget.clutch.co/static/js/widget.js"
+        />
+      </Helmet>
+
+      <div
+        className="clutch-widget"
+        data-url="https://widget.clutch.co"
+        data-widget-type="2"
+        data-height="45"
+        data-nofollow="true"
+        data-expandifr="true"
+        data-theme="white"
+        data-scale="100"
+        data-clutchcompany-id="577137"
+      />
+    </StyledClutchBox>
+  )
+}
 
 const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
   return (
     <LeftContentWrapper sx={{ width: boxWidth }}>
       <StyledHeading variant="overline">Services</StyledHeading>
-      <Link to="/services/custom-project-development/">
-        <StyledItem variant="caption">Custom Project Development</StyledItem>
+      <Link to="/services/aws-cloud-solutions/">
+        <StyledItem variant="caption">AWS Cloud Solutions </StyledItem>
       </Link>
-      <Link to="/services/audit-and-consulting">
-        <StyledItem variant="caption">Audit and Consulting</StyledItem>
+      <Link to="/services/defi-development/">
+        <StyledItem variant="caption">DEFI Development</StyledItem>
       </Link>
-      <Link to="/resources/workshop">
-        <StyledItem variant="caption">Workshops</StyledItem>
+      <Link to="/services/blockchain-software-development/">
+        <StyledItem variant="caption">Blockchain Development</StyledItem>
       </Link>
-      <Link to="/services/dedicated-teams-and-specialists/">
-        <StyledItem variant="caption">Dedicated Teams and Specialists</StyledItem>
+      <Link to="/startup/">
+        <StyledItem variant="caption">IT Services for Startups</StyledItem>
+      </Link>
+      <Link to="/services/web-development/">
+        <StyledItem variant="caption">Web Development</StyledItem>
+      </Link>
+      <Link to="/services/nft-development/">
+        <StyledItem variant="caption">NFT Development</StyledItem>
+      </Link>
+      <Link to="/services/dedicated-development-teams/">
+        <StyledItem variant="caption">Dedicated Development Teams</StyledItem>
+      </Link>
+      <Link to="/services/mobile-development/">
+        <StyledItem variant="caption">Mobile Development</StyledItem>
+      </Link>
+      <Link to="/services/fintech-software-development/">
+        <StyledItem variant="caption">Fintech Software Development</StyledItem>
+      </Link>
+      <Link to="/services/product-design/">
+        <StyledItem variant="caption">UI/UX</StyledItem>
       </Link>
     </LeftContentWrapper>
   )
 }
 
 const Contact = () => {
+  const useIsDarkOrNavyMode = (): boolean => {
+    const theme = useTheme()
+    return isDarkOrNavy(theme)
+  }
   return (
     <ContactWrapper>
-      <StyledHeading variant="overline">RUMBLE FISH POLAND SP Z O. O.</StyledHeading>
-      <ContactDetailsWrapper>
+      <StyledHeading variant="overline">Rumblefish sp z o.o.</StyledHeading>
+      <ContactDetailsWrapper
+        sx={{
+          span: {
+            fontFamily: useIsDarkOrNavyMode ? 'Inter' : 'default',
+          },
+        }}
+      >
         <Typography
           variant="caption"
-          sx={{ whiteSpace: 'pre-line', marginBottom: '24px' }}
+          sx={{
+            whiteSpace: 'pre-line',
+            marginBottom: '24px',
+          }}
         >
           {'Filipa Eisenberga 11/3 \n31-523 Kraków, Poland \nPL6772425725'}
         </Typography>
         <Stack>
           <Typography variant="caption">P: +48 737 455 594</Typography>
           <Typography variant="caption">E: hello@rumblefish.dev</Typography>
-          <Hidden smDown>{/* <ClutchReviews /> */}</Hidden>
+          <Hidden
+            smDown
+            implementation="css"
+          >
+            <ClutchReviews />
+          </Hidden>
         </Stack>
       </ContactDetailsWrapper>
-      <Hidden smUp>{/* <ClutchReviews /> */}</Hidden>
+      <Hidden
+        smUp
+        implementation="css"
+      >
+        <ClutchReviews />
+      </Hidden>
     </ContactWrapper>
   )
 }
@@ -142,37 +195,52 @@ const SocialMedia = () => {
           />
         </Link>
       </Stack>
-      <StyledItem variant="caption">Copyright © {new Date().getFullYear()} Rumblefish</StyledItem>
+      <StyledItem variant="caption">Copyright © 2023 Rumblefish</StyledItem>
     </>
   )
 }
 
 export const Footer = ({ ...props }: FooterProps) => {
   const theme = useTheme()
+  const useIsDarkOrNavyMode = (): boolean => {
+    return isDarkOrNavy(theme)
+  }
   return (
     <Section
       width="small"
       positionRelativeOn
-      backgroundColor={theme.palette.colorBrand?.primary}
+      backgroundColor={useIsDarkOrNavyMode ? 'transparent' : theme.palette.colorBrand?.primary}
     >
       <StyledStack {...props}>
-        <LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.down('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
           <Contact />
-          <Hidden smDown>
-            <Menu />
-            <Services />
-          </Hidden>
-          <Hidden smUp>
-            <Stack
-              flexDirection="row"
-              justifyContent="space-between"
-              width="100%"
-            >
-              <Menu />
-              <Services boxWidth="135px" />
-            </Stack>
-          </Hidden>
+          <Menu />
+          <Services />
         </LeftSideWrapper>
+        <LeftSideWrapper
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              display: 'none',
+            },
+          }}
+        >
+          <Contact />
+          <Stack
+            flexDirection="row"
+            justifyContent="space-between"
+            width="100%"
+          >
+            <Menu />
+            <Services boxWidth="135px" />
+          </Stack>
+        </LeftSideWrapper>
+
         <RightSideWrapper>
           <SocialMedia />
         </RightSideWrapper>

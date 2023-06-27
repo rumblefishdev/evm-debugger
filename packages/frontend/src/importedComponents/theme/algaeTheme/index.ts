@@ -17,12 +17,12 @@ declare module '@mui/material/Typography' {
 }
 declare module '@mui/material/styles' {
   interface Theme {
-    utilis: {
+    utils: {
       fluidFont: (min: number, max: number) => string
     }
   }
   interface ThemeOptions {
-    utilis?: {
+    utils?: {
       fluidFont: (min: number, max: number) => string
     }
   }
@@ -31,7 +31,7 @@ declare module '@mui/material/styles' {
 const spacing = 8
 
 export const theme = createTheme({
-  utilis: {
+  utils: {
     fluidFont,
   },
   typography: { ...typography, ...typography2 },

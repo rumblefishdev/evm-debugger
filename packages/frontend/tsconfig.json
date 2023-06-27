@@ -3,13 +3,19 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "lib": ["esnext", "dom"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "composite": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "sourceMap": false
   },
-  "include": ["src/**/*", "custom.d.ts"],
+  "include": [
+    "src/**/*",
+    "custom.d.ts"
+  ],
   "references": [
     {
       "path": "../types"

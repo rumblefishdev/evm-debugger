@@ -6,7 +6,7 @@ import ArrowIcon from '../../assets/svg/arrow-right-white.svg'
 import type { ButtonProps } from './Button.types'
 import { StyledButton } from './styles'
 
-export const Button: React.FC<ButtonProps> = ({ children, variant = 'outlined', size = 'medium', icon = false, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ children, variant = 'outlined', size = 'medium', icon = false, sx = {}, ...props }) => {
   const arrow = variant === 'contained' ? ArrowIcon : ArrowIconBlue
 
   return (
@@ -14,6 +14,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'outlined', 
       disableRipple
       variant={variant}
       size={size}
+      sx={sx}
       endIcon={
         icon ? (
           <img

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { AppContainer } from '../../components/AppContainer'
-import { ROUTES } from '../../router'
+import { ROUTES } from '../../routes'
 import { useTypedSelector } from '../../store/storeHooks'
 
 import type { AppNavigationProps } from './AppNavigation.types'

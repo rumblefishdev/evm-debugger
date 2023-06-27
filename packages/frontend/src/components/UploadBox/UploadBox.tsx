@@ -1,7 +1,7 @@
 import React from 'react'
-import { Tooltip } from '@mui/material'
+import { Tooltip, Stack } from '@mui/material'
 
-import { Button } from '../Button'
+import { Button } from '../../importedComponents/components/Button'
 import { TickFilledBlue, Error } from '../../icons'
 import { safeJsonParse } from '../../helpers/helpers'
 import { DataAdder } from '../DataAdder'
@@ -30,20 +30,25 @@ export const UploadBox = ({ isUploaded, isError, errorMessage, onChange, onBlur,
   return (
     <StyledStack {...props}>
       <IconWrapper>
-        {isUploaded && !isError && <TickFilledBlue />}
-        {isError && (
-          <Tooltip title={errorMessage}>
-            <Error />
-          </Tooltip>
-        )}
         <StyledTextWrapper>
-          <StyledLabel>Upload Result of</StyledLabel>
+          <Stack sx={{ flexDirection: 'row', display: 'flex' }}>
+            <StyledLabel>Upload Result of</StyledLabel>
+            {isUploaded && !isError && <TickFilledBlue style={{ height: '12px' }} />}
+            {isError && (
+              <Tooltip title={errorMessage}>
+                <Error style={{ height: '10px' }} />
+              </Tooltip>
+            )}
+          </Stack>
+
           <StyledTitle>{uploadInfo}</StyledTitle>
         </StyledTextWrapper>
       </IconWrapper>
       <Button
-        variant="outlined"
         onClick={openHandler}
+        variant="contained"
+        size="small"
+        sx={{ fontWeight: 400, borderRadius: '16px' }}
       >
         Add
       </Button>

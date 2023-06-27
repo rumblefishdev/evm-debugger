@@ -20,6 +20,9 @@ const getKey = (): string => {
   let key = 'manual'
   const pathname = window.location.pathname.match(/[^/]+/g)
   const regex = new RegExp(/^0x([\dA-Fa-f]{64})$/)
+
+  if (!pathname) return key
+
   if (pathname.length >= 4 && pathname[0] === 'evm-debugger' && pathname[1] === 'tx' && regex.test(pathname[3]))
     key = `${pathname[2]}-${pathname[3]}`
   return key

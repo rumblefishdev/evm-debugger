@@ -1,18 +1,18 @@
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography, ThemeProvider } from '@mui/material'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from '../../components/Button'
-import { TailProgressScreen } from '../../images'
+import { theme } from '../../theme/default'
+import { Button } from '../../importedComponents/components/Button'
 import { etherscanUrls } from '../../config'
 import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
-import { ROUTES } from '../../router'
-import { AppContainer } from '../../components/AppContainer'
+import { ROUTES } from '../../routes'
 import { supportedChains } from '../../helpers/chains'
+import { Section } from '../../importedComponents/components/Section'
 
-import { StyledHeadlineCaption, StyledImage, StyledMainPanel } from './styles'
+import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
@@ -82,17 +82,28 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
       )
   }, [dispatch, error, structLogs, txInfo])
 
-  const buttonsStyle: React.CSSProperties = {
-    width: '224px',
-  }
-
   return (
     <>
-      {(isLoading || error) && (
-        <>
-          <AppContainer>
-            <StyledMainPanel>
-              <Stack>
+      <ThemeProvider theme={theme}>
+        {(isLoading || error) && (
+          <Section
+            mobilePadding={false}
+            height="fullHeight"
+            width="full"
+            backgroundColor="transparent"
+          >
+            <StyledStack>
+              <Stack
+                sx={{
+                  width: '30%',
+                  [theme.breakpoints.down('md')]: {
+                    width: '100%',
+                  },
+                  gap: '20px',
+                  flexDirection: 'column',
+                  display: 'flex',
+                }}
+              >
                 <Stack>
                   <StyledHeadlineCaption
                     variant="uppercase"
@@ -106,38 +117,39 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                   stages={stages}
                   error={error}
                 />
+                {error && (
+                  <Stack
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    width={'100%'}
+                    direction="row"
+                    spacing={2}
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{ width: '45%', backgroundColor: 'white' }}
+                      onClick={moveBackToStartingScreen}
+                    >
+                      Back
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      sx={{ width: '45%' }}
+                      onClick={restartHandler}
+                    >
+                      Restart
+                    </Button>
+                  </Stack>
+                )}
               </Stack>
-              <StyledImage src={TailProgressScreen} />
-              {error && (
-                <Stack
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    style={buttonsStyle}
-                    variant="outlined"
-                    onClick={moveBackToStartingScreen}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    style={buttonsStyle}
-                    variant="contained"
-                    onClick={restartHandler}
-                  >
-                    Restart
-                  </Button>
-                </Stack>
-              )}
-            </StyledMainPanel>
-            <Logger
-              messages={messages}
-              style={{ marginTop: 24 }}
-            />
-          </AppContainer>
-        </>
-      )}
-      {isStagesFinished && children}
+
+              <Logger messages={messages} />
+            </StyledStack>
+          </Section>
+        )}
+        {isStagesFinished && children}
+      </ThemeProvider>
     </>
   )
 }

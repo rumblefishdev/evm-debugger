@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom'
+import { hydrateRoot } from 'react-dom/client'
 import './index.css'
 import './fonts'
 import { Provider } from 'react-redux'
@@ -22,22 +23,32 @@ if (sentryDsn)
     dsn: sentryDsn,
   })
 
-const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      {isPersistOn && (
-        <PersistGate
-          loading={true}
-          persistor={persistor}
-        >
-          <App />
-        </PersistGate>
-      )}
-      {!isPersistOn && <App />}
-    </Provider>
-  </React.StrictMode>,
-)
+const rootElement = document.getElementById('root')
+
+const RenderApp = (props: { isHydrated?: boolean }) => {
+  const shouldUseCacheProvider = process.env.REACT_APP_IS_PRERENDER === 'true' || Boolean(props.isHydrated)
+
+  return (
+    <div>
+      <React.StrictMode>
+        <Provider store={store}>
+          {isPersistOn && (
+            <PersistGate
+              loading={true}
+              persistor={persistor}
+            >
+              <App shouldUseCacheProvider={shouldUseCacheProvider} />
+            </PersistGate>
+          )}
+          {!isPersistOn && <App shouldUseCacheProvider={shouldUseCacheProvider} />}
+        </Provider>
+      </React.StrictMode>
+    </div>
+  )
+}
+
+if (rootElement.hasChildNodes()) hydrateRoot(rootElement, <RenderApp isHydrated />)
+else ReactDOM.render(<RenderApp />, rootElement)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

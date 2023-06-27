@@ -3,6 +3,230 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.23](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.23-alpha.0...@evm-debuger/frontend@0.2.23) (2023-06-27)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.23-alpha.0](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.22...@evm-debuger/frontend@0.2.23-alpha.0) (2023-06-27)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.22](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.21...@evm-debuger/frontend@0.2.22) (2023-06-27)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.21](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.20...@evm-debuger/frontend@0.2.21) (2023-06-27)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.20](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.19...@evm-debuger/frontend@0.2.20) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.19](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.18...@evm-debuger/frontend@0.2.19) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.18](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.17...@evm-debuger/frontend@0.2.18) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.17](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.16...@evm-debuger/frontend@0.2.17) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.16](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.15...@evm-debuger/frontend@0.2.16) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.15](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.14...@evm-debuger/frontend@0.2.15) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.14](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.13...@evm-debuger/frontend@0.2.14) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.13](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.12...@evm-debuger/frontend@0.2.13) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.12](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.11...@evm-debuger/frontend@0.2.12) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.11](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.10...@evm-debuger/frontend@0.2.11) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.10](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.9...@evm-debuger/frontend@0.2.10) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.9](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8...@evm-debuger/frontend@0.2.9) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.10...@evm-debuger/frontend@0.2.8) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.10](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.9...@evm-debuger/frontend@0.2.8-alpha.10) (2023-06-26)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.9](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.8...@evm-debuger/frontend@0.2.8-alpha.9) (2023-06-23)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.8](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.7...@evm-debuger/frontend@0.2.8-alpha.8) (2023-06-23)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.7](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.6...@evm-debuger/frontend@0.2.8-alpha.7) (2023-06-21)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.6](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.5...@evm-debuger/frontend@0.2.8-alpha.6) (2023-06-21)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.5](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.4...@evm-debuger/frontend@0.2.8-alpha.5) (2023-06-21)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.4](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.3...@evm-debuger/frontend@0.2.8-alpha.4) (2023-06-20)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.3](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.1...@evm-debuger/frontend@0.2.8-alpha.3) (2023-06-20)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.2](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.1...@evm-debuger/frontend@0.2.8-alpha.2) (2023-06-20)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.1](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.8-alpha.0...@evm-debuger/frontend@0.2.8-alpha.1) (2023-06-20)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
+## [0.2.8-alpha.0](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.7...@evm-debuger/frontend@0.2.8-alpha.0) (2023-06-20)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
+
+
+
+
 ## [0.2.7](https://github.com/rumblefishdev/evm-debuger/compare/@evm-debuger/frontend@0.2.7-alpha.0...@evm-debuger/frontend@0.2.7) (2023-05-18)
 
 **Note:** Version bump only for package @evm-debuger/frontend

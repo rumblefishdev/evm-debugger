@@ -12,6 +12,8 @@ import {
   StyledDialog,
   StyledInputLabel,
   StyledInputLabelStar,
+  StyledTextAreaWrapper,
+  StyledButtonText,
 } from './styles'
 
 export const DataAdder = ({ submithandler, onClose, title, description, ...props }: DataAdderProps) => {
@@ -21,6 +23,15 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
 
   return (
     <StyledDialog
+      PaperProps={{
+        style: {
+          overflow: 'hidden',
+          boxShadow: 'none',
+          borderRadius: '24px',
+          background:
+            'radial-gradient(102.78% 104.72% at -0.77% 0%, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(255, 255, 255, 0.01)',
+        },
+      }}
       {...props}
       onClose={onClose}
     >
@@ -29,22 +40,25 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
           <StyledTitle>{title}</StyledTitle>
           {description ? <StyledDescription>{description}</StyledDescription> : null}
         </StyledHeader>
-        <StyledInputLabel>
-          Code<StyledInputLabelStar component="span">*</StyledInputLabelStar>
-        </StyledInputLabel>
-        <StyledTextArea
-          multiline
-          minRows={12}
-          value={inputValue}
-          onChange={(event) => setFileValue(event.target.value)}
-        />
+        <StyledTextAreaWrapper>
+          <StyledInputLabel>
+            Code<StyledInputLabelStar component="span">*</StyledInputLabelStar>
+          </StyledInputLabel>
+          <StyledTextArea
+            multiline
+            minRows={12}
+            value={inputValue}
+            onChange={(event) => setFileValue(event.target.value)}
+          />
+        </StyledTextAreaWrapper>
+
         <StyledButtonWrapper>
           <StyledButton
             variant="outlined"
             component="label"
-            sx={{ textAlign: 'center', paddingRight: 0, paddingLeft: 0 }}
+            // sx={{ textAlign: 'center', paddingRight: 0, paddingLeft: 0 }}
           >
-            Upload file
+            <StyledButtonText>Upload file</StyledButtonText>
             <input
               type="file"
               hidden
@@ -52,10 +66,17 @@ export const DataAdder = ({ submithandler, onClose, title, description, ...props
             />
           </StyledButton>
           <StyledButton
-            variant="contained"
             onClick={() => submithandler(fileValue)}
+            variant="outlined"
+            component="label"
+            sx={{ color: '#070706', backgroundColor: '#FFFFFF' }}
           >
-            Submit
+            <StyledButtonText>Submit</StyledButtonText>
+            <input
+              type="file"
+              hidden
+              onChange={uploadFile}
+            />
           </StyledButton>
         </StyledButtonWrapper>
       </StyledStack>

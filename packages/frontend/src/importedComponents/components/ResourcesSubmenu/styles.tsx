@@ -55,6 +55,9 @@ export const StyledDivider = styled(Box)(({ theme }) => ({
 }))
 
 export const StyledMenuBoxImage = styled(MenuBoxImage)(({ theme }) => ({
+  '&:hover': {
+    background: theme.palette.type === 'dark' ? '#000000b8' : theme.palette.type === 'navy' && 'rgba(255, 255, 255, 0.1);',
+  },
   [theme.breakpoints.up('md')]: {
     margin: '4px 12px',
   },

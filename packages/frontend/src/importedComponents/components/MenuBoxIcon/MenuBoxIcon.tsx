@@ -16,7 +16,10 @@ export const MenuBoxIcon: React.FC<MenuBoxIconProps> = ({ iconIdle, iconHover, h
         onMouseLeave={() => setHover(false)}
         {...props}
       >
-        <Hidden mdDown>
+        <Hidden
+          mdDown
+          implementation="css"
+        >
           <StyledImageWrapper sx={{ position: 'relative' }}>
             <StyledImage
               src={iconHover}
@@ -32,7 +35,10 @@ export const MenuBoxIcon: React.FC<MenuBoxIconProps> = ({ iconIdle, iconHover, h
         </Hidden>
         <StyledTextWrapper>
           <StyledHeader variant="buttonSmall">{headline}</StyledHeader>
-          <Hidden mdDown>
+          <Hidden
+            mdDown
+            implementation="css"
+          >
             <StyledText variant="caption">{text}</StyledText>
           </Hidden>
         </StyledTextWrapper>
