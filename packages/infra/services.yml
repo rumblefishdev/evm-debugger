@@ -250,9 +250,9 @@ Resources:
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           BUCKET_NAME: !Ref TraceBucketName
-          REACT_APP_ETHERSCAN_KEY: VTCZHIZD7SD7EP2TMQRDINFV8HWHM243MY
-          REACT_APP_POLYGONSCAN_KEY: 93Q76PDC9677CUYFQMHR7S6MI12YKPPVHH
-          REACT_APP_ARBITRUMSCAN_KEY: EF6I9YQHU46455ABCHI9EZMR848D38CZK4
+          REACT_APP_ETHERSCAN_KEY: !Ref EtherscanKey
+          REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
+          REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
       Events:
         TransactionTraceApiEvent:
           Type: Api
@@ -283,3 +283,15 @@ Resources:
                 - !Sub arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile
+
+  EtherscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ETHERSCAN_KEY"
+
+  PolygonscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/POLYGONSCAN_KEY"
+
+  ArbitrumscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
