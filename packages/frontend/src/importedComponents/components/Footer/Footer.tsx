@@ -84,17 +84,35 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
   return (
     <LeftContentWrapper sx={{ width: boxWidth }}>
       <StyledHeading variant="overline">Services</StyledHeading>
-      <Link to="/services/custom-project-development/">
-        <StyledItem variant="caption">Custom Project Development</StyledItem>
+      <Link to="/services/aws-cloud-solutions/">
+        <StyledItem variant="caption">AWS Cloud Solutions </StyledItem>
       </Link>
-      <Link to="/services/audit-and-consulting">
-        <StyledItem variant="caption">Audit and Consulting</StyledItem>
+      <Link to="/services/defi-development/">
+        <StyledItem variant="caption">DEFI Development</StyledItem>
       </Link>
-      <Link to="/resources/workshop">
-        <StyledItem variant="caption">Workshops</StyledItem>
+      <Link to="/services/blockchain-software-development/">
+        <StyledItem variant="caption">Blockchain Development</StyledItem>
       </Link>
-      <Link to="/services/dedicated-teams-and-specialists/">
-        <StyledItem variant="caption">Dedicated Teams and Specialists</StyledItem>
+      <Link to="/startup/">
+        <StyledItem variant="caption">IT Services for Startups</StyledItem>
+      </Link>
+      <Link to="/services/web-development/">
+        <StyledItem variant="caption">Web Development</StyledItem>
+      </Link>
+      <Link to="/services/nft-development/">
+        <StyledItem variant="caption">NFT Development</StyledItem>
+      </Link>
+      <Link to="/services/dedicated-development-teams/">
+        <StyledItem variant="caption">Dedicated Development Teams</StyledItem>
+      </Link>
+      <Link to="/services/mobile-development/">
+        <StyledItem variant="caption">Mobile Development</StyledItem>
+      </Link>
+      <Link to="/services/fintech-software-development/">
+        <StyledItem variant="caption">Fintech Software Development</StyledItem>
+      </Link>
+      <Link to="/services/product-design/">
+        <StyledItem variant="caption">UI/UX</StyledItem>
       </Link>
     </LeftContentWrapper>
   )
