@@ -8,7 +8,6 @@ import { Helmet } from 'react-helmet'
 import { theme } from './theme/algaeTheme'
 import { appRouter } from './router'
 import { GAnalyticsInit } from './components/GAnalytics'
-import { GoogleTagManager } from './components/GAnalytics/googleTagManager'
 
 const emotionCache = createCache({
   speedy: false,
@@ -39,7 +38,6 @@ const AddBodyScript = () => {
 function App(props: AppProps) {
   useEffect(() => {
     GAnalyticsInit()
-    GoogleTagManager()
   }, [])
 
   if (!props.shouldUseCacheProvider)
