@@ -52,5 +52,3 @@ Resources:
         Ref: SrcMapCompilerFunction
     Metadata:
       SamResourceId: SrcMapCompiler
-
-
