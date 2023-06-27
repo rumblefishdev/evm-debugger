@@ -3,7 +3,6 @@
 /* eslint-disable unicorn/prefer-string-slice */
 import type { SourceMapContext } from './sourceMapContext'
 import { OpCode } from './opCode'
-import { SourceMapElementTree } from './sourceMapElementTree'
 
 type SourceMapElementProperties =
   | '_offset'

@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-keyword-prefix */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -100,7 +99,7 @@ const getInternals = async (
 
   let allEntries: EntryType[] = []
   for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
-    const newEntries: EntryType[] = await Promise.all(
+    const newerEntries: EntryType[] = await Promise.all(
       Object.entries(fileInternals).map(
         async ([contractName, contractInternals]) => {
           const formattedOpcodes = await formatOpcodes(
@@ -117,7 +116,7 @@ const getInternals = async (
         },
       ),
     )
-    allEntries = [...allEntries, ...newEntries]
+    allEntries = [...allEntries, ...newerEntries]
   }
   return allEntries
 }
