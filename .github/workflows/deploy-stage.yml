@@ -99,7 +99,7 @@ jobs:
         run: |
           npm i
           npm install jq.node -g
-          lerna bootstrap
+          node_modules/.bin/lerna bootstrap
 
       - name: Build
         run: |
@@ -147,7 +147,7 @@ jobs:
         run: |
           npm i
           npm install jq.node -g
-          lerna bootstrap
+          node_modules/.bin/lerna bootstrap
 
       - name: Build
         run: |
