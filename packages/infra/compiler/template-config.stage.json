@@ -1,0 +1,15 @@
+{
+  "Parameters": {
+    "RepositoryName": "evm-debugger",
+    "StackArtifactsBucketName": "artifacts.evm-transaction-trace.rumblefish.com",
+    "GhOIDCProviderArn": "arn:aws:iam::045028348791:oidc-provider/token.actions.githubusercontent.com",
+    "Domain": "evm-debugger-stage.rumblefish.dev",
+    "Environment": "stage",
+    "HostedZoneId": "Z1AXAHZLKLTXED",
+    "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
+    "TraceBucketName": "transaction-trace-storage-stage.rumblefish.dev",
+    "ApiGatewayAllowOrigin": "*",
+    "AlchemyKey": "PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ",
+    "SentryDsn": "https://8176811a1c53456aa4669573596c0f07@o4505125543477248.ingest.sentry.io/4505130540990464"
+  }
+}

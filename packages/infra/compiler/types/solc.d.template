@@ -1,0 +1,3 @@
+declare module 'solc{{version}}' {
+  export function compile(input: string): string
+}

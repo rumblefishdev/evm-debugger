@@ -9,12 +9,22 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
+import { InvokeCommand, LambdaClient, LogType } from '@aws-sdk/client-lambda'
+import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
 import type { ChainId } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapResponseStatus } from '@evm-debuger/types'
 
-const { BUCKET_NAME, AWS_REGION } = process.env
+const { BUCKET_NAME, AWS_REGION, ENVIRONMENT } = process.env
 
 const s3 = new S3Client({
+  region: AWS_REGION,
+})
+
+const ssm = new SSMClient({
+  region: AWS_REGION,
+})
+
+const lambda = new LambdaClient({
   region: AWS_REGION,
 })
 
@@ -86,6 +96,29 @@ const extractFiles = async (files: any, params: PutObjectRequest) => {
   return uploaded.filter(Boolean)
 }
 
+const triggerCompiler = async (data: any) => {
+  const compilerVersion = data.CompilerVersion.split('+')[0]
+  const parameterName = `/evm-debugger/${ENVIRONMENT}/${compilerVersion.replaceAll(
+    '.',
+    '-',
+  )}`
+  console.log({ parameterName, compilerVersion })
+  const getParameterParams = new GetParameterCommand({
+    WithDecryption: false,
+    Name: parameterName,
+  })
+  const parameterValue = await ssm.send(getParameterParams)
+  console.log('lambda to trigger', parameterValue.Parameter?.Value)
+  if (parameterValue.Parameter?.Value) {
+    const command = new InvokeCommand({
+      Payload: new TextEncoder().encode(JSON.stringify(data)),
+      LogType: LogType.Tail,
+      FunctionName: parameterValue.Parameter?.Value,
+    })
+    lambda.send(command)
+  }
+}
+
 export type Address = {
   address: string
   chainId: ChainId
@@ -144,6 +177,7 @@ export const constructFiles = async (
         ...params,
         Body: JSON.stringify(body),
       })
+      await triggerCompiler(body)
     } catch (error) {
       body = {
         status: SrcMapResponseStatus.FAILED,
