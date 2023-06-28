@@ -285,6 +285,17 @@ Resources:
                 - !GetAtt SrcMapDataTable.Arn
                 - !Sub ${SrcMapDataTable.Arn}/**
             - Action:
+                - ssm:GetParameter
+                - ssm:GetParameters
+              Effect: Allow
+              Resource:
+                - '*'
+            - Action:
+                - lambda:InvokeFunction
+              Effect: Allow
+              Resource:
+                - '*'
+            - Action:
                 - s3:*
               Effect: Allow
               Resource:
