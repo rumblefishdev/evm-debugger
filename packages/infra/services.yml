@@ -18,6 +18,15 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
+  EtherscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ETHERSCAN_KEY"
+  PolygonscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/POLYGONSCAN_KEY"
+  ArbitrumscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
 
 Resources:
   Api:
@@ -284,14 +293,4 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
-  EtherscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/ETHERSCAN_KEY"
 
-  PolygonscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/POLYGONSCAN_KEY"
-
-  ArbitrumscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
