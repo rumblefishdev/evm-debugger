@@ -44,7 +44,8 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     bytecodeMaps: {},
     abis: { ...abis, ...additionalAbis },
   })
-  const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+  // instructionsMap
+  const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
   yield* put(addTraceLogs(mainTraceLogList))
   yield* put(
@@ -68,11 +69,11 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  yield* put(
-    addInstructions(
-      Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => [...accumulator, { instructions, address }], []),
-    ),
-  )
+  // yield* put(
+  //   addInstructions(
+  //     Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => [...accumulator, { instructions, address }], []),
+  //   ),
+  // )
 
   return analyzeSummary
 }
