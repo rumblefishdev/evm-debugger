@@ -1,5 +1,6 @@
 import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
+import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import type { IStructLog } from './structLogs'
 
@@ -78,7 +79,10 @@ export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TSourceCodesMap = Record<string, string>
+export type TSourceMapsMap = Record<string, string>
+export type TByteCodeMap = Record<string, string>
 export type TContractNamesMap = Record<string, string>
+export type TInstructionsMap = { address: string; instructions: Record<number, Instruction> }
 
 export type TContractData = {
   abi: TAbi
@@ -94,6 +98,8 @@ export type TTransactionData = {
   abis: TAbis
   sourceCodes: TSourceCodesMap
   contractNames: TContractNamesMap
+  sourceMaps: TSourceMapsMap
+  bytecodeMaps: TByteCodeMap
 }
 
 export type TSighashStatus = {

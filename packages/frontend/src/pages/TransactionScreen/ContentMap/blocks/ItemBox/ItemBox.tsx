@@ -38,7 +38,6 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
 
   const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch(loadActiveBlock(treeMapItem.item))
-
     event.stopPropagation()
   }
 
