@@ -29,6 +29,13 @@ logs-sqs-stage: STACK_NAME=evm-transaction-trace-stage
 logs-sqs-stage:
 	sam logs -n TransactionTraceService/TransactionTraceSqsHandlerFunction --stack-name ${STACK_NAME} --tail
 
+logs-srcmap-stage: STACK_NAME=evm-transaction-trace-stage
+logs-srcmap-stage:
+	sam logs -n TransactionTraceService/SrcMapApiFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
+
+logs-scrcompiler-stage: STACK_NAME=evm-scrmap-compiler-stage-v0-8-17
+logs-scrcompiler-stage:
+	sam logs -n SrcMapCompilerFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
 
 # PROD
 
@@ -50,3 +57,7 @@ logs-prod:
 logs-sqs-prod: STACK_NAME=evm-transaction-trace-prod
 logs-sqs-prod:
 	sam logs -n TransactionTraceService/TransactionTraceSqsHandlerFunction --stack-name ${STACK_NAME} --tail
+
+logs-srcmap-prod: STACK_NAME=evm-transaction-trace-prod
+logs-srcmap-prod:
+	sam logs -n TransactionTraceService/SrcMapApiFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
