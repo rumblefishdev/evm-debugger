@@ -12,7 +12,7 @@ Resources:
   SrcMapCompilerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://artifacts.evm-transaction-trace.rumblefish.com/stage/infrastructure/compiler/current/
+      CodeUri: s3://artifacts.evm-transaction-trace.rumblefish.com/stage/infrastructure/compiler/current/bc3337b27ceb4134bae83ed5dac4226f
       Handler: srcMapCompiler.srcmapCompilerEntrypoint
       Runtime: nodejs18.x
       Timeout: 180
