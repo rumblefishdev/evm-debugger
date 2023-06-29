@@ -21,15 +21,15 @@ const AddBodyScript = () => {
   return (
     <Helmet>
       <body>
-        <noscript>
+        {`        <noscript>
           <iframe
             title="gtm"
-            src={`https://www.googletagmanager.com/ns.html?id=${process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID}`}
+            src={"https://www.googletagmanager.com/ns.html?id=${process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID}"}
             height="0"
             width="0"
             style={{ visibility: 'hidden', display: 'none' }}
           />
-        </noscript>
+        </noscript>`}
       </body>
     </Helmet>
   )
