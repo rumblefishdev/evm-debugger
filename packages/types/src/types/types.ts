@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
 import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
@@ -88,6 +89,7 @@ export type TContractData = {
   abi: TAbi
   sourceCode: string
   contractName: string
+  srcMap?: any
 }
 
 export type TContractDataByAddress = Record<string, TContractData>
@@ -98,8 +100,8 @@ export type TTransactionData = {
   abis: TAbis
   sourceCodes: TSourceCodesMap
   contractNames: TContractNamesMap
-  sourceMaps: TSourceMapsMap
-  bytecodeMaps: TByteCodeMap
+  sourceMaps?: TSourceMapsMap
+  bytecodeMaps?: TByteCodeMap
 }
 
 export type TSighashStatus = {

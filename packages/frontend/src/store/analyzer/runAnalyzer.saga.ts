@@ -21,14 +21,16 @@ import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
 function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], additionalData: TContractDataByAddress = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
   const abis = yield* select(sighashSelectors.abis)
-  const { additionalAbis, sourceCodes, contractNames } = Object.entries(additionalData).reduce(
-    (accumulator, [address, { abi, sourceCode, contractName }]) => {
+  const { additionalAbis, sourceCodes, contractNames, srcMaps } = Object.entries(additionalData).reduce(
+    (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
       accumulator.additionalAbis[address] = abi
       accumulator.sourceCodes[address] = sourceCode
       accumulator.contractNames[address] = contractName
+      accumulator.srcMaps[address] = srcMap
       return accumulator
     },
     {
+      srcMaps: {},
       sourceCodes: {} as TSourceCodesMap,
       contractNames: {} as TContractNamesMap,
       additionalAbis: {} as TAbis,
@@ -69,11 +71,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  // yield* put(
-  //   addInstructions(
-  //     Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => [...accumulator, { instructions, address }], []),
-  //   ),
-  // )
+  yield* put(addInstructions(Object.entries(srcMaps).reduce((accumulator, maps) => [...accumulator, ...maps], [])))
 
   return analyzeSummary
 }
