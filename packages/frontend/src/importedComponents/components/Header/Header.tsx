@@ -1,5 +1,5 @@
 import { Hidden, Stack, Box, useTheme } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useReducer, useRef } from 'react'
 
 import CrossIcon from '../../assets/svg/cross.svg'
 import HamburgerIcon from '../../assets/svg/hamburger.svg'
@@ -13,6 +13,9 @@ import { Section } from '../Section'
 import { ServicesSubmenu } from '../ServicesSubmenu'
 import { Submenu } from '../Submenu'
 import { Link } from '../Link'
+import { SUBMENUS, submenusWhichAction } from '../../utils/SubmenusUtils'
+import { MenuItemWithCollapse } from '../MenuItemWithCollapse'
+import { SubmenuInsideContainer } from '../SubmenuInsideContainer'
 
 import type { AnimateIconProps, HeaderProps, IState, IView, TMenu } from './Header.types'
 import {
@@ -26,6 +29,15 @@ import {
   StyledButtonWrapper,
   StyledButtonAnimationWrapper,
 } from './styles'
+import {
+  reducer,
+  initialState,
+  doChangeCollapseUnmounted,
+  doChangeHoverState,
+  doSetCurrentSub,
+  doSetIsUnwantedTouch,
+  doOnSubmenuClose,
+} from './DesktopHeaderReducer'
 
 const defaultState: IState = {
   services: false,
@@ -52,13 +64,22 @@ const AnimatedIcon = ({ displayMobile, mobileDisplayHandler }: AnimateIconProps)
 
 const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IView) => {
   const [isDisplayMobile, setDisplayMobile] = useState(false)
+  const [collapseHeight, setCollapseHeight] = useState(0)
+  const mainNavbarRef = useRef(null)
+  const handleResize = useCallback(() => {
+    setCollapseHeight(window.innerHeight - mainNavbarRef.current?.clientHeight)
+  }, [])
+
   const mobileDisplayHandler = () => {
     if (isDisplayMobile) {
       setDisplayMobile(false)
+      window.removeEventListener('resize', handleResize)
       closeAll()
       document.body.style.overflow = 'auto'
     } else {
       setDisplayMobile(true)
+      setCollapseHeight(window.innerHeight - mainNavbarRef.current?.clientHeight)
+      window.addEventListener('resize', handleResize)
       document.body.style.overflow = 'hidden'
     }
   }
@@ -70,10 +91,15 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
   return (
     <>
       <Box height="80px" />
-      <StyledHeader background={background}>
+      <StyledHeader
+        background={background}
+        sx={isDisplayMobile ? { height: '100%' } : {}}
+      >
         <Section
+          backDropFilter={true}
           width="normal"
           backgroundColor={background ?? '#fff'}
+          heightRef={mainNavbarRef}
         >
           <StyledWrapper
             direction="row"
@@ -118,111 +144,151 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
               />
             </Stack>
           </StyledWrapper>
-          <Submenu
-            isOpen={isDisplayMobile}
-            closeMenu={mobileDisplayHandler}
-          >
-            <Box height="84px" />
-            <Stack
-              sx={{ height: '90%' }}
-              justifyContent="space-between"
-            >
-              <StyledTextContainer>
-                <StyledMenuItemIcon
-                  onClick={() => displayHandler && displayHandler('services')}
-                  open={display?.services}
-                >
-                  Services
-                </StyledMenuItemIcon>
-                <StyledCollapse
-                  in={display?.services}
-                  timeout={500}
-                  unmountOnExit
-                >
-                  <ServicesSubmenu />
-                </StyledCollapse>
-                <StyledMenuItem
-                  to="/evm-debugger"
-                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
-                >
-                  Products
-                </StyledMenuItem>
-                <StyledMenuItem
-                  to="/case-studies"
-                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
-                >
-                  Case Studies
-                </StyledMenuItem>
-                <StyledMenuItemIcon
-                  onClick={() => displayHandler && displayHandler('careers')}
-                  open={display?.careers}
-                >
-                  Careers
-                </StyledMenuItemIcon>
-                <StyledCollapse
-                  in={display?.careers}
-                  timeout={500}
-                  unmountOnExit
-                >
-                  <CareersSubmenu />
-                </StyledCollapse>
-                <StyledMenuItemIcon
-                  onClick={() => displayHandler && displayHandler('resources')}
-                  open={display?.resources}
-                >
-                  Resources
-                </StyledMenuItemIcon>
-                <StyledCollapse
-                  in={display?.resources}
-                  timeout={500}
-                  unmountOnExit
-                >
-                  <ResourcesSubmenu blogs={blogs} />
-                </StyledCollapse>
-                <StyledMenuItem
-                  to="/team"
-                  linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
-                >
-                  About us
-                </StyledMenuItem>
-              </StyledTextContainer>
-              <Hidden
-                implementation="css"
-                lgDown={theme.palette.type === 'navy'}
-                smUp={theme.palette.type !== 'navy'}
-              >
-                <StyledButtonWrapper>
-                  <Link
-                    to="/contact"
-                    sx={{
-                      width: '100%',
-                      maxWidth: '288px',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      sx={{ width: '100%', maxWidth: '288px' }}
-                    >
-                      Contact
-                    </Button>
-                  </Link>
-                </StyledButtonWrapper>
-              </Hidden>
-            </Stack>
-          </Submenu>
         </Section>
+        <Submenu
+          isOpen={isDisplayMobile}
+          closeMenu={mobileDisplayHandler}
+        >
+          <Stack
+            sx={{ height: `${collapseHeight}px` }}
+            justifyContent="space-between"
+          >
+            <StyledTextContainer>
+              <StyledMenuItemIcon
+                onClick={() => displayHandler && displayHandler('services')}
+                open={display?.services}
+              >
+                Services
+              </StyledMenuItemIcon>
+              <StyledCollapse
+                in={display?.services}
+                timeout={500}
+                unmountOnExit
+              >
+                <ServicesSubmenu />
+              </StyledCollapse>
+              <StyledMenuItem
+                to="/evm-debugger"
+                linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+              >
+                Products
+              </StyledMenuItem>
+              <StyledMenuItem
+                to="/case-studies"
+                linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+              >
+                Case Studies
+              </StyledMenuItem>
+              <StyledMenuItemIcon
+                onClick={() => displayHandler && displayHandler('careers')}
+                open={display?.careers}
+              >
+                Careers
+              </StyledMenuItemIcon>
+              <StyledCollapse
+                in={display?.careers}
+                timeout={500}
+                unmountOnExit
+              >
+                <CareersSubmenu />
+              </StyledCollapse>
+              <StyledMenuItemIcon
+                onClick={() => displayHandler && displayHandler('resources')}
+                open={display?.resources}
+              >
+                Resources
+              </StyledMenuItemIcon>
+              <StyledCollapse
+                in={display?.resources}
+                timeout={500}
+                unmountOnExit
+              >
+                <ResourcesSubmenu blogs={blogs} />
+              </StyledCollapse>
+              <StyledMenuItem
+                to="/team"
+                linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+              >
+                About us
+              </StyledMenuItem>
+            </StyledTextContainer>
+            <Hidden
+              implementation="css"
+              lgDown={theme.palette.type === 'navy'}
+              smUp={theme.palette.type !== 'navy'}
+            >
+              <StyledButtonWrapper>
+                <Link
+                  to="/contact"
+                  sx={{
+                    width: '100%',
+                    maxWidth: '288px',
+                    marginBottom: '24px',
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    sx={{ width: '100%', maxWidth: '288px' }}
+                  >
+                    Contact
+                  </Button>
+                </Link>
+              </StyledButtonWrapper>
+            </Hidden>
+          </Stack>
+        </Submenu>
       </StyledHeader>
     </>
   )
 }
 
 const DesktopView = ({ closeAll, blogs, background }: IView) => {
-  const [isServicesHover, setServicesHover] = useState(false)
-  const [isCareersHover, setCareersHover] = useState(false)
-  const [isResourceHover, setResourceHover] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState)
 
+  const handleOnSubmenuClose = useCallback(
+    (sub: SUBMENUS | null) => {
+      dispatch(doOnSubmenuClose(sub))
+    },
+    [dispatch],
+  )
+  const handleCollapseUnmounted = useCallback(
+    (value: boolean) => {
+      dispatch(doChangeCollapseUnmounted(value))
+    },
+    [dispatch],
+  )
+
+  const handleUnwantedTouch = useCallback(
+    (value: boolean) => {
+      dispatch(doSetIsUnwantedTouch(value))
+    },
+    [dispatch],
+  )
+  const handleHoverStateChange = useCallback(
+    (type: string, value: boolean) => {
+      dispatch(doChangeHoverState(type, value))
+    },
+    [dispatch],
+  )
+
+  const handleCurrentSubChange = useCallback(
+    (sub: SUBMENUS | null) => {
+      dispatch(doSetCurrentSub(sub))
+    },
+    [dispatch],
+  )
+
+  useEffect(() => {
+    if (!state.isCollapseUnmounted || !state.currentSubmenu) return
+    if (state.isUnwantedTouch) {
+      handleUnwantedTouch(false)
+
+      if (state.prevSubmenu === state.currentSubmenu) handleCurrentSubChange(null)
+      return
+    }
+    handleHoverStateChange(submenusWhichAction[state.currentSubmenu], true)
+  }, [handleCurrentSubChange, handleHoverStateChange, handleUnwantedTouch, state])
   return (
     <>
       <Box height="100px"></Box>
@@ -230,6 +296,7 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
         <Section
           width="normal"
           backgroundColor={background ?? '#fff'}
+          backDropFilter={true}
         >
           <StyledWrapper
             direction="row"
@@ -242,47 +309,34 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
               justifyContent="space-around"
               alignItems="center"
             >
-              <div
-                onMouseEnter={() => setServicesHover(true)}
-                onMouseLeave={() => setServicesHover(false)}
+              <MenuItemWithCollapse
+                onSubmenuClose={handleOnSubmenuClose}
+                onSubmenuChange={handleCurrentSubChange}
+                state={state}
+                submenu={SUBMENUS.SERVICES}
               >
-                <MenuItemIcon
-                  onTouchStart={() => {
-                    setServicesHover(!isServicesHover)
-                  }}
-                  open={isServicesHover}
-                >
-                  Services
-                </MenuItemIcon>
-              </div>
+                <MenuItemIcon open={state.servicesHover}>Services</MenuItemIcon>
+              </MenuItemWithCollapse>
+
               <MenuItem to="/evm-debugger">Products</MenuItem>
+
               <MenuItem to="/case-studies">Case Studies</MenuItem>
-              <div
-                onMouseEnter={() => setCareersHover(true)}
-                onMouseLeave={() => setCareersHover(false)}
+              <MenuItemWithCollapse
+                onSubmenuClose={handleOnSubmenuClose}
+                onSubmenuChange={handleCurrentSubChange}
+                state={state}
+                submenu={SUBMENUS.CAREERS}
               >
-                <MenuItemIcon
-                  onTouchStart={() => {
-                    setCareersHover(!isCareersHover)
-                  }}
-                  open={isCareersHover}
-                >
-                  Careers
-                </MenuItemIcon>
-              </div>
-              <div
-                onMouseEnter={() => setResourceHover(true)}
-                onMouseLeave={() => setResourceHover(false)}
+                <MenuItemIcon open={state.careersHover}>Careers</MenuItemIcon>
+              </MenuItemWithCollapse>
+              <MenuItemWithCollapse
+                onSubmenuClose={handleOnSubmenuClose}
+                onSubmenuChange={handleCurrentSubChange}
+                state={state}
+                submenu={SUBMENUS.RESOURCES}
               >
-                <MenuItemIcon
-                  onTouchStart={() => {
-                    setResourceHover(!isResourceHover)
-                  }}
-                  open={isResourceHover}
-                >
-                  Resources
-                </MenuItemIcon>
-              </div>
+                <MenuItemIcon open={state.resourceHover}>Resources</MenuItemIcon>
+              </MenuItemWithCollapse>
               <MenuItem to="/team">About us</MenuItem>
             </StyledTextContainer>
             <Link to="/contact">
@@ -294,43 +348,49 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
               </Button>
             </Link>
           </StyledWrapper>
-          <Submenu
-            isOpen={isServicesHover}
-            closeMenu={closeAll}
-            noPadding
-          >
-            <div
-              onMouseEnter={() => setServicesHover(true)}
-              onMouseLeave={() => setServicesHover(false)}
-            >
-              <ServicesSubmenu />
-            </div>
-          </Submenu>
-          <Submenu
-            isOpen={isResourceHover}
-            closeMenu={closeAll}
-            noPadding
-          >
-            <div
-              onMouseEnter={() => setResourceHover(true)}
-              onMouseLeave={() => setResourceHover(false)}
-            >
-              <ResourcesSubmenu blogs={blogs} />
-            </div>
-          </Submenu>
-          <Submenu
-            isOpen={isCareersHover}
-            closeMenu={closeAll}
-            noPadding
-          >
-            <div
-              onMouseEnter={() => setCareersHover(true)}
-              onMouseLeave={() => setCareersHover(false)}
-            >
-              <CareersSubmenu />
-            </div>
-          </Submenu>
         </Section>
+        <Submenu
+          isOpen={state.servicesHover}
+          closeMenu={closeAll}
+          noPadding
+          setUnmounted={handleCollapseUnmounted}
+        >
+          <SubmenuInsideContainer
+            onUnwantedTouch={handleUnwantedTouch}
+            onHoverStateChange={handleHoverStateChange}
+            submenu={SUBMENUS.SERVICES}
+          >
+            <ServicesSubmenu />
+          </SubmenuInsideContainer>
+        </Submenu>
+        <Submenu
+          isOpen={state.resourceHover}
+          closeMenu={closeAll}
+          noPadding
+          setUnmounted={handleCollapseUnmounted}
+        >
+          <SubmenuInsideContainer
+            onUnwantedTouch={handleUnwantedTouch}
+            onHoverStateChange={handleHoverStateChange}
+            submenu={SUBMENUS.RESOURCES}
+          >
+            <ResourcesSubmenu blogs={blogs} />
+          </SubmenuInsideContainer>
+        </Submenu>
+        <Submenu
+          isOpen={state.careersHover}
+          closeMenu={closeAll}
+          noPadding
+          setUnmounted={handleCollapseUnmounted}
+        >
+          <SubmenuInsideContainer
+            onUnwantedTouch={handleUnwantedTouch}
+            onHoverStateChange={handleHoverStateChange}
+            submenu={SUBMENUS.CAREERS}
+          >
+            <CareersSubmenu />
+          </SubmenuInsideContainer>
+        </Submenu>
       </StyledHeader>
     </>
   )

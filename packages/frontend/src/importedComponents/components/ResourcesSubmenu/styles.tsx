@@ -10,6 +10,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   flexFlow: 'row',
   alignItems: 'flex-start',
   [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(0),
     ...theme.mixins.flexColumnStartStart,
     height: 'auto',
   },
@@ -42,15 +43,20 @@ export const StyledEbookSectionWrapper = styled(Stack)(({ theme }) => ({
     justifyContent: 'space-around',
   },
 }))
-export const StyledDivider = styled(Box)(({ theme }) => ({
+export const StyledDivider = styled(Stack)(({ theme }) => ({
   width: '1px',
+  opacity: 0.5,
   margin: theme.spacing(0, 4, 0, 0),
   height: '400px',
   background: '#E0E3E6',
+  [theme.breakpoints.down('lg')]: {
+    display: 'none',
+  },
   [theme.breakpoints.down('md')]: {
     width: '100%',
     margin: 0,
     height: '1px',
+    display: 'block',
   },
 }))
 
@@ -70,7 +76,7 @@ export const StyledMenuItemIconLink = styled(MenuItemIconLink)(({ theme }) => ({
 export const StyledLinkWrapper = styled(Box)(({ theme }) => ({
   margin: theme.spacing(2, 0, 0, 4),
   [theme.breakpoints.down('md')]: {
-    margin: theme.spacing(3, 0),
+    margin: theme.spacing(3, 0, 2, 0),
   },
 }))
 

@@ -1,4 +1,4 @@
-import { Stack, Typography, styled, Box } from '@mui/material'
+import { Stack, Typography, styled } from '@mui/material'
 
 import { MenuBoxBigIcon } from '../MenuBoxBigIcon'
 
@@ -9,6 +9,8 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   flexFlow: 'row nowrap',
   alignItems: 'flex-start',
   [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(0),
+
     ...theme.mixins.flexColumnStartStart,
   },
 }))
@@ -31,8 +33,9 @@ export const StyledText = styled(Typography)(({ theme }) => ({
     fontSize: '1rem',
   },
 }))
-export const StyledDivider = styled(Box)(({ theme }) => ({
+export const StyledDivider = styled(Stack)(({ theme }) => ({
   width: '1px',
+  opacity: 0.5,
   margin: theme.spacing(1, 0, 0, 8),
   height: '100px',
   background: '#E0E3E6',

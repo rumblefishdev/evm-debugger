@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material'
 import React from 'react'
 
+import { MenuItem } from '../MenuItem'
 import Ebook1Img from '../../assets/png/ebook1.png'
 import Ebook2Img from '../../assets/png/ebook2.png'
 import { MenuBoxCover } from '../MenuBoxCover'
@@ -16,9 +17,25 @@ import {
   StyledSectionWrapper,
   StyledMenuBoxImage,
   StyledMarginTypography,
+  StyledLinkWrapper,
 } from './styles'
 
 const Link: React.FC<{ to: string; noIcon?: boolean } & React.PropsWithChildren> = ({ to, children, noIcon }) => {
+  const theme = useTheme()
+
+  if (theme.utilis.isMobile())
+    return (
+      <StyledLinkWrapper>
+        <MenuItem
+          sx={{ fontSize: '1rem' }}
+          noIcon={noIcon}
+          to={to}
+        >
+          {children}
+        </MenuItem>
+      </StyledLinkWrapper>
+    )
+
   return (
     <StyledMenuItemIconLink
       noIcon={noIcon}
@@ -75,17 +92,13 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
   return (
     <Section
       backgroundColor="unset"
-      width="small"
+      width={theme.utilis.isMobile() ? 'full' : 'small'}
     >
       <StyledStack
         direction="row"
         alignItems="flex-start"
         justifyContent="space-between"
-        sx={{
-          img: {
-            filter: 'none',
-          },
-        }}
+        sx={{ img: { filter: 'none' } }}
         {...props}
       >
         <StyledSectionWrapper sx={{ width: 'auto' }}>

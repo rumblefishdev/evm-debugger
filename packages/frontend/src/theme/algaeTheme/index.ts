@@ -13,7 +13,7 @@ import type { ExtendedTypographyPropsVariantOverrides1 } from './typography'
 import { typography } from './typography'
 import type { ExtendedTypographyPropsVariantOverrides2 } from './typography2'
 import { typography2 } from './typography2'
-import { fluidFont } from './utilis'
+import { fluidFont, isMobile } from './utilis'
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides extends ExtendedTypographyPropsVariantOverrides1, ExtendedTypographyPropsVariantOverrides2 {}
@@ -22,14 +22,14 @@ declare module '@mui/material/Typography' {
 declare module '@mui/material/styles' {
   interface Theme {
     utilis: {
-      isMobile: boolean
+      isMobile: () => boolean
       fluidFont: (min: number, max: number) => string
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-shadow
   interface ThemeOptions {
     utilis?: {
-      isMobile: boolean
+      isMobile: () => boolean
       fluidFont: (min: number, max: number) => string
     }
   }
@@ -39,7 +39,7 @@ const spacing = 8
 
 export const theme = createTheme({
   utilis: {
-    isMobile: global.innerWidth <= 960,
+    isMobile,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
@@ -55,7 +55,7 @@ export const theme = createTheme({
 
 export const themeDark = createTheme({
   utilis: {
-    isMobile: global.innerWidth <= 960,
+    isMobile,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
@@ -89,7 +89,7 @@ export const themeDark = createTheme({
 
 export const themeNavy = createTheme({
   utilis: {
-    isMobile: global.innerWidth <= 960,
+    isMobile,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
