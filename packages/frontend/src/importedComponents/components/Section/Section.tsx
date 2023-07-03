@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import clsx from 'clsx'
 import React from 'react'
 
@@ -13,16 +13,23 @@ export const Section = ({
   backgroundColor = '#FFF',
   mobilePadding = true,
   positionRelativeOn,
+  heightRef = null,
+  backDropFilter = false,
   ...props
 }: SectionProps) => {
+  const theme = useTheme()
+  const isDarkMode: boolean = theme.palette.type === 'dark'
+  const isNavyMode: boolean = theme.palette.type === 'navy'
   return (
     <Box
+      ref={heightRef}
       sx={{
         width: '100%',
         position: positionRelativeOn ? 'relative' : 'static',
         overflowX: 'clip',
         height: height === 'fullHeight' ? '100%' : 'auto',
-        background: backgroundColor,
+        background: isDarkMode || isNavyMode ? 'transparent' : backgroundColor,
+        backdropFilter: backDropFilter ? 'blur(16px)' : '',
       }}
     >
       <StyledRoot
