@@ -9,6 +9,16 @@ Parameters:
     Type: String
   CompilerVersion:
     Type: String
+  EtherscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ETHERSCAN_KEY"
+  PolygonscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/POLYGONSCAN_KEY"
+  ArbitrumscanKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
+
 
 Resources:
   AnalyzerDataTable:
@@ -279,21 +289,6 @@ Resources:
       Name: !Sub "/evm-debugger/${Environment}/${CompilerVersion}"
       Type: String
       Value: !Ref SrcMapCompilerFunction
-
-  EtherscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/ETHERSCAN_KEY"
-
-  PolygonscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/POLYGONSCAN_KEY"
-
-  ArbitrumscanKey:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
-
-
-
 
 Outputs:
   ApiUrl:

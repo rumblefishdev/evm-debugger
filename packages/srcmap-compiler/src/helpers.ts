@@ -2,7 +2,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { SrcMapResponseStatus } from '@evm-debuger/types'
 
 import type { EntryType, SolcOutput } from './types'
 import { SourceMapElement } from './sourceMapElement'
@@ -121,35 +121,92 @@ const getInternals = async (
   return allEntries
 }
 
+const getInternalsFromString = async (input: string, solc: any) => {
+  const solcCompile = solc.compile(input)
+  console.log(solcCompile)
+  const output: SolcOutput = JSON.parse(solcCompile) as SolcOutput
+
+  let allEntries: EntryType[] = []
+  for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
+    const newerEntries: EntryType[] = await Promise.all(
+      Object.entries(fileInternals).map(
+        async ([contractName, contractInternals]) => {
+          const formattedOpcodes = await formatOpcodes(
+            contractInternals.evm.deployedBytecode.opcodes,
+          )
+          const formattedOpcodesArr = formattedOpcodes.split('\n')
+
+          formattedOpcodesArr.shift()
+          return {
+            rawSourceMap: contractInternals.evm.deployedBytecode.sourceMap,
+            fileName,
+            contractName,
+          }
+        },
+      ),
+    )
+    allEntries = [...allEntries, ...newerEntries]
+  }
+  return allEntries
+}
+
 export const compileFiles = async (payload: any, solc: any) => {
-  const files = await Promise.all(
-    payload.files.map(async (solFile: string) => {
-      const params: PutObjectRequest = {
-        Key: solFile,
-        Bucket: BUCKET_NAME,
-      }
-      const resp = await s3download(params)
-      return await resp.Body?.transformToString('utf8')
-    }),
-  )
-  const internals = await getInternals(payload.files, files, solc)
   const params: PutObjectRequest = {
     Key: `contracts/${payload.chainId}/${payload.address}/payload.json`,
     Bucket: BUCKET_NAME,
   }
+  let resp
   try {
-    const resp = await s3download(params)
+    resp = await s3download(params)
+  } catch (error) {
+    const msg = 'Payload file not found'
+    console.log(msg)
+    await s3upload({
+      ...params,
+      Body: JSON.stringify({
+        status: SrcMapResponseStatus.FAILED,
+        error: msg,
+      }),
+    })
+  }
+  if (resp) {
     const existingResponse = JSON.parse(
       (await resp.Body?.transformToString('utf8')) || '',
     )
-    existingResponse.status = TransactionTraceResponseStatus.SUCCESS
-    existingResponse.srcmap = internals
-    await s3upload({
-      ...params,
-      Body: JSON.stringify(existingResponse),
-    })
-  } catch (error) {
-    console.log(error)
+    try {
+      const files = await Promise.all(
+        payload.files.map(async (solFile: string) => {
+          const param: PutObjectRequest = {
+            Key: solFile,
+            Bucket: BUCKET_NAME,
+          }
+          const res = await s3download(param)
+          return await res.Body?.transformToString('utf8')
+        }),
+      )
+      const internals = await getInternals(payload.files, files, solc)
+
+      existingResponse.status = SrcMapResponseStatus.SUCCESS
+      existingResponse.srcmap = internals
+      await s3upload({
+        ...params,
+        Body: JSON.stringify(existingResponse),
+      })
+      return internals
+    } catch (error) {
+      const msg = {
+        msg: 'Fail to compile',
+        error: (error as any).toString(),
+      }
+      console.log(msg)
+      await s3upload({
+        ...params,
+        Body: JSON.stringify({
+          ...existingResponse,
+          status: SrcMapResponseStatus.CANT_COMPILE,
+          error: msg,
+        }),
+      })
+    }
   }
-  return internals
 }

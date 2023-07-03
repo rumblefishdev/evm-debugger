@@ -156,22 +156,13 @@ export const constructFiles = async (
     const content = data.result[0]
     try {
       body = {
-        SwarmSource: content.SwarmSource,
-        status: SrcMapResponseStatus.PENDING,
-        Runs: content.Runs,
-        Proxy: content.Proxy,
-        OptimizationUsed: content.OptimizationUsed,
-        LicenseType: content.LicenseType,
-        Library: content.Library,
-        Implementation: content.Implementation,
+        ...content,
+        status: SrcMapResponseStatus.BUILDING,
+        srcmap: null,
         files: await extractFiles(content.SourceCode, params),
         EVMVersion: content.EVMVersion,
-        ContractName: content.ContractName,
-        ConstructorArguments: content.ConstructorArguments,
-        CompilerVersion: content.CompilerVersion,
         chainId: address.chainId,
         address: address.address,
-        ABI: content.ABI,
       }
       await s3upload({
         ...params,

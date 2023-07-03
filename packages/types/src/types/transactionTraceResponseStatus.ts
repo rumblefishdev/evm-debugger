@@ -10,6 +10,7 @@ export enum SrcMapResponseStatus {
   RUNNING = 'RUNNING',
   BUILDING = 'BUILDING',
   COMPILING = 'COMPILING',
+  CANT_COMPILE = 'CANT_COMPILE',
   FAILED = 'FAILED',
   SUCCESS = 'SUCCESS',
 }

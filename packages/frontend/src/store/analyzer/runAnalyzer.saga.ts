@@ -13,7 +13,7 @@ import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 import { addContractNames } from '../contractNames/contractNames'
-import { addInstructions } from '../instructions/instructions.slice'
+// import { addInstructions } from '../instructions/instructions.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { ISourceProvider, IBytecodeProvider } from './analyzer.types'
@@ -70,8 +70,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
-
-  yield* put(addInstructions(Object.entries(srcMaps).reduce((accumulator, maps) => [...accumulator, ...maps], [])))
+  // if (srcMaps) yield* put(addInstructions(Object.entries(srcMaps).reduce((accumulator, maps) => [...accumulator, ...maps], [])))
 
   return analyzeSummary
 }
