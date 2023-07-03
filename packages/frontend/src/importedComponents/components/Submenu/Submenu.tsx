@@ -9,8 +9,6 @@ import type { SubmenuProps } from './Submenu.types'
 export const Submenu: React.FC<SubmenuProps> = ({
   children,
   isOpen,
-  closeMenu,
-  noPadding,
   setUnmounted = (val: boolean) => {
     return val
   },
