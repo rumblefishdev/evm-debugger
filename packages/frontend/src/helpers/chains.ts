@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
 import { ChainId } from '@evm-debuger/types'
 
-import { chainNames, etherscanUrls, jsonRpcProvider, transactionTraceProviderUrl } from '../config'
+import { chainNames, jsonRpcProvider, transactionTraceProviderUrl } from '../config'
 import {
   EvmSourceFetcher,
   JSONRpcBytecodeFetcher,
@@ -32,7 +32,7 @@ export const supportedChains = Object.fromEntries(
     {
       txInfoProvider: (hash: string) => new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[chainId]),
       structLogProvider: (hash: string) => new TransactionTraceFetcher(transactionTraceProviderUrl, hash, chainId),
-      sourceProvider: new EvmSourceFetcher(etherscanUrls[chainId].url, etherscanUrls[chainId].key, chainId),
+      sourceProvider: new EvmSourceFetcher(chainId),
       name: chainNames[chainId],
       bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[chainId]),
     },

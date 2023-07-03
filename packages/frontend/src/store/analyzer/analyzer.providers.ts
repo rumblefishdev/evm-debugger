@@ -50,7 +50,7 @@ export class EtherscanSourceFetcher implements ISourceProvider {
 }
 
 export class EvmSourceFetcher implements ISourceProvider {
-  constructor(private etherscanUrl: string, private etherscanKey: string, private chainId: number | string) {}
+  constructor(private chainId: number | string) {}
 
   async getSource(address: string) {
     const tryCount = 30
@@ -58,11 +58,12 @@ export class EvmSourceFetcher implements ISourceProvider {
       status: SrcMapResponseStatus[SrcMapResponseStatus.PENDING],
       reponse: null,
     }
-    const etherscanResponse = await fetch(
-      `${this.etherscanUrl}/api?module=contract&action=getsourcecode&address=${address}&apikey=${this.etherscanKey}`,
-    )
-    if (etherscanResponse.status !== 200) throw new Error(`Etherscan returned ${etherscanResponse.status} response code`)
-    const sourceCode = (await etherscanResponse.json()).result[0].SourceCode
+    let adressData = {
+      srcmap: null,
+      sourceCode: null,
+      contractName: null,
+      abi: null,
+    }
     for (let index = 0; index < tryCount; index++) {
       const response = await fetch(`${transactionTraceProviderUrl}/srcmap-api`, {
         method: 'POST',
@@ -86,18 +87,19 @@ export class EvmSourceFetcher implements ISourceProvider {
           fetchStatus.status = SrcMapResponseStatus[SrcMapResponseStatus.FAILED]
           throw new Error(`${address} is not verified on Etherscan`)
         } else {
-          fetchStatus.status = fetchStatus.reponse.data[0].status
+          const data = fetchStatus.reponse.data[0]
+          fetchStatus.status = data.status
+          adressData = {
+            srcmap: data.srcmap,
+            sourceCode: data.SourceCode,
+            contractName: data.ContractName,
+            abi: JSON.parse(data.abi),
+          }
           break
         }
       }
     }
-
-    return {
-      srcmap: fetchStatus.reponse.data[0].srcmap,
-      sourceCode,
-      contractName: fetchStatus.reponse.data[0].ContractName,
-      abi: JSON.parse(fetchStatus.reponse.data[0].ABI),
-    }
+    return adressData
   }
 }
 

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { theme } from '../../theme/default'
 import { Button } from '../../importedComponents/components/Button'
-import { etherscanUrls } from '../../config'
 import { EvmSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
@@ -77,7 +76,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
-          sourceProvider: new EvmSourceFetcher(etherscanUrls[txInfo.chainId].url, etherscanUrls[txInfo.chainId].key, txInfo.chainId),
+          sourceProvider: new EvmSourceFetcher(txInfo.chainId),
         }),
       )
   }, [dispatch, error, structLogs, txInfo])
