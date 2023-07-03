@@ -1,6 +1,8 @@
 import { useTheme, Collapse } from '@mui/material'
 import React from 'react'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
+
 import { StyledBox } from './styles'
 import type { SubmenuProps } from './Submenu.types'
 
@@ -16,6 +18,7 @@ export const Submenu: React.FC<SubmenuProps> = ({
   const theme = useTheme()
   const isDarkMode: boolean = theme.palette.type === 'dark'
   const isNavyMode: boolean = theme.palette.type === 'navy'
+  const useIsDarkOrNavyMode = (): boolean => isDarkOrNavy(theme)
 
   return (
     <Collapse
@@ -28,12 +31,12 @@ export const Submenu: React.FC<SubmenuProps> = ({
         width: '100%',
 
         span: {
-          color: (isDarkMode || isNavyMode) && 'white',
+          color: useIsDarkOrNavyMode && 'white',
         },
 
         img: {
           filter:
-            (isDarkMode || isNavyMode) &&
+            useIsDarkOrNavyMode &&
             'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)',
         },
         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',

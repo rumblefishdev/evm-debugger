@@ -1,5 +1,6 @@
 import { Button, styled } from '@mui/material'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 export const StyledButton = styled(Button)(({ theme }) => ({
   fontFamily: 'Rajdhani',
@@ -13,9 +14,9 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   '&.MuiButton-contained': {
     color: theme.palette.primaryTextButtonColor,
     backgroundColor: theme.palette.colorLink,
-    boxShadow: theme.palette.type === 'dark' || theme.palette.type === 'navy' ? '0px 8px 24px rgba(255, 255, 255, 0.15)' : 'none',
-    border: theme.palette.type === 'dark' || theme.palette.type === 'navy' ? '4px solid rgba(255, 255, 255, 0.25)' : 'none',
-    backgroundClip: (theme.palette.type === 'dark' || theme.palette.type === 'navy') && 'padding-box',
+    boxShadow: isDarkOrNavy(theme) ? '0px 8px 24px rgba(255, 255, 255, 0.15)' : 'none',
+    border: isDarkOrNavy(theme) ? '4px solid rgba(255, 255, 255, 0.25)' : 'none',
+    backgroundClip: isDarkOrNavy(theme) && 'padding-box',
     borderRadius: theme.palette.type === 'dark' ? '16px' : 'none',
     '&:hover': {
       backgroundColor: theme.palette.primaryButtonHoverBgColor,

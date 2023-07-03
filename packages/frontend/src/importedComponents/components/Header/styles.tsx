@@ -1,5 +1,6 @@
 import { Box, Collapse, Stack, styled } from '@mui/material'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
 import { MenuItem } from '../MenuItem'
 import { MenuItemIcon } from '../MenuItemIcon'
 
@@ -16,10 +17,9 @@ export const StyledHeader = styled(Box)<{ background?: string }>(({ background }
 export const StyledTextContainer = styled(Stack)(({ theme }) => ({
   width: '55%',
   'span, img': {
-    filter:
-      theme.palette.type === 'dark' || theme.palette.type === 'navy'
-        ? 'brightness(0) saturate(100%) invert(73%) sepia(3%) saturate(502%) hue-rotate(155deg) brightness(101%) contrast(80%)'
-        : 'none',
+    filter: isDarkOrNavy(theme)
+      ? 'brightness(0) saturate(100%) invert(73%) sepia(3%) saturate(502%) hue-rotate(155deg) brightness(101%) contrast(80%)'
+      : 'none',
   },
   [theme.breakpoints.down('md')]: {
     width: '100%',
@@ -28,8 +28,7 @@ export const StyledTextContainer = styled(Stack)(({ theme }) => ({
 }))
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(3, 0),
-  borderBottom:
-    theme.palette.type === 'dark' || theme.palette.type === 'navy' ? 'none' : `1px solid ${theme.palette.colorBackground?.dark}`,
+  borderBottom: isDarkOrNavy(theme) ? 'none' : `1px solid ${theme.palette.colorBackground?.dark}`,
 }))
 
 export const StyledImg = styled(`img`)(() => ({
@@ -63,10 +62,9 @@ export const StyledButtonAnimationWrapper = styled(Box)(({ theme }) => ({
   width: '40px',
   position: 'relative',
   height: '40px',
-  filter:
-    theme.palette.type === 'dark' || theme.palette.type === 'navy'
-      ? 'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)'
-      : 'none',
+  filter: isDarkOrNavy(theme)
+    ? 'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)'
+    : 'none',
   borderRadius: '20px',
   border: `1px solid ${theme.palette.colorLines50}`,
 }))
