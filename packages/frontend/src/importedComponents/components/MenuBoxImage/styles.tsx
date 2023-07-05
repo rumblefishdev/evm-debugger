@@ -2,6 +2,9 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '317px',
+  [theme.breakpoints.down('lg')]: {
+    width: '100%',
+  },
   padding: theme.spacing(1.5),
   height: 'auto',
   cursor: 'pointer',
@@ -38,5 +41,7 @@ export const StyledImage = styled(`img`)(() => ({
   alignSelf: 'flex-start',
 }))
 export const StyledTextWrapper = styled(Stack)(({ theme }) => ({
-  ...theme.mixins.flexColumnStartStart,
+  [theme.breakpoints.up('lg')]: {
+    ...theme.mixins.flexColumnStartStart,
+  },
 }))

@@ -17,7 +17,10 @@ export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxIma
   return (
     <a
       href={link}
-      style={{ textDecoration: 'none' }}
+      style={{
+        width: '50%',
+        textDecoration: 'none',
+      }}
     >
       <StyledStack
         direction="row"

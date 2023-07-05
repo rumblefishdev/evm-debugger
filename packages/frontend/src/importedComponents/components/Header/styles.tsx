@@ -21,6 +21,9 @@ export const StyledTextContainer = styled(Stack)(({ theme }) => ({
       ? 'brightness(0) saturate(100%) invert(73%) sepia(3%) saturate(502%) hue-rotate(155deg) brightness(101%) contrast(80%)'
       : 'none',
   },
+  [theme.breakpoints.down('lg')]: {
+    width: '63%',
+  },
   [theme.breakpoints.down('md')]: {
     width: '100%',
     ...theme.mixins.flexColumnStartStart,

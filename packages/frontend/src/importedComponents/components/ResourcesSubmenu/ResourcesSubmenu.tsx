@@ -60,7 +60,7 @@ const EbooksSection = () => {
         }}
       />
 
-      <StyledEbookSectionWrapper>
+      <StyledEbookSectionWrapper sx={{ img: { filter: 'none !important' } }}>
         <MenuBoxCover
           to="/resources/workshop"
           cover={Ebook2Img}
@@ -98,7 +98,6 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
         direction="row"
         alignItems="flex-start"
         justifyContent="space-between"
-        sx={{ img: { filter: 'none' } }}
         {...props}
       >
         <StyledSectionWrapper sx={{ width: 'auto' }}>
@@ -115,6 +114,7 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
           <StyledBlogSectionWrapper>
             {adjustedBlogsData.map((item, index) => (
               <StyledMenuBoxImage
+                sx={{ img: { filter: 'none !important' } }}
                 key={index}
                 {...item}
               />
