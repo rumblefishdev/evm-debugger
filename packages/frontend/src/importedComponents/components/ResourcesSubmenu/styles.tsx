@@ -1,5 +1,6 @@
 import { Stack, styled, Box, Typography } from '@mui/material'
 
+import { isDarkOrNavy } from '../../../helpers/helpers'
 import { MenuBoxImage } from '../MenuBoxImage'
 import { MenuItemIconLink } from '../MenuItemIconLink'
 
@@ -71,10 +72,20 @@ export const StyledMenuBoxImage = styled(MenuBoxImage)(({ theme }) => ({
 
 export const StyledMenuItemIconLink = styled(MenuItemIconLink)(({ theme }) => ({
   margin: theme.spacing(3, 0),
+  img: {
+    filter:
+      isDarkOrNavy(theme) &&
+      'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)',
+  },
 }))
 
 export const StyledLinkWrapper = styled(Box)(({ theme }) => ({
   margin: theme.spacing(2, 0, 0, 4),
+  img: {
+    filter:
+      isDarkOrNavy(theme) &&
+      'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)',
+  },
   [theme.breakpoints.down('md')]: {
     margin: theme.spacing(3, 0, 2, 0),
   },

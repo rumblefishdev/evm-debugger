@@ -13,6 +13,9 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   '&:hover': {
     background: '#F2F4F8',
   },
+  [theme.breakpoints.down('lg')]: {
+    width: '400px',
+  },
   [theme.breakpoints.down('md')]: {
     width: '100%',
     padding: 0,
