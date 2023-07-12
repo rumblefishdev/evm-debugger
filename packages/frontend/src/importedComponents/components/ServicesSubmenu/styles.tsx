@@ -4,13 +4,18 @@ import { MenuBoxIcon } from '../MenuBoxIcon'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
-  padding: theme.spacing(6, 0),
+  padding: theme.spacing(5, 0),
+  overflow: 'hidden',
   justifyContent: 'space-between',
   flexDirection: 'row',
   display: 'flex',
   alignItems: 'flex-start',
+  [theme.breakpoints.down('lg')]: {
+    padding: theme.spacing(2, 0),
+  },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(0, 0),
+    overflow: 'visible',
     ...theme.mixins.flexColumnStartStart,
   },
 }))
@@ -29,10 +34,10 @@ export const StyledWrapper = styled(Stack)(({ theme }) => ({
 }))
 export const StyledDivider = styled(Stack)(({ theme }) => ({
   width: '1px',
-  opacity: 0.5,
+  opacity: 0.15,
   margin: theme.spacing(1, 0, 0, 8),
   height: '400px',
-  background: '#E0E3E6',
+  background: theme.palette.colorLines50,
   [theme.breakpoints.down('lg')]: {
     margin: theme.spacing(0),
   },
@@ -40,7 +45,6 @@ export const StyledDivider = styled(Stack)(({ theme }) => ({
     width: '100%',
     margin: '0 0 10px 0',
     height: '1px',
-    background: '#E0E3E6',
   },
 }))
 

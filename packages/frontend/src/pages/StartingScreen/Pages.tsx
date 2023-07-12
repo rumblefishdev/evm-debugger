@@ -66,7 +66,7 @@ export const StartingScreen: () => JSX.Element = () => {
         <CssBaseline>
           <Header
             blogs={fetchedBlogPosts}
-            background={'transparent'}
+            background={'rgba(7, 29, 90)'}
           />
           <GAnalytics />
           <DebuggerFormSection ref={offerRef} />
