@@ -28,5 +28,5 @@ export const StyledIcon = styled(`img`)(({ theme }) => ({
 export const StyledIconWrapper = styled(Box)(() => ({
   width: '10px',
   position: 'relative',
-  height: '7px',
+  height: '7px !important',
 }))

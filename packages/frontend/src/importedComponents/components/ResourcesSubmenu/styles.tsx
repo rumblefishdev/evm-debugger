@@ -6,12 +6,19 @@ import { MenuItemIconLink } from '../MenuItemIconLink'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
-  padding: theme.spacing(6, 0),
+  padding: theme.spacing(5, 0),
+  overflow: 'hidden',
   justifyContent: 'space-between',
   flexFlow: 'row',
+  flexDirection: 'column',
+  display: 'flex',
   alignItems: 'flex-start',
+  [theme.breakpoints.down('lg')]: {
+    padding: theme.spacing(2, 0),
+  },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(0),
+    overflow: 'visible',
     ...theme.mixins.flexColumnStartStart,
     height: 'auto',
   },
@@ -19,8 +26,8 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 
 export const StyledBlogSectionWrapper = styled(Stack)(({ theme }) => ({
   width: 'auto',
+  justifyContent: 'space-between',
   flexFlow: 'row wrap',
-  alignItems: 'space-around',
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2, 0, 0, 0),
   },
@@ -33,31 +40,24 @@ export const StyledSectionWrapper = styled(Stack)(({ theme }) => ({
 }))
 export const StyledEbookSectionWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  marginTop: theme.spacing(1),
-  marginLeft: theme.spacing(2),
-  justifyContent: 'space-between',
-  flexFlow: 'row',
+  padding: theme.spacing(1.5),
+  justifyContent: 'flex-start',
+  gap: theme.spacing(3),
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+  display: 'flex',
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(3, 0),
-    marginTop: 'unset',
-    marginLeft: 'unset',
-    justifyContent: 'space-around',
+    padding: theme.spacing(0),
+    margin: theme.spacing(3, 0, 3, 0),
   },
 }))
 export const StyledDivider = styled(Stack)(({ theme }) => ({
-  width: '1px',
-  opacity: 0.5,
-  margin: theme.spacing(0, 4, 0, 0),
-  height: '400px',
-  background: '#E0E3E6',
-  [theme.breakpoints.down('lg')]: {
-    display: 'none',
-  },
+  width: '100%',
+  opacity: 0.15,
+  height: '1px',
+  background: theme.palette.colorLines50,
   [theme.breakpoints.down('md')]: {
-    width: '100%',
-    margin: 0,
-    height: '1px',
-    display: 'block',
+    marginTop: theme.spacing(2),
   },
 }))
 
@@ -65,13 +65,9 @@ export const StyledMenuBoxImage = styled(MenuBoxImage)(({ theme }) => ({
   '&:hover': {
     background: theme.palette.type === 'dark' ? '#000000b8' : theme.palette.type === 'navy' && 'rgba(255, 255, 255, 0.1);',
   },
-  [theme.breakpoints.up('md')]: {
-    margin: '4px 12px',
-  },
 }))
 
 export const StyledMenuItemIconLink = styled(MenuItemIconLink)(({ theme }) => ({
-  margin: theme.spacing(3, 0),
   img: {
     filter:
       isDarkOrNavy(theme) &&
@@ -87,10 +83,10 @@ export const StyledLinkWrapper = styled(Box)(({ theme }) => ({
       'brightness(0%) saturate(100%) invert(100%) sepia(2%) saturate(887%) hue-rotate(84deg) brightness(110%) contrast(100%)',
   },
   [theme.breakpoints.down('md')]: {
-    margin: theme.spacing(3, 0, 2, 0),
+    margin: theme.spacing(3, 0, 0, 0),
   },
 }))
 
 export const StyledMarginTypography = styled(Typography)(({ theme }) => ({
-  margin: theme.spacing(3, 0),
+  margin: theme.spacing(1, 0, 2, 0),
 }))

@@ -4,7 +4,7 @@ import { getCmsOptimizedUrl } from '../../utils/getCmsOptimizedUrl'
 import { truncateText, removeDash } from '../../utils/stringUtilis'
 
 import type { MenuBoxImageProps } from './MenuBoxImage.types'
-import { StyledStack, StyledHeadline, StyledTextWrapper, StyledImage, StyledText } from './styles'
+import { StyledLink, StyledStack, StyledHeadline, StyledTextWrapper, StyledImage, StyledText } from './styles'
 
 export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxImageProps) => {
   const truncatedText = truncateText(text, 80)
@@ -14,14 +14,9 @@ export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxIma
     url: img,
     quality: 100,
   })
+
   return (
-    <a
-      href={link}
-      style={{
-        width: '50%',
-        textDecoration: 'none',
-      }}
-    >
+    <StyledLink href={link}>
       <StyledStack
         direction="row"
         spacing={2}
@@ -36,6 +31,6 @@ export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxIma
           <StyledText variant="caption">{truncatedText}</StyledText>
         </StyledTextWrapper>
       </StyledStack>
-    </a>
+    </StyledLink>
   )
 }

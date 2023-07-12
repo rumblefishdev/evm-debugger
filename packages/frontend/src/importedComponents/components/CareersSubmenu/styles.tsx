@@ -4,12 +4,17 @@ import { MenuBoxBigIcon } from '../MenuBoxBigIcon'
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
-  padding: theme.spacing(6, 0),
+  padding: theme.spacing(5, 0),
+  overflow: 'hidden',
   justifyContent: 'space-between',
   flexFlow: 'row nowrap',
   alignItems: 'flex-start',
+  [theme.breakpoints.down('lg')]: {
+    padding: theme.spacing(2, 0),
+  },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(0),
+    overflow: 'visible',
 
     ...theme.mixins.flexColumnStartStart,
   },
@@ -36,17 +41,17 @@ export const StyledText = styled(Typography)(({ theme }) => ({
 
   color: theme.palette.colorGrey?.primary,
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(3, 0),
+    padding: theme.spacing(3, 0, 2, 0),
     margin: 'unset',
     fontSize: '1rem',
   },
 }))
 export const StyledDivider = styled(Stack)(({ theme }) => ({
   width: '1px',
-  opacity: 0.5,
+  opacity: 0.15,
   margin: theme.spacing(1, 0, 0, 8),
   height: '100px',
-  background: '#E0E3E6',
+  background: theme.palette.colorLines50,
   [theme.breakpoints.down('lg')]: {
     margin: theme.spacing(0),
   },

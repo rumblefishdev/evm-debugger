@@ -1,9 +1,13 @@
-import { useTheme } from '@mui/material'
+import { useTheme, Stack, Typography } from '@mui/material'
 import React from 'react'
 
 import { MenuItem } from '../MenuItem'
 import Ebook1Img from '../../assets/png/ebook1.png'
 import Ebook2Img from '../../assets/png/ebook2.png'
+import Ebook3Img from '../../assets/png/ebook3.png'
+import Ebook1ImgSmall from '../../assets/png/ebook1-small.png'
+import Ebook2ImgSmall from '../../assets/png/ebook2-small.png'
+import Ebook3ImgSmall from '../../assets/png/ebook3-small.png'
 import { MenuBoxCover } from '../MenuBoxCover'
 import { Section } from '../Section'
 
@@ -16,7 +20,6 @@ import {
   StyledBlogSectionWrapper,
   StyledSectionWrapper,
   StyledMenuBoxImage,
-  StyledMarginTypography,
   StyledLinkWrapper,
 } from './styles'
 
@@ -50,11 +53,26 @@ const EbooksSection = () => {
   const theme = useTheme()
   return (
     <>
-      <StyledMarginTypography variant="bodySmall">Check out our ebooks</StyledMarginTypography>
+      <Stack
+        sx={{
+          margin: theme.spacing(1, 0, 2, 0),
+          [theme.breakpoints.down('md')]: { margin: theme.spacing(0) },
+        }}
+      >
+        <Typography
+          variant="buttonSmall"
+          sx={{
+            color: theme.palette.colorBrand?.primary,
+            [theme.breakpoints.down('md')]: { fontSize: '1rem' },
+          }}
+        >
+          Check all ebooks
+        </Typography>
+      </Stack>
 
       <StyledDivider
         sx={{
-          [theme.breakpoints.up('lg')]: {
+          [theme.breakpoints.up('md')]: {
             display: 'none',
           },
         }}
@@ -62,13 +80,18 @@ const EbooksSection = () => {
 
       <StyledEbookSectionWrapper sx={{ img: { filter: 'none !important' } }}>
         <MenuBoxCover
+          to="/resources/fintech-mvp-guide"
+          cover={theme.utilis.isMobile() ? Ebook3ImgSmall : Ebook3Img}
+          text={'The Ultimate Guide to \nBuilding Your Fintech MVP'}
+        />
+        <MenuBoxCover
           to="/resources/workshop"
-          cover={Ebook2Img}
+          cover={theme.utilis.isMobile() ? Ebook2ImgSmall : Ebook2Img}
           text={'Discovery \nWorkshop'}
         />
         <MenuBoxCover
           to="/resources/blockchain"
-          cover={Ebook1Img}
+          cover={theme.utilis.isMobile() ? Ebook1ImgSmall : Ebook1Img}
           text={'Blockchain \nTrends in 2022'}
         />
       </StyledEbookSectionWrapper>
@@ -95,17 +118,27 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
       width={theme.utilis.isMobile() ? 'full' : 'small'}
     >
       <StyledStack
-        direction="row"
+        gap={2}
+        direction="column"
         alignItems="flex-start"
         justifyContent="space-between"
         {...props}
       >
         <StyledSectionWrapper sx={{ width: 'auto' }}>
-          <Link to="/blog">Visit our blog</Link>
+          <Stack
+            sx={{
+              margin: theme.spacing(0, 0, 2, 0),
+              [theme.breakpoints.down('md')]: {
+                margin: theme.spacing(0),
+              },
+            }}
+          >
+            <Link to="/blog">Visit our blog</Link>
+          </Stack>
 
           <StyledDivider
             sx={{
-              [theme.breakpoints.up('lg')]: {
+              [theme.breakpoints.up('md')]: {
                 display: 'none',
               },
             }}
@@ -124,7 +157,7 @@ export const ResourcesSubmenu = ({ blogs, ...props }: ResourcesSubmenuProps) => 
 
         <StyledDivider
           sx={{
-            [theme.breakpoints.down('lg')]: {
+            [theme.breakpoints.down('md')]: {
               display: 'none',
             },
           }}

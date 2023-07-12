@@ -5,11 +5,20 @@ import { MenuItem } from '../MenuItem'
 export const StyledText = styled(Typography)(({ theme }) => ({
   whiteSpace: 'pre-line',
   textAlign: 'center',
-  marginTop: theme.spacing(3),
+  paddingLeft: '10px !important',
+  [theme.breakpoints.down('md')]: {
+    paddingLeft: '8px !important',
+    marginTop: theme.spacing(0),
+  },
+  marginTop: theme.spacing(1),
 }))
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  marginTop: theme.spacing(1),
+  paddingLeft: '10px !important',
+  fontSize: '100%',
   cursor: 'pointer',
   '&:hover': theme.mixins.hoverTextLightBlue,
+  [theme.breakpoints.down('md')]: {
+    paddingLeft: '8px !important',
+  },
 }))
