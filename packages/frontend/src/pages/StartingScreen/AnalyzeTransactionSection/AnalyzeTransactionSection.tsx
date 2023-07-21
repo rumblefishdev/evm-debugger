@@ -51,7 +51,7 @@ export const AnalyzeTransactionSection: React.FC<StackProps> = ({ ...props }: St
         <NetworksStyledStack>
           <NetworksHeading>Networks we currently support:</NetworksHeading>
           <CurrentsNetworksStyledStack>
-            <NetworkName>Etherum</NetworkName>
+            <NetworkName>Ethereum</NetworkName>
             <NetworkName>Goerli</NetworkName>
             <NetworkName>Polygon</NetworkName>
             <NetworkName>Mumbai</NetworkName>
