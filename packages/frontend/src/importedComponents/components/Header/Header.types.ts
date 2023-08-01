@@ -2,11 +2,12 @@ import type { StackProps } from '@mui/material'
 
 import type { IBlogPost } from '../../contentful-ui.types'
 
-export type TMenu = 'services' | 'resources' | 'careers'
+export type TMenu = 'services' | 'resources' | 'careers' | 'products'
 export interface IState {
   resources: boolean
   services: boolean
   careers: boolean
+  products: boolean
 }
 export interface IView {
   closeAll: () => void

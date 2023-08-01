@@ -28,6 +28,7 @@ export interface IHeaderDesktopReducerState {
   servicesHover: boolean
   careersHover: boolean
   resourceHover: boolean
+  productsHover: boolean
   prevSubmenu: null | SUBMENUS
   currentSubmenu: null | SUBMENUS
   isUnwantedTouch: boolean
@@ -36,6 +37,7 @@ export interface IHeaderDesktopReducerState {
 export const initialState = {
   servicesHover: false,
   resourceHover: false,
+  productsHover: false,
   prevSubmenu: null,
   isUnwantedTouch: false,
   isCollapseUnmounted: true,
@@ -69,6 +71,12 @@ export function reducer(state: IHeaderDesktopReducerState, action) {
         resourceHover: action.payload,
       }
     }
+    case 'setProductsHover': {
+      return {
+        ...state,
+        productsHover: action.payload,
+      }
+    }
 
     case 'setPrevSubmenu': {
       return {
@@ -93,6 +101,14 @@ export function reducer(state: IHeaderDesktopReducerState, action) {
       return {
         ...state,
         servicesHover: false,
+        prevSubmenu: action.payload,
+        currentSubmenu: null,
+      }
+    }
+    case 'onSubmenuClose_setProductsHover': {
+      return {
+        ...state,
+        productsHover: false,
         prevSubmenu: action.payload,
         currentSubmenu: null,
       }
