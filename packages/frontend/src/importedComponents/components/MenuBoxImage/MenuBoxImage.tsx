@@ -14,13 +14,13 @@ export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxIma
     url: img,
     quality: 100,
   })
-  const websiteUrl = location
-  console.log(websiteUrl)
+  const websiteUrl = location.origin
+
   return (
     <StyledLink
       href={link}
-      target={`${link.startsWith('websiteUrl') || link.startsWith('/') ? '_self' : '_blank'}`}
-      rel={`${link.startsWith('websiteUrl') ? '' : 'noopener noreferrer'}`}
+      target={`${link.startsWith(websiteUrl) || link.startsWith('/') ? '_self' : '_blank'}`}
+      rel={`${link.startsWith(websiteUrl) ? '' : 'noopener noreferrer'}`}
     >
       <StyledStack
         direction="row"
