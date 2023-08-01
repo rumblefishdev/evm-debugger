@@ -14,7 +14,7 @@ export const MenuBoxImage = ({ headline, text, img, link, ...props }: MenuBoxIma
     url: img,
     quality: 100,
   })
-  const websiteUrl = location.origin
+  const websiteUrl = location.origin as string
 
   return (
     <StyledLink
