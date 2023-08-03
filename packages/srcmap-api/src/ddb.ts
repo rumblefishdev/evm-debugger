@@ -52,7 +52,7 @@ export const putStatusToDdb = async (address: string, chainId: string) => {
   return initDetails
 }
 
-export const putTxEventToDdb = async (
+export const putTxEventToDdb = (
   event: string,
   address: string,
   additionalData: object = {},

@@ -9,6 +9,7 @@ import { CareersSubmenu } from '../CareersSubmenu'
 import { MenuItem } from '../MenuItem'
 import { MenuItemIcon } from '../MenuItemIcon'
 import { ResourcesSubmenu } from '../ResourcesSubmenu'
+import { ProductsSubmenu } from '../ProductsSubmenu'
 import { Section } from '../Section'
 import { ServicesSubmenu } from '../ServicesSubmenu'
 import { Submenu } from '../Submenu'
@@ -42,6 +43,7 @@ import {
 const defaultState: IState = {
   services: false,
   resources: false,
+  products: false,
   careers: false,
 }
 
@@ -167,12 +169,19 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
               >
                 <ServicesSubmenu />
               </StyledCollapse>
-              <StyledMenuItem
-                to="/evm-debugger"
-                linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
+              <StyledMenuItemIcon
+                onClick={() => displayHandler && displayHandler('products')}
+                open={display?.products}
               >
                 Products
-              </StyledMenuItem>
+              </StyledMenuItemIcon>
+              <StyledCollapse
+                in={display?.products}
+                timeout={500}
+                unmountOnExit
+              >
+                <ProductsSubmenu />
+              </StyledCollapse>
               <StyledMenuItem
                 to="/case-studies"
                 linkProps={{ sx: { ...theme.mixins.mobilePadding('16px') } }}
@@ -318,7 +327,14 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
                 <MenuItemIcon open={state.servicesHover}>Services</MenuItemIcon>
               </MenuItemWithCollapse>
 
-              <MenuItem to="/evm-debugger">Products</MenuItem>
+              <MenuItemWithCollapse
+                onSubmenuClose={handleOnSubmenuClose}
+                onSubmenuChange={handleCurrentSubChange}
+                state={state}
+                submenu={SUBMENUS.PRODUCTS}
+              >
+                <MenuItemIcon open={state.productsHover}>Products</MenuItemIcon>
+              </MenuItemWithCollapse>
 
               <MenuItem to="/case-studies">Case Studies</MenuItem>
               <MenuItemWithCollapse
@@ -361,6 +377,20 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
             submenu={SUBMENUS.SERVICES}
           >
             <ServicesSubmenu />
+          </SubmenuInsideContainer>
+        </Submenu>
+        <Submenu
+          isOpen={state.productsHover}
+          closeMenu={closeAll}
+          noPadding
+          setUnmounted={handleCollapseUnmounted}
+        >
+          <SubmenuInsideContainer
+            onUnwantedTouch={handleUnwantedTouch}
+            onHoverStateChange={handleHoverStateChange}
+            submenu={SUBMENUS.PRODUCTS}
+          >
+            <ProductsSubmenu />
           </SubmenuInsideContainer>
         </Submenu>
         <Submenu
