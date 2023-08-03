@@ -12,13 +12,13 @@ export const ProductsSubmenu = ({ ...props }: ResourcesSubmenuProps) => {
   const theme = useTheme()
   const productsData = [
     {
-      text: 'ong established fact that a reader will be distracted by the readable content of a page when looking at its layout. T',
+      text: 'EVM Debugger is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis of Ethereum smart contracts.',
       link: `/evm-debugger`,
       img: evmDebuggerScreen,
       headline: 'EVM Debugger',
     },
     {
-      text: 'ong established fact that a reader will be distracted by the readable content of a page when looking at its layout. T',
+      text: 'A decentralized exchange platform for stablecoin tradingHadouken offers a complete set of DeFi protocols for trading, investment, lending and cross-chain bridging, optimized for capital efficiency.',
       link: `https://hadouken.finance/`,
       img: hadoukenScreen,
       headline: 'Hadouken',
