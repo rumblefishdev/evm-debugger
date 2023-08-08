@@ -2,12 +2,12 @@
 /* eslint-disable no-await-in-loop */
 import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { SrcMapResponseStatus } from '@evm-debuger/types'
+import type { TSrcMapInputAddress } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
 import { createResponse } from './wrappers'
-import type { Address } from './helpers'
 import { parseS3File } from './helpers'
 
 AWSLambda.init({
@@ -19,7 +19,7 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'srcmap-api')
 
 export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
-  let addresses: Address[] = []
+  let addresses: TSrcMapInputAddress[] = []
   if (event.body) addresses = JSON.parse(event.body)?.addresses
 
   if (!addresses || addresses.length === 0)

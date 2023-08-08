@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { InvokeCommand, LambdaClient, LogType } from '@aws-sdk/client-lambda'
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
-import type { ChainId } from '@evm-debuger/types'
+import type { TSrcMapInputAddress } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapResponseStatus } from '@evm-debuger/types'
 
 const { BUCKET_NAME, AWS_REGION, ENVIRONMENT } = process.env
@@ -119,10 +119,6 @@ const triggerCompiler = async (data: any) => {
   }
 }
 
-export type Address = {
-  address: string
-  chainId: ChainId
-}
 
 export const getObject = async function (params: GetObjectCommandInput) {
   try {
@@ -136,7 +132,7 @@ export const getObject = async function (params: GetObjectCommandInput) {
 }
 
 export const constructFiles = async (
-  address: Address,
+  address: TSrcMapInputAddress,
   params: PutObjectRequest,
 ) => {
   const scanUrl = `${
@@ -203,7 +199,7 @@ export const constructFiles = async (
   return body
 }
 
-export const parseS3File = async (address: Address) => {
+export const parseS3File = async (address: TSrcMapInputAddress) => {
   const params: PutObjectRequest = {
     Key: `contracts/${address.chainId}/${address.address}/payload.json`,
     Bucket: BUCKET_NAME,
