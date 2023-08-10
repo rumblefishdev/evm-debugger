@@ -1,6 +1,6 @@
 REGION=us-east-1
 ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
-TEMPLATE_FILE=template.yml
+TEMPLATE_FILE=main.yml
 CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 TAGS="Owner=evm-debugger"
 
@@ -11,7 +11,6 @@ build:
 	sam build
 
 # STAGE
-
 deploy-stage: STACK_NAME=evm-scrmap-compiler-stage
 deploy-stage: PARAMETERS_FILE=template-config.stage.json
 deploy-stage: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
