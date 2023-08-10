@@ -80,10 +80,6 @@ export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TSourceCodesMap = Record<string, string>
 export type TContractNamesMap = Record<string, string>
-export type TSrcMapInputAddress = {
-  address: string
-  chainId: ChainId
-}
 
 export type TContractData = {
   abi: TAbi

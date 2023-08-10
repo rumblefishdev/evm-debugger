@@ -119,7 +119,6 @@ const triggerCompiler = async (data: any) => {
   }
 }
 
-
 export const getObject = async function (params: GetObjectCommandInput) {
   try {
     const command = new GetObjectCommand(params)

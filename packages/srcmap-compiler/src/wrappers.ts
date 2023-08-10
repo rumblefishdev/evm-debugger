@@ -1,10 +1,9 @@
-import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { SrcMapResponseStatus } from '@evm-debuger/types'
 
 export const createResponse = (status: string, output = {}) => {
   return {
     statusCode:
-      status === TransactionTraceResponseStatus.SUCCESS ||
-      TransactionTraceResponseStatus.PENDING
+      status === SrcMapResponseStatus.SUCCESS || SrcMapResponseStatus.PENDING
         ? 200
         : 400,
     headers: {

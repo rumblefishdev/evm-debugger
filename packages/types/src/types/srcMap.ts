@@ -1,9 +1,4 @@
-export enum TransactionTraceResponseStatus {
-  PENDING = 'PENDING',
-  RUNNING = 'RUNNING',
-  FAILED = 'FAILED',
-  SUCCESS = 'SUCCESS',
-}
+import type { ChainId } from './chains'
 
 export enum SrcMapResponseStatus {
   PENDING = 'PENDING',
@@ -12,4 +7,9 @@ export enum SrcMapResponseStatus {
   COMPILING = 'COMPILING',
   FAILED = 'FAILED',
   SUCCESS = 'SUCCESS',
+}
+
+export type TSrcMapInputAddress = {
+  address: string
+  chainId: ChainId
 }
