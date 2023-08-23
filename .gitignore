@@ -41,3 +41,5 @@ lerna-debug.log
 transaction-trace-provider.zip
 
 .aws-sam
+
+temporary/

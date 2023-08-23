@@ -9,6 +9,11 @@ TAGS="Owner=evm-debugger"
 VERSION=current
 ARTIFACT_NAME=main.zip
 
+local-rebootstrap:
+	@if [ -z "${CI}" ]; then \
+		$(MAKE) -C ../.. rebootstrap; \
+	fi
+
 build:
 	sam build
 

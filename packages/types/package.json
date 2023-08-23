@@ -5,7 +5,10 @@
   "scripts": {
     "build": "tsc --build",
     "lint:check": "eslint --quiet 'src/**/*.ts'",
-    "lint:fix": "eslint 'src/**/*.ts'"
+    "lint:fix": "eslint 'src/**/*.ts'",
+    "clean": "npm run clean:build && npm run clean:js",
+    "clean:build": "rimraf dist, src/*.tsbuildinfo",
+    "clean:js": "rimraf src/**/*.{js,js.map}"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",

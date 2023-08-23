@@ -48,11 +48,14 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "prestart": "npm run export-env:local && npm run build:dependencies",
     "start": "REACT_APP_IS_PRERENDER=false PUBLIC_URL=/evm-debugger react-scripts start",
     "build": "bash build.sh build",
     "build:production": "bash build.sh build production",
     "build:staging": " bash build.sh build staging",
+    "build:dependencies": "cd ../types; npm run build; cd ../analyzer; npm run build",
     "test": "jest",
+    "export-env:local": "export $(cat .env.local | xargs)",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
@@ -61,7 +64,10 @@
     "postbuild:production": "bash build.sh prerender production",
     "serve-prerender": "bash build.sh serve-prerender",
     "serve-prerender:staging": "bash build.sh serve-prerender staging",
-    "serve-prerender:production": "bash build.sh serve-prerender production"
+    "serve-prerender:production": "bash build.sh serve-prerender production",
+    "clean": "npm run clean:build && npm run clean:js",
+    "clean:build": "rimraf build",
+    "clean:js": "rimraf src/**/*.{js,js.map}"
   },
   "eslintConfig": {
     "extends": [

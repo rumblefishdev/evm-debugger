@@ -105,7 +105,10 @@
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts' --fix",
     "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "test": "npm run compile && npm run unit",
+    "clean": "npm run clean:build && npm run clean:js",
+    "clean:build": "rimraf dist",
+    "clean:js": "rimraf src/**/*.{js,js.map}"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.315.0",

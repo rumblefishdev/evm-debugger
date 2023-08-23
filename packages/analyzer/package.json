@@ -10,7 +10,10 @@
     "lint:check": "eslint --quiet 'src/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' --fix",
     "type-check": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "clean": "npm run clean:build && npm run clean:js",
+    "clean:build": "rimraf dist, src/*.tsbuildinfo",
+    "clean:js": "rimraf src/**/*.{js,js.map}"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
@@ -20,12 +23,10 @@
     "@typechain/hardhat": "^6.1.3",
     "@types/chai": "^4",
     "@types/node-fetch": "^2.6.2",
-    "@types/rimraf": "^3",
     "chai": "^4.3.6",
     "ethers": "^5.7.2",
     "hardhat-gas-reporter": "^1.0.9",
     "nodemon": "^2.0.20",
-    "rimraf": "^3.0.2",
     "solidity-coverage": "^0.8.2"
   },
   "dependencies": {
