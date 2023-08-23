@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := build
+
 REGION=us-east-1
 ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
 TEMPLATE_FILE=main.yml

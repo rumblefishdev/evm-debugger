@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := start
+
 REGION=us-east-1
 STACK_NAME=test-transaction-trace-local
 PARAMETERS_FILE=template-config.local.json
