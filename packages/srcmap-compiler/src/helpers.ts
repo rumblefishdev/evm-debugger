@@ -2,7 +2,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import { SrcMapResponseStatus } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
 
 import type { EntryType, SolcOutput } from './types'
 import { SourceMapElement } from './sourceMapElement'
@@ -142,7 +142,7 @@ export const compileFiles = async (payload: any, solc: any) => {
     const existingResponse = JSON.parse(
       (await resp.Body?.transformToString('utf8')) || '',
     )
-    existingResponse.status = SrcMapResponseStatus.SUCCESS
+    existingResponse.status = SrcMapStatus.SUCCESS
     existingResponse.srcmap = internals
     await s3upload({
       ...params,

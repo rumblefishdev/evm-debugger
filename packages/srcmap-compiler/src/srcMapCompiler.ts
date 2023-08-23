@@ -4,7 +4,7 @@
 /* eslint-disable no-await-in-loop */
 import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { AWSLambda } from '@sentry/serverless'
-import { SrcMapResponseStatus } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
 
 import { version } from '../package.json'
 
@@ -36,15 +36,15 @@ export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
     const solc = await getSolcModule(payload.CompilerVersion.split('+')[0])
     try {
       const response = await compileFiles(payload, solc)
-      return createResponse(SrcMapResponseStatus.SUCCESS, {
+      return createResponse(SrcMapStatus.SUCCESS, {
         response,
       })
     } catch (error) {
       console.log({ error })
-      return createResponse(SrcMapResponseStatus.FAILED, { error })
+      return createResponse(SrcMapStatus.FAILED, { error })
     }
   }
-  return createResponse(SrcMapResponseStatus.FAILED)
+  return createResponse(SrcMapStatus.FAILED)
 }
 
 export const srcmapCompilerEntrypoint = AWSLambda.wrapHandler(

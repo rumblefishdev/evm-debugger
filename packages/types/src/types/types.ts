@@ -2,7 +2,6 @@ import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
 
 import type { IStructLog } from './structLogs'
-import { ChainId } from './chains'
 
 export type TStorage = Record<string, string>
 
