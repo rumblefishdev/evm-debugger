@@ -24,7 +24,7 @@ help:
 bootstrap: #% Project bootstrap
 	npm install --include=dev
 	lerna bootstrap
-	$(MAKE) build_deps
+	@$(MAKE) -s build_deps
 
 .PHONY: clean
 clean: #% Clean project

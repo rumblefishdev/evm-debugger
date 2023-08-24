@@ -12,6 +12,7 @@ Resources:
   SrcMapCompilerFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub ${AWS::StackName}
       CodeUri: ../../srcmap-compiler
       Handler: srcMapCompiler.srcmapCompilerEntrypoint
       Runtime: nodejs18.x
@@ -34,9 +35,9 @@ Resources:
           - iam:PassRole
           Resource:
           - '*'
-        - Action:
+        - Effect: Allow
+          Action:
           - s3:*
-          Effect: Allow
           Resource:
           - Fn::Sub: arn:aws:s3:::${TraceBucketName}/**
     Metadata:
