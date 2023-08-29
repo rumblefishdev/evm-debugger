@@ -17,7 +17,12 @@ export type SolcOutput = Record<
   >
 >
 
-export type EntryType = {
+export type TSourceFile = {
+  path: string
+  content: string
+}
+
+export type TSourceMapEntry = {
   fileName: string
   contractName: string
   opcodes?: string

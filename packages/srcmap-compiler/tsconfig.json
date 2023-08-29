@@ -7,7 +7,11 @@
     "noEmit": true,
     "sourceMap": false,
     "module": "commonjs",
-    "types": ["jest", "node"],
+    "types": [
+      "jest",
+      "node",
+      "types/solc.d.ts",
+    ],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,

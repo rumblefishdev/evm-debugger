@@ -23,11 +23,6 @@ tsconfig.build.tsbuildinfo
 packages/*/dist/
 packages/*/node_modules/
 
-## infra
-packages/infra/**/.aws-sam/
-packages/infra/**/main.zip
-packages/infra/**/main.yml
-
 # others
 lerna-debug.log
 

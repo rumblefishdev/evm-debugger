@@ -74,19 +74,12 @@ export type TEtherscanContractSourceCodeResp = {
   result: TEtherscanContractSourceCodeResult[]
 }
 
-export type TExtractedFile = string | null | undefined
-
 export interface ISrcMapApiPayload {
   status: SrcMapStatus
   chainId: ChainId
   address: string
   message?: string
-  files?: TExtractedFile[]
-  sourceMaps?: TSourceMap[] | null
+  filesPath?: string[]
+  sourceMaps?: TSourceMap[]
   sourceData?: TEtherscanContractSourceCodeResult
-}
-
-export interface ISrcMapCompilerPayload {
-  compilerVersion: string
-  files: TExtractedFile[]
 }

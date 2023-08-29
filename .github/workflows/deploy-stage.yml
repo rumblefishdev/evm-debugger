@@ -162,4 +162,4 @@ jobs:
       - name: Deploy stack
         working-directory: ./packages/infra/compiler
         run: |
-          make deploy-stage-all
+          make stage-deploy-all
