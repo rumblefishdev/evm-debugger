@@ -38,3 +38,4 @@ transaction-trace-provider.zip
 .aws-sam
 
 temporary/
+scripts/.tmp
