@@ -106,32 +106,56 @@ const fetchSourceData = async (
   _url.searchParams.append('apikey', etherscanUrls[addressObj.chainId].key)
   const ethUrl = _url.toString()
 
-  let payload = await payloadSync(payloadS3Params, {
+  const payload = await payloadSync(payloadS3Params, {
     status: SrcMapStatus.SOURCE_DATA_FETCHING_PENDING,
     chainId: addressObj.chainId,
     address: addressObj.address,
   })
 
   const ethResp = await fetch(ethUrl)
-  const ethData: TEtherscanContractSourceCodeResp = await ethResp.json()
-  if (ethData.status === '1' && ethData.message === 'OK') {
-    const ethResult = ethData.result[0]
-    payload = await payloadSync(payloadS3Params, {
-      ...payload,
-      status: SrcMapStatus.SOURCE_DATA_FETCHING_SUCCESS,
-      sourceData: ethResult,
-    })
-  } else {
-    const msg = `/Etherscan/Fetching failed with error\n: ${ethData}`
+  if (ethResp.status !== 200) {
+    const msg = `/Etherscan/Fetching failed with status: ${ethResp.status}`
     console.warn(addressObj.address, msg)
-    payload = await payloadSync(payloadS3Params, {
+    // TODO Add sentry call
+    return payloadSync(payloadS3Params, {
       ...payload,
       status: SrcMapStatus.SOURCE_DATA_FETCHING_FAILED,
       message: msg,
     })
   }
+
+  const ethData: TEtherscanContractSourceCodeResp = await ethResp.json()
+  if (ethData.status !== '1') {
+    const msg = `/Etherscan/Fetching failed\n: ${JSON.stringify(
+      ethData,
+      null,
+      2,
+    )}`
+    console.warn(addressObj.address, msg)
+    // TODO Add sentry call
+    return payloadSync(payloadS3Params, {
+      ...payload,
+      status: SrcMapStatus.SOURCE_DATA_FETCHING_FAILED,
+      message: msg,
+    })
+  }
+
+  if (ethData.result[0].SourceCode === '') {
+    const msg = `/Etherscan/Not verified`
+    console.warn(addressObj.address, msg)
+    return payloadSync(payloadS3Params, {
+      ...payload,
+      status: SrcMapStatus.SOURCE_DATA_FETCHING_NOT_VERIFIED,
+      message: msg,
+    })
+  }
+
   console.log(addressObj.address, '/Etherscan/Done')
-  return payload
+  return payloadSync(payloadS3Params, {
+    ...payload,
+    status: SrcMapStatus.SOURCE_DATA_FETCHING_SUCCESS,
+    sourceData: ethData.result[0],
+  })
 }
 
 const extractFiles = async (
@@ -294,12 +318,12 @@ export const addressesProcessing = async (
   }
 
   let payload = await fetchSourceData(contractAddressObj, payloadS3Params)
-  if (payload.status === SrcMapStatus.SOURCE_DATA_FETCHING_FAILED) {
+  if (payload.status !== SrcMapStatus.SOURCE_DATA_FETCHING_SUCCESS) {
     return payload
   }
 
   payload = await extractFiles(payload, payloadS3Params)
-  if (payload.status === SrcMapStatus.FILES_EXTRACTING_FAILED) {
+  if (payload.status !== SrcMapStatus.FILES_EXTRACTING_SUCCESS) {
     return payload
   }
 
