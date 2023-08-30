@@ -1,15 +1,24 @@
 import type { ChainId } from './chains'
 
 export enum SrcMapStatus {
+  SOURCE_DATA_FETCHING_PENDING = 'SOURCE_DATA_FETCHING_PENDING',
+  SOURCE_DATA_FETCHING_FAILED = 'SOURCE_DATA_FETCHING_FAILED',
+  SOURCE_DATA_FETCHING_SUCCESS = 'SOURCE_DATA_FETCHING_SUCCESS',
+  FILES_EXTRACTING_PENDING = 'FILES_EXTRACTING_PENDING',
+  FILES_EXTRACTING_FAILED = 'FILES_EXTRACTING_FAILED',
+  FILES_EXTRACTING_SUCCESS = 'FILES_EXTRACTING_SUCCESS',
+  COMPILATOR_TRIGGERRING_PENDING = 'COMPILATOR_TRIGERRING_PENDING',
+  COMPILATOR_TRIGGERRING_FAILED = 'COMPILATOR_TRIGERRING_FAILED',
+  COMPILATOR_TRIGGERRING_SUCCESS = 'COMPILATOR_TRIGERRING_SUCCESS',
+  COMPILATION_PENDING = 'COMPILATION_PENDING',
+  COMPILATION_FAILED = 'COMPILATION_FAILED',
+  COMPILATION_SUCCESS = 'COMPILATION_SUCCESS',
+
   PENDING = 'PENDING',
   RUNNING = 'RUNNING',
   BUILDING = 'BUILDING',
   COMPILING = 'COMPILING',
   FAILED = 'FAILED',
-  COMPILATION_FAILED = 'COMPILATION_FAILED',
-  SOURCE_DATA_FETCHING_PENDING = 'SOURCE_DATA_FETCHING_PENDING',
-  SOURCE_DATA_FETCHING_SUCCESS = 'SOURCE_DATA_FETCHING_SUCCESS',
-  SOURCE_DATA_FETCHING_FAILED = 'SOURCE_DATA_FETCHING_FAILED',
   SUCCESS = 'SUCCESS',
 }
 
@@ -38,6 +47,24 @@ export type TEtherscanContractSourceCodeResult = {
   Proxy: string
   Implementation: string
   SwarmSource: string
+}
+
+export type TEtherscanParsedSourceCode = {
+  language: string
+  settings: {
+    evmVersion: string
+    libraries: Record<string, string>
+    metadata: {
+      bytecodeHash: string
+      useLiteralContent: boolean
+    }
+    optimizer: {
+      enabled: boolean
+      runs: number
+    }
+    remappings: string[]
+  }
+  sources: Record<string, { content: string }>
 }
 
 export type TEtherscanContractSourceCodeResp = {

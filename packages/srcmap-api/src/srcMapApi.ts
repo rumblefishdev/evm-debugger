@@ -1,14 +1,14 @@
 /* eslint-disable import/exports-last */
 /* eslint-disable no-await-in-loop */
 import type { APIGatewayProxyEvent } from 'aws-lambda'
-import { SrcMapResponseStatus } from '@evm-debuger/types'
-import type { TSrcMapInputAddress } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
+import type { TSrcMapAddres } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
 import { createResponse } from './wrappers'
-import { parseS3File } from './helpers'
+import { addressesProcessing } from './helpers'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -19,24 +19,28 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'srcmap-api')
 
 export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
-  let addresses: TSrcMapInputAddress[] = []
+  let addresses: TSrcMapAddres[] = []
   if (event.body) addresses = JSON.parse(event.body)?.addresses
 
   if (!addresses || addresses.length === 0)
-    return createResponse(SrcMapResponseStatus.FAILED, 'Invalid params')
+    return createResponse(
+      SrcMapStatus.FAILED,
+      'Invalid params - No addresses provided',
+    )
 
+  console.log('Processing\n', JSON.stringify(addresses, null, 2))
   try {
     const responseContainer = await Promise.all(
-      addresses.map((address) => parseS3File(address)),
+      addresses.map((addressObj) => addressesProcessing(addressObj)),
     )
-    return createResponse(SrcMapResponseStatus.SUCCESS, responseContainer)
+    return createResponse(SrcMapStatus.SUCCESS, responseContainer)
   } catch (error) {
     if (error instanceof Error) {
       captureException(error)
-      return createResponse(SrcMapResponseStatus.FAILED, JSON.stringify(error))
+      return createResponse(SrcMapStatus.FAILED, JSON.stringify(error, null, 2))
     }
   }
-  return createResponse(SrcMapResponseStatus.FAILED)
+  return createResponse(SrcMapStatus.FAILED)
 }
 
 export const srcmapApiEntrypoint = AWSLambda.wrapHandler(srcmapApiHandler)

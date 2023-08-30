@@ -21,7 +21,7 @@ describe('Unit test for api', function () {
       .spyOn(helpers, 'parseS3File')
       .mockImplementation((address) => Promise.resolve({ address }))
     const result: APIGatewayProxyResult = await srcmapApiHandler(testEvent)
-    expect(helpers.parseS3File).toHaveBeenCalledTimes(1)
+    expect(helpers.fetchPayloadFromS3).toHaveBeenCalledTimes(1)
     expect(result.statusCode).toEqual(200)
   })
   it('returns 400 if no address provided', async () => {

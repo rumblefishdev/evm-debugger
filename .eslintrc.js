@@ -137,7 +137,7 @@ module.exports = {
 
         //Rules that suggest alternate ways of doing things
 
-        "curly": ["error", "multi"],
+        "curly": 0,
         "default-case": "error",
         "default-case-last": "error",
         "default-param-last": "error",

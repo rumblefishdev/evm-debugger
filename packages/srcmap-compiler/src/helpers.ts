@@ -2,7 +2,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import { SrcMapStatus } from '@evm-debuger/types'
+import { ISrcMapApiPayload, SrcMapStatus } from '@evm-debuger/types'
 
 import type { EntryType, SolcOutput } from './types'
 import { SourceMapElement } from './sourceMapElement'
@@ -121,8 +121,8 @@ const getInternals = async (
   return allEntries
 }
 
-export const compileFiles = async (payload: any, solc: any) => {
-  const files = await Promise.all(
+export const compileFiles = async (payload: ISrcMapApiPayload, solc: any) => {
+  const filesContent = await Promise.all(
     payload.files.map(async (solFile: string) => {
       const params: PutObjectRequest = {
         Key: solFile,
@@ -132,7 +132,7 @@ export const compileFiles = async (payload: any, solc: any) => {
       return await resp.Body?.transformToString('utf8')
     }),
   )
-  const internals = await getInternals(payload.files, files, solc)
+  const internals = await getInternals(payload.files, filesContent, solc)
   const params: PutObjectRequest = {
     Key: `contracts/${payload.chainId}/${payload.address}/payload.json`,
     Bucket: BUCKET_NAME,

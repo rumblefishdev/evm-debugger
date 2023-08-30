@@ -4,7 +4,7 @@ import {
   PutCommand,
   QueryCommand,
 } from '@aws-sdk/lib-dynamodb'
-import { SrcMapResponseStatus } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
 
 const ddbClient = new DynamoDBClient({
   region: process.env.AWS_REGION,
@@ -39,7 +39,7 @@ export const putStatusToDdb = async (address: string, chainId: string) => {
   const initDetails = {
     'type#time': 'TRANSACTION',
     timestamp: Date.now().toString(),
-    status: SrcMapResponseStatus.PENDING,
+    status: SrcMapStatus.PENDING,
     chainId,
     address,
   }
