@@ -7,11 +7,7 @@
     "noEmit": true,
     "sourceMap": false,
     "module": "commonjs",
-    "types": [
-      "jest",
-      "node",
-      "types/solc.d.ts",
-    ],
+    "types": ["jest", "node"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -19,5 +15,5 @@
     "isolatedModules": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "custom.d.ts", "./.eslintrc.js", "tests/**/*", "types/solc.d.ts"]
+  "include": ["src/**/*", "custom.d.ts", "./.eslintrc.js", "tests/**/*", "types/**/*"]
 }

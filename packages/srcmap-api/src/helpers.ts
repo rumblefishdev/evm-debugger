@@ -19,6 +19,7 @@ import type {
   TEtherscanParsedSourceCode,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
+import fetch from 'node-fetch'
 
 const { BUCKET_NAME, AWS_REGION, ENVIRONMENT } = process.env
 

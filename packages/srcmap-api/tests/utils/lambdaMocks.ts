@@ -1,7 +1,8 @@
+import type { TSrcMapAddres } from '@evm-debuger/types'
 import type { APIGatewayProxyEvent } from 'aws-lambda'
 
 export const createLambdaEvent = (bodyParameters: {
-  addresses: { chainId: string; address: string }[]
+  addresses: TSrcMapAddres[]
 }): APIGatewayProxyEvent => {
   return {
     stageVariables: {},
