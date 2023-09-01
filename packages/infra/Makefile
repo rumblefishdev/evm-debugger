@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := build
+
 REGION=us-east-1
 ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
 TEMPLATE_FILE=main.yml
@@ -6,6 +8,11 @@ TAGS="Owner=evm-debugger"
 
 VERSION=current
 ARTIFACT_NAME=main.zip
+
+local-rebootstrap:
+	@if [ -z "${CI}" ]; then \
+		$(MAKE) -C ../.. rebootstrap; \
+	fi
 
 build:
 	sam build

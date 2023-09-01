@@ -6,7 +6,7 @@ on:
       - created
 
 env:
-  NODE_VERSION: 16.18.0
+  NODE_VERSION: 18.16.0
   ENV: staging
   AWS_EC2_METADATA_DISABLED: true
 
@@ -162,4 +162,4 @@ jobs:
       - name: Deploy stack
         working-directory: ./packages/infra/compiler
         run: |
-          make deploy-stage
+          make stage-deploy-all

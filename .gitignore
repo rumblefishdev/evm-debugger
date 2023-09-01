@@ -18,9 +18,14 @@ node_modules
 dist
 tsconfig.tsbuildinfo
 tsconfig.build.tsbuildinfo
-packages/infra/.aws-sam/
-packages/infra/main.zip
-packages/infra/main.yml
+
+# Packages
+packages/*/dist/
+packages/*/node_modules/
+
+# others
+lerna-debug.log
+
 .idea
 .idea/evm-debuger.iml
 .idea/misc.xml
@@ -31,3 +36,6 @@ packages/infra/main.yml
 transaction-trace-provider.zip
 
 .aws-sam
+
+temporary/
+scripts/.tmp

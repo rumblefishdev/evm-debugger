@@ -1,3 +1,4 @@
 import * as solc from 'solc{{version}}'
 
+export const solcVersion = '{{version}}'
 export default solc

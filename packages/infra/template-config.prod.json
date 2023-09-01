@@ -10,6 +10,6 @@
     "TraceBucketName": "transaction-trace-storage-prod.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
     "AlchemyKey": "PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ",
-    "SentryDsn": "https://8176811a1c53456aa4669573596c0f07@o4505125543477248.ingest.sentry.io/4505130540990464"
+    "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752"
   }
 }

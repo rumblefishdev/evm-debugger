@@ -12,7 +12,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "lib": [
+      "ES2021.String"
+    ]
   },
   "include": ["src/**/*", "custom.d.ts", "./.eslintrc.js", "tests/**/*"]
 }

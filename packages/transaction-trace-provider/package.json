@@ -13,13 +13,18 @@
     "hardhat": "^2.14.0"
   },
   "scripts": {
+    "postinstall": "cd dependencies/nodejs && npm install",
     "build": "esbuild hardhat.config.ts src/* --bundle --external:hardhat --loader:.node=file --sourcemap --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts' --fix",
     "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "test": "npm run compile && npm run unit",
+    "clean": "npm run clean:build && npm run clean:js && npm run clean:dep",
+    "clean:build": "rimraf dist",
+    "clean:js": "rimraf src/**/*.{js,js.map}",
+    "clean:dep": "rimraf dependencies/nodejs/{node_modules,package-lock.json}"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.315.0",

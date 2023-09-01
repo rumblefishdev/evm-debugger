@@ -1,11 +1,10 @@
-import { SrcMapResponseStatus } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
 
 export const createResponse = (status: string, output = {}) => {
   return {
-    statusCode: [
-      SrcMapResponseStatus.SUCCESS,
-      SrcMapResponseStatus.PENDING,
-    ].includes(status as SrcMapResponseStatus)
+    statusCode: [SrcMapStatus.SUCCESS, SrcMapStatus.PENDING].includes(
+      status as SrcMapStatus,
+    )
       ? 200
       : 400,
     headers: {

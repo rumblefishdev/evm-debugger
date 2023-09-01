@@ -1,4 +1,3 @@
-
 const version = process.argv.slice(2).join('')
 const solcVersion = version.replaceAll('-', '.')
 console.log(`Prebuild for solc: ${solcVersion}`)
@@ -10,29 +9,27 @@ const typeFilePath = `${prefix}/types/solc.d.ts`
 
 const filesToDelete = [filePath, typeFilePath]
 
-filesToDelete.forEach(file => {
-    fs.unlink(file, () => {
-        console.log(`Deleted file: ${file}`)
-    })
+filesToDelete.forEach((file) => {
+  fs.unlink(file, () => {
+    console.log(`Deleted file: ${file}`)
+  })
 })
 
 const toReplace = '{{version}}'
 
 const filesToCreate = [`./src/solc.template`, `./types/solc.d.template`]
-filesToCreate.forEach(file => {
-    fs.readFile(file, 'utf8', (error, content) => {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        const fileName = file.replace('template', 'ts').replace('.', prefix)
-        fs.writeFile(fileName, content.replace(toReplace, solcVersion), error => {
-            if (error)
-                console.error(error);
-
-            console.log(`Created file ${fileName} for solc ${solcVersion}`)
-        });
-
+filesToCreate.forEach((file) => {
+  fs.readFile(file, 'utf8', (error, content) => {
+    if (error) {
+      console.error(error)
+      return
+    }
+    const fileName = file.replace('template', 'ts').replace('.', prefix)
+    fs.writeFile(fileName, content.replaceAll(toReplace, solcVersion), (error) => {
+      if (error) {
+        console.error(error)
+      }
+      console.log(`Created file ${fileName} for solc ${solcVersion}`)
     })
+  })
 })
-

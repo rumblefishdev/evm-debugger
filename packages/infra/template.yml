@@ -82,9 +82,14 @@ Resources:
                   - sqs:Get*
                   - sqs:List*
                   - iam:GetRole
+                  - iam:PutRolePolicy
                   - lambda:UpdateFunctionCode
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:CreateFunction
+                  - ssm:GetParameter
+                  - ssm:GetParameters
                 Resource: "*"
                 Condition:
                   StringEquals:

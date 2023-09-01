@@ -2,14 +2,16 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import type { ISrcMapApiPayload } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
 
-import type { EntryType, SolcOutput } from './types'
+import type { TSourceMapEntry, SolcOutput, TSourceFile } from './types'
 import { SourceMapElement } from './sourceMapElement'
 import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
-import { s3download, s3upload } from './s3'
+import { payloadSync, s3download } from './s3'
+import solc from './solc'
 
 const { BUCKET_NAME } = process.env
 
@@ -69,18 +71,16 @@ const gatherSameSourceCodeElements = (
   )
 }
 
-const getInternals = async (
-  fileList: string[],
-  fileConents: string[],
-  solc: any,
-) => {
+const getSourceMap = async (
+  files: TSourceFile[],
+): Promise<TSourceMapEntry[]> => {
   const input = {
-    sources: fileList.reduce((accumulator, current, index) => {
-      const key: string = current.split('contract_files/').pop() || ''
+    sources: files.reduce((accumulator, current, index) => {
+      const key: string = current.path.split('contract_files/').pop() || ''
       return {
         ...accumulator,
         [key]: {
-          content: fileConents[index],
+          content: current.content,
         },
       }
     }, {}),
@@ -97,9 +97,9 @@ const getInternals = async (
     solc.compile(JSON.stringify(input)),
   ) as SolcOutput
 
-  let allEntries: EntryType[] = []
+  let allEntries: TSourceMapEntry[] = []
   for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
-    const newerEntries: EntryType[] = await Promise.all(
+    const newerEntries: TSourceMapEntry[] = await Promise.all(
       Object.entries(fileInternals).map(
         async ([contractName, contractInternals]) => {
           const formattedOpcodes = await formatOpcodes(
@@ -121,35 +121,63 @@ const getInternals = async (
   return allEntries
 }
 
-export const compileFiles = async (payload: any, solc: any) => {
-  const files = await Promise.all(
-    payload.files.map(async (solFile: string) => {
-      const params: PutObjectRequest = {
-        Key: solFile,
-        Bucket: BUCKET_NAME,
-      }
-      const resp = await s3download(params)
-      return await resp.Body?.transformToString('utf8')
-    }),
-  )
-  const internals = await getInternals(payload.files, files, solc)
-  const params: PutObjectRequest = {
-    Key: `contracts/${payload.chainId}/${payload.address}/payload.json`,
-    Bucket: BUCKET_NAME,
-  }
-  try {
-    const resp = await s3download(params)
-    const existingResponse = JSON.parse(
-      (await resp.Body?.transformToString('utf8')) || '',
-    )
-    existingResponse.status = TransactionTraceResponseStatus.SUCCESS
-    existingResponse.srcmap = internals
-    await s3upload({
-      ...params,
-      Body: JSON.stringify(existingResponse),
+export const compileFiles = async (
+  _payload: ISrcMapApiPayload,
+  payloadS3Params: PutObjectRequest,
+): Promise<ISrcMapApiPayload> => {
+  console.log(_payload.address, '/Compilation/Start')
+
+  if (!_payload.filesPath) {
+    const msg = '/Compilation/No files to compile'
+    console.warn(_payload.address, msg)
+    return payloadSync(payloadS3Params, {
+      ..._payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message: msg,
     })
-  } catch (error) {
-    console.log(error)
   }
-  return internals
+
+  const sourceFiles: TSourceFile[] = (
+    await Promise.all(
+      _payload.filesPath.map(async (path: string) => {
+        const params: PutObjectRequest = {
+          Key: path,
+          Bucket: BUCKET_NAME,
+        }
+
+        let content: string
+        try {
+          const resp = await s3download(params)
+          content = (await resp.Body?.transformToString('utf8')) as string
+        } catch (error) {
+          const msg = `/Compilation/No File on S3: ${path}`
+          console.warn(_payload.address, msg)
+          // Todo add sentry request
+          return null
+        }
+        return { path, content }
+      }),
+    )
+  ).filter(Boolean) as TSourceFile[]
+
+  let sourceMaps: TSourceMapEntry[] = []
+  try {
+    sourceMaps = await getSourceMap(sourceFiles)
+  } catch (error) {
+    const msg = `/Compilation/Unknow error while compiling:\n${error}`
+    console.warn(_payload.address, msg)
+    // Todo add sentry request
+    return payloadSync(payloadS3Params, {
+      ..._payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message: msg,
+    })
+  }
+
+  console.log(_payload.address, '/Compilation/Done')
+  return payloadSync(payloadS3Params, {
+    ..._payload,
+    status: SrcMapStatus.COMPILATION_SUCCESS,
+    sourceMaps,
+  })
 }

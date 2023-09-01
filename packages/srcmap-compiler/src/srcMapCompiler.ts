@@ -2,14 +2,16 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable import/exports-last */
 /* eslint-disable no-await-in-loop */
-import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { AWSLambda } from '@sentry/serverless'
-import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import type { ISrcMapApiPayload } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
+import type { PutObjectRequest } from '@aws-sdk/client-s3'
 
 import { version } from '../package.json'
 
-import { createResponse } from './wrappers'
 import { compileFiles } from './helpers'
+import { payloadSync } from './s3'
+import { solcVersion } from './solc'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -18,32 +20,45 @@ AWSLambda.init({
   dsn: process.env.SENTRY_DSN,
 })
 AWSLambda.setTag('lambda_name', 'srcmap-compiler')
+AWSLambda.setTag('solc_version', solcVersion)
 
-function getSolcModule(solcVersion: string) {
+const { BUCKET_NAME } = process.env
+
+export const srcmapCompilerHandler = async (
+  _payload: ISrcMapApiPayload,
+): Promise<ISrcMapApiPayload> => {
+  const payloadS3Params: PutObjectRequest = {
+    Key: `contracts/${_payload.chainId}/${_payload.address}/payload.json`,
+    Bucket: BUCKET_NAME,
+  }
+
+  const payload = await payloadSync(payloadS3Params, {
+    ..._payload,
+    status: SrcMapStatus.COMPILATION_PENDING,
+  })
+
+  if (!payload.sourceData?.CompilerVersion && !payload.filesPath?.length) {
+    const msg = '/Compilation/No sourceData or filesPath in payload'
+    console.warn(payload.address, msg)
+    return payloadSync(payloadS3Params, {
+      ...payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message: msg,
+    })
+  }
+
   try {
-    console.log(`Reqire solc ${solcVersion}`)
-    return require('./solc').default
+    return compileFiles(payload, payloadS3Params)
   } catch (error) {
-    console.log('Cant find solc', error)
-    return null
+    const msg = `/Compilation/Unknow error while compiling:\n${error}`
+    console.warn(payload.address, msg)
+    // Todo add sentry request
+    return payloadSync(payloadS3Params, {
+      ...payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message: msg,
+    })
   }
-}
-
-export const srcmapCompilerHandler = async (event: APIGatewayProxyEvent) => {
-  if (event && Object.keys(event).length > 0) {
-    const payload = event as any
-    const solc = await getSolcModule(payload.CompilerVersion.split('+')[0])
-    try {
-      const response = await compileFiles(payload, solc)
-      return createResponse(TransactionTraceResponseStatus.SUCCESS, {
-        response,
-      })
-    } catch (error) {
-      console.log({ error })
-      return createResponse(TransactionTraceResponseStatus.FAILED, { error })
-    }
-  }
-  return createResponse(TransactionTraceResponseStatus.FAILED)
 }
 
 export const srcmapCompilerEntrypoint = AWSLambda.wrapHandler(

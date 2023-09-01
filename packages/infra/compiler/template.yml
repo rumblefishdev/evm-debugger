@@ -12,7 +12,8 @@ Resources:
   SrcMapCompilerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://artifacts.evm-transaction-trace.rumblefish.com/stage/infrastructure/compiler/current/bc3337b27ceb4134bae83ed5dac4226f
+      FunctionName: !Sub ${AWS::StackName}
+      CodeUri: ../../srcmap-compiler
       Handler: srcMapCompiler.srcmapCompilerEntrypoint
       Runtime: nodejs18.x
       Timeout: 180
@@ -34,9 +35,9 @@ Resources:
           - iam:PassRole
           Resource:
           - '*'
-        - Action:
+        - Effect: Allow
+          Action:
           - s3:*
-          Effect: Allow
           Resource:
           - Fn::Sub: arn:aws:s3:::${TraceBucketName}/**
     Metadata:
