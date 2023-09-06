@@ -3,21 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.29](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.28...@evm-debuger/frontend@0.2.29) (2023-09-06)
+
+**Note:** Version bump only for package @evm-debuger/frontend
+
 ## [0.2.28](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.28-alpha.0...@evm-debuger/frontend@0.2.28) (2023-08-04)
 
 **Note:** Version bump only for package @evm-debuger/frontend
 
-
-
-
-
 ## [0.2.28-alpha.0](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.27...@evm-debuger/frontend@0.2.28-alpha.0) (2023-08-03)
 
 **Note:** Version bump only for package @evm-debuger/frontend
-
-
-
-
 
 ## [0.2.27](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.27-alpha.0...@evm-debuger/frontend@0.2.27) (2023-07-21)
 
