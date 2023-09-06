@@ -143,7 +143,7 @@ const Contact = () => {
           {'Filipa Eisenberga 11/3 \n31-523 Kraków, Poland \nPL6772425725'}
         </Typography>
         <Stack>
-          <Typography variant="caption">P: +48 737 455 594</Typography>
+          <Typography variant="caption">P: +48 601 265 364</Typography>
           <Typography variant="caption">E: hello@rumblefish.dev</Typography>
           <Hidden
             smDown
