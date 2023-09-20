@@ -4,13 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { theme } from '../../theme/default'
 import { Button } from '../../importedComponents/components/Button'
-import { etherscanUrls } from '../../config'
-import { EtherscanSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
+import { ContractSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { ROUTES } from '../../routes'
 import { supportedChains } from '../../helpers/chains'
 import { Section } from '../../importedComponents/components/Section'
+import { srcMapProviderUrl } from '../../config'
 
 import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
@@ -77,7 +77,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(txInfo),
           structLogProvider: new StaticStructLogProvider(structLogs),
-          sourceProvider: new EtherscanSourceFetcher(etherscanUrls[txInfo.chainId].url, etherscanUrls[txInfo.chainId].key),
+          sourceProvider: new ContractSourceFetcher(srcMapProviderUrl, txInfo.chainId),
         }),
       )
   }, [dispatch, error, structLogs, txInfo])

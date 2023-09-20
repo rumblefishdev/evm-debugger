@@ -1,4 +1,4 @@
-import type { IStructLog, TAbi, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbi, TSourceMap, TTransactionInfo } from '@evm-debuger/types'
 
 export interface IStructLogProvider {
   getStructLog: () => Promise<IStructLog[]>
@@ -7,12 +7,17 @@ export interface ITxInfoProvider {
   getTxInfo: () => Promise<TTransactionInfo>
 }
 
-export interface ISourceProvider {
-  getSource: (address: string) => Promise<{
+export type TContractsSources = Record<
+  string,
+  {
     contractName: string
     sourceCode: string
     abi: TAbi
-  } | null>
+    srcMap: TSourceMap[]
+  }
+>
+export interface IContractSourceProvider {
+  getSources: (addresses: Set<string>) => Promise<TContractsSources | null>
 }
 
 export interface IBytecodeProvider {
@@ -22,7 +27,7 @@ export interface IBytecodeProvider {
 export interface IRunAnalyzerPayload {
   structLogProvider: IStructLogProvider
   txInfoProvider: ITxInfoProvider
-  sourceProvider?: ISourceProvider
+  sourceProvider?: IContractSourceProvider
   bytecodeProvider?: IBytecodeProvider
 }
 
