@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '../../../components/Button'
 import { UploadBox } from '../../../components/UploadBox'
-import { etherscanUrls, jsonRpcProvider } from '../../../config'
+import { jsonRpcProvider, srcMapProviderUrl } from '../../../config'
 import { validateSchema } from '../../../helpers/validateSchema'
 import { ROUTES } from '../../../routes'
 import {
-  EtherscanSourceFetcher,
+  ContractSourceFetcher,
   JSONRpcBytecodeFetcher,
   StaticStructLogProvider,
   StaticTxInfoProvider,
@@ -34,7 +34,7 @@ export const Manual = () => {
         analyzerActions.runAnalyzer({
           txInfoProvider: new StaticTxInfoProvider(data.txInfo),
           structLogProvider: new StaticStructLogProvider(data.structLogs.structLogs),
-          sourceProvider: new EtherscanSourceFetcher(etherscanUrls[data.txInfo.chainId].url, etherscanUrls[data.txInfo.chainId].key),
+          sourceProvider: new ContractSourceFetcher(srcMapProviderUrl, data.txInfo.chainId),
           bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[1]),
         }),
       )

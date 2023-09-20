@@ -1,20 +1,20 @@
 /* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
 import { ChainId } from '@evm-debuger/types'
 
-import { chainNames, etherscanUrls, jsonRpcProvider, transactionTraceProviderUrl } from '../config'
+import { chainNames, jsonRpcProvider, transactionTraceProviderUrl, srcMapProviderUrl } from '../config'
 import {
-  EtherscanSourceFetcher,
   JSONRpcBytecodeFetcher,
   JSONRpcTxInfoFetcher,
   TransactionTraceFetcher,
+  ContractSourceFetcher,
 } from '../store/analyzer/analyzer.providers'
-import type { ISourceProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from '../store/analyzer/analyzer.types'
+import type { IContractSourceProvider, IBytecodeProvider, IStructLogProvider, ITxInfoProvider } from '../store/analyzer/analyzer.types'
 
 type SupportedChain = {
   name: string
   txInfoProvider: (hash: string) => ITxInfoProvider
   structLogProvider: (hash: string) => IStructLogProvider
-  sourceProvider?: ISourceProvider
+  sourceProvider?: IContractSourceProvider
   bytecodeProvider?: IBytecodeProvider
 }
 
@@ -30,10 +30,10 @@ export const supportedChains = Object.fromEntries(
   ].map((chainId): [ChainId, SupportedChain] => [
     chainId,
     {
+      name: chainNames[chainId],
       txInfoProvider: (hash: string) => new JSONRpcTxInfoFetcher(hash, jsonRpcProvider[chainId]),
       structLogProvider: (hash: string) => new TransactionTraceFetcher(transactionTraceProviderUrl, hash, chainId),
-      sourceProvider: new EtherscanSourceFetcher(etherscanUrls[chainId].url, etherscanUrls[chainId].key),
-      name: chainNames[chainId],
+      sourceProvider: new ContractSourceFetcher(srcMapProviderUrl, chainId),
       bytecodeProvider: new JSONRpcBytecodeFetcher(jsonRpcProvider[chainId]),
     },
   ]),
