@@ -1,4 +1,5 @@
 import type { ChainId } from './chains'
+import type { TAbi } from './types'
 
 export enum SrcMapStatus {
   SOURCE_DATA_FETCHING_PENDING = 'SOURCE_DATA_FETCHING_PENDING',
@@ -36,7 +37,7 @@ export type TSourceMap = {
 
 export type TEtherscanContractSourceCodeResult = {
   SourceCode: string
-  ABI: string
+  ABI: TAbi
   ContractName: string
   CompilerVersion: string
   OptimizationUsed: string
@@ -83,4 +84,10 @@ export interface ISrcMapApiPayload {
   filesPath?: string[]
   sourceMaps?: TSourceMap[]
   sourceData?: TEtherscanContractSourceCodeResult
+}
+
+export interface ISrcMapApiResponseBody {
+  status: SrcMapStatus
+  data?: Record<string, ISrcMapApiPayload>
+  error?: string
 }

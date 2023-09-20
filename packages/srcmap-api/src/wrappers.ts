@@ -1,19 +1,19 @@
+import type { ISrcMapApiResponseBody } from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
 
-export const createResponse = (status: string, output = {}) => {
+export const createResponse = (args: ISrcMapApiResponseBody) => {
+  const isError = [SrcMapStatus.FAILED].includes(args.status)
+
+  const body: ISrcMapApiResponseBody = {
+    status: args.status,
+    ...(isError ? { error: args.error } : { data: args.data }),
+  }
+
   return {
-    statusCode: [SrcMapStatus.SUCCESS, SrcMapStatus.PENDING].includes(
-      status as SrcMapStatus,
-    )
-      ? 200
-      : 400,
+    statusCode: isError ? 400 : 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    body: JSON.stringify({
-      data: {
-        ...output,
-      },
-    }),
+    body: JSON.stringify(body),
   }
 }
