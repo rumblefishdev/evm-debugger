@@ -1,8 +1,7 @@
-import { sumReducer } from '../../helpers/helpers'
-import { NestedMap } from '../../helpers/nestedTreeMap'
-import type { TIntrinsicLog, TTreeMapData } from '../../types'
-
-import type { TMainTraceLogsWithId } from './traceLogs.types'
+import { sumReducer } from '../../../helpers/helpers'
+import { NestedMap } from '../../../helpers/nestedTreeMap'
+import type { TMainTraceLogsWithId } from '../../../store/traceLogs/traceLogs.types'
+import type { TIntrinsicLog, TTreeMapData } from '../../../types'
 
 export const lastItemInContext = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]) => {
   const lastItem = state.findIndex((item) => item.index > rootItem.index && item.depth === rootItem.depth)
@@ -47,4 +46,18 @@ export const parseNestedArrayRecursive = (
     const childNestedItems = parseNestedArrayRecursive({ ...item, nestedItems: [] }, state, item.dimensions.height, item.dimensions.width)
     return { ...item, nestedItems: childNestedItems }
   })
+}
+export const generateTraceLogsMap = (traceLogs, { width, height }) => {
+  const dimensions = { y: 0, x: 0, width, height }
+
+  const rootItem = {
+    nestedItems: [],
+    item: traceLogs[0],
+    dimensions,
+  }
+
+  return {
+    ...rootItem,
+    nestedItems: parseNestedArrayRecursive(rootItem, traceLogs, height, width),
+  }
 }

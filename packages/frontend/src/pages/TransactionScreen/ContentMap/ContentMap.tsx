@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../store/storeHooks'
 import type { TTreeMapData } from '../../../types'
 import { tracleLogsSelectors } from '../../../store/traceLogs/tractLogs.selectors'
 
@@ -10,6 +9,7 @@ import { ItemBox } from './blocks/ItemBox'
 import { NestedItemBox } from './blocks/NestedItemBox'
 import type { ContentMapProps } from './ContentMap.types'
 import { StyledCard, StyledWrapper } from './styles'
+import { generateTraceLogsMap } from './ContentMap.utils'
 
 export const ContentMap = ({ ...props }: ContentMapProps) => {
   const [height, setHeight] = useState(0)
@@ -41,7 +41,9 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [rootRef, width, height])
 
-  const traceLog = useTypedSelector((state) => tracleLogsSelectors.selectMappedTraceLogs(state, width, height))
+  const traceLogs = useSelector(tracleLogsSelectors.selectAll)
+
+  const mappedTraceLogs = React.useMemo(() => generateTraceLogsMap(traceLogs, { width, height }), [traceLogs, width, height])
 
   const renderContent = (element: TTreeMapData) => {
     if ('owningLog' in element.item)
@@ -75,7 +77,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
         {...props}
       >
         {/* {width && height ? renderContent(traceLog) : null} */}
-        {renderContent(traceLog)}
+        {renderContent(mappedTraceLogs)}
         {/* <div style={{ width: '100%', height, background: 'blue' }}></div> */}
       </StyledCard>
     </StyledWrapper>

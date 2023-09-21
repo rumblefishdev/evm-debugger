@@ -1,17 +1,18 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
-import { selectParsedMemory } from '../../../../../../store/structlogs/structlogs.slice'
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
 import { StoreKeys } from '../../../../../../store/store.keys'
+import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
-  const memory = useTypedSelector(selectParsedMemory)
+  const memory = useSelector(structlogsSelectors.selectParsedMemory)
   const activeStructlog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}

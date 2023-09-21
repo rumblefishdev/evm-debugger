@@ -1,15 +1,15 @@
 import React from 'react'
 import { Stack } from '@mui/material'
+import { useSelector } from 'react-redux'
 
-import { selectStructlogStorage } from '../../../../../../store/structlogs/structlogs.slice'
-import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecord, StyledRecordType, StyledRecordValue, StyledWrapper } from '../styles'
+import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'
 
 export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
-  const storage = useTypedSelector(selectStructlogStorage)
+  const storage = useSelector(structlogsSelectors.selectStructlogStorage)
 
   const keys = Object.keys(storage)
 
