@@ -1,20 +1,12 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 import { persistStore, persistReducer } from 'redux-persist'
 import type { Storage } from 'redux-persist'
 import indexedDbStorage from 'redux-persist-indexeddb-storage'
 
-import { activeBlockReducer } from './activeBlock/activeBlock.slice'
-import { structLogsReducer } from './structlogs/structlogs.slice'
-import { bytecodesReducer } from './bytecodes/bytecodes.slice'
-import { analyzerReducer } from './analyzer/analyzer.slice'
-import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
-import { sighashReducer } from './sighash/sighash.slice'
-import { sourceCodesReducer } from './sourceCodes/sourceCodes.slice'
-import { traceLogsReducer } from './traceLogs/traceLogs.slice'
 import { rootSaga } from './root.saga'
-import { contractNamesReducer } from './contractNames/contractNames'
 import SetTransform from './transformers'
+import { rootReducer } from './root.reducer'
 
 const getKey = (): string => {
   let key = 'manual'
@@ -34,18 +26,6 @@ const persistConfig = {
   key: getKey(),
   blacklist: ['structLogsReducer'],
 }
-
-const rootReducer = combineReducers({
-  traceLogs: traceLogsReducer,
-  structLogs: structLogsReducer,
-  sourceCodes: sourceCodesReducer,
-  sighashes: sighashReducer,
-  rawTxData: rawTxDataReducer,
-  contractNames: contractNamesReducer,
-  bytecodes: bytecodesReducer,
-  analyzer: analyzerReducer,
-  activeBlock: activeBlockReducer,
-})
 
 const sagaMiddleware = createSagaMiddleware()
 

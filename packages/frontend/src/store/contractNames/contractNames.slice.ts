@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import type { TContractNames } from '../../types'
+import { StoreKeys } from '../store.keys'
 
 const contractNamesAdapter = createEntityAdapter<TContractNames>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
@@ -12,7 +13,7 @@ export const contractNamesSlice = createSlice({
     updateContractName: contractNamesAdapter.updateOne,
     addContractNames: contractNamesAdapter.addMany,
   },
-  name: 'contractNames',
+  name: StoreKeys.CONTRACT_NAMES,
   initialState: contractNamesAdapter.getInitialState(),
 })
 

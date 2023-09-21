@@ -5,7 +5,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTypedSelector } from '../../store/storeHooks'
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
 import { StyledDataWrapper, StyledDescription, StyledDialog, StyledHeader, StyledStack, StyledTitle } from '../RawDataDisplayer/styles'
-import { contractNamesSelectors } from '../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../store/contractNames/contractNames.slice'
 
 import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
 

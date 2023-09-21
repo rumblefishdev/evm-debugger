@@ -10,6 +10,7 @@ import { useTypedSelector } from '../../../../store/storeHooks'
 import { selectParsedStructLogs } from '../../../../store/structlogs/structlogs.slice'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
+import { StoreKeys } from '../../../../store/store.keys'
 
 import { StyledCollapse, StyledHeading, StyledInput, StyledInfo } from './styles'
 
@@ -26,7 +27,7 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
   const expensiveOpsListRef = useRef<ViewportListRef>(null)
 
   const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
 
   const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
 

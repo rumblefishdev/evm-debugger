@@ -1,5 +1,5 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TContractDataByAddress, TContractNamesMap, TSourceCodesMap, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbis, TContractNamesMap, TSourceCodesMap, TSourceMap, TSourceMapMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
@@ -12,22 +12,25 @@ import { addSighashes } from '../sighash/sighash.slice'
 import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
 import { loadStructLogs } from '../structlogs/structlogs.slice'
 import { addTraceLogs } from '../traceLogs/traceLogs.slice'
-import { addContractNames } from '../contractNames/contractNames'
+import { addContractNames } from '../contractNames/contractNames.slice'
+import { sourceMapsActions } from '../sourceMaps/sourceMaps.slice'
 
 import { analyzerActions } from './analyzer.slice'
-import type { IContractSourceProvider, IBytecodeProvider } from './analyzer.types'
+import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
 
-function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractDataByAddress = {}) {
+function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractsSources = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
   const abis = yield* select(sighashSelectors.abis)
-  const { additionalAbis, sourceCodes, contractNames } = Object.entries(contractsSources).reduce(
-    (accumulator, [address, { abi, sourceCode, contractName }]) => {
+  const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
+    (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
       accumulator.additionalAbis[address] = abi
       accumulator.sourceCodes[address] = sourceCode
       accumulator.contractNames[address] = contractName
+      accumulator.sourceMaps[address] = srcMap
       return accumulator
     },
     {
+      sourceMaps: {} as TSourceMapMap,
       sourceCodes: {} as TSourceCodesMap,
       contractNames: {} as TContractNamesMap,
       additionalAbis: {} as TAbis,
@@ -37,6 +40,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const analyzer = new TxAnalyzer({
     transactionInfo,
     structLogs,
+    sourceMaps,
     sourceCodes,
     contractNames,
     abis: { ...abis, ...additionalAbis },
@@ -64,6 +68,20 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
+
+  console.log('dupa', contractsSources)
+  console.log('loadActiveBlock addSourceMaps', sourceMaps)
+
+  const sourceMapsPayload = Object.entries(sourceMaps)
+    .reduce((accumulator, [address, sourceMap]) => {
+      accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))
+      return accumulator
+    }, [])
+    .flat()
+
+  console.log('loadActiveBlock sourceMapsPayload', sourceMapsPayload)
+
+  yield* put(sourceMapsActions.setSourceMaps(sourceMapsPayload))
 
   return analyzeSummary
 }

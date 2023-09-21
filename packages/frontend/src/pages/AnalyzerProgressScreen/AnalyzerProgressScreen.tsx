@@ -11,6 +11,7 @@ import { ROUTES } from '../../routes'
 import { supportedChains } from '../../helpers/chains'
 import { Section } from '../../importedComponents/components/Section'
 import { srcMapProviderUrl } from '../../config'
+import { StoreKeys } from '../../store/store.keys'
 
 import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
@@ -25,7 +26,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const { messages, isLoading, error, stages } = useTypedSelector((state) => state.analyzer)
 
   const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
-  const structLogs = useTypedSelector((state) => state.structLogs.structLogs)
+  const structLogs = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].structLogs)
 
   const isStagesFinished = useMemo(() => {
     return stages.every((stage) => stage.isFinished)

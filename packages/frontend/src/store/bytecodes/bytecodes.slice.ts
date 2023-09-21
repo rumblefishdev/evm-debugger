@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import type { TBytecodes } from '../../types'
+import { StoreKeys } from '../store.keys'
 
 export const bytecodesAdapter = createEntityAdapter<TBytecodes>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
@@ -12,7 +13,7 @@ export const bytecodesSlice = createSlice({
     updateBytecode: bytecodesAdapter.updateOne,
     addBytecodes: bytecodesAdapter.addMany,
   },
-  name: 'bytecodes',
+  name: StoreKeys.BYTECODES,
   initialState: bytecodesAdapter.getInitialState(),
 })
 

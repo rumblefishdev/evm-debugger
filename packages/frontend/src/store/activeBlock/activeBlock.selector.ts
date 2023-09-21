@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
-import { contractNamesSelectors } from '../contractNames/contractNames'
+import { contractNamesSelectors } from '../contractNames/contractNames.slice'
 import type { TRootState } from '../store'
 
 import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'

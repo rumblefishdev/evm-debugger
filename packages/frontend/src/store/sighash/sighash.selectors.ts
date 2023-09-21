@@ -1,10 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import type { TRootState } from '../store'
+import { selectReducer } from '../store.utils'
+import { StoreKeys } from '../store.keys'
 
 import { sighashAdapter } from './sighash.slice'
 
-const abis = createSelector([(state: TRootState) => state.sighashes], (state) =>
+const selectSighashState = createSelector([selectReducer(StoreKeys.SIGHASH)], (state) => state)
+
+const abis = createSelector([selectSighashState], (state) =>
   Object.fromEntries(
     sighashAdapter
       .getSelectors()
@@ -15,7 +18,7 @@ const abis = createSelector([(state: TRootState) => state.sighashes], (state) =>
 )
 
 const allAddresses = createSelector(
-  [(state: TRootState) => state.sighashes],
+  [selectSighashState],
   (state) =>
     new Set<string>(
       sighashAdapter

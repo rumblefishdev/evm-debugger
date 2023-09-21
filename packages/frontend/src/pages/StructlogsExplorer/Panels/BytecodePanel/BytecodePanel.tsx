@@ -10,6 +10,7 @@ import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.slice'
 import { isInView } from '../../../../helpers/dom'
+import { StoreKeys } from '../../../../store/store.keys'
 
 import { StyledDisabledBytecode } from './styles'
 import { SourceCodePanel } from './SourceCodePanel'
@@ -24,7 +25,7 @@ export const BytecodePanel = (): JSX.Element => {
   const activeBlock = useTypedSelector((state) => state.activeBlock)
   const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address))?.sourceCode
 
-  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
   const currentAddress = activeBlock.address
   const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectById(state.bytecodes, currentAddress))
 

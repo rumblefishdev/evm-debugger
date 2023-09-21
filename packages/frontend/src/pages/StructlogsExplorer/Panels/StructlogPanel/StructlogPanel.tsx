@@ -13,13 +13,14 @@ import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { isInView } from '../../../../helpers/dom'
+import { StoreKeys } from '../../../../store/store.keys'
 
 import { QuickLinks } from './QuickLinks'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
 
   const [isQuickLinksOpen, setQuickLinksOpen] = React.useState(false)
 

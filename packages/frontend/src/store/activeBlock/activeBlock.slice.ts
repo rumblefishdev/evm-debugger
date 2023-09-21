@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import type { TMainTraceLogsWithId } from '../../types'
 import type { TRootState } from '../store'
+import { StoreKeys } from '../store.keys'
 
 const initialState: null | TMainTraceLogsWithId = null
 
@@ -12,7 +13,7 @@ export const activeBlockSlice = createSlice({
       return action.payload
     },
   },
-  name: 'activeBlock',
+  name: StoreKeys.ACTIVE_BLOCK,
   initialState,
 })
 

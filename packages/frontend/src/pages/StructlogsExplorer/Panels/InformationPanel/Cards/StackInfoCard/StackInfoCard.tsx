@@ -4,6 +4,7 @@ import { useTypedSelector } from '../../../../../../store/storeHooks'
 import { selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledTable, StyledTableCell, StyledTableRow, StyledTableValueCell } from '../styles'
+import { StoreKeys } from '../../../../../../store/store.keys'
 
 export const skipLeadingZeroes = (value: string): string => {
   return `0x${value.replace(/^0+/, '')}`
@@ -11,7 +12,7 @@ export const skipLeadingZeroes = (value: string): string => {
 
 export const StackInfoCard = () => {
   const stack = useTypedSelector(selectParsedStack)
-  const activeStructlog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const activeStructlog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
 
   return (
     <StructlogAcordionPanel

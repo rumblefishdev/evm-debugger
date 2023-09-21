@@ -5,6 +5,7 @@ import type { TMainTraceLogs } from '@evm-debuger/types'
 import type { TMainTraceLogsWithId } from '../../types'
 import { createCallIdentifier } from '../../helpers/helpers'
 import type { TRootState } from '../store'
+import { StoreKeys } from '../store.keys'
 
 const initialState: TMainTraceLogsWithId[] = []
 
@@ -19,7 +20,7 @@ export const traceLogsSlice = createSlice({
       return traceLogsWithId
     },
   },
-  name: 'traceLogs',
+  name: StoreKeys.TRACE_LOGS,
   initialState,
 })
 

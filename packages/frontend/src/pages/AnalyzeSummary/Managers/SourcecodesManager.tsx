@@ -4,7 +4,7 @@ import { sourceCodesSelectors, updateSourceCode } from '../../../store/sourceCod
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { SourceCodeDisplayer } from '../../../components/SourceCodeDisplayer'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames.slice'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 

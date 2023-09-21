@@ -3,7 +3,7 @@ import React from 'react'
 import { bytecodesAdapter, updateBytecode } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames.slice'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 

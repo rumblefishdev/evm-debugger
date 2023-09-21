@@ -4,7 +4,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { sighashAdapter, updateSighash } from '../../../store/sighash/sighash.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames.slice'
+import { StoreKeys } from '../../../store/store.keys'
 
 import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from './styles'
 
@@ -18,7 +19,7 @@ function formatFragment(fragment: JsonFragment) {
 }
 
 export const SighashesManager = () => {
-  const sighashes = useTypedSelector((state) => sighashAdapter.getSelectors().selectAll(state.sighashes))
+  const sighashes = useTypedSelector((state) => sighashAdapter.getSelectors().selectAll(state[StoreKeys.SIGHASH]))
   const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
 
   const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))

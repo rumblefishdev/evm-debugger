@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import type { TSourceCodes } from '../../types'
+import { StoreKeys } from '../store.keys'
 
 const sourceCodesAdapter = createEntityAdapter<TSourceCodes>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
@@ -12,7 +13,7 @@ export const sourceCodesSlice = createSlice({
     updateSourceCode: sourceCodesAdapter.updateOne,
     addSourceCodes: sourceCodesAdapter.addMany,
   },
-  name: 'sourceCodes',
+  name: StoreKeys.SOURCE_CODES,
   initialState: sourceCodesAdapter.getInitialState(),
 })
 

@@ -4,8 +4,6 @@ import type { TTransactionData } from '@evm-debuger/types'
 
 import { prepareAnalyzer } from '../scripts/scriptHelper'
 
-import { TxAnalyzer } from './txAnalyzer'
-
 async function runAnalyzerForTestDataFile(path: string) {
   const testData = await promises.readFile(path, 'utf8')
   const jsonTestData = JSON.parse(testData)
