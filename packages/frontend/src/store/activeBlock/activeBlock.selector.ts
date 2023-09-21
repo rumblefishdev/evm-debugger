@@ -7,9 +7,13 @@ import type { TParsedEventLog } from '../../types'
 import { contractNamesSelectors } from '../contractNames/contractNames.slice'
 import type { TRootState } from '../store'
 import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
+import { StoreKeys } from '../store.keys'
+import { selectReducer } from '../store.utils'
 
 import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
+
+const selectActiveBlockState = createSelector([selectReducer(StoreKeys.ACTIVE_BLOCK)], (state) => state)
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
@@ -117,10 +121,12 @@ export const selectParsedActiveBlock = createSelector(({ activeBlock, contractNa
   return [activeBlock, contractName]
 }, parseActiveBlock)
 
+export const selectActiveBlock = createSelector([selectActiveBlockState], (state) => state)
+
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
   const errorSignature = checkIfOfCallType(block) ? block.errorDescription?.signature : null
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }
 
-export const activeBlockSelectors = { selectParsedActiveBlock }
+export const activeBlockSelectors = { selectParsedActiveBlock, selectActiveBlock }

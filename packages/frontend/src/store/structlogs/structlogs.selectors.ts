@@ -39,29 +39,33 @@ export const selectParsedStructLogs = createSelector(
       }),
 )
 
-export const selectParsedStack = createSelector([selectActiveStructLog], (activeStructlog) =>
-  activeStructlog.stack
-    .map((stackItem, index) => {
+export const selectParsedStack = createSelector(
+  [selectActiveStructLog],
+  (activeStructlog) =>
+    activeStructlog?.stack
+      .map((stackItem, index) => {
+        const defaultString = '0000'
+        const hexValue = (activeStructlog.stack.length - 1 - index).toString()
+        const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+
+        return { value: stackItem, index: paddedHexValue }
+      })
+      .reverse() ?? [],
+)
+
+export const selectParsedMemory = createSelector(
+  [selectActiveStructLog],
+  (activeStructlog) =>
+    activeStructlog?.memory.map((memoryItem, index) => {
       const defaultString = '0000'
-      const hexValue = (activeStructlog.stack.length - 1 - index).toString()
+      const hexValue = (index * 32).toString(16)
       const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+      const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
 
-      return { value: stackItem, index: paddedHexValue }
-    })
-    .reverse(),
+      return { value: splitMemoryItem, index: paddedHexValue }
+    }) ?? [],
 )
-
-export const selectParsedMemory = createSelector([selectActiveStructLog], (activeStructlog) =>
-  activeStructlog?.memory.map((memoryItem, index) => {
-    const defaultString = '0000'
-    const hexValue = (index * 32).toString(16)
-    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
-    const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
-
-    return { value: splitMemoryItem, index: paddedHexValue }
-  }),
-)
-export const selectStructlogStorage = createSelector([selectActiveStructLog], (state) => state.storage ?? {})
+export const selectStructlogStorage = createSelector([selectActiveStructLog], (state) => state?.storage ?? {})
 
 export const structlogsSelectors = {
   selectStructlogStorage,

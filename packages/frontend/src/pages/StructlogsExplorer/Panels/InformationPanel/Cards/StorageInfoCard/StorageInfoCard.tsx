@@ -10,9 +10,7 @@ import type { StorageInfoCardProps } from './StorageInfoCard.types'
 
 export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
   const storage = useSelector(structlogsSelectors.selectStructlogStorage)
-
   const keys = Object.keys(storage)
-
   return (
     <StructlogAcordionPanel
       text="Storage"
