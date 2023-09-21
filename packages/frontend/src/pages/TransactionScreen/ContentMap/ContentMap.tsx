@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useTypedSelector } from '../../../store/storeHooks'
-import { selectMappedTraceLogs } from '../../../store/traceLogs/mappedTraceLog.selector'
 import type { TTreeMapData } from '../../../types'
+import { tracleLogsSelectors } from '../../../store/traceLogs/tractLogs.selectors'
 
 import { IntrinsicItemBox } from './blocks/IntrinsicItemBox'
 import { ItemBox } from './blocks/ItemBox'
@@ -40,7 +41,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [rootRef, width, height])
 
-  const traceLog = useTypedSelector((state) => selectMappedTraceLogs(state, width, height))
+  const traceLog = useTypedSelector((state) => tracleLogsSelectors.selectMappedTraceLogs(state, width, height))
 
   const renderContent = (element: TTreeMapData) => {
     if ('owningLog' in element.item)

@@ -29,4 +29,4 @@ export const selectMappedTraceLogs = createSelector(
   },
 )
 
-export const tracleLogsSelectors = { selectAll }
+export const tracleLogsSelectors = { selectMappedTraceLogs, selectAll }
