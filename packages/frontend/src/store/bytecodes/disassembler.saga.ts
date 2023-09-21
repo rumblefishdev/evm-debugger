@@ -2,7 +2,7 @@ import { actionChannel, take, call, put } from 'typed-redux-saga'
 
 import type { TOpcodeDisassemled } from '../../types'
 
-import { updateBytecode } from './bytecodes.slice'
+import { bytecodesActions, type BytecodesActions } from './bytecodes.slice'
 
 async function initializePyodide() {
   console.log('Initializing python environment')
@@ -31,7 +31,7 @@ async function disassembleBytecode(pyodide, code: string) {
 }
 
 export function* disassembleNewlyAddedBytescodes() {
-  const channel = yield* actionChannel<ReturnType<typeof updateBytecode>>(updateBytecode.type)
+  const channel = yield* actionChannel<BytecodesActions['updateBytecode']>(bytecodesActions.updateBytecode.type)
   let pyodide
   while (true) {
     const action = yield* take(channel)
@@ -43,14 +43,14 @@ export function* disassembleNewlyAddedBytescodes() {
     try {
       const disassembled = yield* call(disassembleBytecode, pyodide, changes.bytecode)
       yield* put(
-        updateBytecode({
+        bytecodesActions.updateBytecode({
           id,
           changes: { error: null, disassembled },
         }),
       )
     } catch (error) {
       yield* put(
-        updateBytecode({
+        bytecodesActions.updateBytecode({
           id,
           changes: { error: error.toString() },
         }),

@@ -4,7 +4,7 @@ import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
-import { addBytecodes, updateBytecode } from '../bytecodes/bytecodes.slice'
+import { bytecodesActions } from '../bytecodes/bytecodes.slice'
 import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
@@ -54,7 +54,6 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].type),
     }),
   )
-  console.log('loadActiveBlock addSighashes contractSighashesInfo')
   yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
 
   yield* put(
@@ -69,17 +68,12 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  console.log('dupa', contractsSources)
-  console.log('loadActiveBlock addSourceMaps', sourceMaps)
-
   const sourceMapsPayload = Object.entries(sourceMaps)
     .reduce((accumulator, [address, sourceMap]) => {
       accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))
       return accumulator
     }, [])
     .flat()
-
-  console.log('loadActiveBlock sourceMapsPayload', sourceMapsPayload)
 
   yield* put(sourceMapsActions.setSourceMaps(sourceMapsPayload))
 
@@ -108,7 +102,7 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
       if (!bytecode) throw new Error(`Bytecode of address ${address} not found!`)
 
       yield* put(analyzerActions.logMessage('Success!'))
-      yield* put(updateBytecode({ id: address, changes: { bytecode } }))
+      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
     } catch (error) {
       yield* put(analyzerActions.logMessage(error.toString()))
     }
@@ -125,7 +119,7 @@ export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.ru
   const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
   yield* put(setContractAddresses(analyzeSummary.contractAddresses))
   yield* put(
-    addBytecodes(
+    bytecodesActions.addBytecodes(
       analyzeSummary.contractAddresses.map((address) => ({
         error: null,
         disassembled: null,
@@ -163,7 +157,7 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
 
     yield* put(setContractAddresses(analyzeSummary.contractAddresses))
     yield* put(
-      addBytecodes(
+      bytecodesActions.addBytecodes(
         analyzeSummary.contractAddresses.map((address) => ({
           error: null,
           disassembled: null,
