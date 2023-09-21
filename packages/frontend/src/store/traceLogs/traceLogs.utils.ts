@@ -1,18 +1,15 @@
-import { createSelector } from '@reduxjs/toolkit'
-
-import type { TMainTraceLogsWithId, TIntrinsicLog, TTreeMapData } from '../../types'
 import { sumReducer } from '../../helpers/helpers'
 import { NestedMap } from '../../helpers/nestedTreeMap'
-import type { TRootState } from '../store'
+import type { TIntrinsicLog, TTreeMapData } from '../../types'
 
-import { selectAllTraceLogs } from './traceLogs.slice'
+import type { TMainTraceLogsWithId } from './traceLogs.types'
 
-const lastItemInContext = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]) => {
+export const lastItemInContext = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]) => {
   const lastItem = state.findIndex((item) => item.index > rootItem.index && item.depth === rootItem.depth)
   return lastItem === -1 ? state.length : lastItem
 }
 
-const getNestedItems = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]): TMainTraceLogsWithId[] => {
+export const getNestedItems = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWithId[]): TMainTraceLogsWithId[] => {
   return state
     .slice(
       state.findIndex((item) => item.index === rootItem.index),
@@ -21,7 +18,7 @@ const getNestedItems = (rootItem: TMainTraceLogsWithId, state: TMainTraceLogsWit
     .filter((item) => item.depth === rootItem.depth + 1)
 }
 
-const parseNestedArrayRecursive = (
+export const parseNestedArrayRecursive = (
   rootItem: TTreeMapData,
   state: TMainTraceLogsWithId[],
   height: number,
@@ -51,27 +48,3 @@ const parseNestedArrayRecursive = (
     return { ...item, nestedItems: childNestedItems }
   })
 }
-
-const selectTraceAsNestedArrays = (state: TMainTraceLogsWithId[], width: number, height: number): TTreeMapData => {
-  const dimensions = { y: 0, x: 0, width, height }
-
-  const rootItem = {
-    nestedItems: [],
-    item: state[0],
-    dimensions,
-  }
-
-  return {
-    ...rootItem,
-    nestedItems: parseNestedArrayRecursive(rootItem, state, height, width),
-  }
-}
-
-export const selectMappedTraceLogs = createSelector(
-  [
-    (state: TRootState) => selectAllTraceLogs(state),
-    (state: TRootState, width: number) => width,
-    (state: TRootState, width: number, height: number) => height,
-  ],
-  selectTraceAsNestedArrays,
-)

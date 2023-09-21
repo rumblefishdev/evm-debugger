@@ -3,20 +3,22 @@ import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 import { checkIfOfCallType } from '@evm-debuger/analyzer'
 import { Tooltip } from '@mui/material'
+import { useSelector } from 'react-redux'
 
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
 import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
-import type { TMainTraceLogsWithId } from '../../types'
 import { getSignature } from '../../helpers/helpers'
 import { getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
+import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
+import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
 export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const activeBlock = useTypedSelector((state) => state.activeBlock)
-  const traceLogs = useTypedSelector((state) => state.traceLogs)
+  const traceLogs = useSelector(tracleLogsSelectors.selectAll)
   const contractNames = useTypedSelector((state) => state.contractNames.entities)
 
   const ref = React.useRef<HTMLDivElement>(null)

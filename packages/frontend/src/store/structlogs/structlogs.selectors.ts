@@ -11,11 +11,6 @@ const selectAll = createSelector(selectStructlogsState, structlogsAdapter.getSel
 
 const selectActiveStructLog = createSelector(selectStructlogsState, (state) => state.activeStructLog)
 
-// export const selectIsActive = (state: TRootState, index: number): boolean => {
-//   return state[StoreKeys.STRUCT_LOGS].activeStructLog?.index === index
-// }
-export const selectIsActive = createSelector([])
-
 export const selectParsedStructLogs = createSelector(
   (state: TRootState) => state[StoreKeys.STRUCT_LOGS].structLogs,
   (state: TRootState) => selectAllTraceLogs(state),

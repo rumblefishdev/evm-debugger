@@ -2,7 +2,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import type { TIntrinsicLog, TMainTraceLogsWithId, TTreeMapItemWithoutNested } from '../types'
+import type { TMainTraceLogsWithId } from '../store/traceLogs/traceLogs.types'
+import type { TIntrinsicLog, TTreeMapItemWithoutNested } from '../types'
 
 import { sumReducer } from './helpers'
 

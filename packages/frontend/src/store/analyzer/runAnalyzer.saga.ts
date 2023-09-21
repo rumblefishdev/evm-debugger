@@ -1,5 +1,5 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TContractNamesMap, TSourceCodesMap, TSourceMap, TSourceMapMap, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbis, TContractNamesMap, TSourceCodesMap, TSourceMapMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
@@ -10,10 +10,10 @@ import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
 import { addSighashes } from '../sighash/sighash.slice'
 import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
-import { loadStructLogs } from '../structlogs/structlogs.slice'
-import { addTraceLogs } from '../traceLogs/traceLogs.slice'
 import { addContractNames } from '../contractNames/contractNames.slice'
 import { sourceMapsActions } from '../sourceMaps/sourceMaps.slice'
+import { structLogsActions } from '../structlogs/structlogs.slice'
+import { traceLogsActions } from '../traceLogs/traceLogs.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
@@ -47,7 +47,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   })
   const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
-  yield* put(addTraceLogs(mainTraceLogList))
+  yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
     loadActiveBlock({
       ...mainTraceLogList[0],
@@ -156,7 +156,7 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
     const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
     yield* put(analyzerActions.logMessage('Fetching structLogs success!'))
     yield* put(analyzerActions.updateStage('Fetching structlogs'))
-    yield* put(loadStructLogs(structLogs))
+    yield* put(structLogsActions.loadStructLogs(structLogs))
 
     const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
     yield* put(analyzerActions.updateStage('Run analyzer'))

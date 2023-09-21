@@ -3,9 +3,10 @@ import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
-import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
+import type { TParsedEventLog } from '../../types'
 import { contractNamesSelectors } from '../contractNames/contractNames.slice'
 import type { TRootState } from '../store'
+import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
 
 import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'

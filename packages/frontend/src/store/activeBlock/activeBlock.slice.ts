@@ -1,9 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { TMainTraceLogsWithId } from '../../types'
 import type { TRootState } from '../store'
 import { StoreKeys } from '../store.keys'
+import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
 
 const initialState: null | TMainTraceLogsWithId = null
 
