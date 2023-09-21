@@ -7,7 +7,7 @@ import { traceLogsAdapter } from './traceLogs.slice'
 import type { TMainTraceLogsWithId } from './traceLogs.types'
 import { parseNestedArrayRecursive } from './traceLogs.utils'
 
-const selectTraceLogsState = createSelector(selectReducer[StoreKeys.TRACE_LOGS], (state) => state)
+const selectTraceLogsState = createSelector([selectReducer(StoreKeys.TRACE_LOGS)], (state) => state)
 
 const selectAll = createSelector(selectTraceLogsState, traceLogsAdapter.getSelectors().selectAll)
 

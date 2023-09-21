@@ -4,13 +4,12 @@ import ViewportList from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
 import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/helpers'
 import type { TReturnedTraceLog } from '@evm-debuger/types'
+import { useSelector } from 'react-redux'
 
 import { StyledListWrapper } from '../styles'
-import { useTypedSelector } from '../../../../store/storeHooks'
-import { selectParsedStructLogs } from '../../../../store/structlogs/structlogs.slice'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
-import { StoreKeys } from '../../../../store/store.keys'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 
 import { StyledCollapse, StyledHeading, StyledInput, StyledInfo } from './styles'
 
@@ -26,8 +25,8 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
   const externalCallsListRef = useRef<ViewportListRef>(null)
   const expensiveOpsListRef = useRef<ViewportListRef>(null)
 
-  const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
+  const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
 
   const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
 

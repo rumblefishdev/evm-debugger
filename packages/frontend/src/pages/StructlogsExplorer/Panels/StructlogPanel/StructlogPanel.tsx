@@ -1,26 +1,22 @@
 import React, { useEffect } from 'react'
 import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
+import { useSelector } from 'react-redux'
 
-import {
-  loadPreviousStructlog,
-  loadNextStructlog,
-  selectParsedStructLogs,
-  loadActiveStructLog,
-} from '../../../../store/structlogs/structlogs.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
+import { structLogsActions } from '../../../../store/structlogs/structlogs.slice'
+import { useTypedDispatch } from '../../../../store/storeHooks'
 import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { isInView } from '../../../../helpers/dom'
-import { StoreKeys } from '../../../../store/store.keys'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 
 import { QuickLinks } from './QuickLinks'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
-  const structLogs = useTypedSelector(selectParsedStructLogs)
-  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
+  const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
 
   const [isQuickLinksOpen, setQuickLinksOpen] = React.useState(false)
 
@@ -34,11 +30,11 @@ export const StructlogPanel = (): JSX.Element => {
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
       if (event.key === 'ArrowDown' && !event.repeat) {
         event.preventDefault()
-        dispatch(loadNextStructlog(structLogs))
+        dispatch(structLogsActions.loadNextStructlog(structLogs))
       }
       if (event.key === 'ArrowUp' && !event.repeat) {
         event.preventDefault()
-        dispatch(loadPreviousStructlog(structLogs))
+        dispatch(structLogsActions.loadPreviousStructlog(structLogs))
       }
     }
 
@@ -67,7 +63,7 @@ export const StructlogPanel = (): JSX.Element => {
   }, [activeStrucLog, structLogs])
 
   const handleClick = (structLog: IExtendedStructLog) => {
-    dispatch(loadActiveStructLog(structLog))
+    dispatch(structLogsActions.loadActiveStructLog(structLog))
   }
 
   return (

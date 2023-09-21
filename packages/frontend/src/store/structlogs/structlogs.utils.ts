@@ -30,26 +30,3 @@ export const getParsedStructLogs = (
       }
     })
 }
-
-export const getParsedStack = (stack: TExtendedStack) => {
-  return stack
-    .map((stackItem, index) => {
-      const defaultString = '0000'
-      const hexValue = (stack.length - 1 - index).toString()
-      const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
-
-      return { value: stackItem, index: paddedHexValue }
-    })
-    .reverse()
-}
-
-export const getParsedMemory = (memory: string[]) => {
-  return memory.map((memoryItem, index) => {
-    const defaultString = '0000'
-    const hexValue = (index * 32).toString(16)
-    const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
-    const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
-
-    return { value: splitMemoryItem, index: paddedHexValue }
-  })
-}

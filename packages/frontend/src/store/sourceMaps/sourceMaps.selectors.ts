@@ -5,7 +5,7 @@ import { selectReducer } from '../store.utils'
 
 import { sourceMapsAdapter } from './sourceMaps.slice'
 
-const selectSourceMapsState = createSelector(selectReducer[StoreKeys.SOURCE_MAPS], (state) => state)
+const selectSourceMapsState = createSelector([selectReducer(StoreKeys.SOURCE_MAPS)], (state) => state)
 
 const selectAll = createSelector(selectSourceMapsState, sourceMapsAdapter.getSelectors().selectAll)
 

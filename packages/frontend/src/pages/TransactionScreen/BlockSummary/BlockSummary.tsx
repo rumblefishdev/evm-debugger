@@ -1,7 +1,7 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../store/storeHooks'
-import { selectParsedActiveBlock } from '../../../store/activeBlock/activeBlock.selector'
+import { activeBlockSelectors } from '../../../store/activeBlock/activeBlock.selector'
 
 import type { BlockSummaryProps, CallBlockSummaryProps, CreateBlockSummaryProps, DefaultBlockSummaryProps } from './BlockSummary.types'
 import { StyledBlockWrapper, StyledInfoRow, StyledInfoType, StyledStack, StyledInfoValue } from './styles'
@@ -155,7 +155,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
 }
 
 export const BlockSummary: React.FC<BlockSummaryProps> = () => {
-  const currentBlock = useTypedSelector(selectParsedActiveBlock)
+  const currentBlock = useSelector(activeBlockSelectors.selectParsedActiveBlock)
 
   const { callSpecificData, createSpecificData, defaultData } = currentBlock
 

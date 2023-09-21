@@ -33,11 +33,13 @@ const parseActiveBlock = ([block, contractName]: [TMainTraceLogsWithId, string |
     callSpecificData: null,
   }
 
-  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess } = block
+  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess, startIndex, returnIndex } = block
   result.defaultData = {
     value,
     type,
+    startIndex,
     stackTrace: parseStackTrace(stackTrace),
+    returnIndex,
     passedGas,
     isSuccess,
     gasCost,
@@ -120,3 +122,5 @@ export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }
+
+export const activeBlockSelectors = { selectParsedActiveBlock }

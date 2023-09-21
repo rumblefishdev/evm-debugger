@@ -17,6 +17,8 @@ export type TBlockDefaultData = {
   blockNumber: string
   address: string
   isSuccess: boolean
+  startIndex: number
+  returnIndex: number
 }
 export type TBlockCallSpecificData = {
   storageLogs: TStorageLogs

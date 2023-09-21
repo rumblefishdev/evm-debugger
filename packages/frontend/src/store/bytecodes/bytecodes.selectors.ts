@@ -5,7 +5,7 @@ import { selectReducer } from '../store.utils'
 
 import { bytecodesAdapter } from './bytecodes.slice'
 
-const selectBytecodesState = createSelector(selectReducer[StoreKeys.BYTECODES], (state) => state)
+const selectBytecodesState = createSelector([selectReducer(StoreKeys.BYTECODES)], (state) => state)
 
 const selectAll = createSelector(selectBytecodesState, bytecodesAdapter.getSelectors().selectAll)
 
