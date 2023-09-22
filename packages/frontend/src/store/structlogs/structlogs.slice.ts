@@ -9,8 +9,7 @@ import type { ActionsType } from '../store.types'
 import type { TStructlogsSlice } from './structlogs.types'
 
 export const structlogsAdapter = createEntityAdapter<IStructLog>({
-  sortComparer: (a, b) => a.pc - b.pc,
-  selectId: (entity) => entity.pc,
+  selectId: (entity) => `${entity.depth}|${entity.pc}`,
 })
 
 export const initialStructlogsState: TStructlogsSlice = {
