@@ -16,18 +16,23 @@ export const SourcecodesManager = () => {
     dispatch(sourceCodesActions.updateSourceCode({ id, changes: { sourceCode: value } }))
   }
 
-  const data = useSelector(sourceCodesSelectors.selectAll)
+  const sourceCodes = useSelector(sourceCodesSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
+
+  const sourceCodesWithNames = sourceCodes.map((sourceCode) => ({
+    ...sourceCode,
+    name: contractNames.find((item) => item.address === sourceCode.address).contractName || sourceCode.address,
+  }))
 
   return (
     <StyledStack>
       <StyledHeading>Source Codes</StyledHeading>
       <StyledWrapper>
-        {data.map((item) => (
+        {sourceCodesWithNames.map((item) => (
           <ManagerItem
             key={item.address}
             address={item.address}
-            name={contractNames[item.address]?.contractName}
+            name={item.name}
             value={item.sourceCode}
             isFound={item.sourceCode !== null}
             updateItem={addSourcecode}

@@ -22,29 +22,33 @@ function formatFragment(fragment: JsonFragment) {
 
 export const SighashesManager = () => {
   const sighashes = useSelector(sighashSelectors.selectAll)
-  const contractAddresses = useSelector(rawTxDataSelectors.selectContractAddresses)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
+
+  const sighashesWithNames = sighashes.map((sighash) => ({
+    ...sighash,
+    name: contractNames.find((item) => sighash.addresses.has(item.address)).contractName || sighash.sighash,
+  }))
 
   return (
     <StyledStack>
       <StyledHeading>Sighashes</StyledHeading>
       <StyledAbisWrapper>
-        {contractAddresses.map((address) => {
-          const filteredSighashes = sighashes.filter((sighash) => sighash.addresses.has(address))
+        {contractNames.map((contract) => {
+          const filteredSighashes = sighashesWithNames.filter((sighash) => sighash.addresses.has(contract.address))
           return (
-            <StyledSighashesWrapper key={address}>
+            <StyledSighashesWrapper key={contract.address}>
               <Tooltip
-                title={address}
+                title={contract.address}
                 arrow
                 followCursor
               >
-                <StyledAddress>{contractNames[address]?.contractName || address}</StyledAddress>
+                <StyledAddress>{contract.contractName || contract.address}</StyledAddress>
               </Tooltip>
               <StyledWrapper>
                 {filteredSighashes.map((sighash) => (
                   <ManagerItem
                     key={sighash.sighash}
-                    address={address}
+                    address={contract.address}
                     name={sighash.fragment ? formatFragment(sighash.fragment) : sighash.sighash}
                     value={JSON.stringify(sighash.fragment, null, 2)}
                     isFound={sighash.fragment !== null}

@@ -18,14 +18,19 @@ export const BytecodesManager = () => {
   const bytecodes = useSelector(bytecodesSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
 
+  const bytecodesWithNames = bytecodes.map((bytecode) => ({
+    ...bytecode,
+    name: contractNames.find((item) => item.address === bytecode.address).contractName || bytecode.address,
+  }))
+
   return (
     <StyledStack>
       <StyledHeading>Bytecodes</StyledHeading>
       <StyledWrapper>
-        {bytecodes.map((item) => (
+        {bytecodesWithNames.map((item) => (
           <ManagerItem
             key={item.address}
-            name={contractNames[item.address]?.contractName}
+            name={item.name}
             address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}
