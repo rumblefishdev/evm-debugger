@@ -9,4 +9,6 @@ export enum StoreKeys {
   STRUCT_LOGS = 'structlogs',
   TRACE_LOGS = 'traceLogs',
   CONTRACT_NAMES = 'contractNames',
+  ACTIVE_SOURCE_FILE = 'sourceFiles',
+  INSTRUCTIONS = 'instructions',
 }

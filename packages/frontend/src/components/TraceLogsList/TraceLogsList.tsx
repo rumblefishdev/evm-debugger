@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { useTypedDispatch } from '../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
 import { getSignature } from '../../helpers/helpers'
-import { setActiveSourceFile } from '../../store/activeSourceFile/activeSourceFile.slice'
+import { activeSourceFileActions } from '../../store/activeSourceFile/activeSourceFile.slice'
 import { activeBlockSelectors, getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
@@ -29,7 +29,7 @@ export const TraceLogsList = (): JSX.Element => {
   const activate = useCallback(
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
-      dispatch(setActiveSourceFile(0))
+      dispatch(activeSourceFileActions.setActiveSourceFile(0))
     },
     [dispatch],
   )

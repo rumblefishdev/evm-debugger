@@ -21,6 +21,8 @@ import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } fr
 
 function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractsSources = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
+  const bytecodes = yield* select(bytecodesSelectors.selectAll)
+
   const abis = yield* select(sighashSelectors.abis)
   const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
     (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
@@ -41,10 +43,13 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const analyzer = new TxAnalyzer({
     transactionInfo,
     structLogs,
-    sourceMaps: {},
+    sourceMaps,
     sourceCodes,
     contractNames,
-    bytecodeMaps: {},
+    bytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
+      accumulator[bytecode.address] = bytecode.bytecode
+      return accumulator
+    }, {} as Record<string, string>),
     abis: { ...abis, ...additionalAbis },
   })
   const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])

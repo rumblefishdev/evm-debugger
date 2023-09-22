@@ -2,14 +2,18 @@ import { usePreviousProps } from '@mui/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import TreeItem from '@mui/lab/TreeItem'
 import getLineFromPos from 'get-line-from-pos'
+import { useSelector } from 'react-redux'
 
 import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
 import { StyledLoading, StyledSyntaxHighlighter } from '../../../../components/SourceCodeDisplayer/styles'
 import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
-import { contractNamesSelectors } from '../../../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../../../store/contractNames/contractNames.selectors'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.slice'
-import { setActiveSourceFile } from '../../../../store/activeSourceFile/activeSourceFile.slice'
+import { activeSourceFileSelectors } from '../../../../store/activeSourceFile/activeSourceFile.selectors'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
+import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
+import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
@@ -64,18 +68,16 @@ const parseDefaultExpanded = (sourceItems): string[] => {
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const dispatch = useTypedDispatch()
-  const activeSourceFile = useTypedSelector((state) => state.activeSourceFile)
-  const activeStrucLog = useTypedSelector((state) => state.structLogs.activeStructLog)
-
-  const activeBlock = useTypedSelector((state) => state.activeBlock)
+  const activeSourceFile = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const instructions = useTypedSelector((state) => instructionsSelectors.selectById(state.instructions, activeBlock.address))?.instructions
 
-  const contractName =
-    useTypedSelector((state) => contractNamesSelectors.selectById(state.contractNames, activeBlock.address))?.contractName ??
-    activeBlock.address
+  const { contractName } = useTypedSelector((state) => contractNamesSelectors.selectByAddress(state, activeBlock.address))
 
-  let highlightStartLine, highlightEndLine
+  let highlightStartLine
+  let highlightEndLine
   if (activeStrucLog && instructions) {
     // TODO: This code need to be adjusted after sync with backend
     const currentInstruction = instructions[activeStrucLog.pc]
@@ -123,7 +125,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
 
   const clickAction = useCallback(
     (index: number, isFile: boolean) => {
-      if (isFile) dispatch(setActiveSourceFile(index))
+      if (isFile) dispatch(activeSourceFileActions.setActiveSourceFile(index))
     },
     [dispatch],
   )

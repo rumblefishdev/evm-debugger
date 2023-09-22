@@ -1,6 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TInstructionsMap } from '@evm-debuger/types'
 
+import { StoreKeys } from '../store.keys'
+
 const instructionsAdapter = createEntityAdapter<TInstructionsMap>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
   selectId: (entity) => entity.address,
@@ -11,7 +13,7 @@ export const instructionsSlice = createSlice({
     updateInstructions: instructionsAdapter.updateOne,
     addInstructions: instructionsAdapter.addMany,
   },
-  name: 'instructions',
+  name: StoreKeys.INSTRUCTIONS,
   initialState: instructionsAdapter.getInitialState(),
 })
 

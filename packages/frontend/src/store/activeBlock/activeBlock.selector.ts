@@ -4,7 +4,6 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TParsedEventLog } from '../../types'
-import type { TRootState } from '../store'
 import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
