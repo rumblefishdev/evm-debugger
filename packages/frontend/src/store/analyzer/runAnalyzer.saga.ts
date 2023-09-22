@@ -1,5 +1,5 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TContractNamesMap, TSourceCodesMap, TSourceMapMap, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbis, TMappedContractNames, TMappedSourceCodes, TMappedSourceMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
@@ -30,9 +30,9 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       return accumulator
     },
     {
-      sourceMaps: {} as TSourceMapMap,
-      sourceCodes: {} as TSourceCodesMap,
-      contractNames: {} as TContractNamesMap,
+      sourceMaps: {} as TMappedSourceMap,
+      sourceCodes: {} as TMappedSourceCodes,
+      contractNames: {} as TMappedContractNames,
       additionalAbis: {} as TAbis,
     },
   )
