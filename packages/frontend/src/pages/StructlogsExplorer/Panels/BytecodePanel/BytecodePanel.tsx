@@ -2,15 +2,17 @@ import React, { useEffect } from 'react'
 import ViewportList from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
 import { ethers } from 'ethers'
+import { useSelector } from 'react-redux'
 
 import { useTypedSelector } from '../../../../store/storeHooks'
-import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.slice'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel, StyledButton } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
-import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.slice'
 import { isInView } from '../../../../helpers/dom'
-import { StoreKeys } from '../../../../store/store.keys'
+import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
+import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
+import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
 
 import { StyledDisabledBytecode } from './styles'
 import { SourceCodePanel } from './SourceCodePanel'
@@ -22,12 +24,13 @@ export const BytecodePanel = (): JSX.Element => {
   const [isSourceView, setSourceView] = React.useState(false)
   const toggleSourceView = () => setSourceView((prev) => !prev)
 
-  const activeBlock = useTypedSelector((state) => state.activeBlock)
-  const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectById(state.sourceCodes, activeBlock.address))?.sourceCode
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
+  const currentBlockAddress = activeBlock.address
 
-  const activeStrucLog = useTypedSelector((state) => state[StoreKeys.STRUCT_LOGS].activeStructLog)
-  const currentAddress = activeBlock.address
-  const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectById(state.bytecodes, currentAddress))
+  const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectByAddress(state, currentBlockAddress))?.sourceCode
+  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+
+  const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, currentBlockAddress))
 
   useEffect(() => {
     if (!activeBlockBytecode?.disassembled) return

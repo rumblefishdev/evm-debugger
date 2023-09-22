@@ -6,14 +6,14 @@ import { createCallIdentifier } from '../../helpers/helpers'
 import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
 import { bytecodesActions } from '../bytecodes/bytecodes.slice'
 import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
-import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
+import { rawTxDataActions } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
-import { addSighashes } from '../sighash/sighash.slice'
-import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
-import { addContractNames } from '../contractNames/contractNames.slice'
 import { sourceMapsActions } from '../sourceMaps/sourceMaps.slice'
 import { structLogsActions } from '../structlogs/structlogs.slice'
 import { traceLogsActions } from '../traceLogs/traceLogs.slice'
+import { sighashActions } from '../sighash/sighash.slice'
+import { sourceCodesActions } from '../sourceCodes/sourceCodes.slice'
+import { contractNamesActions } from '../contractNames/contractNames.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
@@ -54,16 +54,16 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].type),
     }),
   )
-  yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
+  yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
 
   yield* put(
-    addSourceCodes(
+    sourceCodesActions.addSourceCodes(
       Object.entries(sourceCodes).reduce((accumulator, [address, sourceCode]) => [...accumulator, { sourceCode, address }], []),
     ),
   )
 
   yield* put(
-    addContractNames(
+    contractNamesActions.addContractNames(
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
@@ -117,7 +117,7 @@ export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.ru
   const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
   const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
   const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
-  yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+  yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
   yield* put(
     bytecodesActions.addBytecodes(
       analyzeSummary.contractAddresses.map((address) => ({
@@ -144,7 +144,7 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
     const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
     yield* put(analyzerActions.logMessage('Fetching txInfo success!'))
     yield* put(analyzerActions.updateStage('Fetching transaction info'))
-    yield* put(setTxInfo(transactionInfo))
+    yield* put(rawTxDataActions.setTxInfo(transactionInfo))
 
     yield* put(analyzerActions.logMessage('Fetching structLogs'))
     const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
@@ -155,7 +155,7 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
     const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
     yield* put(analyzerActions.updateStage('Run analyzer'))
 
-    yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+    yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
     yield* put(
       bytecodesActions.addBytecodes(
         analyzeSummary.contractAddresses.map((address) => ({

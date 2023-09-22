@@ -20,6 +20,5 @@ export const bytecodesSlice = createSlice({
 
 export const bytecodesActions = bytecodesSlice.actions
 export const bytecodesReducer = bytecodesSlice.reducer
-export const bytecodesSelectors = bytecodesAdapter.getSelectors()
 
 export type BytecodesActions = ActionsType<typeof bytecodesActions>

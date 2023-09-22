@@ -7,25 +7,15 @@ import { sighashAdapter } from './sighash.slice'
 
 const selectSighashState = createSelector([selectReducer(StoreKeys.SIGHASH)], (state) => state)
 
-const abis = createSelector([selectSighashState], (state) =>
-  Object.fromEntries(
-    sighashAdapter
-      .getSelectors()
-      .selectAll(state)
-      .filter((sighash) => Boolean(sighash.fragment))
-      .map((sighash) => [sighash.sighash, [sighash.fragment]]),
-  ),
+const selectAll = createSelector([selectSighashState], sighashAdapter.getSelectors().selectAll)
+
+const abis = createSelector([selectAll], (sighashes) =>
+  Object.fromEntries(sighashes.filter((sighash) => Boolean(sighash.fragment)).map((sighash) => [sighash.sighash, [sighash.fragment]])),
 )
 
 const allAddresses = createSelector(
-  [selectSighashState],
-  (state) =>
-    new Set<string>(
-      sighashAdapter
-        .getSelectors()
-        .selectAll(state)
-        .flatMap((sighash) => [...sighash.addresses.values()]),
-    ),
+  [selectAll],
+  (sighashes) => new Set<string>(sighashes.flatMap((sighash) => [...sighash.addresses.values()])),
 )
 
-export const sighashSelectors = { allAddresses, abis }
+export const sighashSelectors = { selectAll, allAddresses, abis }

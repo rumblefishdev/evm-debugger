@@ -1,17 +1,19 @@
 import type { JsonFragment } from '@ethersproject/abi'
 import Tooltip from '@mui/material/Tooltip'
+import { useSelector } from 'react-redux'
 
-import { sighashAdapter, updateSighash } from '../../../store/sighash/sighash.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames.slice'
-import { StoreKeys } from '../../../store/store.keys'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames.selectors'
+import { rawTxDataSelectors } from '../../../store/rawTxData/rawTxData.selectors'
+import { sighashSelectors } from '../../../store/sighash/sighash.selectors'
+import { sighashActions } from '../../../store/sighash/sighash.slice'
 
 import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from './styles'
 
 const addSighash = (id: string, value: string) => {
   const dispatch = useTypedDispatch()
-  dispatch(updateSighash({ id, changes: { sighash: value } }))
+  dispatch(sighashActions.updateSighash({ id, changes: { sighash: value } }))
 }
 
 function formatFragment(fragment: JsonFragment) {
@@ -19,10 +21,9 @@ function formatFragment(fragment: JsonFragment) {
 }
 
 export const SighashesManager = () => {
-  const sighashes = useTypedSelector((state) => sighashAdapter.getSelectors().selectAll(state[StoreKeys.SIGHASH]))
-  const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
-
-  const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))
+  const sighashes = useSelector(sighashSelectors.selectAll)
+  const contractAddresses = useSelector(rawTxDataSelectors.selectContractAddresses)
+  const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   return (
     <StyledStack>
