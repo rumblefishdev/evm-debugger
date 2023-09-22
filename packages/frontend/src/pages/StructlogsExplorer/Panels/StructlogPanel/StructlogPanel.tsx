@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback, useState, useRef } from 'react'
 import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 import { useSelector } from 'react-redux'
@@ -18,12 +18,12 @@ export const StructlogPanel = (): JSX.Element => {
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
 
-  const [isQuickLinksOpen, setQuickLinksOpen] = React.useState(false)
+  const [isQuickLinksOpen, setQuickLinksOpen] = useState(false)
 
-  const toggleQuickLinks = React.useCallback(() => setQuickLinksOpen((v) => !v), [])
+  const toggleQuickLinks = useCallback(() => setQuickLinksOpen((v) => !v), [])
 
-  const ref = React.useRef<HTMLDivElement>(null)
-  const listRef = React.useRef<ViewportListRef>(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const listRef = useRef<ViewportListRef>(null)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -62,7 +62,7 @@ export const StructlogPanel = (): JSX.Element => {
     }
   }, [activeStrucLog, structLogs])
 
-  const handleClick = React.useCallback(
+  const handleClick = useCallback(
     (structLog: IExtendedStructLog) => {
       dispatch(structLogsActions.loadActiveStructLog(structLog))
     },
