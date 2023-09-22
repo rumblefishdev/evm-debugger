@@ -21,13 +21,8 @@ function formatFragment(fragment: JsonFragment) {
 }
 
 export const SighashesManager = () => {
-  const sighashes = useSelector(sighashSelectors.selectAll)
+  const sighashesWithNames = useSelector(sighashSelectors.selectAllWithContractNames)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
-
-  const sighashesWithNames = sighashes.map((sighash) => ({
-    ...sighash,
-    name: contractNames.find((item) => sighash.addresses.has(item.address)).contractName || sighash.sighash,
-  }))
 
   return (
     <StyledStack>

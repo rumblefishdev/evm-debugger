@@ -5,7 +5,6 @@ import { bytecodesActions } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { bytecodesSelectors } from '../../../store/bytecodes/bytecodes.selectors'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames.selectors'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
@@ -15,13 +14,7 @@ export const BytecodesManager = () => {
     dispatch(bytecodesActions.updateBytecode({ id, changes: { bytecode: value } }))
   }
 
-  const bytecodes = useSelector(bytecodesSelectors.selectAll)
-  const contractNames = useSelector(contractNamesSelectors.selectAll)
-
-  const bytecodesWithNames = bytecodes.map((bytecode) => ({
-    ...bytecode,
-    name: contractNames.find((item) => item.address === bytecode.address).contractName || bytecode.address,
-  }))
+  const bytecodesWithNames = useSelector(bytecodesSelectors.selectAllWithContractNames)
 
   return (
     <StyledStack>
@@ -30,7 +23,7 @@ export const BytecodesManager = () => {
         {bytecodesWithNames.map((item) => (
           <ManagerItem
             key={item.address}
-            name={item.name}
+            name={item.contractName}
             address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}

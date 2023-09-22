@@ -62,9 +62,12 @@ export const StructlogPanel = (): JSX.Element => {
     }
   }, [activeStrucLog, structLogs])
 
-  const handleClick = (structLog: IExtendedStructLog) => {
-    dispatch(structLogsActions.loadActiveStructLog(structLog))
-  }
+  const handleClick = React.useCallback(
+    (structLog: IExtendedStructLog) => {
+      dispatch(structLogsActions.loadActiveStructLog(structLog))
+    },
+    [dispatch],
+  )
 
   return (
     <StyledSmallPanel>
