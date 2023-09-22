@@ -29,7 +29,7 @@ export const structLogsSlice = createSlice({
         if (index !== -1) state.activeStructLog.stack[count - index].isSelected = !activeStructlog.stack[count - index].isSelected
       }
     },
-    loadStructLogs: structlogsAdapter.setAll,
+    loadStructLogs: structlogsAdapter.addMany,
     loadPreviousStructlog: (state, action: PayloadAction<IExtendedStructLog[]>) => {
       if (state.activeStructLog.index > 0) state.activeStructLog = action.payload[state.activeStructLog.index - 1]
     },

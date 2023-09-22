@@ -7,11 +7,11 @@ import { useSelector } from 'react-redux'
 
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
-import { loadActiveBlock } from '../../store/activeBlock/activeBlock.slice'
 import { getSignature } from '../../helpers/helpers'
 import { getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
+import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
@@ -24,7 +24,7 @@ export const TraceLogsList = (): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
-  const activate = useCallback((traceLog: TMainTraceLogsWithId) => dispatch(loadActiveBlock(traceLog)), [dispatch])
+  const activate = useCallback((traceLog: TMainTraceLogsWithId) => dispatch(activeBlockActions.loadActiveBlock(traceLog)), [dispatch])
   const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
     let signature = ''
     if (traceLog.type === 'CALL' && traceLog.input === '0x' && traceLog.isContract !== null)

@@ -3,7 +3,6 @@ import type { IStructLog, TAbis, TContractNamesMap, TSourceCodesMap, TSourceMapM
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
-import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
 import { bytecodesActions } from '../bytecodes/bytecodes.slice'
 import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { rawTxDataActions } from '../rawTxData/rawTxData.slice'
@@ -14,6 +13,7 @@ import { traceLogsActions } from '../traceLogs/traceLogs.slice'
 import { sighashActions } from '../sighash/sighash.slice'
 import { sourceCodesActions } from '../sourceCodes/sourceCodes.slice'
 import { contractNamesActions } from '../contractNames/contractNames.slice'
+import { activeBlockActions } from '../activeBlock/activeBlock.slice'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
@@ -49,7 +49,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
-    loadActiveBlock({
+    activeBlockActions.loadActiveBlock({
       ...mainTraceLogList[0],
       id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].type),
     }),

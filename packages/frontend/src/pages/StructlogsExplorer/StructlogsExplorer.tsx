@@ -9,13 +9,13 @@ import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper, NotAContractHero } from './styles'
 
 export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
-  const { isContract } = useSelector(activeBlockSelectors.selectActiveBlock)
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   return (
     <>
       <StyledContentWrapper {...props}>
         <TraceLogsList />
-        {isContract ? (
+        {activeBlock.isContract ? (
           <>
             <StructlogPanel />
             <BytecodePanel />

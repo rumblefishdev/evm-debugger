@@ -1,9 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { TRootState } from '../store'
 import { StoreKeys } from '../store.keys'
 import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
+import type { ActionsType } from '../store.types'
 
 const initialState: null | TMainTraceLogsWithId = null
 
@@ -18,7 +18,6 @@ export const activeBlockSlice = createSlice({
 })
 
 export const activeBlockReducer = activeBlockSlice.reducer
+export const activeBlockActions = activeBlockSlice.actions
 
-export const selectActiveBlock = (state: TRootState) => state.activeBlock
-
-export const { loadActiveBlock } = activeBlockSlice.actions
+export type ActiveBlockActions = ActionsType<typeof activeBlockActions>
