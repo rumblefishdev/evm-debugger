@@ -97,7 +97,6 @@ export type TTransactionData = {
   abis: TAbis
   sourceCodes: TSourceCodesMap
   contractNames: TContractNamesMap
-  sourceMaps: TSourceMapMap
 }
 
 export type TSighashStatus = {

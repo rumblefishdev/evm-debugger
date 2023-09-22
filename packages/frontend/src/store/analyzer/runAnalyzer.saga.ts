@@ -40,7 +40,6 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const analyzer = new TxAnalyzer({
     transactionInfo,
     structLogs,
-    sourceMaps,
     sourceCodes,
     contractNames,
     abis: { ...abis, ...additionalAbis },
