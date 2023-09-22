@@ -5,21 +5,22 @@ import { checkIfOfCallType } from '@evm-debuger/analyzer'
 import { Tooltip } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
+import { useTypedDispatch } from '../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
 import { getSignature } from '../../helpers/helpers'
-import { getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
+import { activeBlockSelectors, getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
+import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
 export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
-  const activeBlock = useTypedSelector((state) => state.activeBlock)
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(tracleLogsSelectors.selectAll)
-  const contractNames = useTypedSelector((state) => state.contractNames.entities)
+  const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
@@ -30,7 +31,7 @@ export const TraceLogsList = (): JSX.Element => {
     if (traceLog.type === 'CALL' && traceLog.input === '0x' && traceLog.isContract !== null)
       signature = `Send ${traceLog.value} ETH to ${traceLog.isContract ? 'SC' : 'EOA'}`
     else {
-      const contractName = contractNames[traceLog.address]?.contractName
+      const contractName = contractNames.find((item) => item.address === traceLog.address)?.contractName || traceLog.address
       signature = traceLog.input.slice(0, 10)
       if (checkIfOfCallType(traceLog) && traceLog.isContract) {
         const { functionFragment } = traceLog
