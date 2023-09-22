@@ -1,30 +1,29 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { bytecodesAdapter, updateBytecode } from '../../../store/bytecodes/bytecodes.slice'
-import { useTypedSelector, useTypedDispatch } from '../../../store/storeHooks'
+import { bytecodesActions } from '../../../store/bytecodes/bytecodes.slice'
+import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { bytecodesSelectors } from '../../../store/bytecodes/bytecodes.selectors'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const BytecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addBytecode = (id: string, value: string) => {
-    dispatch(updateBytecode({ id, changes: { bytecode: value } }))
+    dispatch(bytecodesActions.updateBytecode({ id, changes: { bytecode: value } }))
   }
 
-  const data = useTypedSelector((state) => bytecodesAdapter.getSelectors().selectAll(state.bytecodes))
-
-  const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))
+  const bytecodesWithNames = useSelector(bytecodesSelectors.selectAllWithContractNames)
 
   return (
     <StyledStack>
       <StyledHeading>Bytecodes</StyledHeading>
       <StyledWrapper>
-        {data.map((item) => (
+        {bytecodesWithNames.map((item) => (
           <ManagerItem
             key={item.address}
-            name={contractNames[item.address]?.contractName}
+            name={item.contractName}
             address={item.address}
             value={item.bytecode}
             isFound={item.bytecode !== null}

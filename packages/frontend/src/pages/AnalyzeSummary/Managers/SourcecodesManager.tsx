@@ -1,32 +1,31 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { sourceCodesSelectors, updateSourceCode } from '../../../store/sourceCodes/sourceCodes.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { SourceCodeDisplayer } from '../../../components/SourceCodeDisplayer'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { sourceCodesSelectors } from '../../../store/sourceCodes/sourceCodes.selectors'
+import { sourceCodesActions } from '../../../store/sourceCodes/sourceCodes.slice'
 
 import { StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const SourcecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addSourcecode = (id: string, value: string) => {
-    dispatch(updateSourceCode({ id, changes: { sourceCode: value } }))
+    dispatch(sourceCodesActions.updateSourceCode({ id, changes: { sourceCode: value } }))
   }
 
-  const data = useTypedSelector((state) => sourceCodesSelectors.selectAll(state.sourceCodes))
-
-  const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))
+  const sourceCodesWithNames = useSelector(sourceCodesSelectors.selectAllWithContractNames)
 
   return (
     <StyledStack>
       <StyledHeading>Source Codes</StyledHeading>
       <StyledWrapper>
-        {data.map((item) => (
+        {sourceCodesWithNames.map((item) => (
           <ManagerItem
             key={item.address}
             address={item.address}
-            name={contractNames[item.address]?.contractName}
+            name={item.contractName}
             value={item.sourceCode}
             isFound={item.sourceCode !== null}
             updateItem={addSourcecode}

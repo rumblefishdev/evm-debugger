@@ -1,17 +1,17 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../../../../store/storeHooks'
-import { selectParsedStack } from '../../../../../../store/structlogs/structlogs.slice'
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledTable, StyledTableCell, StyledTableRow, StyledTableValueCell } from '../styles'
+import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
 
 export const skipLeadingZeroes = (value: string): string => {
   return `0x${value.replace(/^0+/, '')}`
 }
 
 export const StackInfoCard = () => {
-  const stack = useTypedSelector(selectParsedStack)
-  const activeStructlog = useTypedSelector((state) => state.structLogs.activeStructLog)
+  const stack = useSelector(structlogsSelectors.selectParsedStack)
+  const activeStructlog = useSelector(structlogsSelectors.selectActiveStructLog)
 
   return (
     <StructlogAcordionPanel

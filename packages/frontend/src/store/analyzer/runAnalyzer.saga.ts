@@ -1,35 +1,38 @@
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TContractDataByAddress, TContractNamesMap, TSourceCodesMap, TTransactionInfo } from '@evm-debuger/types'
+import type { IStructLog, TAbis, TMappedContractNames, TMappedSourceCodes, TMappedSourceMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
-import { loadActiveBlock } from '../activeBlock/activeBlock.slice'
-import { addBytecodes, updateBytecode } from '../bytecodes/bytecodes.slice'
+import { bytecodesActions } from '../bytecodes/bytecodes.slice'
 import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
-import { setContractAddresses, setTxInfo } from '../rawTxData/rawTxData.slice'
+import { rawTxDataActions } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
-import { addSighashes } from '../sighash/sighash.slice'
-import { addSourceCodes } from '../sourceCodes/sourceCodes.slice'
-import { loadStructLogs } from '../structlogs/structlogs.slice'
-import { addTraceLogs } from '../traceLogs/traceLogs.slice'
-import { addContractNames } from '../contractNames/contractNames'
+import { sourceMapsActions } from '../sourceMaps/sourceMaps.slice'
+import { structLogsActions } from '../structlogs/structlogs.slice'
+import { traceLogsActions } from '../traceLogs/traceLogs.slice'
+import { sighashActions } from '../sighash/sighash.slice'
+import { sourceCodesActions } from '../sourceCodes/sourceCodes.slice'
+import { contractNamesActions } from '../contractNames/contractNames.slice'
+import { activeBlockActions } from '../activeBlock/activeBlock.slice'
 
 import { analyzerActions } from './analyzer.slice'
-import type { IContractSourceProvider, IBytecodeProvider } from './analyzer.types'
+import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
 
-function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractDataByAddress = {}) {
+function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractsSources = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
   const abis = yield* select(sighashSelectors.abis)
-  const { additionalAbis, sourceCodes, contractNames } = Object.entries(contractsSources).reduce(
-    (accumulator, [address, { abi, sourceCode, contractName }]) => {
+  const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
+    (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
       accumulator.additionalAbis[address] = abi
       accumulator.sourceCodes[address] = sourceCode
       accumulator.contractNames[address] = contractName
+      accumulator.sourceMaps[address] = srcMap
       return accumulator
     },
     {
-      sourceCodes: {} as TSourceCodesMap,
-      contractNames: {} as TContractNamesMap,
+      sourceMaps: {} as TMappedSourceMap,
+      sourceCodes: {} as TMappedSourceCodes,
+      contractNames: {} as TMappedContractNames,
       additionalAbis: {} as TAbis,
     },
   )
@@ -43,27 +46,35 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   })
   const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
-  yield* put(addTraceLogs(mainTraceLogList))
+  yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
-    loadActiveBlock({
+    activeBlockActions.loadActiveBlock({
       ...mainTraceLogList[0],
       id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].type),
     }),
   )
-  console.log('loadActiveBlock addSighashes contractSighashesInfo')
-  yield* put(addSighashes(analyzeSummary.contractSighashesInfo))
+  yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
 
   yield* put(
-    addSourceCodes(
+    sourceCodesActions.addSourceCodes(
       Object.entries(sourceCodes).reduce((accumulator, [address, sourceCode]) => [...accumulator, { sourceCode, address }], []),
     ),
   )
 
   yield* put(
-    addContractNames(
+    contractNamesActions.addContractNames(
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
+
+  const sourceMapsPayload = Object.entries(sourceMaps)
+    .reduce((accumulator, [address, sourceMap]) => {
+      accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))
+      return accumulator
+    }, [])
+    .flat()
+
+  yield* put(sourceMapsActions.setSourceMaps(sourceMapsPayload))
 
   return analyzeSummary
 }
@@ -90,7 +101,7 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
       if (!bytecode) throw new Error(`Bytecode of address ${address} not found!`)
 
       yield* put(analyzerActions.logMessage('Success!'))
-      yield* put(updateBytecode({ id: address, changes: { bytecode } }))
+      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
     } catch (error) {
       yield* put(analyzerActions.logMessage(error.toString()))
     }
@@ -105,9 +116,9 @@ export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.ru
   const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
   const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
   const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
-  yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+  yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
   yield* put(
-    addBytecodes(
+    bytecodesActions.addBytecodes(
       analyzeSummary.contractAddresses.map((address) => ({
         error: null,
         disassembled: null,
@@ -132,20 +143,20 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
     const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
     yield* put(analyzerActions.logMessage('Fetching txInfo success!'))
     yield* put(analyzerActions.updateStage('Fetching transaction info'))
-    yield* put(setTxInfo(transactionInfo))
+    yield* put(rawTxDataActions.setTxInfo(transactionInfo))
 
     yield* put(analyzerActions.logMessage('Fetching structLogs'))
     const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
     yield* put(analyzerActions.logMessage('Fetching structLogs success!'))
     yield* put(analyzerActions.updateStage('Fetching structlogs'))
-    yield* put(loadStructLogs(structLogs))
+    yield* put(structLogsActions.loadStructLogs(structLogs))
 
     const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
     yield* put(analyzerActions.updateStage('Run analyzer'))
 
-    yield* put(setContractAddresses(analyzeSummary.contractAddresses))
+    yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
     yield* put(
-      addBytecodes(
+      bytecodesActions.addBytecodes(
         analyzeSummary.contractAddresses.map((address) => ({
           error: null,
           disassembled: null,
