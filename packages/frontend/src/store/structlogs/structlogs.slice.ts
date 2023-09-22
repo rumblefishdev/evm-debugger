@@ -8,12 +8,8 @@ import type { ActionsType } from '../store.types'
 
 import type { TStructlogsSlice } from './structlogs.types'
 
-export const structlogsAdapter = createEntityAdapter<IStructLog>({
-  selectId: (entity) => `${entity.depth}|${entity.pc}`,
-})
-
 export const initialStructlogsState: TStructlogsSlice = {
-  ...structlogsAdapter.getInitialState(),
+  structLogs: [],
   activeStructLog: null,
 }
 
@@ -28,13 +24,15 @@ export const structLogsSlice = createSlice({
         if (index !== -1) state.activeStructLog.stack[count - index].isSelected = !activeStructlog.stack[count - index].isSelected
       }
     },
-    loadStructLogs: structlogsAdapter.addMany,
+    loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
+      state.structLogs = action.payload
+    },
     loadPreviousStructlog: (state, action: PayloadAction<IExtendedStructLog[]>) => {
       if (state.activeStructLog.index > 0) state.activeStructLog = action.payload[state.activeStructLog.index - 1]
     },
 
     loadNextStructlog: (state, action: PayloadAction<IExtendedStructLog[]>) => {
-      const totalCount = structlogsAdapter.getSelectors().selectTotal(state)
+      const totalCount = state.structLogs.length
       if (state.activeStructLog.index < totalCount - 1) state.activeStructLog = action.payload[state.activeStructLog.index + 1]
     },
     loadActiveStructLog: (state, action: PayloadAction<IExtendedStructLog | null>) => {

@@ -8,11 +8,9 @@ import { tracleLogsSelectors } from '../traceLogs/tractLogs.selectors'
 import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
 
-import { structlogsAdapter } from './structlogs.slice'
-
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
 
-const selectAll = createSelector(selectStructlogsState, structlogsAdapter.getSelectors().selectAll)
+const selectAll = createSelector(selectStructlogsState, (state) => state.structLogs)
 
 const selectActiveStructLog = createSelector(selectStructlogsState, (state) => state.activeStructLog)
 
