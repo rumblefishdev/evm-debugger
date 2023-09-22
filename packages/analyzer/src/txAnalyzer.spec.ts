@@ -1,11 +1,8 @@
 import { promises } from 'node:fs'
 
 import type { TTransactionData } from '@evm-debuger/types'
-import { SourceFile } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import { prepareAnalyzer } from '../scripts/scriptHelper'
-
-import { TxAnalyzer } from './txAnalyzer'
 
 async function runAnalyzerForTestDataFile(tracesPath: string, sourceMaps = {}, sourceCodes = {}, bytecodeMaps = {}) {
   const testData = await promises.readFile(tracesPath, 'utf8')

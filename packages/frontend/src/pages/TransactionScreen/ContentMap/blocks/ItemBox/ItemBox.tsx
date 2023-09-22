@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { loadActiveBlock } from '../../../../../store/activeBlock/activeBlock.slice'
+import { activeBlockActions } from '../../../../../store/activeBlock/activeBlock.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../../../store/storeHooks'
 import { TreemapTooltip } from '../../TreemapTooltip'
 
@@ -37,7 +37,8 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
   const dispatch = useTypedDispatch()
 
   const setActiveBlock = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch(loadActiveBlock(treeMapItem.item))
+    dispatch(activeBlockActions.loadActiveBlock(treeMapItem.item))
+
     event.stopPropagation()
   }
 

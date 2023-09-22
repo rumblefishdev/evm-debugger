@@ -1,6 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAction, createSlice } from '@reduxjs/toolkit'
 
+import { StoreKeys } from '../store.keys'
+
 import type { IRunAnalyzerPayload, TAnalyzeStage, TAnalyzeStageName } from './analyzer.types'
 
 const ANALYZE_STAGES: TAnalyzeStage[] = [
@@ -45,7 +47,7 @@ export const analyzerSlice = createSlice({
       })
     },
   },
-  name: 'analyzer',
+  name: StoreKeys.ANALYZER,
   initialState: { ...new AnalyzerState() },
 })
 

@@ -3,12 +3,17 @@ import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
-import type { TMainTraceLogsWithId, TParsedEventLog } from '../../types'
-import { contractNamesSelectors } from '../contractNames/contractNames'
+import type { TParsedEventLog } from '../../types'
 import type { TRootState } from '../store'
+import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
+import { StoreKeys } from '../store.keys'
+import { selectReducer } from '../store.utils'
+import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
 
 import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
+
+const selectActiveBlockState = createSelector([selectReducer(StoreKeys.ACTIVE_BLOCK)], (state) => state)
 
 const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
@@ -25,18 +30,20 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   })
 }
 
-const parseActiveBlock = ([block, contractName]: [TMainTraceLogsWithId, string | null]) => {
+const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | null) => {
   const result: TParsedActiveBlock = {
     defaultData: null,
     createSpecificData: null,
     callSpecificData: null,
   }
 
-  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess } = block
+  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess, startIndex, returnIndex } = block
   result.defaultData = {
     value,
     type,
+    startIndex,
     stackTrace: parseStackTrace(stackTrace),
+    returnIndex,
     passedGas,
     isSuccess,
     gasCost,
@@ -109,13 +116,21 @@ const parseActiveBlock = ([block, contractName]: [TMainTraceLogsWithId, string |
   return result
 }
 
-export const selectParsedActiveBlock = createSelector(({ activeBlock, contractNames }: TRootState) => {
-  const contractName = contractNamesSelectors.selectById(contractNames, activeBlock.address)?.contractName ?? null
-  return [activeBlock, contractName]
-}, parseActiveBlock)
+export const selectParsedActiveBlock = createSelector(
+  [selectActiveBlockState, contractNamesSelectors.selectAll],
+  (activeBlock, contractNames) => {
+    const contract = contractNames.find((contractName) => contractName.address === activeBlock.address)
+    const contractNameString = contract?.contractName ?? null
+    return parseActiveBlock(activeBlock, contractNameString)
+  },
+)
+
+export const selectActiveBlock = createSelector([selectActiveBlockState], (state) => state)
 
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
   const errorSignature = checkIfOfCallType(block) ? block.errorDescription?.signature : null
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }
+
+export const activeBlockSelectors = { selectParsedActiveBlock, selectActiveBlock }

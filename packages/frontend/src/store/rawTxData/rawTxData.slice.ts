@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { TTransactionInfo } from '@evm-debuger/types'
 
 import type { TRawTxData } from '../../types'
+import { StoreKeys } from '../store.keys'
+import type { ActionsType } from '../store.types'
 
 const initialState = {
   txHash: '',
@@ -21,9 +23,11 @@ export const rawTxDataSlice = createSlice({
       state.contractAddresses = action.payload
     },
   },
-  name: 'rawTxData',
+  name: StoreKeys.RAW_TX_DATA,
   initialState,
 })
 
 export const rawTxDataReducer = rawTxDataSlice.reducer
-export const { setTxInfo, setTxHash, setContractAddresses } = rawTxDataSlice.actions
+export const rawTxDataActions = rawTxDataSlice.actions
+
+export type RawTxDataActions = ActionsType<typeof rawTxDataActions>

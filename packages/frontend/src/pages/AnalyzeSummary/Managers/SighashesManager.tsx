@@ -1,16 +1,19 @@
 import type { JsonFragment } from '@ethersproject/abi'
 import Tooltip from '@mui/material/Tooltip'
+import { useSelector } from 'react-redux'
 
-import { sighashAdapter, updateSighash } from '../../../store/sighash/sighash.slice'
-import { useTypedDispatch, useTypedSelector } from '../../../store/storeHooks'
+import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames'
+import { contractNamesSelectors } from '../../../store/contractNames/contractNames.selectors'
+import { rawTxDataSelectors } from '../../../store/rawTxData/rawTxData.selectors'
+import { sighashSelectors } from '../../../store/sighash/sighash.selectors'
+import { sighashActions } from '../../../store/sighash/sighash.slice'
 
 import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from './styles'
 
 const addSighash = (id: string, value: string) => {
   const dispatch = useTypedDispatch()
-  dispatch(updateSighash({ id, changes: { sighash: value } }))
+  dispatch(sighashActions.updateSighash({ id, changes: { sighash: value } }))
 }
 
 function formatFragment(fragment: JsonFragment) {
@@ -18,31 +21,29 @@ function formatFragment(fragment: JsonFragment) {
 }
 
 export const SighashesManager = () => {
-  const sighashes = useTypedSelector((state) => sighashAdapter.getSelectors().selectAll(state.sighashes))
-  const contractAddresses = useTypedSelector((state) => state.rawTxData.contractAddresses)
-
-  const contractNames = useTypedSelector((state) => contractNamesSelectors.selectEntities(state.contractNames))
+  const sighashesWithNames = useSelector(sighashSelectors.selectAllWithContractNames)
+  const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   return (
     <StyledStack>
       <StyledHeading>Sighashes</StyledHeading>
       <StyledAbisWrapper>
-        {contractAddresses.map((address) => {
-          const filteredSighashes = sighashes.filter((sighash) => sighash.addresses.has(address))
+        {contractNames.map((contract) => {
+          const filteredSighashes = sighashesWithNames.filter((sighash) => sighash.addresses.has(contract.address))
           return (
-            <StyledSighashesWrapper key={address}>
+            <StyledSighashesWrapper key={contract.address}>
               <Tooltip
-                title={address}
+                title={contract.address}
                 arrow
                 followCursor
               >
-                <StyledAddress>{contractNames[address]?.contractName || address}</StyledAddress>
+                <StyledAddress>{contract.contractName || contract.address}</StyledAddress>
               </Tooltip>
               <StyledWrapper>
                 {filteredSighashes.map((sighash) => (
                   <ManagerItem
                     key={sighash.sighash}
-                    address={address}
+                    address={contract.address}
                     name={sighash.fragment ? formatFragment(sighash.fragment) : sighash.sighash}
                     value={JSON.stringify(sighash.fragment, null, 2)}
                     isFound={sighash.fragment !== null}

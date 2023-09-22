@@ -10,7 +10,7 @@
     "composite": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "sourceMap": false
+    "sourceMap": false,
   },
   "include": [
     "src/**/*",

@@ -4,6 +4,7 @@ import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/
 
 import type { IStructLog } from './structLogs'
 import type { ChainId } from './chains'
+import type { TSourceMap } from './srcMap'
 
 export type TStorage = Record<string, string>
 
@@ -79,11 +80,12 @@ export type TEventInfo = {
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
-export type TSourceCodesMap = Record<string, string>
-export type TSourceMapsMap = Record<string, string>
 export type TByteCodeMap = Record<string, string>
-export type TContractNamesMap = Record<string, string>
 export type TInstructionsMap = { address: string; instructions: Record<number, Instruction> }
+
+export type TMappedSourceCodes = Record<string, string>
+export type TMappedSourceMap = Record<string, TSourceMap[]>
+export type TMappedContractNames = Record<string, string>
 
 export type TContractData = {
   abi: TAbi
@@ -97,10 +99,10 @@ export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
   abis: TAbis
-  sourceCodes: TSourceCodesMap
-  contractNames: TContractNamesMap
-  sourceMaps: TSourceMapsMap
+  sourceMaps: TMappedSourceMap
   bytecodeMaps: TByteCodeMap
+  sourceCodes: TMappedSourceCodes
+  contractNames: TMappedContractNames
 }
 
 export type TSighashStatus = {

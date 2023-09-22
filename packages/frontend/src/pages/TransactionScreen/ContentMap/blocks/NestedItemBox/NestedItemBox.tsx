@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react'
 
-import { loadActiveBlock } from '../../../../../store/activeBlock/activeBlock.slice'
 import { useTypedDispatch, useTypedSelector } from '../../../../../store/storeHooks'
 import type { TTreeMapData } from '../../../../../types'
 import { IntrinsicItemBox } from '../IntrinsicItemBox'
 import { ItemBox } from '../ItemBox'
 import { TreemapTooltip } from '../../TreemapTooltip'
+import { activeBlockActions } from '../../../../../store/activeBlock/activeBlock.slice'
 
 import type { NestedItemBoxProps } from './NestedItemBox.types'
 import { StyledBox, StyledNestedItemsBox } from './styles'
@@ -28,7 +28,7 @@ export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => 
 
   const setActiveBlock = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      dispatch(loadActiveBlock(treeMapItem.item))
+      dispatch(activeBlockActions.loadActiveBlock(treeMapItem.item))
       event.stopPropagation()
     },
     [treeMapItem.item, dispatch],

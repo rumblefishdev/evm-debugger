@@ -5,8 +5,8 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTypedSelector } from '../../store/storeHooks'
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
 import { StyledDataWrapper, StyledDescription, StyledDialog, StyledHeader, StyledStack, StyledTitle } from '../RawDataDisplayer/styles'
-import { contractNamesSelectors } from '../../store/contractNames/contractNames'
 import { parseSourceCode } from '../../helpers/sourceCodeParser'
+import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 
 import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
 
@@ -18,9 +18,7 @@ export function useSources(contractName, sourceCode?: string) {
 }
 
 export const SourceCodeDisplayer = ({ data, title, address, description, ...props }: RawDataDisplayerProps) => {
-  const contractName = useTypedSelector(
-    ({ contractNames }) => contractNamesSelectors.selectById(contractNames, address)?.contractName ?? null,
-  )
+  const { contractName } = useTypedSelector((state) => contractNamesSelectors.selectByAddress(state, address))
 
   const inputId = useId()
 
