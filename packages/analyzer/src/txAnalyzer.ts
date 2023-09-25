@@ -3,14 +3,15 @@ import type {
   TEventInfo,
   TInstructionsMap,
   TMainTraceLogs,
+  TMappedInstructions,
   TReturnedTraceLog,
   TTransactionData,
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
 import { decodeInstructions } from 'hardhat/internal/hardhat-network/stack-traces/source-maps'
-import { Instruction, SourceFile, SourceLocation } from 'hardhat/internal/hardhat-network/stack-traces/model'
-import { toBuffer } from '@nomicfoundation/ethereumjs-util'
+import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
+import { SourceFile } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import {
   checkIfOfCallType,
@@ -252,13 +253,7 @@ export class TxAnalyzer {
   }
 
   public getContractsInstructions() {
-    const instructionsMap = {} as TInstructionsMap
-
-    console.log('getContractsInstructions')
-
-    console.log('this.transactionData.sourceCodes', this.transactionData.sourceCodes)
-    console.log('this.transactionData.bytecodeMaps', this.transactionData.bytecodeMaps)
-    console.log('this.transactionData.sourceMaps', this.transactionData.sourceMaps)
+    const instructionsMap = [] as TInstructionsMap[]
 
     Object.keys(this.transactionData.sourceCodes).forEach((address) => {
       if (
@@ -273,21 +268,25 @@ export class TxAnalyzer {
         Object.entries(this.transactionData.sourceCodes[address]).forEach(([contractName, contractSource], fileId) => {
           fileIdToSourceFile.set(fileId, new SourceFile(contractName, contractSource))
         })
-        const instructions = decodeInstructions(
-          bytecode,
-          sourceMaps.flatMap((sourceMap) => sourceMap.rawSourceMap).join(''),
-          fileIdToSourceFile,
-          false,
-        )
 
-        console.log('instructions', instructions)
+        sourceMaps.forEach((sourceMap) => {
+          const instructions = decodeInstructions(bytecode, sourceMap.rawSourceMap, fileIdToSourceFile, false)
 
-        instructionsMap[address] = {}
-        instructions.forEach((instruction) => (instructionsMap[address][instruction.pc] = instruction))
+          const mappedInstructions = instructions.reduce((accumulator, instruction) => {
+            accumulator[instruction.pc] = instruction
+            return accumulator
+          }, {} as Record<number, Instruction>)
+
+          instructionsMap.push({
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            instructions: mappedInstructions,
+            fileName: sourceMap.fileName,
+            address,
+          })
+        })
       }
     })
-
-    console.log('instructionsMap', instructionsMap)
 
     return instructionsMap
   }

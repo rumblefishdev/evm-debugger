@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer'
+
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { IStructLog, TAbis, TMappedContractNames, TMappedSourceCodes, TMappedSourceMap, TTransactionInfo } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
@@ -40,7 +42,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     },
   )
 
-  const analyzer = new TxAnalyzer({
+  const analyzerPayload = {
     transactionInfo,
     structLogs,
     sourceMaps,
@@ -51,7 +53,11 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       return accumulator
     }, {} as Record<string, string>),
     abis: { ...abis, ...additionalAbis },
-  })
+  }
+
+  // fix for Buffer not defined
+  window.Buffer = window.Buffer || Buffer
+  const analyzer = new TxAnalyzer(analyzerPayload)
   const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
@@ -75,11 +81,10 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  yield* put(
-    addInstructions(
-      Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => [...accumulator, { instructions, address }], []),
-    ),
-  )
+  console.log('instructionsMap', instructionsMap)
+
+  yield* put(addInstructions(instructionsMap))
+
   const sourceMapsPayload = Object.entries(sourceMaps)
     .reduce((accumulator, [address, sourceMap]) => {
       accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))

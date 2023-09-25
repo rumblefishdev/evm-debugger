@@ -3,9 +3,9 @@ import type { TInstructionsMap } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 
-const instructionsAdapter = createEntityAdapter<TInstructionsMap>({
+export const instructionsAdapter = createEntityAdapter<TInstructionsMap>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
-  selectId: (entity) => entity.address,
+  selectId: (entity) => `${entity.address}|${entity.fileName}`,
 })
 
 export const instructionsSlice = createSlice({
@@ -19,4 +19,3 @@ export const instructionsSlice = createSlice({
 
 export const { updateInstructions, addInstructions } = instructionsSlice.actions
 export const instructionsReducer = instructionsSlice.reducer
-export const instructionsSelectors = instructionsAdapter.getSelectors()

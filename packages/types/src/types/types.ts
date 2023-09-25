@@ -81,8 +81,9 @@ export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TByteCodeMap = Record<string, string>
-export type TInstructionsMap = { address: string; instructions: Record<number, Instruction> }
+export type TInstructionsMap = { address: string; fileName: string; instructions: Record<number, Instruction> }
 
+export type TMappedInstructions = Record<string, TInstructionsMap[]>
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
 export type TMappedContractNames = Record<string, string>

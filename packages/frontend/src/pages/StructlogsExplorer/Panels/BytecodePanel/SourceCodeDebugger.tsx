@@ -9,11 +9,11 @@ import { useSources } from '../../../../components/SourceCodeDisplayer'
 import { StyledLoading, StyledSyntaxHighlighter } from '../../../../components/SourceCodeDisplayer/styles'
 import { useTypedDispatch, useTypedSelector } from '../../../../store/storeHooks'
 import { contractNamesSelectors } from '../../../../store/contractNames/contractNames.selectors'
-import { instructionsSelectors } from '../../../../store/instructions/instructions.slice'
 import { activeSourceFileSelectors } from '../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
+import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 
 import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
@@ -72,7 +72,7 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
-  const instructions = useTypedSelector((state) => instructionsSelectors.selectById(state.instructions, activeBlock.address))?.instructions
+  const instructions = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
 
   const { contractName } = useTypedSelector((state) => contractNamesSelectors.selectByAddress(state, activeBlock.address))
 
