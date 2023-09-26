@@ -2,15 +2,15 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import type { ISrcMapApiPayload } from '@evm-debuger/types'
+import type { ISrcMapApiPayload, TSourceMap } from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
 
-import type { TSourceMapEntry, SolcOutput, TSourceFile } from './types'
+import type { SolcOutput, TSourceFile } from './types'
 import { SourceMapElement } from './sourceMapElement'
 import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
-import { payloadSync, s3download } from './s3'
+import { payloadSync, s3download, s3upload } from './s3'
 import solc from './solc'
 
 const { BUCKET_NAME } = process.env
@@ -71,9 +71,7 @@ const gatherSameSourceCodeElements = (
   )
 }
 
-const getSourceMap = async (
-  files: TSourceFile[],
-): Promise<TSourceMapEntry[]> => {
+const getSourceMap = async (files: TSourceFile[]): Promise<TSourceMap[]> => {
   const input = {
     sources: files.reduce((accumulator, current, index) => {
       const key: string = current.path.split('contract_files/').pop() || ''
@@ -97,24 +95,25 @@ const getSourceMap = async (
     solc.compile(JSON.stringify(input)),
   ) as SolcOutput
 
-  let allEntries: TSourceMapEntry[] = []
+  let allEntries: TSourceMap[] = []
   for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
-    const newerEntries: TSourceMapEntry[] = await Promise.all(
-      Object.entries(fileInternals).map(
-        async ([contractName, contractInternals]) => {
-          const formattedOpcodes = await formatOpcodes(
-            contractInternals.evm.deployedBytecode.opcodes,
-          )
-          const formattedOpcodesArr = formattedOpcodes.split('\n')
-
-          formattedOpcodesArr.shift()
-          return {
-            rawSourceMap: contractInternals.evm.deployedBytecode.sourceMap,
-            fileName,
-            contractName,
-          }
-        },
-      ),
+    const newerEntries: TSourceMap[] = await Promise.all(
+      Object.entries(fileInternals).map(([contractName, contractInternals]) => {
+        return {
+          fileName,
+          deployedBytecode: {
+            sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
+            opcodes: contractInternals.evm.deployedBytecode.opcodes,
+            object: contractInternals.evm.deployedBytecode.object,
+          },
+          contractName,
+          bytecode: {
+            sourceMap: contractInternals.evm.bytecode.sourceMap,
+            opcodes: contractInternals.evm.bytecode.opcodes,
+            object: contractInternals.evm.bytecode.object,
+          },
+        }
+      }),
     )
     allEntries = [...allEntries, ...newerEntries]
   }
@@ -160,7 +159,7 @@ export const compileFiles = async (
     )
   ).filter(Boolean) as TSourceFile[]
 
-  let sourceMaps: TSourceMapEntry[] = []
+  let sourceMaps: TSourceMap[] = []
   try {
     sourceMaps = await getSourceMap(sourceFiles)
   } catch (error) {

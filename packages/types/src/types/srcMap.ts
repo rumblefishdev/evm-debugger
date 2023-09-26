@@ -30,9 +30,18 @@ export type TSrcMapAddres = {
 }
 
 export type TSourceMap = {
-  contractName: string
   fileName: string
-  rawSourceMap: string
+  contractName: string
+  bytecode: {
+    object: string
+    opcodes: string
+    sourceMap: string
+  }
+  deployedBytecode: {
+    object: string
+    opcodes: string
+    sourceMap: string
+  }
 }
 
 export type TEtherscanContractSourceCodeResult = {
