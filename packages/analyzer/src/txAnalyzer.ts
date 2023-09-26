@@ -258,12 +258,9 @@ export class TxAnalyzer {
     Object.keys(this.transactionData.sourceCodes).forEach((address) => {
       if (
         this.transactionData.sourceCodes[address] &&
-        this.transactionData.creationBytecodeMaps[address] &&
+        this.transactionData.bytecodeMaps[address] &&
         this.transactionData.sourceMaps[address]
       ) {
-        console.log('address', address)
-        console.log('bytecode', `${this.transactionData.creationBytecodeMaps[address].slice(0, 100)}...`)
-        const bytecode = Buffer.from(this.transactionData.creationBytecodeMaps[address])
         const sourceMaps = this.transactionData.sourceMaps[address]
         const fileIdToSourceFile: Map<number, SourceFile> = new Map()
 
@@ -272,7 +269,12 @@ export class TxAnalyzer {
         })
 
         sourceMaps.forEach((sourceMap) => {
-          const instructions = decodeInstructions(bytecode, sourceMap.rawSourceMap, fileIdToSourceFile, false)
+          const instructions = decodeInstructions(
+            Buffer.from(sourceMap.deployedBytecode.object),
+            sourceMap.deployedBytecode.sourceMap,
+            fileIdToSourceFile,
+            false,
+          )
 
           const mappedInstructions = instructions.reduce((accumulator, instruction) => {
             accumulator[instruction.pc] = instruction

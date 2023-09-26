@@ -58,10 +58,6 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     structLogs,
     sourceMaps,
     sourceCodes,
-    creationBytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
-      accumulator[bytecode.address] = bytecode.bytecode
-      return accumulator
-    }, {} as Record<string, string>),
     contractNames,
     bytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
       accumulator[bytecode.address] = bytecode.bytecode
@@ -95,63 +91,6 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
-
-  const addressInstruction: Record<string, Instruction[]> = {}
-
-  for (const instruction of Object.values(instructionsMap).flat()) {
-    if (!addressInstruction[instruction.address]) addressInstruction[instruction.address] = []
-    addressInstruction[instruction.address].push(...Object.values(instruction.instructions))
-  }
-
-  for (const [address, instructions] of Object.entries(addressInstruction)) {
-    console.log('============ address', address)
-
-    console.log(
-      'instructionsMap Invalid',
-      instructions.filter((item) => item.opcode === Opcode.INVALID),
-    )
-    console.log(
-      'instructionsMap Return',
-      instructions.filter((item) => item.opcode === Opcode.RETURN),
-    )
-    console.log(
-      'instructionsMap PUSH 1',
-      instructions.filter((item) => item.opcode === Opcode.PUSH1),
-    )
-    console.log(
-      'instructionsMap PUSH 4',
-      instructions.filter((item) => item.opcode === Opcode.PUSH4),
-    )
-    console.log(
-      'instructionsMap PUSH 2',
-      instructions
-        .filter((item) => item.opcode === Opcode.PUSH2)
-        .map((item) => ({
-          ...item,
-          pushData: item.pushData.toString('hex'),
-        })),
-    )
-    console.log(
-      'instructionsMap EQ',
-      instructions.filter((item) => item.opcode === Opcode.EQ),
-    )
-    console.log(
-      'instructionsMap CODECOPY',
-      instructions.filter((item) => item.opcode === Opcode.CODECOPY),
-    )
-    console.log(
-      'instructionsMap CALLDATACOPY',
-      instructions.filter((item) => item.opcode === Opcode.CALLDATACOPY),
-    )
-    console.log(
-      'instructionsMap JUMP',
-      instructions.filter((item) => item.opcode === Opcode.JUMP),
-    )
-    console.log(
-      'instructionsMap JUMPDEST',
-      instructions.filter((item) => item.opcode === Opcode.JUMPDEST),
-    )
-  }
 
   yield* put(addInstructions(instructionsMap))
 

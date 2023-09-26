@@ -104,7 +104,6 @@ export type TTransactionData = {
   bytecodeMaps: TByteCodeMap
   sourceCodes: TMappedSourceCodes
   contractNames: TMappedContractNames
-  creationBytecodeMaps?: TByteCodeMap
 }
 
 export type TSighashStatus = {
