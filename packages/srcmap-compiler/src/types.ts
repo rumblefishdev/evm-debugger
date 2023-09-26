@@ -1,5 +1,3 @@
-import type { SourceMapElementTree } from './sourceMapElementTree'
-
 export type SolcOutput = Record<
   string,
   Record<
@@ -7,7 +5,13 @@ export type SolcOutput = Record<
     {
       evm: {
         evm: {
+          bytecode: {
+            object: string
+            opcodes: string
+            sourceMap: string
+          }
           deployedBytecode: {
+            object: string
             opcodes: string
             sourceMap: string
           }
@@ -20,13 +24,4 @@ export type SolcOutput = Record<
 export type TSourceFile = {
   path: string
   content: string
-}
-
-export type TSourceMapEntry = {
-  fileName: string
-  contractName: string
-  opcodes?: string
-  opcodesRaw?: string
-  sourceMap?: SourceMapElementTree
-  rawSourceMap: string
 }
