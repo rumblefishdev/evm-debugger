@@ -258,10 +258,12 @@ export class TxAnalyzer {
     Object.keys(this.transactionData.sourceCodes).forEach((address) => {
       if (
         this.transactionData.sourceCodes[address] &&
-        this.transactionData.bytecodeMaps[address] &&
+        this.transactionData.creationBytecodeMaps[address] &&
         this.transactionData.sourceMaps[address]
       ) {
-        const bytecode = Buffer.from(this.transactionData.bytecodeMaps[address])
+        console.log('address', address)
+        console.log('bytecode', `${this.transactionData.creationBytecodeMaps[address].slice(0, 100)}...`)
+        const bytecode = Buffer.from(this.transactionData.creationBytecodeMaps[address])
         const sourceMaps = this.transactionData.sourceMaps[address]
         const fileIdToSourceFile: Map<number, SourceFile> = new Map()
 

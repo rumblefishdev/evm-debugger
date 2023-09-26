@@ -1,8 +1,18 @@
 import { Buffer } from 'buffer'
 
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TMappedContractNames, TMappedSourceCodes, TMappedSourceMap, TTransactionInfo } from '@evm-debuger/types'
+import type {
+  IStructLog,
+  TAbis,
+  TMappedContractNames,
+  TMappedSourceCodes,
+  TMappedSourceMap,
+  TTransactionData,
+  TTransactionInfo,
+} from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
+import { Opcode } from 'hardhat/internal/hardhat-network/stack-traces/opcodes'
+import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { bytecodesActions } from '../bytecodes/bytecodes.slice'
@@ -17,6 +27,7 @@ import { sighashActions } from '../sighash/sighash.slice'
 import { sourceCodesActions } from '../sourceCodes/sourceCodes.slice'
 import { contractNamesActions } from '../contractNames/contractNames.slice'
 import { activeBlockActions } from '../activeBlock/activeBlock.slice'
+import { HARDCODED_BYTECODES } from '../bytecodes/hardcodedBytecodes'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
@@ -42,11 +53,15 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     },
   )
 
-  const analyzerPayload = {
+  const analyzerPayload: TTransactionData = {
     transactionInfo,
     structLogs,
     sourceMaps,
     sourceCodes,
+    creationBytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
+      accumulator[bytecode.address] = bytecode.bytecode
+      return accumulator
+    }, {} as Record<string, string>),
     contractNames,
     bytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
       accumulator[bytecode.address] = bytecode.bytecode
@@ -81,7 +96,62 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  console.log('instructionsMap', instructionsMap)
+  const addressInstruction: Record<string, Instruction[]> = {}
+
+  for (const instruction of Object.values(instructionsMap).flat()) {
+    if (!addressInstruction[instruction.address]) addressInstruction[instruction.address] = []
+    addressInstruction[instruction.address].push(...Object.values(instruction.instructions))
+  }
+
+  for (const [address, instructions] of Object.entries(addressInstruction)) {
+    console.log('============ address', address)
+
+    console.log(
+      'instructionsMap Invalid',
+      instructions.filter((item) => item.opcode === Opcode.INVALID),
+    )
+    console.log(
+      'instructionsMap Return',
+      instructions.filter((item) => item.opcode === Opcode.RETURN),
+    )
+    console.log(
+      'instructionsMap PUSH 1',
+      instructions.filter((item) => item.opcode === Opcode.PUSH1),
+    )
+    console.log(
+      'instructionsMap PUSH 4',
+      instructions.filter((item) => item.opcode === Opcode.PUSH4),
+    )
+    console.log(
+      'instructionsMap PUSH 2',
+      instructions
+        .filter((item) => item.opcode === Opcode.PUSH2)
+        .map((item) => ({
+          ...item,
+          pushData: item.pushData.toString('hex'),
+        })),
+    )
+    console.log(
+      'instructionsMap EQ',
+      instructions.filter((item) => item.opcode === Opcode.EQ),
+    )
+    console.log(
+      'instructionsMap CODECOPY',
+      instructions.filter((item) => item.opcode === Opcode.CODECOPY),
+    )
+    console.log(
+      'instructionsMap CALLDATACOPY',
+      instructions.filter((item) => item.opcode === Opcode.CALLDATACOPY),
+    )
+    console.log(
+      'instructionsMap JUMP',
+      instructions.filter((item) => item.opcode === Opcode.JUMP),
+    )
+    console.log(
+      'instructionsMap JUMPDEST',
+      instructions.filter((item) => item.opcode === Opcode.JUMPDEST),
+    )
+  }
 
   yield* put(addInstructions(instructionsMap))
 
@@ -115,11 +185,12 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
   for (const address of addresses)
     try {
       yield* put(analyzerActions.logMessage(`Fetching bytecode of ${address}`))
+      const creationBytecode = HARDCODED_BYTECODES.find((item) => item.address === address)?.creationBytecode
       const bytecode = yield* apply(bytecodeProvider, bytecodeProvider.getBytecode, [address])
       if (!bytecode) throw new Error(`Bytecode of address ${address} not found!`)
 
       yield* put(analyzerActions.logMessage('Success!'))
-      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
+      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { creationBytecode, bytecode } }))
     } catch (error) {
       yield* put(analyzerActions.logMessage(error.toString()))
     }
