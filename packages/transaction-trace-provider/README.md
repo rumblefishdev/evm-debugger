@@ -12,11 +12,8 @@ Package is built by `esbuild` bundler.
 
 ## Hardhat
 
-Due to `hardhat` internal tricks it is impossible to keep it as bundled package.
-Due to it, is attached to infrastructure as
+Due to `hardhat` internal tricks it is impossible to keep it as bundled package. Due to it, is attached to infrastructure as
 a dependency lambda layer with source in the `dependecies` directory.
-
-Check [dependencies README](./dependencies/README.md) for more details.
 
 ### Retry/API rate limit bug
 
