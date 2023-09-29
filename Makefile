@@ -23,7 +23,7 @@ help:
 .PHONY: bootstrap
 bootstrap: #% Project bootstrap
 	npm install --include=dev
-	lerna bootstrap
+	npx lerna bootstrap
 	@$(MAKE) -s build_deps
 
 .PHONY: clean
