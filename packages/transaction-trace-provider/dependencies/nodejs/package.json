@@ -1,10 +1,8 @@
 {
   "dependencies": {
-    "hardhat": "^2.14.0"
+    "hardhat": "2.14.0"
   },
   "scripts": {
-    "patch": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js && cp patches/node_modules/hardhat/internal/hardhat-network/provider/node.js node_modules/hardhat/internal/hardhat-network/provider/node.js",
-    "dump": "cp -f node_modules/hardhat/internal/core/providers/http.js patches/node_modules/hardhat/internal/core/providers/http.js && cp -f node_modules/hardhat/internal/hardhat-network/provider/node.js patches/node_modules/hardhat/internal/hardhat-network/provider/node.js",
-    "postdump": "node --version > patches/patches-node-version"
+    "postinstall": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js && cp patches/node_modules/hardhat/internal/hardhat-network/provider/node.js node_modules/hardhat/internal/hardhat-network/provider/node.js"
   }
 }
