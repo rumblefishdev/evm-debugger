@@ -71,7 +71,10 @@ const gatherSameSourceCodeElements = (
   )
 }
 
-const getSourceMap = async (files: TSourceFile[]): Promise<TSourceMap[]> => {
+const getSourceMap = async (
+  files: TSourceFile[],
+  optimizerConfig: { enabled: boolean; runs: number },
+): Promise<TSourceMap[]> => {
   const input = {
     sources: files.reduce((accumulator, current, index) => {
       const key: string = current.path.split('contract_files/').pop() || ''
@@ -88,6 +91,7 @@ const getSourceMap = async (files: TSourceFile[]): Promise<TSourceMap[]> => {
           '*': ['*'],
         },
       },
+      optimizer: optimizerConfig,
     },
     language: 'Solidity',
   }
@@ -161,7 +165,10 @@ export const compileFiles = async (
 
   let sourceMaps: TSourceMap[] = []
   try {
-    sourceMaps = await getSourceMap(sourceFiles)
+    sourceMaps = await getSourceMap(sourceFiles, {
+      runs: Number(_payload.sourceData?.Runs),
+      enabled: Boolean(_payload.sourceData?.OptimizationUsed),
+    })
   } catch (error) {
     const msg = `/Compilation/Unknow error while compiling:\n${error}`
     console.warn(_payload.address, msg)
