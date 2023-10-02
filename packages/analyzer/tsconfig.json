@@ -8,7 +8,7 @@
     "sourceMap": true,
     "composite": true
   },
-  "include": ["src/**/*", "scripts/scriptHelper.ts"],
+  "include": ["src/**/*", "scripts/**/*"],
   "exclude": ["./hardhat.config.ts", "./scripts/script.ts"],
   "references": [
     {

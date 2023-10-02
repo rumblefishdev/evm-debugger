@@ -190,6 +190,8 @@ const extractFiles = async (
   try {
     const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
 
+    console.log('sourceCodeObj', sourceCodeObj)
+
     if (!sourceCodeObj.sources) {
       const msg = "/Extract Files/Can't find source files"
       console.warn(payload.address, msg)
