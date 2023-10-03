@@ -253,17 +253,22 @@ export class TxAnalyzer {
   public getContractsInstructions(): TStepInstrctionsMap {
     if (Object.keys(this.transactionData.sourceMaps).length === 0) return {} as TStepInstrctionsMap
 
-    const dataToDecode = Object.keys(this.transactionData.contractNames).map((address) => {
+    const dataToDecode = []
+
+    Object.keys(this.transactionData.contractNames).forEach((address) => {
       const contractName = this.transactionData.contractNames[address]
-      const { deployedBytecode } = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
+      const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
       const sourceCode = this.transactionData.sourceCodes[address]
-      return {
-        sourceMap: deployedBytecode.sourceMap,
-        sourceCode,
-        opcodes: deployedBytecode.opcodes,
-        contractName,
-        bytecode: deployedBytecode.object,
-        address,
+
+      if (source) {
+        dataToDecode.push({
+          sourceMap: source.deployedBytecode.sourceMap,
+          sourceCode,
+          opcodes: source.deployedBytecode.opcodes,
+          contractName,
+          bytecode: source.deployedBytecode.object,
+          address,
+        })
       }
     })
 
