@@ -8,7 +8,7 @@ import { sighashAdapter } from './sighash.slice'
 
 const selectSighashState = createSelector([selectReducer(StoreKeys.SIGHASH)], (state) => state)
 
-const selectAll = createSelector([selectSighashState], sighashAdapter.getSelectors().selectAll)
+const selectAll = createSelector([selectSighashState], (state) => sighashAdapter.getSelectors().selectAll(state))
 
 const abis = createSelector([selectAll], (sighashes) =>
   Object.fromEntries(sighashes.filter((sighash) => Boolean(sighash.fragment)).map((sighash) => [sighash.sighash, [sighash.fragment]])),

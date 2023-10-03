@@ -8,7 +8,7 @@ import { sourceCodesAdapter } from './sourceCodes.slice'
 
 const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CODES)], (state) => state)
 
-const selectAll = createSelector(selectSourceCodesState, sourceCodesAdapter.getSelectors().selectAll)
+const selectAll = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectAll(state))
 
 const selectByAddress = createSelector([selectAll, (_: unknown, address: string) => address], (sourceCodes, address) =>
   sourceCodes.find((sourceCode) => sourceCode.address === address),
