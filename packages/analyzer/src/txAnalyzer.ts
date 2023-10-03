@@ -256,20 +256,20 @@ export class TxAnalyzer {
     const dataToDecode = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
+      if (!this.transactionData.sourceMaps[address]) return
+
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
       const sourceCode = this.transactionData.sourceCodes[address]
 
-      if (source) {
-        dataToDecode.push({
-          sourceMap: source.deployedBytecode.sourceMap,
-          sourceCode,
-          opcodes: source.deployedBytecode.opcodes,
-          contractName,
-          bytecode: source.deployedBytecode.object,
-          address,
-        })
-      }
+      dataToDecode.push({
+        sourceMap: source.deployedBytecode.sourceMap,
+        sourceCode,
+        opcodes: source.deployedBytecode.opcodes,
+        contractName,
+        bytecode: source.deployedBytecode.object,
+        address,
+      })
     })
 
     return dataToDecode
