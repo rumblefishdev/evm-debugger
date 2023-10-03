@@ -77,6 +77,22 @@ export type TEventInfo = {
   decodedEvent: ethers.utils.Result
 }
 
+export type TParsedSourceMap = {
+  offset: number
+  length: number
+  fileId: number
+  jumpType: string
+}
+
+export type TOpcodeFromSourceMap = {
+  pc: string
+  opcode: string
+}
+
+export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap
+
+export type TStepInstrctionsMap = Record<string, TStepInstruction[]>
+
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
@@ -100,9 +116,9 @@ export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
   abis: TAbis
+  sourceCodes: TMappedSourceCodes
   sourceMaps: TMappedSourceMap
   bytecodeMaps: TByteCodeMap
-  sourceCodes: TMappedSourceCodes
   contractNames: TMappedContractNames
 }
 

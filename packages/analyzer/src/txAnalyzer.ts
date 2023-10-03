@@ -3,15 +3,13 @@ import type {
   TEventInfo,
   TInstructionsMap,
   TMainTraceLogs,
-  TMappedInstructions,
   TReturnedTraceLog,
+  TStepInstrctionsMap,
+  TStepInstruction,
   TTransactionData,
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
-import { decodeInstructions } from 'hardhat/internal/hardhat-network/stack-traces/source-maps'
-import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
-import { SourceFile } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import {
   checkIfOfCallType,
@@ -34,6 +32,7 @@ import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
+import { opcodesConverter, sourceMapConverter } from './dataExtractors/sourceMapConverter'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -252,47 +251,44 @@ export class TxAnalyzer {
     return this.getTraceLogsContractAddresses(mainTraceLogList)
   }
 
-  public getContractsInstructions() {
-    const instructionsMap = [] as TInstructionsMap[]
-
-    Object.keys(this.transactionData.sourceCodes).forEach((address) => {
-      if (
-        this.transactionData.sourceCodes[address] &&
-        this.transactionData.bytecodeMaps[address] &&
-        this.transactionData.sourceMaps[address]
-      ) {
-        const sourceMaps = this.transactionData.sourceMaps[address]
-        const fileIdToSourceFile: Map<number, SourceFile> = new Map()
-
-        Object.entries(this.transactionData.sourceCodes[address]).forEach(([contractName, contractSource], fileId) => {
-          fileIdToSourceFile.set(fileId, new SourceFile(contractName, contractSource))
-        })
-
-        sourceMaps.forEach((sourceMap) => {
-          const instructions = decodeInstructions(
-            Buffer.from(sourceMap.deployedBytecode.object),
-            sourceMap.deployedBytecode.sourceMap,
-            fileIdToSourceFile,
-            false,
-          )
-
-          const mappedInstructions = instructions.reduce((accumulator, instruction) => {
-            accumulator[instruction.pc] = instruction
-            return accumulator
-          }, {} as Record<number, Instruction>)
-
-          instructionsMap.push({
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            instructions: mappedInstructions,
-            fileName: sourceMap.fileName,
-            address,
-          })
-        })
+  public getContractsInstructions(): TStepInstrctionsMap {
+    const dataToDecode = Object.keys(this.transactionData.contractNames).map((address) => {
+      const contractName = this.transactionData.contractNames[address]
+      const { deployedBytecode } = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
+      const sourceCode = this.transactionData.sourceCodes[address]
+      return {
+        sourceMap: deployedBytecode.sourceMap,
+        sourceCode,
+        opcodes: deployedBytecode.opcodes,
+        contractName,
+        bytecode: deployedBytecode.object,
+        address,
       }
     })
 
-    return instructionsMap
+    return dataToDecode
+      .map((payload) => {
+        const { address, contractName, bytecode, opcodes, sourceMap, sourceCode } = payload
+
+        const convertedSourceMap = sourceMapConverter(sourceMap)
+        const parsedOpcodes = opcodesConverter(opcodes)
+
+        console.log('convertedSourceMap length', convertedSourceMap.length)
+        console.log('parsedOpcodes length', parsedOpcodes.length)
+
+        const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
+          const { offset, length, fileId, jumpType } = sourceMapEntry
+          const { pc, opcode } = parsedOpcodes[index]
+
+          return { pc, opcode, offset, length, jumpType, fileId }
+        })
+
+        return { result, address }
+      })
+      .reduce((accumulator, { address, result }) => {
+        accumulator[address] = result
+        return accumulator
+      }, {} as TStepInstrctionsMap)
   }
 
   public analyze() {

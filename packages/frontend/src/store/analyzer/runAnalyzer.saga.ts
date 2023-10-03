@@ -11,8 +11,6 @@ import type {
   TTransactionInfo,
 } from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
-import { Opcode } from 'hardhat/internal/hardhat-network/stack-traces/opcodes'
-import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { bytecodesActions } from '../bytecodes/bytecodes.slice'
@@ -66,10 +64,14 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     abis: { ...abis, ...additionalAbis },
   }
 
+  console.log({ analyzerPayload })
+
   // fix for Buffer not defined
   window.Buffer = window.Buffer || Buffer
   const analyzer = new TxAnalyzer(analyzerPayload)
   const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+
+  console.log({ instructionsMap })
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
@@ -92,7 +94,14 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     ),
   )
 
-  yield* put(addInstructions(instructionsMap))
+  yield* put(
+    addInstructions(
+      Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => {
+        accumulator.push({ instructions, address })
+        return accumulator
+      }, []),
+    ),
+  )
 
   const sourceMapsPayload = Object.entries(sourceMaps)
     .reduce((accumulator, [address, sourceMap]) => {

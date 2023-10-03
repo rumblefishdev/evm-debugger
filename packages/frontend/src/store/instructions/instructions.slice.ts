@@ -1,11 +1,11 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TInstructionsMap } from '@evm-debuger/types'
+import type { TStepInstruction } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 
-export const instructionsAdapter = createEntityAdapter<TInstructionsMap>({
+export const instructionsAdapter = createEntityAdapter<{ address: string; instructions: TStepInstruction[] }>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
-  selectId: (entity) => `${entity.address}|${entity.fileName}`,
+  selectId: (entity) => entity.address,
 })
 
 export const instructionsSlice = createSlice({

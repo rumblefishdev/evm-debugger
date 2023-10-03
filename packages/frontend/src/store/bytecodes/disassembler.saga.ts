@@ -43,7 +43,8 @@ export function* disassembleNewlyAddedBytescodes() {
     try {
       const disassembled = yield* call(disassembleBytecode, pyodide, changes.bytecode)
       console.log('disassembled id', id)
-      console.log('disassembled content', JSON.stringify(disassembled, null, 2))
+      console.log('disassembled content', { content: JSON.stringify(disassembled, null, 2) })
+      console.log('disassembled content', { contentLength: disassembled.length })
       yield* put(
         bytecodesActions.updateBytecode({
           id,
