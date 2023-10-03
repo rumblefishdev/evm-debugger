@@ -1,7 +1,6 @@
 import type {
   IFilteredStructLog,
   TEventInfo,
-  TInstructionsMap,
   TMainTraceLogs,
   TReturnedTraceLog,
   TStepInstrctionsMap,
@@ -272,9 +271,6 @@ export class TxAnalyzer {
 
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const parsedOpcodes = opcodesConverter(opcodes)
-
-        console.log('convertedSourceMap length', convertedSourceMap.length)
-        console.log('parsedOpcodes length', parsedOpcodes.length)
 
         const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
           const { offset, length, fileId, jumpType } = sourceMapEntry

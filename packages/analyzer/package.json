@@ -4,8 +4,6 @@
   "main": "dist/index.js",
   "scripts": {
     "chain": "hardhat node",
-    "hardhat-fork": "hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/$ALCHEMY_KEY --fork-block-number 18240176",
-    "fetch-transaction-content": "npx tsx scripts/fetchTransactionData.ts",
     "build": "tsc -p tsconfig.build.json",
     "start:dev": "npx hardhat run scripts/script.ts --network localhost",
     "test:fetch-abis": "npx tsx scripts/fetchAbisForTests.ts",

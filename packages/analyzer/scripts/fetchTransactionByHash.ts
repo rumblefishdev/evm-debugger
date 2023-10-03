@@ -1,3 +1,4 @@
+/* eslint-disable import/exports-last */
 import { writeFile } from 'node:fs/promises'
 
 import { network } from 'hardhat'

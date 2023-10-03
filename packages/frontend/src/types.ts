@@ -39,7 +39,6 @@ export type TBytecodes = {
   bytecode: string | null
   error: string | null
   disassembled: TOpcodeDisassemled[] | null
-  creationBytecode?: string
 }
 export type TSourceCodes = { address: string; sourceCode: string | null }
 export type TContractNames = { address: string; contractName: string | null }

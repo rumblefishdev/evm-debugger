@@ -25,7 +25,6 @@ import { sighashActions } from '../sighash/sighash.slice'
 import { sourceCodesActions } from '../sourceCodes/sourceCodes.slice'
 import { contractNamesActions } from '../contractNames/contractNames.slice'
 import { activeBlockActions } from '../activeBlock/activeBlock.slice'
-import { HARDCODED_BYTECODES } from '../bytecodes/hardcodedBytecodes'
 
 import { analyzerActions } from './analyzer.slice'
 import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } from './analyzer.types'
@@ -133,12 +132,11 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
   for (const address of addresses)
     try {
       yield* put(analyzerActions.logMessage(`Fetching bytecode of ${address}`))
-      const creationBytecode = HARDCODED_BYTECODES.find((item) => item.address === address)?.creationBytecode
       const bytecode = yield* apply(bytecodeProvider, bytecodeProvider.getBytecode, [address])
       if (!bytecode) throw new Error(`Bytecode of address ${address} not found!`)
 
       yield* put(analyzerActions.logMessage('Success!'))
-      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { creationBytecode, bytecode } }))
+      yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
     } catch (error) {
       yield* put(analyzerActions.logMessage(error.toString()))
     }
