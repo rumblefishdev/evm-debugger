@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable no-undefined */
 import type { TOpcodeFromSourceMap, TParsedSourceMap } from '@evm-debuger/types'
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
