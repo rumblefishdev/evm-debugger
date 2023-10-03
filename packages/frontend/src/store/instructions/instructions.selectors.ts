@@ -7,7 +7,7 @@ import { instructionsAdapter } from './instructions.slice'
 
 const selectInstructionsState = createSelector([selectReducer(StoreKeys.INSTRUCTIONS)], (state) => state)
 
-const selectAll = createSelector([selectInstructionsState], instructionsAdapter.getSelectors().selectAll)
+const selectAll = createSelector([selectInstructionsState], (state) => instructionsAdapter.getSelectors().selectAll(state))
 
 const selectByAddress = createSelector([selectAll, (_: unknown, address: string) => address], (instructions, address) =>
   instructions.filter((instruction) => instruction.address === address),

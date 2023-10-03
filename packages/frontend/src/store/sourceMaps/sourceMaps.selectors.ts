@@ -7,7 +7,7 @@ import { sourceMapsAdapter } from './sourceMaps.slice'
 
 const selectSourceMapsState = createSelector([selectReducer(StoreKeys.SOURCE_MAPS)], (state) => state)
 
-const selectAll = createSelector(selectSourceMapsState, sourceMapsAdapter.getSelectors().selectAll)
+const selectAll = createSelector([selectSourceMapsState], (state) => sourceMapsAdapter.getSelectors().selectAll(state))
 
 export const createSourceMapId = (address: string, contractName: string) => `${address}|${contractName}`
 

@@ -8,7 +8,7 @@ import { bytecodesAdapter } from './bytecodes.slice'
 
 const selectBytecodesState = createSelector([selectReducer(StoreKeys.BYTECODES)], (state) => state)
 
-const selectAll = createSelector(selectBytecodesState, bytecodesAdapter.getSelectors().selectAll)
+const selectAll = createSelector([selectBytecodesState], (state) => bytecodesAdapter.getSelectors().selectAll(state))
 
 const selectByAddress = createSelector([selectAll, (_: unknown, address: string) => address], (bytecodes, address) =>
   bytecodes.find((bytecode) => bytecode.address === address),
