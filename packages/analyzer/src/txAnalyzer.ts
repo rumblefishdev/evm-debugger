@@ -251,6 +251,8 @@ export class TxAnalyzer {
   }
 
   public getContractsInstructions(): TStepInstrctionsMap {
+    if (Object.keys(this.transactionData.sourceMaps)) return {} as TStepInstrctionsMap
+
     const dataToDecode = Object.keys(this.transactionData.contractNames).map((address) => {
       const contractName = this.transactionData.contractNames[address]
       const { deployedBytecode } = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
