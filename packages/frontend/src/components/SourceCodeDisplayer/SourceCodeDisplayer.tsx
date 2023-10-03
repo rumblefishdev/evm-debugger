@@ -5,27 +5,16 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTypedSelector } from '../../store/storeHooks'
 import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
 import { StyledDataWrapper, StyledDescription, StyledDialog, StyledHeader, StyledStack, StyledTitle } from '../RawDataDisplayer/styles'
+import { parseSourceCode } from '../../helpers/sourceCodeParser'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 
 import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
 
-export function useSources(data?: string) {
+export function useSources(contractName, sourceCode?: string) {
   return useMemo(() => {
-    if (!data) return {}
-
-    const parsed: Record<string, { content: string }> | null =
-      data.startsWith('{"') && !/\n/u.test(data)
-        ? JSON.parse(data)
-        : data.startsWith('{{') && data.endsWith('}}')
-        ? (
-            JSON.parse(data.slice(1, -1)) as {
-              sources: Record<string, { content: string }>
-            }
-          ).sources
-        : null
-
-    if (parsed) return parsed ? Object.fromEntries(Object.entries(parsed).map(([key, value]) => [key, value.content])) : { '': data }
-  }, [data])
+    if (!sourceCode) return {}
+    return parseSourceCode(contractName, sourceCode)
+  }, [contractName, sourceCode])
 }
 
 export const SourceCodeDisplayer = ({ data, title, address, description, ...props }: RawDataDisplayerProps) => {
@@ -33,7 +22,7 @@ export const SourceCodeDisplayer = ({ data, title, address, description, ...prop
 
   const inputId = useId()
 
-  const sources = useSources(data)
+  const sources = useSources(contractName, data)
   const defaultSourceKey =
     contractName && sources
       ? Object.keys(sources).find((key) => new RegExp(`(^|/)${contractName}.sol`, 'u').test(key))

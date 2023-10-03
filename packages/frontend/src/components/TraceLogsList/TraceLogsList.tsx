@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { useTypedDispatch } from '../../store/storeHooks'
 import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
 import { getSignature } from '../../helpers/helpers'
+import { activeSourceFileActions } from '../../store/activeSourceFile/activeSourceFile.slice'
 import { activeBlockSelectors, getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
@@ -25,7 +26,14 @@ export const TraceLogsList = (): JSX.Element => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
-  const activate = useCallback((traceLog: TMainTraceLogsWithId) => dispatch(activeBlockActions.loadActiveBlock(traceLog)), [dispatch])
+  const activate = useCallback(
+    (traceLog: TMainTraceLogsWithId) => {
+      dispatch(activeBlockActions.loadActiveBlock(traceLog))
+      dispatch(activeSourceFileActions.setActiveSourceFile(0))
+    },
+    [dispatch],
+  )
+
   const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
     let signature = ''
     if (traceLog.type === 'CALL' && traceLog.input === '0x' && traceLog.isContract !== null)

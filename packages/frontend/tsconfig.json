@@ -14,7 +14,8 @@
   },
   "include": [
     "src/**/*",
-    "custom.d.ts"
+    "custom.d.ts",
+    "src/**/*.json"
   ],
   "references": [
     {

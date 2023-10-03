@@ -11,6 +11,8 @@ import { analyzerReducer } from './analyzer/analyzer.slice'
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
 import { sourceMapsReducer } from './sourceMaps/sourceMaps.slice'
 import { StoreKeys } from './store.keys'
+import { activeSourceFileReducer } from './activeSourceFile/activeSourceFile.slice'
+import { instructionsReducer } from './instructions/instructions.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
@@ -23,4 +25,6 @@ export const rootReducer = combineReducers({
   [StoreKeys.ANALYZER]: analyzerReducer,
   [StoreKeys.ACTIVE_BLOCK]: activeBlockReducer,
   [StoreKeys.SOURCE_MAPS]: sourceMapsReducer,
+  [StoreKeys.ACTIVE_SOURCE_FILE]: activeSourceFileReducer,
+  [StoreKeys.INSTRUCTIONS]: instructionsReducer,
 })

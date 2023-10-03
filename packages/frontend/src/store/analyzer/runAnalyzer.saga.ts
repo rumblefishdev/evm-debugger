@@ -1,5 +1,15 @@
+import { Buffer } from 'buffer'
+
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { IStructLog, TAbis, TMappedContractNames, TMappedSourceCodes, TMappedSourceMap, TTransactionInfo } from '@evm-debuger/types'
+import type {
+  IStructLog,
+  TAbis,
+  TMappedContractNames,
+  TMappedSourceCodes,
+  TMappedSourceMap,
+  TTransactionData,
+  TTransactionInfo,
+} from '@evm-debuger/types'
 import { apply, put, select } from 'typed-redux-saga'
 
 import { createCallIdentifier } from '../../helpers/helpers'
@@ -7,6 +17,7 @@ import { bytecodesActions } from '../bytecodes/bytecodes.slice'
 import { bytecodesSelectors } from '../bytecodes/bytecodes.selectors'
 import { rawTxDataActions } from '../rawTxData/rawTxData.slice'
 import { sighashSelectors } from '../sighash/sighash.selectors'
+import { addInstructions } from '../instructions/instructions.slice'
 import { sourceMapsActions } from '../sourceMaps/sourceMaps.slice'
 import { structLogsActions } from '../structlogs/structlogs.slice'
 import { traceLogsActions } from '../traceLogs/traceLogs.slice'
@@ -20,6 +31,8 @@ import type { IContractSourceProvider, IBytecodeProvider, TContractsSources } fr
 
 function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStructLog[], contractsSources: TContractsSources = {}) {
   yield* put(analyzerActions.logMessage('Calling analyzer'))
+  const bytecodes = yield* select(bytecodesSelectors.selectAll)
+
   const abis = yield* select(sighashSelectors.abis)
   const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
     (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
@@ -37,14 +50,27 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     },
   )
 
-  const analyzer = new TxAnalyzer({
+  const analyzerPayload: TTransactionData = {
     transactionInfo,
     structLogs,
+    sourceMaps,
     sourceCodes,
     contractNames,
+    bytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
+      accumulator[bytecode.address] = bytecode.bytecode
+      return accumulator
+    }, {} as Record<string, string>),
     abis: { ...abis, ...additionalAbis },
-  })
-  const { mainTraceLogList, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+  }
+
+  console.log({ analyzerPayload })
+
+  // fix for Buffer not defined
+  window.Buffer = window.Buffer || Buffer
+  const analyzer = new TxAnalyzer(analyzerPayload)
+  const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+
+  console.log({ instructionsMap })
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
@@ -64,6 +90,15 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   yield* put(
     contractNamesActions.addContractNames(
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
+    ),
+  )
+
+  yield* put(
+    addInstructions(
+      Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => {
+        accumulator.push({ instructions, address })
+        return accumulator
+      }, []),
     ),
   )
 

@@ -1,4 +1,12 @@
-import type { IFilteredStructLog, TEventInfo, TMainTraceLogs, TReturnedTraceLog, TTransactionData } from '@evm-debuger/types'
+import type {
+  IFilteredStructLog,
+  TEventInfo,
+  TMainTraceLogs,
+  TReturnedTraceLog,
+  TStepInstrctionsMap,
+  TStepInstruction,
+  TTransactionData,
+} from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
 
@@ -23,6 +31,7 @@ import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
+import { opcodesConverter, sourceMapConverter } from './dataExtractors/sourceMapConverter'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -241,6 +250,45 @@ export class TxAnalyzer {
     return this.getTraceLogsContractAddresses(mainTraceLogList)
   }
 
+  public getContractsInstructions(): TStepInstrctionsMap {
+    if (Object.keys(this.transactionData.sourceMaps)) return {} as TStepInstrctionsMap
+
+    const dataToDecode = Object.keys(this.transactionData.contractNames).map((address) => {
+      const contractName = this.transactionData.contractNames[address]
+      const { deployedBytecode } = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
+      const sourceCode = this.transactionData.sourceCodes[address]
+      return {
+        sourceMap: deployedBytecode.sourceMap,
+        sourceCode,
+        opcodes: deployedBytecode.opcodes,
+        contractName,
+        bytecode: deployedBytecode.object,
+        address,
+      }
+    })
+
+    return dataToDecode
+      .map((payload) => {
+        const { address, contractName, bytecode, opcodes, sourceMap, sourceCode } = payload
+
+        const convertedSourceMap = sourceMapConverter(sourceMap)
+        const parsedOpcodes = opcodesConverter(opcodes)
+
+        const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
+          const { offset, length, fileId, jumpType } = sourceMapEntry
+          const { pc, opcode } = parsedOpcodes[index]
+
+          return { pc, opcode, offset, length, jumpType, fileId }
+        })
+
+        return { result, address }
+      })
+      .reduce((accumulator, { address, result }) => {
+        accumulator[address] = result
+        return accumulator
+      }, {} as TStepInstrctionsMap)
+  }
+
   public analyze() {
     this.fragmentReader = new FragmentReader()
     const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
@@ -259,8 +307,11 @@ export class TxAnalyzer {
     const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
 
+    const instructionsMap = this.getContractsInstructions()
+
     return {
       mainTraceLogList,
+      instructionsMap,
       analyzeSummary: { contractSighashesInfo, contractAddresses },
     }
   }
