@@ -3,12 +3,14 @@ import type {
   TEventInfo,
   TMainTraceLogs,
   TReturnedTraceLog,
+  TSourceMapConverstionPayload,
   TStepInstrctionsMap,
   TStepInstruction,
   TTransactionData,
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
+import getLineFromPos from 'get-line-from-pos'
 
 import {
   checkIfOfCallType,
@@ -24,6 +26,7 @@ import {
   isLogType,
   prepareTraceToSearch,
   readMemory,
+  parseSourceCode,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -251,7 +254,7 @@ export class TxAnalyzer {
   }
 
   public getContractsInstructions(): TStepInstrctionsMap {
-    const dataToDecode = []
+    const dataToDecode: TSourceMapConverstionPayload[] = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
       if (!this.transactionData.sourceMaps[address]) return
@@ -274,6 +277,8 @@ export class TxAnalyzer {
       .map((payload) => {
         const { address, contractName, bytecode, opcodes, sourceMap, sourceCode } = payload
 
+        const parsedSourceCode = parseSourceCode(contractName, sourceCode)
+
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const parsedOpcodes = opcodesConverter(opcodes)
 
@@ -281,7 +286,14 @@ export class TxAnalyzer {
           const { offset, length, fileId, jumpType } = sourceMapEntry
           const { pc, opcode } = parsedOpcodes[index]
 
-          return { pc, opcode, offset, length, jumpType, fileId }
+          const startCodeLine = getLineFromPos(sourceCode, offset)
+          const endCodeLine = getLineFromPos(sourceCode, offset + length)
+
+          const filesCount = Object.keys(parsedSourceCode).length
+
+          const hasSource = fileId < filesCount
+
+          return { startCodeLine, pc, opcode, offset, length, jumpType, hasSource, fileId, endCodeLine }
         })
 
         return { result, address }

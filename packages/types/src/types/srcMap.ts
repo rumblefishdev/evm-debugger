@@ -100,3 +100,12 @@ export interface ISrcMapApiResponseBody {
   data?: Record<string, ISrcMapApiPayload>
   error?: string
 }
+
+export type TSourceMapConverstionPayload = {
+  sourceMap: string
+  sourceCode: string
+  opcodes: string
+  contractName: string
+  bytecode: string
+  address: string
+}
