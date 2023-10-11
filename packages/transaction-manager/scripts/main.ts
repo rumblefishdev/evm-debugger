@@ -12,7 +12,7 @@ import { DefaultPaths, Paths } from '../src/paths'
 import { fetchTransactionInfo, handleTransactionInfoFetching } from '../src/transaction-data-getters/transactionInfo'
 import { handleTransactionTraceFetching } from '../src/transaction-data-getters/transactionTrace'
 import { fetchBytecode, handleBytecodeFetching } from '../src/transaction-data-getters/bytecodes'
-import { fetchSourceCodes, handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes2'
+import { fetchSourceCodes, handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes'
 import type { SolcOutput } from '../src/transaction-data-getters/sourceCodes'
 import type { TTempExecs } from '../src/types'
 
