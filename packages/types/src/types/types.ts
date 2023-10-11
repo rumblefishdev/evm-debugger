@@ -93,7 +93,7 @@ export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TByteCodeMap = Record<string, string>
-export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap
+export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap & { hasSource: boolean; startCodeLine: number; endCodeLine: number }
 
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>

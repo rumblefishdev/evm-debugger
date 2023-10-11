@@ -170,3 +170,26 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
     type: 'CREATE',
   } as ICreateTypeTraceLog
 }
+
+export const isMultipleFilesJSON = (sourceCode: string) => sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
+
+export const parseSourceCode = (sourceName: string, sourceCode: string): Record<number, { content: string; sourceName: string }> => {
+  if (isMultipleFilesJSON(sourceCode)) {
+    const contractsInfo = JSON.parse(sourceCode.slice(1, -1)) as {
+      sources: Record<string, { content: string }>
+    }
+
+    return Object.fromEntries(
+      Object.entries(contractsInfo.sources).map(([contractName, contractDetails], index) => {
+        return [index, { sourceName: contractName, content: contractDetails.content }]
+      }),
+    )
+  }
+  return { 0: { sourceName, content: sourceCode } }
+}
+
+export const getLineFromOffset = (sourceCode: string, offset: number) => {
+  const codeBeforeOffset = sourceCode.slice(0, offset)
+  const linesCount = codeBeforeOffset.match(/[\n\r]/g)?.length ?? 0
+  return linesCount + 1
+}
