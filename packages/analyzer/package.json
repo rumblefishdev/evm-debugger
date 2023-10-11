@@ -33,7 +33,6 @@
     "@ethersproject/abi": "^5.7.0",
     "@evm-debuger/types": "^0.1.2",
     "evm": "^0.2.0",
-    "get-line-from-pos": "^1.0.0",
     "hardhat": "^2.12.0",
     "node-fetch": "2.6.6"
   },

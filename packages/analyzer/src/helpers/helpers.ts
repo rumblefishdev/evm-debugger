@@ -187,3 +187,9 @@ export const parseSourceCode = (sourceName: string, sourceCode: string): Record<
   }
   return { 0: { sourceName, content: sourceCode } }
 }
+
+export const getLineFromOffset = (sourceCode: string, offset: number) => {
+  const codeBeforeOffset = sourceCode.slice(0, offset)
+  const linesCount = codeBeforeOffset.match(/\n/g)?.length ?? 0
+  return linesCount + 1
+}

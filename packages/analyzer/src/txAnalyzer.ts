@@ -10,7 +10,6 @@ import type {
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
 import { FormatTypes } from '@ethersproject/abi'
-import getLineFromPos from 'get-line-from-pos'
 
 import {
   checkIfOfCallType,
@@ -27,6 +26,7 @@ import {
   prepareTraceToSearch,
   readMemory,
   parseSourceCode,
+  getLineFromOffset,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -286,14 +286,14 @@ export class TxAnalyzer {
           const { offset, length, fileId, jumpType } = sourceMapEntry
           const { pc, opcode } = parsedOpcodes[index]
 
-          const startCodeLine = getLineFromPos(sourceCode, offset)
-          const endCodeLine = getLineFromPos(sourceCode, offset + length)
+          const startCodeLine = getLineFromOffset(sourceCode, offset)
+          const endCodeLine = getLineFromOffset(sourceCode, offset + length)
 
           const filesCount = Object.keys(parsedSourceCode).length
 
           const hasSource = fileId < filesCount
 
-          return { startCodeLine, pc, opcode, offset, length, jumpType, hasSource, fileId, endCodeLine }
+          return { startCodeLine, pc, opcode, hasSource, fileId, endCodeLine }
         })
 
         return { result, address }
