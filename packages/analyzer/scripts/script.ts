@@ -6,7 +6,7 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
 
 // eslint-disable-next-line import/newline-after-import
 ;(async () => {
-  const traceResult = await network.provider.send('debug_traceTransaction', [TRANSACTION_HASH, { tracer: 'callTracer' }])
+  const traceResult = await network.provider.send('debug_traceTransaction', [TRANSACTION_HASH])
   const transactionInfo = await network.provider.send('eth_getTransactionByHash', [TRANSACTION_HASH])
 
   const transactionData: TTransactionData = {
@@ -16,6 +16,7 @@ const TRANSACTION_HASH = '0x4c39f85ff29a71b49d4237fe70d68366ccd28725e1343500c120
     sourceCodes: {},
     contractNames: {},
   }
+
 
   const analyzer = await prepareAnalyzer(transactionData)
 
