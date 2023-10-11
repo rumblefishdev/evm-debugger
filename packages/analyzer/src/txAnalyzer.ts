@@ -293,7 +293,7 @@ export class TxAnalyzer {
 
           const hasSource = fileId < filesCount
 
-          return { startCodeLine, pc, opcode, hasSource, fileId, endCodeLine }
+          return { startCodeLine, pc, opcode, offset, length, jumpType, hasSource, fileId, endCodeLine }
         })
 
         return { result, address }
