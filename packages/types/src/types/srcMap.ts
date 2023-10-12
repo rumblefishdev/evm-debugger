@@ -100,3 +100,21 @@ export interface ISrcMapApiResponseBody {
   data?: Record<string, ISrcMapApiPayload>
   error?: string
 }
+
+export type TSourceMapConverstionPayload = {
+  sourceMap: string
+  sourceCode: string
+  opcodes: string
+  contractName: string
+  bytecode: string
+  address: string
+}
+
+export type TParsedSourceCode = {
+  content: string
+  sourceName: string
+}
+
+export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
+
+export type TSourceCodeObject = { sources: Record<string, { content: string }> }

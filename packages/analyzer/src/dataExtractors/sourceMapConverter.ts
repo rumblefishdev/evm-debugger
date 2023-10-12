@@ -1,8 +1,72 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import type { TOpcodeFromSourceMap, TParsedSourceMap } from '@evm-debuger/types'
+import type { TOpcodeFromSourceMap, TParseSourceCodeOutput, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
+
+export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSourceMap[] => {
+  const uniqueSourceMaps: TParsedSourceMap[] = []
+
+  sourceMaps.forEach((sourceMap) => {
+    const isUnique = !uniqueSourceMaps.some((uniqueSourceMap) => {
+      return (
+        uniqueSourceMap.offset === sourceMap.offset &&
+        uniqueSourceMap.length === sourceMap.length &&
+        uniqueSourceMap.fileId === sourceMap.fileId
+      )
+    })
+
+    if (isUnique) uniqueSourceMaps.push(sourceMap)
+  })
+
+  return uniqueSourceMaps
+}
+
+export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string => {
+  return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}`
+}
+
+export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceCodeOutput, sourceMaps: TParsedSourceMap[]) => {
+  const sourceMapToSourceCodeDictionary: Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> = {}
+
+  sourceMaps.forEach((sourceMap) => {
+    const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
+    const sourceCode = sourceCodes[sourceMap.fileId]
+
+    if (sourceCode) {
+      const stringNewLineRegexp = /\r?\n|\r/g
+      const sourceParts = sourceCode.content.split(stringNewLineRegexp)
+
+      let startLine = 0
+      let endLine = 0
+      let accumulator = 0
+
+      for (let index = 0; index < sourceParts.length; index++) {
+        const codePartLength = sourceParts[index].length + 1
+
+        if (accumulator + codePartLength >= sourceMap.offset && startLine === 0) {
+          startLine = index + 1
+        }
+
+        if (accumulator + codePartLength >= sourceMap.offset + sourceMap.length && endLine === 0) {
+          endLine = index + 1
+          break
+        }
+
+        accumulator += codePartLength
+      }
+
+      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
+        ...sourceMap,
+        startCodeLine: startLine,
+        hasSource: true,
+        endCodeLine: endLine,
+      }
+    }
+  })
+
+  return sourceMapToSourceCodeDictionary
+}
 
 export const sourceMapConverter = (sourceMap: string): TParsedSourceMap[] => {
   const sourceMapArray: string[] = sourceMap.split(';')

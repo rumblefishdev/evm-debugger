@@ -89,11 +89,13 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
+export type TSourceMapCodeRepresentation = { hasSource: boolean; startCodeLine: number; endCodeLine: number }
+
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TByteCodeMap = Record<string, string>
-export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap
+export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap & TSourceMapCodeRepresentation
 
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>

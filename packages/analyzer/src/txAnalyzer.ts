@@ -3,6 +3,7 @@ import type {
   TEventInfo,
   TMainTraceLogs,
   TReturnedTraceLog,
+  TSourceMapConverstionPayload,
   TStepInstrctionsMap,
   TStepInstruction,
   TTransactionData,
@@ -24,6 +25,7 @@ import {
   isLogType,
   prepareTraceToSearch,
   readMemory,
+  parseSourceCode,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -31,7 +33,13 @@ import { StorageHandler } from './dataExtractors/storageHandler'
 import { FragmentReader } from './helpers/fragmentReader'
 import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
 import { SigHashStatuses } from './sigHashes'
-import { opcodesConverter, sourceMapConverter } from './dataExtractors/sourceMapConverter'
+import {
+  createSourceMapIdentifier,
+  createSourceMapToSourceCodeDictionary,
+  getUniqueSourceMaps,
+  opcodesConverter,
+  sourceMapConverter,
+} from './dataExtractors/sourceMapConverter'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -251,7 +259,7 @@ export class TxAnalyzer {
   }
 
   public getContractsInstructions(): TStepInstrctionsMap {
-    const dataToDecode = []
+    const dataToDecode: TSourceMapConverstionPayload[] = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
       if (!this.transactionData.sourceMaps[address]) return
@@ -272,16 +280,29 @@ export class TxAnalyzer {
 
     return dataToDecode
       .map((payload) => {
-        const { address, contractName, bytecode, opcodes, sourceMap, sourceCode } = payload
+        const { address, contractName, opcodes, sourceMap, sourceCode } = payload
+
+        const parsedSourceCode = parseSourceCode(contractName, sourceCode)
 
         const convertedSourceMap = sourceMapConverter(sourceMap)
+        const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
+
+        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps)
+
         const parsedOpcodes = opcodesConverter(opcodes)
 
         const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
           const { offset, length, fileId, jumpType } = sourceMapEntry
           const { pc, opcode } = parsedOpcodes[index]
 
-          return { pc, opcode, offset, length, jumpType, fileId }
+          const id = createSourceMapIdentifier(sourceMapEntry)
+
+          const instructionWithSource = uniqueSoruceMapsCodeLinesDictionary[id]
+
+          if (!instructionWithSource)
+            return { startCodeLine: 0, pc, opcode, offset, length, jumpType, hasSource: false, fileId, endCodeLine: 0 }
+
+          return { pc, opcode, ...instructionWithSource }
         })
 
         return { result, address }
