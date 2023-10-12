@@ -1,9 +1,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import type { TOpcodeFromSourceMap, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
+import type { TOpcodeFromSourceMap, TParseSourceCodeOutput, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
-import type { TParseSourceCodeOutput } from '../helpers/helpers'
 
 export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSourceMap[] => {
   const uniqueSourceMaps: TParsedSourceMap[] = []
