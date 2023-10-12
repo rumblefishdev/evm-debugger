@@ -2,7 +2,6 @@ import { readFileSync, writeFileSync } from 'fs'
 
 import type { TEtherscanParsedSourceCode, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import { API_KEYS, ChainIds } from '@evm-debuger/config'
 import solc from 'solc'
 
 import { inputPrompt, selectPrompt } from '../src/prompts'
@@ -13,8 +12,7 @@ import { fetchTransactionInfo, handleTransactionInfoFetching } from '../src/tran
 import { handleTransactionTraceFetching } from '../src/transaction-data-getters/transactionTrace'
 import { fetchBytecode, handleBytecodeFetching } from '../src/transaction-data-getters/bytecodes'
 import { fetchSourceCodes, handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes'
-import type { SolcOutput } from '../src/transaction-data-getters/sourceCodes'
-import type { TTempExecs } from '../src/types'
+import type { SolcOutput, TTempExecs } from '../src/types'
 
 /* eslint-disable prettier/prettier */
 (async () => {
@@ -55,7 +53,7 @@ import type { TTempExecs } from '../src/types'
       const bytecodePath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/bytecode.json`
       const bytecode = await handleBytecodeFetching(address,bytecodePath)
 
-      const sourceCodesPath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodes.json`
+      const sourceCodesPath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodeData.json`
       const sourceCodesData = await handleSourceCodesFetching(address,currentHardhatEnvironment.chainId,sourceCodesPath)
 
       const isCotractVerified = sourceCodesData.SourceCode
@@ -63,6 +61,9 @@ import type { TTempExecs } from '../src/types'
       if (isCotractVerified) {
         const rawSourceCode = sourceCodesData.SourceCode.replace(/(\r\n)/gm,'').slice(1, -1)
         const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+
+        saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodes.json`, Object.entries(sourceCodeObj.sources).map(([path,{content}]) => ({path,content: content.replace(/\r?\n|\r/g, " ").replace(/"/g, "'")})))
+
 
         Object.entries(sourceCodeObj.sources).forEach(([path,{content}]) => {
           ensureDirectoryExistance(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/files/${path.slice(0, path.lastIndexOf('/'))}`)
@@ -87,45 +88,13 @@ import type { TTempExecs } from '../src/types'
         }))
 
         saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, output)
+        
 
       }else {
         console.log(`contract ${address} is not verified`)
       }
 
-      // console.log('sourceCodes.result', sourceCodes.result)
-      // const rawSourceCode = readFileSync(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/rawSourceCode.sol`, 'utf8')
-
-      // writeFileSync(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/rawSourceCode.sol`, rawSourceCode)
-
-      // console.log('rawSourceCode', rawSourceCode)
-
-
-      // const input = {
-      //   sources: {
-      //     'A.sol': {
-      //       content: rawSourceCode,
-      //     },
-      //   },
-      //   settings: {
-      //     outputSelection: {
-      //     '*': {
-      //       '*': ['*'],
-      //     },
-      //   },
-      //   optimizer: {
-      //       runs: 200,
-      //       enabled: false,
-      //     }
-      //   },
-      //   language: 'Solidity',
-      // }
-      // const output: SolcOutput = JSON.parse(solc.compile(JSON.stringify(input))) as SolcOutput
-
-      // console.log('sourceCodeObj', output.contracts["A.sol"]["A"].evm)
-
-      // writeFileSync(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodeObj.json`, JSON.stringify(output, null, 2))
     }
-
 
   } catch (error) {
     console.log(error)

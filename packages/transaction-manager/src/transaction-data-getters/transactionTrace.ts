@@ -11,6 +11,7 @@ const fetchTransactionTrace = async (
 ): Promise<TTransactionTraceResult> => {
   try {
     const traceResult: TTransactionTraceResult = await network.provider.send('debug_traceTransaction', [transactionHash])
+
     return traceResult
   } catch (error) {
     if (error.code === 'UND_ERR_HEADERS_TIMEOUT' && retryCounter.numberOfRetries < MAX_RETRIES) {
@@ -30,7 +31,7 @@ export const handleTransactionTraceFetching = async (transactionHash: string, pa
 
   const retryCounter = { numberOfRetries: 0 }
 
-  const transactionTrace = fetchTransactionTrace(transactionHash, retryCounter)
+  const transactionTrace = await fetchTransactionTrace(transactionHash, retryCounter)
   saveToFile(path, transactionTrace)
 
   return transactionTrace
