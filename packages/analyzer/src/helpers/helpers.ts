@@ -11,7 +11,9 @@ import type {
   IStopTypeTraceLog,
   IStructLog,
   TMainTraceLogs,
+  TParseSourceCodeOutput,
   TReturnedTraceLog,
+  TSourceCodeObject,
   TTransactionInfo,
 } from '@evm-debuger/types'
 
@@ -173,22 +175,13 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
 
 export const isMultipleFilesJSON = (sourceCode: string) => sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
 
-export type TParsedSourceCode = {
-  content: string
-  sourceName: string
-}
-
-export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
-
-export type TSources = { sources: Record<string, { content: string }> }
-
 export const removeEncapsulation = (sourceCode: string) => {
   return sourceCode.slice(1, -1).replace(/"/g, "'")
 }
 
 export const parseSourceCode = (sourceName: string, sourceCode: string): TParseSourceCodeOutput => {
   if (isMultipleFilesJSON(sourceCode)) {
-    const contractsInfo: TSources = JSON.parse(sourceCode.slice(1, -1))
+    const contractsInfo: TSourceCodeObject = JSON.parse(sourceCode.slice(1, -1))
 
     return Object.fromEntries(
       Object.entries(contractsInfo.sources).map(([contractName, contractDetails], index) => {

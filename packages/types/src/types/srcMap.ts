@@ -109,3 +109,12 @@ export type TSourceMapConverstionPayload = {
   bytecode: string
   address: string
 }
+
+export type TParsedSourceCode = {
+  content: string
+  sourceName: string
+}
+
+export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
+
+export type TSourceCodeObject = { sources: Record<string, { content: string }> }
