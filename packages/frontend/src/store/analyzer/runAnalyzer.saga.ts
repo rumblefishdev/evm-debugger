@@ -104,7 +104,9 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
 
   const sourceMapsPayload = Object.entries(sourceMaps)
     .reduce((accumulator, [address, sourceMap]) => {
-      accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))
+      if (sourceMap) {
+        accumulator.push(sourceMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })))
+      }
       return accumulator
     }, [])
     .flat()
