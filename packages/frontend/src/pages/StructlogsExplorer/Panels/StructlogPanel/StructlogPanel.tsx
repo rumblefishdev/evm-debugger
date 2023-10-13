@@ -47,6 +47,8 @@ export const StructlogPanel = (): JSX.Element => {
 
   useEffect(() => {
     if (!activeStrucLog) return
+
+    // TODO: refactor this - laggy as hell
     const index = structLogs.findIndex((structLog) => structLog.pc === activeStrucLog.pc)
     if (typeof index === 'number') {
       const element = document.querySelector(`#structlogItem_${index}`) as HTMLElement
