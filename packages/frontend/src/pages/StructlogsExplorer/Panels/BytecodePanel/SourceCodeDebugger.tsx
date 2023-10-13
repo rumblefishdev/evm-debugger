@@ -1,8 +1,8 @@
 import { usePreviousProps } from '@mui/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import TreeItem from '@mui/lab/TreeItem'
-import getLineFromPos from 'get-line-from-pos'
 import { useSelector } from 'react-redux'
+import type { TStepInstruction } from '@evm-debuger/types'
 
 import { ArrowDownBlack } from '../../../../icons'
 import { useSources } from '../../../../components/SourceCodeDisplayer'
@@ -14,6 +14,8 @@ import { structlogsSelectors } from '../../../../store/structlogs/structlogs.sel
 import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
+import type { MuiTreeViewNode } from '../../../../helpers/muiTreeViewUtils'
+import { getExpandedNodes, getNodeIdByPath, getPathByNodeId, parsePathsToMuiTreeView } from '../../../../helpers/muiTreeViewUtils'
 
 import { NoSourceCodeHero, StyledSourceSection, StyledSourceSectionHeading, StyledSourceWrapper, StyledTreeView } from './styles'
 
@@ -21,99 +23,69 @@ type SourceCodeDebuggerProps = {
   source?: string
 }
 
-interface RenderTree {
-  id: string
-  name: string
-  children?: readonly RenderTree[]
-  index?: number
-  isFile?: boolean
-}
-
-const parseToTree = (paths): RenderTree[] => {
-  const result = []
-  const level = { result }
-
-  paths
-    .map((elem) => elem.name)
-    .forEach((path, index) => {
-      path.split('/').reduce((r, name) => {
-        if (!r[name]) {
-          r[name] = { result: [] }
-          const treeElem: RenderTree = {
-            name,
-            isFile: `${path.split('/').slice(-1)}` === name,
-            index,
-            id: `${path}-${name}`,
-            children: r[name].result,
-          }
-          r.result.push(treeElem)
-        }
-        return r[name]
-      }, level)
-    })
-  return result
-}
-
-const parseDefaultExpanded = (sourceItems): string[] => {
-  if (sourceItems && sourceItems[0]) {
-    const defaultExpanded: string[] = ['-1']
-    const { name } = sourceItems[0]
-    const items: string[] = name.split('/')
-    for (let index = 2; index <= items.length; index++) defaultExpanded.push(`${name}-${items.slice(index * -1)[0]}`)
-
-    return defaultExpanded
-  }
-  return null
-}
 export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const dispatch = useTypedDispatch()
-  const activeSourceFile = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+
+  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
-  const instructions = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
-
+  const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
   const { contractName } = useTypedSelector((state) => contractNamesSelectors.selectByAddress(state, activeBlock.address))
 
-  let highlightStartLine
-  let highlightEndLine
-  if (activeStrucLog && instructions) {
-    // TODO: This code need to be adjusted after sync with backend
-    const currentInstruction = instructions[activeStrucLog.pc]
-    const codeLocation = currentInstruction.location
-    highlightStartLine = getLineFromPos(codeLocation.file.content, codeLocation.offset)
-    highlightEndLine = getLineFromPos(codeLocation.file.content, codeLocation.offset + codeLocation.length)
-  }
-  const sources = useSources(contractName, source)
+  const [sourceFiles, setSourceFiles] = useState<{ sourceCode: string; name: string }[]>([])
+  const [sourceFilesNameToIdMap, setSourceFilesNameToIdMap] = useState<Record<string, number>>({})
+  const [activeInstruction, setActiveInstruction] = useState<TStepInstruction>()
+  const [activeSourceCode, setActiveSourceCode] = useState<string>()
+  const [shouldHighlight, setShouldHighlight] = useState(false)
 
-  const sourceItems = useMemo(
-    () =>
-      sources
-        ? Object.entries(sources).map(([name, sourceCode]) => ({
-            sourceCode,
-            name,
-          }))
-        : [],
-    [sources],
-  )
+  const [sourceFilesTreeItems, setSourceFilesTreeItems] = useState<MuiTreeViewNode[]>([])
+  const [expandedTreeNodes, setExpandedTreeNodes] = useState<string[]>(['/'])
+  const [selectedTreeNode, setSelectedTreeNode] = useState<string>('/')
 
-  const getSourceCode = useMemo(
-    () => (sourceItems && sourceItems[activeSourceFile] ? sourceItems[activeSourceFile].sourceCode : null),
-    [activeSourceFile, sourceItems],
-  )
+  const sourceNameToCodeMap = useSources(contractName, source)
 
-  const defaultSelected = useMemo(
-    () => (sourceItems && sourceItems[0] ? `${sourceItems[0].name}-${sourceItems[0].name.split('/').slice(-1)}` : null),
-    [sourceItems],
-  )
+  useEffect(() => {
+    const _sourceFiles = Object.entries(sourceNameToCodeMap).map(([name, sourceCode]) => ({ sourceCode, name })) || []
+    setSourceFiles(_sourceFiles)
+    setSourceFilesNameToIdMap(_sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}))
+    setSourceFilesTreeItems(parsePathsToMuiTreeView(_sourceFiles.map((item) => item.name)))
+    setExpandedTreeNodes(getExpandedNodes([_sourceFiles[0]?.name]))
+    setSelectedTreeNode(getNodeIdByPath(_sourceFiles[0]?.name))
+  }, [sourceNameToCodeMap])
 
-  const sourceItemsTree = useMemo(() => parseToTree(sourceItems), [sourceItems])
+  useEffect(() => {
+    setActiveSourceCode(sourceFiles?.[activeSourceFileId]?.sourceCode || null)
+  }, [sourceFiles, activeSourceFileId])
 
-  const { source: prevSource } = usePreviousProps({ source }) as {
-    source?: string
-  }
-  const didSourceChange = prevSource !== source
+  useEffect(() => {
+    if (activeStrucLog && instructions) {
+      const currentInstr = instructions[activeStrucLog.pc]
+      console.log('Current instruction', JSON.stringify(currentInstr, null, 2))
+      setActiveInstruction(currentInstr)
+
+      const _fileId = currentInstr?.fileId
+      if (sourceFiles[_fileId]) {
+        dispatch(activeSourceFileActions.setActiveSourceFile(currentInstr?.fileId))
+        setExpandedTreeNodes(getExpandedNodes([sourceFiles[currentInstr?.fileId]?.name]))
+        setSelectedTreeNode(getNodeIdByPath(sourceFiles[currentInstr?.fileId]?.name))
+      } else {
+        dispatch(activeSourceFileActions.setActiveSourceFile(null))
+        console.warn(`No source file found for instruction ${JSON.stringify(currentInstr)}`)
+      }
+    }
+  }, [activeStrucLog, instructions, sourceFiles, dispatch])
+
+  useEffect(() => {
+    if (activeInstruction?.fileId === activeSourceFileId) {
+      setShouldHighlight(true)
+    } else {
+      setShouldHighlight(false)
+    }
+  }, [activeInstruction, activeSourceFileId])
+
+  const didSourceChange = usePreviousProps({ source }).source !== source
 
   useEffect(() => {
     if (didSourceChange && !isLoading) setIsLoading(true)
@@ -123,48 +95,55 @@ export const SourceCodeDebugger = ({ source }: SourceCodeDebuggerProps) => {
     }
   }, [isLoading, didSourceChange])
 
-  const clickAction = useCallback(
-    (index: number, isFile: boolean) => {
-      if (isFile) dispatch(activeSourceFileActions.setActiveSourceFile(index))
-    },
-    [dispatch],
-  )
+  const handleSelect = (_: React.SyntheticEvent, nodeId: string) => {
+    setSelectedTreeNode(nodeId)
+    const fileName = getPathByNodeId(nodeId)
+    if (Object.hasOwn(sourceNameToCodeMap, fileName)) {
+      dispatch(activeSourceFileActions.setActiveSourceFile(sourceFilesNameToIdMap[fileName]))
+    }
+  }
 
-  const renderTree = (nodes: RenderTree) => (
+  const handleExpandToggle = (_: React.SyntheticEvent, nodeIds: string[]) => {
+    setExpandedTreeNodes(nodeIds)
+  }
+
+  const renderTree = (nodes: MuiTreeViewNode) => (
     <TreeItem
       key={nodes.id}
       nodeId={nodes.id}
       label={nodes.name}
-      onClick={() => clickAction(nodes.index, nodes.isFile)}
     >
       {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
     </TreeItem>
   )
 
-  return source && sourceItems && sourceItems[activeSourceFile] ? (
+  return source && sourceFiles && sourceFiles[activeSourceFileId] ? (
     isLoading || didSourceChange ? (
       <StyledLoading />
     ) : (
       <StyledSourceWrapper>
         <StyledTreeView
+          aria-label="controlled"
           className="file-list-tree"
           defaultCollapseIcon={<ArrowDownBlack />}
           defaultExpandIcon={<ArrowDownBlack />}
-          defaultExpanded={parseDefaultExpanded(sourceItems)}
-          defaultSelected={defaultSelected}
+          expanded={expandedTreeNodes}
+          onNodeToggle={handleExpandToggle}
+          onNodeSelect={handleSelect}
+          selected={selectedTreeNode}
         >
           {renderTree({
-            name: 'files',
-            id: '-1',
-            children: sourceItemsTree,
+            name: 'Source Files',
+            id: '/',
+            children: sourceFilesTreeItems,
           })}
         </StyledTreeView>
         <StyledSourceSection>
-          <StyledSourceSectionHeading variant="headingUnknown">{sourceItems[activeSourceFile].name}</StyledSourceSectionHeading>
+          <StyledSourceSectionHeading variant="headingUnknown">{sourceFiles[activeSourceFileId].name}</StyledSourceSectionHeading>
           <StyledSyntaxHighlighter
-            source={getSourceCode}
-            highlightStartLine={highlightStartLine}
-            highlightEndLine={highlightEndLine}
+            source={activeSourceCode}
+            highlightStartLine={shouldHighlight ? activeInstruction.startCodeLine : null}
+            highlightEndLine={shouldHighlight ? activeInstruction.endCodeLine : null}
           />
         </StyledSourceSection>
       </StyledSourceWrapper>
