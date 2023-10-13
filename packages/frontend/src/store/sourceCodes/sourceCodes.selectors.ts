@@ -10,15 +10,18 @@ const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CO
 
 const selectAll = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectAll(state))
 
-const selectByAddress = createSelector([selectAll, (_: unknown, address: string) => address], (sourceCodes, address) =>
-  sourceCodes.find((sourceCode) => sourceCode.address === address),
+const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, address: string) => address], (state, address) =>
+  sourceCodesAdapter.getSelectors().selectById(state, address),
 )
 
-const selectAllWithContractNames = createSelector([selectAll, contractNamesSelectors.selectAll], (sourceCodes, contractNames) =>
-  sourceCodes.map((sourceCode) => {
-    const contract = contractNames.find((_contractName) => sourceCode.address === _contractName.address)
-    return { ...sourceCode, contractName: contract?.contractName || sourceCode.address }
-  }),
+const selectAllWithContractNames = createSelector(
+  [selectAll, contractNamesSelectors.selectEntities],
+  (allSourceCodes, contractEntities) => {
+    return allSourceCodes.map((sourceCode) => {
+      const contract = contractEntities[sourceCode.address]
+      return { ...sourceCode, contractName: contract?.contractName || sourceCode.address }
+    })
+  },
 )
 
 export const sourceCodesSelectors = { selectByAddress, selectAllWithContractNames, selectAll }

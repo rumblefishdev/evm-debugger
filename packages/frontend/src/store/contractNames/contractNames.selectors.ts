@@ -9,8 +9,10 @@ const selectContractNamesState = createSelector([selectReducer(StoreKeys.CONTRAC
 
 const selectAll = createSelector([selectContractNamesState], (state) => contractNamesAdapter.getSelectors().selectAll(state))
 
+const selectEntities = createSelector([selectContractNamesState], (state) => contractNamesAdapter.getSelectors().selectEntities(state))
+
 const selectByAddress = createSelector([selectContractNamesState, (_: unknown, address: string) => address], (_, address) =>
   contractNamesAdapter.getSelectors().selectById(_, address),
 )
 
-export const contractNamesSelectors = { selectByAddress, selectAll }
+export const contractNamesSelectors = { selectEntities, selectByAddress, selectAll }
