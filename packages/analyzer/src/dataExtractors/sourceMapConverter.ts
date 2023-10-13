@@ -141,7 +141,7 @@ export const opcodesConverter = (opcodes: string): TOpcodeFromSourceMap[] => {
 
     if (isPush) {
       convertedOpcodes.push({
-        pc: `0x${pc.toString(16)}`,
+        pc,
         opcode: opcodeElement,
       })
       index++
@@ -150,7 +150,7 @@ export const opcodesConverter = (opcodes: string): TOpcodeFromSourceMap[] => {
 
     if (!isPush) {
       convertedOpcodes.push({
-        pc: `0x${pc.toString(16)}`,
+        pc,
         opcode: opcodeElement,
       })
       pc++

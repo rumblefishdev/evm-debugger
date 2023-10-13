@@ -85,7 +85,7 @@ export type TParsedSourceMap = {
 }
 
 export type TOpcodeFromSourceMap = {
-  pc: string
+  pc: number
   opcode: string
 }
 
@@ -96,11 +96,12 @@ export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TByteCodeMap = Record<string, string>
 export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap & TSourceMapCodeRepresentation
+export type TPcIndexedStepInstructions = Record<number, TStepInstruction>
 
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
 export type TMappedContractNames = Record<string, string>
-export type TStepInstrctionsMap = Record<string, TStepInstruction[]>
+export type TStepInstrctionsMap = Record<string, TPcIndexedStepInstructions>
 
 export type TContractData = {
   abi: TAbi
