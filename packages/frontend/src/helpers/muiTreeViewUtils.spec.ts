@@ -1,4 +1,4 @@
-import { getExpandedNodes, parsePathsToMuiTreeView } from './structLogExplorer'
+import { getExpandedNodes, parsePathsToMuiTreeView } from './muiTreeViewUtils'
 
 describe('parsePathsToMuiTreeView', () => {
   it('should place childs to the same ancestors', () => {
@@ -147,9 +147,9 @@ describe('getExpandedNodes', () => {
 
   it('should return root and multi path with already passed toggled list', () => {
     const paths = ['@openzeppelin/contracts/token/ERC20/IERC20.sol', '@openzeppelin/contracts/token/ERC721/IERC721.sol']
-    const toggled = ['/src/Some.sol', '/@openzeppelin/utils/Context.sol']
+    const expanded = ['/src/Some.sol', '/@openzeppelin/utils/Context.sol']
 
-    expect(getExpandedNodes(paths, toggled)).toStrictEqual([
+    expect(getExpandedNodes(paths, expanded)).toStrictEqual([
       '/src/Some.sol',
       '/@openzeppelin/utils/Context.sol',
       '/',
@@ -165,10 +165,10 @@ describe('getExpandedNodes', () => {
 
   it('should return different root with paths when root is passed', () => {
     const paths = ['@openzeppelin/contracts/token/ERC20/IERC20.sol', '@openzeppelin/contracts/token/ERC721/IERC721.sol']
-    const toggled = ['/src/Some.sol', '/@openzeppelin/utils/Context.sol']
+    const expanded = ['/src/Some.sol', '/@openzeppelin/utils/Context.sol']
     const root = '-1'
 
-    expect(getExpandedNodes(paths, toggled, root)).toStrictEqual([
+    expect(getExpandedNodes(paths, expanded, root)).toStrictEqual([
       '/src/Some.sol',
       '/@openzeppelin/utils/Context.sol',
       '-1',

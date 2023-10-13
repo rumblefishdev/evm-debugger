@@ -32,8 +32,8 @@ export const parsePathsToMuiTreeView = (paths: string[]): MuiTreeViewNode[] => {
   }, [] as MuiTreeViewNode[])
 }
 
-export const getExpandedNodes = (paths: string[], toggled: string[] = [], root = '/'): string[] => {
-  const toggledSet: Set<string> = new Set(toggled)
+export const getExpandedNodes = (paths: string[], expanded: string[] = [], root = '/'): string[] => {
+  const toggledSet: Set<string> = new Set(expanded)
   toggledSet.add(root)
 
   paths.forEach((path) => {
@@ -46,4 +46,12 @@ export const getExpandedNodes = (paths: string[], toggled: string[] = [], root =
     })
   })
   return Array.from(toggledSet)
+}
+
+export const getNodeIdByPath = (path: string): string => {
+  return path ? `/${path}` : '' // id must start with a slash
+}
+
+export const getPathByNodeId = (nodeId: string): string => {
+  return nodeId ? nodeId.slice(1) : '' // remove the leading slash
 }
