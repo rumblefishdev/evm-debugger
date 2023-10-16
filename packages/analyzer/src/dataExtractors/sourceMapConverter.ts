@@ -13,9 +13,9 @@ import { AlternativeOpcodes, Opcodes } from '../opcodes'
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
 const fileTypeMap = {
-  '.yul': SourceFileType.YUL,
-  '.vy': SourceFileType.VYPER,
-  '.sol': SourceFileType.SOLIDITY,
+  yul: SourceFileType.YUL,
+  vy: SourceFileType.VYPER,
+  sol: SourceFileType.SOLIDITY,
 }
 
 export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSourceMap[] => {
