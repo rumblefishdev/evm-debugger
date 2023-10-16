@@ -11,10 +11,7 @@ import { contractNamesSelectors } from '../../store/contractNames/contractNames.
 import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
 
 export function useSources(contractName, sourceCode?: string) {
-  return useMemo(() => {
-    if (!sourceCode) return {}
-    return parseSourceCode(contractName, sourceCode)
-  }, [contractName, sourceCode])
+  return useMemo(() => (sourceCode ? parseSourceCode(contractName, sourceCode) : {}), [contractName, sourceCode])
 }
 
 export const SourceCodeDisplayer = ({ data, title, address, description, ...props }: RawDataDisplayerProps) => {

@@ -5,7 +5,7 @@ import type {
   TReturnedTraceLog,
   TSourceMapConverstionPayload,
   TStepInstrctionsMap,
-  TStepInstruction,
+  TPcIndexedStepInstructions,
   TTransactionData,
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
@@ -279,11 +279,8 @@ export class TxAnalyzer {
     })
 
     return dataToDecode
-      .map((payload) => {
-        const { address, contractName, opcodes, sourceMap, sourceCode } = payload
-
+      .map(({ address, contractName, bytecode, opcodes, sourceMap, sourceCode }) => {
         const parsedSourceCode = parseSourceCode(contractName, sourceCode)
-
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
@@ -291,24 +288,26 @@ export class TxAnalyzer {
 
         const parsedOpcodes = opcodesConverter(opcodes)
 
-        const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
+        const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const { offset, length, fileId, jumpType } = sourceMapEntry
           const { pc, opcode } = parsedOpcodes[index]
 
           const id = createSourceMapIdentifier(sourceMapEntry)
 
-          const instructionWithSource = uniqueSoruceMapsCodeLinesDictionary[id]
+          const { hasSource, startCodeLine, endCodeLine } = uniqueSoruceMapsCodeLinesDictionary[id] || {
+            startCodeLine: 0,
+            hasSource: false,
+            endCodeLine: 0,
+          }
 
-          if (!instructionWithSource)
-            return { startCodeLine: 0, pc, opcode, offset, length, jumpType, hasSource: false, fileId, endCodeLine: 0 }
+          accumulator[pc] = { startCodeLine, pc, opcode, offset, length, jumpType, hasSource, fileId, endCodeLine }
+          return accumulator
+        }, {} as TPcIndexedStepInstructions)
 
-          return { pc, opcode, ...instructionWithSource }
-        })
-
-        return { result, address }
+        return { instructions, address }
       })
-      .reduce((accumulator, { address, result }) => {
-        accumulator[address] = result
+      .reduce((accumulator, { address, instructions }) => {
+        accumulator[address] = instructions
         return accumulator
       }, {} as TStepInstrctionsMap)
   }
