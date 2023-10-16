@@ -4,7 +4,7 @@ import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
-import { tracleLogsSelectors } from '../traceLogs/tractLogs.selectors'
+import { traceLogsSelectors } from '../traceLogs/traceLogs.selectors'
 import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
 
@@ -15,7 +15,7 @@ const selectAll = createSelector(selectStructlogsState, (state) => state.structL
 const selectActiveStructLog = createSelector(selectStructlogsState, (state) => state.activeStructLog)
 
 export const selectParsedStructLogs = createSelector(
-  [selectAll, tracleLogsSelectors.selectAll, activeBlockSelectors.selectParsedActiveBlock],
+  [selectAll, traceLogsSelectors.selectAll, activeBlockSelectors.selectParsedActiveBlock],
   (structLogs, traceLogs, { defaultData: { startIndex, returnIndex } }) =>
     structLogs
       .slice(startIndex, returnIndex + 1)

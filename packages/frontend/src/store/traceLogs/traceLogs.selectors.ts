@@ -7,4 +7,4 @@ const selectTraceLogsState = createSelector([selectReducer(StoreKeys.TRACE_LOGS)
 
 const selectAll = createSelector(selectTraceLogsState, (state) => state)
 
-export const tracleLogsSelectors = { selectAll }
+export const traceLogsSelectors = { selectAll }
