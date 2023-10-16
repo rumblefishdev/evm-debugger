@@ -55,11 +55,12 @@ const SyntaxHighlighter = ({ source, highlightStartLine, highlightEndLine }: Syn
   const textHeight = lines ? lines.length : 0
   const height = textHeight * ACE_LINE_HEIGHT + BORDER
 
+  // Temporary solution for mismatching line numbers between Ace and Analyzer output
   const highlightMarker: IMarker = {
     type: 'fullLine',
-    startRow: highlightStartLine,
-    startCol: 0,
-    endRow: highlightEndLine,
+    startRow: highlightStartLine - 1,
+    startCol: 1,
+    endRow: highlightEndLine - 1,
     endCol: 0,
     // eslint-disable-next-line unicorn/no-keyword-prefix -- Ace require to provide className in that form
     className: 'highlightMarker',
