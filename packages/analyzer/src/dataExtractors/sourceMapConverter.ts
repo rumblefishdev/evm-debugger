@@ -53,7 +53,7 @@ export const createSourceMapToSourceCodeDictionary = (
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
-      const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.')[-1]]
+      const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
 
       let startLine = 0
       let endLine = 0
