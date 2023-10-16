@@ -89,7 +89,7 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
-export type TSourceMapCodeRepresentation = { hasSource: boolean; startCodeLine: number; endCodeLine: number }
+export type TSourceMapCodeRepresentation = { hasSource: boolean; startCodeLine: number; endCodeLine: number; isYUL: boolean }
 
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]

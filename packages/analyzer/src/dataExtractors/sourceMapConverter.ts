@@ -29,7 +29,7 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
 export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceCodeOutput, sourceMaps: TParsedSourceMap[]) => {
   const sourceMapToSourceCodeDictionary: Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> = {}
 
-  sourceMaps.forEach((sourceMap) => {
+  for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
     const sourceCode = sourceCodes[sourceMap.fileId]
 
@@ -59,11 +59,16 @@ export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceC
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startCodeLine: startLine,
+        isYUL: false,
         hasSource: true,
         endCodeLine: endLine,
       }
+    } else {
+      const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
+      const previousSourceMapId = createSourceMapIdentifier(previousSourceMap)
+      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = { ...sourceMapToSourceCodeDictionary[previousSourceMapId], isYUL: true }
     }
-  })
+  }
 
   return sourceMapToSourceCodeDictionary
 }

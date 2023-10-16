@@ -289,18 +289,10 @@ export class TxAnalyzer {
         const parsedOpcodes = opcodesConverter(opcodes)
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
-          const { offset, length, fileId, jumpType } = sourceMapEntry
+          const instructionId = createSourceMapIdentifier(sourceMapEntry)
           const { pc, opcode } = parsedOpcodes[index]
 
-          const id = createSourceMapIdentifier(sourceMapEntry)
-
-          const { hasSource, startCodeLine, endCodeLine } = uniqueSoruceMapsCodeLinesDictionary[id] || {
-            startCodeLine: 0,
-            hasSource: false,
-            endCodeLine: 0,
-          }
-
-          accumulator[pc] = { startCodeLine, pc, opcode, offset, length, jumpType, hasSource, fileId, endCodeLine }
+          accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
           return accumulator
         }, {} as TPcIndexedStepInstructions)
 
