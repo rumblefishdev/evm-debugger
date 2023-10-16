@@ -10,6 +10,14 @@ import {
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
 
+type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
+
+const fileTypeMap = {
+  '.yul': SourceFileType.YUL,
+  '.vy': SourceFileType.VYPER,
+  '.sol': SourceFileType.SOLIDITY,
+}
+
 export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSourceMap[] => {
   const uniqueSourceMaps: TParsedSourceMap[] = []
 
@@ -35,8 +43,8 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
 export const createSourceMapToSourceCodeDictionary = (
   sourceCodes: TParseSourceCodeOutput,
   sourceMaps: TParsedSourceMap[],
-): Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> => {
-  const sourceMapToSourceCodeDictionary: Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> = {}
+): SourceCodeDictionary => {
+  const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
 
   for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
@@ -45,7 +53,7 @@ export const createSourceMapToSourceCodeDictionary = (
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
-      const fileType = sourceCode.sourceName.endsWith('.sol') ? SourceFileType.SOLIDITY : SourceFileType.VYPER
+      const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.')[-1]]
 
       let startLine = 0
       let endLine = 0
