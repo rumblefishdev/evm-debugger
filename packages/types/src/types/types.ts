@@ -4,7 +4,7 @@ import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/
 
 import type { IStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { TSourceMap } from './srcMap'
+import type { SourceFileType, TSourceMap } from './srcMap'
 
 export type TStorage = Record<string, string>
 
@@ -89,7 +89,7 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
-export type TSourceMapCodeRepresentation = { hasSource: boolean; startCodeLine: number; endCodeLine: number }
+export type TSourceMapCodeRepresentation = { startCodeLine: number; endCodeLine: number; fileType: SourceFileType }
 
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]

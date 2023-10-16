@@ -1,8 +1,22 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import type { TOpcodeFromSourceMap, TParseSourceCodeOutput, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
+import {
+  SourceFileType,
+  type TOpcodeFromSourceMap,
+  type TParseSourceCodeOutput,
+  type TParsedSourceMap,
+  type TSourceMapCodeRepresentation,
+} from '@evm-debuger/types'
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
+
+type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
+
+const fileTypeMap = {
+  yul: SourceFileType.YUL,
+  vy: SourceFileType.VYPER,
+  sol: SourceFileType.SOLIDITY,
+}
 
 export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSourceMap[] => {
   const uniqueSourceMaps: TParsedSourceMap[] = []
@@ -26,16 +40,20 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
   return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}`
 }
 
-export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceCodeOutput, sourceMaps: TParsedSourceMap[]) => {
-  const sourceMapToSourceCodeDictionary: Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> = {}
+export const createSourceMapToSourceCodeDictionary = (
+  sourceCodes: TParseSourceCodeOutput,
+  sourceMaps: TParsedSourceMap[],
+): SourceCodeDictionary => {
+  const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
 
-  sourceMaps.forEach((sourceMap) => {
+  for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
     const sourceCode = sourceCodes[sourceMap.fileId]
 
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
+      const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
 
       let startLine = 0
       let endLine = 0
@@ -59,11 +77,18 @@ export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceC
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startCodeLine: startLine,
-        hasSource: true,
+        fileType,
         endCodeLine: endLine,
       }
+    } else {
+      const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
+      const previousSourceMapId = createSourceMapIdentifier(previousSourceMap)
+      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
+        ...sourceMapToSourceCodeDictionary[previousSourceMapId],
+        fileType: SourceFileType.YUL,
+      }
     }
-  })
+  }
 
   return sourceMapToSourceCodeDictionary
 }
