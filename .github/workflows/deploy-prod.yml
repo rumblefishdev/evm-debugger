@@ -7,7 +7,7 @@ on:
 
 env:
   NODE_VERSION: 18.16.0
-  ENV: production
+  ENV: prod
   AWS_EC2_METADATA_DISABLED: true
 
 jobs:
@@ -51,7 +51,7 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build:production
+          npm run frontend:build:prod
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -113,4 +113,4 @@ jobs:
       - name: Deploy stack
         working-directory: ./packages/infra
         run: |
-          make deploy-prod
+          make prod-deploy
