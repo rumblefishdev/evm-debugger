@@ -1,6 +1,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import type { TOpcodeFromSourceMap, TParseSourceCodeOutput, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
+import {
+  SourceFileType,
+  type TOpcodeFromSourceMap,
+  type TParseSourceCodeOutput,
+  type TParsedSourceMap,
+  type TSourceMapCodeRepresentation,
+} from '@evm-debuger/types'
 
 import { AlternativeOpcodes, Opcodes } from '../opcodes'
 
@@ -26,7 +32,10 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
   return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}`
 }
 
-export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceCodeOutput, sourceMaps: TParsedSourceMap[]) => {
+export const createSourceMapToSourceCodeDictionary = (
+  sourceCodes: TParseSourceCodeOutput,
+  sourceMaps: TParsedSourceMap[],
+): Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> => {
   const sourceMapToSourceCodeDictionary: Record<string, TParsedSourceMap & TSourceMapCodeRepresentation> = {}
 
   for (const sourceMap of sourceMaps) {
@@ -36,6 +45,7 @@ export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceC
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
+      const fileType = sourceCode.sourceName.endsWith('.sol') ? SourceFileType.SOLIDITY : SourceFileType.VYPER
 
       let startLine = 0
       let endLine = 0
@@ -59,14 +69,16 @@ export const createSourceMapToSourceCodeDictionary = (sourceCodes: TParseSourceC
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startCodeLine: startLine,
-        isYUL: false,
-        hasSource: true,
+        fileType,
         endCodeLine: endLine,
       }
     } else {
       const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
       const previousSourceMapId = createSourceMapIdentifier(previousSourceMap)
-      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = { ...sourceMapToSourceCodeDictionary[previousSourceMapId], isYUL: true }
+      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
+        ...sourceMapToSourceCodeDictionary[previousSourceMapId],
+        fileType: SourceFileType.YUL,
+      }
     }
   }
 

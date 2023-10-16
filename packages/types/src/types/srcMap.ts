@@ -24,6 +24,12 @@ export enum SrcMapStatus {
   SUCCESS = 'SUCCESS',
 }
 
+export enum SourceFileType {
+  SOLIDITY = 'SOLIDITY',
+  VYPER = 'VYPER',
+  YUL = 'YUL',
+}
+
 export type TSrcMapAddres = {
   address: string
   chainId: ChainId
