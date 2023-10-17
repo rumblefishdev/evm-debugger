@@ -1,0 +1,69 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+import { useTypedDispatch } from '../../../../../../store/storeHooks'
+import {
+  getExpandedNodes,
+  getNodeIdByPath,
+  parsePathsToMuiTreeView,
+  type MuiTreeViewNode,
+  getPathByNodeId,
+} from '../../../../../../helpers/muiTreeViewUtils'
+import { activeSourceFileSelectors } from '../../../../../../store/activeSourceFile/activeSourceFile.selectors'
+import { activeSourceFileActions } from '../../../../../../store/activeSourceFile/activeSourceFile.slice'
+
+import { TreeFileView } from './TreeFileView.component'
+import type { ITreeFileViewContainerProps } from './TreeFileView.types'
+
+export const TreeFileViewContainer: React.FC<ITreeFileViewContainerProps> = ({ sourceFiles }) => {
+  const dispatch = useTypedDispatch()
+
+  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+
+  const [sourceFilesNameToIdMap, setSourceFilesNameToIdMap] = React.useState<Record<string, number>>({})
+
+  const [sourceFilesTreeItems, setSourceFilesTreeItems] = React.useState<MuiTreeViewNode[]>([])
+  const [expandedTreeNodes, setExpandedTreeNodes] = React.useState<string[]>(['/'])
+  const [selectedTreeNode, setSelectedTreeNode] = React.useState<string>('/')
+
+  React.useEffect(() => {
+    setSourceFilesNameToIdMap(sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}))
+    setSourceFilesTreeItems(parsePathsToMuiTreeView(sourceFiles.map((item) => item.name)))
+    setExpandedTreeNodes(getExpandedNodes([sourceFiles[0]?.name]))
+    setSelectedTreeNode(getNodeIdByPath(sourceFiles[0]?.name))
+  }, [sourceFiles])
+
+  React.useEffect(() => {
+    if (sourceFiles[activeSourceFileId]) {
+      // dispatch(activeSourceFileActions.setActiveSourceFile(currentInstr?.fileId))
+      setExpandedTreeNodes(getExpandedNodes([sourceFiles[activeSourceFileId]?.name]))
+      setSelectedTreeNode(getNodeIdByPath(sourceFiles[activeSourceFileId]?.name))
+    }
+    // else {
+    //   dispatch(activeSourceFileActions.setActiveSourceFile(null))
+    //   console.warn(`No source file found for instruction ${JSON.stringify(currentInstr)}`)
+    // }
+  }, [sourceFiles, activeSourceFileId])
+
+  const handleSelect = (_: React.SyntheticEvent, nodeId: string) => {
+    setSelectedTreeNode(nodeId)
+    const fileName = getPathByNodeId(nodeId)
+    if (sourceFiles.some((file) => file.name === fileName)) {
+      dispatch(activeSourceFileActions.setActiveSourceFile(sourceFilesNameToIdMap[fileName]))
+    }
+  }
+
+  const handleExpandToggle = (_: React.SyntheticEvent, nodeIds: string[]) => {
+    setExpandedTreeNodes(nodeIds)
+  }
+
+  return (
+    <TreeFileView
+      expandedTreeNodes={expandedTreeNodes}
+      handleExpandToggle={handleExpandToggle}
+      handleSelect={handleSelect}
+      selectedTreeNode={selectedTreeNode}
+      sourceFilesTreeItems={sourceFilesTreeItems}
+    />
+  )
+}

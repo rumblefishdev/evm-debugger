@@ -1,17 +1,15 @@
 import { Stack, styled, Typography } from '@mui/material'
 
-export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
+export const StyledContentWrapper = styled(Stack)({
   width: '100%',
+  overflow: 'hidden',
   height: '100%',
-  gridTemplateRows: 'min-content 1fr',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-  display: 'grid',
-  columnGap: theme.spacing(2),
-  alignItems: 'stretch',
-  '> div': {
-    overflow: 'hidden',
-    gridRow: 2,
-  },
+})
+
+export const StyledListsWrapper = styled(Stack)(({ theme }) => ({
+  overflow: 'hidden',
+  gap: theme.spacing(2),
+  flexDirection: 'row',
 }))
 
 export const NotAContractHero = styled(Typography)(() => ({
