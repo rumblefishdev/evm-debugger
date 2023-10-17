@@ -11,7 +11,7 @@ import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './styles'
 import { SourceCodePanel } from './Panels/SourceCodePanel/SourceCodePanel'
 
-export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
+export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const source = useTypedSelector((state) => sourceCodesSelectors.selectByAddress(state, activeBlock.address))?.sourceCode
   const [isSourceView, setSourceView] = React.useState(false)
@@ -20,7 +20,7 @@ export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
   if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
   return (
-    <StyledContentWrapper>
+    <StyledContentWrapper {...props}>
       {isSourceView && <SourceCodePanel close={toggleSourceView} />}
       <StyledListsWrapper>
         <TraceLogsList />
