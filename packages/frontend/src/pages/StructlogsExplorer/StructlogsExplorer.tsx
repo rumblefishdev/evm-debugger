@@ -7,8 +7,8 @@ import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.select
 
 import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
-import { StyledContentWrapper, StyledListsWrapper, NotAContractHero, StyledSourceCodeWrapper } from './styles'
-import { SourceCodePanelContainer } from './Panels/SourceCodePanel/SourceCodePanel.container'
+import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './StructlogsExplorer.styles'
+import { SourceCodePanel } from './Panels/SourceCodePanel/SourceCodePanel'
 
 export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
@@ -21,7 +21,7 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
   return (
     <StyledContentWrapper {...props}>
       {isSourceView && (
-        <SourceCodePanelContainer
+        <SourceCodePanel
           close={toggleSourceView}
           isSourceCodeAvailable={isSourceCodeAvailable}
         />

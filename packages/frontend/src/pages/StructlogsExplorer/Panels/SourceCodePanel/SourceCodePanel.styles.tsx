@@ -6,12 +6,12 @@ export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
   boxSizing: 'border-box',
 }))
 
-export const StyledSourceWrapper = styled('div')(({ theme }) => ({
+export const StyledSourceWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
   overflowY: 'scroll',
   height: '100%',
-  display: 'flex',
-  columnGap: theme.spacing(2),
+  gap: theme.spacing(4),
+  flexDirection: 'row',
 }))
 
 export const NoSourceCodeHero = styled(Typography)(({ theme }) => ({
