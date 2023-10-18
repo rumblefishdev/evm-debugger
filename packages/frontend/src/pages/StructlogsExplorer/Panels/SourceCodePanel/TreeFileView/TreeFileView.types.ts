@@ -1,4 +1,5 @@
-import type { MuiTreeViewNode } from '../../../../../../helpers/muiTreeViewUtils'
+import type { MuiTreeViewNode } from '../../../../../helpers/muiTreeViewUtils'
+import type { TSourceFiles } from '../SourceCodePanel.types'
 
 export interface ITreeFileViewProps {
   expandedTreeNodes: string[]
@@ -9,5 +10,5 @@ export interface ITreeFileViewProps {
 }
 
 export interface ITreeFileViewContainerProps {
-  sourceFiles: { sourceCode: unknown; name: string }[]
+  sourceFiles: TSourceFiles[]
 }
