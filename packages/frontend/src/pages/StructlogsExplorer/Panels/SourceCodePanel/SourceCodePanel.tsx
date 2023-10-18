@@ -1,3 +1,4 @@
+import { pageTexts } from '../../../../pageTexts'
 import { StyledHeading, StyledButton } from '../styles'
 
 import { NoSourceCodeHero, StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
@@ -6,8 +7,7 @@ import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.contain
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 
 export const SourceCodePanel: React.FC<ISourceCodePanelComponentProps> = ({ close, isSourceCodeAvailable }) => {
-  if (!isSourceCodeAvailable)
-    return <NoSourceCodeHero variant="headingUnknown">No source code available for this contract</NoSourceCodeHero>
+  if (!isSourceCodeAvailable) return <NoSourceCodeHero variant="headingUnknown">{pageTexts.noSourceCode}</NoSourceCodeHero>
 
   return (
     <StyledSourceCodePanel>

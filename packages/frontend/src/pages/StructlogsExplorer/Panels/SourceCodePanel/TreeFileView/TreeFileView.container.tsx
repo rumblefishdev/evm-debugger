@@ -22,8 +22,8 @@ export const TreeFileViewContainer: React.FC = () => {
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
   const [sourceFilesNameToIdMap, setSourceFilesNameToIdMap] = useState<Record<string, number>>({})
-
   const [sourceFilesTreeItems, setSourceFilesTreeItems] = useState<MuiTreeViewNode[]>([])
+
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<string[]>(['/'])
   const [selectedTreeNode, setSelectedTreeNode] = useState<string>('/')
 
