@@ -1,5 +1,6 @@
 export interface ISourceCodePanelContainerProps {
   close: () => void
+  source: string
 }
 export interface ISourceCodePanelComponentProps {
   sourceFiles: {

@@ -21,7 +21,12 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
 
   return (
     <StyledContentWrapper {...props}>
-      {isSourceView && <SourceCodePanelContainer close={toggleSourceView} />}
+      {isSourceView && (
+        <SourceCodePanelContainer
+          source={source}
+          close={toggleSourceView}
+        />
+      )}
       <StyledListsWrapper>
         <TraceLogsList />
         <StructlogPanel />
