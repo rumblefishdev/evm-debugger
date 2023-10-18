@@ -10,6 +10,9 @@ import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { isInView } from '../../../../helpers/dom'
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
+import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
+import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
+import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { QuickLinks } from './QuickLinks'
 
@@ -17,6 +20,8 @@ export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const instructions = useSelector(instructionsSelectors.selectEntities)
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const [isQuickLinksOpen, setQuickLinksOpen] = useState(false)
 
@@ -67,8 +72,9 @@ export const StructlogPanel = (): JSX.Element => {
   const handleClick = useCallback(
     (structLog: IExtendedStructLog) => {
       dispatch(structLogsActions.loadActiveStructLog(structLog))
+      dispatch(activeSourceFileActions.setActiveSourceFile(instructions[activeBlock.address]?.instructions[structLog.pc]?.fileId))
     },
-    [dispatch],
+    [dispatch, activeBlock.address, instructions],
   )
 
   return (

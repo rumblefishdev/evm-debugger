@@ -3,6 +3,8 @@ import { createSelector } from '@reduxjs/toolkit'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
+import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
+import { parseSourceCode } from '../../helpers/sourceCodeParser'
 
 import { sourceCodesAdapter } from './sourceCodes.slice'
 
@@ -24,4 +26,26 @@ const selectAllWithContractNames = createSelector(
   },
 )
 
-export const sourceCodesSelectors = { selectByAddress, selectAllWithContractNames, selectAll }
+const selectCurrentSourceCode = createSelector([selectAll, activeBlockSelectors.selectActiveBlock], (_sourceCodes, _activeBlock) => {
+  return _sourceCodes.find(({ address }) => address === _activeBlock?.address)
+})
+
+const selectIsSourceCodePresent = createSelector([selectCurrentSourceCode], (_sourceCode) => Boolean(_sourceCode))
+
+const selectCurrentSourceFiles = createSelector(
+  [selectCurrentSourceCode, contractNamesSelectors.selectAll],
+  (_sourceCode, _contractNames) => {
+    const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
+    const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
+    return Object.entries(parseSourceCodeResult).map(([name, sourceCode]) => ({ sourceCode, name }))
+  },
+)
+
+export const sourceCodesSelectors = {
+  selectIsSourceCodePresent,
+  selectCurrentSourceFiles,
+  selectCurrentSourceCode,
+  selectByAddress,
+  selectAllWithContractNames,
+  selectAll,
+}

@@ -3,28 +3,39 @@ import { useSelector } from 'react-redux'
 
 import { TraceLogsList } from '../../components/TraceLogsList'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
+import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.selectors'
 
-import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
+import { BytecodePanel, StructlogPanel, InformationPanel, SourceCodePanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
-import { StyledContentWrapper, NotAContractHero } from './styles'
+import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './StructlogsExplorer.styles'
 
-export const StructlogsExplorer = ({ ...props }: StructlogsExplorerProps) => {
+export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
+  const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodePresent)
+  const [isSourceView, setSourceView] = React.useState(false)
+  const toggleSourceView = () => setSourceView((prev) => !prev)
+
+  if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
   return (
-    <>
-      <StyledContentWrapper {...props}>
+    <StyledContentWrapper {...props}>
+      {isSourceView && (
+        <SourceCodePanel
+          close={toggleSourceView}
+          isSourceCodeAvailable={isSourceCodeAvailable}
+        />
+      )}
+      <StyledListsWrapper>
         <TraceLogsList />
-        {activeBlock.isContract ? (
-          <>
-            <StructlogPanel />
-            <BytecodePanel />
-            <InformationPanel />
-          </>
-        ) : (
-          <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
+        <StructlogPanel />
+        {!isSourceView && (
+          <BytecodePanel
+            toggleSourceCodePanel={toggleSourceView}
+            isSourceCodeAvailable={isSourceCodeAvailable}
+          />
         )}
-      </StyledContentWrapper>
-    </>
+        <InformationPanel />
+      </StyledListsWrapper>
+    </StyledContentWrapper>
   )
 }

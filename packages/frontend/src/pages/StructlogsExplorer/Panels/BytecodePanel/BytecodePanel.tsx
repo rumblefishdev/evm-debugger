@@ -10,24 +10,19 @@ import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { isInView } from '../../../../helpers/dom'
 import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
-import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
 
 import { StyledDisabledBytecode } from './styles'
-import { SourceCodePanel } from './SourceCodePanel'
+import type { BytecodePanelProps } from './BytecodePanel.types'
 
-export const BytecodePanel = (): JSX.Element => {
+export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvailable, toggleSourceCodePanel }) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
-
-  const [isSourceView, setSourceView] = React.useState(false)
-  const toggleSourceView = () => setSourceView((prev) => !prev)
 
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const currentBlockAddress = activeBlock.address
 
-  const sourceCode = useTypedSelector((state) => sourceCodesSelectors.selectByAddress(state, currentBlockAddress))?.sourceCode
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
 
   const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, currentBlockAddress))
@@ -52,14 +47,6 @@ export const BytecodePanel = (): JSX.Element => {
     }
   }, [activeStrucLog, activeBlockBytecode.disassembled])
 
-  if (isSourceView)
-    return (
-      <SourceCodePanel
-        close={toggleSourceView}
-        sourceCode={sourceCode}
-      />
-    )
-
   if (!activeBlockBytecode?.disassembled)
     return (
       <StyledSmallPanel>
@@ -71,10 +58,10 @@ export const BytecodePanel = (): JSX.Element => {
     <StyledSmallPanel>
       <StyledHeading>
         Disassembled Bytecode
-        {sourceCode ? (
+        {isSourceCodeAvailable ? (
           <StyledButton
             variant="text"
-            onClick={toggleSourceView}
+            onClick={toggleSourceCodePanel}
           >
             View source
           </StyledButton>

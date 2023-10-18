@@ -85,9 +85,3 @@ export const StyledSyntaxHighlighter = memo(SyntaxHighlighter)
 export const StyledSelectWrapper = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }))
-
-export const StyledLoading = styled(CircularProgress)<{
-  dimensions?: [number, number]
-}>(({ theme, dimensions }) => ({
-  margin: dimensions ? `${dimensions[1] / 2}px ${dimensions[0] / 2}px` : `${theme.spacing(40)} auto`,
-}))
