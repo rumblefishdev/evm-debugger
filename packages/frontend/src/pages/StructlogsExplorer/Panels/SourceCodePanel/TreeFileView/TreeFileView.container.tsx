@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTypedDispatch } from '../../../../../store/storeHooks'
@@ -18,18 +18,22 @@ import { TreeFileView } from './TreeFileView.component'
 export const TreeFileViewContainer: React.FC = () => {
   const dispatch = useTypedDispatch()
 
-  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
-  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
-
-  const [sourceFilesNameToIdMap, setSourceFilesNameToIdMap] = useState<Record<string, number>>({})
-  const [sourceFilesTreeItems, setSourceFilesTreeItems] = useState<MuiTreeViewNode[]>([])
-
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<string[]>(['/'])
   const [selectedTreeNode, setSelectedTreeNode] = useState<string>('/')
 
+  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
+
+  const sourceFilesNameToIdMap = useMemo<Record<string, number>>(
+    () => sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}),
+    [sourceFiles],
+  )
+  const sourceFilesTreeItems = useMemo<MuiTreeViewNode[]>(
+    () => parsePathsToMuiTreeView(sourceFiles.map((item) => item.name)),
+    [sourceFiles],
+  )
+
   useEffect(() => {
-    setSourceFilesNameToIdMap(sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}))
-    setSourceFilesTreeItems(parsePathsToMuiTreeView(sourceFiles.map((item) => item.name)))
     setExpandedTreeNodes(getExpandedNodes([sourceFiles[0]?.name]))
     setSelectedTreeNode(getNodeIdByPath(sourceFiles[0]?.name))
   }, [sourceFiles])
