@@ -1,14 +1,12 @@
 export type TSourceFiles = {
-  sourceCode: unknown
+  sourceCode: string
   name: string
 }
 
 export interface ISourceCodePanelContainerProps {
   close: () => void
-  source: string
+  isSourceCodeAvailable: boolean
 }
 export interface ISourceCodePanelComponentProps {
-  sourceFiles: TSourceFiles[]
-  activeSourceCode: string
   close: () => void
 }

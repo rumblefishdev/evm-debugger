@@ -6,13 +6,17 @@ import { instructionsSelectors } from '../../../../../store/instructions/instruc
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
 import { contractNamesSelectors } from '../../../../../store/contractNames/contractNames.selectors'
+import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
+import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
-import type { ISourceCodeViewContainerProps } from './SourceCodeView.types'
 
-export const SourceCodeViewContainer: React.FC<ISourceCodeViewContainerProps> = ({ activeSourceCode }) => {
+export const SourceCodeViewContainer: React.FC = () => {
   const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
+
+  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
   const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
   const { contractName } = useTypedSelector((state) => contractNamesSelectors.selectByAddress(state, activeBlock.address))
@@ -24,7 +28,7 @@ export const SourceCodeViewContainer: React.FC<ISourceCodeViewContainerProps> = 
       endCodeLine={endCodeLine}
       startCodeLine={startCodeLine}
       contractName={contractName}
-      activeSourceCode={activeSourceCode}
+      activeSourceCode={sourceFiles[activeSourceFileId]?.sourceCode}
     />
   )
 }

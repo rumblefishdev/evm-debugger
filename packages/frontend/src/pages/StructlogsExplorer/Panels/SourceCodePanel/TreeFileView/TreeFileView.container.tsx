@@ -11,14 +11,15 @@ import {
 } from '../../../../../helpers/muiTreeViewUtils'
 import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
+import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
 
 import { TreeFileView } from './TreeFileView.component'
-import type { ITreeFileViewContainerProps } from './TreeFileView.types'
 
-export const TreeFileViewContainer: React.FC<ITreeFileViewContainerProps> = ({ sourceFiles }) => {
+export const TreeFileViewContainer: React.FC = () => {
   const dispatch = useTypedDispatch()
 
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
+  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
   const [sourceFilesNameToIdMap, setSourceFilesNameToIdMap] = useState<Record<string, number>>({})
 

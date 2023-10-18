@@ -5,7 +5,7 @@ import type { ISourceCodePanelComponentProps } from './SourceCodePanel.types'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 
-export const SourceCodePanelComponent: React.FC<ISourceCodePanelComponentProps> = ({ activeSourceCode, close, sourceFiles }) => {
+export const SourceCodePanelComponent: React.FC<ISourceCodePanelComponentProps> = ({ close }) => {
   return (
     <StyledSourceCodePanel>
       <StyledHeading>
@@ -18,8 +18,8 @@ export const SourceCodePanelComponent: React.FC<ISourceCodePanelComponentProps> 
         </StyledButton>
       </StyledHeading>
       <StyledSourceWrapper>
-        <TreeFileViewContainer sourceFiles={sourceFiles} />
-        <SourceCodeViewContainer activeSourceCode={activeSourceCode} />
+        <TreeFileViewContainer />
+        <SourceCodeViewContainer />
       </StyledSourceWrapper>
     </StyledSourceCodePanel>
   )

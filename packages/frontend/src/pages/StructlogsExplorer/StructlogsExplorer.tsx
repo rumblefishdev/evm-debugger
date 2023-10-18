@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { TraceLogsList } from '../../components/TraceLogsList'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
-import { useTypedSelector } from '../../store/storeHooks'
 import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.selectors'
 
 import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
@@ -13,7 +12,7 @@ import { SourceCodePanelContainer } from './Panels/SourceCodePanel/SourceCodePan
 
 export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
-  const source = useTypedSelector((state) => sourceCodesSelectors.selectByAddress(state, activeBlock.address))?.sourceCode
+  const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodePresent)
   const [isSourceView, setSourceView] = React.useState(false)
   const toggleSourceView = () => setSourceView((prev) => !prev)
 
@@ -23,8 +22,8 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
     <StyledContentWrapper {...props}>
       {isSourceView && (
         <SourceCodePanelContainer
-          source={source}
           close={toggleSourceView}
+          isSourceCodeAvailable={isSourceCodeAvailable}
         />
       )}
       <StyledListsWrapper>
@@ -33,7 +32,7 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
         {!isSourceView && (
           <BytecodePanel
             toggleSourceCodePanel={toggleSourceView}
-            isSourceCodeAvailable={Boolean(source)}
+            isSourceCodeAvailable={isSourceCodeAvailable}
           />
         )}
         <InformationPanel />

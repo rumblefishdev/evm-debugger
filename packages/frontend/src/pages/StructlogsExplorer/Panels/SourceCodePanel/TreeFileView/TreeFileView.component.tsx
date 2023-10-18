@@ -1,7 +1,7 @@
 import { TreeItem } from '@mui/lab'
 
-import type { MuiTreeViewNode } from '../../../../../../helpers/muiTreeViewUtils'
-import { ArrowDownBlack } from '../../../../../../icons'
+import type { MuiTreeViewNode } from '../../../../../helpers/muiTreeViewUtils'
+import { ArrowDownBlack } from '../../../../../icons'
 
 import { StyledTreeFileView } from './TreeFileView.styles'
 import type { ITreeFileViewProps } from './TreeFileView.types'

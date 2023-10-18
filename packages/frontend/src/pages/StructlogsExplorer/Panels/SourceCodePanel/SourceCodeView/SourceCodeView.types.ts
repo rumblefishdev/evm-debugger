@@ -4,7 +4,3 @@ export interface ISourceCodeViewProps {
   startCodeLine: number
   endCodeLine: number
 }
-
-export interface ISourceCodeViewContainerProps {
-  activeSourceCode: string
-}
