@@ -1,8 +1,3 @@
-export type TSourceFiles = {
-  sourceCode: string
-  name: string
-}
-
 export interface ISourceCodePanelContainerProps {
   close: () => void
   isSourceCodeAvailable: boolean
