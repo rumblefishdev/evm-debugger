@@ -7,7 +7,7 @@ import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.select
 
 import { BytecodePanel, StructlogPanel, InformationPanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
-import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './styles'
+import { StyledContentWrapper, StyledListsWrapper, NotAContractHero, StyledSourceCodeWrapper } from './styles'
 import { SourceCodePanelContainer } from './Panels/SourceCodePanel/SourceCodePanel.container'
 
 export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
