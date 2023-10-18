@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { usePreviousProps } from '@mui/utils'
-import React from 'react'
+import { useState, useEffect } from 'react'
 
 import { useTypedSelector } from '../../../../../store/storeHooks'
 import { contractNamesSelectors } from '../../../../../store/contractNames/contractNames.selectors'
@@ -16,9 +16,9 @@ import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
 
 export const SourceCodeDebuggerContainer: React.FC = () => {
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [sourceFiles, setSourceFiles] = React.useState<{ sourceCode: string; name: string }[]>([])
-  const [activeSourceCode, setActiveSourceCode] = React.useState<string>()
+  const [isLoading, setIsLoading] = useState(true)
+  const [sourceFiles, setSourceFiles] = useState<{ sourceCode: string; name: string }[]>([])
+  const [activeSourceCode, setActiveSourceCode] = useState<string>()
 
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
@@ -30,24 +30,24 @@ export const SourceCodeDebuggerContainer: React.FC = () => {
 
   const didSourceChange = usePreviousProps<ISourceCodeDebuggerContainerProps>({ source }).source !== source
 
-  const isSourcePresent = source && sourceFiles && sourceFiles[activeSourceFileId]
-  const shouldDisplayLoading = isLoading || didSourceChange
-
-  React.useEffect(() => {
+  useEffect(() => {
     setSourceFiles(Object.entries(sourceNameToCodeMap).map(([name, sourceCode]) => ({ sourceCode, name })))
   }, [sourceNameToCodeMap])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setActiveSourceCode(sourceFiles?.[activeSourceFileId]?.sourceCode || null)
   }, [sourceFiles, activeSourceFileId])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (didSourceChange && !isLoading) setIsLoading(true)
     else {
       const timeout = setTimeout(() => setIsLoading(false), 100)
       return () => clearTimeout(timeout)
     }
   }, [isLoading, didSourceChange])
+
+  const isSourcePresent = source && sourceFiles && sourceFiles[activeSourceFileId]
+  const shouldDisplayLoading = isLoading || didSourceChange
 
   switch (true) {
     case isSourcePresent && !shouldDisplayLoading:

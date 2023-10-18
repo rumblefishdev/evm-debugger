@@ -1,8 +1,6 @@
 import { Stack, styled } from '@mui/material'
 
-import { StyledSmallPanel } from '../styles'
-
-export const StyledSourceCodePanel = styled(Stack)(() => ({
-  marginBottom: '2rem',
+export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
   height: 'calc(50vh - 3rem)',
 }))

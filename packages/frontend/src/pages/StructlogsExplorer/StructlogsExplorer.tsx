@@ -31,7 +31,6 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
             isSourceCodeAvailable={Boolean(source)}
           />
         )}
-
         <InformationPanel />
       </StyledListsWrapper>
     </StyledContentWrapper>
