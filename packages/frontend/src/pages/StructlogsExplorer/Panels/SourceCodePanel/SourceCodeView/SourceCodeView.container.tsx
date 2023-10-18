@@ -1,11 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../../../../store/storeHooks'
-import { instructionsSelectors } from '../../../../../../store/instructions/instructions.selectors'
-import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
-import { activeBlockSelectors } from '../../../../../../store/activeBlock/activeBlock.selector'
-import { contractNamesSelectors } from '../../../../../../store/contractNames/contractNames.selectors'
+import { useTypedSelector } from '../../../../../store/storeHooks'
+import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
+import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
+import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
+import { contractNamesSelectors } from '../../../../../store/contractNames/contractNames.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 import type { ISourceCodeViewContainerProps } from './SourceCodeView.types'

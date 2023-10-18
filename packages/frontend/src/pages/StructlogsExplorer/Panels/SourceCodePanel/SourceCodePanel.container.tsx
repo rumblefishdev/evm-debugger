@@ -1,21 +1,19 @@
 import { useSelector } from 'react-redux'
-import { usePreviousProps } from '@mui/utils'
 import { useState, useEffect } from 'react'
 
-import { useTypedSelector } from '../../../../../store/storeHooks'
-import { contractNamesSelectors } from '../../../../../store/contractNames/contractNames.selectors'
-import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
-import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
-import { useSources } from '../../../../../components/SourceCodeDisplayer'
-import { StyledLoading } from '../../../../../components/SourceCodeDisplayer/styles'
-import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
+import { activeSourceFileSelectors } from '../../../../store/activeSourceFile/activeSourceFile.selectors'
+import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
+import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
+import { useTypedSelector } from '../../../../store/storeHooks'
+import { useSources } from '../../../../components/SourceCodeDisplayer'
+import { contractNamesSelectors } from '../../../../store/contractNames/contractNames.selectors'
+import { StyledLoading } from '../../../../components/SourceCodeDisplayer/styles'
 
-import type { ISourceCodeDebuggerContainerProps } from './SourceCodeDebugger.types'
-import { NoSourceCodeHero, StyledSourceWrapper } from './SourceCodeDebugger.styles'
-import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
-import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
+import type { ISourceCodePanelContainerProps } from './SourceCodePanel.types'
+import { NoSourceCodeHero } from './SourceCodePanel.styles'
+import { SourceCodePanelComponent } from './SourceCodePanel.component'
 
-export const SourceCodeDebuggerContainer: React.FC = () => {
+export const SourceCodePanelContainer: React.FC<ISourceCodePanelContainerProps> = ({ close }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [sourceFiles, setSourceFiles] = useState<{ sourceCode: string; name: string }[]>([])
   const [activeSourceCode, setActiveSourceCode] = useState<string>()
@@ -28,8 +26,6 @@ export const SourceCodeDebuggerContainer: React.FC = () => {
 
   const sourceNameToCodeMap = useSources(contractName, source)
 
-  const didSourceChange = usePreviousProps<ISourceCodeDebuggerContainerProps>({ source }).source !== source
-
   useEffect(() => {
     setSourceFiles(Object.entries(sourceNameToCodeMap).map(([name, sourceCode]) => ({ sourceCode, name })))
   }, [sourceNameToCodeMap])
@@ -39,23 +35,24 @@ export const SourceCodeDebuggerContainer: React.FC = () => {
   }, [sourceFiles, activeSourceFileId])
 
   useEffect(() => {
-    if (didSourceChange && !isLoading) setIsLoading(true)
+    if (!isLoading) setIsLoading(true)
     else {
       const timeout = setTimeout(() => setIsLoading(false), 100)
       return () => clearTimeout(timeout)
     }
-  }, [isLoading, didSourceChange])
+  }, [isLoading])
 
   const isSourcePresent = source && sourceFiles && sourceFiles[activeSourceFileId]
-  const shouldDisplayLoading = isLoading || didSourceChange
+  const shouldDisplayLoading = isLoading
 
   switch (true) {
     case isSourcePresent && !shouldDisplayLoading:
       return (
-        <StyledSourceWrapper>
-          <TreeFileViewContainer sourceFiles={sourceFiles} />
-          <SourceCodeViewContainer activeSourceCode={activeSourceCode} />
-        </StyledSourceWrapper>
+        <SourceCodePanelComponent
+          activeSourceCode={activeSourceCode}
+          sourceFiles={sourceFiles}
+          close={close}
+        />
       )
     case isSourcePresent && shouldDisplayLoading:
       return <StyledLoading />

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useTypedDispatch } from '../../../../../../store/storeHooks'
+import { useTypedDispatch } from '../../../../../store/storeHooks'
 import {
   getExpandedNodes,
   getNodeIdByPath,
   parsePathsToMuiTreeView,
   type MuiTreeViewNode,
   getPathByNodeId,
-} from '../../../../../../helpers/muiTreeViewUtils'
-import { activeSourceFileSelectors } from '../../../../../../store/activeSourceFile/activeSourceFile.selectors'
-import { activeSourceFileActions } from '../../../../../../store/activeSourceFile/activeSourceFile.slice'
+} from '../../../../../helpers/muiTreeViewUtils'
+import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
+import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { TreeFileView } from './TreeFileView.component'
 import type { ITreeFileViewContainerProps } from './TreeFileView.types'
@@ -35,14 +35,9 @@ export const TreeFileViewContainer: React.FC<ITreeFileViewContainerProps> = ({ s
 
   useEffect(() => {
     if (sourceFiles[activeSourceFileId]) {
-      // dispatch(activeSourceFileActions.setActiveSourceFile(currentInstr?.fileId))
       setExpandedTreeNodes(getExpandedNodes([sourceFiles[activeSourceFileId]?.name]))
       setSelectedTreeNode(getNodeIdByPath(sourceFiles[activeSourceFileId]?.name))
     }
-    // else {
-    //   dispatch(activeSourceFileActions.setActiveSourceFile(null))
-    //   console.warn(`No source file found for instruction ${JSON.stringify(currentInstr)}`)
-    // }
   }, [sourceFiles, activeSourceFileId])
 
   const handleSelect = (_: React.SyntheticEvent, nodeId: string) => {

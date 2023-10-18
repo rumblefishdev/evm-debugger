@@ -1,4 +1,4 @@
-import { StyledSyntaxHighlighter } from '../../../../../../components/SourceCodeDisplayer/styles'
+import { StyledSyntaxHighlighter } from '../../../../../components/SourceCodeDisplayer/styles'
 
 import type { ISourceCodeViewProps } from './SourceCodeView.types'
 import { StyledSourceSection, StyledSourceSectionHeading } from './SourceCodeView.styles'
