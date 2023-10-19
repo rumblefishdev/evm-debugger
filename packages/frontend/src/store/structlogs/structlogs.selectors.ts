@@ -9,9 +9,11 @@ import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
 import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.selectors'
 
+import { structLogsAdapter } from './structlogs.slice'
+
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
 
-const selectAll = createSelector(selectStructlogsState, (state) => state)
+const selectAll = createSelector([selectStructlogsState], (state) => structLogsAdapter.getSelectors().selectAll(state))
 
 export const selectParsedStructLogs = createSelector(
   [selectAll, traceLogsSelectors.selectAll, activeBlockSelectors.selectParsedActiveBlock],
@@ -19,19 +21,17 @@ export const selectParsedStructLogs = createSelector(
     structLogs
       .slice(startIndex, returnIndex + 1)
       .filter((item) => item.depth === structLogs[startIndex].depth)
-      .map((item, index) => {
+      .map((item) => {
         if (checkIfOfCallType(item) || checkIfOfCreateType(item))
           return {
             ...argStackExtractor(item),
             stack: extendStack(item.stack),
-            index,
             gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
           }
 
         return {
           ...argStackExtractor(item),
           stack: extendStack(item.stack),
-          index,
         }
       }),
 )
