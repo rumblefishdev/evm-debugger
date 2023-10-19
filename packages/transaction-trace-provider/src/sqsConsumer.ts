@@ -2,6 +2,7 @@ import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
+import type { TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 
@@ -25,7 +26,10 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     chainId,
   })
   console.log(`Starting debug_traceTransaction for ${txHash}`)
-  const traceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+  const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+  // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
+  // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
+
   return pushTraceToS3(txHash, chainId, JSON.stringify(traceResult))
 }
 

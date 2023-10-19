@@ -2,7 +2,7 @@ import type { TCallTypeOpcodes, TCreateTypeOpcodes, TLogOpcodes, TReturnTypeOpco
 import type { TAllOpCodes } from './opcodesNames'
 import type { TStorage } from './types'
 
-export interface IStructLog {
+export interface IRawStructLog {
   pc: number
   op: TAllOpCodes
   gas: number
@@ -13,8 +13,11 @@ export interface IStructLog {
   storage: TStorage
 }
 
-export interface IFilteredStructLog extends IStructLog {
+export interface IStructLog extends IRawStructLog {
   index: number
+}
+
+export interface IFilteredStructLog extends IStructLog {
   op: TCallTypeOpcodes | TCreateTypeOpcodes | TReturnTypeOpcodes | 'STOP'
 }
 
@@ -29,7 +32,6 @@ export interface IReturnTypeStructLogs extends IFilteredStructLog {
 }
 
 export interface IStorageTypeStructLogs extends IStructLog {
-  index: number
   op: TStorageOpCodes
 }
 
