@@ -7,12 +7,11 @@ import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../traceLogs/traceLogs.selectors'
 import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
+import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.selectors'
 
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
 
-const selectAll = createSelector(selectStructlogsState, (state) => state.structLogs)
-
-const selectActiveStructLog = createSelector(selectStructlogsState, (state) => state.activeStructLog)
+const selectAll = createSelector(selectStructlogsState, (state) => state)
 
 export const selectParsedStructLogs = createSelector(
   [selectAll, traceLogsSelectors.selectAll, activeBlockSelectors.selectParsedActiveBlock],
@@ -38,7 +37,7 @@ export const selectParsedStructLogs = createSelector(
 )
 
 export const selectParsedStack = createSelector(
-  [selectActiveStructLog],
+  [activeStructLogSelectors.selectActiveStructLog],
   (activeStructlog) =>
     activeStructlog?.stack
       .map((stackItem, index) => {
@@ -52,7 +51,7 @@ export const selectParsedStack = createSelector(
 )
 
 export const selectParsedMemory = createSelector(
-  [selectActiveStructLog],
+  [activeStructLogSelectors.selectActiveStructLog],
   (activeStructlog) =>
     activeStructlog?.memory.map((memoryItem, index) => {
       const defaultString = '0000'
@@ -63,7 +62,7 @@ export const selectParsedMemory = createSelector(
       return { value: splitMemoryItem, index: paddedHexValue }
     }) ?? [],
 )
-export const selectStructlogStorage = createSelector([selectActiveStructLog], (state) => state?.storage ?? {})
+export const selectStructlogStorage = createSelector([activeStructLogSelectors.selectActiveStructLog], (state) => state?.storage ?? {})
 
 export const structlogsSelectors = {
   selectStructlogStorage,
@@ -71,5 +70,4 @@ export const structlogsSelectors = {
   selectParsedStack,
   selectParsedMemory,
   selectAll,
-  selectActiveStructLog,
 }

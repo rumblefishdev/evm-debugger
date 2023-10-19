@@ -110,8 +110,8 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           clearInterval(transactionTraceInterval)
           // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
           const traceResult: TTransactionTraceResult = await transactionTrace.json()
-          const structLogs = traceResult.structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
-          resolve(structLogs)
+          // const structLogs = traceResult.structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
+          resolve(traceResult.structLogs)
         }
       }, 15_000)
     })
