@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { TraceLogsList } from '../../components/TraceLogsList'
@@ -17,10 +17,6 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
 
   const [isSourceView, setSourceView] = React.useState(false)
   const toggleSourceView = () => setSourceView((prev) => !prev)
-
-  useEffect(() => {
-    !isSourceCodeAvailable && !isSourceMapAvailable && setSourceView(false)
-  }, [isSourceCodeAvailable, isSourceMapAvailable])
 
   const isAbleToDisplaySourceCodePanel = isSourceCodeAvailable && isSourceMapAvailable
 
