@@ -28,7 +28,7 @@ export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvaila
   const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, currentBlockAddress))
 
   useEffect(() => {
-    if (!activeBlockBytecode?.disassembled) return
+    if (activeBlockBytecode || !activeBlockBytecode?.disassembled) return
     if (activeStrucLog) {
       const pcFormatted = `0x${activeStrucLog.pc.toString(16)}`
       const index = activeBlockBytecode.disassembled.findIndex((opcode) => opcode.pc === pcFormatted)
@@ -45,7 +45,7 @@ export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvaila
         }
       }
     }
-  }, [activeStrucLog, activeBlockBytecode.disassembled])
+  }, [activeStrucLog, activeBlockBytecode])
 
   if (!activeBlockBytecode?.disassembled)
     return (
@@ -71,7 +71,7 @@ export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvaila
         <ViewportList
           ref={listRef}
           viewportRef={ref}
-          items={activeBlockBytecode.disassembled}
+          items={activeBlockBytecode?.disassembled}
           withCache={true}
         >
           {(item, index) => {

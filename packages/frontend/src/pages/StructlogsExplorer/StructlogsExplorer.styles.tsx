@@ -8,7 +8,7 @@ export const StyledContentWrapper = styled(Stack)({
 
 export const StyledListsWrapper = styled(Stack)(({ theme }) => ({
   overflow: 'hidden',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   flexDirection: 'row',
 }))
 
