@@ -5,7 +5,7 @@ import { TraceLogsList } from '../../components/TraceLogsList'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.selectors'
 
-import { BytecodePanel, StructlogPanel, InformationPanel, SourceCodePanel } from './Panels'
+import { StructlogPanel, InformationPanel, SourceCodePanel, BytecodePanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './StructlogsExplorer.styles'
 
