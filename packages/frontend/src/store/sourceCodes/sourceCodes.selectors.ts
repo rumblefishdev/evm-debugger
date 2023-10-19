@@ -30,7 +30,7 @@ const selectCurrentSourceCode = createSelector([selectAll, activeBlockSelectors.
   return _sourceCodes.find(({ address }) => address === _activeBlock?.address)
 })
 
-const selectIsSourceCodePresent = createSelector([selectCurrentSourceCode], (_sourceCode) => Boolean(_sourceCode))
+const selectIsSourceCodeAvailable = createSelector([selectCurrentSourceCode], (_sourceCode) => Boolean(_sourceCode))
 
 const selectCurrentSourceFiles = createSelector(
   [selectCurrentSourceCode, contractNamesSelectors.selectAll],
@@ -42,7 +42,7 @@ const selectCurrentSourceFiles = createSelector(
 )
 
 export const sourceCodesSelectors = {
-  selectIsSourceCodePresent,
+  selectIsSourceCodeAvailable,
   selectCurrentSourceFiles,
   selectCurrentSourceCode,
   selectByAddress,

@@ -1,3 +1,5 @@
+import { Button } from '@mui/material'
+
 import { pageTexts } from '../../../../pageTexts'
 import { StyledHeading, StyledButton } from '../styles'
 
@@ -6,8 +8,14 @@ import type { ISourceCodePanelComponentProps } from './SourceCodePanel.types'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 
-export const SourceCodePanel: React.FC<ISourceCodePanelComponentProps> = ({ close, isSourceCodeAvailable }) => {
-  if (!isSourceCodeAvailable) return <NoSourceCodeHero variant="headingUnknown">{pageTexts.noSourceCode}</NoSourceCodeHero>
+export const SourceCodePanel: React.FC<ISourceCodePanelComponentProps> = ({ close, isAbleToDisplaySourceCodePanel }) => {
+  if (!isAbleToDisplaySourceCodePanel)
+    return (
+      <NoSourceCodeHero variant="headingUnknown">
+        {pageTexts.noSourceCode}
+        <Button onClick={close}>Close</Button>
+      </NoSourceCodeHero>
+    )
 
   return (
     <StyledSourceCodePanel>

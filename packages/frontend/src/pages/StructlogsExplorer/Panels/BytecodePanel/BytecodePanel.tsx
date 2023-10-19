@@ -16,7 +16,7 @@ import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.select
 import { StyledDisabledBytecode } from './styles'
 import type { BytecodePanelProps } from './BytecodePanel.types'
 
-export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvailable, toggleSourceCodePanel }) => {
+export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isAbleToDisplaySourceCodePanel, toggleSourceCodePanel }) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
@@ -58,7 +58,7 @@ export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvaila
     <StyledSmallPanel>
       <StyledHeading>
         Disassembled Bytecode
-        {isSourceCodeAvailable ? (
+        {isAbleToDisplaySourceCodePanel ? (
           <StyledButton
             variant="text"
             onClick={toggleSourceCodePanel}
