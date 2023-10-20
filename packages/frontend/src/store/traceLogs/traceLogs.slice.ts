@@ -9,7 +9,6 @@ import type { ActionsType } from '../store.types'
 import type { TMainTraceLogsWithId } from './traceLogs.types'
 
 export const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
-  sortComparer: (a, b) => a.id.localeCompare(b.id),
   selectId: (entity) => entity.id,
 })
 
