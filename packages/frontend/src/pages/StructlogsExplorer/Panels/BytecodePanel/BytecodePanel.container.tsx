@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
-import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { isInView } from '../../../../helpers/dom'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 
