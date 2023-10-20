@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { isInView } from '../../../../helpers/dom'
+import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { BytecodePanelContainerProps } from './BytecodePanel.types'
 import { BytecodePanelComponent } from './BytecodePanel.component'
@@ -12,7 +13,7 @@ import { StyledMissingBytecodeContainer, StyledMissingBytecodeText } from './Byt
 export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
-  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentDissasembledBytecode = useSelector(bytecodesSelectors.selectCurrentDissasembledBytecode)
 
   const isBytecodeAvailable = Boolean(currentDissasembledBytecode)
