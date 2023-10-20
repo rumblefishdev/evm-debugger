@@ -6,12 +6,13 @@ import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
 import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
+import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useSelector(structlogsSelectors.selectParsedMemory)
-  const activeStructlog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}

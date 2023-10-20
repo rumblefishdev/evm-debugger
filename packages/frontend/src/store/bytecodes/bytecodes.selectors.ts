@@ -12,20 +12,20 @@ const selectBytecodesState = createSelector([selectReducer(StoreKeys.BYTECODES)]
 
 const selectAll = createSelector([selectBytecodesState], (state) => bytecodesAdapter.getSelectors().selectAll(state))
 
-const selectByAddress = createSelector([selectAll, (_: unknown, address: string) => address], (bytecodes, address) =>
-  bytecodes.find((bytecode) => bytecode.address === address),
+const selectByAddress = createSelector([selectBytecodesState, (_: unknown, address: string) => address], (_, address) =>
+  bytecodesAdapter.getSelectors().selectById(_, address),
 )
 
 const addressesWithMissingBytecode = createSelector([selectAll], (allBytecodes) =>
   allBytecodes.filter((code) => !code.bytecode).map((code) => code.address),
 )
 
-const selectAllWithContractNames = createSelector([selectAll, contractNamesSelectors.selectAll], (bytecodes, contractNames) =>
-  bytecodes.map((bytecode) => {
-    const contract = contractNames.find((_contractName) => bytecode.address === _contractName.address)
+const selectAllWithContractNames = createSelector([selectAll, contractNamesSelectors.selectEntities], (allBytecodes, contractNames) => {
+  return allBytecodes.map((bytecode) => {
+    const contract = contractNames[bytecode.address]
     return { ...bytecode, contractName: contract?.contractName || bytecode.address }
-  }),
-)
+  })
+})
 
 const selectCurrentDissasembledBytecode = createSelector([selectAll, activeBlockSelectors.selectActiveBlock], (bytecodes, activeBlock) => {
   const bytecode = bytecodes.find((code) => code.address === activeBlock?.address)

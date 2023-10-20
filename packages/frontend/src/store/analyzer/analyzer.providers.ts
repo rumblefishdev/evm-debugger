@@ -1,5 +1,13 @@
 import type ethers from 'ethers'
-import type { IStructLog, TTransactionInfo, TSrcMapAddres, ChainId, ISrcMapApiPayload, ISrcMapApiResponseBody } from '@evm-debuger/types'
+import type {
+  IStructLog,
+  TTransactionInfo,
+  TSrcMapAddres,
+  ChainId,
+  ISrcMapApiPayload,
+  ISrcMapApiResponseBody,
+  TTransactionTraceResult,
+} from '@evm-debuger/types'
 import { TransactionTraceResponseStatus, SrcMapStatus } from '@evm-debuger/types'
 
 import { store } from '../store'
@@ -100,8 +108,10 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
 
           clearInterval(transactionTraceInterval)
-          const parsed = await transactionTrace.json()
-          resolve(parsed.structLogs)
+          // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
+          const traceResult: TTransactionTraceResult = await transactionTrace.json()
+          const structLogs = traceResult.structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
+          resolve(structLogs)
         }
       }, 15_000)
     })

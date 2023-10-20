@@ -10,8 +10,9 @@ import { StyledListWrapper } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
+import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 
-import { StyledCollapse, StyledHeading, StyledInput, StyledInfo } from './styles'
+import { StyledCollapse, StyledInput, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from './styles'
 
 export type QuickLinksProps = {
   isOpen: boolean
@@ -26,7 +27,7 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
   const expensiveOpsListRef = useRef<ViewportListRef>(null)
 
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
 
@@ -35,7 +36,9 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
   return (
     <StyledCollapse in={isOpen}>
       <StyledListWrapper ref={ref}>
-        <StyledHeading>External calls</StyledHeading>
+        <StyledHeadingWrapper>
+          <StyledQuickLinksHeading>External calls</StyledQuickLinksHeading>
+        </StyledHeadingWrapper>
 
         {externalCalls.length > 0 ? (
           <ViewportList
@@ -62,14 +65,14 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
           <StyledInfo>None were found</StyledInfo>
         )}
 
-        <StyledHeading>
-          From gas cost
+        <StyledHeadingWrapper>
+          <StyledQuickLinksHeading>From gas cost</StyledQuickLinksHeading>
           <StyledInput
             variant="standard"
             value={gasThreshold || ''}
             onChange={(event) => setGasThreshold(Number(event.target.value))}
           />
-        </StyledHeading>
+        </StyledHeadingWrapper>
 
         {expensiveOps.length > 0 ? (
           <ViewportList

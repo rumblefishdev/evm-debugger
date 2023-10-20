@@ -116,9 +116,9 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
 }
 
 export const selectParsedActiveBlock = createSelector(
-  [selectActiveBlockState, contractNamesSelectors.selectAll],
+  [selectActiveBlockState, contractNamesSelectors.selectEntities],
   (activeBlock, contractNames) => {
-    const contract = contractNames.find((contractName) => contractName.address === activeBlock.address)
+    const contract = contractNames[activeBlock.address]
     const contractNameString = contract?.contractName ?? null
     return parseActiveBlock(activeBlock, contractNameString)
   },

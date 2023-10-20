@@ -3,15 +3,15 @@ import { useSelector } from 'react-redux'
 
 import { useTypedSelector } from '../../../../../store/storeHooks'
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
-import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
+import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
 export const SourceCodeViewContainer: React.FC = () => {
-  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)

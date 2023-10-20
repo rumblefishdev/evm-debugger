@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { TraceLogsList } from '../../components/TraceLogsList'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.selectors'
+import { sourceMapsSelectors } from '../../store/sourceMaps/sourceMaps.selectors'
 
 import { StructlogPanel, InformationPanel, SourceCodePanel, BytecodePanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
@@ -11,9 +12,13 @@ import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './St
 
 export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
-  const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodePresent)
+  const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
+  const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
+
   const [isSourceView, setSourceView] = React.useState(false)
   const toggleSourceView = () => setSourceView((prev) => !prev)
+
+  const isAbleToDisplaySourceCodePanel = isSourceCodeAvailable && isSourceMapAvailable
 
   if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
@@ -22,7 +27,7 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
       {isSourceView && (
         <SourceCodePanel
           close={toggleSourceView}
-          isSourceCodeAvailable={isSourceCodeAvailable}
+          isAbleToDisplaySourceCodePanel={isAbleToDisplaySourceCodePanel}
         />
       )}
       <StyledListsWrapper>
@@ -31,7 +36,7 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
         {!isSourceView && (
           <BytecodePanel
             toggleSourceCodePanel={toggleSourceView}
-            isSourceCodeAvailable={isSourceCodeAvailable}
+            isAbleToDisplaySourceCodePanel={isAbleToDisplaySourceCodePanel}
           />
         )}
         <InformationPanel />

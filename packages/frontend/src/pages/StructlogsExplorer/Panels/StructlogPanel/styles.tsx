@@ -1,6 +1,6 @@
-import { TextField, Typography, styled } from '@mui/material'
+import { Stack, TextField, Typography, styled } from '@mui/material'
 
-import { StyledHeading as MainStyledHeading, StyledListWrapper } from '../styles'
+import { StyledListWrapper } from '../styles'
 
 export const StyledCollapse = styled(StyledListWrapper, {
   shouldForwardProp: (prop) => prop !== 'in',
@@ -11,21 +11,23 @@ export const StyledCollapse = styled(StyledListWrapper, {
   border: 'none',
 }))
 
-export const StyledHeading = styled(MainStyledHeading)(({ theme }) => ({
+export const StyledQuickLinksHeading = styled(Typography)(({ theme }) => ({
+  ...theme.typography.headingUnknown,
+  fontSize: '18px',
+  color: theme.palette.rfSecondary,
+}))
+
+export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
   zIndex: 1,
   top: 0,
   position: 'sticky',
   padding: theme.spacing(4, 4, 3),
   margin: 0,
-  fontSize: '18px',
+  flexDirection: 'row',
   display: 'flex',
   border: `1px solid ${theme.palette.rfLinesLight}`,
   background: 'white',
   alignItems: 'center',
-
-  '&:not(:first-child)': {
-    marginTop: theme.spacing(4),
-  },
 }))
 
 export const StyledInput = styled(TextField)(({ theme }) => ({

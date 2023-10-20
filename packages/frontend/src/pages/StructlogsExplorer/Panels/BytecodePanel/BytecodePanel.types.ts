@@ -2,7 +2,7 @@ import type { TDisassembledBytecode } from '../../../../store/bytecodes/bytecode
 
 export interface BytecodePanelContainerProps {
   toggleSourceCodePanel: () => void
-  isSourceCodeAvailable: boolean
+  isAbleToDisplaySourceCodePanel: boolean
 }
 export interface BytecodePanelComponentProps extends BytecodePanelContainerProps {
   dissasembledBytecode: TDisassembledBytecode[]
