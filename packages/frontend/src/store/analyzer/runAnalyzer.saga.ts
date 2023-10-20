@@ -153,6 +153,7 @@ export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.ru
   const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
   const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
   const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+
   yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
   yield* put(
     bytecodesActions.addBytecodes(

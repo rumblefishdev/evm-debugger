@@ -3,8 +3,10 @@ import { createSelector } from '@reduxjs/toolkit'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
+import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 
 import { bytecodesAdapter } from './bytecodes.slice'
+import type { TDisassembledBytecodeList } from './bytecodes.types'
 
 const selectBytecodesState = createSelector([selectReducer(StoreKeys.BYTECODES)], (state) => state)
 
@@ -25,4 +27,18 @@ const selectAllWithContractNames = createSelector([selectAll, contractNamesSelec
   })
 })
 
-export const bytecodesSelectors = { selectByAddress, selectAllWithContractNames, selectAll, addressesWithMissingBytecode }
+const selectCurrentDissasembledBytecode = createSelector([selectAll, activeBlockSelectors.selectActiveBlock], (bytecodes, activeBlock) => {
+  const bytecode = bytecodes.find((code) => code.address === activeBlock?.address)
+  return bytecode?.disassembled.reduce((accumulator: TDisassembledBytecodeList, element, index) => {
+    accumulator[element.pc] = { ...element, index }
+    return accumulator
+  }, {})
+})
+
+export const bytecodesSelectors = {
+  selectCurrentDissasembledBytecode,
+  selectByAddress,
+  selectAllWithContractNames,
+  selectAll,
+  addressesWithMissingBytecode,
+}
