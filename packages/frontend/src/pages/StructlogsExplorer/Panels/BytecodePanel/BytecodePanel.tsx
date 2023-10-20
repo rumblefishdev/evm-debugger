@@ -10,8 +10,8 @@ import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { isInView } from '../../../../helpers/dom'
 import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
-import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
+import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 
 import { StyledDisabledBytecode } from './styles'
 import type { BytecodePanelProps } from './BytecodePanel.types'
@@ -23,8 +23,7 @@ export const BytecodePanel: React.FC<BytecodePanelProps> = ({ isSourceCodeAvaila
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const currentBlockAddress = activeBlock.address
 
-  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
-
+  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const activeBlockBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, currentBlockAddress))
 
   useEffect(() => {

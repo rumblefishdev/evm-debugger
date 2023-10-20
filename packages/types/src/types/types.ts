@@ -1,8 +1,7 @@
 import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
-import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
-import type { IStructLog } from './structLogs'
+import type { IRawStructLog, IStructLog } from './structLogs'
 import type { ChainId } from './chains'
 import type { SourceFileType, TSourceMap } from './srcMap'
 
@@ -36,10 +35,14 @@ export type TTransactionInfo = {
   nonce: number
 }
 
-export type TTransactionTraceResult = {
+export interface TRawTransactionTraceResult {
   gas: number
   failed: boolean
   returnValue: string
+  structLogs: IRawStructLog[]
+}
+
+export interface TTransactionTraceResult extends TRawTransactionTraceResult {
   structLogs: IStructLog[]
 }
 

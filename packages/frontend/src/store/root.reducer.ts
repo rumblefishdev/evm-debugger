@@ -13,10 +13,12 @@ import { sourceMapsReducer } from './sourceMaps/sourceMaps.slice'
 import { StoreKeys } from './store.keys'
 import { activeSourceFileReducer } from './activeSourceFile/activeSourceFile.slice'
 import { instructionsReducer } from './instructions/instructions.slice'
+import { activeStructLogReducer } from './activeStructLog/activeStructLog.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
   [StoreKeys.STRUCT_LOGS]: structLogsReducer,
+  [StoreKeys.ACTIVE_STRUCT_LOG]: activeStructLogReducer,
   [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
   [StoreKeys.SIGHASH]: sighashReducer,
   [StoreKeys.RAW_TX_DATA]: rawTxDataReducer,

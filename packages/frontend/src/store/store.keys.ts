@@ -7,6 +7,7 @@ export enum StoreKeys {
   RAW_TX_DATA = 'rawTxData',
   SIGHASH = 'sighash',
   STRUCT_LOGS = 'structlogs',
+  ACTIVE_STRUCT_LOG = 'activeStructLog',
   TRACE_LOGS = 'traceLogs',
   CONTRACT_NAMES = 'contractNames',
   ACTIVE_SOURCE_FILE = 'sourceFiles',

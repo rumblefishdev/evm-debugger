@@ -3,23 +3,24 @@ import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 import { useSelector } from 'react-redux'
 
-import { structLogsActions } from '../../../../store/structlogs/structlogs.slice'
 import { useTypedDispatch } from '../../../../store/storeHooks'
 import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import type { IExtendedStructLog } from '../../../../types'
 import { isInView } from '../../../../helpers/dom'
-import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
+import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
+import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 
 import { QuickLinks } from './QuickLinks'
 
 export const StructlogPanel = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeStrucLog = useSelector(structlogsSelectors.selectActiveStructLog)
+  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const instructions = useSelector(instructionsSelectors.selectEntities)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
@@ -35,11 +36,11 @@ export const StructlogPanel = (): JSX.Element => {
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
       if (event.key === 'ArrowDown' && !event.repeat) {
         event.preventDefault()
-        dispatch(structLogsActions.loadNextStructlog(structLogs))
+        dispatch(activeStructLogActions.setNextStructLogAsActive(structLogs))
       }
       if (event.key === 'ArrowUp' && !event.repeat) {
         event.preventDefault()
-        dispatch(structLogsActions.loadPreviousStructlog(structLogs))
+        dispatch(activeStructLogActions.setPreviousStructLogAsActive(structLogs))
       }
     }
 
@@ -71,8 +72,8 @@ export const StructlogPanel = (): JSX.Element => {
 
   const handleClick = useCallback(
     (structLog: IExtendedStructLog) => {
-      dispatch(structLogsActions.loadActiveStructLog(structLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(instructions[activeBlock.address]?.instructions[structLog.pc]?.fileId))
+      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch, activeBlock.address, instructions],
   )
