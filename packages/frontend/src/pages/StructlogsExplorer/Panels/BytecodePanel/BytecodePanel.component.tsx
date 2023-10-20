@@ -10,7 +10,7 @@ import type { BytecodePanelComponentProps } from './BytecodePanel.types'
 
 export const BytecodePanelComponent = React.forwardRef(
   (props: BytecodePanelComponentProps, ref: React.MutableRefObject<HTMLDivElement>) => {
-    const { activeStructlogPc, dissasembledBytecode, isSourceCodeAvailable, toggleSourceCodePanel } = props
+    const { activeStructlogPc, dissasembledBytecode, isAbleToDisplaySourceCodePanel, toggleSourceCodePanel } = props
 
     return (
       <StyledSmallPanel>
@@ -19,7 +19,7 @@ export const BytecodePanelComponent = React.forwardRef(
           <StyledButton
             variant="text"
             onClick={toggleSourceCodePanel}
-            disabled={!isSourceCodeAvailable}
+            disabled={!isAbleToDisplaySourceCodePanel}
           >
             View source
           </StyledButton>
