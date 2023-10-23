@@ -31,7 +31,6 @@ export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodeP
             const isActive = currentElementIndex === listIndex
             return (
               <ExplorerListRow
-                id={`bytecodeItem_${listIndex}`}
                 key={pc}
                 chipValue={operand}
                 isActive={isActive}
