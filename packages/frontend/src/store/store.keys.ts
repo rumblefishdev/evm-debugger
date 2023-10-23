@@ -12,4 +12,5 @@ export enum StoreKeys {
   CONTRACT_NAMES = 'contractNames',
   ACTIVE_SOURCE_FILE = 'sourceFiles',
   INSTRUCTIONS = 'instructions',
+  UI = 'ui',
 }

@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
+import type { VirtuosoHandle } from 'react-virtuoso'
 
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
+import { uiActions } from '../../../../store/ui/ui.slice'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 
@@ -14,6 +16,7 @@ export const StructlogPanel: React.FC = () => {
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeIndex = useSelector(activeStructLogSelectors.selectIndex)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
+  const listRef = React.useRef<VirtuosoHandle>(null)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -40,11 +43,25 @@ export const StructlogPanel: React.FC = () => {
     dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[index].pc].fileId))
   }
 
+  useEffect(() => {
+    // const element = document.getElementById(`explorer-list-row-${activeIndex}`)
+    // if (element) {
+    //   const rects = element.getBoundingClientRect()
+    //   console.log('rects', rects)
+    //   dispatch(uiActions.setStructLogsListOffset(rects.top))
+    // }
+    // listRef.current.getState((state) => console.log(state))
+    // if (listRef.current) {
+    //   listRef.current.scrollToIndex({ index: activeIndex, behavior: 'smooth' })
+    // }
+  }, [activeIndex, dispatch])
+
   return (
     <StructlogPanelComponent
       structlogs={structLogs}
       activeStructlogIndex={activeIndex}
       handleSelect={handleSelect}
+      ref={listRef}
     />
   )
 }

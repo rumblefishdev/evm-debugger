@@ -5,6 +5,7 @@ import { useDebouncedCallback } from 'use-debounce'
 
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
+import { uiSelectors } from '../../../../store/ui/ui.selectors'
 
 import type { BytecodePanelContainerProps } from './BytecodePanel.types'
 import { BytecodePanelComponent } from './BytecodePanel.component'
@@ -13,7 +14,8 @@ import { StyledMissingBytecodeContainer, StyledMissingBytecodeText } from './Byt
 export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentDissasembledBytecode = useSelector(bytecodesSelectors.selectCurrentDissasembledBytecode)
-
+  const currentStructlogListOffset = useSelector(uiSelectors.selectStructlogListOffset)
+  const listRef = React.useRef<VirtuosoHandle>(null)
   const isBytecodeAvailable = Boolean(currentDissasembledBytecode)
 
   const currentElementIndex = useMemo(() => {
@@ -26,11 +28,9 @@ export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
     return (currentDissasembledBytecode && Object.entries(currentDissasembledBytecode).map(([pc, item]) => item)) || []
   }, [currentDissasembledBytecode])
 
-  const listRef = React.useRef<VirtuosoHandle>(null)
-
   const scrollToItem = useDebouncedCallback(() => {
     listRef.current.scrollToIndex({ index: currentElementIndex, behavior: 'smooth' })
-  }, 250)
+  }, 0)
 
   useEffect(() => {
     if (listRef.current && currentElementIndex) {
