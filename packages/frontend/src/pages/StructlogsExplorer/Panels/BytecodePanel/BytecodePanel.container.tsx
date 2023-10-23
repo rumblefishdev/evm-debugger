@@ -29,7 +29,7 @@ export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
   }, [currentDissasembledBytecode])
 
   const scrollToItem = useDebouncedCallback(() => {
-    listRef.current.scrollToIndex({ index: currentElementIndex, behavior: 'smooth' })
+    listRef.current.scrollToIndex({ offset: -currentStructlogListOffset, index: currentElementIndex, behavior: 'smooth' })
   }, 0)
 
   useEffect(() => {
