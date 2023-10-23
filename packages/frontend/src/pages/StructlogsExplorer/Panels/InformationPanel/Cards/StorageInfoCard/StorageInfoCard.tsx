@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux'
 
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecord, StyledRecordType, StyledRecordValue, StyledWrapper } from '../styles'
-import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
+import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'
 
 export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
-  const storage = useSelector(structlogsSelectors.selectStructlogStorage)
+  const storage = useSelector(activeStructLogSelectors.selectStructlogStorage)
   const keys = Object.keys(storage)
   return (
     <StructlogAcordionPanel

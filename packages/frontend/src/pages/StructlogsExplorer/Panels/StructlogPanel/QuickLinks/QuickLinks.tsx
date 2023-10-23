@@ -6,13 +6,12 @@ import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/he
 import type { TReturnedTraceLog } from '@evm-debuger/types'
 import { useSelector } from 'react-redux'
 
-import { StyledListWrapper } from '../styles'
-import { ExplorerListRow } from '../../../../components/ExplorerListRow'
-import type { IExtendedStructLog } from '../../../../types'
-import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
-import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
-
-import { StyledCollapse, StyledInput, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from './styles'
+import { StyledListWrapper } from '../../styles'
+import { ExplorerListRow } from '../../../../../components/ExplorerListRow'
+import type { IExtendedStructLog } from '../../../../../types'
+import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
+import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
+import { StyledCollapse, StyledInput, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from '../styles'
 
 export type QuickLinksProps = {
   isOpen: boolean

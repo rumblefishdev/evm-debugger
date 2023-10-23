@@ -6,5 +6,5 @@ export interface BytecodePanelContainerProps {
 }
 export interface BytecodePanelComponentProps extends BytecodePanelContainerProps {
   dissasembledBytecode: TDisassembledBytecode[]
-  activeStructlogPc: number
+  currentElementIndex: number
 }

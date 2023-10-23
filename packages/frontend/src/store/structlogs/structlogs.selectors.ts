@@ -7,7 +7,6 @@ import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../traceLogs/traceLogs.selectors'
 import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
-import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.selectors'
 
 import { structLogsAdapter } from './structlogs.slice'
 
@@ -15,59 +14,30 @@ const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOG
 
 const selectAll = createSelector([selectStructlogsState], (state) => structLogsAdapter.getSelectors().selectAll(state))
 
-export const selectParsedStructLogs = createSelector(
-  [selectAll, traceLogsSelectors.selectAll, activeBlockSelectors.selectParsedActiveBlock],
-  (structLogs, traceLogs, { defaultData: { startIndex, returnIndex } }) =>
-    structLogs
-      .slice(startIndex, returnIndex + 1)
-      .filter((item) => item.depth === structLogs[startIndex].depth)
-      .map((item) => {
-        if (checkIfOfCallType(item) || checkIfOfCreateType(item))
-          return {
-            ...argStackExtractor(item),
-            stack: extendStack(item.stack),
-            gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
-          }
-
-        return {
-          ...argStackExtractor(item),
-          stack: extendStack(item.stack),
-        }
-      }),
+const selectAllOffCurrentBlock = createSelector(
+  [selectAll, activeBlockSelectors.selectActiveBlock],
+  (structLogs, { startIndex, returnIndex }) =>
+    structLogs.slice(startIndex, returnIndex + 1).filter((item) => item.depth === structLogs[startIndex].depth),
 )
 
-export const selectParsedStack = createSelector(
-  [activeStructLogSelectors.selectActiveStructLog],
-  (activeStructlog) =>
-    activeStructlog?.stack
-      .map((stackItem, index) => {
-        const defaultString = '0000'
-        const hexValue = (activeStructlog.stack.length - 1 - index).toString()
-        const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
+export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
+  structLogs.map((item) => {
+    if (checkIfOfCallType(item) || checkIfOfCreateType(item))
+      return {
+        ...argStackExtractor(item),
+        stack: extendStack(item.stack),
+        gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
+      }
 
-        return { value: stackItem, index: paddedHexValue }
-      })
-      .reverse() ?? [],
+    return {
+      ...argStackExtractor(item),
+      stack: extendStack(item.stack),
+    }
+  }),
 )
-
-export const selectParsedMemory = createSelector(
-  [activeStructLogSelectors.selectActiveStructLog],
-  (activeStructlog) =>
-    activeStructlog?.memory.map((memoryItem, index) => {
-      const defaultString = '0000'
-      const hexValue = (index * 32).toString(16)
-      const paddedHexValue = defaultString.slice(0, Math.max(0, defaultString.length - hexValue.length)) + hexValue
-      const splitMemoryItem = [...memoryItem.match(/.{1,2}/g)]
-
-      return { value: splitMemoryItem, index: paddedHexValue }
-    }) ?? [],
-)
-export const selectStructlogStorage = createSelector([activeStructLogSelectors.selectActiveStructLog], (state) => state?.storage ?? {})
 
 export const structlogsSelectors = {
-  selectStructlogStorage,
   selectParsedStructLogs,
-  selectParsedStack,
-  selectParsedMemory,
+  selectAllOffCurrentBlock,
   selectAll,
 }

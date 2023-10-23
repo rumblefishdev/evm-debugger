@@ -39,7 +39,7 @@ export const StructlogsExplorer: React.FC<StructlogsExplorerProps> = (props) => 
             isAbleToDisplaySourceCodePanel={isAbleToDisplaySourceCodePanel}
           />
         )}
-        <InformationPanel />
+        {/* <InformationPanel /> */}
       </StyledListsWrapper>
     </StyledContentWrapper>
   )

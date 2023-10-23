@@ -5,13 +5,12 @@ import { StructlogAcordionPanel } from '../../../../../../components/StructlogAc
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
-import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
-  const memory = useSelector(structlogsSelectors.selectParsedMemory)
+  const memory = useSelector(activeStructLogSelectors.selectParsedMemory)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {

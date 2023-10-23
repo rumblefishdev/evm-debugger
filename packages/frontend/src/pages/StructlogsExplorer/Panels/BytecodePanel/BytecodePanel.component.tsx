@@ -1,17 +1,15 @@
 import React from 'react'
-import ViewportList from 'react-viewport-list'
-import { ethers } from 'ethers'
+import type { VirtuosoHandle } from 'react-virtuoso'
 
 import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
+import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
 
 import type { BytecodePanelComponentProps } from './BytecodePanel.types'
 
-export const BytecodePanelComponent = React.forwardRef(
-  (props: BytecodePanelComponentProps, ref: React.MutableRefObject<HTMLDivElement>) => {
-    const { activeStructlogPc, dissasembledBytecode, isAbleToDisplaySourceCodePanel, toggleSourceCodePanel } = props
-
+export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodePanelComponentProps>(
+  ({ currentElementIndex, dissasembledBytecode, isAbleToDisplaySourceCodePanel, toggleSourceCodePanel }, ref) => {
     return (
       <StyledSmallPanel>
         <StyledHeading>
@@ -24,29 +22,42 @@ export const BytecodePanelComponent = React.forwardRef(
             View source
           </StyledButton>
         </StyledHeading>
-        <StyledListWrapper ref={ref}>
-          <ViewportList
-            viewportRef={ref}
-            items={dissasembledBytecode}
-            withCache={true}
-          >
-            {(item, index) => {
-              const { opcode, operand, pc } = item
-              const isActive = activeStructlogPc === ethers.BigNumber.from(pc).toNumber()
-              return (
-                <ExplorerListRow
-                  id={`bytecodeItem_${index}`}
-                  key={pc}
-                  chipValue={operand}
-                  isActive={isActive}
-                  opCode={convertOpcodeToName(opcode)}
-                  pc={pc}
-                />
-              )
-            }}
-          </ViewportList>
-        </StyledListWrapper>
+        <VirtualizedList
+          ref={ref}
+          items={dissasembledBytecode}
+        >
+          {(listIndex, data) => {
+            const { opcode, operand, pc } = data
+            const isActive = currentElementIndex === listIndex
+            return (
+              <ExplorerListRow
+                id={`bytecodeItem_${listIndex}`}
+                key={pc}
+                chipValue={operand}
+                isActive={isActive}
+                opCode={convertOpcodeToName(opcode)}
+                pc={pc}
+              />
+            )
+          }}
+        </VirtualizedList>
       </StyledSmallPanel>
     )
   },
 )
+
+// ({
+//   currentElementIndex,
+//   dissasembledBytecode,
+//   isAbleToDisplaySourceCodePanel,
+//   toggleSourceCodePanel,
+// }) => {
+//   const ref = React.useRef<VirtuosoHandle>(null)
+
+//   useEffect(() => {
+//     if (ref.current && currentElementIndex) {
+//       ref.current.scrollToIndex({ index: currentElementIndex, behavior: 'smooth' })
+//     }
+//   }, [currentElementIndex])
+
+// }
