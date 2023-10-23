@@ -1,7 +1,7 @@
 import React from 'react'
 import type { VirtuosoHandle } from 'react-virtuoso'
 
-import { StyledButton, StyledHeading, StyledListWrapper, StyledSmallPanel } from '../styles'
+import { StyledButton, StyledHeading, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
@@ -45,19 +45,3 @@ export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodeP
     )
   },
 )
-
-// ({
-//   currentElementIndex,
-//   dissasembledBytecode,
-//   isAbleToDisplaySourceCodePanel,
-//   toggleSourceCodePanel,
-// }) => {
-//   const ref = React.useRef<VirtuosoHandle>(null)
-
-//   useEffect(() => {
-//     if (ref.current && currentElementIndex) {
-//       ref.current.scrollToIndex({ index: currentElementIndex, behavior: 'smooth' })
-//     }
-//   }, [currentElementIndex])
-
-// }
