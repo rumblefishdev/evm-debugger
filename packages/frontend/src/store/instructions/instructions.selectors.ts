@@ -16,13 +16,23 @@ const selectByAddress = createSelector([selectInstructionsState, (_: unknown, ad
   instructionsAdapter.getSelectors().selectById(_, address),
 )
 
+const selectCurrentInstructions = createSelector([selectEntities, activeBlockSelectors.selectActiveBlock], (entities, activeBlock) => {
+  return entities[activeBlock.address].instructions
+})
+
 const selectCurrentInstruction = createSelector(
-  [selectEntities, activeStructLogSelectors.selectActiveStructLog, activeBlockSelectors.selectActiveBlock],
-  (entities, activeStructlog, activeBlock) => {
-    return entities[activeBlock.address].instructions[activeStructlog?.pc]
+  [selectCurrentInstructions, activeStructLogSelectors.selectActiveStructLog],
+  (instructions, activeStructlog) => {
+    return instructions[activeStructlog?.pc]
   },
 )
 
 const selectCurrentFileId = createSelector([selectCurrentInstruction], (instruction) => instruction?.fileId)
 
-export const instructionsSelectors = { selectEntities, selectCurrentInstruction, selectCurrentFileId, selectByAddress }
+export const instructionsSelectors = {
+  selectEntities,
+  selectCurrentInstructions,
+  selectCurrentInstruction,
+  selectCurrentFileId,
+  selectByAddress,
+}

@@ -9,11 +9,11 @@ const initialState: number | null = null
 const activeStructLogSlice = createSlice({
   reducers: {
     setPreviousStructLogAsActive: (activeStructLog, action: PayloadAction<IExtendedStructLog[]>) => {
-      // if (activeStructLog.index > 0) activeStructLog = action.payload[activeStructLog.index - 1]
+      if (activeStructLog > 0) return action.payload[activeStructLog - 1].index
     },
     setNextStructLogAsActive: (activeStructLog, action: PayloadAction<IExtendedStructLog[]>) => {
       const totalStructLogsCount = action.payload.length
-      // if (activeStructLog.index < totalStructLogsCount - 1) activeStructLog = action.payload[activeStructLog.index + 1]
+      if (activeStructLog < totalStructLogsCount - 1) return action.payload[activeStructLog + 1].index
     },
 
     setActiveStrucLog: (_, action: PayloadAction<number | null>) => {
