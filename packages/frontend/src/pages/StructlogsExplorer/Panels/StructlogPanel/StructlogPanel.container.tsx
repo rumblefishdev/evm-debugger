@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
@@ -23,11 +23,21 @@ export const StructlogPanel: React.FC = () => {
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
+  const setActiveStructlog = useCallback(
+    (index: number) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(index))
+      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[index].pc].fileId))
+    },
+    [currentInstructions, dispatch, structLogs],
+  )
+
   useEffect(() => {
     if (componentRefs.current && activeIndex) {
       const { listRef, wrapperRef } = componentRefs.current
 
       const element = document.getElementById(`explorer-list-row-${activeIndex}`)
+
+      // Its handling case when when user scroll futher down the list then selected element so current element will be unmounted from the view by virtualization
 
       if (!element) {
         listRef.scrollToIndex({ offset: -currentOffset, index: activeIndex, behavior: 'smooth' })
@@ -38,8 +48,6 @@ export const StructlogPanel: React.FC = () => {
       const listHeight = wrapperRef.offsetHeight
       const currentRowOffsetFromTopOfList = element.getBoundingClientRect().top - listOffsetTop
       const elementHeight = element.offsetHeight
-
-      console.log({ listOffsetTop, listHeight, elementHeight, currentRowOffsetFromTopOfList })
 
       if (currentRowOffsetFromTopOfList > Math.abs(listHeight - elementHeight)) {
         listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList + elementHeight, index: activeIndex })
@@ -63,13 +71,11 @@ export const StructlogPanel: React.FC = () => {
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
       if (event.key === 'ArrowDown' && !event.repeat) {
         event.preventDefault()
-        dispatch(activeStructLogActions.setActiveStrucLog(nextIndex))
-        dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[nextIndex].pc].fileId))
+        setActiveStructlog(nextIndex)
       }
       if (event.key === 'ArrowUp' && !event.repeat) {
         event.preventDefault()
-        dispatch(activeStructLogActions.setActiveStrucLog(previousIndex))
-        dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[previousIndex].pc].fileId))
+        setActiveStructlog(previousIndex)
       }
     }
 
@@ -78,18 +84,13 @@ export const StructlogPanel: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [structLogs, nextIndex, previousIndex, currentInstructions, dispatch])
-
-  const handleSelect = (index: number) => {
-    dispatch(activeStructLogActions.setActiveStrucLog(index))
-    dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[index].pc].fileId))
-  }
+  }, [nextIndex, previousIndex, setActiveStructlog, dispatch])
 
   return (
     <StructlogPanelComponent
       structlogs={structLogs}
       activeStructlogIndex={activeIndex}
-      handleSelect={handleSelect}
+      handleSelect={setActiveStructlog}
       ref={componentRefs}
     />
   )
