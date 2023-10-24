@@ -54,38 +54,37 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   }, [activeStructlog, dispatch, isSourceView, didChangeView])
 
   useEffect(() => {
-    if (componentRefs.current && activeStructlog) {
-      const { listRef, wrapperRef } = componentRefs.current
+    if (!componentRefs.current || !activeStructlog) return
 
-      const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
+    const { listRef, wrapperRef } = componentRefs.current
+    const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
 
-      if (!element) {
-        listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })
-        dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
-        return
-      }
-
-      const listOffsetTop = wrapperRef.offsetTop
-      const listHeight = wrapperRef.offsetHeight
-      const elementHeight = element.offsetHeight
-      const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
-
-      if (currentRowOffsetFromTopOfList + elementHeight > listHeight - elementHeight / 2) {
-        const offset = currentRowOffsetFromTopOfList - elementHeight
-        listRef.scrollToIndex({ offset: -offset, index: activeStructlog.listIndex })
-        dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList - elementHeight))
-        return
-      }
-
-      if (currentRowOffsetFromTopOfList < elementHeight) {
-        listRef.scrollToIndex({ offset: -elementHeight, index: activeStructlog.listIndex })
-        dispatch(uiActions.setStructLogsListOffset(elementHeight))
-        return
-      }
-
-      listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.listIndex })
-      dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
+    if (!element) {
+      listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })
+      dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
+      return
     }
+
+    const listOffsetTop = wrapperRef.offsetTop
+    const listHeight = wrapperRef.offsetHeight
+    const elementHeight = element.offsetHeight
+    const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
+
+    if (currentRowOffsetFromTopOfList + elementHeight > listHeight - elementHeight / 2) {
+      const offset = currentRowOffsetFromTopOfList - elementHeight
+      listRef.scrollToIndex({ offset: -offset, index: activeStructlog.listIndex })
+      dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList - elementHeight))
+      return
+    }
+
+    if (currentRowOffsetFromTopOfList < elementHeight) {
+      listRef.scrollToIndex({ offset: -elementHeight, index: activeStructlog.listIndex })
+      dispatch(uiActions.setStructLogsListOffset(elementHeight))
+      return
+    }
+
+    listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.listIndex })
+    dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
   }, [activeStructlog, dispatch])
 
   useEffect(() => {
