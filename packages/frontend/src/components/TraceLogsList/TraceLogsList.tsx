@@ -31,7 +31,7 @@ export const TraceLogsList = (): JSX.Element => {
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
-      dispatch(activeStructLogActions.setActiveStrucLog(0))
+      dispatch(activeStructLogActions.setActiveStrucLog(traceLog.index + 1))
     },
     [dispatch],
   )

@@ -11,12 +11,12 @@ import { uiActions } from '../../../../store/ui/ui.slice'
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
 
-const defaultElementHeight = 74
+const DEFAULT_ELEMENT_HEIGHT = 74
 
 export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeIndex = useSelector(activeStructLogSelectors.selectIndex)
+  const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const nextIndex = useSelector(activeStructLogSelectors.selectNextIndex)
   const previousIndex = useSelector(activeStructLogSelectors.selectPreviousIndex)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
@@ -25,6 +25,8 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   const didChangeView = lastSourceViewValue.current !== isSourceView
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
+
+  const structlogsArray = Object.values(structLogs)
 
   const setActiveStructlog = useCallback(
     (index: number) => {
@@ -36,21 +38,26 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
 
   useEffect(() => {
     if (didChangeView && componentRefs.current.listRef) {
-      componentRefs.current.listRef.scrollToIndex({ offset: -defaultElementHeight, index: activeIndex, behavior: 'smooth', align: 'start' })
-      dispatch(uiActions.setStructLogsListOffset(defaultElementHeight))
+      componentRefs.current.listRef.scrollToIndex({
+        offset: -DEFAULT_ELEMENT_HEIGHT,
+        index: activeStructlog.listIndex,
+        behavior: 'smooth',
+        align: 'start',
+      })
+      dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
       lastSourceViewValue.current = isSourceView
     }
-  }, [activeIndex, dispatch, isSourceView, didChangeView])
+  }, [activeStructlog, dispatch, isSourceView, didChangeView])
 
   useEffect(() => {
-    if (componentRefs.current && activeIndex) {
+    if (componentRefs.current && activeStructlog) {
       const { listRef, wrapperRef } = componentRefs.current
 
-      const element = document.getElementById(`explorer-list-row-${activeIndex}`)
+      const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
 
       if (!element) {
-        listRef.scrollToIndex({ offset: -defaultElementHeight, index: activeIndex, behavior: 'smooth', align: 'start' })
-        dispatch(uiActions.setStructLogsListOffset(defaultElementHeight))
+        listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })
+        dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
         return
       }
 
@@ -60,21 +67,21 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
       const elementHeight = element.offsetHeight
 
       if (currentRowOffsetFromTopOfList > Math.abs(listHeight - elementHeight)) {
-        listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList + elementHeight, index: activeIndex })
+        listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList + elementHeight, index: activeStructlog.listIndex })
         dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList - elementHeight))
         return
       }
 
       if (currentRowOffsetFromTopOfList < elementHeight) {
-        listRef.scrollToIndex({ offset: -elementHeight, index: activeIndex })
+        listRef.scrollToIndex({ offset: -elementHeight, index: activeStructlog.listIndex })
         dispatch(uiActions.setStructLogsListOffset(elementHeight))
         return
       }
 
-      listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeIndex })
+      listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.listIndex })
       dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
     }
-  }, [activeIndex, dispatch])
+  }, [activeStructlog, dispatch])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -98,8 +105,8 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
 
   return (
     <StructlogPanelComponent
-      structlogs={structLogs}
-      activeStructlogIndex={activeIndex}
+      structlogs={structlogsArray}
+      activeStructlogIndex={activeStructlog.index}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
     />
