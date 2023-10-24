@@ -2,13 +2,13 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
-  height: '50vh',
+  minHeight: '50%',
   boxSizing: 'border-box',
 }))
 
 export const StyledSourceWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  overflowY: 'scroll',
+  overflowY: 'hidden',
   height: '100%',
   gap: theme.spacing(4),
   flexDirection: 'row',

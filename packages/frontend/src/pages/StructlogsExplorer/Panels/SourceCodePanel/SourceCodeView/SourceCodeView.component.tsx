@@ -1,3 +1,5 @@
+import { Stack } from '@mui/material'
+
 import { StyledSyntaxHighlighter } from '../../../../../components/SourceCodeDisplayer/styles'
 
 import type { ISourceCodeViewProps } from './SourceCodeView.types'
@@ -5,13 +7,18 @@ import { StyledSourceSection, StyledSourceSectionHeading } from './SourceCodeVie
 
 export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({ activeSourceCode, endCodeLine, contractName, startCodeLine }) => {
   return (
-    <StyledSourceSection>
+    <Stack
+      height="100%"
+      width="70%"
+    >
       <StyledSourceSectionHeading variant="headingUnknown">{contractName}</StyledSourceSectionHeading>
-      <StyledSyntaxHighlighter
-        source={activeSourceCode}
-        highlightStartLine={startCodeLine}
-        highlightEndLine={endCodeLine}
-      />
-    </StyledSourceSection>
+      <StyledSourceSection>
+        <StyledSyntaxHighlighter
+          source={activeSourceCode}
+          highlightStartLine={startCodeLine}
+          highlightEndLine={endCodeLine}
+        />
+      </StyledSourceSection>
+    </Stack>
   )
 }

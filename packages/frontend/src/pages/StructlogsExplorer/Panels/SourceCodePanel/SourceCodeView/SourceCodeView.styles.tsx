@@ -13,8 +13,6 @@ export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledSourceSection = styled('div')(() => ({
-  width: '70%',
-  '> div': {
-    width: '100% !important',
-  },
+  width: '100%',
+  height: '100%',
 }))

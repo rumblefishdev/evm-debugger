@@ -1,5 +1,5 @@
-import { CircularProgress, styled } from '@mui/material'
-import { useId, memo } from 'react'
+import { styled } from '@mui/material'
+import React, { useId, useEffect } from 'react'
 import type { IAceEditorProps, IMarker } from 'react-ace'
 import AceEditor from 'react-ace'
 
@@ -7,12 +7,13 @@ import 'ace-mode-solidity'
 import 'ace-builds/src-noconflict/theme-dawn'
 
 type AceProps = IAceEditorProps & { aceTheme: IAceEditorProps['theme'] }
-const Ace = ({ aceTheme, ...props }: AceProps) => (
+const Ace = React.forwardRef<AceEditor, AceProps>(({ aceTheme, ...props }, ref) => (
   <AceEditor
     {...props}
     theme={aceTheme}
+    ref={ref}
   />
-)
+))
 
 const StyledAceEditor = styled(Ace)(({ theme }) => ({
   textarea: {
@@ -47,13 +48,10 @@ type SyntaxHighlighterProps = {
   highlightEndLine?: number
 }
 
-const ACE_LINE_HEIGHT = 16
-const BORDER = 2
+const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ source, highlightStartLine, highlightEndLine }) => {
+  const editorRef = React.useRef<AceEditor>(null)
 
-const SyntaxHighlighter = ({ source, highlightStartLine, highlightEndLine }: SyntaxHighlighterProps) => {
   const lines = source ? source.split('\n') : source
-  const textHeight = lines ? lines.length : 0
-  const height = textHeight * ACE_LINE_HEIGHT + BORDER
 
   // Temporary solution for mismatching line numbers between Ace and Analyzer output
   const highlightMarker: IMarker = {
@@ -66,21 +64,29 @@ const SyntaxHighlighter = ({ source, highlightStartLine, highlightEndLine }: Syn
     className: 'highlightMarker',
   }
 
+  useEffect(() => {
+    if (editorRef.current && highlightStartLine) {
+      console.log('scrolling to line', highlightStartLine)
+      editorRef.current.editor.scrollToLine(highlightStartLine - 1, true, true, () => {})
+    }
+  }, [highlightStartLine])
+
   return (
     <StyledAceEditor
-      height={`${height}px`}
+      ref={editorRef}
+      height="100%"
+      width="100%"
       mode="solidity"
       aceTheme="dawn"
       name={useId()}
       value={source}
       readOnly
       markers={[highlightMarker]}
-      editorProps={{ $blockScrolling: true }}
     />
   )
 }
 
-export const StyledSyntaxHighlighter = memo(SyntaxHighlighter)
+export const StyledSyntaxHighlighter = SyntaxHighlighter
 
 export const StyledSelectWrapper = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(4),

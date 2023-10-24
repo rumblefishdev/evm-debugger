@@ -19,10 +19,7 @@ export const StyledButton = styled(ButtonUnstyled, {
     color: theme.palette.rfWhite,
     borderRadius: '32px',
     backgroundColor: theme.palette.rfButton,
-    ...(big && {
-      padding: theme.spacing(4, 8),
-      ...theme.typography.buttonBig,
-    }),
+
     ...(disabled && {
       color: theme.palette.rfDisabled,
       backgroundColor: theme.palette.rfLinesLight,
@@ -41,5 +38,8 @@ export const StyledButton = styled(ButtonUnstyled, {
     fontFamily: 'Rajdhani',
     color: theme.palette.rfButton,
     backgroundColor: 'unset',
+  }),
+  ...(big && {
+    ...theme.typography.buttonBig,
   }),
 }))
