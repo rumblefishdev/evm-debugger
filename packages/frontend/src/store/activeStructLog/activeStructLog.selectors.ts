@@ -8,14 +8,6 @@ const selectActiveStructLogState = createSelector([selectReducer(StoreKeys.ACTIV
 
 const selectIndex = createSelector([selectActiveStructLogState], (state) => state)
 
-const selectNextIndex = createSelector([structlogsSelectors.selectAll, selectIndex], (structLogs, activeIndex) => {
-  return structLogs[activeIndex + 1] ? activeIndex + 1 : activeIndex
-})
-
-const selectPreviousIndex = createSelector([structlogsSelectors.selectAll, selectIndex], (structLogs, activeIndex) => {
-  return structLogs[activeIndex - 1] ? activeIndex - 1 : activeIndex
-})
-
 const selectActiveStructLog = createSelector(
   [structlogsSelectors.selectParsedStructLogs, selectActiveStructLogState],
   (structLogs, currentStructlogIndex) => structLogs[currentStructlogIndex],
@@ -51,10 +43,8 @@ export const selectStructlogStorage = createSelector([selectActiveStructLog], (s
 
 export const activeStructLogSelectors = {
   selectStructlogStorage,
-  selectPreviousIndex,
   selectParsedStack,
   selectParsedMemory,
-  selectNextIndex,
   selectIndex,
   selectActiveStructLog,
 }

@@ -17,8 +17,6 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
-  const nextIndex = useSelector(activeStructLogSelectors.selectNextIndex)
-  const previousIndex = useSelector(activeStructLogSelectors.selectPreviousIndex)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
 
   const lastSourceViewValue = useRef(isSourceView)
@@ -31,14 +29,20 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   const setActiveStructlog = useCallback(
     (index: number) => {
       dispatch(activeStructLogActions.setActiveStrucLog(index))
-      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[index].pc].fileId))
     },
-    [dispatch, currentInstructions, structLogs],
+    [dispatch],
   )
 
   useEffect(() => {
-    if (didChangeView && componentRefs.current.listRef) {
-      componentRefs.current.listRef.scrollToIndex({
+    if (activeStructlog) {
+      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[activeStructlog.pc].fileId))
+    }
+  }, [currentInstructions, structLogs, activeStructlog, dispatch])
+
+  useEffect(() => {
+    const { listRef } = componentRefs.current
+    if (didChangeView && listRef && activeStructlog) {
+      listRef.scrollToIndex({
         offset: -DEFAULT_ELEMENT_HEIGHT,
         index: activeStructlog.listIndex,
         behavior: 'smooth',
@@ -85,14 +89,16 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
+      const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
       // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
-      if (event.key === 'ArrowDown' && !event.repeat) {
+      if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
         event.preventDefault()
-        setActiveStructlog(nextIndex)
+        setActiveStructlog(nextStructlog.index)
       }
-      if (event.key === 'ArrowUp' && !event.repeat) {
+      if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
         event.preventDefault()
-        setActiveStructlog(previousIndex)
+        setActiveStructlog(previousStructlog.index)
       }
     }
 
@@ -101,7 +107,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [nextIndex, setActiveStructlog, previousIndex, dispatch])
+  }, [setActiveStructlog, dispatch, structlogsArray, activeStructlog])
 
   return (
     <StructlogPanelComponent
