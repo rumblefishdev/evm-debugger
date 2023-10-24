@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import type { VirtuosoHandle } from 'react-virtuoso'
-import { useDebouncedCallback } from 'use-debounce'
 
 import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
@@ -28,15 +27,11 @@ export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
     return (currentDissasembledBytecode && Object.entries(currentDissasembledBytecode).map(([pc, item]) => item)) || []
   }, [currentDissasembledBytecode])
 
-  const scrollToItem = useDebouncedCallback(() => {
-    listRef.current.scrollToIndex({ offset: -currentStructlogListOffset, index: currentElementIndex, behavior: 'smooth' })
-  }, 0)
-
   useEffect(() => {
     if (listRef.current && currentElementIndex) {
-      scrollToItem()
+      listRef.current.scrollToIndex({ offset: -currentStructlogListOffset, index: currentElementIndex, behavior: 'smooth' })
     }
-  }, [currentElementIndex, scrollToItem])
+  }, [currentElementIndex, currentStructlogListOffset])
 
   if (!isBytecodeAvailable)
     return (
