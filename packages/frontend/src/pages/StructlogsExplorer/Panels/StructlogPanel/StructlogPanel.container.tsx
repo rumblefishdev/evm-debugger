@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
@@ -26,7 +26,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
-  const structlogsArray = Object.values(structLogs)
+  const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
 
   const setActiveStructlog = useCallback(
     (index: number) => {
@@ -106,7 +106,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   return (
     <StructlogPanelComponent
       structlogs={structlogsArray}
-      activeStructlogIndex={activeStructlog.index}
+      activeStructlogIndex={activeStructlog?.index}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
     />
