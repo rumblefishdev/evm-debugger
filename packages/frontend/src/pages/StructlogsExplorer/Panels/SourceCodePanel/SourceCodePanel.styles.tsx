@@ -2,7 +2,7 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
-  minHeight: '50vh',
+  height: '50vh',
   boxSizing: 'border-box',
 }))
 

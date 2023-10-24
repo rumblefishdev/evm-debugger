@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledTable, StyledTableCell, StyledTableRow, StyledTableValueCell } from '../styles'
-import { structlogsSelectors } from '../../../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 export const skipLeadingZeroes = (value: string): string => {
@@ -11,7 +10,7 @@ export const skipLeadingZeroes = (value: string): string => {
 }
 
 export const StackInfoCard = () => {
-  const stack = useSelector(structlogsSelectors.selectParsedStack)
+  const stack = useSelector(activeStructLogSelectors.selectParsedStack)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   return (
