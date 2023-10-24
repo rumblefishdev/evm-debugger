@@ -67,11 +67,12 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
 
       const listOffsetTop = wrapperRef.offsetTop
       const listHeight = wrapperRef.offsetHeight
-      const currentRowOffsetFromTopOfList = element.getBoundingClientRect().top - listOffsetTop
       const elementHeight = element.offsetHeight
+      const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
 
-      if (currentRowOffsetFromTopOfList > Math.abs(listHeight - elementHeight)) {
-        listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList + elementHeight, index: activeStructlog.listIndex })
+      if (currentRowOffsetFromTopOfList + elementHeight > listHeight - elementHeight / 2) {
+        const offset = currentRowOffsetFromTopOfList - elementHeight
+        listRef.scrollToIndex({ offset: -offset, index: activeStructlog.listIndex })
         dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList - elementHeight))
         return
       }
