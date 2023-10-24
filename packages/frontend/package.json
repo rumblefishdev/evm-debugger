@@ -59,6 +59,7 @@
     "build:stage": " bash build.sh build stage",
     "build:dependencies": "cd ../types; npm run build; cd ../analyzer; npm run build",
     "test": "jest",
+    "test:snapshot-update": "jest --updateSnapshot",
     "export-env:local": "export $(cat .env.local | xargs)",
     "create-component": "create-component -p templates",
     "lint:check": "eslint --ext .ts,.tsx src",

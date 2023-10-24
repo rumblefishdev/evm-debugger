@@ -107,7 +107,6 @@ exports[`ManagerItem tests simple render 1`] = `
       onMouseDown={[Function]}
       onMouseLeave={[Function]}
       onMouseUp={[Function]}
-      sx={{}}
       variant="text"
     >
       Add
