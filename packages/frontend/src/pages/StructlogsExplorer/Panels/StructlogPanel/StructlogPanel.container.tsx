@@ -7,19 +7,22 @@ import { instructionsSelectors } from '../../../../store/instructions/instructio
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
-import { uiSelectors } from '../../../../store/ui/ui.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
-import type { StructlogPanelComponentRef } from './StructlogPanel.types'
+import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
 
-export const StructlogPanel: React.FC = () => {
+const defaultElementHeight = 74
+
+export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeIndex = useSelector(activeStructLogSelectors.selectIndex)
   const nextIndex = useSelector(activeStructLogSelectors.selectNextIndex)
   const previousIndex = useSelector(activeStructLogSelectors.selectPreviousIndex)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-  const currentOffset = useSelector(uiSelectors.selectStructlogListOffset)
+
+  const lastSourceViewValue = useRef(isSourceView)
+  const didChangeView = lastSourceViewValue.current !== isSourceView
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
@@ -28,8 +31,16 @@ export const StructlogPanel: React.FC = () => {
       dispatch(activeStructLogActions.setActiveStrucLog(index))
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[structLogs[index].pc].fileId))
     },
-    [currentInstructions, dispatch, structLogs],
+    [dispatch, currentInstructions, structLogs],
   )
+
+  useEffect(() => {
+    if (didChangeView && componentRefs.current.listRef) {
+      componentRefs.current.listRef.scrollToIndex({ offset: -defaultElementHeight, index: activeIndex, behavior: 'smooth', align: 'start' })
+      dispatch(uiActions.setStructLogsListOffset(defaultElementHeight))
+      lastSourceViewValue.current = isSourceView
+    }
+  }, [activeIndex, dispatch, isSourceView, didChangeView])
 
   useEffect(() => {
     if (componentRefs.current && activeIndex) {
@@ -37,10 +48,9 @@ export const StructlogPanel: React.FC = () => {
 
       const element = document.getElementById(`explorer-list-row-${activeIndex}`)
 
-      // Its handling case when when user scroll futher down the list then selected element so current element will be unmounted from the view by virtualization
-
       if (!element) {
-        listRef.scrollToIndex({ offset: -currentOffset, index: activeIndex, behavior: 'smooth' })
+        listRef.scrollToIndex({ offset: -defaultElementHeight, index: activeIndex, behavior: 'smooth', align: 'start' })
+        dispatch(uiActions.setStructLogsListOffset(defaultElementHeight))
         return
       }
 
@@ -64,7 +74,7 @@ export const StructlogPanel: React.FC = () => {
       listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeIndex })
       dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
     }
-  }, [activeIndex, dispatch, currentOffset])
+  }, [activeIndex, dispatch])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -84,7 +94,7 @@ export const StructlogPanel: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [nextIndex, previousIndex, setActiveStructlog, dispatch])
+  }, [nextIndex, setActiveStructlog, previousIndex, dispatch])
 
   return (
     <StructlogPanelComponent

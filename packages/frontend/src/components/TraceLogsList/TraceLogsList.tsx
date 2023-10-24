@@ -14,6 +14,7 @@ import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types
 import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
+import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 
 import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
 
@@ -30,6 +31,7 @@ export const TraceLogsList = (): JSX.Element => {
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
+      dispatch(activeStructLogActions.setActiveStrucLog(0))
     },
     [dispatch],
   )
