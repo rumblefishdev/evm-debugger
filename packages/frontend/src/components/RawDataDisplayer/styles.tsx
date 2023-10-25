@@ -9,8 +9,10 @@ export const StyledDialog = styled(Dialog)(() => ({
   },
   '& .MuiDialog-container': {
     '& .MuiDialog-paper': {
+      width: '100%',
       maxWidth: '80vw',
       maxHeight: '80vh',
+      height: '100%',
       boxShadow: 'none',
     },
   },
@@ -20,6 +22,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: theme.spacing(6),
   overflow: 'auto',
+  height: '100%',
   boxSizing: 'border-box',
 }))
 
