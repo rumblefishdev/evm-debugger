@@ -48,10 +48,8 @@ type SyntaxHighlighterProps = {
   highlightEndLine?: number
 }
 
-const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ source, highlightStartLine, highlightEndLine }) => {
+export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ source, highlightStartLine, highlightEndLine }) => {
   const editorRef = React.useRef<AceEditor>(null)
-
-  const lines = source ? source.split('\n') : source
 
   // Temporary solution for mismatching line numbers between Ace and Analyzer output
   const highlightMarker: IMarker = {
@@ -85,8 +83,6 @@ const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ source, highlight
     />
   )
 }
-
-export const StyledSyntaxHighlighter = SyntaxHighlighter
 
 export const StyledSelectWrapper = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(4),

@@ -8,7 +8,7 @@ import { StyledDataWrapper, StyledDescription, StyledDialog, StyledHeader, Style
 import { parseSourceCode } from '../../helpers/sourceCodeParser'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 
-import { StyledSelectWrapper, StyledSyntaxHighlighter } from './styles'
+import { StyledSelectWrapper, SyntaxHighlighter } from './styles'
 
 export function useSources(contractName, sourceCode?: string) {
   return useMemo(() => (sourceCode ? parseSourceCode(contractName, sourceCode) : {}), [contractName, sourceCode])
@@ -76,7 +76,7 @@ export const SourceCodeDisplayer = ({ data, title, address, description, ...prop
           </StyledSelectWrapper>
         )}
         <StyledDataWrapper>
-          <StyledSyntaxHighlighter source={source} />
+          <SyntaxHighlighter source={source} />
         </StyledDataWrapper>
       </StyledStack>
     </StyledDialog>
