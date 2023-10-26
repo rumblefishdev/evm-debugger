@@ -174,7 +174,7 @@ module.exports = {
         "no-script-url": "error",
         "no-throw-literal": "error",
         "no-undef-init": "error",
-        "no-undefined": "error",
+        "no-undefined": "off",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
         "no-useless-call": "error",
@@ -226,7 +226,7 @@ module.exports = {
         "import/group-exports": "off",
         "import/order": ["error", { "groups": ["builtin", "external", "parent", "sibling", "index"], "newlines-between": "always" }],
         //Unicorn
-        "unicorn/no-keyword-prefix": "error",
+        "unicorn/no-keyword-prefix": "off",
         "unicorn/consistent-destructuring": "warn",
         "unicorn/prefer-add-event-listener": "off",
         "unicorn/no-array-for-each": "off",

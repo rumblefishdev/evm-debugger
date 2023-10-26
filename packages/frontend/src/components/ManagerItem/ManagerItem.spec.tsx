@@ -15,6 +15,7 @@ describe('ManagerItem tests', () => {
         value="sampleValue"
         isFound={false}
         updateItem={null}
+        contentType="json"
       />,
     )
     const testInstance = render.root.findByType(StyledName)
@@ -32,6 +33,7 @@ describe('ManagerItem tests', () => {
         isFound={false}
         updateItem={null}
         name={null}
+        contentType="json"
       />,
     )
     const testInstance = render.root.findByType(StyledName)

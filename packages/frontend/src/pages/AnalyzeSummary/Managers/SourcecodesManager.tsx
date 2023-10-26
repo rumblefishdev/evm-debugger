@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { SourceCodeDisplayer } from '../../../components/SourceCodeDisplayer'
 import { sourceCodesSelectors } from '../../../store/sourceCodes/sourceCodes.selectors'
 import { sourceCodesActions } from '../../../store/sourceCodes/sourceCodes.slice'
 
@@ -29,7 +28,7 @@ export const SourcecodesManager = () => {
             value={item.sourceCode}
             isFound={item.sourceCode !== null}
             updateItem={addSourcecode}
-            displayer={SourceCodeDisplayer}
+            contentType="solidity"
           />
         ))}
       </StyledWrapper>

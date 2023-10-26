@@ -1,6 +1,6 @@
-import { Dialog, Stack, styled, Typography } from '@mui/material'
+import { Dialog, Stack, Typography, styled } from '@mui/material'
 
-export const StyledDialog = styled(Dialog)(() => ({
+export const StyledTransactionContentDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
     overflow: 'hidden',
     maxWidth: 'unset',
@@ -9,17 +9,20 @@ export const StyledDialog = styled(Dialog)(() => ({
   },
   '& .MuiDialog-container': {
     '& .MuiDialog-paper': {
+      width: '100%',
       maxWidth: '80vw',
       maxHeight: '80vh',
+      height: '100%',
       boxShadow: 'none',
     },
   },
-}))
+})
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: theme.spacing(6),
   overflow: 'auto',
+  height: '100%',
   boxSizing: 'border-box',
 }))
 
@@ -47,6 +50,7 @@ export const StyledDataWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   ...theme.customStyles.scrollbar,
 }))
+
 export const StyledDataIndexesWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2, 0),
   height: 'min-content',

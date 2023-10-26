@@ -2,7 +2,7 @@ import type { VirtuosoHandle } from 'react-virtuoso'
 import React, { useImperativeHandle } from 'react'
 import { Stack } from '@mui/material'
 
-import { StyledHeading, StyledSmallPanel } from '../styles'
+import { StyledHeading, StyledHeadingWrapper, StyledSmallPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
 
@@ -20,7 +20,9 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
 
     return (
       <StyledSmallPanel>
-        <StyledHeading>EVM steps</StyledHeading>
+        <StyledHeadingWrapper>
+          <StyledHeading>EVM steps</StyledHeading>
+        </StyledHeadingWrapper>
         <Stack
           width="100%"
           height="100%"

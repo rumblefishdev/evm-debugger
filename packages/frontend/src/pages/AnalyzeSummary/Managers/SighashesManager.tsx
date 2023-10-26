@@ -48,6 +48,7 @@ export const SighashesManager = () => {
                     value={JSON.stringify(sighash.fragment, null, 2)}
                     isFound={sighash.fragment !== null}
                     updateItem={addSighash}
+                    contentType="json"
                   />
                 ))}
               </StyledWrapper>
