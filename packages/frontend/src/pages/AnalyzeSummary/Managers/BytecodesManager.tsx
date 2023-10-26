@@ -28,6 +28,7 @@ export const BytecodesManager = () => {
             value={item.bytecode}
             isFound={item.bytecode !== null}
             updateItem={addBytecode}
+            contentType="plain_text"
           />
         ))}
       </StyledWrapper>

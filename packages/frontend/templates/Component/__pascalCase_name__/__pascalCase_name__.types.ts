@@ -1,4 +1,3 @@
-import type { BoxProps } from '@mui/material';
+import type { StackProps } from '@mui/material'
 
-export interface {{name}}Props extends BoxProps {}
-
+export interface {{ pascalCase name }}Props extends StackProps {}

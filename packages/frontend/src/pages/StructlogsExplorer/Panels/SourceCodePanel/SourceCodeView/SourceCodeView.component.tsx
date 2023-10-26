@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 
-import { SyntaxHighlighter } from '../../../../../components/SourceCodeDisplayer/styles'
+import { AceEditor } from '../../../../../components/AceEditor'
 
 import type { ISourceCodeViewProps } from './SourceCodeView.types'
 import { StyledSourceSection, StyledSourceSectionHeading } from './SourceCodeView.styles'
@@ -13,10 +13,11 @@ export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({ activeSourceCod
     >
       <StyledSourceSectionHeading variant="headingUnknown">{contractName}</StyledSourceSectionHeading>
       <StyledSourceSection>
-        <SyntaxHighlighter
+        <AceEditor
           source={activeSourceCode}
           highlightStartLine={startCodeLine}
           highlightEndLine={endCodeLine}
+          mode="solidity"
         />
       </StyledSourceSection>
     </Stack>

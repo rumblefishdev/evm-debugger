@@ -3,20 +3,12 @@ import { Tooltip } from '@mui/material'
 
 import { Button } from '../Button'
 import { DataAdder } from '../DataAdder'
-import { RawDataDisplayer } from '../RawDataDisplayer'
+import { TransactionContentDialog } from '../TransactionContentDialog'
 
 import type { ManagerItemProps } from './ManagerItem.types'
 import { StyledStack, StyledName, StyledStatusFound, StyledStatusNotFound } from './styles'
 
-export const ManagerItem = ({
-  isFound,
-  address,
-  name,
-  value,
-  updateItem,
-  displayer: Displayer = RawDataDisplayer,
-  ...props
-}: ManagerItemProps) => {
+export const ManagerItem = ({ isFound, address, name, value, updateItem, contentType, ...props }: ManagerItemProps) => {
   const [isDataVisible, setDataVisibility] = useState(false)
   const [isDataAdderVisible, setDataAdderVisibility] = useState(false)
 
@@ -35,28 +27,18 @@ export const ManagerItem = ({
       >
         <StyledName>{name || address}</StyledName>
       </Tooltip>
+      <Button
+        variant="text"
+        onClick={isFound ? () => setDataVisibility(true) : () => setDataAdderVisibility(true)}
+      >
+        {isFound ? 'Show' : 'Add'}
+      </Button>
       {isFound ? (
-        <Button
-          variant="text"
-          onClick={() => setDataVisibility(true)}
-        >
-          Show
-        </Button>
-      ) : (
-        <Button
-          variant="text"
-          onClick={() => setDataAdderVisibility(true)}
-        >
-          Add
-        </Button>
-      )}
-
-      {isFound ? (
-        <Displayer
+        <TransactionContentDialog
           title={name}
           description={address}
-          address={address}
-          data={value}
+          content={value}
+          contentType={contentType}
           open={isDataVisible}
           onClose={() => setDataVisibility(false)}
         />
