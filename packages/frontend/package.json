@@ -100,5 +100,12 @@
     "dotenv-cli": "^7.2.1",
     "react-test-renderer": "^18.2.0",
     "webpack-dev-server": "^4.3.1"
+  },
+  "jest": {
+  "verbose": true,
+  "testRegex": "(/tests/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+  "globals": {
+    "window": {}
   }
+}
 }

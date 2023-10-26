@@ -1,6 +1,5 @@
 import { styled } from '@mui/material'
 import React from 'react'
-import type { IAceEditorProps } from 'react-ace'
 import AceEditor from 'react-ace'
 
 import type { AceProps } from './AceEditor.types'
@@ -16,7 +15,7 @@ const Ace = React.forwardRef<AceEditor, AceProps>(({ aceTheme, ...props }, ref) 
   />
 ))
 
-export const StyledAceEditor = styled(Ace)<{ mode: IAceEditorProps['mode'] }>(({ theme, mode }) => ({
+export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   textarea: {
     display: 'none',
   },
@@ -27,27 +26,6 @@ export const StyledAceEditor = styled(Ace)<{ mode: IAceEditorProps['mode'] }>(({
   '.highlightMarker': {
     position: 'absolute',
     backgroundColor: 'yellow',
-  },
-
-  '.ace_line': {
-    ...(mode === 'json' && {
-      wordBreak: 'break-word',
-      whiteSpace: 'pre-wrap',
-      overflowWrap: 'break-word',
-      lineHeight: '21px',
-      fontFamily: 'Ibm Plex Mono',
-      ...theme.typography.bodySmall,
-      color: theme.palette.rfSecondary,
-    }),
-    ...(mode === 'plain_text' && {
-      wordBreak: 'break-word',
-      whiteSpace: 'pre-wrap',
-      overflowWrap: 'break-word',
-      lineHeight: '21px',
-      fontFamily: 'monospace',
-      ...theme.typography.bodySmall,
-      color: theme.palette.rfSecondary,
-    }),
   },
   '.ace_gutter-active-line': {
     background: 'unset',
