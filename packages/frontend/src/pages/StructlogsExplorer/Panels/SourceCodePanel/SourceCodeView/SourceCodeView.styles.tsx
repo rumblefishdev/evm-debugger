@@ -12,7 +12,7 @@ export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   background: 'white',
 }))
 
-export const StyledSourceSection = styled('div')(() => ({
+export const StyledSourceSection = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
 }))

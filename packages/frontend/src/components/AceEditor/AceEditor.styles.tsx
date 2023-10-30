@@ -21,12 +21,13 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   },
 
   boxSizing: 'border-box',
-  border: `1px solid ${theme.palette.rfLinesLight}`,
 
+  border: `1px solid ${theme.palette.rfLinesLight}`,
   '.highlightMarker': {
     position: 'absolute',
     backgroundColor: 'yellow',
   },
+
   '.ace_gutter-active-line': {
     background: 'unset',
   },

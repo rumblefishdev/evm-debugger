@@ -8,6 +8,8 @@ export enum ROUTES {
   DATA_MANAGER = '/tx/:chainId/:txHash/dataManager',
   DATA_MANAGER_MANUAL = '/tx/manual/dataManager',
   STRUCTLOGS_EXPLORER = '/tx/:chainId/:txHash/structlogsExplorer',
+  TRANSACTION_EXPLORER = '/tx/:chainId/:txHash/transactionExplorer',
+  TRANSACTION_EXPLORER_MANUAL = '/tx/manual/:txHash/transactionExplorer',
   STRUCTLOGS_EXPLORER_MANUAL = '/tx/manual/structlogsExplorer',
   ANALYZER_PROGRESS_SCREEN = '/analyzerProgressScreen',
 }

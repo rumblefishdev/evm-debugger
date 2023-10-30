@@ -11,6 +11,7 @@ import {
 } from './pages'
 import { AppNavigation } from './pages/AppNavigation'
 import { ROUTES as ORIG_ROUTES } from './routes'
+import { TransactionExplorer } from './pages/TransactionExplorer/TransactionExplorer'
 
 export const ROUTES = ORIG_ROUTES
 
@@ -59,6 +60,14 @@ export const appRouter = createBrowserRouter(
           element: (
             <AnalyzerProgressScreen>
               <StructlogsExplorer />
+            </AnalyzerProgressScreen>
+          ),
+        },
+        {
+          path: ROUTES.TRANSACTION_EXPLORER,
+          element: (
+            <AnalyzerProgressScreen>
+              <TransactionExplorer />
             </AnalyzerProgressScreen>
           ),
         },

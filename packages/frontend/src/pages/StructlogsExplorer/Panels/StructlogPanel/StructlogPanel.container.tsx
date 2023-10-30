@@ -65,7 +65,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
       return
     }
 
-    const listOffsetTop = wrapperRef.offsetTop
+    const listOffsetTop = wrapperRef.getBoundingClientRect().top
     const listHeight = wrapperRef.offsetHeight
     const elementHeight = element.offsetHeight
     const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
@@ -91,13 +91,11 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
     const handleKeyDown = (event: KeyboardEvent) => {
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
-      // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
+      event.preventDefault()
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        event.preventDefault()
         setActiveStructlog(nextStructlog.index)
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        event.preventDefault()
         setActiveStructlog(previousStructlog.index)
       }
     }
