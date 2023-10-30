@@ -10,34 +10,11 @@ import { TraceLogsList } from '../../components/TraceLogsList'
 
 import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
 import { NotAContractHero } from './TransactionExplorer.styles'
-
-enum LayoutKeys {
-  BytecodeLayout = 'bytecodePanel',
-  SourceCodeLayout = 'SourceCodepanel',
-  StructlogLayout = 'StructlogPanel',
-  TracelogListLayout = 'TracelogListLayout',
-}
-
-const saveLayoutToLocalStorage = (layout: Layout): void => {
-  const localStorageKey = `transactionExplorerLayout-${layout.i}`
-  const localStoragePayload = JSON.stringify(layout)
-
-  localStorage.setItem(localStorageKey, localStoragePayload)
-}
-
-const readLayoutFromLocalStorage = (layoutKey: LayoutKeys): Layout | null => {
-  const localStorageKey = `transactionExplorerLayout-${layoutKey}`
-
-  const localStoragePayload = localStorage.getItem(localStorageKey)
-
-  if (localStoragePayload) {
-    return JSON.parse(localStoragePayload)
-  }
-
-  return null
-}
+import { LayoutKeys, readLayoutFromLocalStorage, saveLayoutToLocalStorage } from './TransactionExplorer.utils'
 
 export const TransactionExplorer: React.FC = () => {
+  const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
+
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const initialLayout = React.useMemo(() => {
@@ -62,7 +39,11 @@ export const TransactionExplorer: React.FC = () => {
     })
   }, [initialLayout])
 
-  const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
+  const handleLayoutChange = React.useCallback((layout: Layout[]) => {
+    layout.forEach((layoutItem) => {
+      saveLayoutToLocalStorage(layoutItem)
+    })
+  }, [])
 
   if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
@@ -79,11 +60,7 @@ export const TransactionExplorer: React.FC = () => {
         rowHeight={30}
         style={{ width: '100%', height: '100%' }}
         layout={initialLayout}
-        onLayoutChange={(layout) => {
-          layout.forEach((layoutItem) => {
-            saveLayoutToLocalStorage(layoutItem)
-          })
-        }}
+        onLayoutChange={handleLayoutChange}
       >
         <div key={LayoutKeys.TracelogListLayout}>
           <TraceLogsList />
