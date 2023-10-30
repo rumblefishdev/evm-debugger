@@ -1,7 +1,7 @@
 import type { IStructLog, TMainTraceLogs } from '@evm-debuger/types'
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 
-import type { IExtendedStructLog, TExtendedStack } from '../../types'
+import type { IExtendedStructLog } from '../../types'
 import { extendStack } from '../../helpers/helpers'
 import { argStackExtractor } from '../../helpers/argStackExtractor'
 

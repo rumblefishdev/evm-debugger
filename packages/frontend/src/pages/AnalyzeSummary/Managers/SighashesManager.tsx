@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { contractNamesSelectors } from '../../../store/contractNames/contractNames.selectors'
-import { rawTxDataSelectors } from '../../../store/rawTxData/rawTxData.selectors'
 import { sighashSelectors } from '../../../store/sighash/sighash.selectors'
 import { sighashActions } from '../../../store/sighash/sighash.slice'
 

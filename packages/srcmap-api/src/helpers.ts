@@ -316,7 +316,9 @@ export const addressesProcessing = async (
     contractAddressObj,
     payloadS3Params,
   )
-  if (s3Payload) {
+
+  const refreshPayloadOnStatuses = [SrcMapStatus.SOURCE_DATA_FETCHING_FAILED]
+  if (s3Payload && !refreshPayloadOnStatuses.includes(s3Payload.status)) {
     return s3Payload
   }
 

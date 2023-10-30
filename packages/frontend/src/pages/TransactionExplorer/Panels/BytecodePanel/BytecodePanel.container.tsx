@@ -24,7 +24,7 @@ export const BytecodePanel: React.FC = (props) => {
   }, [activeStrucLog, currentDissasembledBytecode])
 
   const dissasembledBytecodeArray = useMemo(() => {
-    return (currentDissasembledBytecode && Object.entries(currentDissasembledBytecode).map(([pc, item]) => item)) || []
+    return (currentDissasembledBytecode && Object.values(currentDissasembledBytecode)) || []
   }, [currentDissasembledBytecode])
 
   const scrollToItem = useDebouncedCallback(() => {
