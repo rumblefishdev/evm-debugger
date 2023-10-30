@@ -1,7 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-import type { TSourceCodes } from '../../types'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
