@@ -29,6 +29,7 @@ export const ManagerItem = ({ isFound, address, name, value, updateItem, content
       </Tooltip>
       <Button
         variant="text"
+        size="medium"
         onClick={isFound ? () => setDataVisibility(true) : () => setDataAdderVisibility(true)}
       >
         {isFound ? 'Show' : 'Add'}

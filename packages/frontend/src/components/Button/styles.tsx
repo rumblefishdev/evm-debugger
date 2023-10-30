@@ -9,26 +9,12 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'unset',
   },
 
-  '.MuiButton-sizeSmall': {
-    padding: theme.spacing(2, 4),
-    ...theme.typography.buttonSmall,
-  },
-
-  '.MuiButton-sizeMedium': {
-    padding: theme.spacing(3, 6),
-    ...theme.typography.buttonMedium,
-  },
-
-  '.MuiButton-sizeLarge': {
-    padding: theme.spacing(4, 8),
-    ...theme.typography.buttonBig,
-  },
-
   '.MuiButton-root': {
     outline: 'none',
     cursor: 'pointer',
     border: 'none',
   },
+
   '.MuiButton-outlined': {
     color: theme.palette.rfButton,
     borderRadius: '32px',
@@ -44,5 +30,19 @@ export const StyledButton = styled(Button)(({ theme }) => ({
       color: theme.palette.rfDisabled,
       backgroundColor: theme.palette.rfLinesLight,
     },
+  },
+  '&.MuiButton-sizeSmall': {
+    padding: theme.spacing(1, 2),
+    ...theme.typography.buttonSmall,
+  },
+
+  '&.MuiButton-sizeMedium': {
+    padding: theme.spacing(2, 4),
+    ...theme.typography.buttonMedium,
+  },
+
+  '&.MuiButton-sizeLarge': {
+    padding: theme.spacing(3, 6),
+    ...theme.typography.buttonBig,
   },
 }))
