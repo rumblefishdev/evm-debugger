@@ -28,9 +28,11 @@ export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactE
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
-  const externalCalls = structLogs.filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
+  const externalCalls = Object.values(structLogs).filter((structLog) =>
+    checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog),
+  )
 
-  const expensiveOps = gasThreshold ? structLogs.filter(({ gasCost }) => gasCost >= gasThreshold) : []
+  const expensiveOps = gasThreshold ? Object.values(structLogs).filter(({ gasCost }) => gasCost >= gasThreshold) : []
 
   return (
     <StyledCollapse in={isOpen}>
