@@ -13,14 +13,11 @@ import type { StructlogPanelComponentRef, StructlogPanelProps } from './Structlo
 
 const DEFAULT_ELEMENT_HEIGHT = 74
 
-export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) => {
+export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-
-  const lastSourceViewValue = useRef(isSourceView)
-  const didChangeView = lastSourceViewValue.current !== isSourceView
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
@@ -38,20 +35,6 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[activeStructlog.pc].fileId))
     }
   }, [currentInstructions, structLogs, activeStructlog, dispatch])
-
-  useEffect(() => {
-    const { listRef } = componentRefs.current
-    if (didChangeView && listRef && activeStructlog) {
-      listRef.scrollToIndex({
-        offset: -DEFAULT_ELEMENT_HEIGHT,
-        index: activeStructlog.listIndex,
-        behavior: 'smooth',
-        align: 'start',
-      })
-      dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
-      lastSourceViewValue.current = isSourceView
-    }
-  }, [activeStructlog, dispatch, isSourceView, didChangeView])
 
   useEffect(() => {
     if (!componentRefs.current || !activeStructlog) return

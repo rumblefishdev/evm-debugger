@@ -44,11 +44,6 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
               onClick={() => handleTabClick(chainId && txHash ? ROUTES.TRANSACTION_SCREEN : ROUTES.TRANSACTION_SCREEN_MANUAL)}
             />
             <StyledTab
-              label="Structlog Explorer"
-              value={chainId && txHash ? convertNav(ROUTES.STRUCTLOGS_EXPLORER) : ROUTES.STRUCTLOGS_EXPLORER_MANUAL}
-              onClick={() => handleTabClick(chainId && txHash ? ROUTES.STRUCTLOGS_EXPLORER : ROUTES.STRUCTLOGS_EXPLORER_MANUAL)}
-            />
-            <StyledTab
               label="Transaction Explorer"
               value={chainId && txHash ? convertNav(ROUTES.TRANSACTION_EXPLORER) : ROUTES.TRANSACTION_EXPLORER_MANUAL}
               onClick={() => handleTabClick(chainId && txHash ? ROUTES.TRANSACTION_EXPLORER : ROUTES.TRANSACTION_EXPLORER_MANUAL)}

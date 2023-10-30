@@ -7,11 +7,10 @@ import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.select
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 import { uiSelectors } from '../../../../store/ui/ui.selectors'
 
-import type { BytecodePanelContainerProps } from './BytecodePanel.types'
 import { BytecodePanelComponent } from './BytecodePanel.component'
 import { StyledMissingBytecodeContainer, StyledMissingBytecodeText } from './BytecodePanel.styles'
 
-export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
+export const BytecodePanel: React.FC = (props) => {
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentDissasembledBytecode = useSelector(bytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentStructlogListOffset = useSelector(uiSelectors.selectStructlogListOffset)

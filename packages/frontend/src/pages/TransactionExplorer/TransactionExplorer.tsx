@@ -3,8 +3,12 @@ import type { Layout } from 'react-grid-layout'
 import ReactGridlayout, { WidthProvider } from 'react-grid-layout'
 import React from 'react'
 import { Box } from '@mui/material'
+import { useSelector } from 'react-redux'
 
-import { BytecodePanel, SourceCodePanel, StructlogPanel } from '../StructlogsExplorer/Panels'
+import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
+
+import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
+import { NotAContractHero } from './TransactionExplorer.styles'
 
 enum LayoutKeys {
   BytecodeLayout = 'bytecodePanel',
@@ -32,6 +36,8 @@ const readLayoutFromLocalStorage = (layoutKey: LayoutKeys): Layout | null => {
 }
 
 export const TransactionExplorer: React.FC = () => {
+  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
+
   const initialLayout = React.useMemo(() => {
     const BytecodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.BytecodeLayout)
     const BytecodeLayout: Layout = BytecodeLayoutFromLocalStorage || { y: 0, x: 3, w: 3, i: LayoutKeys.BytecodeLayout, h: 20 }
@@ -53,6 +59,8 @@ export const TransactionExplorer: React.FC = () => {
 
   const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
 
+  if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
+
   return (
     <Box
       width="100%"
@@ -73,19 +81,13 @@ export const TransactionExplorer: React.FC = () => {
         }}
       >
         <div key={LayoutKeys.SourceCodeLayout}>
-          <SourceCodePanel
-            close={() => {}}
-            isAbleToDisplaySourceCodePanel={true}
-          />
+          <SourceCodePanel />
         </div>
         <div key={LayoutKeys.BytecodeLayout}>
-          <BytecodePanel
-            toggleSourceCodePanel={() => {}}
-            isAbleToDisplaySourceCodePanel={true}
-          />
+          <BytecodePanel />
         </div>
         <div key={LayoutKeys.StructlogLayout}>
-          <StructlogPanel isSourceView={true} />
+          <StructlogPanel />
         </div>
       </GridLayout>
     </Box>
