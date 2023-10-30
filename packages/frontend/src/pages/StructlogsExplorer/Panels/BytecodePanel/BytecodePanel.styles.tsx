@@ -12,4 +12,4 @@ export const StyledMissingBytecodeContainer = styled(Stack)(() => ({
   alignItems: 'center',
 }))
 
-export const StyledMissingBytecodeText = styled(Typography)(({ theme }) => ({}))
+export const StyledMissingBytecodeText = styled(Typography)({})

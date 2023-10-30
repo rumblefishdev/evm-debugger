@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import type { VirtuosoHandle } from 'react-virtuoso'
 import { useDebouncedCallback } from 'use-debounce'
@@ -25,7 +25,7 @@ export const BytecodePanel: React.FC<BytecodePanelContainerProps> = (props) => {
   }, [activeStrucLog, currentDissasembledBytecode])
 
   const dissasembledBytecodeArray = useMemo(() => {
-    return (currentDissasembledBytecode && Object.entries(currentDissasembledBytecode).map(([pc, item]) => item)) || []
+    return (currentDissasembledBytecode && Object.values(currentDissasembledBytecode)) || []
   }, [currentDissasembledBytecode])
 
   const scrollToItem = useDebouncedCallback(() => {

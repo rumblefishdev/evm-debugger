@@ -6,7 +6,7 @@ import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.select
 import { sourceCodesSelectors } from '../../store/sourceCodes/sourceCodes.selectors'
 import { sourceMapsSelectors } from '../../store/sourceMaps/sourceMaps.selectors'
 
-import { StructlogPanel, InformationPanel, SourceCodePanel, BytecodePanel } from './Panels'
+import { StructlogPanel, SourceCodePanel, BytecodePanel } from './Panels'
 import type { StructlogsExplorerProps } from './StructlogsExplorer.types'
 import { StyledContentWrapper, StyledListsWrapper, NotAContractHero } from './StructlogsExplorer.styles'
 

@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { act } from 'react-dom/test-utils'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
