@@ -1,4 +1,5 @@
 import { TreeItem } from '@mui/lab'
+import React from 'react'
 
 import type { MuiTreeViewNode } from '../../../../../helpers/muiTreeViewUtils'
 import { ArrowDownBlack } from '../../../../../icons'

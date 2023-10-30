@@ -5,6 +5,7 @@ declare module '@mui/material/styles' {
     buttonSmall: React.CSSProperties
     bodySmallBold: React.CSSProperties
     buttonBig: React.CSSProperties
+    buttonMedium: React.CSSProperties
     bodySmall: React.CSSProperties
     label: React.CSSProperties
     caption: React.CSSProperties
@@ -19,6 +20,7 @@ declare module '@mui/material/styles' {
     buttonSmall?: React.CSSProperties
     bodySmallBold?: React.CSSProperties
     buttonBig?: React.CSSProperties
+    buttonMedium?: React.CSSProperties
     bodySmall?: React.CSSProperties
     label?: React.CSSProperties
     caption?: React.CSSProperties
@@ -101,6 +103,14 @@ export const typography: TypographyOptions = {
     letterSpacing: '-0.01em',
     fontWeight: 600,
     fontSize: '15px',
+    fontFamily: 'Rajdhani',
+  },
+  buttonMedium: {
+    textAlign: 'center',
+    lineHeight: '15px',
+    letterSpacing: '-0.01em',
+    fontWeight: 600,
+    fontSize: '18px',
     fontFamily: 'Rajdhani',
   },
   buttonBig: {

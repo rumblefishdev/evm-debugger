@@ -1,10 +1,3 @@
-import type { ButtonUnstyledProps } from '@mui/base'
+import type { ButtonProps as MuiButtonProps } from '@mui/material'
 
-export type TButtonVariant = 'text' | 'outlined' | 'contained'
-
-export interface ButtonProps extends Omit<ButtonUnstyledProps, 'component'> {
-  variant: TButtonVariant
-  big?: boolean
-  sx?: object
-  component?: 'button' | 'label'
-}
+export interface ButtonProps extends MuiButtonProps {}

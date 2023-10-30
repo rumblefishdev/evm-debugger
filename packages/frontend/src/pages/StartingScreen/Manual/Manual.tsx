@@ -90,7 +90,7 @@ export const Manual = () => {
       />
       <Button
         variant="contained"
-        big={true}
+        size="large"
         style={{ width: '200px', marginTop: '32px' }}
         onClick={handleSubmit(submitHandler)}
       >
