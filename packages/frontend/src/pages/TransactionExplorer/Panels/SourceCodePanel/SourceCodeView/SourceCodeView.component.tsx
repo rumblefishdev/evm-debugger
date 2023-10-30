@@ -9,7 +9,7 @@ export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({ activeSourceCod
   return (
     <Stack
       height="100%"
-      width="70%"
+      width="100%"
     >
       <StyledSourceSectionHeading variant="headingUnknown">{contractName}</StyledSourceSectionHeading>
       <StyledSourceSection>

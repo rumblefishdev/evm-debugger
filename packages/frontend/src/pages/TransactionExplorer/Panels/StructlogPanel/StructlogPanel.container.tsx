@@ -13,14 +13,11 @@ import type { StructlogPanelComponentRef, StructlogPanelProps } from './Structlo
 
 const DEFAULT_ELEMENT_HEIGHT = 74
 
-export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) => {
+export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-
-  const lastSourceViewValue = useRef(isSourceView)
-  const didChangeView = lastSourceViewValue.current !== isSourceView
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
@@ -40,20 +37,6 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
   }, [currentInstructions, structLogs, activeStructlog, dispatch])
 
   useEffect(() => {
-    const { listRef } = componentRefs.current
-    if (didChangeView && listRef && activeStructlog) {
-      listRef.scrollToIndex({
-        offset: -DEFAULT_ELEMENT_HEIGHT,
-        index: activeStructlog.listIndex,
-        behavior: 'smooth',
-        align: 'start',
-      })
-      dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
-      lastSourceViewValue.current = isSourceView
-    }
-  }, [activeStructlog, dispatch, isSourceView, didChangeView])
-
-  useEffect(() => {
     if (!componentRefs.current || !activeStructlog) return
 
     const { listRef, wrapperRef } = componentRefs.current
@@ -65,7 +48,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
       return
     }
 
-    const listOffsetTop = wrapperRef.offsetTop
+    const listOffsetTop = wrapperRef.getBoundingClientRect().top
     const listHeight = wrapperRef.offsetHeight
     const elementHeight = element.offsetHeight
     const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
@@ -91,13 +74,11 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ isSourceView }) 
     const handleKeyDown = (event: KeyboardEvent) => {
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
-      // event.preventDefault() won't stop scrolling via arrow keys when is fired in if statement
+      event.preventDefault()
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        event.preventDefault()
         setActiveStructlog(nextStructlog.index)
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        event.preventDefault()
         setActiveStructlog(previousStructlog.index)
       }
     }
