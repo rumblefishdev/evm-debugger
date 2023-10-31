@@ -75,16 +75,41 @@ Resources:
       AttributeDefinitions:
         - AttributeName: address
           AttributeType: S
-        - AttributeName: type#time
+        - AttributeName: timestamp
+          AttributeType: N
+        - AttributeName: chainId
+          AttributeType: N
+        - AttributeName: status
           AttributeType: S
       KeySchema:
         - AttributeName: address
           KeyType: HASH
-        - AttributeName: type#time
+        - AttributeName: timestamp
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: ChainIdIndex
+          KeySchema:
+            - AttributeName: chainId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
 
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
