@@ -31,7 +31,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
   )
 
   useEffect(() => {
-    if (activeStructlog) {
+    if (activeStructlog && currentInstructions) {
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstructions[activeStructlog.pc].fileId))
     }
   }, [currentInstructions, structLogs, activeStructlog, dispatch])

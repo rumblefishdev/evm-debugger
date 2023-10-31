@@ -2,7 +2,11 @@
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
-import type { ISrcMapApiPayload, TSourceMap } from '@evm-debuger/types'
+import type {
+  ISrcMapApiPayload,
+  TEtherscanParsedSourceCode,
+  TSourceMap,
+} from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
 
 import type { SolcOutput, TSourceFile } from './types'
@@ -10,7 +14,7 @@ import { SourceMapElement } from './sourceMapElement'
 import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
-import { payloadSync, s3download, s3upload } from './s3'
+import { payloadSync, s3download } from './s3'
 import solc from './solc'
 
 const { BUCKET_NAME } = process.env
@@ -73,7 +77,7 @@ const gatherSameSourceCodeElements = (
 
 const getSourceMap = async (
   files: TSourceFile[],
-  optimizerConfig: { enabled: boolean; runs: number },
+  settings: TEtherscanParsedSourceCode['settings'],
 ): Promise<TSourceMap[]> => {
   const input = {
     sources: files.reduce((accumulator, current, index) => {
@@ -86,18 +90,23 @@ const getSourceMap = async (
       }
     }, {}),
     settings: {
+      ...settings,
       outputSelection: {
         '*': {
           '*': ['*'],
         },
       },
-      optimizer: optimizerConfig,
     },
+
     language: 'Solidity',
   }
-  const output: SolcOutput = JSON.parse(
-    solc.compile(JSON.stringify(input)),
-  ) as SolcOutput
+  console.log('input', JSON.stringify(input))
+
+  const rawCompilationResult = solc.compile(JSON.stringify(input))
+
+  const output: SolcOutput = JSON.parse(rawCompilationResult) as SolcOutput
+
+  console.log('output', JSON.stringify(output))
 
   let allEntries: TSourceMap[] = []
   for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
@@ -140,6 +149,22 @@ export const compileFiles = async (
     })
   }
 
+  const rawSourceCode = _payload.sourceData?.SourceCode.replace(
+    /(\r\n)/gm,
+    '',
+  ).slice(1, -1)
+
+  const sourceCodeObj: TEtherscanParsedSourceCode = rawSourceCode
+    ? JSON.parse(rawSourceCode)
+    : undefined
+
+  const settings = sourceCodeObj?.settings || {
+    optimizer: {
+      runs: Number(_payload.sourceData?.Runs),
+      enabled: Boolean(_payload.sourceData?.OptimizationUsed),
+    },
+  }
+
   const sourceFiles: TSourceFile[] = (
     await Promise.all(
       _payload.filesPath.map(async (path: string) => {
@@ -165,10 +190,9 @@ export const compileFiles = async (
 
   let sourceMaps: TSourceMap[] = []
   try {
-    sourceMaps = await getSourceMap(sourceFiles, {
-      runs: Number(_payload.sourceData?.Runs),
-      enabled: Boolean(_payload.sourceData?.OptimizationUsed),
-    })
+    console.log('chuj dupa')
+    sourceMaps = await getSourceMap(sourceFiles, settings)
+    console.log(`${_payload.address} sourceMaps`, sourceMaps)
   } catch (error) {
     const msg = `/Compilation/Unknow error while compiling:\n${error}`
     console.warn(_payload.address, msg)

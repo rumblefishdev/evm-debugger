@@ -16,7 +16,7 @@ const selectByAddress = createSelector([selectInstructionsState, (_: unknown, ad
 )
 
 const selectCurrentInstructions = createSelector([selectEntities, activeBlockSelectors.selectActiveBlock], (entities, activeBlock) => {
-  return entities[activeBlock.address].instructions
+  return entities[activeBlock.address]?.instructions
 })
 
 const selectCurrentInstruction = createSelector(
