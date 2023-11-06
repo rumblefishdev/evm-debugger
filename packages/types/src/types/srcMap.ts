@@ -80,6 +80,7 @@ export type TEtherscanParsedSourceCode = {
       runs: number
     }
     remappings: string[]
+    viaIR: boolean
   }
   sources: Record<string, { content: string }>
 }
