@@ -100,7 +100,6 @@ export class TransactionTraceFetcher implements IStructLogProvider {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         const asJson = await response.json()
-        console.log('INVOKE:', asJson)
 
         store.dispatch(analyzerActions.logMessage(`Fetching structLogs status: ${asJson.status}`))
 

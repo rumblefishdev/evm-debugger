@@ -24,14 +24,6 @@ export const TreeFileView: React.FC<ITreeFileViewProps> = ({
   selectedTreeNode,
   sourceFilesTreeItems,
 }) => {
-  console.log({
-    sourceFilesTreeItems,
-    selectedTreeNode,
-    handleSelect,
-    handleExpandToggle,
-    expandedTreeNodes,
-  })
-
   const Items = React.useMemo(() => {
     return renderTree({
       name: 'Source Files',
@@ -39,8 +31,6 @@ export const TreeFileView: React.FC<ITreeFileViewProps> = ({
       children: sourceFilesTreeItems,
     })
   }, [sourceFilesTreeItems])
-
-  console.log({ Items })
 
   return (
     <StyledTreeFileView

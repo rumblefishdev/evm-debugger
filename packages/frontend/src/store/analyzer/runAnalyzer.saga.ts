@@ -34,7 +34,6 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const bytecodes = yield* select(bytecodesSelectors.selectAll)
 
   const abis = yield* select(sighashSelectors.abis)
-  console.log({ contractsSources })
   const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
     (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
       accumulator.additionalAbis[address] = abi
@@ -64,14 +63,10 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
     abis: { ...abis, ...additionalAbis },
   }
 
-  console.log({ analyzerPayload })
-
   // fix for Buffer not defined
   window.Buffer = window.Buffer || Buffer
   const analyzer = new TxAnalyzer(analyzerPayload)
   const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
-
-  console.log({ instructionsMap })
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
