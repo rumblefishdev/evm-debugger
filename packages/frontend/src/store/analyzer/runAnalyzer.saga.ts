@@ -34,11 +34,12 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   const bytecodes = yield* select(bytecodesSelectors.selectAll)
 
   const abis = yield* select(sighashSelectors.abis)
+  console.log({ contractsSources })
   const { additionalAbis, sourceCodes, contractNames, sourceMaps } = Object.entries(contractsSources).reduce(
     (accumulator, [address, { abi, sourceCode, contractName, srcMap }]) => {
       accumulator.additionalAbis[address] = abi
       accumulator.sourceCodes[address] = sourceCode
-      accumulator.contractNames[address] = contractName
+      accumulator.contractNames[address] = contractName || address
       accumulator.sourceMaps[address] = srcMap
       return accumulator
     },
@@ -88,7 +89,7 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   )
 
   yield* put(
-    contractNamesActions.addContractNames(
+    contractNamesActions.updateContractNames(
       Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
     ),
   )
@@ -114,6 +115,21 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
   yield* put(sourceMapsActions.setSourceMaps(sourceMapsPayload))
 
   return analyzeSummary
+}
+
+function* initializeContractInformations(transactionInfo: TTransactionInfo, structLogs: IStructLog[]) {
+  const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+
+  const addContractNamesPayload = analyzeSummary.contractAddresses.map((address) => ({ contractName: null, address }))
+  yield* put(contractNamesActions.addContractNames(addContractNamesPayload))
+
+  const addBytecodesPayload = analyzeSummary.contractAddresses.map((address) => ({
+    error: null,
+    disassembled: null,
+    bytecode: null,
+    address,
+  }))
+  yield* put(bytecodesActions.addBytecodes(addBytecodesPayload))
 }
 
 function* fetchContractsSources(sourceProvider: IContractSourceProvider, addresses: Set<string>) {
@@ -146,28 +162,14 @@ export function* fetchBytecodes(bytecodeProvider: IBytecodeProvider) {
 
 export function* regenerateAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyzer>) {
   const { sourceProvider, txInfoProvider, structLogProvider } = action.payload
-  console.log('regenerateAnalyzer', {
-    sourceProvider,
-    payload: action.payload,
-  })
+
   const transactionInfo = yield* apply(txInfoProvider, txInfoProvider.getTxInfo, [])
   const structLogs = yield* apply(structLogProvider, structLogProvider.getStructLog, [])
-  const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+  yield* initializeContractInformations(transactionInfo, structLogs)
 
-  yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
-  yield* put(
-    bytecodesActions.addBytecodes(
-      analyzeSummary.contractAddresses.map((address) => ({
-        error: null,
-        disassembled: null,
-        bytecode: null,
-        address,
-      })),
-    ),
-  )
   const addresses = yield* select(sighashSelectors.allAddresses)
   const additionalAbisAndSource = yield* fetchContractsSources(sourceProvider, addresses)
-  console.log('callAnalyzerOnce')
+
   yield* callAnalyzerOnce(transactionInfo, structLogs, additionalAbisAndSource)
 }
 
@@ -189,20 +191,8 @@ export function* runAnalyzer(action: ReturnType<typeof analyzerActions.runAnalyz
     yield* put(analyzerActions.updateStage('Fetching structlogs'))
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
-    const analyzeSummary = yield* callAnalyzerOnce(transactionInfo, structLogs)
+    yield* initializeContractInformations(transactionInfo, structLogs)
     yield* put(analyzerActions.updateStage('Run analyzer'))
-
-    yield* put(rawTxDataActions.setContractAddresses(analyzeSummary.contractAddresses))
-    yield* put(
-      bytecodesActions.addBytecodes(
-        analyzeSummary.contractAddresses.map((address) => ({
-          error: null,
-          disassembled: null,
-          bytecode: null,
-          address,
-        })),
-      ),
-    )
 
     if (bytecodeProvider) {
       yield* put(analyzerActions.logMessage('Fetching bytecodes'))

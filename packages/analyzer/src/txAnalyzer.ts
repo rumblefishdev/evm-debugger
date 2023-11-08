@@ -262,7 +262,7 @@ export class TxAnalyzer {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address]) return
+      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceCodes[address]) return
 
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)

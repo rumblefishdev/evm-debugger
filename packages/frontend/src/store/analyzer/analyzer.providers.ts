@@ -66,6 +66,9 @@ export class ContractSourceFetcher implements IContractSourceProvider {
 
         const payloads: Record<string, ISrcMapApiPayload> = asJson.data
         const sources: TContractsSources = Object.entries(payloads).reduce((accumulator: TContractsSources, [address, current]) => {
+          if (current.status !== SrcMapStatus.COMPILATION_SUCCESS) {
+            return accumulator
+          }
           accumulator[address] = {
             srcMap: current.sourceMaps,
             sourceCode: current.sourceData.SourceCode,

@@ -11,6 +11,7 @@ export const contractNamesAdapter = createEntityAdapter<TContractNames>({
 
 export const contractNamesSlice = createSlice({
   reducers: {
+    updateContractNames: contractNamesAdapter.updateMany,
     updateContractName: contractNamesAdapter.updateOne,
     addContractNames: contractNamesAdapter.addMany,
   },
