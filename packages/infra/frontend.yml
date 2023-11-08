@@ -12,6 +12,12 @@ Parameters:
     Type: String
     Default: ""
     Description: Limit serving files only to specified prefix
+  ShouldCreateCloudFront:
+    Type: String
+    Default: "true"
+
+Conditions:
+  ShouldCreateCloudFront: !Equals [!Ref ShouldCreateCloudFront, "true"]
 
 Resources:
   FrontendBucket:
@@ -35,12 +41,14 @@ Resources:
 
   FrontendOriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Condition: ShouldCreateCloudFront
     Properties:
       CloudFrontOriginAccessIdentityConfig:
         Comment: !Sub access-identity-${DomainName}
 
   FrontendCloudFront:
     Type: AWS::CloudFront::Distribution
+    Condition: ShouldCreateCloudFront
     Properties:
       DistributionConfig:
         Aliases:

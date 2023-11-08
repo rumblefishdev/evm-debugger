@@ -89,7 +89,7 @@ Resources:
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-dead-letter
+      QueueName: !Sub ${AWS::StackName}-sqs-dlq
 
   TransactionTraceSqs:
     Type: AWS::SQS::Queue
