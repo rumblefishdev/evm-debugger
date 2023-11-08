@@ -91,7 +91,8 @@ endef
 .deploy: STACK_NAME=emv-debugger-$(ENV_NAME)-srcmap-compiler-$(SOLC_VERSION)
 .deploy: PARAMETERS_FILE=template-config.$(ENV_NAME).json
 .deploy: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
-.deploy: TAGS="Owner=evm-debugger Environment=$(ENV_NAME)"
+.deploy: GIT_COMMIT=$(shell git rev-parse HEAD)
+.deploy: TAGS="Owner=evm-debugger Environment=$(ENV_NAME) GitCommit=$(GIT_COMMIT)"
 .deploy:
 	$(solc-version-check)
 	$(env-name-check)
