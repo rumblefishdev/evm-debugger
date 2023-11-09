@@ -4,6 +4,7 @@
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
 import type {
   ISrcMapApiPayload,
+  TEtherscanContractSourceCodeResult,
   TEtherscanParsedSourceCode,
   TSourceMap,
 } from '@evm-debuger/types'
@@ -18,6 +19,32 @@ import { payloadSync, s3download } from './s3'
 import solc from './solc'
 
 const { BUCKET_NAME } = process.env
+
+const isMultipleFilesJSON = (sourceCode: string) =>
+  sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
+
+const createSettingsObject = (
+  sourceData: TEtherscanContractSourceCodeResult,
+): TEtherscanParsedSourceCode['settings'] => {
+  const hasMultipleSources = isMultipleFilesJSON(sourceData.SourceCode)
+
+  if (hasMultipleSources) {
+    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
+      1,
+      -1,
+    )
+
+    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+
+    return sourceCodeObj.settings
+  }
+  return {
+    optimizer: {
+      runs: Number(sourceData.Runs),
+      enabled: sourceData.OptimizationUsed === '1',
+    },
+  }
+}
 
 const formatOpcodes = async (opcodesRaw: string): Promise<string> => {
   const opcodeFile = await getLastOpcodeFile()
@@ -149,21 +176,19 @@ export const compileFiles = async (
     })
   }
 
-  const rawSourceCode = _payload.sourceData?.SourceCode.replace(
-    /(\r\n)/gm,
-    '',
-  ).slice(1, -1)
-
-  const sourceCodeObj: TEtherscanParsedSourceCode = rawSourceCode
-    ? JSON.parse(rawSourceCode)
-    : undefined
-
-  const settings = sourceCodeObj?.settings || {
-    optimizer: {
-      runs: Number(_payload.sourceData?.Runs),
-      enabled: Boolean(_payload.sourceData?.OptimizationUsed),
-    },
+  if (!_payload.sourceData) {
+    const msg = '/Compilation/No source data'
+    console.warn(_payload.address, msg)
+    return payloadSync(payloadS3Params, {
+      ..._payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message: msg,
+    })
   }
+
+  const settings = createSettingsObject(_payload.sourceData)
+
+  console.log(`Settings ${_payload.address}`, settings)
 
   const sourceFiles: TSourceFile[] = (
     await Promise.all(

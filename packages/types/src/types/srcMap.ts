@@ -69,9 +69,9 @@ export type TEtherscanContractSourceCodeResult = {
 export type TEtherscanParsedSourceCode = {
   language: string
   settings: {
-    evmVersion: string
-    libraries: Record<string, string>
-    metadata: {
+    evmVersion?: string
+    libraries?: Record<string, string>
+    metadata?: {
       bytecodeHash: string
       useLiteralContent: boolean
     }
@@ -79,8 +79,8 @@ export type TEtherscanParsedSourceCode = {
       enabled: boolean
       runs: number
     }
-    remappings: string[]
-    viaIR: boolean
+    remappings?: string[]
+    viaIR?: boolean
   }
   sources: Record<string, { content: string }>
 }
