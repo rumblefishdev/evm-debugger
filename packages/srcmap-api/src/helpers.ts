@@ -207,7 +207,7 @@ const extractFiles = async (
       sourceCodeObj.sources[fileName].content,
     ])
   } catch {
-    toUpload = [['main.sol', rawSourceCode]]
+    toUpload = [['main.sol', payload.sourceData?.SourceCode]]
   }
 
   const uploaded: string[] = (
