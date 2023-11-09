@@ -9,6 +9,4 @@ const selectTxHash = createSelector(selectRawTxDataState, (state) => state.txHas
 
 const selectTxInfo = createSelector(selectRawTxDataState, (state) => state.transactionInfo)
 
-const selectContractAddresses = createSelector(selectRawTxDataState, (state) => state.contractAddresses)
-
-export const rawTxDataSelectors = { selectTxInfo, selectTxHash, selectContractAddresses }
+export const rawTxDataSelectors = { selectTxInfo, selectTxHash }

@@ -6,7 +6,10 @@ export interface MuiTreeViewNode {
 
 export const parsePathsToMuiTreeView = (paths: string[]): MuiTreeViewNode[] => {
   return paths.reduce((tree: MuiTreeViewNode[], path: string) => {
-    const segments = path.split('/')
+    // 0xcd16c0b83e4357deb05c8560500c792dedc14a50e587fdd5c77da9652eab6b62
+    // One file name starts with /, the other doesn't
+    const santizedPath = path.startsWith('/') ? path.slice(1) : path
+    const segments = santizedPath.split('/')
     let currentSegment = ''
     let currentChildren = tree
 

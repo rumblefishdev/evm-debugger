@@ -66,6 +66,9 @@ export class ContractSourceFetcher implements IContractSourceProvider {
 
         const payloads: Record<string, ISrcMapApiPayload> = asJson.data
         const sources: TContractsSources = Object.entries(payloads).reduce((accumulator: TContractsSources, [address, current]) => {
+          if (current.status !== SrcMapStatus.COMPILATION_SUCCESS) {
+            return accumulator
+          }
           accumulator[address] = {
             srcMap: current.sourceMaps,
             sourceCode: current.sourceData.SourceCode,
@@ -97,7 +100,6 @@ export class TransactionTraceFetcher implements IStructLogProvider {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         const asJson = await response.json()
-        console.log('INVOKE:', asJson)
 
         store.dispatch(analyzerActions.logMessage(`Fetching structLogs status: ${asJson.status}`))
 

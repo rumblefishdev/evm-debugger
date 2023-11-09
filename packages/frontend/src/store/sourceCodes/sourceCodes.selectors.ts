@@ -10,6 +10,8 @@ import { sourceCodesAdapter } from './sourceCodes.slice'
 
 const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CODES)], (state) => state)
 
+const selectEntities = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectEntities(state))
+
 const selectAll = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectAll(state))
 
 const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, address: string) => address], (state, address) =>
@@ -17,11 +19,11 @@ const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, add
 )
 
 const selectAllWithContractNames = createSelector(
-  [selectAll, contractNamesSelectors.selectEntities],
-  (allSourceCodes, contractEntities) => {
-    return allSourceCodes.map((sourceCode) => {
-      const contract = contractEntities[sourceCode.address]
-      return { ...sourceCode, contractName: contract?.contractName || sourceCode.address }
+  [selectEntities, contractNamesSelectors.selectAll],
+  (sourceCodeEntities, contractNames) => {
+    return contractNames.map((contractName) => {
+      const sourceCode = sourceCodeEntities[contractName.address] || null
+      return sourceCode ? { ...contractName, ...sourceCode } : { ...contractName, sourceCode: null }
     })
   },
 )
