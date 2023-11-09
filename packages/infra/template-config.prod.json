@@ -9,7 +9,7 @@
     "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
     "TraceBucketName": "transaction-trace-storage-prod.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
-    "AlchemyKey": "3-iIzln-MQF8Lc5a7DL2BwTPK8D5XRwv",
+    "AlchemyKey": "Hqhq4Kmez9e1D8TqzQJUXgHf-BT_doUO",
     "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752"
   }
 }
