@@ -22,18 +22,12 @@ Parameters:
     Type: String
   RepositoryName:
     Type: String
+  FrontendBucketName:
+    Type: String
+  FrontendExternalCloudFrontOriginAccessIdentity:
+    Type: String
 
 Resources:
-  FrontendBucket:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: ./frontend.yml
-      Parameters:
-        CertificateArn: !Ref CertificateArn
-        HostedZoneId: !Ref HostedZoneId
-        DomainName: !Ref FrontendBucketName
-        ShouldCreateCloudFront: "false"
-
   TraceBucket:
     Type: AWS::Serverless::Application
     Properties:
@@ -42,6 +36,17 @@ Resources:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
         DomainName: !Ref TraceBucketName
+
+  FrontendBucket:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./frontend.yml
+      Parameters:
+        CertificateArn: !Ref CertificateArn
+        HostedZoneId: !Ref HostedZoneId
+        DomainName: !Ref FrontendBucketName
+        ExternalCloudFrontOriginAccessIdentity: !Ref FrontendExternalCloudFrontOriginAccessIdentity
+
 
   TransactionTraceService:
     Type: AWS::Serverless::Application

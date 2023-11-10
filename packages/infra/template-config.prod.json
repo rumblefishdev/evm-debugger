@@ -10,6 +10,8 @@
     "TraceBucketName": "transaction-trace-storage-prod.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
     "AlchemyKey": "PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ",
-    "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752"
+    "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752",
+    "FrontendExternalCloudFrontOriginAccessIdentity": "origin-access-identity/cloudfront/E3RYCXCTS68PZZ",
+    "FrontendBucketName": "www.rumblefish.dev.evm-debugger"
   }
 }

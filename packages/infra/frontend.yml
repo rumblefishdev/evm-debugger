@@ -12,12 +12,12 @@ Parameters:
     Type: String
     Default: ""
     Description: Limit serving files only to specified prefix
-  ShouldCreateCloudFront:
+  ExternalCloudFrontOriginAccessIdentity:
     Type: String
-    Default: "true"
+    Default: ""
 
 Conditions:
-  ShouldCreateCloudFront: !Equals [!Ref ShouldCreateCloudFront, "true"]
+  ShouldCreateCloudFront: !Equals [!Ref ExternalCloudFrontOriginAccessIdentity, ""]
 
 Resources:
   FrontendBucket:
@@ -107,6 +107,7 @@ Resources:
 
   FrontendAllowFromCloudFrontBucketPolicy:
     Type: AWS::S3::BucketPolicy
+    Condition: ShouldCreateCloudFront
     Properties:
       Bucket:
         Ref: FrontendBucket
@@ -128,12 +129,12 @@ Resources:
               AWS:
                 Fn::Join:
                   - " "
-                  -
-                    - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
-                    - Ref: FrontendOriginAccessIdentity
+                  - - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
+                    - !If [ShouldCreateCloudFront, !Ref FrontendOriginAccessIdentity,  !Ref ExternalCloudFrontOriginAccessIdentity]
 
   FrontendRoute53:
     Type: AWS::Route53::RecordSet
+    Condition: ShouldCreateCloudFront
     Properties:
       AliasTarget:
         DNSName:
@@ -145,8 +146,8 @@ Resources:
 
 Outputs:
   CloudFrontDistributionId:
-    Value: !Ref FrontendCloudFront
+    Value: !If [ ShouldCreateCloudFront, !Ref FrontendCloudFront, "" ]
   FrontendBucketName:
-    Value: !Ref DomainName
+    Value: !If [ ShouldCreateCloudFront, !Ref DomainName, "" ]
   FrontendBucketArn:
     Value: !GetAtt FrontendBucket.Arn
