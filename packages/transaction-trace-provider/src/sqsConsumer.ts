@@ -11,7 +11,7 @@ import type { CompletedPart } from '@aws-sdk/client-s3'
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
-import { pushTraceToS3, getFilePath, abortMultiPartUpload, completeMultiPartUpload, createMultiPartUpload, uploadPart } from './s3'
+import { getFilePath, abortMultiPartUpload, completeMultiPartUpload, createMultiPartUpload, uploadPart } from './s3'
 import { DEFAULT_ERROR, knownErrors } from './errors'
 
 AWSLambda.init({

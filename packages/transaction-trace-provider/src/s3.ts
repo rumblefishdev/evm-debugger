@@ -4,7 +4,6 @@ import {
   UploadPartCommand,
   CompleteMultipartUploadCommand,
   AbortMultipartUploadCommand,
-  PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
 
@@ -12,29 +11,17 @@ const s3Client = new S3Client({
   region: process.env.AWS_REGION,
 })
 
+export const getFileName = (txHash: string, chainId: string) => {
+  return `trace/${chainId}/${txHash}.json`
+}
+
 export const getFilePath = (txHash: string, chainId: string) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = getFileName(txHash, chainId)
   return `${process.env.ANALYZER_DATA_BUCKET_NAME}/${fileName}`
 }
 
-export const pushTraceToS3 = async (txHash: string, chainId: string, json: string) => {
-  console.log('process.env.ANALYZER_DATA_BUCKET_NAME', process.env.ANALYZER_DATA_BUCKET_NAME)
-  const fileName = `trace/${chainId}/${txHash}.json`
-  const params = {
-    Key: fileName,
-    ContentType: 'application/json',
-    Bucket: process.env.ANALYZER_DATA_BUCKET_NAME,
-    Body: json,
-  }
-  const filePath = `${process.env.ANALYZER_DATA_BUCKET_NAME}/${fileName}`
-  console.log(`Pushing ${fileName} to ${filePath}`)
-  const command = new PutObjectCommand(params)
-  await s3Client.send(command)
-  return filePath
-}
-
 export const createMultiPartUpload = async (txHash: string, chainId: string) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = getFileName(txHash, chainId)
   const params = {
     Key: fileName,
     ContentType: 'application/json',
@@ -46,7 +33,7 @@ export const createMultiPartUpload = async (txHash: string, chainId: string) => 
 }
 
 export const uploadPart = async (txHash: string, chainId: string, uploadId: string, partNumber: number, body: string) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = getFileName(txHash, chainId)
   const params = {
     UploadId: uploadId,
     PartNumber: partNumber,
@@ -60,7 +47,7 @@ export const uploadPart = async (txHash: string, chainId: string, uploadId: stri
 }
 
 export const completeMultiPartUpload = async (txHash: string, chainId: string, uploadId: string, parts: CompletedPart[]) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = getFileName(txHash, chainId)
   const params = {
     UploadId: uploadId,
     MultipartUpload: {
@@ -74,7 +61,7 @@ export const completeMultiPartUpload = async (txHash: string, chainId: string, u
 }
 
 export const abortMultiPartUpload = async (txHash: string, chainId: string, uploadId: string) => {
-  const fileName = `trace/${chainId}/${txHash}.json`
+  const fileName = getFileName(txHash, chainId)
   const params = {
     UploadId: uploadId,
     Key: fileName,
