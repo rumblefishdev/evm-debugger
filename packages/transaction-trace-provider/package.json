@@ -10,6 +10,7 @@
     "@evm-debuger/types": "^0.1.2",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@sentry/serverless": "^7.51.0",
+    "big-json": "^3.2.0",
     "hardhat": "^2.14.0"
   },
   "scripts": {
@@ -31,6 +32,7 @@
     "@aws-sdk/client-s3": "^3.315.0",
     "@aws-sdk/lib-dynamodb": "^3.315.0",
     "@types/aws-lambda": "^8.10.92",
+    "@types/big-json": "^3.2.3",
     "aws-sdk-client-mock": "^2.1.1",
     "esbuild": "^0.17.19",
     "timekeeper": "^2.2.0"
