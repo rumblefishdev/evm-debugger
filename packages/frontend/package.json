@@ -29,6 +29,7 @@
     "aws-sdk": "^2.1288.0",
     "buffer": "^6.0.3",
     "ethers": "^5.7.2",
+    "fast-json": "^3.0.0",
     "get-line-from-pos": "^1.0.0",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",

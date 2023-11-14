@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer'
+
 import type ethers from 'ethers'
 import type {
   IStructLog,
@@ -9,6 +11,7 @@ import type {
   TTransactionTraceResult,
 } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus, SrcMapStatus } from '@evm-debuger/types'
+import { FastJson } from 'fast-json'
 
 import { store } from '../store'
 
@@ -108,12 +111,28 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           reject(`Cannot retrieve data for transaction with hash: ${this.hash}. Reason: ${asJson.errorDetails}`)
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
-
           clearInterval(transactionTraceInterval)
+          const arrayBuffer = await transactionTrace.arrayBuffer()
+
+          console.log(arrayBuffer)
+
+          const fastJson = new FastJson()
+
+          const structLogs: IStructLog[] = []
+
+          fastJson.on('structLogs[*]', (structLog) => {
+            structLogs.push(JSON.parse(structLog.toString()))
+          })
+
+          window.Buffer = window.Buffer || Buffer
+          fastJson.write(Buffer.from(arrayBuffer))
+
+          console.log('Written')
+
           // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-          const traceResult: TTransactionTraceResult = await transactionTrace.json()
-          const structLogs = traceResult.structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
-          resolve(structLogs)
+
+          const mappedStructlogs = structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
+          resolve(mappedStructlogs)
         }
       }, 15_000)
     })
