@@ -36,8 +36,10 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
 
   const uploadId = await createMultiPartUpload(txHash, chainId)
 
-  if (!uploadId) throw new Error('Failed to create multi part upload')
-  let j = 1
+  const MAX_ELEMENTS_IN_PART = 1000
+
+  // Must be in range of 1-10000
+  let partNumberIndex = 1
 
   const rootPartBody = JSON.stringify({
     returnValue: traceResult.returnValue,
@@ -45,15 +47,16 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     failed: traceResult.failed,
   })
 
-  // remove last bracket and array bracket and add comma
-  const rootPartBodySanitized = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(traceResult.structLogs.slice(0, 1000)).slice(
-    0,
-    -1,
-  )},`
+  // first slice removes end bracket " } "
+  // then we add the structLogs field
+  // stringifying the structLogs array and removing the end bracket " ] "
+  // so we can add a comma to the end of the string and push more data
+  const rootPartBodySanitized = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(
+    traceResult.structLogs.slice(0, MAX_ELEMENTS_IN_PART),
+  ).slice(0, -1)},`
 
   const rootPart = {
-    PartNumber: j,
-    ETag: `entityTag-${j}`,
+    PartNumber: partNumberIndex,
     body: rootPartBodySanitized,
   }
 
@@ -61,11 +64,13 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     const parts: { PartNumber: number; body: string }[] = [rootPart]
     const uploadedParts: CompletedPart[] = []
 
-    for (let index = 1000; index < traceResult.structLogs.length; ) {
-      j++
-      const partNumber = j
+    for (let index = MAX_ELEMENTS_IN_PART; index < traceResult.structLogs.length; ) {
+      partNumberIndex++
+      // first slice gets part of data
+      // second slice removes end bracket " ] "
+      // then we add a comma to the end of the string and push more data
       const body = `${JSON.stringify(traceResult.structLogs.slice(index, index + 1000)).slice(1, -1)},`
-      parts.push({ PartNumber: partNumber, body })
+      parts.push({ PartNumber: partNumberIndex, body })
       index += 1000
     }
 
@@ -73,8 +78,10 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
 
     for await (const part of parts) {
       console.log(`Uploading part ${part.PartNumber}`)
+
       const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
       if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}`)
+
       uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
     }
 
