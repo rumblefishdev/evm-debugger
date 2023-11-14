@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-at */
 import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
@@ -41,21 +42,21 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
   let j = 1
 
   const rootPartBody = JSON.stringify({
-    structLogs: traceResult.structLogs.slice(0, 1000),
     returnValue: traceResult.returnValue,
     gas: traceResult.gas,
     failed: traceResult.failed,
   })
 
+  // remove last bracket and array bracket and add comma
+  const rootPartBodySanitized = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(traceResult.structLogs.slice(0, 1000)).slice(
+    0,
+    -1,
+  )},`
+
   const rootPart = {
     PartNumber: j,
     ETag: `entityTag-${j}`,
-    body: JSON.stringify({
-      structLogs: traceResult.structLogs.slice(0, 1000),
-      returnValue: traceResult.returnValue,
-      gas: traceResult.gas,
-      failed: traceResult.failed,
-    }),
+    body: rootPartBodySanitized,
   }
 
   try {
@@ -65,13 +66,17 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     for (let index = 1000; index < traceResult.structLogs.length; ) {
       j++
       const partNumber = j
-      const body = JSON.stringify(traceResult.structLogs.slice(index, index + 1000))
+      const body = `${JSON.stringify(traceResult.structLogs.slice(index, index + 1000)).slice(1, -1)},`
       parts.push({ PartNumber: partNumber, body })
       index += 1000
     }
 
+    parts[parts.length - 1].body = `${parts[parts.length - 1].body.slice(0, -1)}]}`
+
     for await (const part of parts) {
       console.log(`Uploading part ${part.PartNumber}`)
+      console.log(`Part body length ${part.body.length}`)
+      console.log(`Part body last 100 chars ${part.body.slice(-100)}`)
       const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
       if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}`)
       uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
