@@ -1,15 +1,7 @@
 import { Buffer } from 'buffer'
 
 import type ethers from 'ethers'
-import type {
-  IStructLog,
-  TTransactionInfo,
-  TSrcMapAddres,
-  ChainId,
-  ISrcMapApiPayload,
-  ISrcMapApiResponseBody,
-  TTransactionTraceResult,
-} from '@evm-debuger/types'
+import type { IStructLog, TTransactionInfo, TSrcMapAddres, ChainId, ISrcMapApiPayload, ISrcMapApiResponseBody } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus, SrcMapStatus } from '@evm-debuger/types'
 import { FastJson } from 'fast-json'
 
@@ -112,9 +104,8 @@ export class TransactionTraceFetcher implements IStructLogProvider {
         } else if (asJson.status === TransactionTraceResponseStatus.SUCCESS) {
           const transactionTrace = await fetch(`https://${asJson.s3Location}`)
           clearInterval(transactionTraceInterval)
-          const arrayBuffer = await transactionTrace.arrayBuffer()
 
-          console.log(arrayBuffer)
+          const arrayBuffer = await transactionTrace.arrayBuffer()
 
           const fastJson = new FastJson()
 
@@ -127,10 +118,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
           window.Buffer = window.Buffer || Buffer
           fastJson.write(Buffer.from(arrayBuffer))
 
-          console.log('Written')
-
           // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-
           const mappedStructlogs = structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
           resolve(mappedStructlogs)
         }
