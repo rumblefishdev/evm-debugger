@@ -74,6 +74,7 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
       index += 1000
     }
 
+    // slice removes comma " , " from last element and closes the array " ] " and object " } "
     parts[parts.length - 1].body = `${parts[parts.length - 1].body.slice(0, -1)}]}`
 
     for await (const part of parts) {
