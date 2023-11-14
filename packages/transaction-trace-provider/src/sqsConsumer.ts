@@ -105,10 +105,10 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
     await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
     try {
       await processTx(txHash, chainId, hardhatForkingUrl)
-      const filePath = getFilePath(txHash, chainId)
-      putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { filePath })
+      const s3Location = getFilePath(txHash, chainId)
+      putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
       console.log(`Finished processing ${txHash}`)
-      console.log(`Trace saved to ${filePath}`)
+      console.log(`Trace saved to ${s3Location}`)
     } catch (error) {
       const errorMessage = { errorDetails: DEFAULT_ERROR }
       if (error instanceof Error) {
