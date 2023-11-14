@@ -32,9 +32,7 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
   // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
   // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
-
   console.log(`Finished debug_traceTransaction for ${txHash}`)
-  console.log(`traceResult.structLogs.length`, traceResult.structLogs.length)
 
   const uploadId = await createMultiPartUpload(txHash, chainId)
 
@@ -75,8 +73,6 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
 
     for await (const part of parts) {
       console.log(`Uploading part ${part.PartNumber}`)
-      console.log(`Part body length ${part.body.length}`)
-      console.log(`Part body last 100 chars ${part.body.slice(-100)}`)
       const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
       if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}`)
       uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
@@ -93,10 +89,7 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
 }
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
-  console.log('consumeSqsAnalyzeTx event', JSON.stringify(event))
   const records = event.Records
-  console.log(`Received ${records.length} records`)
-  console.log(JSON.stringify(records))
   if (records && records.length > 0) {
     const txHash = records[0].messageAttributes.txHash.stringValue!
     const chainId = records[0].messageAttributes.chainId.stringValue!

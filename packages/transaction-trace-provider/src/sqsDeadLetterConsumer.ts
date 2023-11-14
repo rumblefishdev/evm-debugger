@@ -16,7 +16,6 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider-dlq')
 
 export const consumeSqsAnalyzeTxError: Handler = async (event: SQSEvent) => {
-  console.log('transaction-trace-provider-dlq', JSON.stringify(event))
   for (const record of event.Records) {
     const txHash = record.messageAttributes.txHash.stringValue!
     await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, {
