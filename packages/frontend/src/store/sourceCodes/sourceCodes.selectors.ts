@@ -43,8 +43,11 @@ const selectCurrentSourceFiles = createSelector(
   },
 )
 
+const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], (_sourceFiles) => _sourceFiles.length > 1)
+
 export const sourceCodesSelectors = {
   selectIsSourceCodeAvailable,
+  selectHasMultipleSourceFiles,
   selectCurrentSourceFiles,
   selectCurrentSourceCode,
   selectByAddress,
