@@ -1,5 +1,5 @@
-import type { BoxProps } from '@mui/material'
+import type { StackProps } from '@mui/material'
 
-export interface AppContainerProps extends BoxProps {
+export interface AppContainerProps extends StackProps {
   withNavbar?: boolean
 }
