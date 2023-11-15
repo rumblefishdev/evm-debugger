@@ -29,6 +29,7 @@ export const createMultiPartUpload = async (txHash: string, chainId: string) => 
   }
   const command = new CreateMultipartUploadCommand(params)
   const response = await s3Client.send(command)
+
   const uploadId = response.UploadId
 
   if (!uploadId) throw new Error('Failed to create multi part upload')
