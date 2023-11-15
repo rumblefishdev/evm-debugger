@@ -49,7 +49,10 @@ Resources:
         DomainName: !Ref Domain
         Route53:
           HostedZoneId: !Ref HostedZoneId
-        
+
+  ###################################
+  ###### Transaction Trace API ######
+  ###################################
   AnalyzerDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -67,49 +70,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-
-  SrcMapDataTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub ${AWS::StackName}-srcmap-actions
-      AttributeDefinitions:
-        - AttributeName: address
-          AttributeType: S
-        - AttributeName: timestamp
-          AttributeType: N
-        - AttributeName: chainId
-          AttributeType: N
-        - AttributeName: status
-          AttributeType: S
-      KeySchema:
-        - AttributeName: address
-          KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      GlobalSecondaryIndexes:
-        - IndexName: ChainIdIndex
-          KeySchema:
-            - AttributeName: chainId
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
-        - IndexName: StatusIndex
-          KeySchema:
-            - AttributeName: status
-              KeyType: HASH
-            - AttributeName: timestamp
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
 
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
@@ -270,9 +230,70 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  ###################################
+  ######### Source Map API ##########
+  ###################################
+  SrcMapDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub evm-debugger-${Environment}-srcmap-contracts
+      AttributeDefinitions:
+        - AttributeName: address
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+        - AttributeName: chainId
+          AttributeType: N
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: address
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: ChainIdIndex
+          KeySchema:
+            - AttributeName: chainId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+
+  SrcMapSqsDeadLetter:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub evm-debugger-${Environment}-srcmap-sqs-dead-letter
+
+  SrcMapSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub evm-debugger-${Environment}-srcmap-sqs
+      VisibilityTimeout: 910
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SrcMapSqsDeadLetter.Arn
+        maxReceiveCount: 1
+
   SrcMapApiFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-srcmap-api
       CodeUri: ../srcmap-api
       Handler: srcMapApi.srcmapApiEntrypoint
       Runtime: nodejs18.x
@@ -290,7 +311,7 @@ Resources:
           REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
           REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
       Events:
-        TransactionTraceApiEvent:
+        SrcMapApiEvent:
           Type: Api
           Properties:
             RestApiId: !Ref Api
@@ -330,5 +351,3 @@ Resources:
                 - !Sub arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile
-
-
