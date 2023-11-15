@@ -51,13 +51,13 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
   // then we add the structLogs field
   // stringifying the structLogs array and removing the end bracket " ] "
   // so we can add a comma to the end of the string and push more data
-  const rootPartBodySanitized = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(
+  const rootPartBodyParsed = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(
     traceResult.structLogs.slice(0, MAX_ELEMENTS_IN_PART),
   ).slice(0, -1)},`
 
   const rootPart = {
     PartNumber: partNumberIndex,
-    body: rootPartBodySanitized,
+    body: rootPartBodyParsed,
   }
 
   try {
