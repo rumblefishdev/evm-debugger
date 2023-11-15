@@ -77,7 +77,7 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     // slice removes comma " , " from last element and closes the array " ] " and object " } "
     parts[parts.length - 1].body = `${parts[parts.length - 1].body.slice(0, -1)}]}`
 
-    for await (const part of parts) {
+    for (const part of parts) {
       console.log(`Uploading part ${part.PartNumber}`)
 
       const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
