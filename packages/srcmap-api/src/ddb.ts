@@ -1,9 +1,11 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import {
-  DynamoDBDocumentClient,
-  PutCommand,
-  QueryCommand,
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
+import type {
+  PutCommandInput,
+  QueryCommandInput,
+  QueryCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb'
+import type { ChainId } from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
 
 const ddbClient = new DynamoDBClient({
@@ -12,27 +14,62 @@ const ddbClient = new DynamoDBClient({
 
 const dynamoDbClient = DynamoDBDocumentClient.from(ddbClient)
 
-export const getStatus = async (address: string) => {
-  const params = {
+interface IContractStatusDDBItem {
+  chainId: ChainId
+  address: string
+  status: SrcMapStatus
+  timestamp: number
+  message?: string
+}
+
+export const getContractStatus = async (
+  chainId: ChainId,
+  address: string,
+): Promise<IContractStatusDDBItem | undefined> => {
+  const params: QueryCommandInput = {
     TableName: process.env.SRCMAP_TABLE_NAME,
     ScanIndexForward: false,
-    Limit: 2,
+    Limit: 1,
     KeyConditionExpression: 'address = :address',
+    FilterExpression: 'chainId = :chainId',
     ExpressionAttributeValues: {
-      ':address': address,
+      ':chainId': { N: chainId.toString() },
+      ':address': { S: address },
     },
   }
+
   const command = new QueryCommand(params)
-  const { Items } = await dynamoDbClient.send(command)
-  if (Items && Items.length > 0) {
-    const transactionDetails = Items[0]
-    const transactionLastEvent = Items[1] || Items[0]
-    return {
-      ...transactionDetails,
-      ...transactionLastEvent,
-    }
+  const result: QueryCommandOutput = await dynamoDbClient.send(command)
+  const items: IContractStatusDDBItem[] | undefined = (result.Items || []).map(
+    (item: Record<string, { N: string; S: string }>) => ({
+      timestamp: parseInt(item.timestamp.N, 10),
+      status: item.status.S as SrcMapStatus,
+      message: item.message?.S,
+      chainId: parseInt(item.chainId.N, 10) as ChainId,
+      address: item.address.S,
+    }),
+  )
+  return items?.[0]
+}
+
+export const setContractStatus = async (
+  chainId: ChainId,
+  address: string,
+  status: SrcMapStatus,
+  message?: string,
+) => {
+  const params: PutCommandInput = {
+    TableName: process.env.SRCMAP_TABLE_NAME,
+    Item: {
+      timestamp: Date.now(),
+      status,
+      message,
+      chainId,
+      address,
+    },
   }
-  return null
+  const command = new PutCommand(params)
+  return dynamoDbClient.send(command)
 }
 
 export const putStatusToDdb = async (address: string, chainId: string) => {
