@@ -85,7 +85,10 @@ function* callAnalyzerOnce(transactionInfo: TTransactionInfo, structLogs: IStruc
 
   yield* put(
     contractNamesActions.updateContractNames(
-      Object.entries(contractNames).reduce((accumulator, [address, contractName]) => [...accumulator, { contractName, address }], []),
+      Object.entries(contractNames).reduce((accumulator, [address, contractName]) => {
+        accumulator.push({ id: address, changes: { contractName } })
+        return accumulator
+      }, []),
     ),
   )
 
