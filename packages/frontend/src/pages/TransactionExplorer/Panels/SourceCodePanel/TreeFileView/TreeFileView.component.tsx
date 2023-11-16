@@ -1,4 +1,4 @@
-import { TreeItem } from '@mui/lab'
+import { TreeItem } from '@mui/x-tree-view'
 import React from 'react'
 
 import type { MuiTreeViewNode } from '../../../../../helpers/muiTreeViewUtils'
