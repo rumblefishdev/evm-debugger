@@ -25,7 +25,6 @@ export const rootReducer = combineReducers({
   [StoreKeys.ACTIVE_STRUCT_LOG]: activeStructLogReducer,
   [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
   [StoreKeys.SIGHASH]: sighashReducer,
-  [StoreKeys.RAW_TX_DATA]: rawTxDataReducer,
   [StoreKeys.CONTRACT_NAMES]: contractNamesReducer,
   [StoreKeys.BYTECODES]: bytecodesReducer,
   [StoreKeys.ANALYZER]: analyzerReducer,
