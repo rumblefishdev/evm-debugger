@@ -1,8 +1,10 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
-import type { TBytecodes } from '../../types'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
+
+import type { TBytecodes, TInitializeBytecodesPayload } from './bytecodes.types'
 
 export const bytecodesAdapter = createEntityAdapter<TBytecodes>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
@@ -12,6 +14,15 @@ export const bytecodesAdapter = createEntityAdapter<TBytecodes>({
 export const bytecodesSlice = createSlice({
   reducers: {
     updateBytecode: bytecodesAdapter.updateOne,
+    initializeBytecodes: (state, action: PayloadAction<TInitializeBytecodesPayload>) => {
+      const emptyBytecodes = action.payload.map((address) => ({ error: null, disassembled: null, bytecode: null, address }))
+      bytecodesAdapter.addMany(state, emptyBytecodes)
+    },
+    finishFetchingBytecodes: () => {},
+    fetchBytecodes: () => {},
+    clearBytecodes: (state) => {
+      bytecodesAdapter.removeAll(state)
+    },
     addBytecodes: bytecodesAdapter.addMany,
   },
   name: StoreKeys.BYTECODES,

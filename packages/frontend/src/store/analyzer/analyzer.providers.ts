@@ -95,6 +95,7 @@ export class TransactionTraceFetcher implements IStructLogProvider {
       const transactionTraceInterval = setInterval(async () => {
         const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${this.hash}/${this.chainId}`)
         const asJson = await response.json()
+        console.log('structlogs fetching', asJson)
 
         store.dispatch(analyzerActions.logMessage(`Fetching structLogs status: ${asJson.status}`))
 
@@ -154,6 +155,8 @@ export class JSONRpcTxInfoFetcher implements ITxInfoProvider {
 
   async getTxInfo() {
     const tx = await this.provider.getTransaction(this.hash)
+
+    console.log(tx)
 
     return this.unifyTxInfo(tx)
   }

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@reduxjs/toolkit'
 import { createSelector } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'

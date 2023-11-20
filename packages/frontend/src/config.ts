@@ -15,17 +15,11 @@ export const { version } = require('../package.json')
 
 export const jsonRpcProvider = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
-
   [ChainId.goerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli'),
-
   [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic'),
-
   [ChainId.mumbai]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MUMBAI_JSONRPC, 'maticmum'),
-
   [ChainId.sepolia]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_SEPOLIA_JSONRPC, 'sepolia'),
-
   [ChainId.arbitrum]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_ONE_JSONRPC, 'arbitrum'),
-
   [ChainId.arbitrumGoerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC, 'arbitrum-goerli'),
 }
 

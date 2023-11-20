@@ -15,6 +15,8 @@ import { activeSourceFileReducer } from './activeSourceFile/activeSourceFile.sli
 import { instructionsReducer } from './instructions/instructions.slice'
 import { activeStructLogReducer } from './activeStructLog/activeStructLog.slice'
 import { uiReducer } from './ui/ui.slice'
+import { transactionInfoReducer } from './transactionInfo/transactionInfo.slice'
+import { transactionConfigReducer } from './transactionConfig/transactionConfig.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
@@ -31,4 +33,6 @@ export const rootReducer = combineReducers({
   [StoreKeys.ACTIVE_SOURCE_FILE]: activeSourceFileReducer,
   [StoreKeys.INSTRUCTIONS]: instructionsReducer,
   [StoreKeys.UI]: uiReducer,
+  [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
+  [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
 })

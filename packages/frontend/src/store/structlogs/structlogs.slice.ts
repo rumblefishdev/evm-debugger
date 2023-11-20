@@ -1,8 +1,11 @@
 import type { IStructLog } from '@evm-debuger/types'
+import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
+
+import type { TFetchStructlogsLocationPayload, TFetchStructlogsPayload } from './structlogs.types'
 
 export const structLogsAdapter = createEntityAdapter<IStructLog>({
   sortComparer: (a, b) => a.index - b.index,
@@ -11,7 +14,14 @@ export const structLogsAdapter = createEntityAdapter<IStructLog>({
 
 export const structLogsSlice = createSlice({
   reducers: {
-    loadStructLogs: structLogsAdapter.setMany,
+    loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
+      structLogsAdapter.addMany(state, action.payload)
+    },
+    fetchStructlogsLocation: (_, action: PayloadAction<TFetchStructlogsLocationPayload>) => {},
+    fetchStructlogs: (_, action: PayloadAction<TFetchStructlogsPayload>) => {},
+    clearStructLogs: (state) => {
+      structLogsAdapter.removeAll(state)
+    },
   },
   name: StoreKeys.STRUCT_LOGS,
   initialState: structLogsAdapter.getInitialState(),
@@ -19,4 +29,4 @@ export const structLogsSlice = createSlice({
 
 export const structLogsReducer = structLogsSlice.reducer
 export const structLogsActions = structLogsSlice.actions
-export type IStructLogsActions = ActionsType<typeof structLogsActions>
+export type TStructLogsActions = ActionsType<typeof structLogsActions>

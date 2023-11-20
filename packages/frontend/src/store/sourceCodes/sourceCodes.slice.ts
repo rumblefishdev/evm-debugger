@@ -12,7 +12,9 @@ export const sourceCodesAdapter = createEntityAdapter<TSourceCodes>({
 export const sourceCodesSlice = createSlice({
   reducers: {
     updateSourceCode: sourceCodesAdapter.updateOne,
+    fetchSourceCodes: () => {},
     addSourceCodes: sourceCodesAdapter.addMany,
+    addSourceCode: sourceCodesAdapter.addOne,
   },
   name: StoreKeys.SOURCE_CODES,
   initialState: sourceCodesAdapter.getInitialState(),

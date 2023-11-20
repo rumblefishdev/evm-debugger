@@ -1,4 +1,5 @@
 import type { EntityState } from '@reduxjs/toolkit'
+import type { ChainId } from '@evm-debuger/types'
 
 import type { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from './analyzer.const'
 
@@ -24,3 +25,8 @@ export interface IAnalyzerState {
 }
 
 export type TAddLogMessagePayload = Omit<TLogMessageRecord, 'identifier' | 'timestamp'>
+
+export type TProcessTransactionPayload = {
+  chainId: ChainId
+  transactionHash: string
+}
