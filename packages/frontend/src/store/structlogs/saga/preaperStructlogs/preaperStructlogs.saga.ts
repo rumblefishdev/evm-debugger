@@ -54,6 +54,5 @@ export function* startPreaperingStructlogsSaga(): SagaGenerator<void> {
         message: `Error while preapering structlogs: ${error.message}`,
       }),
     )
-    throw error
   }
 }

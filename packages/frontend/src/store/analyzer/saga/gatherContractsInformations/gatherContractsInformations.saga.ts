@@ -60,6 +60,5 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
         message: `Error while gathering contracts informations: ${error.message}`,
       }),
     )
-    throw error
   }
 }

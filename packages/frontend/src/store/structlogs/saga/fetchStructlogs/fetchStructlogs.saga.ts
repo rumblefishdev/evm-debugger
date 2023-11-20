@@ -72,6 +72,5 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
         message: `Error while downloading and parsing structlogs: ${error.message}`,
       }),
     )
-    throw error
   }
 }

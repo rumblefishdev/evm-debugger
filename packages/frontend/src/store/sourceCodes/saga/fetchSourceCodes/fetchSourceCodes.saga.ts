@@ -114,6 +114,5 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
         message: `Error while fetching source codes: ${error.message}`,
       }),
     )
-    throw error
   }
 }

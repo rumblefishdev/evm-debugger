@@ -28,6 +28,5 @@ export function* initializeTransactionProcessingSaga({
         message: `Error while initializing analyzer: ${error.message}`,
       }),
     )
-    throw error
   }
 }

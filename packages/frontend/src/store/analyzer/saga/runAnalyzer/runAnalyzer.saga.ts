@@ -75,6 +75,5 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
         message: `Error while running analyzer: ${error.message}`,
       }),
     )
-    throw error
   }
 }

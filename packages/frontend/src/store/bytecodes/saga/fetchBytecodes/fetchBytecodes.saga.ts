@@ -37,6 +37,5 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
         message: `Error while fetching bytecodes analyzer: ${error.message}`,
       }),
     )
-    throw error
   }
 }

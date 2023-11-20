@@ -82,6 +82,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
   } catch (error) {
+    console.log('processTransaction error', error)
     yield* put(analyzerActions.setCriticalError(error.message))
   }
 }

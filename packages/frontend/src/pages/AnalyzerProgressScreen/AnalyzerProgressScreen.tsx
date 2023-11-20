@@ -34,16 +34,6 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
     if (chainId && txHash && !isRunOnce) {
       setIsRunOnce(true)
       dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
-      // } else if (chainId && txHash && !isRunOnce) {
-      //   setIsRunOnce(true)
-      //   dispatch(
-      //     analyzerActions.regenerateAnalyzer({
-      //       txInfoProvider: chainData.txInfoProvider(txHash),
-      //       structLogProvider: chainData.structLogProvider(txHash),
-      //       sourceProvider: chainData.sourceProvider,
-      //       bytecodeProvider: chainData.bytecodeProvider,
-      //     }),
-      //   )
     }
   }, [dispatch, txHash, chainId, stages, isRunOnce])
 

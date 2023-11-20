@@ -43,6 +43,5 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
         message: `Error while fetch transaction info: ${error.message}`,
       }),
     )
-    throw error
   }
 }
