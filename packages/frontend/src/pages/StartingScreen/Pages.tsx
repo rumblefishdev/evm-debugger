@@ -12,7 +12,6 @@ import { GAnalytics } from '../../components/GAnalytics'
 import { DebuggerFormSection } from './DebuggerFormSection'
 import { AnalyzeTransactionSection } from './AnalyzeTransactionSection'
 import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
-import { Supported } from './Supported'
 
 const isPrerender = process.env.REACT_APP_IS_PRERENDER === 'true'
 
@@ -24,8 +23,6 @@ const getPosts = async () => {
 
   return { blogPosts: entries.items }
 }
-
-export const SupportedChain: () => JSX.Element = () => <Supported />
 
 export const StartingScreen: () => JSX.Element = () => {
   const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])

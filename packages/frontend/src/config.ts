@@ -33,4 +33,6 @@ export const chainNames = {
   [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
 }
 
+export const supportedChainsIdList = Object.values(ChainId).filter((item) => typeof item === 'number')
+
 export const reportIssuePageUrl = 'https://github.com/rumblefishdev/evm-debugger-issues/issues/new/choose'

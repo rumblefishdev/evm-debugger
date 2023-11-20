@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { ChainId } from '@evm-debuger/types'
 
-import { supportedChains } from '../../helpers/chains'
 import { ROUTES } from '../../routes'
 import { DebuggerProcessButton } from '../DebuggerProcessButton'
+import { chainNames, supportedChainsIdList } from '../../config'
 
 import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
 import type { IFormData } from './Supported.types'
@@ -109,12 +110,12 @@ export const Supported = () => {
                   },
                 }}
               >
-                {Object.entries(supportedChains).map(([chainId, chainData]) => (
+                {supportedChainsIdList.map((chainId) => (
                   <StyledMenuItem
-                    key={chainId.toString()}
+                    key={ChainId[chainId].toString()}
                     value={chainId}
                   >
-                    {chainData.name}
+                    {chainNames[chainId]}
                   </StyledMenuItem>
                 ))}
               </StyledSelect>

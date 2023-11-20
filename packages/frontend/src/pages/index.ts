@@ -1,4 +1,4 @@
-export { StartingScreen, SupportedChain } from './StartingScreen/Pages'
+export { StartingScreen } from './StartingScreen/Pages'
 export { AnalyzeSummary } from './AnalyzeSummary/AnalyzeSummary'
 
 export { AnalyzerProgressScreen } from './AnalyzerProgressScreen/AnalyzerProgressScreen'

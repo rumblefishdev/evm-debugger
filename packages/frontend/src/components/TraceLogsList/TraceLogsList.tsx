@@ -32,8 +32,6 @@ export const TraceLogsList = (): JSX.Element => {
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
 
-  console.log('traceLogs', traceLogs)
-
   const ref = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<ViewportListRef>(null)
 
