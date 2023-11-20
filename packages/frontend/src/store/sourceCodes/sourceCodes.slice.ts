@@ -13,6 +13,7 @@ export const sourceCodesSlice = createSlice({
   reducers: {
     updateSourceCode: sourceCodesAdapter.updateOne,
     fetchSourceCodes: () => {},
+    clearSourceCodes: sourceCodesAdapter.removeAll,
     addSourceCodes: sourceCodesAdapter.addMany,
     addSourceCode: sourceCodesAdapter.addOne,
   },

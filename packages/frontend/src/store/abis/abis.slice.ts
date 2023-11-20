@@ -12,6 +12,7 @@ export const abisAdapter = createEntityAdapter<TAbiElement>({
 
 export const abisSlice = createSlice({
   reducers: {
+    clearAbis: abisAdapter.removeAll,
     addAbis: abisAdapter.addMany,
   },
   name: StoreKeys.ABIS,

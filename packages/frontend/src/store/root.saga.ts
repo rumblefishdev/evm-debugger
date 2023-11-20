@@ -7,7 +7,7 @@ import { analyzerMasterSaga } from './analyzer/analyzer.master.saga'
 import { sourceCodesMasterSaga } from './sourceCodes/sourceCodes.master.saga'
 
 export function* rootSaga(): Generator {
-  yield all([
+  yield* all([
     fork(bytescodesMasterSaga),
     fork(analyzerMasterSaga),
     fork(transactionInfoMasterSaga),

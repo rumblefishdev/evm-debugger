@@ -26,6 +26,7 @@ export const sighashSlice = createSlice({
         })),
       )
     },
+    clearSighashes: sighashAdapter.removeAll,
     addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
       return sighashAdapter.setMany(sighashState, action.payload)
     },

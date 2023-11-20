@@ -8,6 +8,7 @@ import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 
 export function* processTransactionSaga({ payload }: TAnalyzerActions['processTransaction']): SagaGenerator<void> {
+  console.log('processTransactionSaga')
   const { chainId, transactionHash } = payload
 
   try {

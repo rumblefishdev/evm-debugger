@@ -5,7 +5,7 @@ import { v4 as createUUID } from 'uuid'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-import { AnalyzerState, INITIAL_STAGES, analyzerLogMessagesAdapter, analyzerStagesAdapter } from './analyzer.state'
+import { AnalyzerState, analyzerLogMessagesAdapter, analyzerStagesAdapter } from './analyzer.state'
 import type { TAddLogMessagePayload, TLogMessageRecord, TProcessTransactionPayload, TStageRecord } from './analyzer.types'
 
 export const initialAnalyzerState: AnalyzerState = { ...new AnalyzerState() }
@@ -25,18 +25,14 @@ export const analyzerSlice = createSlice({
 
       analyzerStagesAdapter.updateMany(state.stages, stagesToUpdate)
     },
-    processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
-    initializeTransactionProcessing: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
-    initializeStages: (state) => {
-      analyzerStagesAdapter.setAll(state.stages, INITIAL_STAGES)
+    processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {
+      console.log(__)
     },
-
+    initializeTransactionProcessing: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
     gatherContractsInformations: () => {},
 
-    clearAnalyzerInformation: (state) => {
-      state.logMessages = analyzerLogMessagesAdapter.getInitialState()
-      state.stages = analyzerStagesAdapter.getInitialState()
-      state.criticalError = null
+    clearAnalyzerInformation: () => {
+      return { ...new AnalyzerState() }
     },
     addStage: (state, action: PayloadAction<TStageRecord>) => {
       analyzerStagesAdapter.addOne(state.stages, action.payload)

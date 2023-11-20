@@ -14,6 +14,7 @@ export const sourceMapsSlice = createSlice({
     updateSourceMaps: sourceMapsAdapter.updateMany,
     updateSourceMap: sourceMapsAdapter.updateOne,
     setSourceMaps: sourceMapsAdapter.addMany,
+    clearSourceMaps: sourceMapsAdapter.removeAll,
   },
   name: StoreKeys.SOURCE_MAPS,
   initialState: sourceMapsAdapter.getInitialState(),

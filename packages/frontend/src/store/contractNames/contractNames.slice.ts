@@ -19,6 +19,7 @@ export const contractNamesSlice = createSlice({
       const emptyContractNames = action.payload.map((address) => ({ contractName: null, address }))
       contractNamesAdapter.addMany(state, emptyContractNames)
     },
+    clearContractNames: contractNamesAdapter.removeAll,
     addContractNames: contractNamesAdapter.addMany,
   },
   name: StoreKeys.CONTRACT_NAMES,

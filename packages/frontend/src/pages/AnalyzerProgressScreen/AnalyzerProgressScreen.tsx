@@ -1,5 +1,5 @@
 import { Stack, Typography, ThemeProvider } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { ChainId } from '@evm-debuger/types'
@@ -20,7 +20,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()
-  const [isRunOnce, setIsRunOnce] = useState(false)
+  const isRunOnce = React.useRef(false)
 
   const stages = useSelector(analyzerSelectors.selectAllStages)
   const isAnalyzerRunning = useSelector(analyzerSelectors.selectIsAnalyzerRunning)
@@ -30,9 +30,9 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const messages = useSelector(analyzerSelectors.selectAllMessages)
 
   useEffect(() => {
-    if (chainId && txHash && !isRunOnce) {
-      setIsRunOnce(true)
+    if (chainId && txHash && !isRunOnce.current) {
       dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
+      isRunOnce.current = true
     }
   }, [dispatch, txHash, chainId, stages, isRunOnce])
 
@@ -46,13 +46,17 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   }, [isAnalyzerRunning, hasProcessingFailed, navigate, chainId, txHash])
 
   const moveBackToStartingScreen = useCallback(() => {
+    dispatch(analyzerActions.clearAnalyzerInformation())
+    isRunOnce.current = false
     navigate(ROUTES.HOME)
-  }, [navigate])
+  }, [navigate, dispatch])
 
   const restartHandler = useCallback(() => {
-    if (hasProcessingFailed)
-      dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
-  }, [dispatch, hasProcessingFailed, txHash, chainId])
+    if (hasProcessingFailed) {
+      dispatch(analyzerActions.clearAnalyzerInformation())
+      isRunOnce.current = false
+    }
+  }, [dispatch, hasProcessingFailed])
 
   return (
     <>
