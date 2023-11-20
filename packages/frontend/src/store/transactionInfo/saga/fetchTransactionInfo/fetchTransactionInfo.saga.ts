@@ -33,6 +33,7 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )
+    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Transaction data fetched' }))
   } catch (error) {
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),

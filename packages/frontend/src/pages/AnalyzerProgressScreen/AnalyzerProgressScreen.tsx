@@ -16,7 +16,6 @@ import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
 import { Logger } from './Logger/Logger'
 
-// eslint-disable-next-line react/prop-types
 export const AnalyzerProgressScreen = ({ children = null }) => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
@@ -27,7 +26,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const isAnalyzerRunning = useSelector(analyzerSelectors.selectIsAnalyzerRunning)
   const isAnalyzerSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
 
-  const criticalError = useSelector(analyzerSelectors.selectCriticalError)
+  const hasProcessingFailed = useSelector(analyzerSelectors.selectHasProcessingFailed)
   const messages = useSelector(analyzerSelectors.selectAllMessages)
 
   useEffect(() => {
@@ -38,26 +37,27 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   }, [dispatch, txHash, chainId, stages, isRunOnce])
 
   useEffect(() => {
-    if (!isAnalyzerRunning && !criticalError) {
+    if (!isAnalyzerRunning && !hasProcessingFailed) {
       const timeout = setTimeout(() => {
         if (!(chainId && txHash)) navigate(ROUTES.TRANSACTION_SCREEN_MANUAL)
       }, 1000)
       return () => clearTimeout(timeout)
     }
-  }, [isAnalyzerRunning, criticalError, navigate, chainId, txHash])
+  }, [isAnalyzerRunning, hasProcessingFailed, navigate, chainId, txHash])
 
   const moveBackToStartingScreen = useCallback(() => {
     navigate(ROUTES.HOME)
   }, [navigate])
 
   const restartHandler = useCallback(() => {
-    if (criticalError) dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
-  }, [dispatch, criticalError, txHash, chainId])
+    if (hasProcessingFailed)
+      dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
+  }, [dispatch, hasProcessingFailed, txHash, chainId])
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        {(isAnalyzerRunning || criticalError) && (
+        {(isAnalyzerRunning || hasProcessingFailed) && (
           <Section
             mobilePadding={false}
             height="fullHeight"
@@ -87,9 +87,9 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 </Stack>
                 <Stepper
                   stages={stages}
-                  error={criticalError}
+                  error={''}
                 />
-                {criticalError && (
+                {hasProcessingFailed && (
                   <Stack
                     justifyContent={'center'}
                     alignItems={'center'}
@@ -116,7 +116,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 )}
               </Stack>
 
-              <Logger messages={messages.map(({ timestamp, message }) => ({ timestamp: new Date(timestamp), message }))} />
+              <Logger messages={messages} />
             </StyledStack>
           </Section>
         )}

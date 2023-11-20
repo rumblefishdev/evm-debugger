@@ -52,7 +52,9 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
 
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Successfully downloaded and parsed structlogs' }))
+    yield* put(
+      analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Successfully downloaded and parsed structlogs' }),
+    )
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.SUCCESS,

@@ -15,13 +15,12 @@ export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
       activeStep={activeStep}
       {...props}
     >
-      {stages.map((stage, index) => {
-        if (error && currentIndex === index)
+      {stages.map((stage) => {
+        if (stage.stageStatus === AnalyzerStagesStatus.FAILED)
           return (
             <ErrorStep
               key={stage.stageName}
               stepName={stage.stageName}
-              errorMessage={error}
             />
           )
         return (

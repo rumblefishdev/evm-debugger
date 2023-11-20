@@ -20,6 +20,7 @@ export function* initializeTransactionProcessingSaga({
     yield* put(transactionConfigActions.setTransactionHash({ transactionHash }))
 
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
+    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Analyzer initialized' }))
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
     yield* put(
