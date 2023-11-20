@@ -11,6 +11,7 @@ import { sourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import type { TContractsSources } from '../../sourceCodes.types'
 import { sighashActions } from '../../../sighash/sighash.slice'
+import { abisActions } from '../../../abis/abis.slice'
 
 export async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
@@ -60,6 +61,8 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
   if (responseBody.status === SrcMapStatus.FAILED) {
     throw new Error(`Cannot retrieve data for transaction with hash:Reason: ${responseBody.error}`)
   } else if (responseBody.status === SrcMapStatus.SUCCESS) {
+    yield* put(abisActions.addAbis(Object.entries(sources).map(([address, current]) => ({ address, abi: current.abi }))))
+
     yield* put(
       sourceCodesActions.addSourceCodes(
         Object.entries(sources).reduce(

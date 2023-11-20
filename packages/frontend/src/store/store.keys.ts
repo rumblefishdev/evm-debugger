@@ -15,4 +15,5 @@ export enum StoreKeys {
   INSTRUCTIONS = 'instructions',
   UI = 'ui',
   TRANSACTION_CONFIG = 'transactionConfig',
+  ABIS = 'abis',
 }
