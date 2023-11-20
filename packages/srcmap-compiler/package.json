@@ -9,7 +9,6 @@
   "dependencies": {
     "@evm-debuger/types": "^0.1.2",
     "@sentry/serverless": "^7.51.0",
-    "aws-sdk": "^2.1378.0",
     "node-fetch": "^3.3.1",
     "solcv0.4.0": "npm:solc@0.4.0",
     "solcv0.4.1": "npm:solc@0.4.1",
