@@ -7,7 +7,6 @@ import { sighashReducer } from './sighash/sighash.slice'
 import { rawTxDataReducer } from './rawTxData/rawTxData.slice'
 import { contractNamesReducer } from './contractNames/contractNames.slice'
 import { bytecodesReducer } from './bytecodes/bytecodes.slice'
-import { analyzerReducer } from './analyzer/analyzer.slice'
 import { activeBlockReducer } from './activeBlock/activeBlock.slice'
 import { sourceMapsReducer } from './sourceMaps/sourceMaps.slice'
 import { StoreKeys } from './store.keys'
@@ -17,6 +16,7 @@ import { activeStructLogReducer } from './activeStructLog/activeStructLog.slice'
 import { uiReducer } from './ui/ui.slice'
 import { transactionInfoReducer } from './transactionInfo/transactionInfo.slice'
 import { transactionConfigReducer } from './transactionConfig/transactionConfig.slice'
+import { analyzerReducer } from './analyzer/analyzer.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,

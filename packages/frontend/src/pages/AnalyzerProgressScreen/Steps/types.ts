@@ -1,6 +1,6 @@
 import type { StepperProps, StepProps } from '@mui/material'
 
-import type { TAnalyzeStage } from '../../../store/analyzer/analyzer.types'
+import type { TStageRecord } from '../../../store/analyzer/analyzer.types'
 
 export interface AnalyzerStepProps extends StepProps {
   stepName: string
@@ -8,6 +8,6 @@ export interface AnalyzerStepProps extends StepProps {
 }
 
 export interface AnalyzerStepperProps extends StepperProps {
-  stages: TAnalyzeStage[]
+  stages: TStageRecord[]
   error: string
 }

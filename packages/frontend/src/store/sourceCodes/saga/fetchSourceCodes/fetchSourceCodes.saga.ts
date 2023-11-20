@@ -4,13 +4,13 @@ import { SrcMapStatus, type ChainId, type ISrcMapApiPayload, type ISrcMapApiResp
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { srcMapProviderUrl } from '../../../../config'
 import { contractNamesSelectors } from '../../../contractNames/contractNames.selectors'
-import type { TContractsSources } from '../../../analyzer/analyzer.types'
-import { analyzerSliceActions } from '../../../analyzer2/analyzer.slice'
-import { LogMessageStatus } from '../../../analyzer2/analyzer.const'
+import { analyzerActions } from '../../../analyzer/analyzer.slice'
+import { LogMessageStatus } from '../../../analyzer/analyzer.const'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { sighashActions } from '../../../sighash/sighash.slice'
+import type { TContractsSources } from '../../sourceCodes.types'
 
 export async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
@@ -56,7 +56,7 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
     return accumulator
   }, {})
 
-  yield* put(analyzerSliceActions.addLogMessage({ status: LogMessageStatus.INFO, message: `Fetching srcMap: ${responseBody.status}` }))
+  yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: `Fetching srcMap: ${responseBody.status}` }))
   if (responseBody.status === SrcMapStatus.FAILED) {
     throw new Error(`Cannot retrieve data for transaction with hash:Reason: ${responseBody.error}`)
   } else if (responseBody.status === SrcMapStatus.SUCCESS) {
@@ -64,7 +64,7 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
       yield* put(sourceCodesActions.addSourceCode({ sourceCode: source.sourceCode, address }))
       yield* put(contractNamesActions.updateContractName({ id: address, changes: { contractName: source.contractName } }))
       yield* put(sourceMapsActions.setSourceMaps(source.srcMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address }))))
-      yield* put(sighashActions.updateSighash({ id: address, changes: { abi: source.abi[0] } }))
+      //   yield* put(sighashActions.updateSighash({ id: address, changes: { abi: source.abi[0] } }))
     }
   }
 }

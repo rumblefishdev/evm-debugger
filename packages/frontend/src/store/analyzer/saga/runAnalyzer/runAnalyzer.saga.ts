@@ -13,7 +13,7 @@ import { sourceCodesSelectors } from '../../../sourceCodes/sourceCodes.selectors
 import { contractNamesSelectors } from '../../../contractNames/contractNames.selectors'
 import { bytecodesSelectors } from '../../../bytecodes/bytecodes.selectors'
 import { sighashSelectors } from '../../../sighash/sighash.selectors'
-import { analyzerSliceActions } from '../../analyzer.slice'
+import { analyzerActions } from '../../analyzer.slice'
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
   const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
@@ -67,5 +67,5 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     ),
   )
 
-  yield* put(analyzerSliceActions.analyzerFinished)
+  yield* put(analyzerActions.analyzerFinished)
 }

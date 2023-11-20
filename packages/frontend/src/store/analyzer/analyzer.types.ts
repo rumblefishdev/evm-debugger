@@ -1,44 +1,32 @@
-import type { IStructLog, TAbi, TSourceMap, TTransactionInfo } from '@evm-debuger/types'
+import type { EntityState } from '@reduxjs/toolkit'
+import type { ChainId } from '@evm-debuger/types'
 
-export interface IStructLogProvider {
-  getStructLog: () => Promise<IStructLog[]>
-}
-export interface ITxInfoProvider {
-  getTxInfo: () => Promise<TTransactionInfo>
-}
+import type { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from './analyzer.const'
 
-export type TContractsSources = Record<
-  string,
-  {
-    contractName: string
-    sourceCode: string
-    abi: TAbi
-    srcMap: TSourceMap[]
-  }
->
-export interface IContractSourceProvider {
-  getSources: (addresses: Set<string>) => Promise<TContractsSources | null>
+export type TStageRecord = {
+  stageName: AnalyzerStages
+  stageStatus: AnalyzerStagesStatus
 }
 
-export interface IBytecodeProvider {
-  getBytecode: (address: string) => Promise<string | null>
+export type TLogMessageRecord = {
+  identifier: string
+  timestamp: number
+  message: string
+  status: LogMessageStatus
 }
 
-export interface IRunAnalyzerPayload {
-  structLogProvider: IStructLogProvider
-  txInfoProvider: ITxInfoProvider
-  sourceProvider?: IContractSourceProvider
-  bytecodeProvider?: IBytecodeProvider
+export type TAnalyzerStages = EntityState<TStageRecord>
+export type TAnalyzerLogMessages = EntityState<TLogMessageRecord>
+
+export interface IAnalyzerState {
+  criticalError: string | null
+  stages: TAnalyzerStages
+  logMessages: TAnalyzerLogMessages
 }
 
-export type TAnalyzeStageName =
-  | 'Fetching transaction info'
-  | 'Fetching structlogs'
-  | 'Run analyzer'
-  | 'Trying to fetch missing data'
-  | 'ReRun analyzer'
+export type TAddLogMessagePayload = Omit<TLogMessageRecord, 'identifier' | 'timestamp'>
 
-export type TAnalyzeStage = {
-  stageName: TAnalyzeStageName
-  isFinished: boolean
+export type TProcessTransactionPayload = {
+  chainId: ChainId
+  transactionHash: string
 }

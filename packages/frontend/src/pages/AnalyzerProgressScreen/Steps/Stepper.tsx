@@ -1,10 +1,12 @@
+import { AnalyzerStagesStatus } from '../../../store/analyzer/analyzer.const'
+
 import { DefaultStep } from './DefaultStep'
 import { ErrorStep } from './ErrorStep'
 import { StyledStepper } from './styles'
 import type { AnalyzerStepperProps } from './types'
 
 export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
-  const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
+  const currentIndex = stages.findIndex((stage) => stage.stageStatus === AnalyzerStagesStatus.IN_PROGRESS)
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
 
   return (

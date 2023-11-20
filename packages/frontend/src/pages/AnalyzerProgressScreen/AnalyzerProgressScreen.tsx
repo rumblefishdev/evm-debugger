@@ -1,18 +1,17 @@
 import { Stack, Typography, ThemeProvider } from '@mui/material'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import type { ChainId } from '@evm-debuger/types'
 
 import { theme } from '../../theme/default'
 import { Button } from '../../importedComponents/components/Button'
-import { ContractSourceFetcher, StaticStructLogProvider, StaticTxInfoProvider } from '../../store/analyzer/analyzer.providers'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch, useTypedSelector } from '../../store/storeHooks'
 import { ROUTES } from '../../routes'
-import { supportedChains } from '../../helpers/chains'
 import { Section } from '../../importedComponents/components/Section'
-import { srcMapProviderUrl } from '../../config'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
+import { analyzerSelectors } from '../../store/analyzer/analyzer.selectors'
 
 import { StyledHeadlineCaption, StyledStack } from './styles'
 import { Stepper } from './Steps'
@@ -24,70 +23,51 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()
   const [isRunOnce, setIsRunOnce] = useState(false)
-  const { messages, isLoading, error, stages } = useTypedSelector((state) => state.analyzer)
 
-  const txInfo = useTypedSelector((state) => state.rawTxData.transactionInfo)
-  const structLogs = useSelector(structlogsSelectors.selectAll)
-
-  const isStagesFinished = useMemo(() => {
-    return stages.every((stage) => stage.isFinished)
-  }, [stages])
+  const stages = useSelector(analyzerSelectors.selectAllStages)
+  const isAnalyzerRunning = useSelector(analyzerSelectors.selectIsAnalyzerRunning)
+  const isAnalyzerSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
+  const criticalError = useSelector(analyzerSelectors.selectCriticalError)
+  const messages = useSelector(analyzerSelectors.selectAllMessages)
 
   useEffect(() => {
-    const chainData = supportedChains[chainId]
-    if (chainId && txHash && !isStagesFinished) {
-      if (!isRunOnce) {
-        setIsRunOnce(true)
-        dispatch(
-          analyzerActions.runAnalyzer({
-            txInfoProvider: chainData.txInfoProvider(txHash),
-            structLogProvider: chainData.structLogProvider(txHash),
-            sourceProvider: chainData.sourceProvider,
-            bytecodeProvider: chainData.bytecodeProvider,
-          }),
-        )
-      }
-    } else if (chainId && txHash && !isRunOnce) {
+    if (chainId && txHash && !isRunOnce) {
       setIsRunOnce(true)
-      dispatch(
-        analyzerActions.regenerateAnalyzer({
-          txInfoProvider: chainData.txInfoProvider(txHash),
-          structLogProvider: chainData.structLogProvider(txHash),
-          sourceProvider: chainData.sourceProvider,
-          bytecodeProvider: chainData.bytecodeProvider,
-        }),
-      )
+      dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
+      // } else if (chainId && txHash && !isRunOnce) {
+      //   setIsRunOnce(true)
+      //   dispatch(
+      //     analyzerActions.regenerateAnalyzer({
+      //       txInfoProvider: chainData.txInfoProvider(txHash),
+      //       structLogProvider: chainData.structLogProvider(txHash),
+      //       sourceProvider: chainData.sourceProvider,
+      //       bytecodeProvider: chainData.bytecodeProvider,
+      //     }),
+      //   )
     }
-  }, [dispatch, txHash, chainId, stages, isRunOnce, isStagesFinished])
+  }, [dispatch, txHash, chainId, stages, isRunOnce])
 
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (!isAnalyzerRunning && !criticalError) {
       const timeout = setTimeout(() => {
         if (!(chainId && txHash)) navigate(ROUTES.TRANSACTION_SCREEN_MANUAL)
       }, 1000)
       return () => clearTimeout(timeout)
     }
-  }, [isLoading, error, navigate, chainId, txHash])
+  }, [isAnalyzerRunning, criticalError, navigate, chainId, txHash])
 
   const moveBackToStartingScreen = useCallback(() => {
     navigate(ROUTES.HOME)
   }, [navigate])
 
   const restartHandler = useCallback(() => {
-    if (error)
-      dispatch(
-        analyzerActions.runAnalyzer({
-          txInfoProvider: new StaticTxInfoProvider(txInfo),
-          structLogProvider: new StaticStructLogProvider(structLogs),
-          sourceProvider: new ContractSourceFetcher(srcMapProviderUrl, txInfo.chainId),
-        }),
-      )
-  }, [dispatch, error, structLogs, txInfo])
+    if (criticalError) dispatch(analyzerActions.runAnalyzer())
+  }, [dispatch, criticalError])
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        {(isLoading || error) && (
+        {(isAnalyzerRunning || criticalError) && (
           <Section
             mobilePadding={false}
             height="fullHeight"
@@ -117,9 +97,9 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 </Stack>
                 <Stepper
                   stages={stages}
-                  error={error}
+                  error={criticalError}
                 />
-                {error && (
+                {criticalError && (
                   <Stack
                     justifyContent={'center'}
                     alignItems={'center'}
@@ -146,11 +126,11 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                 )}
               </Stack>
 
-              <Logger messages={messages} />
+              <Logger messages={messages.map(({ timestamp, message }) => ({ timestamp: new Date(timestamp), message }))} />
             </StyledStack>
           </Section>
         )}
-        {isStagesFinished && children}
+        {isAnalyzerSuccessfullyFinished && children}
       </ThemeProvider>
     </>
   )

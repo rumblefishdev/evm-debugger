@@ -7,7 +7,7 @@ import { structlogsSelectors } from '../../../structlogs/structlogs.selectors'
 import { sighashActions } from '../../../sighash/sighash.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
-import { analyzerSliceActions } from '../../analyzer.slice'
+import { analyzerActions } from '../../analyzer.slice'
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
@@ -33,5 +33,5 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   yield* put(contractNamesActions.initializeContractNames(contractAddresses))
   yield* put(bytecodesActions.initializeBytecodes(contractAddresses))
 
-  yield* put(analyzerSliceActions.analyzerFinished)
+  yield* put(analyzerActions.analyzerFinished)
 }
