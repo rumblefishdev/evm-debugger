@@ -5,7 +5,6 @@ import type {
   TSrcMapAddres,
   TEtherscanContractSourceCodeResp,
   TEtherscanParsedSourceCode,
-  TEtherscanContractSourceCodeResult,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -14,6 +13,8 @@ import { version } from '../package.json'
 
 import { getDdbContractInfo, setDdbContractInfo } from './aws/ddb'
 import { s3upload } from './aws/s3'
+import type { IFetcherPayload } from './types'
+
 const { BUCKET_NAME, SENTRY_DSN, ENVIRONMENT } = process.env
 
 AWSLambda.init({
@@ -23,11 +24,6 @@ AWSLambda.init({
   dsn: SENTRY_DSN,
 })
 AWSLambda.setTag('lambda_name', 'srcmap-fetcher')
-
-interface IFetcherPayload {
-  payload: ISrcMapApiPayload
-  sourceData?: TEtherscanContractSourceCodeResult
-}
 
 const fetchSourceData = async (
   _payload: ISrcMapApiPayload,
