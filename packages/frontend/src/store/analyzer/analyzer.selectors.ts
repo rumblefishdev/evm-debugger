@@ -19,7 +19,6 @@ const selectIsAnalyzerRunning = createSelector([selectAllStages], (stages) =>
 )
 
 const selectIsAnalyzerSuccessfullyFinished = createSelector([selectAllStages], (stages) => {
-  console.log('stages', stages)
   return stages.every((stage) => stage.stageStatus === AnalyzerStagesStatus.SUCCESS)
 })
 

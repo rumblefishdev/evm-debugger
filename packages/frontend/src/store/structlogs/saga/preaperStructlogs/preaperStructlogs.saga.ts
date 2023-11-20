@@ -24,9 +24,7 @@ export function* prepareStructlogsSaga(): SagaGenerator<void> {
 
   if (status === TransactionTraceResponseStatus.PENDING || status === TransactionTraceResponseStatus.RUNNING) {
     yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: `Preapering structLogs status: ${status}` }))
-    console.log('Before delay')
     yield* delay(15_000)
-    console.log('After delay')
     yield* call(prepareStructlogsSaga)
   }
 
