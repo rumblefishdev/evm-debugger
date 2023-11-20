@@ -9,5 +9,4 @@ export interface AnalyzerStepProps extends StepProps {
 
 export interface AnalyzerStepperProps extends StepperProps {
   stages: TStageRecord[]
-  error: string
 }

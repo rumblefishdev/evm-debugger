@@ -89,10 +89,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
                   </StyledHeadlineCaption>
                   <Typography variant="heading4">Fetching progress</Typography>
                 </Stack>
-                <Stepper
-                  stages={stages}
-                  error={''}
-                />
+                <Stepper stages={stages} />
                 {hasProcessingFailed && (
                   <Stack
                     justifyContent={'center'}

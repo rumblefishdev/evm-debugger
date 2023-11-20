@@ -5,8 +5,10 @@ import { ErrorStep } from './ErrorStep'
 import { StyledStepper } from './styles'
 import type { AnalyzerStepperProps } from './types'
 
-export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
-  const currentIndex = stages.findIndex((stage) => stage.stageStatus === AnalyzerStagesStatus.IN_PROGRESS)
+export const Stepper = ({ stages, ...props }: AnalyzerStepperProps) => {
+  const currentIndex = stages.findIndex(
+    (stage) => stage.stageStatus === AnalyzerStagesStatus.IN_PROGRESS || stage.stageStatus === AnalyzerStagesStatus.FAILED,
+  )
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
 
   return (
@@ -27,6 +29,7 @@ export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
           <DefaultStep
             key={stage.stageName}
             stepName={stage.stageName}
+            completed={stage.stageStatus === AnalyzerStagesStatus.SUCCESS}
           />
         )
       })}
