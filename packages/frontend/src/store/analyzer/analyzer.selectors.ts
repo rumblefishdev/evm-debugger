@@ -18,9 +18,10 @@ const selectIsAnalyzerRunning = createSelector([selectAllStages], (stages) =>
   stages.some((stage) => stage.stageStatus === AnalyzerStagesStatus.IN_PROGRESS || stage.stageStatus === AnalyzerStagesStatus.NOT_STARTED),
 )
 
-const selectIsAnalyzerSuccessfullyFinished = createSelector([selectAllStages], (stages) =>
-  stages.every((stage) => stage.stageStatus === AnalyzerStagesStatus.SUCCESS),
-)
+const selectIsAnalyzerSuccessfullyFinished = createSelector([selectAllStages], (stages) => {
+  console.log('stages', stages)
+  return stages.every((stage) => stage.stageStatus === AnalyzerStagesStatus.SUCCESS)
+})
 
 const selectCriticalError = createSelector([selectAnalyzerState], (state) => state.criticalError)
 

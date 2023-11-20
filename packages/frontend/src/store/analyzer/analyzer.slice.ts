@@ -8,7 +8,7 @@ import type { ActionsType } from '../store.types'
 import { AnalyzerState, INITIAL_STAGES, analyzerLogMessagesAdapter, analyzerStagesAdapter } from './analyzer.state'
 import type { TAddLogMessagePayload, TLogMessageRecord, TProcessTransactionPayload, TStageRecord } from './analyzer.types'
 
-export const initialAnalyzerState = { ...new AnalyzerState() }
+export const initialAnalyzerState: AnalyzerState = { ...new AnalyzerState() }
 
 export const analyzerSlice = createSlice({
   reducers: {
@@ -26,7 +26,7 @@ export const analyzerSlice = createSlice({
       analyzerStagesAdapter.updateMany(state.stages, stagesToUpdate)
     },
     processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
-    initializeStages: (state, _) => {
+    initializeStages: (state) => {
       analyzerStagesAdapter.setAll(state.stages, INITIAL_STAGES)
     },
 

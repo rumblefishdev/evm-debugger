@@ -15,8 +15,12 @@ export const INITIAL_STAGES: TStageRecord[] = [
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.RUNNING_ANALYZER },
 ]
 
+export const emptyStagesState = analyzerStagesAdapter.getInitialState()
+export const initializedStagesState = analyzerStagesAdapter.setAll(emptyStagesState, INITIAL_STAGES)
+
+export const emptyLogMessagesState = analyzerLogMessagesAdapter.getInitialState()
 export class AnalyzerState implements IAnalyzerState {
   criticalError: string | null = null
-  stages: TAnalyzerStages = analyzerStagesAdapter.getInitialState()
-  logMessages: TAnalyzerLogMessages = analyzerLogMessagesAdapter.getInitialState()
+  stages: TAnalyzerStages = initializedStagesState
+  logMessages: TAnalyzerLogMessages = emptyLogMessagesState
 }

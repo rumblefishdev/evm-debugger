@@ -27,6 +27,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   const stages = useSelector(analyzerSelectors.selectAllStages)
   const isAnalyzerRunning = useSelector(analyzerSelectors.selectIsAnalyzerRunning)
   const isAnalyzerSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
+  console.log('isAnalyzerSuccessfullyFinished', isAnalyzerSuccessfullyFinished)
   const criticalError = useSelector(analyzerSelectors.selectCriticalError)
   const messages = useSelector(analyzerSelectors.selectAllMessages)
 
@@ -67,8 +68,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {/* {(isAnalyzerRunning || criticalError) && ( */}
-        {true && (
+        {(isAnalyzerRunning || criticalError) && (
           <Section
             mobilePadding={false}
             height="fullHeight"
@@ -131,7 +131,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
             </StyledStack>
           </Section>
         )}
-        {false && children}
+        {isAnalyzerSuccessfullyFinished && children}
       </ThemeProvider>
     </>
   )

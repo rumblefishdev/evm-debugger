@@ -13,7 +13,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
 
   try {
     yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Initializing analyzer' }))
-    yield* put(analyzerActions.initializeStages)
+
     yield* put(transactionConfigActions.setChainId({ chainId }))
     yield* put(transactionConfigActions.setTransactionHash({ transactionHash }))
 

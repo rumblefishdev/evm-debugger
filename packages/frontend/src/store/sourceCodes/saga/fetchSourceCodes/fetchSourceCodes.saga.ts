@@ -10,6 +10,7 @@ import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import type { TContractsSources } from '../../sourceCodes.types'
+import { sighashActions } from '../../../sighash/sighash.slice'
 
 export async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))

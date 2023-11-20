@@ -14,6 +14,7 @@ import { contractNamesSelectors } from '../../../contractNames/contractNames.sel
 import { bytecodesSelectors } from '../../../bytecodes/bytecodes.selectors'
 import { sighashSelectors } from '../../../sighash/sighash.selectors'
 import { analyzerActions } from '../../analyzer.slice'
+import { sighashActions } from '../../../sighash/sighash.slice'
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
   const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
@@ -47,7 +48,9 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
   // fix for Buffer not defined
   window.Buffer = window.Buffer || Buffer
   const analyzer = new TxAnalyzer(analyzerPayload)
-  const { mainTraceLogList, instructionsMap } = yield* apply(analyzer, analyzer.analyze, [])
+  const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+
+  yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
 
   yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
   yield* put(
