@@ -17,5 +17,5 @@ export const instructionsSlice = createSlice({
   initialState: instructionsAdapter.getInitialState(),
 })
 
-export const { updateInstructions, addInstructions } = instructionsSlice.actions
+export const instructionsActions = instructionsSlice.actions
 export const instructionsReducer = instructionsSlice.reducer

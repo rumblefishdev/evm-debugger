@@ -20,13 +20,13 @@ const selectIsCurrentSourceMapAvailable = createSelector([selectCurrentSourceMap
 })
 
 const selectGroupedByAddress = createSelector([selectAll], (sourceMaps) => {
-  return sourceMaps.reduce((accumulator, sourceMap) => {
+  return sourceMaps.reduce((accumulator: TMappedSourceMap, sourceMap) => {
     if (!accumulator[sourceMap.address]) {
       accumulator[sourceMap.address] = []
     }
     accumulator[sourceMap.address] = [...accumulator[sourceMap.address], sourceMap]
     return accumulator
-  }, {} as TMappedSourceMap)
+  }, {})
 })
 
 export const createSourceMapId = (address: string, contractName: string) => `${address}|${contractName}`

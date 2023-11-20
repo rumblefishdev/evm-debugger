@@ -1,13 +1,13 @@
 import { apply, select, type SagaGenerator, put } from 'typed-redux-saga'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import type { TByteCodeMap, TMappedContractNames, TMappedSourceCodes, TTransactionData } from '@evm-debuger/types'
+import type { TTransactionData } from '@evm-debuger/types'
 
 import { transactionInfoSelectors } from '../../../transactionInfo/transactionInfo.selectors'
 import { structlogsSelectors } from '../../../structlogs/structlogs.selectors'
 import { traceLogsActions } from '../../../traceLogs/traceLogs.slice'
 import { activeBlockActions } from '../../../activeBlock/activeBlock.slice'
 import { createCallIdentifier } from '../../../../helpers/helpers'
-import { addInstructions } from '../../../instructions/instructions.slice'
+import { instructionsActions } from '../../../instructions/instructions.slice'
 import { sourceMapsSelectors } from '../../../sourceMaps/sourceMaps.selectors'
 import { sourceCodesSelectors } from '../../../sourceCodes/sourceCodes.selectors'
 import { contractNamesSelectors } from '../../../contractNames/contractNames.selectors'
@@ -26,35 +26,20 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
     const structLogs = yield* select(structlogsSelectors.selectAll)
     const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
-    const sourceCodes = yield* select(sourceCodesSelectors.selectAll)
-    const contractNames = yield* select(contractNamesSelectors.selectAll)
-    const bytecodes = yield* select(bytecodesSelectors.selectAll)
+    const sourceCodes = yield* select(sourceCodesSelectors.selectGroupedByAddress)
+    const contractNames = yield* select(contractNamesSelectors.selectGroupedByAddress)
+    const bytecodes = yield* select(bytecodesSelectors.selectGroupedByAddress)
     const abis = yield* select(sighashSelectors.abis)
-    const addionalAbis = yield* select(abisSelectors.selectAll)
+    const addionalAbis = yield* select(abisSelectors.selectGroupedByAddress)
 
     const analyzerPayload: TTransactionData = {
       transactionInfo,
       structLogs,
       sourceMaps,
-      sourceCodes: sourceCodes.reduce((accumulator, sourceCode) => {
-        accumulator[sourceCode.address] = sourceCode.sourceCode
-        return accumulator
-      }, {} as TMappedSourceCodes),
-      contractNames: contractNames.reduce((accumulator, contractName) => {
-        accumulator[contractName.address] = contractName.contractName
-        return accumulator
-      }, {} as TMappedContractNames),
-      bytecodeMaps: bytecodes.reduce((accumulator, bytecode) => {
-        accumulator[bytecode.address] = bytecode.bytecode
-        return accumulator
-      }, {} as TByteCodeMap),
-      abis: {
-        ...abis,
-        ...addionalAbis.reduce((accumulator, abi) => {
-          accumulator[abi.address] = abi.abi
-          return accumulator
-        }, {}),
-      },
+      sourceCodes,
+      contractNames,
+      bytecodeMaps: bytecodes,
+      abis: { ...abis, ...addionalAbis },
     }
     // fix for Buffer not defined
     window.Buffer = window.Buffer || Buffer
@@ -72,12 +57,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     )
 
     yield* put(
-      addInstructions(
-        Object.entries(instructionsMap).reduce((accumulator, [address, instructions]) => {
-          accumulator.push({ instructions, address })
-          return accumulator
-        }, []),
-      ),
+      instructionsActions.addInstructions(Object.entries(instructionsMap).map(([address, instructions]) => ({ instructions, address }))),
     )
 
     yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Analyzer finished' }))

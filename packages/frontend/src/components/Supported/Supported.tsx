@@ -112,7 +112,7 @@ export const Supported = () => {
               >
                 {supportedChainsIdList.map((chainId) => (
                   <StyledMenuItem
-                    key={ChainId[chainId].toString()}
+                    key={chainId.toString()}
                     value={chainId}
                   >
                     {chainNames[chainId]}

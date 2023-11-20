@@ -9,4 +9,11 @@ const selectAbisState = createSelector([selectReducer(StoreKeys.ABIS)], (state) 
 
 const selectAll = createSelector([selectAbisState], (state) => abisAdapter.getSelectors().selectAll(state))
 
-export const abisSelectors = { selectAll }
+const selectGroupedByAddress = createSelector([selectAll], (abis) => {
+  return abis.reduce((accumulator, abi) => {
+    accumulator[abi.address] = abi.abi
+    return accumulator
+  }, {})
+})
+
+export const abisSelectors = { selectGroupedByAddress, selectAll }
