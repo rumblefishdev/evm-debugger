@@ -1,12 +1,12 @@
-import { all, takeLeading } from 'typed-redux-saga'
+import { all, takeLatest } from 'typed-redux-saga'
 
 import { structLogsActions } from './structlogs.slice'
 import { fetchStructlogsSaga } from './saga/fetchStructlogs/fetchStructlogs.saga'
-import { fetchStructlogsLocationSaga } from './saga/fetchStructlogsLocation/fetchStructlogsLocation.saga'
+import { startPreaperingStructlogsSaga, prepareStructlogsSaga } from './saga/preaperStructlogs/preaperStructlogs.saga'
 
 export function* structlogsMasterSaga(): Generator {
   yield all([
-    takeLeading(structLogsActions.fetchStructlogs.type, fetchStructlogsSaga),
-    takeLeading(structLogsActions.fetchStructlogsLocation.type, fetchStructlogsLocationSaga),
+    takeLatest(structLogsActions.fetchStructlogs.type, fetchStructlogsSaga),
+    takeLatest(structLogsActions.startPreaperingStructlogs.type, startPreaperingStructlogsSaga),
   ])
 }

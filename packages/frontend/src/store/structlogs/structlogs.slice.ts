@@ -14,10 +14,10 @@ export const structLogsAdapter = createEntityAdapter<IStructLog>({
 
 export const structLogsSlice = createSlice({
   reducers: {
+    startPreaperingStructlogs: () => {},
     loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
       structLogsAdapter.addMany(state, action.payload)
     },
-    fetchStructlogsLocation: () => {},
     fetchStructlogs: (_, __: PayloadAction<TFetchStructlogsPayload>) => {},
     clearStructLogs: (state) => {
       structLogsAdapter.removeAll(state)

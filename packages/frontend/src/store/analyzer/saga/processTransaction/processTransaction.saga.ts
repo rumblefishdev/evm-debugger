@@ -34,7 +34,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(structLogsActions.fetchStructlogsLocation())
+    yield* put(structLogsActions.startPreaperingStructlogs())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
@@ -42,7 +42,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(structLogsActions.fetchStructlogs)
+    yield* put(structLogsActions.fetchStructlogs())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
@@ -50,7 +50,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(analyzerActions.gatherContractsInformations)
+    yield* put(analyzerActions.gatherContractsInformations())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
@@ -58,7 +58,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(bytecodesActions.fetchBytecodes)
+    yield* put(bytecodesActions.fetchBytecodes())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
@@ -66,7 +66,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(sourceCodesActions.fetchSourceCodes)
+    yield* put(sourceCodesActions.fetchSourceCodes())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
@@ -74,7 +74,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(analyzerActions.runAnalyzer)
+    yield* put(analyzerActions.runAnalyzer())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
