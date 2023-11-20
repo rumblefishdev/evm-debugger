@@ -1,4 +1,4 @@
-import { select, type SagaGenerator, put, apply } from 'typed-redux-saga'
+import { select, type SagaGenerator, put, apply, take } from 'typed-redux-saga'
 
 import { jsonRpcProvider } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
@@ -20,6 +20,8 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
     for (const address of emptyBytecodes) {
       const bytecode = yield* apply(provider, provider.getCode, [address])
       yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
+      // Temporary fix to wait for bytecode dissasembly
+      yield* take(bytecodesActions.updateBytecode)
     }
 
     yield* put(

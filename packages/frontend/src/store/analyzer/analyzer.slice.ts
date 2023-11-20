@@ -25,9 +25,7 @@ export const analyzerSlice = createSlice({
 
       analyzerStagesAdapter.updateMany(state.stages, stagesToUpdate)
     },
-    processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {
-      console.log(__)
-    },
+    processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
     initializeTransactionProcessing: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
     gatherContractsInformations: () => {},
 
