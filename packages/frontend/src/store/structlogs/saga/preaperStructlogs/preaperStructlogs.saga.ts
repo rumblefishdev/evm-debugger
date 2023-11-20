@@ -29,7 +29,7 @@ export function* prepareStructlogsSaga(): SagaGenerator<void> {
   }
 
   if (status === TransactionTraceResponseStatus.FAILED) {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.ERROR, message: `Preapering structLogs status: ${status}` }))
+    throw new Error(response.errorDetails)
   }
 
   if (status === TransactionTraceResponseStatus.SUCCESS) {
