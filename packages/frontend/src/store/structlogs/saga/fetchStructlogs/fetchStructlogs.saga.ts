@@ -7,6 +7,8 @@ import { FastJson } from 'fast-json'
 
 import { structLogsActions } from '../../structlogs.slice'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
+import { analyzerActions } from '../../../analyzer/analyzer.slice'
+import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../../analyzer/analyzer.const'
 
 export async function fetchStructlogs(s3Location: string): Promise<ArrayBuffer> {
   const transactionTrace = await fetch(`https://${s3Location}`)
@@ -30,14 +32,46 @@ export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): IStructLog[
 }
 
 export function* fetchStructlogsSaga(): SagaGenerator<void> {
-  const s3Location = yield* select(transactionConfigSelectors.selectS3Location)
+  try {
+    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Downloading and parsing structLogs' }))
+    yield* put(
+      analyzerActions.updateStage({
+        stageStatus: AnalyzerStagesStatus.IN_PROGRESS,
+        stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
+      }),
+    )
 
-  if (!s3Location) {
-    throw new Error('S3 location is not set')
+    const s3Location = yield* select(transactionConfigSelectors.selectS3Location)
+
+    if (!s3Location) {
+      throw new Error('S3 location is not set')
+    }
+
+    const structlogsArrayBuffer = yield* call(fetchStructlogs, s3Location)
+    const structLogs = parseStructlogs(structlogsArrayBuffer)
+
+    yield* put(structLogsActions.loadStructLogs(structLogs))
+
+    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Successfully downloaded and parsed structlogs' }))
+    yield* put(
+      analyzerActions.updateStage({
+        stageStatus: AnalyzerStagesStatus.SUCCESS,
+        stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
+      }),
+    )
+  } catch (error) {
+    yield* put(
+      analyzerActions.updateStage({
+        stageStatus: AnalyzerStagesStatus.FAILED,
+        stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
+      }),
+    )
+    yield* put(
+      analyzerActions.addLogMessage({
+        status: LogMessageStatus.ERROR,
+        message: `Error while downloading and parsing structlogs: ${error.message}`,
+      }),
+    )
+    throw error
   }
-
-  const structlogsArrayBuffer = yield* call(fetchStructlogs, s3Location)
-  const structLogs = parseStructlogs(structlogsArrayBuffer)
-
-  yield* put(structLogsActions.loadStructLogs(structLogs))
 }

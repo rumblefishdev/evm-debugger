@@ -18,7 +18,6 @@ export const bytecodesSlice = createSlice({
       const emptyBytecodes = action.payload.map((address) => ({ error: null, disassembled: null, bytecode: null, address }))
       bytecodesAdapter.addMany(state, emptyBytecodes)
     },
-    finishFetchingBytecodes: () => {},
     fetchBytecodes: () => {},
     clearBytecodes: (state) => {
       bytecodesAdapter.removeAll(state)

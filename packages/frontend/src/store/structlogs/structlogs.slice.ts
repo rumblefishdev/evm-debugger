@@ -5,7 +5,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-import type { TFetchStructlogsLocationPayload, TFetchStructlogsPayload } from './structlogs.types'
+import type { TFetchStructlogsPayload } from './structlogs.types'
 
 export const structLogsAdapter = createEntityAdapter<IStructLog>({
   sortComparer: (a, b) => a.index - b.index,
@@ -17,7 +17,7 @@ export const structLogsSlice = createSlice({
     loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
       structLogsAdapter.addMany(state, action.payload)
     },
-    fetchStructlogsLocation: (_, action: PayloadAction<TFetchStructlogsLocationPayload>) => {},
+    fetchStructlogsLocation: () => {},
     fetchStructlogs: (_, action: PayloadAction<TFetchStructlogsPayload>) => {},
     clearStructLogs: (state) => {
       structLogsAdapter.removeAll(state)

@@ -15,7 +15,7 @@ export const transactionInfoSlice = createSlice({
     setTransactionInfo: (_, action: PayloadAction<TTransactionInfo>) => {
       return action.payload
     },
-    fetchTransactionInfo: (_, action: PayloadAction<TFetchTransactionInfoPayload>) => {},
+    fetchTransactionInfo: () => {},
     clearTransactionInfo: () => {
       return transactionInfoInitialState
     },

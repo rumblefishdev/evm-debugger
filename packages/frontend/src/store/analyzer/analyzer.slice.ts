@@ -26,6 +26,7 @@ export const analyzerSlice = createSlice({
       analyzerStagesAdapter.updateMany(state.stages, stagesToUpdate)
     },
     processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
+    initializeTransactionProcessing: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
     initializeStages: (state) => {
       analyzerStagesAdapter.setAll(state.stages, INITIAL_STAGES)
     },
@@ -37,9 +38,6 @@ export const analyzerSlice = createSlice({
       state.stages = analyzerStagesAdapter.getInitialState()
       state.criticalError = null
     },
-
-    analyzerFinished: () => {},
-
     addStage: (state, action: PayloadAction<TStageRecord>) => {
       analyzerStagesAdapter.addOne(state.stages, action.payload)
     },

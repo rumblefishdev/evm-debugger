@@ -4,7 +4,6 @@ import { analyzerActions, type TAnalyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../analyzer.const'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 
@@ -12,10 +11,13 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
   const { chainId, transactionHash } = payload
 
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Initializing analyzer' }))
-
-    yield* put(transactionConfigActions.setChainId({ chainId }))
-    yield* put(transactionConfigActions.setTransactionHash({ transactionHash }))
+    yield* put(analyzerActions.initializeTransactionProcessing(payload))
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.INITIALIZING_ANALYZER &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
+    )
 
     yield* put(
       analyzerActions.addLogMessage({
@@ -24,62 +26,62 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
       }),
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching transaction data' }))
-    yield* put(transactionInfoActions.fetchTransactionInfo({ transactionHash, chainId }))
-    yield* take(transactionInfoActions.setTransactionInfo)
-    yield* put(
-      analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
+    yield* put(transactionInfoActions.fetchTransactionInfo())
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.FETCHING_TRANSACTION_INFO &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching structLogs' }))
-    yield* put(structLogsActions.fetchStructlogsLocation({ transactionHash, chainId }))
-    yield* take(transactionConfigActions.setS3Location)
+    yield* put(structLogsActions.fetchStructlogsLocation())
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.PREAPERING_STRUCTLOGS &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
+    )
 
     yield* put(structLogsActions.fetchStructlogs)
-    yield* take(structLogsActions.loadStructLogs)
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_STRUCTLOGS }))
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
+    )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Gathering contracts information' }))
     yield* put(analyzerActions.gatherContractsInformations)
-    yield* take(analyzerActions.analyzerFinished)
-    yield* put(
-      analyzerActions.updateStage({
-        stageStatus: AnalyzerStagesStatus.SUCCESS,
-        stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION,
-      }),
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.GATHERING_CONTRACTS_INFORMATION &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
     yield* put(bytecodesActions.fetchBytecodes)
-    yield* take(bytecodesActions.finishFetchingBytecodes)
-    yield* put(
-      analyzerActions.updateStage({
-        stageStatus: AnalyzerStagesStatus.SUCCESS,
-        stageName: AnalyzerStages.FETCHING_BYTECODES,
-      }),
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.FETCHING_BYTECODES &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching source codes' }))
     yield* put(sourceCodesActions.fetchSourceCodes)
-    yield* take(sourceCodesActions.addSourceCodes)
-    yield* put(
-      analyzerActions.updateStage({
-        stageStatus: AnalyzerStagesStatus.SUCCESS,
-        stageName: AnalyzerStages.FETCHING_SOURCE_CODES,
-      }),
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.FETCHING_SOURCE_CODES &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Running analyzer' }))
     yield* put(analyzerActions.runAnalyzer)
-    yield* take(analyzerActions.analyzerFinished)
-
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Analyzer finished' }))
-    yield* put(
-      analyzerActions.updateStage({
-        stageStatus: AnalyzerStagesStatus.SUCCESS,
-        stageName: AnalyzerStages.RUNNING_ANALYZER,
-      }),
+    yield* take(
+      (action: TAnalyzerActions['updateStage']) =>
+        action.type === analyzerActions.updateStage.type &&
+        action.payload.stageName === AnalyzerStages.RUNNING_ANALYZER &&
+        action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
   } catch (error) {
-    console.log(error)
+    yield* put(analyzerActions.setCriticalError(error.message))
   }
 }
