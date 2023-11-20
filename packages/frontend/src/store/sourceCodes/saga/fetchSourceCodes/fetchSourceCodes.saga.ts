@@ -9,12 +9,11 @@ import { LogMessageStatus } from '../../../analyzer/analyzer.const'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
-import { sighashActions } from '../../../sighash/sighash.slice'
 import type { TContractsSources } from '../../sourceCodes.types'
 
 export async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
-  const stringifiedBody = JSON.stringify(bodyContent)
+  const stringifiedBody = JSON.stringify({ addresses: bodyContent })
 
   const resp = await fetch(`${srcMapProviderUrl}/srcmap-api`, {
     method: 'POST',
@@ -60,11 +59,31 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
   if (responseBody.status === SrcMapStatus.FAILED) {
     throw new Error(`Cannot retrieve data for transaction with hash:Reason: ${responseBody.error}`)
   } else if (responseBody.status === SrcMapStatus.SUCCESS) {
-    for (const [address, source] of Object.entries(sources)) {
-      yield* put(sourceCodesActions.addSourceCode({ sourceCode: source.sourceCode, address }))
-      yield* put(contractNamesActions.updateContractName({ id: address, changes: { contractName: source.contractName } }))
-      yield* put(sourceMapsActions.setSourceMaps(source.srcMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address }))))
-      //   yield* put(sighashActions.updateSighash({ id: address, changes: { abi: source.abi[0] } }))
-    }
+    yield* put(
+      sourceCodesActions.addSourceCodes(
+        Object.entries(sources).reduce(
+          (accumulator, [address, sourceCode]) => [...accumulator, { sourceCode: sourceCode.sourceCode, address }],
+          [],
+        ),
+      ),
+    )
+
+    yield* put(
+      contractNamesActions.updateContractNames(
+        Object.entries(sources).map(([address, sourceCode]) => ({ id: address, changes: { contractName: sourceCode.contractName } })),
+      ),
+    )
+
+    yield* put(
+      sourceMapsActions.setSourceMaps(
+        Object.entries(sources).reduce(
+          (accumulator, [address, sourceCode]) => [
+            ...accumulator,
+            ...sourceCode.srcMap.map((sourceMapEntry) => ({ ...sourceMapEntry, address })),
+          ],
+          [],
+        ),
+      ),
+    )
   }
 }

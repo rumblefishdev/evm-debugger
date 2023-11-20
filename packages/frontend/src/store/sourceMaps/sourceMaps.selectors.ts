@@ -1,5 +1,6 @@
 import type { Dictionary } from '@reduxjs/toolkit'
 import { createSelector } from '@reduxjs/toolkit'
+import type { TMappedSourceMap } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -19,10 +20,21 @@ const selectIsCurrentSourceMapAvailable = createSelector([selectCurrentSourceMap
   return Boolean(currentSourceMap)
 })
 
+const selectGroupedByAddress = createSelector([selectAll], (sourceMaps) => {
+  return sourceMaps.reduce((accumulator, sourceMap) => {
+    if (!accumulator[sourceMap.address]) {
+      accumulator[sourceMap.address] = []
+    }
+    accumulator[sourceMap.address] = [...accumulator[sourceMap.address], sourceMap]
+    return accumulator
+  }, {} as TMappedSourceMap)
+})
+
 export const createSourceMapId = (address: string, contractName: string) => `${address}|${contractName}`
 
 export const sourceMapsSelectors = {
   selectIsCurrentSourceMapAvailable,
+  selectGroupedByAddress,
   selectCurrentSourceMap,
   selectAll,
 }

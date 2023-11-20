@@ -61,13 +61,14 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   }, [navigate])
 
   const restartHandler = useCallback(() => {
-    if (criticalError) dispatch(analyzerActions.runAnalyzer())
-  }, [dispatch, criticalError])
+    if (criticalError) dispatch(analyzerActions.processTransaction({ transactionHash: txHash, chainId: chainId as unknown as ChainId }))
+  }, [dispatch, criticalError, txHash, chainId])
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        {(isAnalyzerRunning || criticalError) && (
+        {/* {(isAnalyzerRunning || criticalError) && ( */}
+        {true && (
           <Section
             mobilePadding={false}
             height="fullHeight"
@@ -130,7 +131,7 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
             </StyledStack>
           </Section>
         )}
-        {isAnalyzerSuccessfullyFinished && children}
+        {false && children}
       </ThemeProvider>
     </>
   )

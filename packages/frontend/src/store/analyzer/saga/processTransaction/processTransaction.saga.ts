@@ -60,6 +60,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
 
     yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching source codes' }))
     yield* put(sourceCodesActions.fetchSourceCodes)
+    yield* take(sourceCodesActions.addSourceCodes)
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.SUCCESS,

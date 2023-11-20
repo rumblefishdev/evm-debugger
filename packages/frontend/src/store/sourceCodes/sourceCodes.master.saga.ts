@@ -4,5 +4,5 @@ import { fetchSourceCodesSaga } from './saga/fetchSourceCodes/fetchSourceCodes.s
 import { sourceCodesActions } from './sourceCodes.slice'
 
 export function* sourceCodesMasterSaga(): Generator {
-  yield all([takeLatest(sourceCodesActions.fetchSourceCodes, fetchSourceCodesSaga)])
+  yield all([takeLatest(sourceCodesActions.fetchSourceCodes.type, fetchSourceCodesSaga)])
 }

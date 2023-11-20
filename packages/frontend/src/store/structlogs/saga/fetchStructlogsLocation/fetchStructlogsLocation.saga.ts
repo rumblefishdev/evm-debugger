@@ -9,21 +9,20 @@ import type { TStructlogResponse } from '../../structlogs.types'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { LogMessageStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
+import { transactionTraceProviderUrl } from '../../../../config'
 
-export async function fetchStructlogsLocation(
-  chainId: ChainId,
-  transactionHash: string,
-): Promise<Pick<TStructlogResponse, 'status' | 's3Location'>> {
-  const response = await fetch(`${this.transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
-  const { status, s3Location }: TStructlogResponse = await response.json()
+export async function fetchStructlogsLocation(chainId: ChainId, transactionHash: string): Promise<TStructlogResponse> {
+  const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
+  const responseJson: TStructlogResponse = await response.json()
 
-  return { status, s3Location }
+  return responseJson
 }
 
 export function* fetchStructlogsLocationSaga({ payload }: TStructLogsActions['fetchStructlogsLocation']): SagaGenerator<void> {
   const { chainId, transactionHash } = payload
 
-  const { s3Location, status } = yield* call(fetchStructlogsLocation, chainId, transactionHash)
+  const response = yield* call(fetchStructlogsLocation, chainId, transactionHash)
+  const { status } = response
 
   if (status === TransactionTraceResponseStatus.PENDING || status === TransactionTraceResponseStatus.RUNNING) {
     yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: `Fetching structLogs location status: ${status}` }))
@@ -39,6 +38,6 @@ export function* fetchStructlogsLocationSaga({ payload }: TStructLogsActions['fe
     yield* put(
       analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: `Fetching structLogs location status: ${status}` }),
     )
-    yield* put(transactionConfigActions.setS3Location({ s3Location }))
+    yield* put(transactionConfigActions.setS3Location({ s3Location: response.s3Location }))
   }
 }

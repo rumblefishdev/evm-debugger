@@ -1,5 +1,5 @@
 import type { TTransactionInfo } from '@evm-debuger/types'
-import { call, put, type SagaGenerator } from 'typed-redux-saga'
+import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 
 import type { TTransactionInfoActions } from '../../transactionInfo.slice'
 import { transactionInfoActions } from '../../transactionInfo.slice'
@@ -9,7 +9,7 @@ export function* fetchTransactionInfoSaga({ payload }: TTransactionInfoActions['
   const { chainId, transactionHash } = payload
   const provider = jsonRpcProvider[chainId]
 
-  const transactionInfo = yield* call(provider.getTransaction, transactionHash)
+  const transactionInfo = yield* apply(provider, provider.getTransaction, [transactionHash])
 
   const formattedTransactionInfo: TTransactionInfo = {
     ...transactionInfo,

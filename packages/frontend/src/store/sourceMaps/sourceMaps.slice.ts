@@ -13,7 +13,7 @@ export const sourceMapsSlice = createSlice({
   reducers: {
     updateSourceMaps: sourceMapsAdapter.updateMany,
     updateSourceMap: sourceMapsAdapter.updateOne,
-    setSourceMaps: sourceMapsAdapter.setAll,
+    setSourceMaps: sourceMapsAdapter.addMany,
   },
   name: StoreKeys.SOURCE_MAPS,
   initialState: sourceMapsAdapter.getInitialState(),

@@ -18,19 +18,18 @@ import { analyzerActions } from '../../analyzer.slice'
 export function* runAnalyzerSaga(): SagaGenerator<void> {
   const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
   const structLogs = yield* select(structlogsSelectors.selectAll)
-  const sourceMaps = yield* select(sourceMapsSelectors.selectAll)
+  const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
   const sourceCodes = yield* select(sourceCodesSelectors.selectAll)
   const contractNames = yield* select(contractNamesSelectors.selectAll)
   const bytecodes = yield* select(bytecodesSelectors.selectAll)
   const abis = yield* select(sighashSelectors.abis)
 
+  console.log('udpa', transactionInfo, structLogs, sourceMaps, sourceCodes, contractNames, bytecodes, abis)
+
   const analyzerPayload: TTransactionData = {
     transactionInfo,
     structLogs,
-    sourceMaps: sourceMaps.reduce((accumulator, sourceMap) => {
-      accumulator[sourceMap.address].push(sourceMap)
-      return accumulator
-    }, {} as TMappedSourceMap),
+    sourceMaps,
     sourceCodes: sourceCodes.reduce((accumulator, sourceCode) => {
       accumulator[sourceCode.address] = sourceCode.sourceCode
       return accumulator
