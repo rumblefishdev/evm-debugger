@@ -1,5 +1,5 @@
 import type { TTransactionInfo } from '@evm-debuger/types'
-import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
+import { apply, put, type SagaGenerator } from 'typed-redux-saga'
 
 import type { TTransactionInfoActions } from '../../transactionInfo.slice'
 import { transactionInfoActions } from '../../transactionInfo.slice'
@@ -14,6 +14,7 @@ export function* fetchTransactionInfoSaga({ payload }: TTransactionInfoActions['
   const formattedTransactionInfo: TTransactionInfo = {
     ...transactionInfo,
     value: transactionInfo.value.toHexString(),
+    input: transactionInfo.data,
     blockNumber: transactionInfo.blockNumber.toString(),
   }
 
