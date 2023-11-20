@@ -2,6 +2,9 @@ import type { ChainId } from './chains'
 import type { TAbi } from './types'
 
 export enum SrcMapStatus {
+  SOURCE_DATA_FETCHING_QUEUED_PENDING = 'SOURCE_DATA_FETCHING_QUEUED_PENDING',
+  SOURCE_DATA_FETCHING_QUEUED_FAILED = 'SOURCE_DATA_FETCHING_QUEUED_FAILED',
+  SOURCE_DATA_FETCHING_QUEUED_SUCCESS = 'SOURCE_DATA_FETCHING_QUEUED_SUCCESS',
   SOURCE_DATA_FETCHING_PENDING = 'SOURCE_DATA_FETCHING_PENDING',
   SOURCE_DATA_FETCHING_FAILED = 'SOURCE_DATA_FETCHING_FAILED',
   SOURCE_DATA_FETCHING_NOT_VERIFIED = 'SOURCE_DATA_FETCHING_NOT_VERIFIED',
@@ -95,11 +98,24 @@ export type TEtherscanContractSourceCodeResp = {
 export interface ISrcMapApiPayload {
   status: SrcMapStatus
   chainId: ChainId
+  compilerVersion?: string
+  address: string
+  timestamp?: number
+  message?: string
+  pathSourceFiles?: string[]
+  pathSourceMaps?: string[]
+  pathSourceData?: string
+  pathCompilatorSettings?: string
+  // sourceMaps?: TSourceMap[]
+  // sourceData?: TEtherscanContractSourceCodeResult
+}
+
+export interface ISrcMapApiStatusResponse {
+  status: SrcMapStatus
+  chainId: ChainId
   address: string
   message?: string
-  filesPath?: string[]
-  sourceMaps?: TSourceMap[]
-  sourceData?: TEtherscanContractSourceCodeResult
+  timestamp: number
 }
 
 export interface ISrcMapApiResponseBody {

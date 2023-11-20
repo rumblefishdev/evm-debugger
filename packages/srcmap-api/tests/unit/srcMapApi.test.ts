@@ -2,7 +2,8 @@ import type { APIGatewayProxyResult } from 'aws-lambda'
 import { ChainId, SrcMapStatus, type TSrcMapAddres } from '@evm-debuger/types'
 
 import { createLambdaEvent } from '../utils/lambdaMocks'
-import * as helpers from '../../src/helpers'
+import * as helpers from '../../src/lambdaFetcher'
+import * as srcMapApi from '../../src/srcMapApi'
 import { srcmapApiHandler } from '../../src/srcMapApi'
 
 describe('Unit test for api handler', function () {
@@ -28,7 +29,7 @@ describe('Unit test for api handler', function () {
       )
 
     const result: APIGatewayProxyResult = await srcmapApiHandler(testEvent)
-    expect(helpers.addressesProcessing).toHaveBeenCalledTimes(1)
+    expect(srcMapApi.addressesProcessing).toHaveBeenCalledTimes(1)
     expect(result.statusCode).toEqual(200)
   })
   it('returns 400 if no address provided', async () => {
