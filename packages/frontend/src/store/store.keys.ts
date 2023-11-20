@@ -4,7 +4,6 @@ export enum StoreKeys {
   ACTIVE_BLOCK = 'activeBlock',
   ANALYZER = 'analyzer',
   BYTECODES = 'bytecodes',
-  RAW_TX_DATA = 'rawTxData',
   TRANSACTION_INFO = 'transactionInfo',
   SIGHASH = 'sighash',
   STRUCT_LOGS = 'structlogs',
