@@ -1,6 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
-
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
@@ -13,8 +12,7 @@ export const abisAdapter = createEntityAdapter<TAbiElement>({
 
 export const abisSlice = createSlice({
   reducers: {
-
-    addAbis: abisAdapter.addMany
+    addAbis: abisAdapter.addMany,
   },
   name: StoreKeys.ABIS,
   initialState: abisAdapter.getInitialState(),

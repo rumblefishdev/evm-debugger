@@ -1,4 +1,4 @@
-import { select, type SagaGenerator, call, put, apply } from 'typed-redux-saga'
+import { select, type SagaGenerator, put, apply } from 'typed-redux-saga'
 
 import { jsonRpcProvider } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'

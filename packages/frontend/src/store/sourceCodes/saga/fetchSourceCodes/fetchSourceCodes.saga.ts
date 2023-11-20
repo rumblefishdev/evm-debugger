@@ -1,5 +1,5 @@
 import { select, type SagaGenerator, call, put } from 'typed-redux-saga'
-import { SrcMapStatus, type ChainId, type ISrcMapApiPayload, type ISrcMapApiResponseBody, type TSrcMapAddres } from '@evm-debuger/types'
+import { SrcMapStatus, type ChainId, type ISrcMapApiPayload, type ISrcMapApiResponseBody } from '@evm-debuger/types'
 
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { srcMapProviderUrl } from '../../../../config'

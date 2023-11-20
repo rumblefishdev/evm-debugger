@@ -18,7 +18,7 @@ export const structLogsSlice = createSlice({
       structLogsAdapter.addMany(state, action.payload)
     },
     fetchStructlogsLocation: () => {},
-    fetchStructlogs: (_, action: PayloadAction<TFetchStructlogsPayload>) => {},
+    fetchStructlogs: (_, __: PayloadAction<TFetchStructlogsPayload>) => {},
     clearStructLogs: (state) => {
       structLogsAdapter.removeAll(state)
     },

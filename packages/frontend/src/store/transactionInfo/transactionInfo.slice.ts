@@ -5,7 +5,7 @@ import type { TTransactionInfo } from '@evm-debuger/types'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-import type { TTransactionInfoState, TFetchTransactionInfoPayload } from './transactionInfo.types'
+import type { TTransactionInfoState } from './transactionInfo.types'
 import { TransactionInfoState } from './transactionInfo.state'
 
 export const transactionInfoInitialState: TTransactionInfoState = { ...new TransactionInfoState() }
