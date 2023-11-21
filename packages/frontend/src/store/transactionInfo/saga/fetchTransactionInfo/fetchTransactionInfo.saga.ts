@@ -1,15 +1,31 @@
-import type { TTransactionInfo } from '@evm-debuger/types'
-import { apply, put, select, type SagaGenerator } from 'typed-redux-saga'
+import type { ChainId, TTransactionInfo } from '@evm-debuger/types'
+import { put, select, type SagaGenerator, call } from 'typed-redux-saga'
 
 import { transactionInfoActions } from '../../transactionInfo.slice'
 import { jsonRpcProvider } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../../analyzer/analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+
+export async function getTransactionInfo(transactionHash: string, chainId: ChainId): Promise<TTransactionInfo> {
+  const provider = jsonRpcProvider[chainId]
+
+  const transactionInfo = await provider.getTransaction(transactionHash)
+
+  const formattedTransactionInfo: TTransactionInfo = {
+    ...transactionInfo,
+    value: transactionInfo.value.toHexString(),
+    input: transactionInfo.data,
+    blockNumber: transactionInfo.blockNumber.toString(),
+  }
+
+  return formattedTransactionInfo
+}
 
 export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching transaction data' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Fetching transaction data')))
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )
@@ -17,32 +33,26 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const transactionHash = yield* select(transactionConfigSelectors.selectTransactionHash)
 
-    const provider = jsonRpcProvider[chainId]
-
-    const transactionInfo = yield* apply(provider, provider.getTransaction, [transactionHash])
-
-    const formattedTransactionInfo: TTransactionInfo = {
-      ...transactionInfo,
-      value: transactionInfo.value.toHexString(),
-      input: transactionInfo.data,
-      blockNumber: transactionInfo.blockNumber.toString(),
+    if (!chainId) {
+      throw new Error('Chain id is not set')
     }
+
+    if (!transactionHash) {
+      throw new Error('Transaction hash is not set')
+    }
+
+    const formattedTransactionInfo = yield* call(getTransactionInfo, transactionHash, chainId)
 
     yield* put(transactionInfoActions.setTransactionInfo(formattedTransactionInfo))
 
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Transaction data fetched' }))
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Transaction data fetched')))
   } catch (error) {
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while fetch transaction info: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetch transaction info: ${error.message}`)))
   }
 }

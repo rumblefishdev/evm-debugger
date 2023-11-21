@@ -8,11 +8,12 @@ import { sighashActions } from '../../../sighash/sighash.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { analyzerActions } from '../../analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Gathering contracts information' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Gathering contracts information')))
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.IN_PROGRESS,
@@ -49,16 +50,11 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
       }),
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Gathering contracts information success' }))
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Gathering contracts information success')))
   } catch (error) {
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION }),
     )
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while gathering contracts informations: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while gathering contracts informations: ${error.message}`)))
   }
 }

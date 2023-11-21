@@ -8,7 +8,8 @@ import { FastJson } from 'fast-json'
 import { structLogsActions } from '../../structlogs.slice'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../../analyzer/analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
 export async function fetchStructlogs(s3Location: string): Promise<ArrayBuffer> {
   const transactionTrace = await fetch(`https://${s3Location}`)
@@ -33,7 +34,7 @@ export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): IStructLog[
 
 export function* fetchStructlogsSaga(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Downloading and parsing structLogs' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Downloading and parsing structLogs')))
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.IN_PROGRESS,
@@ -52,9 +53,7 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
 
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
-    yield* put(
-      analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Successfully downloaded and parsed structlogs' }),
-    )
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Successfully downloaded and parsed structlogs')))
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.SUCCESS,
@@ -68,11 +67,6 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
         stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
       }),
     )
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while downloading and parsing structlogs: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while downloading and parsing structlogs: ${error.message}`)))
   }
 }

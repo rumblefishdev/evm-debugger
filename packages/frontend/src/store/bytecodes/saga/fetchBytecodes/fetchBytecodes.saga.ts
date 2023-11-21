@@ -5,11 +5,12 @@ import { transactionConfigSelectors } from '../../../transactionConfig/transacti
 import { bytecodesSelectors } from '../../bytecodes.selectors'
 import { bytecodesActions } from '../../bytecodes.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../../analyzer/analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
 export function* fetchBytecodesSaga(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Fetching bytecodes' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Fetching bytecodes')))
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.FETCHING_BYTECODES }))
 
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
@@ -30,14 +31,9 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
         stageName: AnalyzerStages.FETCHING_BYTECODES,
       }),
     )
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Fetching bytecodes success' }))
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Fetching bytecodes success')))
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_BYTECODES }))
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while fetching bytecodes analyzer: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetching bytecodes: ${error.message}`)))
   }
 }

@@ -1,11 +1,12 @@
 import { put, take, type SagaGenerator } from 'typed-redux-saga'
 
 import { analyzerActions, type TAnalyzerActions } from '../../analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
+import { createErrorLogMessage, createInfoLogMessage } from '../../analyzer.utils'
 
 export function* processTransactionSaga({ payload }: TAnalyzerActions['processTransaction']): SagaGenerator<void> {
   const { chainId, transactionHash } = payload
@@ -19,12 +20,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.INFO,
-        message: `Running transaction: ${transactionHash} on chain: ${chainId}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Running transaction: ${transactionHash} on chain: ${chainId}`)))
 
     yield* put(transactionInfoActions.fetchTransactionInfo())
     yield* take(
@@ -84,10 +80,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
   } catch (error) {
     yield* put(analyzerActions.setCriticalError(error.message))
     yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: error.message,
-      }),
+      analyzerActions.addLogMessage(createErrorLogMessage(`Error while processing transaction: ${transactionHash} on chain: ${chainId}`)),
     )
   }
 }

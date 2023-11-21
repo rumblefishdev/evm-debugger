@@ -3,7 +3,8 @@ import { put, type SagaGenerator } from 'typed-redux-saga'
 import type { TAnalyzerActions } from '../../analyzer.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 
 export function* initializeTransactionProcessingSaga({
   payload,
@@ -14,20 +15,15 @@ export function* initializeTransactionProcessingSaga({
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.INITIALIZING_ANALYZER }),
     )
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Initializing analyzer' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Initializing analyzer')))
 
     yield* put(transactionConfigActions.setChainId({ chainId }))
     yield* put(transactionConfigActions.setTransactionHash({ transactionHash }))
 
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.SUCCESS, message: 'Analyzer initialized' }))
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer initialized')))
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while initializing analyzer: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while initializing analyzer: ${error.message}`)))
   }
 }

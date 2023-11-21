@@ -16,11 +16,12 @@ import { sighashSelectors } from '../../../sighash/sighash.selectors'
 import { analyzerActions } from '../../analyzer.slice'
 import { sighashActions } from '../../../sighash/sighash.slice'
 import { abisSelectors } from '../../../abis/abis.selectors'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Running analyzer' }))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Running analyzer')))
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
@@ -60,7 +61,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       instructionsActions.addInstructions(Object.entries(instructionsMap).map(([address, instructions]) => ({ instructions, address }))),
     )
 
-    yield* put(analyzerActions.addLogMessage({ status: LogMessageStatus.INFO, message: 'Analyzer finished' }))
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
     yield* put(
       analyzerActions.updateStage({
         stageStatus: AnalyzerStagesStatus.SUCCESS,
@@ -69,11 +70,6 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     )
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.RUNNING_ANALYZER }))
-    yield* put(
-      analyzerActions.addLogMessage({
-        status: LogMessageStatus.ERROR,
-        message: `Error while running analyzer: ${error.message}`,
-      }),
-    )
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while running analyzer: ${error.message}`)))
   }
 }

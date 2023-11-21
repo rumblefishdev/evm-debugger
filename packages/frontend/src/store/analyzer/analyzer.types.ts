@@ -24,7 +24,7 @@ export interface IAnalyzerState {
   logMessages: TAnalyzerLogMessages
 }
 
-export type TAddLogMessagePayload = Omit<TLogMessageRecord, 'identifier' | 'timestamp'>
+export type TAddLogMessagePayload = TLogMessageRecord
 
 export type TProcessTransactionPayload = {
   chainId: ChainId

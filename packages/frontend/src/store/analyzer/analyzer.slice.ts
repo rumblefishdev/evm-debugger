@@ -1,12 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import { v4 as createUUID } from 'uuid'
 
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
 import { AnalyzerState, analyzerLogMessagesAdapter, analyzerStagesAdapter } from './analyzer.state'
-import type { TAddLogMessagePayload, TLogMessageRecord, TProcessTransactionPayload, TStageRecord } from './analyzer.types'
+import type { TAddLogMessagePayload, TProcessTransactionPayload, TStageRecord } from './analyzer.types'
 
 export const initialAnalyzerState: AnalyzerState = { ...new AnalyzerState() }
 
@@ -37,11 +36,7 @@ export const analyzerSlice = createSlice({
     },
 
     addLogMessage: (state, { payload }: PayloadAction<TAddLogMessagePayload>) => {
-      const timestamp = Date.now()
-      const identifier = createUUID()
-      const newLogMessageRecord: TLogMessageRecord = { ...payload, timestamp, identifier }
-
-      analyzerLogMessagesAdapter.addOne(state.logMessages, newLogMessageRecord)
+      analyzerLogMessagesAdapter.addOne(state.logMessages, payload)
     },
   },
   name: StoreKeys.ANALYZER,
