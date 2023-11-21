@@ -1,6 +1,5 @@
 import { put } from 'typed-redux-saga'
 
-import { analyzerActions } from '../../analyzer.slice'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
@@ -14,18 +13,18 @@ import { abisActions } from '../../../abis/abis.slice'
 import { instructionsActions } from '../../../instructions/instructions.slice'
 
 export function* clearAnalyzerInformationSaga() {
-  yield put(transactionConfigActions.clearTransactionConfig())
-  yield put(transactionInfoActions.clearTransactionInfo())
-  yield put(structLogsActions.clearStructLogs())
+  yield* put(transactionConfigActions.clearTransactionConfig())
+  yield* put(transactionInfoActions.clearTransactionInfo())
+  yield* put(structLogsActions.clearStructLogs())
 
-  yield put(contractNamesActions.clearContractNames())
-  yield put(bytecodesActions.clearBytecodes())
+  yield* put(contractNamesActions.clearContractNames())
+  yield* put(bytecodesActions.clearBytecodes())
 
-  yield put(sourceCodesActions.clearSourceCodes())
-  yield put(sourceMapsActions.clearSourceMaps())
-  yield put(abisActions.clearAbis())
+  yield* put(sourceCodesActions.clearSourceCodes())
+  yield* put(sourceMapsActions.clearSourceMaps())
+  yield* put(abisActions.clearAbis())
 
-  yield put(instructionsActions.clearInstructions())
-  yield put(traceLogsActions.clearTraceLogs())
-  yield put(sighashActions.clearSighashes())
+  yield* put(instructionsActions.clearInstructions())
+  yield* put(traceLogsActions.clearTraceLogs())
+  yield* put(sighashActions.clearSighashes())
 }
