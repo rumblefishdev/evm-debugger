@@ -89,8 +89,11 @@ describe('fetchTransactionInfoSaga', () => {
         }),
       )
       .withState(initialState)
-      .provide([[matchers.call.fn(getTransactionInfo), formatTransactionReposne(transactionInfo)]])
-
+      .provide([
+        [matchers.call.fn(getTransactionInfo), formatTransactionReposne(transactionInfo)],
+        // [matchers.put.like({ action: addFirstLogAction }), firstLogMessage],
+        // [matchers.put.like({ action: addSecondLogAction }), secondLogMessage],
+      ])
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(getTransactionInfo, TRANSACTION_HASH, CHAIN_ID)
