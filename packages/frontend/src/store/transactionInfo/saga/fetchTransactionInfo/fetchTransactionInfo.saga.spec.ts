@@ -13,39 +13,43 @@ import { AnalyzerState } from '../../../analyzer/analyzer.state'
 import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
-import { createLogMessageActionForTests } from '../../../../helpers/sagaTests'
+import {
+  createLogMessageActionForTests,
+  mockLogsInAnalyer,
+  testLogMessages,
+  updateAnalyzerStageStatus,
+} from '../../../../helpers/sagaTests'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import type { TEthersTransactionReposnse } from '../../transactionInfo.types'
 
 import { fetchTransactionInfoSaga, getTransactionInfo } from './fetchTransactionInfo.saga'
 
+const TRANSACTION_HASH = '0x1234567890'
+const CHAIN_ID = ChainId.mainnet
+
+const transactionInfo: TEthersTransactionReposnse = {
+  wait: () => Promise.resolve(undefined),
+  value: BigNumber.from(0),
+  to: '0x1234567890',
+  nonce: 0,
+  hash: TRANSACTION_HASH,
+  gasPrice: BigNumber.from(0),
+  gasLimit: BigNumber.from(0),
+  from: '0x1234567890',
+  data: '0x1234567890',
+  confirmations: 0,
+  chainId: CHAIN_ID,
+  blockNumber: 0,
+  blockHash: '0x1234567890',
+}
+
 describe('fetchTransactionInfoSaga', () => {
   it('should fetch transaction info', async () => {
-    const TRANSACTION_HASH = '0x1234567890'
-    const CHAIN_ID = ChainId.mainnet
-
-    const transactionInfo: TEthersTransactionReposnse = {
-      wait: () => Promise.resolve(undefined),
-      value: BigNumber.from(0),
-      to: '0x1234567890',
-      nonce: 0,
-      hash: TRANSACTION_HASH,
-      gasPrice: BigNumber.from(0),
-      gasLimit: BigNumber.from(0),
-      from: '0x1234567890',
-      data: '0x1234567890',
-      confirmations: 0,
-      chainId: CHAIN_ID,
-      blockNumber: 0,
-      blockHash: '0x1234567890',
-    }
-
     const initialState = {
       [StoreKeys.TRANSACTION_INFO]: { ...new TransactionInfoState() },
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState(), transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID },
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
     }
-
     const inProgresStage = { stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }
     const successStage = { stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }
 
@@ -54,26 +58,17 @@ describe('fetchTransactionInfoSaga', () => {
 
     const addFirstLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(firstLogMessage))
     const addSecondLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(secondLogMessage))
-
     const expectedState = {
       [StoreKeys.TRANSACTION_INFO]: formatTransactionReposne(transactionInfo),
       [StoreKeys.TRANSACTION_CONFIG]: initialState[StoreKeys.TRANSACTION_CONFIG],
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
-        stages: {
-          ids: [...initialState[StoreKeys.ANALYZER].stages.ids],
-          entities: {
-            ...initialState[StoreKeys.ANALYZER].stages.entities,
-            [AnalyzerStages.FETCHING_TRANSACTION_INFO]: {
-              stageStatus: AnalyzerStagesStatus.SUCCESS,
-              stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO,
-            },
-          },
-        },
-        logMessages: {
-          ids: expect.any(Array),
-          entities: expect.any(Object),
-        },
+        stages: updateAnalyzerStageStatus(
+          AnalyzerStages.FETCHING_TRANSACTION_INFO,
+          AnalyzerStagesStatus.SUCCESS,
+          initialState[StoreKeys.ANALYZER],
+        ),
+        logMessages: mockLogsInAnalyer(),
       },
     }
 
@@ -96,18 +91,6 @@ describe('fetchTransactionInfoSaga', () => {
       .run()
 
     expect(storeState).toEqual(expectedState)
-    expect(storeState[StoreKeys.ANALYZER].logMessages.ids).toEqual([expect.any(String), expect.any(String)])
-    expect(Object.values(storeState[StoreKeys.ANALYZER].logMessages.entities)).toEqual([
-      {
-        ...firstLogMessage,
-        timestamp: expect.any(Number),
-        identifier: expect.any(String),
-      },
-      {
-        ...secondLogMessage,
-        timestamp: expect.any(Number),
-        identifier: expect.any(String),
-      },
-    ])
+    testLogMessages(storeState[StoreKeys.ANALYZER], [firstLogMessage, secondLogMessage])
   })
 })
