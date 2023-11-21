@@ -1,8 +1,7 @@
 import { actionChannel, take, call, put } from 'typed-redux-saga'
 
-import type { TOpcodeDisassemled } from '../../types'
-
-import { bytecodesActions, type BytecodesActions } from './bytecodes.slice'
+import { bytecodesActions, type BytecodesActions } from '../../bytecodes.slice'
+import type { TOpcodeDisassemled } from '../../bytecodes.types'
 
 async function initializePyodide() {
   console.log('Initializing python environment')
@@ -45,16 +44,11 @@ export function* disassembleNewlyAddedBytescodes() {
       yield* put(
         bytecodesActions.updateBytecode({
           id,
-          changes: { error: null, disassembled },
+          changes: { disassembled },
         }),
       )
     } catch (error) {
-      yield* put(
-        bytecodesActions.updateBytecode({
-          id,
-          changes: { error: error.toString() },
-        }),
-      )
+      console.log(error)
     }
   }
 }

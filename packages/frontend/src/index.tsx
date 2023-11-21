@@ -7,6 +7,7 @@ import './fonts'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import * as Sentry from '@sentry/react'
+import './polyfills'
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'

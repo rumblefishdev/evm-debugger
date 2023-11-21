@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
+import type { TMappedSourceCodes } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -13,6 +14,13 @@ const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CO
 const selectEntities = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectEntities(state))
 
 const selectAll = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectAll(state))
+
+const selectGroupedByAddress = createSelector([selectAll], (sourceCodes) => {
+  return sourceCodes.reduce((accumulator: TMappedSourceCodes, sourceCode) => {
+    accumulator[sourceCode.address] = sourceCode.sourceCode
+    return accumulator
+  }, {})
+})
 
 const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, address: string) => address], (state, address) =>
   sourceCodesAdapter.getSelectors().selectById(state, address),
@@ -48,6 +56,7 @@ const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], 
 export const sourceCodesSelectors = {
   selectIsSourceCodeAvailable,
   selectHasMultipleSourceFiles,
+  selectGroupedByAddress,
   selectCurrentSourceFiles,
   selectCurrentSourceCode,
   selectByAddress,

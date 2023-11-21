@@ -14,6 +14,7 @@ export const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
 
 export const traceLogsSlice = createSlice({
   reducers: {
+    clearTraceLogs: traceLogsAdapter.removeAll,
     addTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
       traceLogsAdapter.addMany(
         state,

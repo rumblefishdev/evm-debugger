@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { ManualUpload, StartingScreen, SupportedChain, AnalyzeSummary, AnalyzerProgressScreen, TranscationScreen } from './pages'
+import { StartingScreen, AnalyzeSummary, AnalyzerProgressScreen, TranscationScreen } from './pages'
 import { AppNavigation } from './pages/AppNavigation'
 import { ROUTES as ORIG_ROUTES } from './routes'
 import { TransactionExplorer } from './pages/TransactionExplorer/TransactionExplorer'
@@ -12,16 +12,6 @@ export const appRouter = createBrowserRouter(
     {
       path: ROUTES.HOME,
       element: <StartingScreen />,
-      children: [
-        {
-          path: ROUTES.HOME,
-          element: <SupportedChain />,
-        },
-        {
-          path: ROUTES.MANUAL_UPLOAD,
-          element: <ManualUpload />,
-        },
-      ],
     },
     {
       path: ROUTES.ANALYZER_PROGRESS_SCREEN,

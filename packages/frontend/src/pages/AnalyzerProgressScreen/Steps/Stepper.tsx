@@ -1,10 +1,20 @@
+import React from 'react'
+
+import { AnalyzerStagesStatus } from '../../../store/analyzer/analyzer.const'
+
 import { DefaultStep } from './DefaultStep'
 import { ErrorStep } from './ErrorStep'
 import { StyledStepper } from './styles'
 import type { AnalyzerStepperProps } from './types'
 
-export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
-  const currentIndex = stages.findIndex((stage) => stage.isFinished === false)
+export const Stepper = ({ stages, ...props }: AnalyzerStepperProps) => {
+  const currentIndex = React.useMemo(
+    () =>
+      stages.findIndex(
+        (stage) => stage.stageStatus === AnalyzerStagesStatus.IN_PROGRESS || stage.stageStatus === AnalyzerStagesStatus.FAILED,
+      ),
+    [stages],
+  )
   const activeStep = currentIndex === -1 ? stages.length : currentIndex
 
   return (
@@ -13,19 +23,19 @@ export const Stepper = ({ stages, error, ...props }: AnalyzerStepperProps) => {
       activeStep={activeStep}
       {...props}
     >
-      {stages.map((stage, index) => {
-        if (error && currentIndex === index)
+      {stages.map((stage) => {
+        if (stage.stageStatus === AnalyzerStagesStatus.FAILED)
           return (
             <ErrorStep
               key={stage.stageName}
               stepName={stage.stageName}
-              errorMessage={error}
             />
           )
         return (
           <DefaultStep
             key={stage.stageName}
             stepName={stage.stageName}
+            completed={stage.stageStatus === AnalyzerStagesStatus.SUCCESS}
           />
         )
       })}

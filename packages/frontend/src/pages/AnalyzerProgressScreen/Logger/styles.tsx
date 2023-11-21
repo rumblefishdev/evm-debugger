@@ -1,5 +1,7 @@
 import { Stack, styled, Typography } from '@mui/material'
 
+import { LogMessageStatus } from '../../../store/analyzer/analyzer.const'
+
 export const StyledLogPanel = styled(Stack)(({ theme }) => ({
   width: '70%',
   padding: theme.spacing(6),
@@ -31,9 +33,20 @@ export const StyledLogContiner = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledMessage = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isError',
-})<{ isError: boolean }>(({ theme, isError }) => ({
-  color: isError ? theme.palette.rfBrandSecondary : theme.palette.rfSecondary,
+  shouldForwardProp: (prop) => prop !== 'status',
+})<{ status: LogMessageStatus }>(({ theme, status }) => ({
+  ...(status === LogMessageStatus.ERROR && {
+    color: theme.palette.rfBrandSecondary,
+  }),
+  ...(status === LogMessageStatus.INFO && {
+    color: theme.palette.rfSecondary,
+  }),
+  ...(status === LogMessageStatus.SUCCESS && {
+    color: theme.palette.rfSuccess,
+  }),
+  ...(status === LogMessageStatus.WARNING && {
+    color: theme.palette.rfSecondary,
+  }),
 }))
 export const StyledTimestamp = styled(Typography)(({ theme }) => ({
   fontFamily: 'Rajdhani',
