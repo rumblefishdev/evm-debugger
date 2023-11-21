@@ -7,20 +7,14 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { formatTransactionReposne } from '../../transactionInfo.utils'
 
 export async function getTransactionInfo(transactionHash: string, chainId: ChainId): Promise<TTransactionInfo> {
   const provider = jsonRpcProvider[chainId]
 
   const transactionInfo = await provider.getTransaction(transactionHash)
 
-  const formattedTransactionInfo: TTransactionInfo = {
-    ...transactionInfo,
-    value: transactionInfo.value.toHexString(),
-    input: transactionInfo.data,
-    blockNumber: transactionInfo.blockNumber.toString(),
-  }
-
-  return formattedTransactionInfo
+  return formatTransactionReposne(transactionInfo)
 }
 
 export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
