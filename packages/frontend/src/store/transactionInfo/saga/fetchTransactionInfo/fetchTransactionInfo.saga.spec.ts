@@ -93,7 +93,6 @@ describe('fetchTransactionInfoSaga', () => {
       .put(transactionInfoActions.setTransactionInfo(formatTransactionReposne(transactionInfo)))
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addSecondLogAction })
-      // .hasFinalState.like(expectedState)
       .run()
 
     expect(storeState).toEqual(expectedState)
