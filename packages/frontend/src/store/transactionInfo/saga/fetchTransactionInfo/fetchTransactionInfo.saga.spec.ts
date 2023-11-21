@@ -58,6 +58,7 @@ describe('fetchTransactionInfoSaga', () => {
 
     const addFirstLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(firstLogMessage))
     const addSecondLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(secondLogMessage))
+
     const expectedState = {
       [StoreKeys.TRANSACTION_INFO]: formatTransactionReposne(transactionInfo),
       [StoreKeys.TRANSACTION_CONFIG]: initialState[StoreKeys.TRANSACTION_CONFIG],
