@@ -13,7 +13,7 @@ export const environment = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const { version } = require('../package.json')
 
-export const jsonRpcProvider = {
+export const jsonRpcProvider: Record<ChainId, ethers.providers.StaticJsonRpcProvider> = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
   [ChainId.goerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli'),
   [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic'),

@@ -22,7 +22,6 @@ export const bytecodesSlice = createSlice({
     clearBytecodes: (state) => {
       bytecodesAdapter.removeAll(state)
     },
-    addBytecodes: bytecodesAdapter.addMany,
   },
   name: StoreKeys.BYTECODES,
   initialState: bytecodesAdapter.getInitialState(),

@@ -10,7 +10,6 @@ export const instructionsAdapter = createEntityAdapter<{ address: string; instru
 
 export const instructionsSlice = createSlice({
   reducers: {
-    updateInstructions: instructionsAdapter.updateOne,
     clearInstructions: instructionsAdapter.removeAll,
     addInstructions: instructionsAdapter.addMany,
   },

@@ -87,7 +87,7 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
       )
 
       yield* put(
-        sourceMapsActions.setSourceMaps(
+        sourceMapsActions.addSourceMaps(
           Object.entries(sources).reduce(
             (accumulator, [address, sourceCode]) => [
               ...accumulator,

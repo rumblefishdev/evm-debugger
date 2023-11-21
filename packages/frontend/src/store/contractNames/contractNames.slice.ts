@@ -20,7 +20,6 @@ export const contractNamesSlice = createSlice({
       contractNamesAdapter.addMany(state, emptyContractNames)
     },
     clearContractNames: contractNamesAdapter.removeAll,
-    addContractNames: contractNamesAdapter.addMany,
   },
   name: StoreKeys.CONTRACT_NAMES,
   initialState: contractNamesAdapter.getInitialState(),

@@ -13,19 +13,6 @@ export const sighashAdapter = createEntityAdapter<TSighashStatus>({
 export const sighashSlice = createSlice({
   reducers: {
     updateSighash: sighashAdapter.updateOne,
-    setAsFoundByAddress(sighashState, action: PayloadAction<string>) {
-      const sighashesOfAddress = sighashAdapter
-        .getSelectors()
-        .selectAll(sighashState)
-        .filter((sighash) => sighash.addresses.has(action.payload))
-      sighashAdapter.updateMany(
-        sighashState,
-        sighashesOfAddress.map((sighash) => ({
-          id: sighash.sighash,
-          changes: { found: true },
-        })),
-      )
-    },
     clearSighashes: sighashAdapter.removeAll,
     addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
       return sighashAdapter.setMany(sighashState, action.payload)

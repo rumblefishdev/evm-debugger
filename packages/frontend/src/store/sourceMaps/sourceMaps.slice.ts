@@ -11,10 +11,8 @@ export const sourceMapsAdapter = createEntityAdapter<TSourceMapSlice>({
 
 export const sourceMapsSlice = createSlice({
   reducers: {
-    updateSourceMaps: sourceMapsAdapter.updateMany,
-    updateSourceMap: sourceMapsAdapter.updateOne,
-    setSourceMaps: sourceMapsAdapter.addMany,
     clearSourceMaps: sourceMapsAdapter.removeAll,
+    addSourceMaps: sourceMapsAdapter.addMany,
   },
   name: StoreKeys.SOURCE_MAPS,
   initialState: sourceMapsAdapter.getInitialState(),
