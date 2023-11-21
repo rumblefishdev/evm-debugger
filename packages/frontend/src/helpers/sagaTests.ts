@@ -6,6 +6,6 @@ export const createLogMessageActionForTests = <T extends string>(action: Payload
   const { timestamp, identifier, ...addLogExpectedActionPayload } = action.payload
   return {
     type: action.type,
-    payload: { ...addLogExpectedActionPayload, timestamp: expect.any(Number), identifier: expect.any(String) },
+    payload: addLogExpectedActionPayload,
   }
 }

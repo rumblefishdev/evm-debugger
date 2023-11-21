@@ -16,7 +16,6 @@ import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer
 import { createLogMessageActionForTests } from '../../../../helpers/sagaTests'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import type { TEthersTransactionReposnse } from '../../transactionInfo.types'
-import { store } from '../../../store'
 
 import { fetchTransactionInfoSaga, getTransactionInfo } from './fetchTransactionInfo.saga'
 
@@ -94,7 +93,7 @@ describe('fetchTransactionInfoSaga', () => {
       .put(transactionInfoActions.setTransactionInfo(formatTransactionReposne(transactionInfo)))
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addSecondLogAction })
-
+      // .hasFinalState.like(expectedState)
       .run()
 
     expect(storeState).toEqual(expectedState)
