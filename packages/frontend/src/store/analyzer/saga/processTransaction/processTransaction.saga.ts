@@ -30,11 +30,11 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 
-    yield* put(structLogsActions.startPreaperingStructlogs())
+    yield* put(structLogsActions.startPreparingStructlogs())
     yield* take(
       (action: TAnalyzerActions['updateStage']) =>
         action.type === analyzerActions.updateStage.type &&
-        action.payload.stageName === AnalyzerStages.PREAPERING_STRUCTLOGS &&
+        action.payload.stageName === AnalyzerStages.PREPARING_STRUCTLOGS &&
         action.payload.stageStatus === AnalyzerStagesStatus.SUCCESS,
     )
 

@@ -1,5 +1,4 @@
 /* eslint-disable no-return-await */
-import { Buffer } from 'buffer'
 
 import { call, put, select, type SagaGenerator } from 'typed-redux-saga'
 import type { IStructLog } from '@evm-debuger/types'
@@ -25,7 +24,6 @@ export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): IStructLog[
     structLogs.push(JSON.parse(structLog.toString()))
   })
 
-  window.Buffer = window.Buffer || Buffer
   fastJson.write(Buffer.from(structlogsArrayBuffer))
 
   // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285

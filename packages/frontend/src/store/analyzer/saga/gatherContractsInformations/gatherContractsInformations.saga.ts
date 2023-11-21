@@ -32,8 +32,6 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
       bytecodeMaps: {},
       abis: {},
     }
-    // fix for Buffer not defined
-    window.Buffer = window.Buffer || Buffer
     const analyzer = new TxAnalyzer(analyzerPayload)
     const { analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 

@@ -42,8 +42,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       bytecodeMaps: bytecodes,
       abis: { ...abis, ...addionalAbis },
     }
-    // fix for Buffer not defined
-    window.Buffer = window.Buffer || Buffer
+
     const analyzer = new TxAnalyzer(analyzerPayload)
     const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
 

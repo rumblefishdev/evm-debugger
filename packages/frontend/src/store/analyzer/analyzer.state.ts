@@ -9,7 +9,7 @@ export const analyzerLogMessagesAdapter = createEntityAdapter<TLogMessageRecord>
 export const INITIAL_STAGES: TStageRecord[] = [
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.INITIALIZING_ANALYZER },
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO },
-  { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.PREAPERING_STRUCTLOGS },
+  { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.PREPARING_STRUCTLOGS },
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS },
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION },
   { stageStatus: AnalyzerStagesStatus.NOT_STARTED, stageName: AnalyzerStages.FETCHING_BYTECODES },

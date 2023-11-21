@@ -1,7 +1,7 @@
 export enum AnalyzerStages {
   INITIALIZING_ANALYZER = 'Initializing analyzer',
   FETCHING_TRANSACTION_INFO = 'Fetching transaction info',
-  PREAPERING_STRUCTLOGS = 'Preapering structlogs',
+  PREPARING_STRUCTLOGS = 'Preparing structlogs',
   DOWNLOADING_AND_PARSING_STRUCTLOGS = 'Downloading and parsing structlogs',
   GATHERING_CONTRACTS_INFORMATION = 'Gathering contracts information',
   FETCHING_BYTECODES = 'Fetching bytecodes',

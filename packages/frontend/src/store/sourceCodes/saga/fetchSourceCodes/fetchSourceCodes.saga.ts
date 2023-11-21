@@ -13,7 +13,7 @@ import type { TContractsSources } from '../../sourceCodes.types'
 import { abisActions } from '../../../abis/abis.slice'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
-export async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
+async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
   const stringifiedBody = JSON.stringify({ addresses: bodyContent })
 
@@ -67,9 +67,7 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
       return accumulator
     }, {})
 
-    if (responseBody.status === SrcMapStatus.FAILED) {
-      throw new Error(`Cannot retrieve data for transaction with hash:Reason: ${responseBody.error}`)
-    } else if (responseBody.status === SrcMapStatus.SUCCESS) {
+    if (responseBody.status === SrcMapStatus.SUCCESS) {
       yield* put(abisActions.addAbis(Object.entries(sources).map(([address, current]) => ({ address, abi: current.abi }))))
 
       yield* put(
@@ -106,6 +104,8 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
         }),
       )
       yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Fetched ${Object.keys(sources).length} source codes`)))
+    } else if (responseBody.status === SrcMapStatus.FAILED) {
+      throw new Error(`Cannot retrieve data for transaction with hash:Reason: ${responseBody.error}`)
     }
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_SOURCE_CODES }))

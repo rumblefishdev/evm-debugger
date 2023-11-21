@@ -14,7 +14,7 @@ export const structLogsAdapter = createEntityAdapter<IStructLog>({
 
 export const structLogsSlice = createSlice({
   reducers: {
-    startPreaperingStructlogs: () => {},
+    startPreparingStructlogs: () => {},
     loadStructLogs: (state, action: PayloadAction<IStructLog[]>) => {
       structLogsAdapter.addMany(state, action.payload)
     },
