@@ -1,7 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { ChainId } from '@evm-debuger/types'
-import { BigNumber, type Transaction } from 'ethers'
+import { BigNumber } from 'ethers'
 import { combineReducers } from 'redux'
 
 import { transactionInfoActions, transactionInfoReducer } from '../../transactionInfo.slice'
@@ -9,14 +9,14 @@ import { transactionConfigReducer } from '../../../transactionConfig/transaction
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { TransactionInfoState } from '../../transactionInfo.state'
-import { AnalyzerState, analyzerLogMessagesAdapter, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
+import { AnalyzerState } from '../../../analyzer/analyzer.state'
 import { StoreKeys } from '../../../store.keys'
-import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import { AnalyzerStages, AnalyzerStagesStatus, LogMessageStatus } from '../../../analyzer/analyzer.const'
+import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests } from '../../../../helpers/sagaTests'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import type { TEthersTransactionReposnse } from '../../transactionInfo.types'
+import { store } from '../../../store'
 
 import { fetchTransactionInfoSaga, getTransactionInfo } from './fetchTransactionInfo.saga'
 
@@ -62,25 +62,23 @@ describe('fetchTransactionInfoSaga', () => {
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: {
-          ids: [initialState[StoreKeys.ANALYZER].stages.ids],
+          ids: [...initialState[StoreKeys.ANALYZER].stages.ids],
           entities: {
             ...initialState[StoreKeys.ANALYZER].stages.entities,
             [AnalyzerStages.FETCHING_TRANSACTION_INFO]: {
               stageStatus: AnalyzerStagesStatus.SUCCESS,
-              stagesName: AnalyzerStages.FETCHING_TRANSACTION_INFO,
+              stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO,
             },
           },
         },
         logMessages: {
-          ids: [firstLogMessage.identifier, secondLogMessage.identifier],
-          entities: { [firstLogMessage.identifier]: firstLogMessage, [secondLogMessage.identifier]: secondLogMessage },
+          ids: expect.any(Array),
+          entities: expect.any(Object),
         },
       },
     }
 
-    console.log(JSON.stringify(expectedState, null, 2))
-
-    await expectSaga(fetchTransactionInfoSaga)
+    const { storeState } = await expectSaga(fetchTransactionInfoSaga)
       .withReducer(
         combineReducers({
           [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
@@ -89,18 +87,29 @@ describe('fetchTransactionInfoSaga', () => {
         }),
       )
       .withState(initialState)
-      .provide([
-        [matchers.call.fn(getTransactionInfo), formatTransactionReposne(transactionInfo)],
-        // [matchers.put.like({ action: addFirstLogAction }), firstLogMessage],
-        // [matchers.put.like({ action: addSecondLogAction }), secondLogMessage],
-      ])
+      .provide([[matchers.call.fn(getTransactionInfo), formatTransactionReposne(transactionInfo)]])
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(getTransactionInfo, TRANSACTION_HASH, CHAIN_ID)
       .put(transactionInfoActions.setTransactionInfo(formatTransactionReposne(transactionInfo)))
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addSecondLogAction })
-      .hasFinalState(expectedState)
+
       .run()
+
+    expect(storeState).toEqual(expectedState)
+    expect(storeState[StoreKeys.ANALYZER].logMessages.ids).toEqual([expect.any(String), expect.any(String)])
+    expect(Object.values(storeState[StoreKeys.ANALYZER].logMessages.entities)).toEqual([
+      {
+        ...firstLogMessage,
+        timestamp: expect.any(Number),
+        identifier: expect.any(String),
+      },
+      {
+        ...secondLogMessage,
+        timestamp: expect.any(Number),
+        identifier: expect.any(String),
+      },
+    ])
   })
 })
