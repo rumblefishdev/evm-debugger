@@ -17,8 +17,8 @@ import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
 import solc from './solc'
-import { setDdbContractInfo } from './aws/ddb'
-import { s3upload, s3download } from './aws/s3'
+import { setDdbContractInfo } from './ddb'
+import { s3upload, s3download } from './s3'
 
 const { BUCKET_NAME } = process.env
 

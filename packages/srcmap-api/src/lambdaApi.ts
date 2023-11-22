@@ -8,7 +8,7 @@ import { AWSLambda, captureException } from '@sentry/serverless'
 import { version } from '../package.json'
 
 import { createResponse } from './wrappers'
-import { getDdbContractInfo, setDdbContractInfo } from './aws/ddb'
+import { getDdbContractInfo, setDdbContractInfo } from './ddb'
 import { triggerFetchSourceCode, triggerSourceMapCompiler } from './triggers'
 
 AWSLambda.init({
@@ -22,20 +22,23 @@ AWSLambda.setTag('lambda_name', 'srcmap-api')
 export const addressesProcessing = async (
   contractAddressObj: TSrcMapAddres,
 ): Promise<ISrcMapApiPayload> => {
+  console.log(contractAddressObj.address, '/Processing/Start')
+
   let payload = await getDdbContractInfo(
     contractAddressObj.chainId,
     contractAddressObj.address,
   )
 
   if (!payload) {
+    console.log(contractAddressObj.address, '/Processing/Creating new record')
     payload = await setDdbContractInfo({
       status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_PENDING,
       chainId: contractAddressObj.chainId,
       address: contractAddressObj.address,
     })
+  } else {
+    console.log(contractAddressObj.address, '/Processing/Found record')
   }
-
-  console.log(contractAddressObj.address, '/Processing/Start')
 
   if (
     [

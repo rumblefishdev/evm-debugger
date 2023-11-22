@@ -11,8 +11,8 @@ import fetch from 'node-fetch'
 
 import { version } from '../package.json'
 
-import { getDdbContractInfo, setDdbContractInfo } from './aws/ddb'
-import { s3upload } from './aws/s3'
+import { getDdbContractInfo, setDdbContractInfo } from './ddb'
+import { s3upload } from './s3'
 import type { IFetcherPayload } from './types'
 
 const { BUCKET_NAME, SENTRY_DSN, ENVIRONMENT } = process.env

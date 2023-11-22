@@ -7,8 +7,8 @@ import { SrcMapStatus } from '@evm-debuger/types'
 
 import { version } from '../package.json'
 
-import { setDdbContractInfo } from './aws/ddb'
-import { putContractToDownloadSqs } from './aws/sqs'
+import { setDdbContractInfo } from './ddb'
+import { putContractToDownloadSqs } from './sqs'
 
 const { AWS_REGION, ENVIRONMENT, SENTRY_DSN } = process.env
 

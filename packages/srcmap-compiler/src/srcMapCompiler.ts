@@ -10,7 +10,7 @@ import { version } from '../package.json'
 
 import { compileFiles } from './helpers'
 import { solcVersion } from './solc'
-import { setDdbContractInfo } from './aws/ddb'
+import { setDdbContractInfo } from './ddb'
 
 AWSLambda.init({
   tracesSampleRate: 1,
