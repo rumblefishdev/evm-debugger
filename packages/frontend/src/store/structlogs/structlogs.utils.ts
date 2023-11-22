@@ -31,7 +31,7 @@ export const getParsedStructLogs = (
     })
 }
 
-export const createStructlog = (index: number): IStructLog => ({
+export const createMockedStructlog = (index: number): IStructLog => ({
   storage: {},
   stack: [],
   pc: index,
@@ -43,11 +43,11 @@ export const createStructlog = (index: number): IStructLog => ({
   depth: 0,
 })
 
-export const createStructLogs = (length: number): IStructLog[] => {
+export const createMockedStructLogs = (length: number): IStructLog[] => {
   const structLogs: IStructLog[] = []
 
   for (let index = 0; index < length; index++) {
-    structLogs.push(createStructlog(index))
+    structLogs.push(createMockedStructlog(index))
   }
 
   return structLogs

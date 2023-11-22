@@ -6,22 +6,17 @@ import { Response } from 'node-fetch'
 import { transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../structlogs.slice'
-import { AnalyzerState } from '../../../analyzer/analyzer.state'
+import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { StoreKeys } from '../../../store.keys'
-import { createStructLogs } from '../../structlogs.utils'
+import { createMockedStructLogs } from '../../structlogs.utils'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
-import {
-  createLogMessageActionForTests,
-  mockLogsInAnalyer,
-  testLogMessages,
-  updateAnalyzerStageStatus,
-} from '../../../../helpers/sagaTests'
+import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 
 import { fetchStructlogs, fetchStructlogsSaga, parseStructlogs } from './fetchStructlogs.saga'
 
-const STRUCTLOGS = createStructLogs(10)
+const STRUCTLOGS = createMockedStructLogs(10)
 
 describe('fetchStructlogsSaga', () => {
   it('should fetch structlogs', async () => {
@@ -43,18 +38,14 @@ describe('fetchStructlogsSaga', () => {
     const STRUCTLOGS_ARRAY_BUFFER = await new Response(JSON.stringify(STRUCTLOGS)).arrayBuffer()
 
     const expectedState = {
-      [StoreKeys.STRUCT_LOGS]: {
-        ids: [...STRUCTLOGS.map((structLog) => structLog.index)],
-        entities: { ...STRUCTLOGS.reduce((accumulator, structLog) => ({ ...accumulator, [structLog.index]: structLog }), {}) },
-      },
-      [StoreKeys.TRANSACTION_CONFIG]: initialState[StoreKeys.TRANSACTION_CONFIG],
+      ...initialState,
+      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.addMany(initialState[StoreKeys.STRUCT_LOGS], STRUCTLOGS),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
-        stages: updateAnalyzerStageStatus(
-          AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
-          AnalyzerStagesStatus.SUCCESS,
-          initialState[StoreKeys.ANALYZER],
-        ),
+        stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
+          id: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
+          changes: successStage,
+        }),
         logMessages: mockLogsInAnalyer(),
       },
     }

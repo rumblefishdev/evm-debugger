@@ -1,4 +1,4 @@
-import { apply, select, type SagaGenerator, put } from 'typed-redux-saga'
+import { select, type SagaGenerator, put, call } from 'typed-redux-saga'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import type { TTransactionData } from '@evm-debuger/types'
 
@@ -18,6 +18,11 @@ import { sighashActions } from '../../../sighash/sighash.slice'
 import { abisSelectors } from '../../../abis/abis.selectors'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
+
+export function runAnalyzer(payload: TTransactionData) {
+  const analyzer = new TxAnalyzer(payload)
+  return analyzer.analyze()
+}
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
   try {
@@ -43,8 +48,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       abis: { ...abis, ...addionalAbis },
     }
 
-    const analyzer = new TxAnalyzer(analyzerPayload)
-    const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+    const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* call(runAnalyzer, analyzerPayload)
 
     yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
 
