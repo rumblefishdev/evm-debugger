@@ -1,8 +1,9 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { combineReducers } from 'redux'
+import { ChainId } from '@evm-debuger/types'
 
 import { transactionConfigActions, transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
-import { analyzerReducer } from '../../analyzer.slice'
+import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { StoreKeys } from '../../../store.keys'
 import { transactionInfoActions, transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
@@ -17,10 +18,34 @@ import { sighashReducer, sighashAdapter, sighashActions } from '../../../sighash
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { TransactionInfoState } from '../../../transactionInfo/transactionInfo.state'
 import { AnalyzerState } from '../../analyzer.state'
+import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.const'
+import { createMockedStructLogs } from '../../../structlogs/structlogs.utils'
+import { createMockedContractNames } from '../../../contractNames/contractNames.utils'
+import { createMockedBytecodes } from '../../../bytecodes/bytecodes.utils'
+import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.utils'
+import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.utils'
+import { createMockedAbis } from '../../../abis/abi.utils'
+import { createMockedInstructions } from '../../../instructions/instructions.utils'
+import { createMockedTracelogs } from '../../../traceLogs/traceLogs.utils'
+import { createMockedSighashes } from '../../../sighash/sighash.utils'
+import { createDirtyAnalyerState } from '../../analyzer.utils'
 
-import { clearAnalyzerInformationSaga } from './clearAnalyzerInformation.saga'
+import { resetAnalyzerSaga } from './resetAnalyzer.saga'
 
-describe('clearAnalyzerInformationSaga', () => {
+const mockedTransactionConfig = { transactionHash: '0x1234567890', s3Location: 's3Location', chainId: ChainId.mainnet }
+const mockedTransactionInfo = mockTransactionInfoState()
+const mockedStructlogs = createMockedStructLogs(4)
+const mockedAnalyzerState = createDirtyAnalyerState()
+const mockedContractNames = createMockedContractNames(4)
+const mockedBytecodes = createMockedBytecodes(4)
+const mockedSourceCodes = createMockedSourceCodes(4)
+const mockedSourceMaps = createMockedSourceMaps(4)
+const mockedAbis = createMockedAbis(4)
+const mockedInstructions = createMockedInstructions(4)
+const mockedTracelogs = createMockedTracelogs(4)
+const mockedSighashes = createMockedSighashes(4)
+
+describe('resetAnalyzerSaga', () => {
   it('should clear analyzer information', async () => {
     const initialState = {
       [StoreKeys.TRANSACTION_INFO]: { ...new TransactionInfoState() },
@@ -37,121 +62,22 @@ describe('clearAnalyzerInformationSaga', () => {
       [StoreKeys.SIGHASH]: sighashAdapter.getInitialState(),
     }
 
-    const dirtyState = { ...initialState }
-    dirtyState[StoreKeys.TRANSACTION_INFO] = {
-      ...initialState[StoreKeys.TRANSACTION_INFO],
-      hash: '0x1234567890',
-      chainId: 1,
-    }
-    dirtyState[StoreKeys.TRANSACTION_CONFIG] = {
-      ...initialState[StoreKeys.TRANSACTION_CONFIG],
-      transactionHash: '0x1234567890',
-      chainId: 1,
-    }
-    dirtyState[StoreKeys.STRUCT_LOGS] = {
-      ...initialState[StoreKeys.STRUCT_LOGS],
-      ids: [0],
-      entities: {
-        0: {
-          storage: {},
-          stack: [],
-          pc: 0,
-          op: 'ADD',
-          memory: [],
-          index: 0,
-          gasCost: 0,
-          gas: 0,
-          depth: 0,
-        },
-      },
+    const dirtyState = {
+      [StoreKeys.TRANSACTION_INFO]: { ...mockedTransactionInfo },
+      [StoreKeys.TRANSACTION_CONFIG]: { ...mockedTransactionConfig },
+      [StoreKeys.ANALYZER]: { ...mockedAnalyzerState },
+      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.setAll(initialState[StoreKeys.STRUCT_LOGS], mockedStructlogs),
+      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.setAll(initialState[StoreKeys.CONTRACT_NAMES], mockedContractNames),
+      [StoreKeys.BYTECODES]: bytecodesAdapter.setAll(initialState[StoreKeys.BYTECODES], mockedBytecodes),
+      [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.setAll(initialState[StoreKeys.SOURCE_CODES], mockedSourceCodes),
+      [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.setAll(initialState[StoreKeys.SOURCE_MAPS], mockedSourceMaps),
+      [StoreKeys.ABIS]: abisAdapter.setAll(initialState[StoreKeys.ABIS], mockedAbis),
+      [StoreKeys.INSTRUCTIONS]: instructionsAdapter.setAll(initialState[StoreKeys.INSTRUCTIONS], mockedInstructions),
+      [StoreKeys.TRACE_LOGS]: traceLogsAdapter.setAll(initialState[StoreKeys.TRACE_LOGS], mockedTracelogs),
+      [StoreKeys.SIGHASH]: sighashAdapter.setAll(initialState[StoreKeys.SIGHASH], mockedSighashes),
     }
 
-    dirtyState[StoreKeys.CONTRACT_NAMES] = {
-      ...initialState[StoreKeys.CONTRACT_NAMES],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { contractName: 'ContractName', address: '0x1234567890' },
-      },
-    }
-
-    dirtyState[StoreKeys.BYTECODES] = {
-      ...initialState[StoreKeys.BYTECODES],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { disassembled: null, bytecode: '0x1234567890', address: '0x1234567890' },
-      },
-    }
-
-    dirtyState[StoreKeys.SOURCE_CODES] = {
-      ...initialState[StoreKeys.SOURCE_CODES],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { sourceCode: 'SourceCode', address: '0x1234567890' },
-      },
-    }
-
-    dirtyState[StoreKeys.SOURCE_MAPS] = {
-      ...initialState[StoreKeys.SOURCE_MAPS],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': {
-          fileName: 'FileName',
-          deployedBytecode: { sourceMap: '', opcodes: '', object: '' },
-          contractName: 'ContractName',
-          bytecode: { sourceMap: '', opcodes: '', object: '' },
-          address: '0x1234567890',
-        },
-      },
-    }
-
-    dirtyState[StoreKeys.ABIS] = {
-      ...initialState[StoreKeys.ABIS],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { address: '0x1234567890', abi: [] },
-      },
-    }
-
-    dirtyState[StoreKeys.INSTRUCTIONS] = {
-      ...initialState[StoreKeys.INSTRUCTIONS],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { instructions: [], address: '0x1234567890' },
-      },
-    }
-
-    dirtyState[StoreKeys.TRACE_LOGS] = {
-      ...initialState[StoreKeys.TRACE_LOGS],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': {
-          value: '0x1234567890',
-          type: 'CALL',
-          startIndex: 0,
-          stackTrace: [],
-          pc: 0,
-          passedGas: 0,
-          output: '0x1234567890',
-          input: '0x1234567890',
-          index: 0,
-          id: '0x1234567890',
-          gasCost: 0,
-          events: [],
-          depth: 0,
-          address: '0x1234567890',
-        },
-      },
-    }
-
-    dirtyState[StoreKeys.SIGHASH] = {
-      ...initialState[StoreKeys.SIGHASH],
-      ids: ['0x1234567890'],
-      entities: {
-        '0x1234567890': { sighash: '0x1234567890', fragment: {}, found: false, addresses: new Set() },
-      },
-    }
-
-    await expectSaga(clearAnalyzerInformationSaga)
+    await expectSaga(resetAnalyzerSaga)
       .withReducer(
         combineReducers({
           [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
@@ -169,6 +95,7 @@ describe('clearAnalyzerInformationSaga', () => {
         }),
       )
       .withState(dirtyState)
+      .put(analyzerActions.clearAnalyzerInformation())
       .put(transactionConfigActions.clearTransactionConfig())
       .put(transactionInfoActions.clearTransactionInfo())
       .put(structLogsActions.clearStructLogs())
