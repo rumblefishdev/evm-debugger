@@ -43,3 +43,11 @@ export const testLogMessages = (state: AnalyzerState, logMessages: TLogMessageRe
     })),
   )
 }
+
+export const testLogMessageViaInspect = (inspect: unknown, logMessage: TLogMessageRecord) => {
+  expect(inspect['payload']['action']['payload']).toEqual({
+    ...logMessage,
+    timestamp: expect.any(Number),
+    identifier: expect.any(String),
+  })
+}
