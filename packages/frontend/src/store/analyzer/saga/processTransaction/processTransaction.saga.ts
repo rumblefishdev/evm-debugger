@@ -1,7 +1,7 @@
 import { put, take, type SagaGenerator } from 'typed-redux-saga'
 
 import { analyzerActions, type TAnalyzerActions } from '../../analyzer.slice'
-import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
+import { AnalyzerStages } from '../../analyzer.const'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'

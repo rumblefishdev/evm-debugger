@@ -1,7 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import type { TLogMessageRecord } from '../store/analyzer/analyzer.types'
-import type { AnalyzerStages, AnalyzerStagesStatus } from '../store/analyzer/analyzer.const'
 import type { AnalyzerState } from '../store/analyzer/analyzer.state'
 
 export const createLogMessageActionForTests = <T extends string>(action: PayloadAction<TLogMessageRecord, T>) => {
