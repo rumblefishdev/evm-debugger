@@ -46,14 +46,14 @@ export const AnalyzerProgressScreen = ({ children = null }) => {
   }, [isAnalyzerRunning, hasProcessingFailed, navigate, chainId, txHash])
 
   const moveBackToStartingScreen = useCallback(() => {
-    dispatch(analyzerActions.clearAnalyzerInformation())
+    dispatch(analyzerActions.resetAnalyzer())
     isRunOnce.current = false
     navigate(ROUTES.HOME)
   }, [navigate, dispatch])
 
   const restartHandler = useCallback(() => {
     if (hasProcessingFailed) {
-      dispatch(analyzerActions.clearAnalyzerInformation())
+      dispatch(analyzerActions.resetAnalyzer())
       isRunOnce.current = false
     }
   }, [dispatch, hasProcessingFailed])

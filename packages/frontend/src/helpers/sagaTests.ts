@@ -12,20 +12,6 @@ export const createLogMessageActionForTests = <T extends string>(action: Payload
   }
 }
 
-export const updateAnalyzerStageStatus = (
-  stage: AnalyzerStages,
-  status: AnalyzerStagesStatus,
-  state: AnalyzerState,
-): AnalyzerState['stages'] => {
-  return {
-    ids: [...state.stages.ids],
-    entities: {
-      ...state.stages.entities,
-      [stage]: { stageStatus: status, stageName: stage },
-    },
-  }
-}
-
 export const mockLogsInAnalyer = (): AnalyzerState['logMessages'] => {
   return {
     ids: expect.any(Array),
@@ -42,4 +28,12 @@ export const testLogMessages = (state: AnalyzerState, logMessages: TLogMessageRe
       identifier: expect.any(String),
     })),
   )
+}
+
+export const testLogMessageViaInspect = (inspect: unknown, logMessage: TLogMessageRecord) => {
+  expect(inspect['payload']['action']['payload']).toEqual({
+    ...logMessage,
+    timestamp: expect.any(Number),
+    identifier: expect.any(String),
+  })
 }

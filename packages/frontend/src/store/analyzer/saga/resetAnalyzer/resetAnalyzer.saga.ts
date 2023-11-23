@@ -11,8 +11,10 @@ import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { abisActions } from '../../../abis/abis.slice'
 import { instructionsActions } from '../../../instructions/instructions.slice'
+import { analyzerActions } from '../../analyzer.slice'
 
-export function* clearAnalyzerInformationSaga() {
+export function* resetAnalyzerSaga() {
+  yield* put(analyzerActions.clearAnalyzerInformation())
   yield* put(transactionConfigActions.clearTransactionConfig())
   yield* put(transactionInfoActions.clearTransactionInfo())
   yield* put(structLogsActions.clearStructLogs())

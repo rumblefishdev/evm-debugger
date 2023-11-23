@@ -76,7 +76,8 @@
     "serve-prerender:prod": "bash build.sh serve-prerender prod",
     "clean": "npm run clean:build && npm run clean:js",
     "clean:build": "rimraf build",
-    "clean:js": "rimraf src/**/*.{js,js.map}"
+    "clean:js": "rimraf src/**/*.{js,js.map}",
+    "type-check": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [
@@ -99,6 +100,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
+    "@types/node-fetch": "^2.6.9",
     "@types/react-grid-layout": "^1.3.4",
     "@types/react-gtm-module": "^2.0.1",
     "@types/uuid": "^9.0.7",

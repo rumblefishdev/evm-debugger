@@ -1,4 +1,6 @@
-import { select, type SagaGenerator, put, apply, take } from 'typed-redux-saga'
+/* eslint-disable no-return-await */
+import { select, type SagaGenerator, put, apply, take, call } from 'typed-redux-saga'
+import type { ChainId } from '@evm-debuger/types'
 
 import { jsonRpcProvider } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
@@ -8,18 +10,22 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
+export async function fetchBytecode(chainId: ChainId, address: string): Promise<string> {
+  const provider = jsonRpcProvider[chainId]
+  return await provider.getCode(address)
+}
+
 export function* fetchBytecodesSaga(): SagaGenerator<void> {
   try {
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Fetching bytecodes')))
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.FETCHING_BYTECODES }))
 
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
-    const provider = jsonRpcProvider[chainId]
 
     const emptyBytecodes = yield* select(bytecodesSelectors.addressesWithMissingBytecode)
 
     for (const address of emptyBytecodes) {
-      const bytecode = yield* apply(provider, provider.getCode, [address])
+      const bytecode = yield* call(fetchBytecode, chainId, address)
       yield* put(bytecodesActions.updateBytecode({ id: address, changes: { bytecode } }))
       // Temporary fix to wait for bytecode dissasembly
       yield* take(bytecodesActions.updateBytecode)

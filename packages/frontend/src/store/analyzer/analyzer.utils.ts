@@ -26,3 +26,7 @@ export const createWarningLogMessage = (message: string, _identifier?: string, _
   const identifier = _identifier || createUUID()
   return { timestamp, status: LogMessageStatus.WARNING, message, identifier }
 }
+
+export const createMockedLogMessages = (count: number): TLogMessageRecord[] => {
+  return Array.from({ length: count }, (_, index) => createInfoLogMessage(`Message ${index}`))
+}

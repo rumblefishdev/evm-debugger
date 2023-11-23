@@ -5,7 +5,7 @@ import { processTransactionSaga } from './saga/processTransaction/processTransac
 import { runAnalyzerSaga } from './saga/runAnalyzer/runAnalyzer.saga'
 import { analyzerActions } from './analyzer.slice'
 import { initializeTransactionProcessingSaga } from './saga/initializeTransactionProcessing/initializeTransactionProcessing.saga'
-import { clearAnalyzerInformationSaga } from './saga/clearAnalyzerInformation/clearAnalyzerInformation.saga'
+import { resetAnalyzerSaga } from './saga/resetAnalyzer/resetAnalyzer.saga'
 
 export function* analyzerMasterSaga(): Generator {
   yield* all([
@@ -13,6 +13,6 @@ export function* analyzerMasterSaga(): Generator {
     takeLatest(analyzerActions.processTransaction, processTransactionSaga),
     takeLatest(analyzerActions.gatherContractsInformations, gatherContractsInformationsSaga),
     takeLatest(analyzerActions.initializeTransactionProcessing, initializeTransactionProcessingSaga),
-    takeLatest(analyzerActions.clearAnalyzerInformation, clearAnalyzerInformationSaga),
+    takeLatest(analyzerActions.resetAnalyzer, resetAnalyzerSaga),
   ])
 }

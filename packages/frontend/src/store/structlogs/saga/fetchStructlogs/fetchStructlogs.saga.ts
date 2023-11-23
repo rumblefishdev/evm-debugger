@@ -47,7 +47,8 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
     }
 
     const structlogsArrayBuffer = yield* call(fetchStructlogs, s3Location)
-    const structLogs = parseStructlogs(structlogsArrayBuffer)
+
+    const structLogs = yield* call(parseStructlogs, structlogsArrayBuffer)
 
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
