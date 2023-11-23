@@ -1,5 +1,5 @@
 /* eslint-disable no-return-await */
-import { select, type SagaGenerator, put, apply, take, call } from 'typed-redux-saga'
+import { select, type SagaGenerator, put, take, call } from 'typed-redux-saga'
 import type { ChainId } from '@evm-debuger/types'
 
 import { jsonRpcProvider } from '../../../../config'

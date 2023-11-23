@@ -1,7 +1,5 @@
 import { expectSaga } from 'redux-saga-test-plan'
-import * as matchers from 'redux-saga-test-plan/matchers'
 import { ChainId } from '@evm-debuger/types'
-import { BigNumber } from 'ethers'
 import { combineReducers } from 'redux'
 
 import { transactionConfigActions, transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'

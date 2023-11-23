@@ -1,4 +1,4 @@
-import { select, type SagaGenerator, apply, put, call } from 'typed-redux-saga'
+import { select, type SagaGenerator, put, call } from 'typed-redux-saga'
 import type { IStructLog, TTransactionData, TTransactionInfo } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 
