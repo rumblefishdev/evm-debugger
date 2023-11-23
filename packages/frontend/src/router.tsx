@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { StartingScreen, AnalyzeSummary, AnalyzerProgressScreen, TranscationScreen } from './pages'
-import { AppNavigation } from './pages/AppNavigation'
+import { StartingScreen, AnalyzeSummary, TranscationScreen, AppRoot } from './pages'
 import { ROUTES as ORIG_ROUTES } from './routes'
 import { TransactionExplorer } from './pages/TransactionExplorer/TransactionExplorer'
 
@@ -14,36 +13,20 @@ export const appRouter = createBrowserRouter(
       element: <StartingScreen />,
     },
     {
-      path: ROUTES.ANALYZER_PROGRESS_SCREEN,
-      element: <AnalyzerProgressScreen />,
-    },
-    {
       path: ROUTES.APP,
-      element: <AppNavigation />,
+      element: <AppRoot />,
       children: [
         {
           path: ROUTES.TRANSACTION_SCREEN,
-          element: (
-            <AnalyzerProgressScreen>
-              <TranscationScreen />
-            </AnalyzerProgressScreen>
-          ),
+          element: <TranscationScreen />,
         },
         {
           path: ROUTES.DATA_MANAGER,
-          element: (
-            <AnalyzerProgressScreen>
-              <AnalyzeSummary />
-            </AnalyzerProgressScreen>
-          ),
+          element: <AnalyzeSummary />,
         },
         {
           path: ROUTES.TRANSACTION_EXPLORER,
-          element: (
-            <AnalyzerProgressScreen>
-              <TransactionExplorer />
-            </AnalyzerProgressScreen>
-          ),
+          element: <TransactionExplorer />,
         },
       ],
     },

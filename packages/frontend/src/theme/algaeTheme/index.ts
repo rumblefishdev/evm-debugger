@@ -37,7 +37,7 @@ declare module '@mui/material/styles' {
 
 const spacing = 8
 
-export const theme = createTheme({
+export const algaeTheme = createTheme({
   utilis: {
     isMobile,
     fluidFont,

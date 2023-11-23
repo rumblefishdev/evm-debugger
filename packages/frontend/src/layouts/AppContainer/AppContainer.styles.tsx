@@ -1,17 +1,15 @@
 import { Stack, styled } from '@mui/material'
 
-type TWithNavbar = {
-  withNavbar?: boolean
-}
-
 export const StyledWrapper = styled(Stack)(() => ({
+  width: '100%',
   justifyContent: 'center',
+  height: '100%',
   alignItems: 'center',
 }))
 
 export const StyledContainer = styled(Stack, {
   shouldForwardProp: (prop) => prop !== 'withNavbar',
-})<TWithNavbar>(({ theme, withNavbar }) => ({
+})<{ withNavbar?: boolean }>(({ theme, withNavbar }) => ({
   width: '100%',
   padding: theme.spacing(6),
   overflow: 'hidden',

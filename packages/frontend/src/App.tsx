@@ -5,7 +5,7 @@ import createCache from '@emotion/cache'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 
-import { theme } from './theme/algaeTheme'
+import { algaeTheme } from './theme/algaeTheme'
 import { appRouter } from './router'
 import { GAnalyticsInit } from './components/GAnalytics'
 
@@ -44,9 +44,7 @@ function App(props: AppProps) {
     return (
       <>
         <AddBodyScript />
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={appRouter} />
-        </ThemeProvider>
+        <RouterProvider router={appRouter} />
       </>
     )
 
@@ -54,9 +52,7 @@ function App(props: AppProps) {
     <>
       <AddBodyScript />
       <CacheProvider value={emotionCache}>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={appRouter} />
-        </ThemeProvider>
+        <RouterProvider router={appRouter} />
       </CacheProvider>
     </>
   )
