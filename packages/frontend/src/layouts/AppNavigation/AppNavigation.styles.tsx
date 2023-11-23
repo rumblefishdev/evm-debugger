@@ -1,4 +1,6 @@
-import { Tabs, styled, Tab } from '@mui/material'
+import { Tabs, styled, Tab, Stack } from '@mui/material'
+
+import { NewTransactionButton } from '../../containers/NewTransactionButton'
 
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
   width: '100%',
@@ -19,3 +21,17 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
     color: theme.palette.rfButton,
   },
 }))
+
+export const StyledButtonWrapper = styled(Stack)({
+  width: '100%',
+  position: 'relative',
+  flexDirection: 'row',
+  alignItems: 'center',
+})
+
+export const StyledNewTransactionButton = styled(NewTransactionButton)({
+  zIndex: 10,
+  whiteSpace: 'nowrap',
+  position: 'absolute',
+  left: 10,
+})
