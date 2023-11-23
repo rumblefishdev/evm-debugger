@@ -1,11 +1,9 @@
-import { ThemeProvider } from '@mui/material'
 import { RouterProvider } from 'react-router-dom'
 import { CacheProvider } from '@emotion/react'
 import createCache from '@emotion/cache'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 
-import { algaeTheme } from './theme/algaeTheme'
 import { appRouter } from './router'
 import { GAnalyticsInit } from './components/GAnalytics'
 

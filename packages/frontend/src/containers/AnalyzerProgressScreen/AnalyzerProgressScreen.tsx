@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { ChainId } from '@evm-debuger/types'
 
-import { defaultTheme } from '../../theme/default'
 import { Button } from '../../importedComponents/components/Button'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch } from '../../store/storeHooks'

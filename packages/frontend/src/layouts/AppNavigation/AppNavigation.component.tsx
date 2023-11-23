@@ -2,12 +2,11 @@ import React, { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { ROUTES } from '../../routes'
-import { AppContainer } from '../AppContainer/AppContainer.component'
 
 import type { AppNavigationProps } from './AppNavigation.types'
 import { StyledTab, StyledTabs } from './AppNavigation.styles'
 
-export const AppNavigation: React.FC<AppNavigationProps> = ({ children }) => {
+export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { chainId, txHash } = useParams()
