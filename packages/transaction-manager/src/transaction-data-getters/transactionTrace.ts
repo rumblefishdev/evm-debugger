@@ -32,6 +32,7 @@ export const handleTransactionTraceFetching = async (transactionHash: string, pa
   const retryCounter = { numberOfRetries: 0 }
 
   const transactionTrace = await fetchTransactionTrace(transactionHash, retryCounter)
+  console.log('transactionTrace structlogs length', transactionTrace.structLogs.length)
   saveToFile(path, transactionTrace)
 
   return transactionTrace

@@ -15,7 +15,6 @@ export const startHadrhatNode = (chainId: ChainIds) => {
     enabled: true,
     blockNumber,
   }
-  hardhat.config.networks.hardhat.chainId = chainId
 
   // TIMEOUT 10 minuts
   hardhat.config.networks.localhost.timeout = 600000
