@@ -76,7 +76,8 @@
     "serve-prerender:prod": "bash build.sh serve-prerender prod",
     "clean": "npm run clean:build && npm run clean:js",
     "clean:build": "rimraf build",
-    "clean:js": "rimraf src/**/*.{js,js.map}"
+    "clean:js": "rimraf src/**/*.{js,js.map}",
+    "type-check": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [

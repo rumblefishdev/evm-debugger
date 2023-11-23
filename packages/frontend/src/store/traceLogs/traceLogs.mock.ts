@@ -1,5 +1,3 @@
-import { v4 as createUUID } from 'uuid'
-
 import { createCallIdentifier } from '../../helpers/helpers'
 
 import type { TMainTraceLogsWithId } from './traceLogs.types'

@@ -13,7 +13,7 @@ import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { bytecodesActions, bytecodesAdapter, bytecodesReducer } from '../../bytecodes.slice'
 import type { TBytecodes } from '../../bytecodes.types'
-import { createEmptyMockedBytecode } from '../../bytecodes.utils'
+import { createEmptyMockedBytecode } from '../../bytecodes.mock'
 
 import { fetchBytecode, fetchBytecodesSaga } from './fetchBytecodes.saga'
 

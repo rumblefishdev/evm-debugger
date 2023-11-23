@@ -9,7 +9,7 @@ import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../s
 import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { StoreKeys } from '../../../store.keys'
-import { createMockedStructLogs } from '../../structlogs.utils'
+import { createMockedStructLogs } from '../../structlogs.mock'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'

@@ -1,8 +1,7 @@
 import { v4 as createUUID } from 'uuid'
 
-import { AnalyzerStagesStatus, LogMessageStatus } from './analyzer.const'
+import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
-import { AnalyzerState, INITIAL_STAGES, analyzerLogMessagesAdapter, analyzerStagesAdapter } from './analyzer.state'
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
   const timestamp = _timestamp || Date.now()
@@ -30,15 +29,4 @@ export const createWarningLogMessage = (message: string, _identifier?: string, _
 
 export const createMockedLogMessages = (count: number): TLogMessageRecord[] => {
   return Array.from({ length: count }, (_, index) => createInfoLogMessage(`Message ${index}`))
-}
-
-export const mockedAllStagesPassed = INITIAL_STAGES.map((stage) => ({ ...stage, stageStatus: AnalyzerStagesStatus.SUCCESS }))
-
-export const createDirtyAnalyerState = (): AnalyzerState => {
-  const initialState = new AnalyzerState()
-  return {
-    ...initialState,
-    stages: analyzerStagesAdapter.setAll(initialState.stages, [...mockedAllStagesPassed]),
-    logMessages: analyzerLogMessagesAdapter.setAll(initialState.logMessages, [...createMockedLogMessages(10)]),
-  }
 }

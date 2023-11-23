@@ -13,11 +13,11 @@ import { sighashActions, sighashAdapter, sighashReducer } from '../../../sighash
 import { contractNamesActions, contractNamesAdapter, contractNamesReducer } from '../../../contractNames/contractNames.slice'
 import { transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
-import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.const'
-import { createMockedStructLogs } from '../../../structlogs/structlogs.utils'
-import { createMockedBytecodes } from '../../../bytecodes/bytecodes.utils'
-import { createMockedSighashes } from '../../../sighash/sighash.utils'
-import { createMockedContractNames } from '../../../contractNames/contractNames.utils'
+import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
+import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
+import { createMockedSighashes } from '../../../sighash/sighash.mock'
+import { createMockedContractNames } from '../../../contractNames/contractNames.mock'
+import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
 
 import { gatherContractsInformations, gatherContractsInformationsSaga } from './gatherContractsInformations.saga'
 
