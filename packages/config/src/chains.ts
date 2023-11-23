@@ -9,7 +9,7 @@ export enum ChainIds {
 }
 
 export const BLOCK_NUMBERS = {
-  [ChainIds.ETHEREUM_MAINNET]: 18276793,
+  [ChainIds.ETHEREUM_MAINNET]: 18633225,
   [ChainIds.ETHEREUM_GOERLI]: 9807546,
   [ChainIds.ETHEREUM_SEPOLIA]: 4422698,
   [ChainIds.POLYGON_MAINNET]: 48315167,
