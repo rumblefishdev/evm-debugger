@@ -8,7 +8,7 @@ import { scrollbar } from './customScrollbar'
 
 const spacing = 8
 
-export const theme = createTheme({
+export const defaultTheme = createTheme({
   typography,
   spacing,
   palette,

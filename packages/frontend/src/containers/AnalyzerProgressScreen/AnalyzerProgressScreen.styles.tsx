@@ -2,29 +2,18 @@ import { Stack, styled, Typography } from '@mui/material'
 
 import { TailProgressScreen } from '../../images'
 
-export const StyledMainPanel = styled(Stack)(() => ({
-  width: '524px',
-  position: 'relative',
-  paddingTop: 24,
-  justifyContent: 'space-between',
-  height: '100%',
-  flexDirection: 'column',
-}))
-
-export const StyledHeadline = styled(Typography)(({ theme }) => ({
-  color: theme.palette.rfText,
-}))
 export const StyledHeadlineCaption = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfBrandSecondary,
 }))
 
-export const StyledImage = styled('img')(() => ({
-  zIndex: -1,
-  width: 'auto',
-  top: '220px',
-  position: 'absolute',
-  left: '128px',
-  height: '756px',
+export const StyledContainer = styled(Stack)(({ theme }) => ({
+  width: '30%',
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+  gap: '20px',
+  flexDirection: 'column',
+  display: 'flex',
 }))
 
 export const StyledStack = styled(Stack)(({ theme }) => ({
