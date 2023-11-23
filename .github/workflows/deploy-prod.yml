@@ -7,12 +7,13 @@ on:
 
 env:
   NODE_VERSION: 18.16.0
-  ENV: production
+  ENV: prod
   AWS_EC2_METADATA_DISABLED: true
 
 jobs:
   frontend_deploy_prod:
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     env:
       BUCKET_NAME: www.rumblefish.dev.evmdebugger
       PREFIX: evm-debugger
@@ -51,7 +52,7 @@ jobs:
         run: |
           npm run types:build
           npm run analyzer:build
-          npm run frontend:build:production
+          npm run frontend:build:prod
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -113,4 +114,4 @@ jobs:
       - name: Deploy stack
         working-directory: ./packages/infra
         run: |
-          make deploy-prod
+          make prod-deploy

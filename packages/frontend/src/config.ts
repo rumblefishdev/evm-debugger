@@ -13,19 +13,13 @@ export const environment = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const { version } = require('../package.json')
 
-export const jsonRpcProvider = {
+export const jsonRpcProvider: Record<ChainId, ethers.providers.StaticJsonRpcProvider> = {
   [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
-
   [ChainId.goerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli'),
-
   [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic'),
-
   [ChainId.mumbai]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MUMBAI_JSONRPC, 'maticmum'),
-
   [ChainId.sepolia]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_SEPOLIA_JSONRPC, 'sepolia'),
-
   [ChainId.arbitrum]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_ONE_JSONRPC, 'arbitrum'),
-
   [ChainId.arbitrumGoerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC, 'arbitrum-goerli'),
 }
 
@@ -38,5 +32,7 @@ export const chainNames = {
   [ChainId.arbitrum]: 'Arbitrum One',
   [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
 }
+
+export const supportedChainsIdList = Object.values(ChainId).filter((item) => typeof item === 'number')
 
 export const reportIssuePageUrl = 'https://github.com/rumblefishdev/evm-debugger-issues/issues/new/choose'

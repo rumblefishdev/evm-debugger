@@ -5,7 +5,7 @@ import type {
   TReturnedTraceLog,
   TSourceMapConverstionPayload,
   TStepInstrctionsMap,
-  TStepInstruction,
+  TPcIndexedStepInstructions,
   TTransactionData,
 } from '@evm-debuger/types'
 import { ethers } from 'ethers'
@@ -262,7 +262,7 @@ export class TxAnalyzer {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address]) return
+      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceCodes[address]) return
 
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
@@ -279,36 +279,28 @@ export class TxAnalyzer {
     })
 
     return dataToDecode
-      .map((payload) => {
-        const { address, contractName, opcodes, sourceMap, sourceCode } = payload
-
+      .map(({ address, contractName, bytecode, opcodes, sourceMap, sourceCode }) => {
         const parsedSourceCode = parseSourceCode(contractName, sourceCode)
-
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps)
 
-        const parsedOpcodes = opcodesConverter(opcodes)
+        const parsedOpcodes = opcodesConverter(opcodes.trim())
 
-        const result: TStepInstruction[] = convertedSourceMap.map((sourceMapEntry, index) => {
-          const { offset, length, fileId, jumpType } = sourceMapEntry
+        const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
+          const instructionId = createSourceMapIdentifier(sourceMapEntry)
+
           const { pc, opcode } = parsedOpcodes[index]
 
-          const id = createSourceMapIdentifier(sourceMapEntry)
+          accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
+          return accumulator
+        }, {} as TPcIndexedStepInstructions)
 
-          const instructionWithSource = uniqueSoruceMapsCodeLinesDictionary[id]
-
-          if (!instructionWithSource)
-            return { startCodeLine: 0, pc, opcode, offset, length, jumpType, hasSource: false, fileId, endCodeLine: 0 }
-
-          return { pc, opcode, ...instructionWithSource }
-        })
-
-        return { result, address }
+        return { instructions, address }
       })
-      .reduce((accumulator, { address, result }) => {
-        accumulator[address] = result
+      .reduce((accumulator, { address, instructions }) => {
+        accumulator[address] = instructions
         return accumulator
       }, {} as TStepInstrctionsMap)
   }

@@ -1,11 +1,13 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { hydrateRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
+import 'react-grid-layout/css/styles.css'
+import 'react-resizable/css/styles.css'
 import './fonts'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import * as Sentry from '@sentry/react'
+import './polyfills'
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'
@@ -47,8 +49,10 @@ const RenderApp = (props: { isHydrated?: boolean }) => {
   )
 }
 
+const root = createRoot(rootElement)
+
 if (rootElement.hasChildNodes()) hydrateRoot(rootElement, <RenderApp isHydrated />)
-else ReactDOM.render(<RenderApp />, rootElement)
+else root.render(<RenderApp />)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

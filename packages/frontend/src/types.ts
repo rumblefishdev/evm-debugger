@@ -28,20 +28,7 @@ export type TTreeMapData = {
 
 export type TTreeMapItemWithoutNested = Omit<TTreeMapData, 'nestedItems'>
 
-export type TOpcodeDisassemled = {
-  opcode: number
-  operand: string
-  pc: string
-}
-
-export type TBytecodes = {
-  address: string
-  bytecode: string | null
-  error: string | null
-  disassembled: TOpcodeDisassemled[] | null
-}
 export type TSourceCodes = { address: string; sourceCode: string | null }
-export type TContractNames = { address: string; contractName: string | null }
 
 export type TRawTxData = {
   txHash: string

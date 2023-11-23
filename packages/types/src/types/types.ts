@@ -1,10 +1,9 @@
 import type { ethers } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
-import type { Instruction } from 'hardhat/internal/hardhat-network/stack-traces/model'
 
-import type { IStructLog } from './structLogs'
+import type { IRawStructLog, IStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { TSourceMap } from './srcMap'
+import type { SourceFileType, TSourceMap } from './srcMap'
 
 export type TStorage = Record<string, string>
 
@@ -36,10 +35,14 @@ export type TTransactionInfo = {
   nonce: number
 }
 
-export type TTransactionTraceResult = {
+export interface TRawTransactionTraceResult {
   gas: number
   failed: boolean
   returnValue: string
+  structLogs: IRawStructLog[]
+}
+
+export interface TTransactionTraceResult extends TRawTransactionTraceResult {
   structLogs: IStructLog[]
 }
 
@@ -85,22 +88,23 @@ export type TParsedSourceMap = {
 }
 
 export type TOpcodeFromSourceMap = {
-  pc: string
+  pc: number
   opcode: string
 }
 
-export type TSourceMapCodeRepresentation = { hasSource: boolean; startCodeLine: number; endCodeLine: number }
+export type TSourceMapCodeRepresentation = { startCodeLine: number; endCodeLine: number; fileType: SourceFileType }
 
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
 export type TByteCodeMap = Record<string, string>
 export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap & TSourceMapCodeRepresentation
+export type TPcIndexedStepInstructions = Record<number, TStepInstruction>
 
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
 export type TMappedContractNames = Record<string, string>
-export type TStepInstrctionsMap = Record<string, TStepInstruction[]>
+export type TStepInstrctionsMap = Record<string, TPcIndexedStepInstructions>
 
 export type TContractData = {
   abi: TAbi

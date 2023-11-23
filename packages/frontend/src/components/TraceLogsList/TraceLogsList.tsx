@@ -6,21 +6,30 @@ import { Tooltip } from '@mui/material'
 import { useSelector } from 'react-redux'
 
 import { useTypedDispatch } from '../../store/storeHooks'
-import { StyledHeading, StyledListWrapper, StyledSmallPanel } from '../../pages/StructlogsExplorer/Panels/styles'
 import { getSignature } from '../../helpers/helpers'
 import { activeSourceFileActions } from '../../store/activeSourceFile/activeSourceFile.slice'
 import { activeBlockSelectors, getTraceLogErrorOutput } from '../../store/activeBlock/activeBlock.selector'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
-import { tracleLogsSelectors } from '../../store/traceLogs/tractLogs.selectors'
+import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
+import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 
-import { TraceLogElement, Indent, OpWrapper, StyledFailureIcon } from './styles'
+import {
+  StyledHeading,
+  StyledListWrapper,
+  StyledSmallPanel,
+  StyledHeadingWrapper,
+  TraceLogElement,
+  Indent,
+  OpWrapper,
+  StyledFailureIcon,
+} from './styles'
 
 export const TraceLogsList = (): JSX.Element => {
   const dispatch = useTypedDispatch()
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
-  const traceLogs = useSelector(tracleLogsSelectors.selectAll)
+  const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   const ref = React.useRef<HTMLDivElement>(null)
@@ -30,6 +39,7 @@ export const TraceLogsList = (): JSX.Element => {
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
+      dispatch(activeStructLogActions.setActiveStrucLog(null))
     },
     [dispatch],
   )
@@ -50,7 +60,9 @@ export const TraceLogsList = (): JSX.Element => {
   }
   return (
     <StyledSmallPanel>
-      <StyledHeading>Trace</StyledHeading>
+      <StyledHeadingWrapper>
+        <StyledHeading>Trace</StyledHeading>
+      </StyledHeadingWrapper>
       <StyledListWrapper ref={ref}>
         <ViewportList
           viewportRef={ref}

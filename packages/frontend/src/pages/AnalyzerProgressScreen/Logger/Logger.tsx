@@ -20,14 +20,13 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
       <StyledHeading variant="headingUnknown">Console info</StyledHeading>
       <StyledLogContiner ref={scrollRef}>
         {messages.map((item, index) => {
-          const { message, timestamp } = item
-          const isError = message.includes('Error')
+          const { message, timestamp, status } = item
 
           return (
             <React.Fragment key={index}>
               <StyledTimestamp>{getTime(timestamp)}:</StyledTimestamp>
               <StyledMessage
-                isError={isError}
+                status={status}
                 variant="inputText"
               >
                 {message}

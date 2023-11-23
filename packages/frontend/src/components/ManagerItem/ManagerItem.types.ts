@@ -1,7 +1,6 @@
 import type { StackProps } from '@mui/material'
-import type { ReactElement } from 'react'
 
-import type { RawDataDisplayerProps } from '../RawDataDisplayer/RawDataDisplayer.types'
+import type { TransactionContentDialogProps } from '../TransactionContentDialog'
 
 export interface ManagerItemProps extends StackProps {
   name: string
@@ -9,5 +8,5 @@ export interface ManagerItemProps extends StackProps {
   isFound: boolean
   address?: string
   updateItem: (id: string, value: string) => void
-  displayer?: (props: RawDataDisplayerProps) => ReactElement
+  contentType: TransactionContentDialogProps['contentType']
 }

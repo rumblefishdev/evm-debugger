@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { AppContainer } from '../../components/AppContainer'
 import { ROUTES } from '../../routes'
-import { useTypedSelector } from '../../store/storeHooks'
+import { analyzerSelectors } from '../../store/analyzer/analyzer.selectors'
 
 import type { AppNavigationProps } from './AppNavigation.types'
 import { StyledTab, StyledTabs } from './styles'
@@ -13,7 +14,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const location = useLocation()
   const { chainId, txHash } = useParams()
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
-  const { stages } = useTypedSelector((state) => state.analyzer)
+  const isSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
   const handleChange = (_event: React.SyntheticEvent, nextValue: ROUTES) => {
     setValue(nextValue)
   }
@@ -26,7 +27,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
   }
   return (
     <React.Fragment>
-      {stages.every((stage) => stage.isFinished) && (
+      {isSuccessfullyFinished && (
         <>
           <StyledTabs
             value={value}
@@ -44,9 +45,9 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
               onClick={() => handleTabClick(chainId && txHash ? ROUTES.TRANSACTION_SCREEN : ROUTES.TRANSACTION_SCREEN_MANUAL)}
             />
             <StyledTab
-              label="Structlog Explorer"
-              value={chainId && txHash ? convertNav(ROUTES.STRUCTLOGS_EXPLORER) : ROUTES.STRUCTLOGS_EXPLORER_MANUAL}
-              onClick={() => handleTabClick(chainId && txHash ? ROUTES.STRUCTLOGS_EXPLORER : ROUTES.STRUCTLOGS_EXPLORER_MANUAL)}
+              label="Transaction Explorer"
+              value={chainId && txHash ? convertNav(ROUTES.TRANSACTION_EXPLORER) : ROUTES.TRANSACTION_EXPLORER_MANUAL}
+              onClick={() => handleTabClick(chainId && txHash ? ROUTES.TRANSACTION_EXPLORER : ROUTES.TRANSACTION_EXPLORER_MANUAL)}
             />
           </StyledTabs>
         </>

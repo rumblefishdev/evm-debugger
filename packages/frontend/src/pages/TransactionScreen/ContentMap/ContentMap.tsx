@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import type { TTreeMapData } from '../../../types'
-import { tracleLogsSelectors } from '../../../store/traceLogs/tractLogs.selectors'
+import { traceLogsSelectors } from '../../../store/traceLogs/traceLogs.selectors'
 
 import { IntrinsicItemBox } from './blocks/IntrinsicItemBox'
 import { ItemBox } from './blocks/ItemBox'
@@ -41,7 +41,7 @@ export const ContentMap = ({ ...props }: ContentMapProps) => {
     // }
   }, [rootRef, width, height])
 
-  const traceLogs = useSelector(tracleLogsSelectors.selectAll)
+  const traceLogs = useSelector(traceLogsSelectors.selectAll)
 
   const mappedTraceLogs = React.useMemo(() => generateTraceLogsMap(traceLogs, { width, height }), [traceLogs, width, height])
 

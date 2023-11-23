@@ -1,8 +1,20 @@
-import type { IStructLog } from '@evm-debuger/types'
+import type { ChainId, TransactionTraceResponseStatus } from '@evm-debuger/types'
 
-import type { IExtendedStructLog } from '../../types'
+export type TFetchStructlogsPayload = {
+  s3Location: string
+}
 
-export type TStructlogsSlice = {
-  activeStructLog: IExtendedStructLog | null
-  structLogs: IStructLog[]
+export type TFetchStructlogsLocationPayload = {
+  transactionHash: string
+  chainId: ChainId
+}
+
+export type TStructlogResponse = {
+  chainId: ChainId
+  s3Location?: string
+  status: TransactionTraceResponseStatus
+  timestamp: string
+  txHash: string
+  'type#time': string
+  errorDetails?: string
 }

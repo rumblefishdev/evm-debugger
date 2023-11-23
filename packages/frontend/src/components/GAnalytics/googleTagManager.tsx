@@ -11,6 +11,7 @@ declare global {
 }
 
 export const changeGTagPageview = () => {
+  if (window.dataLayer === undefined) return
   window.dataLayer.push({
     page: new URL(window.location.href),
     event: 'pageview',

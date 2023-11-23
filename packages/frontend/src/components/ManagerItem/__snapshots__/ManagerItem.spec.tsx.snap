@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ManagerItem tests simple render 1`] = `
-[
+Array [
   <style
     dangerouslySetInnerHTML={
-      {
+      Object {
         "__html": ".css-5bbpg0{width:100%;padding:28px 32px;max-width:764px;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;gap:32px;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box;border:1px solid undefined;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}",
       }
     }
@@ -12,27 +12,27 @@ exports[`ManagerItem tests simple render 1`] = `
   />,
   <style
     dangerouslySetInnerHTML={
-      {
+      Object {
         "__html": ".css-1xwjwa8-MuiStack-root{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;width:100%;padding:28px 32px;max-width:764px;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;gap:32px;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box;border:1px solid undefined;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}",
       }
     }
     data-emotion="css 1xwjwa8-MuiStack-root"
   />,
   <div
-    className="css-1xwjwa8-MuiStack-root"
+    className="MuiStack-root css-1xwjwa8-MuiStack-root"
   >
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-3hfi54{padding:8px 16px;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
+        Object {
+          "__html": ".css-3hfi54{padding:8px 16px;font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
         }
       }
       data-emotion="css 3hfi54"
     />
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-amio4c-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;padding:8px 16px;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
+        Object {
+          "__html": ".css-amio4c-MuiTypography-root{margin:0;font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;padding:8px 16px;font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:400;font-size:0.75rem;line-height:1.66;letter-spacing:0.03333em;width:100%;max-width:80px;border-radius:21px;}",
         }
       }
       data-emotion="css amio4c-MuiTypography-root"
@@ -44,7 +44,7 @@ exports[`ManagerItem tests simple render 1`] = `
     </p>
     <style
       dangerouslySetInnerHTML={
-        {
+        Object {
           "__html": ".css-1us7b4i{width:100%;max-width:585px;}",
         }
       }
@@ -52,8 +52,8 @@ exports[`ManagerItem tests simple render 1`] = `
     />
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-9tbx7m-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;width:100%;max-width:585px;}",
+        Object {
+          "__html": ".css-9tbx7m-MuiTypography-root{margin:0;font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;width:100%;max-width:585px;}",
         }
       }
       data-emotion="css 9tbx7m-MuiTypography-root"
@@ -75,46 +75,68 @@ exports[`ManagerItem tests simple render 1`] = `
     </p>
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-pnutvq-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
+        Object {
+          "__html": ".css-pnutvq-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"bottom\\"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"bottom\\"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"top\\"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"top\\"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"right\\"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"right\\"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"left\\"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-pnutvq-MuiTooltip-popper[data-popper-placement*=\\"left\\"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
         }
       }
       data-emotion="css pnutvq-MuiTooltip-popper"
     />
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-viryjt-MuiPopper-root-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="top"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="right"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*="left"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
+        Object {
+          "__html": ".css-viryjt-MuiPopper-root-MuiTooltip-popper{z-index:1500;pointer-events:none;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"bottom\\"] .MuiTooltip-arrow{top:0;margin-top:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"bottom\\"] .MuiTooltip-arrow::before{transform-origin:0 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"top\\"] .MuiTooltip-arrow{bottom:0;margin-bottom:-0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"top\\"] .MuiTooltip-arrow::before{transform-origin:100% 0;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"right\\"] .MuiTooltip-arrow{left:0;margin-left:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"right\\"] .MuiTooltip-arrow::before{transform-origin:100% 100%;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"left\\"] .MuiTooltip-arrow{right:0;margin-right:-0.71em;height:1em;width:0.71em;}.css-viryjt-MuiPopper-root-MuiTooltip-popper[data-popper-placement*=\\"left\\"] .MuiTooltip-arrow::before{transform-origin:0 0;}",
         }
       }
       data-emotion="css viryjt-MuiPopper-root-MuiTooltip-popper"
     />
     <style
       dangerouslySetInnerHTML={
-        {
-          "__html": ".css-1dkn99d{outline:none;cursor:pointer;border:none;font-weight:600;font-size:14px;font-family:Rajdhani;background-color:unset;}",
+        Object {
+          "__html": ".css-15b6xal .MuiButton-text{font-weight:600;font-size:14px;font-family:Rajdhani;background-color:unset;}.css-15b6xal .MuiButton-root{outline:none;cursor:pointer;border:none;}.css-15b6xal .MuiButton-outlined{border-radius:32px;border:1px solid undefined;background-color:unset;}.css-15b6xal .MuiButton-contained{border-radius:32px;}.css-15b6xal.MuiButton-sizeSmall{padding:8px 16px;}.css-15b6xal.MuiButton-sizeMedium{padding:16px 32px;}.css-15b6xal.MuiButton-sizeLarge{padding:24px 48px;}",
         }
       }
-      data-emotion="css 1dkn99d"
+      data-emotion="css 15b6xal"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": ".css-1c31kny-MuiButton-root{font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:500;font-size:0.875rem;line-height:1.75;letter-spacing:0.02857em;text-transform:uppercase;min-width:64px;padding:6px 8px;border-radius:4px;-webkit-transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color:#1976d2;box-shadow:none;}.css-1c31kny-MuiButton-root:hover{-webkit-text-decoration:none;text-decoration:none;background-color:rgba(25, 118, 210, 0.04);}@media (hover: none){.css-1c31kny-MuiButton-root:hover{background-color:transparent;}}.css-1c31kny-MuiButton-root.Mui-disabled{color:rgba(0, 0, 0, 0.26);}.css-1c31kny-MuiButton-root:hover{box-shadow:none;}.css-1c31kny-MuiButton-root.Mui-focusVisible{box-shadow:none;}.css-1c31kny-MuiButton-root:active{box-shadow:none;}.css-1c31kny-MuiButton-root.Mui-disabled{box-shadow:none;}.css-1c31kny-MuiButton-root .MuiButton-text{font-weight:600;font-size:14px;font-family:Rajdhani;background-color:unset;}.css-1c31kny-MuiButton-root .MuiButton-root{outline:none;cursor:pointer;border:none;}.css-1c31kny-MuiButton-root .MuiButton-outlined{border-radius:32px;border:1px solid undefined;background-color:unset;}.css-1c31kny-MuiButton-root .MuiButton-contained{border-radius:32px;}.css-1c31kny-MuiButton-root.MuiButton-sizeSmall{padding:8px 16px;}.css-1c31kny-MuiButton-root.MuiButton-sizeMedium{padding:16px 32px;}.css-1c31kny-MuiButton-root.MuiButton-sizeLarge{padding:24px 48px;}",
+        }
+      }
+      data-emotion="css 1c31kny-MuiButton-root"
+    />
+    <style
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": ".css-10z6bag-MuiButtonBase-root-MuiButton-root{display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;position:relative;box-sizing:border-box;-webkit-tap-highlight-color:transparent;background-color:transparent;outline:0;border:0;margin:0;border-radius:0;padding:0;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;-moz-appearance:none;-webkit-appearance:none;-webkit-text-decoration:none;text-decoration:none;color:inherit;font-family:\\"Roboto\\",\\"Helvetica\\",\\"Arial\\",sans-serif;font-weight:500;font-size:0.875rem;line-height:1.75;letter-spacing:0.02857em;text-transform:uppercase;min-width:64px;padding:6px 8px;border-radius:4px;-webkit-transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;color:#1976d2;box-shadow:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root::-moz-focus-inner{border-style:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.Mui-disabled{pointer-events:none;cursor:default;}@media print{.css-10z6bag-MuiButtonBase-root-MuiButton-root{-webkit-print-color-adjust:exact;color-adjust:exact;}}.css-10z6bag-MuiButtonBase-root-MuiButton-root:hover{-webkit-text-decoration:none;text-decoration:none;background-color:rgba(25, 118, 210, 0.04);}@media (hover: none){.css-10z6bag-MuiButtonBase-root-MuiButton-root:hover{background-color:transparent;}}.css-10z6bag-MuiButtonBase-root-MuiButton-root.Mui-disabled{color:rgba(0, 0, 0, 0.26);}.css-10z6bag-MuiButtonBase-root-MuiButton-root:hover{box-shadow:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.Mui-focusVisible{box-shadow:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root:active{box-shadow:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.Mui-disabled{box-shadow:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root .MuiButton-text{font-weight:600;font-size:14px;font-family:Rajdhani;background-color:unset;}.css-10z6bag-MuiButtonBase-root-MuiButton-root .MuiButton-root{outline:none;cursor:pointer;border:none;}.css-10z6bag-MuiButtonBase-root-MuiButton-root .MuiButton-outlined{border-radius:32px;border:1px solid undefined;background-color:unset;}.css-10z6bag-MuiButtonBase-root-MuiButton-root .MuiButton-contained{border-radius:32px;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.MuiButton-sizeSmall{padding:8px 16px;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.MuiButton-sizeMedium{padding:16px 32px;}.css-10z6bag-MuiButtonBase-root-MuiButton-root.MuiButton-sizeLarge{padding:24px 48px;}",
+        }
+      }
+      data-emotion="css 10z6bag-MuiButtonBase-root-MuiButton-root"
     />
     <button
-      className="MuiButton-root css-1dkn99d"
+      className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-disableElevation MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-disableElevation css-10z6bag-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
       onBlur={[Function]}
       onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
       onMouseDown={[Function]}
       onMouseLeave={[Function]}
       onMouseUp={[Function]}
-      sx={{}}
-      variant="text"
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="button"
     >
       Add
     </button>
     <style
       dangerouslySetInnerHTML={
-        {
+        Object {
           "__html": "@media print{.css-1pivxxs-MuiDialog-root{position:absolute!important;}}",
         }
       }

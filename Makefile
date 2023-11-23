@@ -19,6 +19,11 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
+#%% Run
+.PHONY: run-frontend
+run-frontend: #% Run frontend
+	cd packages/frontend && npm run start
+
 #%% Utils commands
 .PHONY: bootstrap
 bootstrap: #% Project bootstrap

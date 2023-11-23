@@ -24,6 +24,12 @@ export enum SrcMapStatus {
   SUCCESS = 'SUCCESS',
 }
 
+export enum SourceFileType {
+  SOLIDITY = 'SOLIDITY',
+  VYPER = 'VYPER',
+  YUL = 'YUL',
+}
+
 export type TSrcMapAddres = {
   address: string
   chainId: ChainId
@@ -63,9 +69,9 @@ export type TEtherscanContractSourceCodeResult = {
 export type TEtherscanParsedSourceCode = {
   language: string
   settings: {
-    evmVersion: string
-    libraries: Record<string, string>
-    metadata: {
+    evmVersion?: string
+    libraries?: Record<string, string>
+    metadata?: {
       bytecodeHash: string
       useLiteralContent: boolean
     }
@@ -73,7 +79,8 @@ export type TEtherscanParsedSourceCode = {
       enabled: boolean
       runs: number
     }
-    remappings: string[]
+    remappings?: string[]
+    viaIR?: boolean
   }
   sources: Record<string, { content: string }>
 }
