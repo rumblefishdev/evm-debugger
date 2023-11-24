@@ -44,9 +44,9 @@ Resources:
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
-        DomainName: !Ref FrontendBucketName
+        DomainName: "stage-front.evmdebugger.rumblefish.dev"
+        CustomBucketName: !Ref FrontendBucketName
         ExternalCloudFrontOriginAccessIdentity: !Ref FrontendExternalCloudFrontOriginAccessIdentity
-
 
   TransactionTraceService:
     Type: AWS::Serverless::Application

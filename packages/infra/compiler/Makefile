@@ -5,7 +5,7 @@
 ###############################################
 
 REGION=us-east-1
-ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
+ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.evmdebugger.rumblefish.com
 CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 S3_VERSION=current
 ARTIFACT_NAME=template.zip

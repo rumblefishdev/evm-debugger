@@ -1,11 +1,20 @@
 Parameters:
   DomainName:
     Type: String
+  CustomBucketName:
+    Type: String
+    Default: ""
   CertificateArn:
     Type: String
   HostedZoneId:
     Type: String
   DefaultObject:
+    Type: String
+    Default: "/index.html"
+  NotFoundObject:
+    Type: String
+    Default: "/index.html"
+  NotPermittedObject:
     Type: String
     Default: "/index.html"
   Prefix:
@@ -18,13 +27,14 @@ Parameters:
 
 Conditions:
   ShouldCreateCloudFront: !Equals [!Ref ExternalCloudFrontOriginAccessIdentity, ""]
+  HasCustomBucketName: !Not [!Equals [!Ref CustomBucketName, ""]]
 
 Resources:
   FrontendBucket:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: Private
-      BucketName: !Ref DomainName
+      BucketName: !If [HasCustomBucketName, !Ref CustomBucketName, !Ref DomainName]
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
@@ -99,15 +109,14 @@ Resources:
           - ErrorCachingMinTTL: 86000
             ErrorCode: 403
             ResponseCode: 200
-            ResponsePagePath: !Ref DefaultObject
+            ResponsePagePath: !Ref NotPermittedObject
           - ErrorCachingMinTTL: 86000
             ErrorCode: 404
             ResponseCode: 200
-            ResponsePagePath: !Ref DefaultObject
+            ResponsePagePath: !Ref NotFoundObject
 
   FrontendAllowFromCloudFrontBucketPolicy:
     Type: AWS::S3::BucketPolicy
-    Condition: ShouldCreateCloudFront
     Properties:
       Bucket:
         Ref: FrontendBucket

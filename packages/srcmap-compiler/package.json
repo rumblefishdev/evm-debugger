@@ -11,6 +11,8 @@
     "@sentry/serverless": "^7.51.0",
     "aws-sdk": "^2.1378.0",
     "node-fetch": "^3.3.1",
+    "solcv0.8.23": "npm:solc@~0.8.23-fixed",
+    "solcv0.8.22": "npm:solc@~0.8.22",
     "solcv0.8.21": "npm:solc@~0.8.21",
     "solcv0.8.20": "npm:solc@~0.8.20",
     "solcv0.8.19": "npm:solc@~0.8.19",
