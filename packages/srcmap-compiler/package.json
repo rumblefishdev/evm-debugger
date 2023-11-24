@@ -100,7 +100,7 @@
   },
   "scripts": {
     "build": "esbuild src/* --sourcemap --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
-    "unit": "jest",
+    "unit": "jest --passWithNoTests",
     "unit-watch": "jest --watch",
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",
     "lint:fix": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts' --fix",
