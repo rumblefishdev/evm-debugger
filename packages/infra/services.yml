@@ -243,7 +243,7 @@ Resources:
         - AttributeName: timestamp
           AttributeType: N
         - AttributeName: chainId
-          AttributeType: N
+          AttributeType: S
         - AttributeName: status
           AttributeType: S
       KeySchema:

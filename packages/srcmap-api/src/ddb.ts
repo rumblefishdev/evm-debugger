@@ -31,7 +31,7 @@ export const getDdbContractInfo = async (
     KeyConditionExpression: 'address = :address',
     FilterExpression: 'chainId = :chainId',
     ExpressionAttributeValues: {
-      ':chainId': { N: chainId.toString() },
+      ':chainId': { S: chainId.toString() },
       ':address': { S: address },
     },
   }
@@ -39,16 +39,16 @@ export const getDdbContractInfo = async (
   const command = new QueryCommand(params)
   const result: QueryCommandOutput = await dynamoDbClient.send(command)
   const items: ISrcMapApiPayload[] | undefined = (result.Items || []).map(
-    (item: Record<string, { N: string; S: string; SS: string[] }>) => ({
+    (item: Record<string, { N: string; S: string; L: { S: string }[] }>) => ({
       timestamp: parseInt(item.timestamp.N, 10),
       status: item.status.S as SrcMapStatus,
-      pathSourceMaps: item.pathSourceMaps?.SS || [],
-      pathSourceFiles: item.pathSourceFiles?.SS || [],
+      pathSourceMaps: item.pathSourceMaps?.L?.map((map) => map.S) || [],
+      pathSourceFiles: item.pathSourceFiles?.L?.map((file) => file.S) || [],
       pathSourceData: item.pathSourceData?.S || '',
       pathCompilatorSettings: item.pathCompilatorSettings?.S || '',
       message: item.message?.S || '',
       compilerVersion: item.compilerVersion?.S || '',
-      chainId: parseInt(item.chainId.N, 10) as ChainId,
+      chainId: parseInt(item.chainId.S, 10) as ChainId,
       address: item.address.S,
     }),
   )
@@ -72,7 +72,10 @@ export const setDdbContractInfo = async (
   }
   const params: PutCommandInput = {
     TableName: process.env.SRCMAP_CONTRACTS_TABLE_NAME,
-    Item: item,
+    Item: {
+      ...item,
+      chainId: String(item.chainId),
+    },
   }
   const command = new PutCommand(params)
   await dynamoDbClient.send(command)

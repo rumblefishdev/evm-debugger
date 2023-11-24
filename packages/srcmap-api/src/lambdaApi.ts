@@ -48,14 +48,19 @@ export const addressesProcessing = async (
       SrcMapStatus.FILES_EXTRACTING_FAILED,
     ].includes(payload.status)
   ) {
-    return triggerFetchSourceCode(payload)
+    console.log(payload.address, '/Queuing Contract Fetch/Initialing')
+    payload = await triggerFetchSourceCode(payload)
   }
 
+  console.log(payload.address, '/Payload', JSON.stringify(payload, null, 2))
   if (
     payload.compilerVersion &&
+    payload.pathSourceData &&
+    payload.pathSourceFiles &&
     [SrcMapStatus.FILES_EXTRACTING_SUCCESS].includes(payload.status)
   ) {
-    return triggerSourceMapCompiler(payload)
+    console.log(payload.address, '/Compiler Trigger/Initialing')
+    payload = await triggerSourceMapCompiler(payload)
   }
 
   console.log(contractAddressObj.address, '/Processing/Done')

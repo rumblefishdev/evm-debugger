@@ -24,25 +24,25 @@ const ssm = new SSMClient({ region: AWS_REGION })
 const lambda = new LambdaClient({ region: AWS_REGION })
 
 export const triggerFetchSourceCode = async (
-  contractInfo: ISrcMapApiPayload,
+  payload: ISrcMapApiPayload,
 ): Promise<ISrcMapApiPayload> => {
-  console.log(contractInfo.address, '/Queuing Contract Fetch/Start')
+  console.log(payload.address, '/Queuing Contract Fetch/Start')
   try {
-    await putContractToDownloadSqs(contractInfo.address, contractInfo.chainId)
+    await putContractToDownloadSqs(payload.address, payload.chainId)
   } catch (error) {
     const message = '/Queuing Contract Fetch/Failed'
     captureMessage(message, 'error')
-    console.warn(contractInfo.address, message)
+    console.warn(payload.address, message)
 
     return setDdbContractInfo({
-      ...contractInfo,
+      ...payload,
       status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_FAILED,
       message,
     })
   }
 
   return setDdbContractInfo({
-    ...contractInfo,
+    ...payload,
     status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_SUCCESS,
   })
 }
