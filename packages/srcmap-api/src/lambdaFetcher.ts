@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AWSLambda, captureMessage } from '@sentry/serverless'
+import type { Handler, SQSEvent } from 'aws-lambda'
 import type {
   ISrcMapApiPayload,
   TSrcMapAddres,
   TEtherscanContractSourceCodeResp,
   TEtherscanParsedSourceCode,
+  ChainId,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -140,8 +142,6 @@ const extractFiles = async (
   try {
     const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
 
-    console.log('sourceCodeObj', sourceCodeObj)
-
     if (!sourceCodeObj.sources) {
       const message = "/Extract Files/Can't find source files"
       console.warn(payload.address, message)
@@ -187,16 +187,29 @@ const extractFiles = async (
   }
 }
 
-export const srcmapFetcherHandler = async (addressObj: TSrcMapAddres) => {
-  let payload = await getDdbContractInfo(addressObj.chainId, addressObj.address)
+export const srcmapFetcherHandler = async (event: SQSEvent) => {
+  const records = event.Records
+  if (!records || records.length === 0) {
+    console.warn('No records')
+    return
+  }
+  const address = records[0].messageAttributes.address.stringValue!
+  const chainId = parseInt(
+    records[0].messageAttributes.chainId.stringValue!,
+    10,
+  )
+
+  console.log(address, '/Handler/Start')
+  let payload = await getDdbContractInfo(chainId, address)
 
   if (!payload) {
     payload = await setDdbContractInfo({
       status: SrcMapStatus.SOURCE_DATA_FETCHING_PENDING,
-      chainId: addressObj.chainId,
-      address: addressObj.address,
+      chainId,
+      address,
     })
   }
+
   const fetcherPyload = await fetchSourceData(payload)
   if (
     fetcherPyload.sourceData &&
