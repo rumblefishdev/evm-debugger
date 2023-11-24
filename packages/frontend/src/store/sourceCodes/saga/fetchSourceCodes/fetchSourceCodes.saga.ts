@@ -95,23 +95,6 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
     const sources: TContractsSources = yield* call(fetchSourceCodes, contractsData)
     console.log('Debug, sources:', sources)
 
-    // const sources: TContractsSources = Object.entries(contractsData).reduce((accumulator: TContractsSources, [address, current]) => {
-    //   if (current.status !== SrcMapStatus.COMPILATION_SUCCESS) {
-    //     return accumulator
-    //   }
-    //   accumulator[address] = {
-    //     srcMap: [],
-    //     sourceCode: '',
-    //     contractName: '',
-    //     abi: [],
-    //     // srcMap: current.sourceMaps,
-    //     // sourceCode: current.sourceData.SourceCode,
-    //     // contractName: current.sourceData.ContractName,
-    //     // abi: current.sourceData.ABI,
-    //   }
-    //   return accumulator
-    // }, {})
-
     if (responseBody.status === SrcMapStatus.SUCCESS) {
       yield* put(abisActions.addAbis(Object.entries(sources).map(([address, current]) => ({ address, abi: current.abi }))))
 
