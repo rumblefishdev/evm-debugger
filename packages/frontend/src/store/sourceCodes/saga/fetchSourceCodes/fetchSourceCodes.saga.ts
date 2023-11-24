@@ -1,6 +1,6 @@
-import { select, type SagaGenerator, call, put, delay } from 'typed-redux-saga'
+import { select, type SagaGenerator, call, put } from 'typed-redux-saga'
 import { SrcMapStatus } from '@evm-debuger/types'
-import type { TEtherscanContractSourceCodeResult, ISrcMapApiPayload, ISrcMapApiResponseBody, ChainId, TSourceMap } from '@evm-debuger/types'
+import type { TEtherscanContractSourceCodeResult, ISrcMapApiResponseBody, ChainId, TSourceMap } from '@evm-debuger/types'
 
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { srcMapProviderUrl } from '../../../../config'
