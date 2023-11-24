@@ -8,7 +8,8 @@ import { AWSLambda, captureException } from '@sentry/serverless'
 import { version } from '../package.json'
 
 import { createResponse } from './wrappers'
-import { addressesProcessing } from './helpers'
+import { getDdbContractInfo, setDdbContractInfo } from './ddb'
+import { triggerFetchSourceCode, triggerSourceMapCompiler } from './triggers'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -17,6 +18,54 @@ AWSLambda.init({
   dsn: process.env.SENTRY_DSN,
 })
 AWSLambda.setTag('lambda_name', 'srcmap-api')
+
+export const addressesProcessing = async (
+  contractAddressObj: TSrcMapAddres,
+): Promise<ISrcMapApiPayload> => {
+  console.log(contractAddressObj.address, '/Processing/Start')
+
+  let payload = await getDdbContractInfo(
+    contractAddressObj.chainId,
+    contractAddressObj.address,
+  )
+
+  if (!payload) {
+    console.log(contractAddressObj.address, '/Processing/Creating new record')
+    payload = await setDdbContractInfo({
+      status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_PENDING,
+      chainId: contractAddressObj.chainId,
+      address: contractAddressObj.address,
+    })
+  } else {
+    console.log(contractAddressObj.address, '/Processing/Found record')
+  }
+
+  if (
+    [
+      SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_PENDING,
+      SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_FAILED,
+      SrcMapStatus.SOURCE_DATA_FETCHING_FAILED,
+      SrcMapStatus.FILES_EXTRACTING_FAILED,
+    ].includes(payload.status)
+  ) {
+    console.log(payload.address, '/Queuing Contract Fetch/Initialing')
+    payload = await triggerFetchSourceCode(payload)
+  }
+
+  console.log(payload.address, '/Payload', JSON.stringify(payload, null, 2))
+  if (
+    payload.compilerVersion &&
+    payload.pathSourceData &&
+    payload.pathSourceFiles &&
+    [SrcMapStatus.FILES_EXTRACTING_SUCCESS].includes(payload.status)
+  ) {
+    console.log(payload.address, '/Compiler Trigger/Initialing')
+    payload = await triggerSourceMapCompiler(payload)
+  }
+
+  console.log(contractAddressObj.address, '/Processing/Done')
+  return payload
+}
 
 export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
   let addresses: TSrcMapAddres[] = []
