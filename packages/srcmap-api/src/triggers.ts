@@ -56,22 +56,23 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
   })
 
   if (!payload.pathSourceData) {
-    const msg = '/Compiler Trigger/No source data found'
-    console.warn(payload.address, msg)
+    const message = '/Compiler Trigger/No source data found'
+    console.warn(payload.address, message)
     return setDdbContractInfo({
       ...payload,
       status: SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED,
-      message: msg,
+      message,
     })
   }
 
   if (!payload.compilerVersion) {
-    const msg = '/Compiler Trigger/No compiler version found'
-    console.warn(payload.address, msg)
+    const message = '/Compiler Trigger/No compiler version found'
+    console.warn(payload.address, message)
+    captureMessage(message, 'error')
     return setDdbContractInfo({
       ...payload,
       status: SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED,
-      message: msg,
+      message,
     })
   }
 
