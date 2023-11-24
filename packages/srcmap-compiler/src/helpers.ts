@@ -251,7 +251,7 @@ export const compileFiles = async (
   console.log(_payload.address, '/Compilation/Done')
   const pathSourceMaps = await Promise.all(
     sourceMaps.map(async (sourceMap) => {
-      const path = `contracts/${_payload.chainId}/${_payload.address}/source_maps/${sourceMap.fileName}`
+      const path = `contracts/${_payload.chainId}/${_payload.address}/source_maps/${sourceMap.fileName}_${sourceMap.contractName}`
       await s3upload({
         Key: path,
         Bucket: BUCKET_NAME,
