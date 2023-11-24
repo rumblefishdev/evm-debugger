@@ -1,4 +1,4 @@
-import type { TAbi, TSourceMap } from '@evm-debuger/types'
+import type { TAbi, TSourceMap, ISrcMapApiPayload } from '@evm-debuger/types'
 
 export type TContractsSources = Record<
   string,
@@ -9,3 +9,5 @@ export type TContractsSources = Record<
     srcMap: TSourceMap[]
   }
 >
+
+export type TRawContractsData = Record<string, ISrcMapApiPayload>
