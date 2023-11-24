@@ -42,6 +42,7 @@ export const StyledMessage = styled(Typography, {
     color: theme.palette.rfSecondary,
   }),
   ...(status === LogMessageStatus.SUCCESS && {
+    fontWeight: 700,
     color: theme.palette.rfSuccess,
   }),
   ...(status === LogMessageStatus.WARNING && {
