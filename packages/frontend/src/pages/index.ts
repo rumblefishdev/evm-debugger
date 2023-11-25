@@ -1,5 +1,5 @@
 export { StartingScreen } from './StartingScreen/Pages'
 export { AnalyzeSummary } from './AnalyzeSummary/AnalyzeSummary'
+export { AppRoot } from './AppRoot/AppRoot'
 
-export { AnalyzerProgressScreen } from './AnalyzerProgressScreen/AnalyzerProgressScreen'
 export { TranscationScreen } from './TransactionScreen/TranscationScreen'

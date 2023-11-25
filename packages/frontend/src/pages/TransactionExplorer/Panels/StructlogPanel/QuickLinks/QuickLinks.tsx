@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+// import { useRef, useState } from 'react'
 // import type { ReactElement } from 'react'
 // import ViewportList from 'react-viewport-list'
 // import type { ViewportListRef } from 'react-viewport-list'
@@ -6,17 +6,18 @@ import { useRef, useState } from 'react'
 // import type { TReturnedTraceLog } from '@evm-debuger/types'
 // import { useSelector } from 'react-redux'
 
+import type { IExtendedStructLog } from '../../../../../types'
+
 // import { StyledListWrapper } from '../../styles'
 // import { ExplorerListRow } from '../../../../../components/ExplorerListRow'
-// import type { IExtendedStructLog } from '../../../../../types'
 // import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 // import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 // import { StyledCollapse, StyledInput, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from '../styles'
 
-// export type QuickLinksProps = {
-//   isOpen: boolean
-//   selectStructLog: (structLog: IExtendedStructLog) => void
-// }
+export type QuickLinksProps = {
+  isOpen: boolean
+  selectStructLog: (structLog: IExtendedStructLog) => void
+}
 
 // export function QuickLinks({ selectStructLog, isOpen }: QuickLinksProps): ReactElement {
 //   const [gasThreshold, setGasThreshold] = useState(1000)

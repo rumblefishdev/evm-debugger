@@ -9,16 +9,11 @@ import { transactionConfigReducer } from '../../../transactionConfig/transaction
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { TransactionInfoState } from '../../transactionInfo.state'
-import { AnalyzerState } from '../../../analyzer/analyzer.state'
+import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
-import {
-  createLogMessageActionForTests,
-  mockLogsInAnalyer,
-  testLogMessages,
-  updateAnalyzerStageStatus,
-} from '../../../../helpers/sagaTests'
+import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import type { TEthersTransactionReposnse } from '../../transactionInfo.types'
 
@@ -58,16 +53,16 @@ describe('fetchTransactionInfoSaga', () => {
 
     const addFirstLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(firstLogMessage))
     const addSecondLogAction = createLogMessageActionForTests(analyzerActions.addLogMessage(secondLogMessage))
+
     const expectedState = {
+      ...initialState,
       [StoreKeys.TRANSACTION_INFO]: formatTransactionReposne(transactionInfo),
-      [StoreKeys.TRANSACTION_CONFIG]: initialState[StoreKeys.TRANSACTION_CONFIG],
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
-        stages: updateAnalyzerStageStatus(
-          AnalyzerStages.FETCHING_TRANSACTION_INFO,
-          AnalyzerStagesStatus.SUCCESS,
-          initialState[StoreKeys.ANALYZER],
-        ),
+        stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
+          id: AnalyzerStages.FETCHING_TRANSACTION_INFO,
+          changes: successStage,
+        }),
         logMessages: mockLogsInAnalyer(),
       },
     }

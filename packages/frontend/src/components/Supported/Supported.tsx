@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ChainId } from '@evm-debuger/types'
 
 import { ROUTES } from '../../routes'
 import { DebuggerProcessButton } from '../DebuggerProcessButton'

@@ -1,5 +1,5 @@
-import { select, type SagaGenerator, apply, put } from 'typed-redux-saga'
-import type { TTransactionData } from '@evm-debuger/types'
+import { select, type SagaGenerator, put, call } from 'typed-redux-saga'
+import type { IStructLog, TTransactionData, TTransactionInfo } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 
 import { transactionInfoSelectors } from '../../../transactionInfo/transactionInfo.selectors'
@@ -11,6 +11,22 @@ import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 
+export function gatherContractsInformations(transactionInfo: TTransactionInfo, structLogs: IStructLog[]) {
+  const analyzerPayload: TTransactionData = {
+    transactionInfo,
+    structLogs,
+    sourceMaps: {},
+    sourceCodes: {},
+    contractNames: {},
+    bytecodeMaps: {},
+    abis: {},
+  }
+  const analyzer = new TxAnalyzer(analyzerPayload)
+  const { analyzeSummary } = analyzer.analyze()
+
+  return analyzeSummary
+}
+
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   try {
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Gathering contracts information')))
@@ -20,20 +36,11 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
         stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION,
       }),
     )
+
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
     const structLogs = yield* select(structlogsSelectors.selectAll)
 
-    const analyzerPayload: TTransactionData = {
-      transactionInfo,
-      structLogs,
-      sourceMaps: {},
-      sourceCodes: {},
-      contractNames: {},
-      bytecodeMaps: {},
-      abis: {},
-    }
-    const analyzer = new TxAnalyzer(analyzerPayload)
-    const { analyzeSummary } = yield* apply(analyzer, analyzer.analyze, [])
+    const analyzeSummary = yield* call(gatherContractsInformations, transactionInfo, structLogs)
 
     const { contractAddresses, contractSighashesInfo } = analyzeSummary
 

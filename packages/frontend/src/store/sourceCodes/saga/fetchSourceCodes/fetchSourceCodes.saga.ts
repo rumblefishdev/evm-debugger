@@ -1,5 +1,6 @@
 import { select, type SagaGenerator, call, put } from 'typed-redux-saga'
-import { SrcMapStatus, type ChainId, type ISrcMapApiPayload, type ISrcMapApiResponseBody } from '@evm-debuger/types'
+import { SrcMapStatus } from '@evm-debuger/types'
+import type { TEtherscanContractSourceCodeResult, ISrcMapApiResponseBody, ChainId, TSourceMap } from '@evm-debuger/types'
 
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { srcMapProviderUrl } from '../../../../config'
@@ -9,11 +10,11 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
-import type { TContractsSources } from '../../sourceCodes.types'
+import type { TContractsSources, TRawContractsData } from '../../sourceCodes.types'
 import { abisActions } from '../../../abis/abis.slice'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
-async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
+async function fetchSourceCodesRouterApi(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
   const stringifiedBody = JSON.stringify({ addresses: bodyContent })
 
@@ -37,6 +38,43 @@ async function fetchSourceCodes(chainId: ChainId, addresses: string[]): Promise<
   return sourceMapsResponse
 }
 
+async function fetchSourceCodes(rawContractsData: TRawContractsData): Promise<TContractsSources> {
+  const bucket = 'transaction-trace-storage-stage.rumblefish.dev'
+  return Object.entries(rawContractsData).reduce(async (accumulator: Promise<TContractsSources>, [address, current]) => {
+    let sourceData: TEtherscanContractSourceCodeResult | undefined
+    let sourceMaps: TSourceMap[] | undefined
+    // if (current.status !== SrcMapStatus.COMPILATION_SUCCESS) {
+    //   return accumulator
+    // }
+    if (current.pathSourceData) {
+      const rawSourceData = await fetch(`https://${bucket}/${current.pathSourceData}`)
+      sourceData = await rawSourceData.json()
+    }
+
+    if (current.pathSourceMaps) {
+      sourceMaps = await Promise.all(
+        current.pathSourceMaps.map(async (pathSourceMap) => {
+          const rawSourceMap = await fetch(`https://${bucket}/${pathSourceMap}`)
+          const sourceMap: TSourceMap = await rawSourceMap.json()
+          return sourceMap
+        }),
+      )
+    }
+
+    const contractSource = {
+      srcMap: sourceMaps || [],
+      sourceCode: sourceData?.SourceCode || '',
+      contractName: sourceData?.ContractName || '',
+      abi: sourceData?.ABI || [],
+    }
+
+    const resolvedAccumulator: TContractsSources = await accumulator
+    resolvedAccumulator[address] = contractSource
+
+    return resolvedAccumulator
+  }, Promise.resolve({}))
+}
+
 export function* fetchSourceCodesSaga(): SagaGenerator<void> {
   try {
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Fetching source codes')))
@@ -51,21 +89,11 @@ export function* fetchSourceCodesSaga(): SagaGenerator<void> {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
 
-    const responseBody = yield* call(fetchSourceCodes, chainId, contractAddresses)
-    const contractsData: Record<string, ISrcMapApiPayload> = responseBody.data
-
-    const sources: TContractsSources = Object.entries(contractsData).reduce((accumulator: TContractsSources, [address, current]) => {
-      if (current.status !== SrcMapStatus.COMPILATION_SUCCESS) {
-        return accumulator
-      }
-      accumulator[address] = {
-        srcMap: current.sourceMaps,
-        sourceCode: current.sourceData.SourceCode,
-        contractName: current.sourceData.ContractName,
-        abi: current.sourceData.ABI,
-      }
-      return accumulator
-    }, {})
+    // Initiall call
+    const responseBody = yield* call(fetchSourceCodesRouterApi, chainId, contractAddresses)
+    const contractsData: TRawContractsData = responseBody.data
+    const sources: TContractsSources = yield* call(fetchSourceCodes, contractsData)
+    console.log('Debug, sources:', sources)
 
     if (responseBody.status === SrcMapStatus.SUCCESS) {
       yield* put(abisActions.addAbis(Object.entries(sources).map(([address, current]) => ({ address, abi: current.abi }))))

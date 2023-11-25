@@ -1,7 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import type { TLogMessageRecord } from '../store/analyzer/analyzer.types'
-import type { AnalyzerStages, AnalyzerStagesStatus } from '../store/analyzer/analyzer.const'
 import type { AnalyzerState } from '../store/analyzer/analyzer.state'
 
 export const createLogMessageActionForTests = <T extends string>(action: PayloadAction<TLogMessageRecord, T>) => {
@@ -9,20 +8,6 @@ export const createLogMessageActionForTests = <T extends string>(action: Payload
   return {
     type: action.type,
     payload: addLogExpectedActionPayload,
-  }
-}
-
-export const updateAnalyzerStageStatus = (
-  stage: AnalyzerStages,
-  status: AnalyzerStagesStatus,
-  state: AnalyzerState,
-): AnalyzerState['stages'] => {
-  return {
-    ids: [...state.stages.ids],
-    entities: {
-      ...state.stages.entities,
-      [stage]: { stageStatus: status, stageName: stage },
-    },
   }
 }
 
@@ -42,4 +27,12 @@ export const testLogMessages = (state: AnalyzerState, logMessages: TLogMessageRe
       identifier: expect.any(String),
     })),
   )
+}
+
+export const testLogMessageViaInspect = (inspect: unknown, logMessage: TLogMessageRecord) => {
+  expect(inspect['payload']['action']['payload']).toEqual({
+    ...logMessage,
+    timestamp: expect.any(Number),
+    identifier: expect.any(String),
+  })
 }

@@ -24,10 +24,11 @@ export const analyzerSlice = createSlice({
 
       analyzerStagesAdapter.updateMany(state.stages, stagesToUpdate)
     },
+    resetAnalyzer: () => {},
     processTransaction: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
     initializeTransactionProcessing: (_, __: PayloadAction<TProcessTransactionPayload>) => {},
-    gatherContractsInformations: () => {},
 
+    gatherContractsInformations: () => {},
     clearAnalyzerInformation: () => {
       return { ...new AnalyzerState() }
     },

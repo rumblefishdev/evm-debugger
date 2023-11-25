@@ -15,7 +15,7 @@ export const bytecodesSlice = createSlice({
   reducers: {
     updateBytecode: bytecodesAdapter.updateOne,
     initializeBytecodes: (state, action: PayloadAction<TInitializeBytecodesPayload>) => {
-      const emptyBytecodes = action.payload.map((address) => ({ error: null, disassembled: null, bytecode: null, address }))
+      const emptyBytecodes = action.payload.map((address) => ({ disassembled: null, bytecode: null, address }))
       bytecodesAdapter.addMany(state, emptyBytecodes)
     },
     fetchBytecodes: () => {},
