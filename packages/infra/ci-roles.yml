@@ -9,6 +9,8 @@ Parameters:
     Type: String
   GhOIDCProviderArn:
     Type: String
+  CloudfrontInvalidationRoleArn:
+    Type: String
 
 Resources:
   CIFrontendDeployRole:
@@ -42,6 +44,10 @@ Resources:
                 Resource:
                   - !Sub arn:aws:s3:::${FrontendBucketName}
                   - !Sub arn:aws:s3:::${FrontendBucketName}/*
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource: !Ref CloudfrontInvalidationRoleArn
 
   CITranasctionTraceDeployRole:
     Type: AWS::IAM::Role

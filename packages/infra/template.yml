@@ -26,6 +26,8 @@ Parameters:
     Type: String
   FrontendExternalCloudFrontOriginAccessIdentity:
     Type: String
+  CloudfrontInvalidationRoleArn:
+    Type: String
 
 Resources:
   TraceBucket:
@@ -72,3 +74,4 @@ Resources:
         StackArtifactsBucketName: !Ref StackArtifactsBucketName
         FrontendBucketName: !Ref FrontendBucketName
         GhOIDCProviderArn: !Ref GhOIDCProviderArn
+        CloudfrontInvalidationRoleArn: !Ref CloudfrontInvalidationRoleArn
