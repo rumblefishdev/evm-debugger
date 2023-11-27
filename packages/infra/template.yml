@@ -70,4 +70,5 @@ Resources:
         RepositoryName: !Ref RepositoryName
         Environment: !Ref Environment
         StackArtifactsBucketName: !Ref StackArtifactsBucketName
+        FrontendBucketName: !Ref FrontendBucketName
         GhOIDCProviderArn: !Ref GhOIDCProviderArn

@@ -1,4 +1,6 @@
 Parameters:
+  FrontendBucketName:
+    Type: String
   RepositoryName:
     Type: String
   Environment:
@@ -33,10 +35,12 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - s3:*
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
                 Resource:
-                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
-                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
+                  - !Sub arn:aws:s3:::${FrontendBucketName}
+                  - !Sub arn:aws:s3:::${FrontendBucketName}/*
 
   CITranasctionTraceDeployRole:
     Type: AWS::IAM::Role
@@ -60,6 +64,12 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
                   - cloudformation:*
@@ -106,6 +116,12 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
                   - cloudformation:*
