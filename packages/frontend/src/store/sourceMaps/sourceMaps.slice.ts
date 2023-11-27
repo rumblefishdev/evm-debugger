@@ -1,6 +1,8 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
+import type { ActionsType } from '../store.types'
 
 import type { TSourceMapSlice } from './sourceMaps.types'
 
@@ -11,6 +13,7 @@ export const sourceMapsAdapter = createEntityAdapter<TSourceMapSlice>({
 
 export const sourceMapsSlice = createSlice({
   reducers: {
+    fetchSourceMaps: (_, __: PayloadAction<{ paths: string[]; contractAddress: string }>) => {},
     clearSourceMaps: sourceMapsAdapter.removeAll,
     addSourceMaps: sourceMapsAdapter.addMany,
   },
@@ -20,3 +23,4 @@ export const sourceMapsSlice = createSlice({
 
 export const sourceMapsActions = sourceMapsSlice.actions
 export const sourceMapsReducer = sourceMapsSlice.reducer
+export type TSourceMapsActions = ActionsType<typeof sourceMapsActions>
