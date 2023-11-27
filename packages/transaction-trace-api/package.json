@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/transaction-trace-api",
-  "version": "1.1.6-alpha.0",
+  "version": "1.1.6-alpha.1",
   "description": "hello world sample for NodeJS",
   "main": "./src/sqsConsumer.ts",
   "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",

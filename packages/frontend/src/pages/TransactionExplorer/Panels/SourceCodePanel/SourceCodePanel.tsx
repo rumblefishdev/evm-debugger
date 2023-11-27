@@ -14,9 +14,10 @@ import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 export const SourceCodePanel: React.FC = () => {
   const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
   const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
+  const hasMultipleSourceFiles = useSelector(sourceCodesSelectors.selectHasMultipleSourceFiles)
   const isAbleToDisplaySourceCodePanel = isSourceCodeAvailable && isSourceMapAvailable
 
-  const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(true)
+  const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(hasMultipleSourceFiles)
 
   const handleCollapseButtonClick = () => {
     setIsTreeViewExpanded((prevState) => !prevState)
@@ -30,13 +31,15 @@ export const SourceCodePanel: React.FC = () => {
     <StyledSourceCodePanel>
       <StyledHeadingWrapper>
         <StyledHeading>Source Code</StyledHeading>
-        <Button
-          variant="text"
-          size="medium"
-          onClick={handleCollapseButtonClick}
-        >
-          {treeFileButtonText}
-        </Button>
+        {hasMultipleSourceFiles && (
+          <Button
+            variant="text"
+            size="medium"
+            onClick={handleCollapseButtonClick}
+          >
+            {treeFileButtonText}
+          </Button>
+        )}
       </StyledHeadingWrapper>
       <StyledSourceWrapper>
         {isTreeViewExpanded && <TreeFileViewContainer />}

@@ -168,7 +168,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ALCHEMY_KEY: PmDXrefs8kgu3ERHun0yjVkeGrVqs0MQ
+          ALCHEMY_KEY: 3-iIzln-MQF8Lc5a7DL2BwTPK8D5XRwv
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref TransactionTraceBucket
           ENVIRONMENT: !Ref Environment

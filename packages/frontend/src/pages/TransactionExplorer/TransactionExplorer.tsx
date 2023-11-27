@@ -19,16 +19,40 @@ export const TransactionExplorer: React.FC = () => {
 
   const initialLayout = React.useMemo(() => {
     const BytecodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.BytecodeLayout)
-    const BytecodeLayout: Layout = BytecodeLayoutFromLocalStorage || { y: 0, x: 4, w: 2, i: LayoutKeys.BytecodeLayout, h: 20 }
+    const BytecodeLayout: Layout = BytecodeLayoutFromLocalStorage || {
+      y: 0,
+      x: 4,
+      w: 2,
+      i: LayoutKeys.BytecodeLayout,
+      h: 20,
+    }
 
     const SourceCodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.SourceCodeLayout)
-    const SourceCodeLayout: Layout = SourceCodeLayoutFromLocalStorage || { y: 0, x: 6, w: 6, i: LayoutKeys.SourceCodeLayout, h: 20 }
+    const SourceCodeLayout: Layout = SourceCodeLayoutFromLocalStorage || {
+      y: 0,
+      x: 6,
+      w: 6,
+      i: LayoutKeys.SourceCodeLayout,
+      h: 20,
+    }
 
     const StructlogLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.StructlogLayout)
-    const StructlogLayout: Layout = StructlogLayoutFromLocalStorage || { y: 0, x: 2, w: 2, i: LayoutKeys.StructlogLayout, h: 20 }
+    const StructlogLayout: Layout = StructlogLayoutFromLocalStorage || {
+      y: 0,
+      x: 2,
+      w: 2,
+      i: LayoutKeys.StructlogLayout,
+      h: 20,
+    }
 
     const TraceLogListLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.TracelogListLayout)
-    const TraceLogListLayout: Layout = TraceLogListLayoutFromLocalStorage || { y: 0, x: 0, w: 2, i: LayoutKeys.TracelogListLayout, h: 20 }
+    const TraceLogListLayout: Layout = TraceLogListLayoutFromLocalStorage || {
+      y: 0,
+      x: 0,
+      w: 2,
+      i: LayoutKeys.TracelogListLayout,
+      h: 20,
+    }
 
     return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout]
   }, [])

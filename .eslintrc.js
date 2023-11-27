@@ -69,7 +69,7 @@ module.exports = {
                 "@typescript-eslint/no-empty-interface": "off",
                 "@typescript-eslint/no-implied-eval": "error",
                 "@typescript-eslint/no-loop-func": "error",
-                "@typescript-eslint/no-unused-vars": "warn",
+                "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "ignoreRestSiblings": true }],
                 "@typescript-eslint/no-useless-empty-export": "error",
                 "@typescript-eslint/require-await": "error",
                 "@typescript-eslint/no-duplicate-imports": "error",
@@ -227,7 +227,7 @@ module.exports = {
         "import/order": ["error", { "groups": ["builtin", "external", "parent", "sibling", "index"], "newlines-between": "always" }],
         //Unicorn
         "unicorn/no-keyword-prefix": "off",
-        "unicorn/consistent-destructuring": "warn",
+        "unicorn/consistent-destructuring": "off",
         "unicorn/prefer-add-event-listener": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/filename-case": "off",

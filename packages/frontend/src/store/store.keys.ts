@@ -4,7 +4,7 @@ export enum StoreKeys {
   ACTIVE_BLOCK = 'activeBlock',
   ANALYZER = 'analyzer',
   BYTECODES = 'bytecodes',
-  RAW_TX_DATA = 'rawTxData',
+  TRANSACTION_INFO = 'transactionInfo',
   SIGHASH = 'sighash',
   STRUCT_LOGS = 'structlogs',
   ACTIVE_STRUCT_LOG = 'activeStructLog',
@@ -13,4 +13,6 @@ export enum StoreKeys {
   ACTIVE_SOURCE_FILE = 'sourceFiles',
   INSTRUCTIONS = 'instructions',
   UI = 'ui',
+  TRANSACTION_CONFIG = 'transactionConfig',
+  ABIS = 'abis',
 }

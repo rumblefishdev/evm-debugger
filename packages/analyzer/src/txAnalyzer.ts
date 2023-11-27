@@ -262,7 +262,7 @@ export class TxAnalyzer {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
     Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address]) return
+      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceCodes[address]) return
 
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
@@ -286,10 +286,11 @@ export class TxAnalyzer {
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps)
 
-        const parsedOpcodes = opcodesConverter(opcodes)
+        const parsedOpcodes = opcodesConverter(opcodes.trim())
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
+
           const { pc, opcode } = parsedOpcodes[index]
 
           accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }

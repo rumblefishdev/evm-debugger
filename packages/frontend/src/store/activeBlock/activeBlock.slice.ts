@@ -9,7 +9,7 @@ const initialState: null | TMainTraceLogsWithId = null
 
 export const activeBlockSlice = createSlice({
   reducers: {
-    loadActiveBlock: (state, action: PayloadAction<TMainTraceLogsWithId>) => {
+    loadActiveBlock: (_, action: PayloadAction<TMainTraceLogsWithId>) => {
       return action.payload
     },
   },

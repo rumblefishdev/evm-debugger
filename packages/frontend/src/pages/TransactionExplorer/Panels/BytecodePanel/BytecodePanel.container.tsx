@@ -34,7 +34,7 @@ export const BytecodePanel: React.FC = (props) => {
   }, 50)
 
   useEffect(() => {
-    if (listRef.current && currentElementIndex) {
+    if (listRef.current && currentElementIndex !== undefined) {
       scrollToItem()
     }
   }, [currentElementIndex, scrollToItem])

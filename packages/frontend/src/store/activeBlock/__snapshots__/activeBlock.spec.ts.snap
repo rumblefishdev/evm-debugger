@@ -1,37 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parseParameter tests Collection types Tuple type 1`] = `
-{
+Object {
   "name": "desc",
   "type": "tuple",
-  "value": [
-    {
+  "value": Array [
+    Object {
       "name": "recipient",
       "type": "address",
       "value": "0x30dcBa0405004cF124045793E1933C798Af9E66a",
     },
-    {
+    Object {
       "name": null,
       "type": "uint256",
       "value": "0.000000000000000001 ETH",
     },
-    {
+    Object {
       "name": "permit",
       "type": "bytes",
       "value": "0x00000000000000000000000096c195f6643a3d797cb90cb6ba0ae2776d51b5f30000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000001e",
     },
-    {
+    Object {
       "name": "srcReceivers",
       "type": "address[]",
-      "value": [
+      "value": Array [
         "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
         "0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       ],
     },
-    {
+    Object {
       "name": "srcAmounts",
       "type": "uint256[]",
-      "value": [
+      "value": Array [
         "0.000000000000000002 ETH",
         "0.000000000000000003 ETH",
       ],
@@ -41,78 +41,78 @@ exports[`parseParameter tests Collection types Tuple type 1`] = `
 `;
 
 exports[`parseParameter tests Collection types Tuple[] type 1`] = `
-{
+Object {
   "name": "consideration",
   "type": "tuple[]",
-  "value": [
-    {
+  "value": Array [
+    Object {
       "name": "desc",
       "type": "tuple",
-      "value": [
-        {
+      "value": Array [
+        Object {
           "name": "recipient",
           "type": "address",
           "value": "0x30dcBa0405004cF124045793E1933C798Af9E66a",
         },
-        {
+        Object {
           "name": null,
           "type": "uint256",
           "value": "0.000000000000000001 ETH",
         },
-        {
+        Object {
           "name": "permit",
           "type": "bytes",
           "value": "0x00000000000000000000000096c195f6643a3d797cb90cb6ba0ae2776d51b5f30000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000001e",
         },
-        {
+        Object {
           "name": "srcReceivers",
           "type": "address[]",
-          "value": [
+          "value": Array [
             "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
             "0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
           ],
         },
-        {
+        Object {
           "name": "srcAmounts",
           "type": "uint256[]",
-          "value": [
+          "value": Array [
             "0.000000000000000002 ETH",
             "0.000000000000000003 ETH",
           ],
         },
       ],
     },
-    {
+    Object {
       "name": "desc",
       "type": "tuple",
-      "value": [
-        {
+      "value": Array [
+        Object {
           "name": "recipient",
           "type": "address",
           "value": "0xbbbBa0405004cF124045793E1933C798Af9E66a",
         },
-        {
+        Object {
           "name": null,
           "type": "uint256",
           "value": "0.000000000000000005 ETH",
         },
-        {
+        Object {
           "name": "permit",
           "type": "bytes",
           "value": "0x00000000000000000000000096c195f6643a3d797cb90cb6ba0ae2776d51b5f30000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000001e",
         },
-        {
+        Object {
           "name": "srcReceivers",
           "type": "address[]",
-          "value": [
+          "value": Array [
             "0xEeeeeEeeeEeEeeEeEeEeeffffffffffFAFFFfffE",
             "0xEaaaaaEeEeeEeEeEeeEffffffffffffffffffff",
           ],
         },
-        {
+        Object {
           "name": "srcAmounts",
           "type": "uint256[]",
-          "value": [
+          "value": Array [
             "0.000000000000000062 ETH",
             "0.000000000000000033 ETH",
           ],

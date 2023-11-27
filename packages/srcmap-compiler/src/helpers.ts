@@ -4,20 +4,49 @@
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
 import type {
   ISrcMapApiPayload,
+  TEtherscanContractSourceCodeResult,
   TEtherscanParsedSourceCode,
   TSourceMap,
 } from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
+import { captureMessage } from '@sentry/serverless'
 
 import type { SolcOutput, TSourceFile } from './types'
 import { SourceMapElement } from './sourceMapElement'
 import { getLastOpcodeFile } from './opcodesFile'
 import { SourceMapElementTree } from './sourceMapElementTree'
 import { SourceMapContext } from './sourceMapContext'
-import { payloadSync, s3download } from './s3'
 import solc from './solc'
+import { setDdbContractInfo } from './ddb'
+import { s3upload, s3download } from './s3'
 
 const { BUCKET_NAME } = process.env
+
+const isMultipleFilesJSON = (sourceCode: string) =>
+  sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
+
+const createSettingsObject = (
+  sourceData: TEtherscanContractSourceCodeResult,
+): TEtherscanParsedSourceCode['settings'] => {
+  const hasMultipleSources = isMultipleFilesJSON(sourceData.SourceCode)
+
+  if (hasMultipleSources) {
+    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
+      1,
+      -1,
+    )
+
+    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+
+    return sourceCodeObj.settings
+  }
+  return {
+    optimizer: {
+      runs: Number(sourceData.Runs),
+      enabled: sourceData.OptimizationUsed === '1',
+    },
+  }
+}
 
 const formatOpcodes = async (opcodesRaw: string): Promise<string> => {
   const opcodeFile = await getLastOpcodeFile()
@@ -135,39 +164,55 @@ const getSourceMap = async (
 
 export const compileFiles = async (
   _payload: ISrcMapApiPayload,
-  payloadS3Params: PutObjectRequest,
 ): Promise<ISrcMapApiPayload> => {
   console.log(_payload.address, '/Compilation/Start')
 
-  if (!_payload.filesPath) {
-    const msg = '/Compilation/No files to compile'
-    console.warn(_payload.address, msg)
-    return payloadSync(payloadS3Params, {
+  if (!_payload.pathSourceFiles) {
+    const message = '/Compilation/No files to compile'
+    console.warn(_payload.address, message)
+    return setDdbContractInfo({
       ..._payload,
       status: SrcMapStatus.COMPILATION_FAILED,
-      message: msg,
+      message,
     })
   }
 
-  const rawSourceCode = _payload.sourceData?.SourceCode.replace(
-    /(\r\n)/gm,
-    '',
-  ).slice(1, -1)
-
-  const sourceCodeObj: TEtherscanParsedSourceCode = rawSourceCode
-    ? JSON.parse(rawSourceCode)
-    : undefined
-
-  const settings = sourceCodeObj?.settings || {
-    optimizer: {
-      runs: Number(_payload.sourceData?.Runs),
-      enabled: Boolean(_payload.sourceData?.OptimizationUsed),
-    },
+  if (!_payload.pathSourceData) {
+    const message = '/Compilation/No source data path'
+    console.warn(_payload.address, message)
+    return setDdbContractInfo({
+      ..._payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message,
+    })
   }
+
+  const sourceDataResp = await s3download({
+    Key: _payload.pathSourceData,
+    Bucket: BUCKET_NAME,
+  })
+
+  const sourceData: TEtherscanContractSourceCodeResult = JSON.parse(
+    (await sourceDataResp.Body?.transformToString('utf8')) || '',
+  )
+
+  if (!sourceData) {
+    const message = '/Compilation/No source data'
+    console.warn(_payload.address, message)
+    return setDdbContractInfo({
+      ..._payload,
+      status: SrcMapStatus.COMPILATION_FAILED,
+      message,
+    })
+  }
+
+  const settings = createSettingsObject(sourceData)
+
+  console.log(`Settings ${_payload.address}`, settings)
 
   const sourceFiles: TSourceFile[] = (
     await Promise.all(
-      _payload.filesPath.map(async (path: string) => {
+      _payload.pathSourceFiles.map(async (path: string) => {
         const params: PutObjectRequest = {
           Key: path,
           Bucket: BUCKET_NAME,
@@ -178,9 +223,9 @@ export const compileFiles = async (
           const resp = await s3download(params)
           content = (await resp.Body?.transformToString('utf8')) as string
         } catch (error) {
-          const msg = `/Compilation/No File on S3: ${path}`
-          console.warn(_payload.address, msg)
-          // Todo add sentry request
+          const message = `/Compilation/No File on S3: ${path}`
+          console.warn(_payload.address, message)
+          captureMessage(message, 'error')
           return null
         }
         return { path, content }
@@ -190,24 +235,35 @@ export const compileFiles = async (
 
   let sourceMaps: TSourceMap[] = []
   try {
-    console.log('chuj dupa')
     sourceMaps = await getSourceMap(sourceFiles, settings)
     console.log(`${_payload.address} sourceMaps`, sourceMaps)
   } catch (error) {
-    const msg = `/Compilation/Unknow error while compiling:\n${error}`
-    console.warn(_payload.address, msg)
-    // Todo add sentry request
-    return payloadSync(payloadS3Params, {
+    const message = `/Compilation/Unknow error while compiling:\n${error}`
+    console.warn(_payload.address, message)
+    captureMessage(message, 'error')
+    return setDdbContractInfo({
       ..._payload,
       status: SrcMapStatus.COMPILATION_FAILED,
-      message: msg,
+      message,
     })
   }
 
   console.log(_payload.address, '/Compilation/Done')
-  return payloadSync(payloadS3Params, {
+  const pathSourceMaps = await Promise.all(
+    sourceMaps.map(async (sourceMap) => {
+      const path = `contracts/${_payload.chainId}/${_payload.address}/source_maps/${sourceMap.fileName}_${sourceMap.contractName}`
+      await s3upload({
+        Key: path,
+        Bucket: BUCKET_NAME,
+        Body: JSON.stringify(sourceMap),
+      })
+      return path
+    }),
+  )
+
+  return setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.COMPILATION_SUCCESS,
-    sourceMaps,
+    pathSourceMaps,
   })
 }

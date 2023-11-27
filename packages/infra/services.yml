@@ -49,7 +49,10 @@ Resources:
         DomainName: !Ref Domain
         Route53:
           HostedZoneId: !Ref HostedZoneId
-        
+
+  ###################################
+  ###### Transaction Trace API ######
+  ###################################
   AnalyzerDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -61,24 +64,6 @@ Resources:
           AttributeType: S
       KeySchema:
         - AttributeName: txHash
-          KeyType: HASH
-        - AttributeName: type#time
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-
-  SrcMapDataTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub ${AWS::StackName}-srcmap-actions
-      AttributeDefinitions:
-        - AttributeName: address
-          AttributeType: S
-        - AttributeName: type#time
-          AttributeType: S
-      KeySchema:
-        - AttributeName: address
           KeyType: HASH
         - AttributeName: type#time
           KeyType: RANGE
@@ -245,11 +230,72 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  ###################################
+  ######### Source Map API ##########
+  ###################################
+  SrcMapContractsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub evm-debugger-${Environment}-srcmap-contracts-ddb
+      AttributeDefinitions:
+        - AttributeName: address
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+        - AttributeName: chainId
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: address
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: ChainIdIndex
+          KeySchema:
+            - AttributeName: chainId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+
+  SrcMapContractsFetcherSqsDeadLetter:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub evm-debugger-${Environment}-srcmap-contracts-fetcher-sqs-dead-letter
+
+  SrcMapContractsFetcherSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub evm-debugger-${Environment}-srcmap-contracts-fetcher-sqs
+      VisibilityTimeout: 910
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SrcMapContractsFetcherSqsDeadLetter.Arn
+        maxReceiveCount: 1
+
   SrcMapApiFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-srcmap-api
       CodeUri: ../srcmap-api
-      Handler: srcMapApi.srcmapApiEntrypoint
+      Handler: lambdaApi.srcmapApiEntrypoint
       Runtime: nodejs18.x
       Timeout: 180
       MemorySize: 256
@@ -257,7 +303,8 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          SRCMAP_TABLE_NAME: !Ref SrcMapDataTable
+          SRCMAP_CONTRACTS_TABLE_NAME: !Ref SrcMapContractsTable
+          SQS_FILES_FETCHER_URL: !Ref SrcMapContractsFetcherSqs
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           BUCKET_NAME: !Ref TraceBucketName
@@ -265,7 +312,7 @@ Resources:
           REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
           REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
       Events:
-        TransactionTraceApiEvent:
+        SrcMapApiEvent:
           Type: Api
           Properties:
             RestApiId: !Ref Api
@@ -284,8 +331,8 @@ Resources:
                 - dynamodb:PutItem
                 - dynamodb:Query
               Resource:
-                - !GetAtt SrcMapDataTable.Arn
-                - !Sub ${SrcMapDataTable.Arn}/**
+                - !GetAtt SrcMapContractsTable.Arn
+                - !Sub ${SrcMapContractsTable.Arn}/**
             - Action:
                 - ssm:GetParameter
                 - ssm:GetParameters
@@ -302,8 +349,68 @@ Resources:
               Effect: Allow
               Resource:
                 - !Sub arn:aws:s3:::${TraceBucketName}
-                - !Sub arn:aws:s3:::${TraceBucketName}\/**
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource:
+                - !GetAtt SrcMapContractsFetcherSqs.Arn
     Metadata:
       BuildMethod: makefile
 
-
+  SrcMapFetcherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-srcmap-fetcher
+      CodeUri: ../srcmap-api
+      Handler: lambdaFetcher.srcmapFetcherEntrypoint
+      Runtime: nodejs18.x
+      Timeout: 180
+      MemorySize: 256
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SRCMAP_CONTRACTS_TABLE_NAME: !Ref SrcMapContractsTable
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          BUCKET_NAME: !Ref TraceBucketName
+          REACT_APP_ETHERSCAN_KEY: !Ref EtherscanKey
+          REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
+          REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SrcMapContractsFetcherSqs.Arn
+            ScalingConfig:
+              MaximumConcurrency: 5
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt SrcMapContractsTable.Arn
+                - !Sub ${SrcMapContractsTable.Arn}/**
+            - Action:
+                - ssm:GetParameter
+                - ssm:GetParameters
+              Effect: Allow
+              Resource:
+                - '*'
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:s3:::${TraceBucketName}
+                - !Sub arn:aws:s3:::${TraceBucketName}\/**
+    Metadata:
+      BuildMethod: makefile

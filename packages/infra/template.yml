@@ -97,6 +97,7 @@ Resources:
 #                  - sqs:List*
 #                  - iam:GetRole
 #                  - iam:PutRolePolicy
+#                  - iam:PassRole
 #                  - lambda:UpdateFunctionCode
 #                  - lambda:ListTags
 #                  - lambda:PublishLayerVersion
