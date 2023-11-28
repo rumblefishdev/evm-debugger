@@ -10,8 +10,6 @@ import { contractNamesSelectors } from '../../../contractNames/contractNames.sel
 import { srcMapProviderUrl } from '../../../../config'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
-import { abisActions } from '../../../abis/abis.slice'
-import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { convertAddressesToStatuses } from '../../sourceCodes.utiils'
 
 export async function fetchSourcesStatus(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody['data']> {
