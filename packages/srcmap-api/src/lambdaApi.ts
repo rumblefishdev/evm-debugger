@@ -46,7 +46,12 @@ export const addressesProcessing = async (
       SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_FAILED,
       SrcMapStatus.SOURCE_DATA_FETCHING_FAILED,
       SrcMapStatus.FILES_EXTRACTING_FAILED,
-    ].includes(payload.status)
+      SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_TO_DLQ,
+    ].includes(payload.status) ||
+    // Run fetch queuing if last fetch was more than 30 seconds ago
+    (payload.status === SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_SUCCESS &&
+      payload.timestamp !== undefined &&
+      Date.now() - 30000 > payload.timestamp)
   ) {
     console.log(payload.address, '/Queuing Contract Fetch/Initialing')
     payload = await triggerFetchSourceCode(payload)

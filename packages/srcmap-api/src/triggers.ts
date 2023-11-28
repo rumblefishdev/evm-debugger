@@ -27,8 +27,14 @@ export const triggerFetchSourceCode = async (
   payload: ISrcMapApiPayload,
 ): Promise<ISrcMapApiPayload> => {
   console.log(payload.address, '/Queuing Contract Fetch/Start')
+  let messageId: string
+
   try {
-    await putContractToDownloadSqs(payload.address, payload.chainId)
+    const sqsResponse = await putContractToDownloadSqs(
+      payload.address,
+      payload.chainId,
+    )
+    messageId = sqsResponse.MessageId as string
   } catch (error) {
     const message = '/Queuing Contract Fetch/Failed'
     captureMessage(message, 'error')
@@ -41,9 +47,12 @@ export const triggerFetchSourceCode = async (
     })
   }
 
+  const message = `/Queuing Contract Fetch/Success with message id: ${messageId}`
+  console.log(payload.address, message)
   return setDdbContractInfo({
     ...payload,
     status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_SUCCESS,
+    message,
   })
 }
 
@@ -122,9 +131,30 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
     LogType: LogType.Tail,
     FunctionName: functionName,
   })
-  lambda.send(command)
 
-  console.log(_payload.address, '/Compiler Trigger/Lambda Started')
+  const compilatorResponse = await lambda.send(command)
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-lambda/interfaces/invokecommandoutput.html#statuscode
+  if (
+    ![
+      200, // RequestResponse
+      202, // Event
+      204, // DryRun
+    ].includes(compilatorResponse.StatusCode as number)
+  ) {
+    const message = `/Compiler Trigger/Compiler lambda failed with status code ${compilatorResponse.StatusCode} with error ${compilatorResponse.FunctionError}`
+    console.warn(_payload.address, message)
+    captureMessage(message, 'error')
+    return setDdbContractInfo({
+      ...payload,
+      status: SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED,
+      message,
+    })
+  }
+
+  console.log(
+    _payload.address,
+    `/Compiler Trigger/Lambda Started: ${compilatorResponse?.ExecutedVersion}`,
+  )
   return setDdbContractInfo({
     ...payload,
     status: SrcMapStatus.COMPILATOR_TRIGGERRING_SUCCESS,
