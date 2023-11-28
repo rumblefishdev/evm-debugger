@@ -58,23 +58,21 @@ export function* gatherAndHandleSourceStatus(chainId: ChainId, initialAddresses:
         case SrcMapStatus.SOURCE_DATA_FETCHING_FAILED:
         case SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED:
         case SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_FAILED:
-          yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Fetching failed for ${address}`)))
+          yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Compilation failed for ${address}`)))
           break
         case SrcMapStatus.SOURCE_DATA_FETCHING_NOT_VERIFIED:
           yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Contract: ${address} is not verified`)))
           break
         case SrcMapStatus.COMPILATION_SUCCESS:
-          yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Fetching success for ${address}`)))
+          yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Compilation success for ${address}`)))
           yield* put(sourceCodesActions.fetchSourceData({ path: payload.pathSourceData, contractAddress: address }))
-          yield* take(abisActions.addAbi)
-          yield* take(sourceCodesActions.addSourceCode)
-          yield* take(contractNamesActions.updateContractName)
+          yield* take(analyzerActions.addLogMessage)
 
           yield* put(sourceMapsActions.fetchSourceMaps({ paths: payload.pathSourceMaps, contractAddress: address }))
-          yield* take(sourceMapsActions.addSourceMaps)
+          yield* take(analyzerActions.addLogMessage)
           break
         default:
-          yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Fetchin pending for ${address}`)))
+          yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Compilation pending for ${address}`)))
           break
       }
     }
@@ -111,7 +109,7 @@ export function* startPoolingSourcesStatus(): SagaGenerator<void> {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
 
-    yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Fetching source codes for [${contractAddresses}] contracts`)))
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Compiling source codes for [${contractAddresses}] contracts`)))
 
     yield* put(
       analyzerActions.updateStage({
@@ -123,6 +121,6 @@ export function* startPoolingSourcesStatus(): SagaGenerator<void> {
     yield* call(gatherAndHandleSourceStatus, chainId, convertAddressesToStatuses(contractAddresses))
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_SOURCE_CODES }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetching source codes: ${error.message}`)))
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while compiling source codes: ${error.message}`)))
   }
 }

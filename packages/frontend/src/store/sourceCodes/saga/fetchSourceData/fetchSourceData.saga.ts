@@ -5,6 +5,8 @@ import { traceStorageBucket } from '../../../../config'
 import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { abisActions } from '../../../abis/abis.slice'
+import { analyzerActions } from '../../../analyzer/analyzer.slice'
+import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 
 export async function fetchSourceData(sourceDataPath: string) {
   const rawSourceData = await fetch(`https://${traceStorageBucket}/${sourceDataPath}`)
@@ -26,7 +28,10 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
     if (sourceData.ContractName) {
       yield* put(contractNamesActions.updateContractName({ id: contractAddress, changes: { contractName: sourceData.ContractName } }))
     }
+
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source data for ${contractAddress} fetched successfully`)))
   } catch (error) {
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Source data for ${contractAddress} fetching failed`)))
     console.log(error)
   }
 }
