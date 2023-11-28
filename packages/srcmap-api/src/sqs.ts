@@ -10,11 +10,16 @@ const sqsClient = new SQSClient({ region: process.env.AWS_REGION })
 export const putContractToDownloadSqs = async (
   address: string,
   chainId: ChainId,
+  awsRequestId: string,
 ): Promise<SendMessageCommandOutput> => {
   const params: SendMessageCommandInput = {
     QueueUrl: process.env.SQS_FILES_FETCHER_URL,
     MessageBody: `Contract ${chainId}/${address}`,
     MessageAttributes: {
+      initialLambdaRequestId: {
+        StringValue: awsRequestId,
+        DataType: 'String',
+      },
       chainId: {
         StringValue: String(chainId),
         DataType: 'String',

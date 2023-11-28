@@ -195,6 +195,10 @@ export const srcmapFetcherHandler = async (event: SQSEvent) => {
     console.warn('No records')
     return
   }
+  const requestId =
+    records[0].messageAttributes.initialLambdaRequestId.stringValue!
+  console.log('Initial Lambda Request ID:', requestId)
+
   const address = records[0].messageAttributes.address.stringValue!
   const chainId = parseInt(
     records[0].messageAttributes.chainId.stringValue!,

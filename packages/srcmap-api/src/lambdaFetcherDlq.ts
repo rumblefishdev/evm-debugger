@@ -29,6 +29,9 @@ export const srcmapFetcherDeadLetterHandler = async (event: SQSEvent) => {
   const promises = event.Records.map(async (record) => {
     const address = record.messageAttributes.address.stringValue!
     const chainId = parseInt(record.messageAttributes.chainId.stringValue!, 10)
+    const requestId =
+      record.messageAttributes.initialLambdaRequestId.stringValue!
+    console.log('Initial Lambda Request ID:', requestId)
 
     const payload = await getDdbContractInfo(chainId, address)
 

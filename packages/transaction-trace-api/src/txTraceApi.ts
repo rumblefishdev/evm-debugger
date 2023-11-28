@@ -1,4 +1,8 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import type {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Context,
+} from 'aws-lambda'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 
@@ -19,10 +23,15 @@ AWSLambda.init({
 })
 AWSLambda.setTag('lambda_name', 'transaction-trace-api')
 
-export const createResponse = (status: string, output = {}) => {
+export const createResponse = (
+  status: string,
+  requestId: string,
+  output = {},
+) => {
   return {
     statusCode: 200,
     headers: {
+      'x-amzn-LambdaRequestId': requestId,
       'Access-Control-Allow-Origin': '*',
     },
     body: JSON.stringify({
@@ -34,6 +43,7 @@ export const createResponse = (status: string, output = {}) => {
 
 export const analyzeTransactionHandler = async (
   event: APIGatewayProxyEvent,
+  context: Context,
 ): Promise<APIGatewayProxyResult> => {
   const { txHash, chainId } = event.pathParameters!
   if (!txHash || !chainId)
@@ -54,15 +64,25 @@ export const analyzeTransactionHandler = async (
       await putTxEventToDdb(TransactionTraceResponseStatus.PENDING, txHash)
       await putTxDetailsToSqs(txHash, chainId)
     }
-    return createResponse(TransactionTraceResponseStatus.SUCCESS, txDetails)
+    return createResponse(
+      TransactionTraceResponseStatus.SUCCESS,
+      context.awsRequestId,
+      txDetails,
+    )
   } catch (error) {
     if (error instanceof Error) {
       console.log(error)
       captureException(error)
-      return createResponse(TransactionTraceResponseStatus.FAILED)
+      return createResponse(
+        TransactionTraceResponseStatus.FAILED,
+        context.awsRequestId,
+      )
     }
   }
-  return createResponse(TransactionTraceResponseStatus.FAILED)
+  return createResponse(
+    TransactionTraceResponseStatus.FAILED,
+    context.awsRequestId,
+  )
 }
 
 export const analyzeTransactionEntrypoint = AWSLambda.wrapHandler(

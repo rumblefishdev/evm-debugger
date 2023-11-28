@@ -25,6 +25,7 @@ const lambda = new LambdaClient({ region: AWS_REGION })
 
 export const triggerFetchSourceCode = async (
   payload: ISrcMapApiPayload,
+  awsRequestId: string,
 ): Promise<ISrcMapApiPayload> => {
   console.log(payload.address, '/Queuing Contract Fetch/Start')
   let messageId: string
@@ -33,6 +34,7 @@ export const triggerFetchSourceCode = async (
     const sqsResponse = await putContractToDownloadSqs(
       payload.address,
       payload.chainId,
+      awsRequestId,
     )
     messageId = sqsResponse.MessageId as string
   } catch (error) {
@@ -56,7 +58,10 @@ export const triggerFetchSourceCode = async (
   })
 }
 
-export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
+export const triggerSourceMapCompiler = async (
+  _payload: ISrcMapApiPayload,
+  awsRequestId: string,
+) => {
   console.log(_payload.address, '/Compiler Trigger/Start')
 
   const payload = await setDdbContractInfo({
@@ -128,31 +133,19 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
     functionName,
   )
   const command = new InvokeCommand({
-    Payload: new TextEncoder().encode(JSON.stringify(payload)),
+    Payload: new TextEncoder().encode(
+      JSON.stringify({
+        payload,
+        initialLambdaRequestId: awsRequestId,
+      }),
+    ),
     LogType: LogType.Tail,
     FunctionName: functionName,
   })
 
-  const compilatorResponse = await lambda.send(command)
-  // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-lambda/interfaces/invokecommandoutput.html#statuscode
-  if (
-    ![
-      200, // RequestResponse
-      202, // Event
-      204, // DryRun
-    ].includes(compilatorResponse.StatusCode as number)
-  ) {
-    const message = `/Compiler Trigger/Compiler lambda failed with status code ${compilatorResponse.StatusCode} with error ${compilatorResponse.FunctionError}`
-    console.warn(_payload.address, message)
-    captureMessage(message, 'error')
-    return setDdbContractInfo({
-      ...payload,
-      status: SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED,
-      message,
-    })
-  }
+  lambda.send(command)
 
-  const message = `/Compiler Trigger/Success with message id: ${compilatorResponse?.ExecutedVersion}`
+  const message = `/Compiler Trigger/Success`
   console.log(_payload.address, message)
   return setDdbContractInfo({
     ...payload,

@@ -1,3 +1,5 @@
+import { ISrcMapApiPayload } from "@evm-debuger/types"
+
 export type SolcOutput = Record<
   string,
   Record<
@@ -24,4 +26,9 @@ export type SolcOutput = Record<
 export type TSourceFile = {
   path: string
   content: string
+}
+
+export type TSrcMapCompilerHandler = {
+  payload: ISrcMapApiPayload
+  initialLambdaRequestId: string
 }
