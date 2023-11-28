@@ -1,4 +1,4 @@
-import { put, select, type SagaGenerator, call, take } from 'typed-redux-saga'
+import { put, select, type SagaGenerator, call, take, delay } from 'typed-redux-saga'
 import { SrcMapStatus } from '@evm-debuger/types'
 import type { ChainId, ISrcMapApiResponseBody } from '@evm-debuger/types'
 
@@ -10,6 +10,9 @@ import { contractNamesSelectors } from '../../../contractNames/contractNames.sel
 import { srcMapProviderUrl } from '../../../../config'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
+import { abisActions } from '../../../abis/abis.slice'
+import { contractNamesActions } from '../../../contractNames/contractNames.slice'
+import { convertAddressesToStatuses } from '../../sourceCodes.utiils'
 
 export async function fetchSourcesStatus(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody['data']> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
@@ -35,49 +38,63 @@ export async function fetchSourcesStatus(chainId: ChainId, addresses: string[]):
   return sourceMapsResponse.data
 }
 
-export const convertAddressesToStatuses = (addresses: string[]): Record<string, SrcMapStatus> =>
-  addresses.reduce((accumulator, address) => {
-    accumulator[address] = SrcMapStatus.PENDING
-    return accumulator
-  }, {})
-
-export function* gatherAndHandleSourceStatus(chainId: ChainId, initialAddresses: string[]): SagaGenerator<void> {
-  const convertedAddresses = convertAddressesToStatuses(initialAddresses)
-
-  if (!convertedAddresses) {
-    throw new Error('Cannot convert addresses')
+export function* gatherAndHandleSourceStatus(chainId: ChainId, initialAddresses: Record<string, SrcMapStatus>): SagaGenerator<void> {
+  if (!Object.keys(initialAddresses).length) {
+    throw new Error('Empty addresses list')
   }
 
-  if (!Object.keys(convertedAddresses).length) {
-    throw new Error('Empty addresses')
-  }
-
-  const addressesToFetch = Object.entries(convertedAddresses)
-    .filter(([, status]) => status !== SrcMapStatus.COMPILATION_SUCCESS)
-    .map(([address]) => address)
+  const addressesToFetch = Object.keys(initialAddresses)
 
   if (addressesToFetch.length > 0) {
     const responseData = yield* call(fetchSourcesStatus, chainId, addressesToFetch)
 
     for (const entry of Object.entries(responseData)) {
       const [address, payload] = entry
+      initialAddresses[address] = payload.status
 
-      if (payload.status === SrcMapStatus.COMPILATION_SUCCESS) {
-        convertedAddresses[address] = payload.status
+      switch (payload.status) {
+        case SrcMapStatus.COMPILATION_FAILED:
+        case SrcMapStatus.FILES_EXTRACTING_FAILED:
+        case SrcMapStatus.SOURCE_DATA_FETCHING_FAILED:
+        case SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED:
+        case SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_FAILED:
+          yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Fetching failed for ${address}`)))
+          break
+        case SrcMapStatus.SOURCE_DATA_FETCHING_NOT_VERIFIED:
+          yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Contract: ${address} is not verified`)))
+          break
+        case SrcMapStatus.COMPILATION_SUCCESS:
+          yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Fetching success for ${address}`)))
+          yield* put(sourceCodesActions.fetchSourceData({ path: payload.pathSourceData, contractAddress: address }))
+          yield* take(abisActions.addAbi)
+          yield* take(sourceCodesActions.addSourceCode)
+          yield* take(contractNamesActions.updateContractName)
 
-        yield* put(sourceCodesActions.fetchSourceData({ path: payload.pathSourceData, contractAddress: address }))
-        yield* put(sourceMapsActions.fetchSourceMaps({ paths: payload.pathSourceMaps, contractAddress: address }))
-        yield* take(sourceMapsActions.addSourceMaps)
+          yield* put(sourceMapsActions.fetchSourceMaps({ paths: payload.pathSourceMaps, contractAddress: address }))
+          yield* take(sourceMapsActions.addSourceMaps)
+          break
+        default:
+          yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Fetchin pending for ${address}`)))
+          break
       }
     }
   }
 
-  const remainingAddresses = Object.entries(convertedAddresses)
-    .filter(([, status]) => status !== SrcMapStatus.COMPILATION_SUCCESS)
+  const remainingAddresses = Object.entries(initialAddresses)
+    .filter(
+      ([, status]) =>
+        status !== SrcMapStatus.COMPILATION_SUCCESS &&
+        status !== SrcMapStatus.COMPILATION_FAILED &&
+        status !== SrcMapStatus.FILES_EXTRACTING_FAILED &&
+        status !== SrcMapStatus.SOURCE_DATA_FETCHING_FAILED &&
+        status !== SrcMapStatus.COMPILATOR_TRIGGERRING_FAILED &&
+        status !== SrcMapStatus.SOURCE_DATA_FETCHING_NOT_VERIFIED,
+    )
     .map(([address]) => address)
 
   if (remainingAddresses.length > 0) {
-    yield* call(gatherAndHandleSourceStatus, chainId, remainingAddresses)
+    yield* delay(15000)
+    yield* call(gatherAndHandleSourceStatus, chainId, convertAddressesToStatuses(remainingAddresses))
   } else {
     yield* put(
       analyzerActions.updateStage({
@@ -91,7 +108,10 @@ export function* gatherAndHandleSourceStatus(chainId: ChainId, initialAddresses:
 
 export function* startPoolingSourcesStatus(): SagaGenerator<void> {
   try {
-    yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Fetching source codes')))
+    const chainId = yield* select(transactionConfigSelectors.selectChainId)
+    const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
+
+    yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Fetching source codes for [${contractAddresses}] contracts`)))
 
     yield* put(
       analyzerActions.updateStage({
@@ -100,10 +120,7 @@ export function* startPoolingSourcesStatus(): SagaGenerator<void> {
       }),
     )
 
-    const chainId = yield* select(transactionConfigSelectors.selectChainId)
-    const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
-
-    yield* call(gatherAndHandleSourceStatus, chainId, contractAddresses)
+    yield* call(gatherAndHandleSourceStatus, chainId, convertAddressesToStatuses(contractAddresses))
   } catch (error) {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_SOURCE_CODES }))
     yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetching source codes: ${error.message}`)))
