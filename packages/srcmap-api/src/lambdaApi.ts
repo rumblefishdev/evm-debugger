@@ -85,6 +85,19 @@ export const srcmapApiHandler = async (event: APIGatewayProxyEvent) => {
       error: 'Invalid params - No addresses provided',
     })
 
+  // Remove duplicates
+  addresses = addresses
+    .map((addressObj) => ({
+      ...addressObj,
+      address: addressObj.address.toLowerCase(),
+    }))
+    .filter((addressObj, index, self) => {
+      const foundIndex = self.findIndex(
+        (element) => element.address === addressObj.address,
+      )
+      return foundIndex === index
+    })
+
   console.log('Processing\n', JSON.stringify(addresses, null, 2))
   try {
     const responseContainer = (

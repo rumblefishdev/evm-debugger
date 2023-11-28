@@ -27,6 +27,7 @@ export const srcmapCompilerHandler = async (
   const payload = await setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.COMPILATION_PENDING,
+    message: '',
   })
 
   if (!payload.compilerVersion && !payload.pathSourceFiles?.length) {

@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AWSLambda, captureMessage } from '@sentry/serverless'
-import type { Handler, SQSEvent } from 'aws-lambda'
+import type { SQSEvent } from 'aws-lambda'
 import type {
   ISrcMapApiPayload,
-  TSrcMapAddres,
   TEtherscanContractSourceCodeResp,
   TEtherscanParsedSourceCode,
-  ChainId,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -43,6 +41,7 @@ const fetchSourceData = async (
   const payload = await setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.SOURCE_DATA_FETCHING_PENDING,
+    message: '',
   })
 
   const ethResp = await fetch(ethUrl)
@@ -105,6 +104,7 @@ const fetchSourceData = async (
       ...payload,
       status: SrcMapStatus.SOURCE_DATA_FETCHING_SUCCESS,
       pathSourceData: sourceDataS3Path,
+      message: '',
       compilerVersion: sourceData.CompilerVersion,
     }),
   }
@@ -118,16 +118,17 @@ const extractFiles = async (
   const payload = await setDdbContractInfo({
     ...fetcherPayload.payload,
     status: SrcMapStatus.FILES_EXTRACTING_PENDING,
+    message: '',
   })
 
   if (!fetcherPayload.sourceData?.SourceCode) {
-    const msg = "/Extract Files/Can't find source code"
-    console.warn(payload.address, msg)
+    const message = "/Extract Files/Can't find source code"
+    console.warn(payload.address, message)
     return {
       payload: await setDdbContractInfo({
         ...payload,
         status: SrcMapStatus.FILES_EXTRACTING_FAILED,
-        message: msg,
+        message,
       }),
     }
   }
@@ -183,6 +184,7 @@ const extractFiles = async (
       ...payload,
       status: SrcMapStatus.FILES_EXTRACTING_SUCCESS,
       pathSourceFiles: uploaded,
+      message: '',
     }),
   }
 }

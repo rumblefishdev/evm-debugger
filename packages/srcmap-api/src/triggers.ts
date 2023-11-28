@@ -62,6 +62,7 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
   const payload = await setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.COMPILATOR_TRIGGERRING_PENDING,
+    message: '',
   })
 
   if (!payload.pathSourceData) {
@@ -151,12 +152,11 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
     })
   }
 
-  console.log(
-    _payload.address,
-    `/Compiler Trigger/Lambda Started: ${compilatorResponse?.ExecutedVersion}`,
-  )
+  const message = `/Compiler Trigger/Success with message id: ${compilatorResponse?.ExecutedVersion}`
+  console.log(_payload.address, message)
   return setDdbContractInfo({
     ...payload,
     status: SrcMapStatus.COMPILATOR_TRIGGERRING_SUCCESS,
+    message,
   })
 }

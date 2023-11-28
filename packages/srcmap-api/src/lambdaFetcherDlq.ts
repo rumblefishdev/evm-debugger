@@ -42,6 +42,7 @@ export const srcmapFetcherDeadLetterHandler = async (event: SQSEvent) => {
       await setDdbContractInfo({
         ...payload,
         status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_TO_DLQ,
+        message: '',
       })
     }
   })
