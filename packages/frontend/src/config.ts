@@ -10,6 +10,8 @@ export const sentryDsn = process.env.REACT_APP_EVM_SENTRY_DSN
 
 export const environment = process.env.REACT_APP_CONTENTFUL_ENVIRONMENT
 
+export const traceStorageBucket = process.env.REACT_APP_TRACE_STORAGE_BUCKET
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const { version } = require('../package.json')
 

@@ -5,6 +5,7 @@ import { transactionInfoMasterSaga } from './transactionInfo/transactionInfo.sag
 import { structlogsMasterSaga } from './structlogs/structlogs.saga'
 import { analyzerMasterSaga } from './analyzer/analyzer.master.saga'
 import { sourceCodesMasterSaga } from './sourceCodes/sourceCodes.master.saga'
+import { sourceMapsMasterSaga } from './sourceMaps/sourceMaps.master.saga'
 
 export function* rootSaga(): Generator {
   yield* all([
@@ -13,5 +14,6 @@ export function* rootSaga(): Generator {
     fork(transactionInfoMasterSaga),
     fork(structlogsMasterSaga),
     fork(sourceCodesMasterSaga),
+    fork(sourceMapsMasterSaga),
   ])
 }
