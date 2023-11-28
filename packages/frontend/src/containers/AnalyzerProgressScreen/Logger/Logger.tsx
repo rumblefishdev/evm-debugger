@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import { Stack } from '@mui/material'
 
 import { StyledHeading, StyledLogContiner, StyledLogPanel, StyledMessage, StyledMessageContainer, StyledTimestamp } from './styles'
 import type { LoggerProps } from './types'
