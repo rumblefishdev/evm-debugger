@@ -5,7 +5,7 @@ import { LogMessageStatus } from '../../../store/analyzer/analyzer.const'
 export const StyledLogPanel = styled(Stack)(({ theme }) => ({
   width: '70%',
   padding: theme.spacing(6),
-  overflowY: 'auto',
+
   height: '100%',
   boxSizing: 'border-box',
   borderRadius: '16px',
@@ -24,17 +24,23 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
-  rowGap: theme.spacing(2),
+  overflowX: 'hidden',
   marginTop: theme.spacing(4),
-  gridTemplateColumns: 'auto 1fr',
-  display: 'grid',
-  columnGap: theme.spacing(2),
+  gap: theme.spacing(2),
   ...theme.customStyles.scrollbar,
+  widows: '100%',
+}))
+
+export const StyledMessageContainer = styled(Stack)(({ theme }) => ({
+  widows: '100%',
+  gap: theme.spacing(2),
+  flexDirection: 'row',
 }))
 
 export const StyledMessage = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'status',
 })<{ status: LogMessageStatus }>(({ theme, status }) => ({
+  marginTop: '-2px',
   ...(status === LogMessageStatus.ERROR && {
     color: theme.palette.rfBrandSecondary,
   }),
@@ -49,7 +55,8 @@ export const StyledMessage = styled(Typography, {
     color: theme.palette.rfSecondary,
   }),
 }))
-export const StyledTimestamp = styled(Typography)(({ theme }) => ({
+export const StyledTimestamp = styled(Stack)(({ theme }) => ({
   fontFamily: 'Rajdhani',
+  flexShrink: 0,
   color: theme.palette.rfDisabledDark,
 }))

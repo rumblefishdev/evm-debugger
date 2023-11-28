@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
+import { Stack } from '@mui/material'
 
-import { StyledHeading, StyledLogContiner, StyledLogPanel, StyledMessage, StyledTimestamp } from './styles'
+import { StyledHeading, StyledLogContiner, StyledLogPanel, StyledMessage, StyledMessageContainer, StyledTimestamp } from './styles'
 import type { LoggerProps } from './types'
 
 const getTime = (timestamp: Date | string | number): string => {
@@ -23,7 +24,7 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
           const { message, timestamp, status } = item
 
           return (
-            <React.Fragment key={index}>
+            <StyledMessageContainer key={index}>
               <StyledTimestamp>{getTime(timestamp)}:</StyledTimestamp>
               <StyledMessage
                 status={status}
@@ -31,7 +32,7 @@ export const Logger = ({ messages, ...props }: LoggerProps) => {
               >
                 {message}
               </StyledMessage>
-            </React.Fragment>
+            </StyledMessageContainer>
           )
         })}
       </StyledLogContiner>

@@ -48,7 +48,7 @@ describe('processTransactionSaga', () => {
       .next()
       .take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_BYTECODES])
       .next()
-      .put(sourceCodesActions.fetchSourceCodes())
+      .put(sourceCodesActions.startPoolingSources())
       .next()
       .take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_SOURCE_CODES])
       .next()

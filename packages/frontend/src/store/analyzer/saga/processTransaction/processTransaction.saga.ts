@@ -34,7 +34,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
     yield* put(bytecodesActions.fetchBytecodes())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_BYTECODES])
 
-    yield* put(sourceCodesActions.fetchSourceCodes())
+    yield* put(sourceCodesActions.startPoolingSources())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_SOURCE_CODES])
 
     yield* put(analyzerActions.runAnalyzer())

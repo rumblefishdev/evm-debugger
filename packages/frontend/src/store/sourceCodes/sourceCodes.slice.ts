@@ -1,3 +1,4 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 import type { TSourceCodes } from '../../types'
@@ -12,7 +13,8 @@ export const sourceCodesAdapter = createEntityAdapter<TSourceCodes>({
 export const sourceCodesSlice = createSlice({
   reducers: {
     updateSourceCode: sourceCodesAdapter.updateOne,
-    fetchSourceCodes: () => {},
+    startPoolingSources: () => {},
+    fetchSourceData: (_, __: PayloadAction<{ path: string; contractAddress: string }>) => {},
     clearSourceCodes: sourceCodesAdapter.removeAll,
     addSourceCodes: sourceCodesAdapter.addMany,
     addSourceCode: sourceCodesAdapter.addOne,
