@@ -107,7 +107,9 @@ export function* startPoolingSourcesStatus(): SagaGenerator<void> {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
 
-    yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Compiling source codes for [${contractAddresses}] contracts`)))
+    for (const address of contractAddresses) {
+      yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Compiling source code for ${address}`)))
+    }
 
     yield* put(
       analyzerActions.updateStage({
