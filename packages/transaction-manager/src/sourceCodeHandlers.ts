@@ -3,8 +3,15 @@ import type { TEtherscanContractSourceCodeResult, TEtherscanParsedSourceCode } f
 import { ensureDirectoryExistance, isMultipleFilesJSON, saveToFile } from './utils'
 import { Paths } from './paths'
 
-export const handleSingleSourceCode = (sourceCodeData: TEtherscanContractSourceCodeResult): TEtherscanParsedSourceCode => {
+export const handleSingleSourceCode = (
+  sourceCodeData: TEtherscanContractSourceCodeResult,
+  contractAddress: string,
+): TEtherscanParsedSourceCode => {
   const rawSourceCode = sourceCodeData.SourceCode.replace(/(\r\n)/gm, '').slice(1, -1)
+  saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${contractAddress}/sourceCode.json`, { sourceCode: rawSourceCode })
+
+  saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${contractAddress}/sourceFile.sol`, sourceCodeData.SourceCode)
+
   const settings = {
     optimizer: { runs: Number(sourceCodeData.Runs), enabled: Boolean(sourceCodeData.OptimizationUsed) },
     evmVersion: sourceCodeData.CompilerVersion,
@@ -48,8 +55,9 @@ export const handleSourceCode = (
   sourceCodeData: TEtherscanContractSourceCodeResult,
   contractAddress: string,
 ): TEtherscanParsedSourceCode => {
-  const rawSourceCode = sourceCodeData.SourceCode.replace(/(\r\n)/gm, '').slice(1, -1)
-  const isMultipleFiles = isMultipleFilesJSON(rawSourceCode)
+  const isMultipleFiles = isMultipleFilesJSON(sourceCodeData.SourceCode)
 
-  return isMultipleFiles ? handleMultipleSourceCodes(sourceCodeData, contractAddress) : handleSingleSourceCode(sourceCodeData)
+  return isMultipleFiles
+    ? handleMultipleSourceCodes(sourceCodeData, contractAddress)
+    : handleSingleSourceCode(sourceCodeData, contractAddress)
 }

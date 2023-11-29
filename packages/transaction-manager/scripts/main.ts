@@ -22,6 +22,12 @@ import { fetchSourceCodes, handleSourceCodesFetching } from '../src/transaction-
 import type { SolcOutput, TTempExecs } from '../src/types'
 import { handleSourceCode } from '../src/sourceCodeHandlers'
 
+const wait = async (ms: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 /* eslint-disable prettier/prettier */
 (async () => {
   try {
@@ -64,6 +70,8 @@ import { handleSourceCode } from '../src/sourceCodeHandlers'
       const sourceCodesPath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodeData.json`
       const sourceCodesData = await handleSourceCodesFetching(address, currentHardhatEnvironment.chainId, sourceCodesPath)
 
+      // await wait(1000)
+
       const isCotractVerified = sourceCodesData.SourceCode
 
       if (isCotractVerified) {
@@ -80,7 +88,7 @@ import { handleSourceCode } from '../src/sourceCodeHandlers'
                 '*': ['*'],
               },
             },
-            evmVersion:"shanghai",
+            // evmVersion:"Default",
           },
           language,
         }))
