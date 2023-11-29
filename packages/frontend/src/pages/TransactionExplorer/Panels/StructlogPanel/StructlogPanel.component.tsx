@@ -43,6 +43,8 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
                   pc={pc}
                   isActive={index === activeStructlogIndex}
                   onClick={() => handleSelect(index)}
+                  onTouchStart={(event) => event.stopPropagation()}
+                  onMouseDown={(event) => event.stopPropagation()}
                 />
               )
             }}
