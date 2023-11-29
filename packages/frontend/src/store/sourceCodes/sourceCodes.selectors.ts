@@ -47,11 +47,6 @@ const selectCurrentSourceFiles = createSelector(
   (_sourceCode, _contractNames) => {
     const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
     const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
-    console.log(
-      Object.entries(parseSourceCodeResult)
-        .map(([name, sourceCode]) => name)
-        .sort(),
-    )
     return Object.entries(parseSourceCodeResult)
       .map(([name, sourceCode]) => ({ sourceCode, name }))
       .sort(
