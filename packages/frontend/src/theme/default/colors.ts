@@ -16,6 +16,7 @@ declare module '@mui/material/styles/createPalette' {
     rfSuccess?: string
     rfBox?: string
     rfBackground?: string
+    rfAppBackground?: string
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -34,6 +35,7 @@ declare module '@mui/material/styles/createPalette' {
     rfSuccess?: string
     rfBox?: string
     rfBackground?: string
+    rfAppBackground?: string
   }
 }
 
@@ -52,4 +54,5 @@ export const palette: Partial<Palette> = {
   rfBox: '#F9277F1A',
   rfBlack: '#000000',
   rfBackground: '#F5F6F8',
+  rfAppBackground: '#f7f7f8',
 }

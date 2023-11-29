@@ -6,7 +6,7 @@ import { ManagerItem } from '../../../components/ManagerItem'
 import { sourceCodesSelectors } from '../../../store/sourceCodes/sourceCodes.selectors'
 import { sourceCodesActions } from '../../../store/sourceCodes/sourceCodes.slice'
 
-import { StyledHeading, StyledStack, StyledWrapper } from './styles'
+import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const SourcecodesManager = () => {
   const dispatch = useTypedDispatch()
@@ -19,19 +19,21 @@ export const SourcecodesManager = () => {
   return (
     <StyledStack>
       <StyledHeading>Source Codes</StyledHeading>
-      <StyledWrapper>
-        {sourceCodesWithNames.map((item) => (
-          <ManagerItem
-            key={item.address}
-            address={item.address}
-            name={item.contractName}
-            value={item.sourceCode}
-            isFound={item.sourceCode !== null}
-            updateItem={addSourcecode}
-            contentType="solidity"
-          />
-        ))}
-      </StyledWrapper>
+      <StyledContentWrapper>
+        <StyledWrapper>
+          {sourceCodesWithNames.map((item) => (
+            <ManagerItem
+              key={item.address}
+              address={item.address}
+              name={item.contractName}
+              value={item.sourceCode}
+              isFound={item.sourceCode !== null}
+              updateItem={addSourcecode}
+              contentType="solidity"
+            />
+          ))}
+        </StyledWrapper>
+      </StyledContentWrapper>
     </StyledStack>
   )
 }

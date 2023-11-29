@@ -6,12 +6,16 @@ import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
 import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.selectors'
 import { Button } from '../../../../importedComponents/components/Button'
+import { GridLayoutHandler } from '../../../../components/GridLayout'
 
 import { NoSourceCodeHero, StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 
-export const SourceCodePanel: React.FC = () => {
+interface ISourceCodePanel {
+  inGridLayout?: boolean
+}
+export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout }) => {
   const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
   const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
   const hasMultipleSourceFiles = useSelector(sourceCodesSelectors.selectHasMultipleSourceFiles)
@@ -42,11 +46,10 @@ export const SourceCodePanel: React.FC = () => {
             {treeFileButtonText}
           </Button>
         )}
+        <div style={{ flex: 1 }} />
+        {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
-      <StyledSourceWrapper
-        onTouchStart={(event) => event.stopPropagation()}
-        onMouseDown={(event) => event.stopPropagation()}
-      >
+      <StyledSourceWrapper>
         {isTreeViewExpanded && <TreeFileViewContainer />}
         <SourceCodeViewContainer />
       </StyledSourceWrapper>

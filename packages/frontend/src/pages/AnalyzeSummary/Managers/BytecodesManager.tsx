@@ -6,7 +6,7 @@ import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 import { bytecodesSelectors } from '../../../store/bytecodes/bytecodes.selectors'
 
-import { StyledHeading, StyledStack, StyledWrapper } from './styles'
+import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const BytecodesManager = () => {
   const dispatch = useTypedDispatch()
@@ -19,19 +19,21 @@ export const BytecodesManager = () => {
   return (
     <StyledStack>
       <StyledHeading>Bytecodes</StyledHeading>
-      <StyledWrapper>
-        {bytecodesWithNames.map((item) => (
-          <ManagerItem
-            key={item.address}
-            name={item.contractName}
-            address={item.address}
-            value={item.bytecode}
-            isFound={item.bytecode !== null}
-            updateItem={addBytecode}
-            contentType="plain_text"
-          />
-        ))}
-      </StyledWrapper>
+      <StyledContentWrapper>
+        <StyledWrapper>
+          {bytecodesWithNames.map((item) => (
+            <ManagerItem
+              key={item.address}
+              name={item.contractName}
+              address={item.address}
+              value={item.bytecode}
+              isFound={item.bytecode !== null}
+              updateItem={addBytecode}
+              contentType="plain_text"
+            />
+          ))}
+        </StyledWrapper>
+      </StyledContentWrapper>
     </StyledStack>
   )
 }

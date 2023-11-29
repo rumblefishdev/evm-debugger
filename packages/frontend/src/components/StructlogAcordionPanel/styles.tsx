@@ -8,7 +8,7 @@ export const StyledAccordion = styled(Accordion, {
   shouldForwardProp: (prop) => prop !== 'canExpand',
 })<TCanExpand>(({ theme, canExpand, expanded }) => ({
   transition: 'all 0.4s ease-in-out',
-  padding: theme.spacing(0, 6),
+  padding: theme.spacing(0, 2),
   outline: 'none',
   boxShadow: 'none',
   borderWidth: '1px',
