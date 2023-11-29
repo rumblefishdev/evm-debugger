@@ -26,46 +26,46 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
 
-  const previousTrace = React.useRef(null)
+  // const previousTrace = React.useRef(null)
 
   const setActiveStructlog = useCallback(
     (index: number) => {
-      if (
-        structLogs[index].op === 'CALL' ||
-        structLogs[index].op === 'DELEGATECALL' ||
-        structLogs[index].op === 'STATICCALL' ||
-        structLogs[index].op === 'CREATE' ||
-        structLogs[index].op === 'CREATE2'
-      ) {
-        dispatch(activeBlockActions.loadActiveBlock(traceLogs.find((traceLog) => traceLog.index === structLogs[index].index)))
-        return
-      }
-      if (structLogs[index].op === 'RETURN' || structLogs[index].op === 'REVERT') {
-        const currentBlockArrayIndex = traceLogs.findIndex((traceLog) => traceLog.index === structlogsArray[0].index - 1)
-        const currentBlock = traceLogs[currentBlockArrayIndex]
-        const previousBlock = traceLogs
-          .slice(0, currentBlockArrayIndex)
-          .filter((trace) => trace.depth === currentBlock.depth - 1)
-          .pop()
-        dispatch(activeBlockActions.loadActiveBlock(previousBlock))
-        previousTrace.current = index + 1
-        return
-      }
+      // if (
+      //   structLogs[index].op === 'CALL' ||
+      //   structLogs[index].op === 'DELEGATECALL' ||
+      //   structLogs[index].op === 'STATICCALL' ||
+      //   structLogs[index].op === 'CREATE' ||
+      //   structLogs[index].op === 'CREATE2'
+      // ) {
+      //   dispatch(activeBlockActions.loadActiveBlock(traceLogs.find((traceLog) => traceLog.index === structLogs[index].index)))
+      //   return
+      // }
+      // if (structLogs[index].op === 'RETURN' || structLogs[index].op === 'REVERT') {
+      //   const currentBlockArrayIndex = traceLogs.findIndex((traceLog) => traceLog.index === structlogsArray[0].index - 1)
+      //   const currentBlock = traceLogs[currentBlockArrayIndex]
+      //   const previousBlock = traceLogs
+      //     .slice(0, currentBlockArrayIndex)
+      //     .filter((trace) => trace.depth === currentBlock.depth - 1)
+      //     .pop()
+      //   dispatch(activeBlockActions.loadActiveBlock(previousBlock))
+      //   previousTrace.current = index + 1
+      //   return
+      // }
       dispatch(activeStructLogActions.setActiveStrucLog(index))
     },
-    [dispatch, structLogs, structlogsArray, traceLogs],
+    [dispatch],
   )
 
   useEffect(() => {
     if (activeStructlog === undefined && structlogsArray.length > 0) {
-      if (previousTrace.current) {
-        dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
-        previousTrace.current = null
-        return
-      }
+      // if (previousTrace.current) {
+      //   dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
+      //   previousTrace.current = null
+      //   return
+      // }
       dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0].index))
     }
-  }, [activeStructlog, structlogsArray, setActiveStructlog, dispatch])
+  }, [activeStructlog, structlogsArray, dispatch])
 
   useEffect(() => {
     if (activeStructlog && currentInstructions) {

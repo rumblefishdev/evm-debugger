@@ -5,6 +5,7 @@ export enum LayoutKeys {
   SourceCodeLayout = 'SourceCodepanel',
   StructlogLayout = 'StructlogPanel',
   TracelogListLayout = 'TracelogListLayout',
+  InformationPanelLayout = 'InformationPanelLayout',
 }
 
 export const saveLayoutToLocalStorage = (layout: Layout): void => {
