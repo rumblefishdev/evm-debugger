@@ -25,10 +25,18 @@ const lambda = new LambdaClient({ region: AWS_REGION })
 
 export const triggerFetchSourceCode = async (
   payload: ISrcMapApiPayload,
+  awsRequestId: string,
 ): Promise<ISrcMapApiPayload> => {
   console.log(payload.address, '/Queuing Contract Fetch/Start')
+  let messageId: string
+
   try {
-    await putContractToDownloadSqs(payload.address, payload.chainId)
+    const sqsResponse = await putContractToDownloadSqs(
+      payload.address,
+      payload.chainId,
+      awsRequestId,
+    )
+    messageId = sqsResponse.MessageId as string
   } catch (error) {
     const message = '/Queuing Contract Fetch/Failed'
     captureMessage(message, 'error')
@@ -41,18 +49,25 @@ export const triggerFetchSourceCode = async (
     })
   }
 
+  const message = `/Queuing Contract Fetch/Success with message id: ${messageId}`
+  console.log(payload.address, message)
   return setDdbContractInfo({
     ...payload,
     status: SrcMapStatus.SOURCE_DATA_FETCHING_QUEUED_SUCCESS,
+    message,
   })
 }
 
-export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
+export const triggerSourceMapCompiler = async (
+  _payload: ISrcMapApiPayload,
+  awsRequestId: string,
+) => {
   console.log(_payload.address, '/Compiler Trigger/Start')
 
   const payload = await setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.COMPILATOR_TRIGGERRING_PENDING,
+    message: '',
   })
 
   if (!payload.pathSourceData) {
@@ -118,15 +133,23 @@ export const triggerSourceMapCompiler = async (_payload: ISrcMapApiPayload) => {
     functionName,
   )
   const command = new InvokeCommand({
-    Payload: new TextEncoder().encode(JSON.stringify(payload)),
+    Payload: new TextEncoder().encode(
+      JSON.stringify({
+        payload,
+        initialLambdaRequestId: awsRequestId,
+      }),
+    ),
     LogType: LogType.Tail,
     FunctionName: functionName,
   })
+
   lambda.send(command)
 
-  console.log(_payload.address, '/Compiler Trigger/Lambda Started')
+  const message = `/Compiler Trigger/Success`
+  console.log(_payload.address, message)
   return setDdbContractInfo({
     ...payload,
     status: SrcMapStatus.COMPILATOR_TRIGGERRING_SUCCESS,
+    message,
   })
 }

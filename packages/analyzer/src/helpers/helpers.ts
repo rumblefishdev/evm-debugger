@@ -164,7 +164,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   if (to)
     return {
       ...defaultFields,
-      address: to,
+      address: to.toLowerCase(),
     } as ICallTypeTraceLog
 
   return {

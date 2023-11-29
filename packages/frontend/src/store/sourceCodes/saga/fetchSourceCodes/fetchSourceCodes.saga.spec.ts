@@ -15,6 +15,7 @@ import { fetchSourcesStatus, startPoolingSourcesStatusSaga } from './fetchSource
 
 const CHAIN_ID = ChainId.mainnet
 const CONTRACT_ADDRESSES = ['0x123', '0x456']
+const TRANSACTION_HASH = '0x123'
 
 const firstMockedResponse: Record<string, ISrcMapApiPayload> = {
   [CONTRACT_ADDRESSES[0]]: {
@@ -59,13 +60,15 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next(CHAIN_ID)
       .select(contractNamesSelectors.selectAllAddresses)
       .next(CONTRACT_ADDRESSES)
+      .select(transactionConfigSelectors.selectTransactionHash)
+      .next(TRANSACTION_HASH)
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, firstLogMessage))
       .next()
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, secondLogMessage))
       .next()
       .put(analyzerActions.updateStage(inProgresStage))
       .next()
-      .call(fetchSourcesStatus, CHAIN_ID, CONTRACT_ADDRESSES)
+      .call(fetchSourcesStatus, TRANSACTION_HASH, CHAIN_ID, CONTRACT_ADDRESSES)
       .next(firstMockedResponse)
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, thirdLogMessage))
       .next()
@@ -91,7 +94,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .delay(15_000)
       .next()
-      .call(fetchSourcesStatus, CHAIN_ID, [CONTRACT_ADDRESSES[1]])
+      .call(fetchSourcesStatus, TRANSACTION_HASH, CHAIN_ID, [CONTRACT_ADDRESSES[1]])
       .next(secondMockedResponse)
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, fifthLogMessage))
       .next()

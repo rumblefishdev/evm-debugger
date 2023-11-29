@@ -51,7 +51,7 @@ export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) =
 
   const output = getSafeHex(readMemory(memory, returnOffset, returnLength))
 
-  const parsedAddress = getSafeHex(address.slice(-40))
+  const parsedAddress = getSafeHex(address.slice(-40)).toLowerCase()
 
   return { value, output, input, address: parsedAddress }
 }

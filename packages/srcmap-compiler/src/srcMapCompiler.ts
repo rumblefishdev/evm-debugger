@@ -11,6 +11,7 @@ import { version } from '../package.json'
 import { compileFiles } from './helpers'
 import { solcVersion } from './solc'
 import { setDdbContractInfo } from './ddb'
+import type { TSrcMapCompilerHandler } from './types'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -22,11 +23,14 @@ AWSLambda.setTag('lambda_name', 'srcmap-compiler')
 AWSLambda.setTag('solc_version', solcVersion)
 
 export const srcmapCompilerHandler = async (
-  _payload: ISrcMapApiPayload,
+  event: TSrcMapCompilerHandler,
 ): Promise<ISrcMapApiPayload> => {
+  console.log('Initial Lambda Request ID:', event.initialLambdaRequestId)
+
   const payload = await setDdbContractInfo({
-    ..._payload,
+    ...event.payload,
     status: SrcMapStatus.COMPILATION_PENDING,
+    message: '',
   })
 
   if (!payload.compilerVersion && !payload.pathSourceFiles?.length) {

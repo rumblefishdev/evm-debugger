@@ -11,9 +11,13 @@ import { srcMapProviderUrl } from '../../../../config'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 
-export async function fetchSourcesStatus(chainId: ChainId, addresses: string[]): Promise<ISrcMapApiResponseBody['data']> {
+export async function fetchSourcesStatus(
+  transactionHash: string,
+  chainId: ChainId,
+  addresses: string[],
+): Promise<ISrcMapApiResponseBody['data']> {
   const bodyContent = addresses.map((address) => ({ chainId, address }))
-  const stringifiedBody = JSON.stringify({ addresses: bodyContent })
+  const stringifiedBody = JSON.stringify({ transactionHash, addresses: bodyContent })
 
   const resp = await fetch(`${srcMapProviderUrl}/srcmap-api`, {
     method: 'POST',
@@ -23,7 +27,7 @@ export async function fetchSourcesStatus(chainId: ChainId, addresses: string[]):
     body: stringifiedBody,
   })
   if (resp.status !== 200) {
-    throw new Error(`Cannot retrieve data for addresses: ${addresses}`)
+    throw new Error(`Cannot retrieve data for transaction: ${transactionHash} with addresses: ${addresses}`)
   }
 
   const sourceMapsResponse: ISrcMapApiResponseBody = await resp.json()
@@ -39,6 +43,7 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
   try {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
+    const transactionHash = yield* select(transactionConfigSelectors.selectTransactionHash)
 
     for (const address of contractAddresses) {
       yield* put(analyzerActions.addLogMessage(createInfoLogMessage(`Compiling source code for ${address}`)))
@@ -63,7 +68,7 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
       }
 
       if (addressesToPool.length > 0) {
-        const responseData = yield* call(fetchSourcesStatus, chainId, addressesToPool)
+        const responseData = yield* call(fetchSourcesStatus, transactionHash, chainId, addressesToPool)
 
         for (const entry of Object.entries(responseData)) {
           const [address, payload] = entry

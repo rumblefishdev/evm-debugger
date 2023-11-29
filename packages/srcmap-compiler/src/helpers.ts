@@ -265,5 +265,6 @@ export const compileFiles = async (
     ..._payload,
     status: SrcMapStatus.COMPILATION_SUCCESS,
     pathSourceMaps,
+    message: '',
   })
 }

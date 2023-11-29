@@ -1,4 +1,7 @@
-import type { SendMessageCommandInput } from '@aws-sdk/client-sqs'
+import type {
+  SendMessageCommandInput,
+  SendMessageCommandOutput,
+} from '@aws-sdk/client-sqs'
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs'
 import type { ChainId } from '@evm-debuger/types'
 
@@ -7,11 +10,16 @@ const sqsClient = new SQSClient({ region: process.env.AWS_REGION })
 export const putContractToDownloadSqs = async (
   address: string,
   chainId: ChainId,
-) => {
+  awsRequestId: string,
+): Promise<SendMessageCommandOutput> => {
   const params: SendMessageCommandInput = {
     QueueUrl: process.env.SQS_FILES_FETCHER_URL,
     MessageBody: `Contract ${chainId}/${address}`,
     MessageAttributes: {
+      initialLambdaRequestId: {
+        StringValue: awsRequestId,
+        DataType: 'String',
+      },
       chainId: {
         StringValue: String(chainId),
         DataType: 'String',
@@ -24,5 +32,5 @@ export const putContractToDownloadSqs = async (
     DelaySeconds: 0,
   }
   const command = new SendMessageCommand(params)
-  await sqsClient.send(command)
+  return sqsClient.send(command)
 }
