@@ -4,6 +4,7 @@ import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb'
 import { SQSClient } from '@aws-sdk/client-sqs'
 import timekeeper from 'timekeeper'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import context from 'aws-lambda-mock-context'
 
 import { createLambdaEvent } from '../utils/lambdaMocks'
 import {
@@ -24,9 +25,11 @@ describe('Unit test for api', function () {
     chainId: CHAIN_ID,
   }
   const testEvent = createLambdaEvent(txInitDetails)
+  let ctx: ReturnType<typeof context>
 
   beforeAll(() => {
     timekeeper.freeze(new Date('2014-01-01'))
+    ctx = context()
   })
   beforeEach(() => {
     ddbMock.reset()
@@ -41,6 +44,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -75,6 +79,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)
@@ -103,6 +108,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -139,6 +145,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)
