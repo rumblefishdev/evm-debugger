@@ -44,7 +44,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
-      ctx
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -79,7 +79,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
-      ctx
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)
@@ -108,7 +108,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
-      ctx
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -145,7 +145,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
-      ctx
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)
