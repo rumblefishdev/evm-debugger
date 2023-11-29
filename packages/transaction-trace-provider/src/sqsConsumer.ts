@@ -27,12 +27,11 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
   })
-  console.log(`Provider for ${chainId} is ${hardhatProvider}`)
-  console.log(`Starting debug_traceTransaction for ${txHash}`)
+  console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
   // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
   // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
-  console.log(`Finished debug_traceTransaction for ${txHash}`)
+  console.log(`Finished debug_traceTransaction for ${chainId}/${txHash}`)
 
   const uploadId = await createMultiPartUpload(txHash, chainId)
 
@@ -78,10 +77,10 @@ export const processTx = async (txHash: string, chainId: string, hardhatForkingU
     parts[parts.length - 1].body = `${parts[parts.length - 1].body.slice(0, -1)}]}`
 
     for (const part of parts) {
-      console.log(`Uploading part ${part.PartNumber}`)
+      console.log(`Uploading part ${part.PartNumber}/${parts.length}`)
 
       const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
-      if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}`)
+      if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}/${parts.length}`)
 
       uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
     }
