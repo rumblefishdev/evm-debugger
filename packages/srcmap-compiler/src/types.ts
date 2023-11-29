@@ -1,4 +1,4 @@
-import { ISrcMapApiPayload } from "@evm-debuger/types"
+import type { ISrcMapApiPayload } from '@evm-debuger/types'
 
 export type SolcOutput = Record<
   string,

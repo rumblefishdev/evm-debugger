@@ -124,7 +124,9 @@ export const srcmapApiHandler = async (
   try {
     const responseContainer = (
       await Promise.all(
-        addresses.map((addressObj) => addressesProcessing(addressObj, context.awsRequestId)),
+        addresses.map((addressObj) =>
+          addressesProcessing(addressObj, context.awsRequestId),
+        ),
       )
     ).reduce((accumulator: Record<string, ISrcMapApiPayload>, element) => {
       accumulator[element.address] = element
