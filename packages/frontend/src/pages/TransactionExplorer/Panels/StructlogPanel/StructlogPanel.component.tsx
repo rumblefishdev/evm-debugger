@@ -36,6 +36,7 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
               const { op, pc, index, gasCost } = data
               return (
                 <ExplorerListRow
+                  className="explorer-list-row"
                   id={`explorer-list-row-${listIndex}`}
                   key={listIndex}
                   chipValue={`gas: ${gasCost}`}

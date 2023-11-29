@@ -284,7 +284,15 @@ export class TxAnalyzer {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
-        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps)
+        const offset = 1
+
+        // console.log('address', address)
+        // console.log('offset', offset)
+        // console.log('Unique source maps', uniqueSourceMaps)
+        // console.log('sourceCode', parsedSourceCode)
+        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps, offset)
+
+        // console.log('uniqueSoruceMapsCodeLinesDictionary', JSON.stringify(uniqueSoruceMapsCodeLinesDictionary, null, 2))
 
         const parsedOpcodes = opcodesConverter(opcodes.trim())
 

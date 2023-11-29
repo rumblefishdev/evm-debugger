@@ -47,7 +47,18 @@ const selectCurrentSourceFiles = createSelector(
   (_sourceCode, _contractNames) => {
     const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
     const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
-    return Object.entries(parseSourceCodeResult).map(([name, sourceCode]) => ({ sourceCode, name }))
+    console.log(
+      Object.entries(parseSourceCodeResult)
+        .map(([name, sourceCode]) => name)
+        .sort(),
+    )
+    return Object.entries(parseSourceCodeResult)
+      .map(([name, sourceCode]) => ({ sourceCode, name }))
+      .sort(
+        (a, b) =>
+          a.name.split('/').slice(0, -1).join('/').localeCompare(b.name.split('/').slice(0, -1).join('/')) ||
+          a.name.split('/').at(-1).localeCompare(b.name.split('/').at(-1)),
+      )
   },
 )
 
