@@ -77,6 +77,8 @@ export const TraceLogsList = (): JSX.Element => {
             return (
               <TraceLogElement
                 key={index}
+                onTouchStart={(event) => event.stopPropagation()}
+                onMouseDown={(event) => event.stopPropagation()}
                 onClick={() => activate(traceLog)}
               >
                 {Array.from({ length: depth }).map((_, depthIndex) => (

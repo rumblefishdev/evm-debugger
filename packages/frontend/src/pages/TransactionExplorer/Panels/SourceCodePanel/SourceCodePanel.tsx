@@ -41,7 +41,10 @@ export const SourceCodePanel: React.FC = () => {
           </Button>
         )}
       </StyledHeadingWrapper>
-      <StyledSourceWrapper>
+      <StyledSourceWrapper
+        onTouchStart={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         {isTreeViewExpanded && <TreeFileViewContainer />}
         <SourceCodeViewContainer />
       </StyledSourceWrapper>
