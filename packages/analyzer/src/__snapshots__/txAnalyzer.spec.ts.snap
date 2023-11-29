@@ -2053,7 +2053,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
 {
   "analyzeSummary": {
     "contractAddresses": [
-      "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+      "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
       "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
@@ -2067,7 +2067,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
     "contractSighashesInfo": [
       {
         "addresses": Set {
-          "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+          "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
         },
         "found": true,
         "fragment": {
@@ -2612,7 +2612,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
   "instructionsMap": {},
   "mainTraceLogList": [
     {
-      "address": "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "blockNumber": "16868672",
       "decodedInput": [
         [
@@ -7359,14 +7359,14 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
 {
   "analyzeSummary": {
     "contractAddresses": [
-      "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+      "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
       "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
       "0x6bf5ed59de0e19999d264746843ff931c0133090",
     ],
     "contractSighashesInfo": [
       {
         "addresses": Set {
-          "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+          "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
         },
         "found": false,
         "fragment": null,
@@ -7406,7 +7406,7 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
   "instructionsMap": {},
   "mainTraceLogList": [
     {
-      "address": "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
       "blockNumber": "16869282",
       "depth": 0,
       "events": [
