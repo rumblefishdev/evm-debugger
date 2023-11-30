@@ -2,9 +2,10 @@ import { Stack, styled, Table, TableCell, TableRow, Typography } from '@mui/mate
 
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
+  // padding: theme.spacing(4, 0),
   overflow: 'auto',
   height: '100%',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
 }))
 
 export const StyledRecord = styled(Stack)(() => ({
@@ -46,8 +47,8 @@ export const StyledTableRow = styled(TableRow)(() => ({
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   width: 1,
   textAlign: 'left',
-  padding: `0 ${theme.spacing(4)} ${theme.spacing(3)} 0`,
-  marginRight: theme.spacing(4),
+  // padding: `0 ${theme.spacing(4)} ${theme.spacing(3)} 0`,
+  // marginRight: theme.spacing(4),
   fontWeight: 500,
   fontSize: '13px',
   fontFamily: 'IBM Plex Mono',
@@ -57,7 +58,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export const StyledTableValueCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'left',
-  padding: `0 0 ${theme.spacing(3)} 0`,
+  // padding: `0 0 ${theme.spacing(3)} 0`,
   marginRight: 'auto',
   fontWeight: 400,
   fontSize: '13px',

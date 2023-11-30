@@ -8,7 +8,7 @@ import { contractNamesSelectors } from '../../../store/contractNames/contractNam
 import { sighashSelectors } from '../../../store/sighash/sighash.selectors'
 import { sighashActions } from '../../../store/sighash/sighash.slice'
 
-import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledAbisWrapper } from './styles'
+import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledContentWrapper } from './styles'
 
 const addSighash = (id: string, value: string) => {
   const dispatch = useTypedDispatch()
@@ -26,7 +26,7 @@ export const SighashesManager = () => {
   return (
     <StyledStack>
       <StyledHeading>Sighashes</StyledHeading>
-      <StyledAbisWrapper>
+      <StyledContentWrapper>
         {contractNames.map((contract) => {
           const filteredSighashes = sighashesWithNames.filter((sighash) => sighash.addresses.has(contract.address))
           return (
@@ -54,7 +54,7 @@ export const SighashesManager = () => {
             </StyledSighashesWrapper>
           )
         })}
-      </StyledAbisWrapper>
+      </StyledContentWrapper>
     </StyledStack>
   )
 }

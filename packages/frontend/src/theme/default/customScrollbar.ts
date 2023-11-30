@@ -18,6 +18,7 @@ declare module '@mui/material/styles' {
 export const scrollbar = {
   '&::-webkit-scrollbar-track': {
     width: '8px',
+    height: '6px',
     backgroundColor: palette.rfBackground,
   },
   '&::-webkit-scrollbar-thumb': {
@@ -31,5 +32,6 @@ export const scrollbar = {
   },
   '&::-webkit-scrollbar': {
     width: '8px',
+    height: '6px',
   },
 }

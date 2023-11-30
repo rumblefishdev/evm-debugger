@@ -4,12 +4,12 @@ import { GAnalytics } from '../../components/GAnalytics'
 import { GoogleTagManager } from '../../components/GAnalytics/googleTagManager'
 
 import type { AppContainerProps } from './AppContainer.types'
-import { StyledContainer, StyledWrapper } from './AppContainer.styles'
+import { StyledAppContainer, StyledAppWrapper } from './AppContainer.styles'
 
 export const AppContainer: React.FC<AppContainerProps> = ({ children, withNavbar = false, ...props }) => (
-  <StyledWrapper {...props}>
+  <StyledAppWrapper {...props}>
     <GAnalytics />
     <GoogleTagManager />
-    <StyledContainer withNavbar={withNavbar}>{children}</StyledContainer>
-  </StyledWrapper>
+    <StyledAppContainer withNavbar={withNavbar}>{children}</StyledAppContainer>
+  </StyledAppWrapper>
 )

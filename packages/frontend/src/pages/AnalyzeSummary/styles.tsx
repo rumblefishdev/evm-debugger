@@ -1,18 +1,20 @@
 import { Stack, styled, Tab, Tabs } from '@mui/material'
 
-export const StyledStack = styled(Stack)(() => ({
-  width: '100%',
+export const StyledStack = styled(Stack)(({ theme }) => ({
+  marginTop: theme.spacing(4),
   justifyContent: 'flex-start',
   height: '100%',
   flexDirection: 'column',
+  boxShadow: '0px 0px 8px 0px rgba(0, 10, 108, 0.2)',
+  borderRadius: '0.5rem',
+  backgroundColor: 'white',
   alignItems: 'center',
 }))
 
 export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  paddingTop: theme.spacing(10),
+  padding: theme.spacing(2),
   overflow: 'hidden',
-  maxWidth: '764px',
   maxHeight: '100%',
   justifyContent: 'flex-start',
   flexDirection: 'column',
@@ -21,10 +23,8 @@ export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
-  zIndex: 10,
-  padding: theme.spacing(1),
-  // maxWidth: '484px',
-  borderRadius: '99px',
+  width: '100%',
+  padding: theme.spacing(2, 0),
   backgroundColor: '#eceef0',
 
   // MuiTabs-indicator

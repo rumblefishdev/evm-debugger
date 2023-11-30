@@ -14,6 +14,7 @@ import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
+import { GridLayoutHandler } from '../GridLayout'
 
 import {
   StyledHeading,
@@ -26,14 +27,18 @@ import {
   StyledFailureIcon,
 } from './styles'
 
-export const TraceLogsList = (): JSX.Element => {
+export interface ITraceLogsListProps {
+  inGridLayout?: boolean
+}
+
+export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): JSX.Element => {
   const dispatch = useTypedDispatch()
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   const ref = React.useRef<HTMLDivElement>(null)
-  const listRef = React.useRef<ViewportListRef>(null)
+  // const listRef = React.useRef<ViewportListRef>(null)
 
   const activate = useCallback(
     (traceLog: TMainTraceLogsWithId) => {
@@ -62,11 +67,11 @@ export const TraceLogsList = (): JSX.Element => {
     <StyledSmallPanel>
       <StyledHeadingWrapper>
         <StyledHeading>Trace</StyledHeading>
+        {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
       <StyledListWrapper ref={ref}>
         <ViewportList
           viewportRef={ref}
-          ref={listRef}
           items={traceLogs}
           withCache={true}
         >
@@ -77,8 +82,6 @@ export const TraceLogsList = (): JSX.Element => {
             return (
               <TraceLogElement
                 key={index}
-                onTouchStart={(event) => event.stopPropagation()}
-                onMouseDown={(event) => event.stopPropagation()}
                 onClick={() => activate(traceLog)}
               >
                 {Array.from({ length: depth }).map((_, depthIndex) => (
