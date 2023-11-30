@@ -14,7 +14,7 @@ export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodeP
     return (
       <StyledSmallPanel>
         <StyledHeadingWrapper>
-          <StyledHeading>Disassembled Bytecode</StyledHeading>
+          <StyledHeading sx={{ fontSize: 22 }}>Disassembled Bytecode</StyledHeading>
           <div style={{ flex: 1 }} />
           {inGridLayout && <GridLayoutHandler />}
         </StyledHeadingWrapper>
