@@ -38,6 +38,6 @@ export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
   ...theme.customStyles.scrollbar,
 }))
 
-export const StyledSighashesWrapper = styled(Stack)(({ theme }) => ({
+export const StyledSighashesWrapper = styled(Stack)({
   width: '100%',
-}))
+})

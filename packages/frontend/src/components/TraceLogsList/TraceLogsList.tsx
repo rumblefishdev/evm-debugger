@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import type { ViewportListRef } from 'react-viewport-list'
 import { ViewportList } from 'react-viewport-list'
 import { checkIfOfCallType } from '@evm-debuger/analyzer'
 import { Tooltip } from '@mui/material'

@@ -149,7 +149,7 @@ export class TxAnalyzer {
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
     return mainTraceLogList.map((item) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input && item.output) {
+      if (checkIfOfCallType(item) && item.isContract && item.input) {
         const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
 
         return { ...item, ...result }
