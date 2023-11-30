@@ -15,7 +15,7 @@ import type { StructlogPanelComponentRef, StructlogPanelProps } from './Structlo
 
 const DEFAULT_ELEMENT_HEIGHT = 74
 
-export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
+export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
@@ -131,6 +131,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
       activeStructlogIndex={activeStructlog?.index}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
+      inGridLayout={inGridLayout}
     />
   )
 }

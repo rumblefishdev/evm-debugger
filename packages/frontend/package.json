@@ -44,7 +44,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
-    "react-viewport-list": "^6.3.0-beta.0",
+    "react-viewport-list": "^7.1.1",
     "react-virtuoso": "^4.6.2",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",

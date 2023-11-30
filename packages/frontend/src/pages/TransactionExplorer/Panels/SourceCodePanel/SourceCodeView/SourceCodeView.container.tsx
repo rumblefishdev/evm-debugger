@@ -19,12 +19,6 @@ export const SourceCodeViewContainer: React.FC = () => {
 
   const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
 
-  console.log('activeBlock', activeBlock)
-  console.log('activeStrucLog', activeStrucLog)
-  console.log('activeInstruction', instructions[activeStrucLog?.pc])
-  console.log('activeSourceFileId', activeSourceFileId)
-  console.log('sourceFiles', sourceFiles)
-
   const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
     startCodeLine: null,
     fileId: null,

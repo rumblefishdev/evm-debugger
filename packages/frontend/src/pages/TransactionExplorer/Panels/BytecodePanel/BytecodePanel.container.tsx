@@ -10,7 +10,11 @@ import { uiSelectors } from '../../../../store/ui/ui.selectors'
 import { BytecodePanelComponent } from './BytecodePanel.component'
 import { StyledMissingBytecodeContainer, StyledMissingBytecodeText } from './BytecodePanel.styles'
 
-export const BytecodePanel: React.FC = (props) => {
+export interface IBytecodePanel {
+  inGridLayout?: boolean
+}
+
+export const BytecodePanel: React.FC<IBytecodePanel> = ({ inGridLayout }) => {
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentDissasembledBytecode = useSelector(bytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentStructlogListOffset = useSelector(uiSelectors.selectStructlogListOffset)
@@ -51,7 +55,7 @@ export const BytecodePanel: React.FC = (props) => {
       dissasembledBytecode={dissasembledBytecodeArray}
       currentElementIndex={currentElementIndex}
       ref={listRef}
-      {...props}
+      inGridLayout={inGridLayout}
     />
   )
 }

@@ -1,12 +1,20 @@
 import React from 'react'
 
-import { StyledBigPanel, StyledHeading } from '../styles'
+import { StyledBigPanel, StyledHeading, StyledHeadingWrapper } from '../styles'
+import { GridLayoutHandler } from '../../../../components/GridLayout'
 
 import { MemoryInfoCard, StackInfoCard, StorageInfoCard } from './Cards'
 
-export const InformationPanel = (): JSX.Element => (
+export interface InformationPanel {
+  inGridLayout?: boolean
+}
+export const InformationPanel: React.FC<InformationPanel> = ({ inGridLayout }): JSX.Element => (
   <StyledBigPanel>
-    <StyledHeading>Step information</StyledHeading>
+    <StyledHeadingWrapper>
+      <StyledHeading>Step information</StyledHeading>
+      <div style={{ flexGrow: 1 }} />
+      {inGridLayout && <GridLayoutHandler />}
+    </StyledHeadingWrapper>
     <StackInfoCard />
     <MemoryInfoCard />
     <StorageInfoCard />
