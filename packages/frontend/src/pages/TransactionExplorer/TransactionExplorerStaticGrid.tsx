@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Grid from '@mui/material/Grid'
-import Container from '@mui/material/Container'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { TraceLogsList } from '../../components/TraceLogsList'

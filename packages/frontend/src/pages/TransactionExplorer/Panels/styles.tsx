@@ -23,7 +23,15 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 
 export const StyledListWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  overflow: 'hidden',
+  overflow: 'auto',
+  height: '100%',
+  ...theme.customStyles.scrollbar,
+}))
+
+export const StyledListQuickLinkWrapper = styled(Stack)(({ theme }) => ({
+  width: '100%',
+  overflow: 'auto',
+  maxHeight: '200px',
   height: '100%',
   ...theme.customStyles.scrollbar,
 }))

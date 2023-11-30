@@ -17,11 +17,7 @@ export const StyledQuickLinksHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
 }))
 
-export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
-  // zIndex: 1,
-  // top: 0,
-  // position: 'sticky',
-  // margin: 0,
+export const StyledHeadingWrapper = styled(Stack)(() => ({
   flexDirection: 'row',
   display: 'flex',
   alignItems: 'center',

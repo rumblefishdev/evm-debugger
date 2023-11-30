@@ -35,6 +35,9 @@ export const QuickLinks: React.FC = () => {
         .filter(({ gasCost }) => gasCost >= gasThreshold)
     : []
 
+  console.log('externalCalls', externalCalls)
+  console.log('expensiveOps', expensiveOps)
+
   const setActiveStructlog = useCallback(
     (structLog: IExtendedStructLog) => {
       dispatch(activeStructLogActions.setActiveStrucLog(structLog.index))
@@ -43,7 +46,7 @@ export const QuickLinks: React.FC = () => {
   )
 
   return (
-    <StyledListWrapper>
+    <StyledListWrapper ref={ref}>
       <StyledHeadingWrapper>
         <StyledQuickLinksHeading>External calls</StyledQuickLinksHeading>
       </StyledHeadingWrapper>
@@ -73,7 +76,7 @@ export const QuickLinks: React.FC = () => {
         <StyledInfo>None were found</StyledInfo>
       )}
 
-      <div style={{ height: '10px' }} />
+      <div style={{ width: '100%', minHeight: '20px' }} />
       <StyledHeadingWrapper>
         <StyledQuickLinksHeading>From gas cost</StyledQuickLinksHeading>
         <StyledTextField
