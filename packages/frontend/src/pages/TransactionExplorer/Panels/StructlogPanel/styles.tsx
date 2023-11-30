@@ -17,20 +17,13 @@ export const StyledQuickLinksHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.rfSecondary,
 }))
 
-export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
-  zIndex: 1,
-  top: 0,
-  position: 'sticky',
-  padding: theme.spacing(4, 4, 3),
-  margin: 0,
+export const StyledHeadingWrapper = styled(Stack)(() => ({
   flexDirection: 'row',
   display: 'flex',
-  border: `1px solid ${theme.palette.rfLinesLight}`,
-  background: 'white',
   alignItems: 'center',
 }))
 
-export const StyledInput = styled(TextField)(({ theme }) => ({
+export const StyledTextField = styled(TextField)(({ theme }) => ({
   marginLeft: theme.spacing(2),
 }))
 

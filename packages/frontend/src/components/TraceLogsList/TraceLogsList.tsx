@@ -37,7 +37,6 @@ export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): 
   const contractNames = useSelector(contractNamesSelectors.selectAll)
 
   const ref = React.useRef<HTMLDivElement>(null)
-  // const listRef = React.useRef<ViewportListRef>(null)
 
   const activate = useCallback(
     (traceLog: TMainTraceLogsWithId) => {
