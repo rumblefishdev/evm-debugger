@@ -1,10 +1,9 @@
-import type { APIGatewayProxyResult } from 'aws-lambda'
+import type { APIGatewayProxyResult, Context } from 'aws-lambda'
 import { mockClient } from 'aws-sdk-client-mock'
 import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb'
 import { SQSClient } from '@aws-sdk/client-sqs'
 import timekeeper from 'timekeeper'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-import context from 'aws-lambda-mock-context'
 
 import { createLambdaEvent } from '../utils/lambdaMocks'
 import {
@@ -25,11 +24,27 @@ describe('Unit test for api', function () {
     chainId: CHAIN_ID,
   }
   const testEvent = createLambdaEvent(txInitDetails)
-  let ctx: ReturnType<typeof context>
+
+  // TODO: Mock this context in better way
+  // Do not use aws-lambda-mock-context because it is not maintained
+  const ctx: Context = {
+    succeed: () => {},
+    memoryLimitInMB: '128',
+    logStreamName: '2014/02/14/[HEAD]13370a84ca4ed8b77c427af260',
+    logGroupName: 'transaction-trace-api',
+    invokedFunctionArn:
+      'arn:aws:lambda:us-east-1:123456789012:function:transaction-trace-api',
+    getRemainingTimeInMillis: () => 1000,
+    functionVersion: '1',
+    functionName: 'transaction-trace-api',
+    fail: () => {},
+    done: () => {},
+    callbackWaitsForEmptyEventLoop: true,
+    awsRequestId: '123',
+  }
 
   beforeAll(() => {
     timekeeper.freeze(new Date('2014-01-01'))
-    ctx = context()
   })
   beforeEach(() => {
     ddbMock.reset()
