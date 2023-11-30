@@ -1,0 +1,47 @@
+{
+  "TransactionExplorer_TracelogListLayout": {
+    "w": 8,
+    "h": 10,
+    "x": 0,
+    "y": 0,
+    "i": "TransactionExplorer_TracelogListLayout",
+    "moved": false,
+    "static": false
+  },
+  "TransactionExplorer_SourceCodeLayout": {
+    "w": 16,
+    "h": 16,
+    "x": 8,
+    "y": 0,
+    "i": "TransactionExplorer_SourceCodeLayout",
+    "moved": false,
+    "static": false
+  },
+  "TransactionExplorer_ByteCodeLayout": {
+    "w": 4,
+    "h": 20,
+    "x": 4,
+    "y": 10,
+    "i": "TransactionExplorer_ByteCodeLayout",
+    "moved": false,
+    "static": false
+  },
+  "TransactionExplorer_StructLogListLayout": {
+    "w": 4,
+    "h": 20,
+    "x": 0,
+    "y": 10,
+    "i": "TransactionExplorer_StructLogListLayout",
+    "moved": false,
+    "static": false
+  },
+  "TransactionExplorer_MemoryLayout": {
+    "w": 8,
+    "h": 13,
+    "x": 8,
+    "y": 16,
+    "i": "TransactionExplorer_MemoryLayout",
+    "moved": false,
+    "static": false
+  }
+}
