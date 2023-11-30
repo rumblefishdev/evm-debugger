@@ -184,16 +184,22 @@ export const parseSourceCode = (sourceName: string, sourceCode: string): TParseS
     const contractsInfo: TSourceCodeObject = JSON.parse(sourceCode.slice(1, -1))
 
     return Object.fromEntries(
-      Object.entries(contractsInfo.sources).map(([contractName, contractDetails], index) => {
-        return [
-          index,
-          {
-            sourceName: contractName,
-            content: removeEncapsulation(contractDetails.content),
-          },
-        ]
-      }),
+      Object.entries(contractsInfo.sources)
+        .sort(
+          ([aName], [bName]) =>
+            aName.split('/').slice(0, -1).join('/').localeCompare(bName.split('/').slice(0, -1).join('/')) ||
+            aName.split('/').at(-1).localeCompare(bName.split('/').at(-1)),
+        )
+        .map(([contractName, contractDetails], index) => {
+          return [
+            index,
+            {
+              sourceName: contractName,
+              content: removeEncapsulation(contractDetails.content),
+            },
+          ]
+        }),
     )
   }
-  return { 0: { sourceName, content: removeEncapsulation(sourceCode) } }
+  return { 0: { sourceName, content: sourceCode } }
 }

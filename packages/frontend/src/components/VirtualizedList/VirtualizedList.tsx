@@ -8,6 +8,7 @@ export const VirtualizedList = React.forwardRef(({ items, children }, ref) => {
   return (
     <StyledVirtualizedList
       data={items}
+      totalCount={items.length}
       itemContent={children}
       ref={ref}
     />

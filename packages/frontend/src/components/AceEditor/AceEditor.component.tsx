@@ -12,9 +12,9 @@ export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highli
   const highlightMarker: IMarker = React.useMemo(
     () => ({
       type: 'fullLine',
-      startRow: highlightStartLine - 1,
+      startRow: highlightStartLine,
       startCol: 1,
-      endRow: highlightEndLine - 1,
+      endRow: highlightEndLine,
       endCol: 0,
       className: 'highlightMarker',
     }),
@@ -23,7 +23,7 @@ export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highli
 
   React.useEffect(() => {
     if (editorRef.current && highlightStartLine) {
-      editorRef.current.editor.scrollToLine(highlightStartLine - 1, true, true, () => {})
+      editorRef.current.editor.scrollToLine(highlightStartLine, true, true, () => {})
     }
   }, [highlightStartLine])
 

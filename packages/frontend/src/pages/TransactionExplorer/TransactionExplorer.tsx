@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { TraceLogsList } from '../../components/TraceLogsList'
 
-import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
+import { BytecodePanel, InformationPanel, SourceCodePanel, StructlogPanel } from './Panels'
 import { NotAContractHero } from './TransactionExplorer.styles'
 import { LayoutKeys, readLayoutFromLocalStorage, saveLayoutToLocalStorage } from './TransactionExplorer.utils'
 
@@ -21,40 +21,49 @@ export const TransactionExplorer: React.FC = () => {
     const BytecodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.BytecodeLayout)
     const BytecodeLayout: Layout = BytecodeLayoutFromLocalStorage || {
       y: 0,
-      x: 4,
+      x: 3,
       w: 2,
       i: LayoutKeys.BytecodeLayout,
-      h: 20,
+      h: 21,
     }
 
     const SourceCodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.SourceCodeLayout)
     const SourceCodeLayout: Layout = SourceCodeLayoutFromLocalStorage || {
       y: 0,
-      x: 6,
-      w: 6,
+      x: 8,
+      w: 4,
       i: LayoutKeys.SourceCodeLayout,
-      h: 20,
+      h: 21,
     }
 
     const StructlogLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.StructlogLayout)
     const StructlogLayout: Layout = StructlogLayoutFromLocalStorage || {
       y: 0,
-      x: 2,
-      w: 2,
+      x: 5,
+      w: 3,
       i: LayoutKeys.StructlogLayout,
-      h: 20,
+      h: 21,
     }
 
     const TraceLogListLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.TracelogListLayout)
     const TraceLogListLayout: Layout = TraceLogListLayoutFromLocalStorage || {
       y: 0,
       x: 0,
-      w: 2,
+      w: 3,
       i: LayoutKeys.TracelogListLayout,
-      h: 20,
+      h: 9,
     }
 
-    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout]
+    const InformationPanelFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.InformationPanelLayout)
+    const InformationPanelLayout: Layout = InformationPanelFromLocalStorage || {
+      y: 9,
+      x: 0,
+      w: 3,
+      i: LayoutKeys.InformationPanelLayout,
+      h: 12,
+    }
+
+    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout, InformationPanelLayout]
   }, [])
 
   React.useEffect(() => {
@@ -97,6 +106,9 @@ export const TransactionExplorer: React.FC = () => {
         </div>
         <div key={LayoutKeys.StructlogLayout}>
           <StructlogPanel />
+        </div>
+        <div key={LayoutKeys.InformationPanelLayout}>
+          <InformationPanel />
         </div>
       </GridLayout>
     </Box>

@@ -53,7 +53,8 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 
 export const StyledListWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  overflow: 'hidden',
+  overflowY: 'auto',
+  overflowX: 'hidden',
   height: '100%',
 
   borderTopLeftRadius: '3px',

@@ -33,6 +33,8 @@ export const SourceCodePanel: React.FC = () => {
         <StyledHeading>Source Code</StyledHeading>
         {hasMultipleSourceFiles && (
           <Button
+            onTouchStart={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
             variant="text"
             size="medium"
             onClick={handleCollapseButtonClick}
