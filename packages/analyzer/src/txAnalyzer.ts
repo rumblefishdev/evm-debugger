@@ -284,6 +284,10 @@ export class TxAnalyzer {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
+        if (address === '0x000000a56aaca3e9a4c479ea6b6cd0dbcb6634f5') {
+          console.log('convertedSourceMap', convertedSourceMap)
+        }
+
         const offset = 1
 
         // console.log('address', address)
