@@ -8,6 +8,7 @@ export enum LayoutKeys {
   StructLogListLayout = 'TransactionExplorer_StructLogListLayout',
   TracelogListLayout = 'TransactionExplorer_TracelogListLayout',
   MemoryLayout = 'TransactionExplorer_MemoryLayout',
+  StackLayout = 'TransactionExplorer_StackLayout',
 }
 
 export const initialLayoutData = InitialLayoutJson as Record<LayoutKeys, Layout>

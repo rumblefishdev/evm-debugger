@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
@@ -12,6 +11,8 @@ import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useSelector(activeStructLogSelectors.selectParsedMemory)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
+  const hasMemory = React.useMemo(() => memory.length > 0, [memory])
+
   const structLogParams = React.useMemo(() => {
     if (!activeStructlog) return null
     return Object.fromEntries(activeStructlog.args.map((v) => [v.name, v.value]))
@@ -79,45 +80,47 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   }
 
   return (
-    <StructlogAcordionPanel
-      text="Memory"
-      canExpand={memory.length > 0}
-    >
-      <StyledWrapper {...props}>
-        {memory.map((memoryItem) => {
-          if (memoryIndexPadded && memoryItem.index === memoryIndexPadded) {
+    <>
+      {hasMemory ? (
+        <StyledWrapper {...props}>
+          {memory.map((memoryItem) => {
+            console.log('memoryItem', memoryItem)
+            if (memoryIndexPadded && memoryItem.index === memoryIndexPadded) {
+              return (
+                <StyledRecord
+                  direction="row"
+                  key={memoryItem.index}
+                >
+                  <StyledRecordType>{memoryItem.index}</StyledRecordType>
+                  <StyledRecordValue>
+                    {memoryItem.value.match(/.{1,2}/g).map((value, index) => {
+                      return (
+                        <span
+                          key={index}
+                          style={decorateBytes(memoryItem.index, index)}
+                        >
+                          {value}
+                        </span>
+                      )
+                    })}
+                  </StyledRecordValue>
+                </StyledRecord>
+              )
+            }
             return (
               <StyledRecord
                 direction="row"
                 key={memoryItem.index}
               >
                 <StyledRecordType>{memoryItem.index}</StyledRecordType>
-                <StyledRecordValue>
-                  {memoryItem.value.match(/.{1,2}/g).map((value, index) => {
-                    return (
-                      <span
-                        key={index}
-                        style={decorateBytes(memoryItem.index, index)}
-                      >
-                        {value}
-                      </span>
-                    )
-                  })}
-                </StyledRecordValue>
+                <StyledRecordValue>{memoryItem.value}</StyledRecordValue>
               </StyledRecord>
             )
-          }
-          return (
-            <StyledRecord
-              direction="row"
-              key={memoryItem.index}
-            >
-              <StyledRecordType>{memoryItem.index}</StyledRecordType>
-              <StyledRecordValue>{memoryItem.value}</StyledRecordValue>
-            </StyledRecord>
-          )
-        })}
-      </StyledWrapper>
-    </StructlogAcordionPanel>
+          })}
+        </StyledWrapper>
+      ) : (
+        <p>This EVM Step has no memory.</p>
+      )}
+    </>
   )
 }

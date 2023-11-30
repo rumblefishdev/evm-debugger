@@ -37,10 +37,19 @@
   },
   "TransactionExplorer_MemoryLayout": {
     "w": 8,
-    "h": 13,
+    "h": 14,
     "x": 8,
     "y": 16,
     "i": "TransactionExplorer_MemoryLayout",
+    "moved": false,
+    "static": false
+  },
+  "TransactionExplorer_StackLayout": {
+    "w": 8,
+    "h": 14,
+    "x": 16,
+    "y": 16,
+    "i": "TransactionExplorer_StackLayout",
     "moved": false,
     "static": false
   }

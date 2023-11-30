@@ -8,9 +8,9 @@ import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.select
 import { TraceLogsList } from '../../components/TraceLogsList'
 
 import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
-import { NotAContractHero } from './TransactionExplorer.styles'
 import { LayoutKeys, saveLayoutToLocalStorage, getLayoutForPanel } from './TransactionExplorer.utils'
 import { MemoryPanel } from './Panels/MemoryPanel/MemoryPanel'
+import { StackPanel } from './Panels/StackPanel/StackPanel'
 
 export const TransactionExplorer: React.FC = () => {
   const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
@@ -23,8 +23,9 @@ export const TransactionExplorer: React.FC = () => {
     const StructlogLayout = getLayoutForPanel(LayoutKeys.StructLogListLayout)
     const TraceLogListLayout = getLayoutForPanel(LayoutKeys.TracelogListLayout)
     const MemoryLayout = getLayoutForPanel(LayoutKeys.MemoryLayout)
+    const StackLayout = getLayoutForPanel(LayoutKeys.StackLayout)
 
-    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout, MemoryLayout]
+    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout, MemoryLayout, StackLayout]
   }, [])
 
   React.useEffect(() => {
@@ -44,8 +45,6 @@ export const TransactionExplorer: React.FC = () => {
       saveLayoutToLocalStorage(layoutItem)
     })
   }, [])
-
-  if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
   return (
     <Box
@@ -67,7 +66,10 @@ export const TransactionExplorer: React.FC = () => {
           <TraceLogsList inGridLayout />
         </div>
         <div key={LayoutKeys.SourceCodeLayout}>
-          <SourceCodePanel inGridLayout />
+          <SourceCodePanel
+            inGridLayout
+            hasContract={activeBlock.isContract}
+          />
         </div>
         <div key={LayoutKeys.ByteCodeLayout}>
           <BytecodePanel inGridLayout />
@@ -77,6 +79,9 @@ export const TransactionExplorer: React.FC = () => {
         </div>
         <div key={LayoutKeys.MemoryLayout}>
           <MemoryPanel inGridLayout />
+        </div>
+        <div key={LayoutKeys.StackLayout}>
+          <StackPanel inGridLayout />
         </div>
       </GridLayout>
     </Box>
