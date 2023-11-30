@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { ethers } from 'ethers'
 import type {
   ICallTypeStructLogs,
@@ -178,27 +179,57 @@ export const isMultipleFilesJSON = (sourceCode: string) => sourceCode.startsWith
 export const removeEncapsulation = (sourceCode: string) => {
   return sourceCode.slice(1, -1).replace(/"/g, "'")
 }
+// TODO: remove this trick after demo
+export const predefinedOrderForContract = [
+  '@openzeppelin/contracts/access/Ownable.sol',
+  '@openzeppelin/contracts/interfaces/IERC1967.sol',
+  '@openzeppelin/contracts/interfaces/draft-IERC1822.sol',
+  '@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol',
+  '@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol',
+  '@openzeppelin/contracts/proxy/Proxy.sol',
+  '@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol',
+  '@openzeppelin/contracts/proxy/beacon/IBeacon.sol',
+  '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol',
+  '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',
+  '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
+  '@openzeppelin/contracts/utils/Address.sol',
+  '@openzeppelin/contracts/utils/Context.sol',
+  '@openzeppelin/contracts/utils/StorageSlot.sol',
+]
 
-export const parseSourceCode = (sourceName: string, sourceCode: string): TParseSourceCodeOutput => {
+export const parseSourceCode = (sourceName: string, sourceCode: string, shouldSortPredefined = false): TParseSourceCodeOutput => {
   if (isMultipleFilesJSON(sourceCode)) {
     const contractsInfo: TSourceCodeObject = JSON.parse(sourceCode.slice(1, -1))
 
+    let sources = Object.entries(contractsInfo.sources).sort(([aName], [bName]) => {
+      const aNamePrepared = aName.split('/').slice(0, -1).join('').toLocaleLowerCase()
+      const bNamePrepared = bName.split('/').slice(0, -1).join('').toLocaleLowerCase()
+      return aNamePrepared.localeCompare(bNamePrepared, undefined, { sensitivity: 'base' })
+    })
+
+    if (shouldSortPredefined) {
+      console.log('shouldSortPredefined', shouldSortPredefined)
+      const test = Object.fromEntries(predefinedOrderForContract.map((predefinedSource) => [predefinedSource, { content: '' }]))
+
+      sources.forEach(([sourceName2, sourceDetails]) => {
+        test[sourceName2] = sourceDetails
+      })
+
+      sources = Object.entries(test)
+    }
+
+    console.log('sources', sources)
+
     return Object.fromEntries(
-      Object.entries(contractsInfo.sources)
-        .sort(
-          ([aName], [bName]) =>
-            aName.split('/').slice(0, -1).join('/').localeCompare(bName.split('/').slice(0, -1).join('/')) ||
-            aName.split('/').at(-1).localeCompare(bName.split('/').at(-1)),
-        )
-        .map(([contractName, contractDetails], index) => {
-          return [
-            index,
-            {
-              sourceName: contractName,
-              content: removeEncapsulation(contractDetails.content),
-            },
-          ]
-        }),
+      sources.map(([contractName, contractDetails], index) => {
+        return [
+          index,
+          {
+            sourceName: contractName,
+            content: removeEncapsulation(contractDetails.content),
+          },
+        ]
+      }),
     )
   }
   return { 0: { sourceName, content: sourceCode } }

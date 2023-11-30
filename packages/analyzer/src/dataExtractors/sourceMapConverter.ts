@@ -57,19 +57,19 @@ export const createSourceMapToSourceCodeDictionary = (
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
       const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
-      if (sourceMapIdentifier === '614:6230:13:-') {
-        console.log('sourceCodes', sourceCodes)
-        console.log(sourceCode.sourceName, sourceCode.content.length)
-        console.log(
-          'sourceParts reduce',
-          sourceParts.reduce((accumulator_, part) => accumulator_ + part.length, 0),
-        )
-        console.log(
-          'sourceParts reduce + 1',
-          sourceParts.reduce((accumulator_, part) => accumulator_ + part.length + 1, 0),
-        )
-        console.log('sourceParts', sourceParts)
-      }
+      // if (sourceMapIdentifier === '2675:11:5:-') {
+      //   console.log('sourceCodes', sourceCodes)
+      //   console.log(sourceCode.sourceName, sourceCode.content.length)
+      //   console.log(
+      //     'sourceParts reduce',
+      //     sourceParts.reduce((accumulator_, part) => accumulator_ + part.length, 0),
+      //   )
+      //   console.log(
+      //     'sourceParts reduce + 1',
+      //     sourceParts.reduce((accumulator_, part) => accumulator_ + part.length + 1, 0),
+      //   )
+      //   console.log('sourceParts', sourceParts)
+      // }
 
       let startLine = 0
       let endLine = 0
@@ -78,37 +78,37 @@ export const createSourceMapToSourceCodeDictionary = (
       for (let index = 0; index < sourceParts.length; index++) {
         const codePartLength = sourceParts[index].length + offset
 
-        if (sourceMapIdentifier === '614:6230:13:-') {
-          console.log('currentIndex', index)
-          console.log('sourceParts.length', sourceParts.length)
-          console.log('sourceParts element', sourceParts[index])
-          console.log('sourceMap.offset', sourceMap.offset)
-          console.log('sourceMap.length', sourceMap.length)
-          console.log('startLine', startLine)
-          console.log('endLine', endLine)
-          console.log('accumulator', accumulator)
-          console.log('codePartLength', codePartLength)
-        }
+        // if (sourceMapIdentifier === '2675:11:5:-') {
+        //   console.log('currentIndex', index)
+        //   console.log('sourceParts.length', sourceParts.length)
+        //   console.log('sourceParts element', sourceParts[index])
+        //   console.log('sourceMap.offset', sourceMap.offset)
+        //   console.log('sourceMap.length', sourceMap.length)
+        //   console.log('startLine', startLine)
+        //   console.log('endLine', endLine)
+        //   console.log('accumulator', accumulator)
+        //   console.log('codePartLength', codePartLength)
+        // }
 
         if (accumulator + codePartLength >= sourceMap.offset && startLine === 0) {
-          if (sourceMapIdentifier === '614:6230:13:-') {
-            console.log('startLineFired')
-          }
+          // if (sourceMapIdentifier === '2675:11:5:-') {
+          //   console.log('startLineFired')
+          // }
           startLine = index
         }
 
         if (accumulator + codePartLength >= sourceMap.offset + sourceMap.length && endLine === 0) {
-          if (sourceMapIdentifier === '614:6230:13:-') {
-            console.log('endLineFired')
-          }
+          // if (sourceMapIdentifier === '2675:11:5:-') {
+          //   console.log('endLineFired')
+          // }
           endLine = index
           break
         }
 
         accumulator += codePartLength
-        if (sourceMapIdentifier === '614:6230:13:-') {
-          console.log('=========================================================')
-        }
+        // if (sourceMapIdentifier === '2675:11:5:-') {
+        //   console.log('=========================================================')
+        // }
       }
 
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {

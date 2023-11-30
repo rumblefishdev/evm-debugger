@@ -280,16 +280,12 @@ export class TxAnalyzer {
 
     return dataToDecode
       .map(({ address, contractName, bytecode, opcodes, sourceMap, sourceCode }) => {
-        const parsedSourceCode = parseSourceCode(contractName, sourceCode)
+        const parsedSourceCode = parseSourceCode(contractName, sourceCode, address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d')
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
         const offset = 1
 
-        // console.log('address', address)
-        // console.log('offset', offset)
-        // console.log('Unique source maps', uniqueSourceMaps)
-        // console.log('sourceCode', parsedSourceCode)
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps, offset)
 
         // console.log('uniqueSoruceMapsCodeLinesDictionary', JSON.stringify(uniqueSoruceMapsCodeLinesDictionary, null, 2))
@@ -304,9 +300,18 @@ export class TxAnalyzer {
 
           const { pc, opcode } = parsedOpcodes[index]
 
+          // if (address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d') {
+          // emptyArray.push({ pc: pc.toString(16), opcode, ...sourceMapEntry })
+          // console.log(pc.toString(16), sourceMapEntry)
+          // }
+
           accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
           return accumulator
         }, {} as TPcIndexedStepInstructions)
+
+        // if (address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d') {
+        //   console.log(JSON.stringify(emptyArray, null, 2))
+        // }
 
         return { instructions, address }
       })
