@@ -7,6 +7,7 @@ export enum LayoutKeys {
   SourceCodeLayout = 'TransactionExplorer_SourceCodeLayout',
   StructLogListLayout = 'TransactionExplorer_StructLogListLayout',
   TracelogListLayout = 'TransactionExplorer_TracelogListLayout',
+  QuickLinksLayout = 'TransactionExplorer_QuickLinksLayout',
   MemoryLayout = 'TransactionExplorer_MemoryLayout',
   StackLayout = 'TransactionExplorer_StackLayout',
 }

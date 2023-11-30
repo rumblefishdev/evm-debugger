@@ -11,6 +11,7 @@ import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
 import { LayoutKeys, saveLayoutToLocalStorage, getLayoutForPanel } from './TransactionExplorer.utils'
 import { MemoryPanel } from './Panels/MemoryPanel/MemoryPanel'
 import { StackPanel } from './Panels/StackPanel/StackPanel'
+import { QuickLinksPanel } from './Panels/QuickLinksPanel/QuickLinksPanel'
 
 export const TransactionExplorer: React.FC = () => {
   const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
@@ -22,10 +23,11 @@ export const TransactionExplorer: React.FC = () => {
     const SourceCodeLayout = getLayoutForPanel(LayoutKeys.SourceCodeLayout)
     const StructlogLayout = getLayoutForPanel(LayoutKeys.StructLogListLayout)
     const TraceLogListLayout = getLayoutForPanel(LayoutKeys.TracelogListLayout)
+    const QuickLinksLayout = getLayoutForPanel(LayoutKeys.QuickLinksLayout)
     const MemoryLayout = getLayoutForPanel(LayoutKeys.MemoryLayout)
     const StackLayout = getLayoutForPanel(LayoutKeys.StackLayout)
 
-    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout, MemoryLayout, StackLayout]
+    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, QuickLinksLayout, TraceLogListLayout, MemoryLayout, StackLayout]
   }, [])
 
   React.useEffect(() => {
@@ -61,6 +63,8 @@ export const TransactionExplorer: React.FC = () => {
         layout={initialLayout}
         onLayoutChange={handleLayoutChange}
         draggableHandle=".grid-draggable-handle"
+        draggableCancel=".grid-draggable-cancel"
+        resizeHandles={['sw', 'se']}
       >
         <div key={LayoutKeys.TracelogListLayout}>
           <TraceLogsList inGridLayout />
@@ -76,6 +80,9 @@ export const TransactionExplorer: React.FC = () => {
         </div>
         <div key={LayoutKeys.StructLogListLayout}>
           <StructlogPanel inGridLayout />
+        </div>
+        <div key={LayoutKeys.QuickLinksLayout}>
+          <QuickLinksPanel inGridLayout />
         </div>
         <div key={LayoutKeys.MemoryLayout}>
           <MemoryPanel inGridLayout />
