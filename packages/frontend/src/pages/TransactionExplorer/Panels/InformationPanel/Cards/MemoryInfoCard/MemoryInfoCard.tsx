@@ -18,7 +18,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   }, [activeStructlog])
 
   const memoryIndexPadded = React.useMemo(() => {
-    if (!structLogParams.offset) return null
+    if (!structLogParams?.offset) return null
     return structLogParams.offset.replace(/^0+/, '').padStart(DEFAULT_STRING.length, '0')
   }, [structLogParams])
 
