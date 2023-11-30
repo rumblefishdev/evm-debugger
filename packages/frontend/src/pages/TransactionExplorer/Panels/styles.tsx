@@ -34,7 +34,7 @@ export const StyledListWrapper = styled(Stack)(({ theme }) => ({
 
 export const StyledBigPanel = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2),
-  maxWidth: '764px',
+  // maxWidth: '764px',
   height: '100%',
   boxSizing: 'border-box',
   boxShadow: '0px 0px 8px 0px rgba(0, 10, 108, 0.2)',
