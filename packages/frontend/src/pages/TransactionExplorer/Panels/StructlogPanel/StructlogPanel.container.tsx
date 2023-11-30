@@ -7,7 +7,6 @@ import { instructionsSelectors } from '../../../../store/instructions/instructio
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
-import { activeBlockActions } from '../../../../store/activeBlock/activeBlock.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
