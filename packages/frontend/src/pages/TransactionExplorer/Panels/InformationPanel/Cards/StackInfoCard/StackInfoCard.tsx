@@ -1,9 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
-import { StyledTable, StyledTableCell, StyledTableRow, StyledTableValueCell } from '../styles'
 import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
+import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 
 export const skipLeadingZeroes = (value: string): string => {
   return `0x${value.replace(/^0+/, '')}`
@@ -12,33 +11,31 @@ export const skipLeadingZeroes = (value: string): string => {
 export const StackInfoCard = () => {
   const stack = useSelector(activeStructLogSelectors.selectParsedStack)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
+  const hasStack = React.useMemo(() => stack.length > 0, [stack])
 
   return (
-    <StructlogAcordionPanel
-      text="Stack"
-      canExpand={stack.length > 0}
-    >
-      <StyledTable>
-        <tbody>
+    <>
+      {hasStack ? (
+        <StyledWrapper>
           {stack.map((stackItem, index) => {
             const isSelected: React.CSSProperties = stackItem.value.isSelected ? { background: 'rgba(0, 0, 0, 0.04)' } : {}
-
             const argName = activeStructlog.args[index]
-
             const name = argName?.name ? `${argName.name}` : stackItem.index
 
             return (
-              <StyledTableRow
-                sx={isSelected}
+              <StyledRecord
                 key={index}
+                sx={isSelected}
               >
-                <StyledTableCell>{name}</StyledTableCell>
-                <StyledTableValueCell>{skipLeadingZeroes(stackItem.value.value)}</StyledTableValueCell>
-              </StyledTableRow>
+                <StyledRecordType>{name}</StyledRecordType>
+                <StyledRecordValue>{skipLeadingZeroes(stackItem.value.value)}</StyledRecordValue>
+              </StyledRecord>
             )
           })}
-        </tbody>
-      </StyledTable>
-    </StructlogAcordionPanel>
+        </StyledWrapper>
+      ) : (
+        <div>This EVM Step has no stack.</div>
+      )}
+    </>
   )
 }

@@ -1,11 +1,12 @@
-import { Stack, styled, Table, TableCell, TableRow, Typography } from '@mui/material'
+import { Stack, styled, Typography } from '@mui/material'
 
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  // padding: theme.spacing(4, 0),
-  overflow: 'auto',
+  overflowY: 'auto',
+  overflowX: 'auto',
   height: '100%',
   gap: theme.spacing(1),
+  ...theme.customStyles.scrollbar,
 }))
 
 export const StyledRecord = styled(Stack)(() => ({
@@ -31,38 +32,4 @@ export const StyledRecordValue = styled(Typography)(({ theme }) => ({
   fontSize: '13px',
   fontFamily: 'IBM Plex Mono',
   color: theme.palette.rfSecondary,
-}))
-
-export const StyledTable = styled(Table)(({ theme }) => ({
-  width: '100%',
-  overflow: 'auto',
-  height: '100%',
-  gap: theme.spacing(2),
-}))
-
-export const StyledTableRow = styled(TableRow)(() => ({
-  textAlign: 'left',
-}))
-
-export const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  width: 1,
-  textAlign: 'left',
-  // padding: `0 ${theme.spacing(4)} ${theme.spacing(3)} 0`,
-  // marginRight: theme.spacing(4),
-  fontWeight: 500,
-  fontSize: '13px',
-  fontFamily: 'IBM Plex Mono',
-  color: theme.palette.rfSecondary,
-  border: 'none',
-}))
-
-export const StyledTableValueCell = styled(TableCell)(({ theme }) => ({
-  textAlign: 'left',
-  // padding: `0 0 ${theme.spacing(3)} 0`,
-  marginRight: 'auto',
-  fontWeight: 400,
-  fontSize: '13px',
-  fontFamily: 'IBM Plex Mono',
-  color: theme.palette.rfSecondary,
-  border: 'none',
 }))

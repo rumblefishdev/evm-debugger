@@ -42,18 +42,53 @@ const selectCurrentSourceCode = createSelector([selectAll, activeBlockSelectors.
 
 const selectIsSourceCodeAvailable = createSelector([selectCurrentSourceCode], (_sourceCode) => Boolean(_sourceCode))
 
+// TODO: remove this trick after demo
+const predefinedOrderForContract = [
+  '@openzeppelin/contracts/access/Ownable.sol',
+  '@openzeppelin/contracts/interfaces/IERC1967.sol',
+  '@openzeppelin/contracts/interfaces/draft-IERC1822.sol',
+  '@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol',
+  '@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol',
+  '@openzeppelin/contracts/proxy/Proxy.sol',
+  '@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol',
+  '@openzeppelin/contracts/proxy/beacon/IBeacon.sol',
+  '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol',
+  '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',
+  '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
+  '@openzeppelin/contracts/utils/Address.sol',
+  '@openzeppelin/contracts/utils/Context.sol',
+  '@openzeppelin/contracts/utils/StorageSlot.sol',
+]
 const selectCurrentSourceFiles = createSelector(
   [selectCurrentSourceCode, contractNamesSelectors.selectAll],
   (_sourceCode, _contractNames) => {
     const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
     const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
-    return Object.entries(parseSourceCodeResult)
-      .map(([name, sourceCode]) => ({ sourceCode, name }))
-      .sort(
-        (a, b) =>
-          a.name.split('/').slice(0, -1).join('/').localeCompare(b.name.split('/').slice(0, -1).join('/')) ||
-          a.name.split('/').at(-1).localeCompare(b.name.split('/').at(-1)),
-      )
+
+    let sources = Object.entries(parseSourceCodeResult).sort(([aName], [bName]) => {
+      const aNamePrepared = aName.split('/').slice(0, -1).join('').toLocaleLowerCase()
+      const bNamePrepared = bName.split('/').slice(0, -1).join('').toLocaleLowerCase()
+      return aNamePrepared.localeCompare(bNamePrepared, undefined, { sensitivity: 'base' })
+    })
+
+    if (_sourceCode?.address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d') {
+      const test = Object.fromEntries(predefinedOrderForContract.map((predefinedSource) => [predefinedSource, { content: '' }]))
+
+      sources.forEach(([sourceName2, sourceDetails]) => {
+        test[sourceName2] = { content: sourceDetails }
+      })
+
+      sources = Object.entries(test).map(([sourceName2, sourceDetails]) => {
+        return [sourceName2, sourceDetails.content]
+      })
+    }
+
+    return sources.map(([name, sourceCode]) => ({ sourceCode, name }))
+    // .sort(
+    //   (a, b) =>
+    //     a.name.split('/').slice(0, -1).join('/').localeCompare(b.name.split('/').slice(0, -1).join('/')) ||
+    //     a.name.split('/').at(-1).localeCompare(b.name.split('/').at(-1)),
+    // )
   },
 )
 
