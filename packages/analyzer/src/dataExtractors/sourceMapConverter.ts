@@ -41,8 +41,25 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
   return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}:${sourceMap.jumpType}`
 }
 
+export const convertNewLineExpressionTypeToNumberOfWhitespaces = (sourceCode: string): number => {
+  const carriageReturnNewLineRegexp = /\r\n/g
+  const newLineRegexp = /\n/g
+  const carriageReturnRegexp = /\r/g
+
+  switch (true) {
+    case carriageReturnNewLineRegexp.test(sourceCode):
+      return 2
+    case newLineRegexp.test(sourceCode):
+      return 1
+    case carriageReturnRegexp.test(sourceCode):
+      return 1
+    default:
+      return 0
+  }
+}
+
 export const createSourceMapToSourceCodeDictionary = (
-  sourceCodes: TParseSourceCodeOutput,
+  sourceFiles: TParseSourceCodeOutput,
   sourceMaps: TParsedSourceMap[],
 ): SourceCodeDictionary => {
   const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
@@ -50,24 +67,26 @@ export const createSourceMapToSourceCodeDictionary = (
   for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
 
-    const sourceCode = sourceCodes[sourceMap.fileId]
+    const sourceCode = sourceFiles[sourceMap.fileId]
     if (sourceCode) {
-      const stringNewLineRegexp = /\r?\n|\r/g
-      const sourceParts = sourceCode.content.split(stringNewLineRegexp)
+      const regexForAllNewLineTypes = /\r\n|\n|\r/g
+      const sourceParts = sourceCode.content.split(regexForAllNewLineTypes)
       const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
+
+      const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
 
       let startLine = 0
       let endLine = 0
       let accumulator = 0
 
       for (let index = 0; index < sourceParts.length; index++) {
-        const codePartLength = sourceParts[index].length + 1
+        const codePartLength = sourceParts[index].length + numberOfCharsPerNewLine
 
-        if (accumulator + codePartLength >= sourceMap.offset && startLine === 0) {
+        if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
           startLine = index
         }
 
-        if (accumulator + codePartLength >= sourceMap.offset + sourceMap.length && endLine === 0) {
+        if (accumulator + codePartLength > sourceMap.offset + sourceMap.length && endLine === 0) {
           endLine = index
           break
         }
