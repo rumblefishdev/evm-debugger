@@ -15,7 +15,7 @@ import { createMockedAbi } from '../../../abis/abi.mock'
 import { createMockedSourceCode } from '../../sourceCodes.mock'
 import { createMockedContractName } from '../../../contractNames/contractNames.mock'
 
-import { fetchSourceData, fetchSourceDataForContractSaga } from './fetchSourceData.saga'
+import { fetchSourceData, fetchSourceDataForContractSaga, fetchSources } from './fetchSourceData.saga'
 
 const MOCK_CONTRACT_ADDRESS = '0x123'
 const MOCK_SOURCE_DATA_PATH = 'mockPath'
@@ -25,11 +25,13 @@ const MOCKED_ABI = createMockedAbi(MOCK_CONTRACT_ADDRESS)
 const MOCKED_SOURCECODE = createMockedSourceCode(MOCK_CONTRACT_ADDRESS)
 const MOCKED_CONTRACT_NAME = createMockedContractName(MOCK_CONTRACT_ADDRESS)
 
-const MOCKED_RESPONSE: Partial<TEtherscanContractSourceCodeResult> = {
+const MOCKED_SOURCEDATA_RESPONSE: Partial<TEtherscanContractSourceCodeResult> = {
   SourceCode: MOCKED_SOURCECODE.sourceCode,
   ContractName: MOCKED_CONTRACT_NAME.contractName,
   ABI: MOCKED_ABI.abi,
 }
+
+const MOCKED_SOURCES_RESPONSE = MOCKED_SOURCECODE.sourcesOrder
 
 describe('fetchSourceDataForContractSaga', () => {
   it('should fetch source data for contract', async () => {
@@ -78,7 +80,10 @@ describe('fetchSourceDataForContractSaga', () => {
         }),
       )
       .withState(initialState)
-      .provide([[matchers.call.fn(fetchSourceData), MOCKED_RESPONSE]])
+      .provide([
+        [matchers.call.fn(fetchSourceData), MOCKED_SOURCEDATA_RESPONSE],
+        [matchers.call.fn(fetchSources), MOCKED_SOURCES_RESPONSE],
+      ])
       .put(abisActions.addAbi(MOCKED_ABI))
       .put(sourceCodesActions.addSourceCode(MOCKED_SOURCECODE))
       .put(
