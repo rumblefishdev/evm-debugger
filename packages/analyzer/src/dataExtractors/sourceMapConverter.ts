@@ -44,7 +44,6 @@ export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string =
 export const createSourceMapToSourceCodeDictionary = (
   sourceCodes: TParseSourceCodeOutput,
   sourceMaps: TParsedSourceMap[],
-  offset = 1,
 ): SourceCodeDictionary => {
   const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
 
@@ -52,63 +51,28 @@ export const createSourceMapToSourceCodeDictionary = (
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
 
     const sourceCode = sourceCodes[sourceMap.fileId]
-    // console.log('sourceMapIdentifier', sourceMapIdentifier)
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
       const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
-      // if (sourceMapIdentifier === '2675:11:5:-') {
-      //   console.log('sourceCodes', sourceCodes)
-      //   console.log(sourceCode.sourceName, sourceCode.content.length)
-      //   console.log(
-      //     'sourceParts reduce',
-      //     sourceParts.reduce((accumulator_, part) => accumulator_ + part.length, 0),
-      //   )
-      //   console.log(
-      //     'sourceParts reduce + 1',
-      //     sourceParts.reduce((accumulator_, part) => accumulator_ + part.length + 1, 0),
-      //   )
-      //   console.log('sourceParts', sourceParts)
-      // }
 
       let startLine = 0
       let endLine = 0
       let accumulator = 0
 
       for (let index = 0; index < sourceParts.length; index++) {
-        const codePartLength = sourceParts[index].length + offset
-
-        // if (sourceMapIdentifier === '2675:11:5:-') {
-        //   console.log('currentIndex', index)
-        //   console.log('sourceParts.length', sourceParts.length)
-        //   console.log('sourceParts element', sourceParts[index])
-        //   console.log('sourceMap.offset', sourceMap.offset)
-        //   console.log('sourceMap.length', sourceMap.length)
-        //   console.log('startLine', startLine)
-        //   console.log('endLine', endLine)
-        //   console.log('accumulator', accumulator)
-        //   console.log('codePartLength', codePartLength)
-        // }
+        const codePartLength = sourceParts[index].length + 1
 
         if (accumulator + codePartLength >= sourceMap.offset && startLine === 0) {
-          // if (sourceMapIdentifier === '2675:11:5:-') {
-          //   console.log('startLineFired')
-          // }
           startLine = index
         }
 
         if (accumulator + codePartLength >= sourceMap.offset + sourceMap.length && endLine === 0) {
-          // if (sourceMapIdentifier === '2675:11:5:-') {
-          //   console.log('endLineFired')
-          // }
           endLine = index
           break
         }
 
         accumulator += codePartLength
-        // if (sourceMapIdentifier === '2675:11:5:-') {
-        //   console.log('=========================================================')
-        // }
       }
 
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {

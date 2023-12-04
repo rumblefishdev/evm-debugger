@@ -3,7 +3,7 @@ import type { JsonFragment } from '@ethersproject/abi'
 
 import type { IRawStructLog, IStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { SourceFileType, TSourceMap } from './srcMap'
+import type { SourceFileType, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
 
 export type TStorage = Record<string, string>
 
@@ -118,7 +118,7 @@ export type TTransactionData = {
   structLogs: IStructLog[]
   transactionInfo: TTransactionInfo
   abis: TAbis
-  sourceCodes: TMappedSourceCodes
+  sourceFiles: TParsedSourceCodesOutput
   sourceMaps: TMappedSourceMap
   bytecodeMaps: TByteCodeMap
   contractNames: TMappedContractNames

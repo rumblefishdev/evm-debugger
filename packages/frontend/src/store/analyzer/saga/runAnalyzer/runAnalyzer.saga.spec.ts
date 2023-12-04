@@ -114,8 +114,8 @@ describe('runAnalyzer', () => {
         accumulator[sourceMap.address] = [...accumulator[sourceMap.address], sourceMap]
         return accumulator
       }, {}),
-      sourceCodes: mockedSourceCodes.reduce((accumulator: TMappedSourceCodes, sourceCode) => {
-        accumulator[sourceCode.address] = sourceCode.sourceCode
+      sourceFiles: mockedSourceCodes.reduce((accumulator, sourceCode) => {
+        accumulator[sourceCode.address] = { 0: { sourceName: sourceCode.sourcesOrder[0], content: sourceCode.sourceCode } }
         return accumulator
       }, {}),
       contractNames: mockedContractNames.reduce((accumulator: TMappedContractNames, contractName) => {

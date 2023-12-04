@@ -14,16 +14,23 @@ export async function fetchSourceData(sourceDataPath: string) {
   return sourceData
 }
 
+export async function fetchSourcesOrder(sourcesPath: string) {
+  const rawSources = await fetch(`https://${traceStorageBucket}/${sourcesPath}`)
+  const sources: Record<number, string> = await rawSources.json()
+  return sources
+}
+
 export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions['fetchSourceData']): SagaGenerator<void> {
-  const { path, contractAddress } = payload
+  const { sourceDataPath, sourcesPath, contractAddress } = payload
 
   try {
-    const sourceData = yield* call(fetchSourceData, path)
+    const sourceData = yield* call(fetchSourceData, sourceDataPath)
+    const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
     if (sourceData.ABI) {
       yield* put(abisActions.addAbi({ address: contractAddress, abi: sourceData.ABI }))
     }
     if (sourceData.SourceCode) {
-      yield* put(sourceCodesActions.addSourceCode({ sourceCode: sourceData.SourceCode, address: contractAddress }))
+      yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: sourceData.SourceCode, address: contractAddress }))
     }
     if (sourceData.ContractName) {
       yield* put(contractNamesActions.updateContractName({ id: contractAddress, changes: { contractName: sourceData.ContractName } }))

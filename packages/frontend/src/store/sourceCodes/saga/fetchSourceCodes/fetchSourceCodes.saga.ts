@@ -87,7 +87,13 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
               break
             case SrcMapStatus.COMPILATION_SUCCESS:
               yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Compilation success for ${address}`)))
-              yield* put(sourceCodesActions.fetchSourceData({ path: payload.pathSourceData, contractAddress: address }))
+              yield* put(
+                sourceCodesActions.fetchSourceData({
+                  sourcesPath: payload.pathSources,
+                  sourceDataPath: payload.pathSourceData,
+                  contractAddress: address,
+                }),
+              )
               yield* take(analyzerActions.addLogMessage)
 
               yield* put(sourceMapsActions.fetchSourceMaps({ paths: payload.pathSourceMaps, contractAddress: address }))
