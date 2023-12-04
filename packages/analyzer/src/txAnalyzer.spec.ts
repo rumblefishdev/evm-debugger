@@ -4,7 +4,7 @@ import type { TTransactionData } from '@evm-debuger/types'
 
 import { prepareAnalyzer } from '../scripts/scriptHelper'
 
-async function runAnalyzerForTestDataFile(tracesPath: string, sourceMaps = {}, sourceCodes = {}, bytecodeMaps = {}) {
+async function runAnalyzerForTestDataFile(tracesPath: string, sourceMaps = {}, sourceFiles = {}, bytecodeMaps = {}) {
   const testData = await promises.readFile(tracesPath, 'utf8')
   const jsonTestData = JSON.parse(testData)
 
@@ -12,7 +12,7 @@ async function runAnalyzerForTestDataFile(tracesPath: string, sourceMaps = {}, s
     transactionInfo: jsonTestData.transactionInfo,
     structLogs: jsonTestData.structLogs,
     sourceMaps,
-    sourceCodes,
+    sourceFiles,
     contractNames: {},
     bytecodeMaps,
     abis: {},

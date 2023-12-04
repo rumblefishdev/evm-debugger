@@ -7,15 +7,17 @@ import { instructionsSelectors } from '../../../../store/instructions/instructio
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
+import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
 
 const DEFAULT_ELEMENT_HEIGHT = 74
 
-export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
+export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
 
@@ -23,12 +25,46 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
 
+  // const previousTrace = React.useRef(null)
+
   const setActiveStructlog = useCallback(
     (index: number) => {
+      // if (
+      //   structLogs[index].op === 'CALL' ||
+      //   structLogs[index].op === 'DELEGATECALL' ||
+      //   structLogs[index].op === 'STATICCALL' ||
+      //   structLogs[index].op === 'CREATE' ||
+      //   structLogs[index].op === 'CREATE2'
+      // ) {
+      //   dispatch(activeBlockActions.loadActiveBlock(traceLogs.find((traceLog) => traceLog.index === structLogs[index].index)))
+      //   return
+      // }
+      // if (structLogs[index].op === 'RETURN' || structLogs[index].op === 'REVERT') {
+      //   const currentBlockArrayIndex = traceLogs.findIndex((traceLog) => traceLog.index === structlogsArray[0].index - 1)
+      //   const currentBlock = traceLogs[currentBlockArrayIndex]
+      //   const previousBlock = traceLogs
+      //     .slice(0, currentBlockArrayIndex)
+      //     .filter((trace) => trace.depth === currentBlock.depth - 1)
+      //     .pop()
+      //   dispatch(activeBlockActions.loadActiveBlock(previousBlock))
+      //   previousTrace.current = index + 1
+      //   return
+      // }
       dispatch(activeStructLogActions.setActiveStrucLog(index))
     },
     [dispatch],
   )
+
+  useEffect(() => {
+    if (activeStructlog === undefined && structlogsArray.length > 0) {
+      // if (previousTrace.current) {
+      //   dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
+      //   previousTrace.current = null
+      //   return
+      // }
+      dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0].index))
+    }
+  }, [activeStructlog, structlogsArray, dispatch])
 
   useEffect(() => {
     if (activeStructlog && currentInstructions) {
@@ -68,7 +104,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
 
     listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.listIndex })
     dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
-  }, [activeStructlog, dispatch])
+  }, [activeStructlog, dispatch, structLogs, structlogsArray])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -83,12 +119,12 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
+    // document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [setActiveStructlog, dispatch, structlogsArray, activeStructlog])
+  }, [setActiveStructlog, dispatch, traceLogs, structlogsArray, activeStructlog])
 
   return (
     <StructlogPanelComponent
@@ -96,6 +132,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = () => {
       activeStructlogIndex={activeStructlog?.index}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
+      inGridLayout={inGridLayout}
     />
   )
 }

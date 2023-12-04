@@ -25,12 +25,14 @@ export const SourceCodeViewContainer: React.FC = () => {
     endCodeLine: null,
   }
 
-  const isOnSameFile = fileId === activeSourceFileId
+  const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
+
+  console.log('isOnSameFile', isOnSameFile)
 
   return (
     <SourceCodeView
-      endCodeLine={isOnSameFile ? endCodeLine : null}
-      startCodeLine={isOnSameFile ? startCodeLine : null}
+      endCodeLine={isOnSameFile ? endCodeLine : -1}
+      startCodeLine={isOnSameFile ? startCodeLine : -1}
       contractName={sourceFiles[activeSourceFileId]?.name}
       activeSourceCode={sourceFiles[activeSourceFileId]?.sourceCode}
     />

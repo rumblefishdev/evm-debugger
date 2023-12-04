@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
 import type { Layout } from 'react-grid-layout'
 import ReactGridlayout, { WidthProvider } from 'react-grid-layout'
 import React from 'react'
@@ -9,8 +8,10 @@ import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.select
 import { TraceLogsList } from '../../components/TraceLogsList'
 
 import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
-import { NotAContractHero } from './TransactionExplorer.styles'
-import { LayoutKeys, readLayoutFromLocalStorage, saveLayoutToLocalStorage } from './TransactionExplorer.utils'
+import { LayoutKeys, saveLayoutToLocalStorage, getLayoutForPanel } from './TransactionExplorer.utils'
+import { MemoryPanel } from './Panels/MemoryPanel/MemoryPanel'
+import { StackPanel } from './Panels/StackPanel/StackPanel'
+import { QuickLinksPanel } from './Panels/QuickLinksPanel/QuickLinksPanel'
 
 export const TransactionExplorer: React.FC = () => {
   const GridLayout = React.useMemo(() => WidthProvider(ReactGridlayout), [])
@@ -18,43 +19,15 @@ export const TransactionExplorer: React.FC = () => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const initialLayout = React.useMemo(() => {
-    const BytecodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.BytecodeLayout)
-    const BytecodeLayout: Layout = BytecodeLayoutFromLocalStorage || {
-      y: 0,
-      x: 4,
-      w: 2,
-      i: LayoutKeys.BytecodeLayout,
-      h: 20,
-    }
+    const BytecodeLayout = getLayoutForPanel(LayoutKeys.ByteCodeLayout)
+    const SourceCodeLayout = getLayoutForPanel(LayoutKeys.SourceCodeLayout)
+    const StructlogLayout = getLayoutForPanel(LayoutKeys.StructLogListLayout)
+    const TraceLogListLayout = getLayoutForPanel(LayoutKeys.TracelogListLayout)
+    const QuickLinksLayout = getLayoutForPanel(LayoutKeys.QuickLinksLayout)
+    const MemoryLayout = getLayoutForPanel(LayoutKeys.MemoryLayout)
+    const StackLayout = getLayoutForPanel(LayoutKeys.StackLayout)
 
-    const SourceCodeLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.SourceCodeLayout)
-    const SourceCodeLayout: Layout = SourceCodeLayoutFromLocalStorage || {
-      y: 0,
-      x: 6,
-      w: 6,
-      i: LayoutKeys.SourceCodeLayout,
-      h: 20,
-    }
-
-    const StructlogLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.StructlogLayout)
-    const StructlogLayout: Layout = StructlogLayoutFromLocalStorage || {
-      y: 0,
-      x: 2,
-      w: 2,
-      i: LayoutKeys.StructlogLayout,
-      h: 20,
-    }
-
-    const TraceLogListLayoutFromLocalStorage = readLayoutFromLocalStorage(LayoutKeys.TracelogListLayout)
-    const TraceLogListLayout: Layout = TraceLogListLayoutFromLocalStorage || {
-      y: 0,
-      x: 0,
-      w: 2,
-      i: LayoutKeys.TracelogListLayout,
-      h: 20,
-    }
-
-    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, TraceLogListLayout]
+    return [BytecodeLayout, SourceCodeLayout, StructlogLayout, QuickLinksLayout, TraceLogListLayout, MemoryLayout, StackLayout]
   }, [])
 
   React.useEffect(() => {
@@ -63,13 +36,17 @@ export const TransactionExplorer: React.FC = () => {
     })
   }, [initialLayout])
 
-  const handleLayoutChange = React.useCallback((layout: Layout[]) => {
-    layout.forEach((layoutItem) => {
+  const handleLayoutChange = React.useCallback((layouts: Layout[]) => {
+    // ### Initial layout generator - uncomment this to generate initial layout ###
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // const { initialLayoutGenerator } = require('./TransactionExplorer.utils')
+    // initialLayoutGenerator(layouts)
+    // ### End of initial layout generator ###
+
+    layouts.forEach((layoutItem) => {
       saveLayoutToLocalStorage(layoutItem)
     })
   }, [])
-
-  if (!activeBlock.isContract) return <NotAContractHero variant="headingUnknown">Selected Block is not a contract</NotAContractHero>
 
   return (
     <Box
@@ -80,23 +57,38 @@ export const TransactionExplorer: React.FC = () => {
         className="layout"
         useCSSTransforms={true}
         autoSize={true}
-        cols={12}
+        cols={24}
         rowHeight={30}
         style={{ width: '100%', height: '100%' }}
         layout={initialLayout}
         onLayoutChange={handleLayoutChange}
+        draggableHandle=".grid-draggable-handle"
+        draggableCancel=".grid-draggable-cancel"
+        resizeHandles={['sw', 'se']}
       >
         <div key={LayoutKeys.TracelogListLayout}>
-          <TraceLogsList />
+          <TraceLogsList inGridLayout />
         </div>
         <div key={LayoutKeys.SourceCodeLayout}>
-          <SourceCodePanel />
+          <SourceCodePanel
+            inGridLayout
+            hasContract={activeBlock.isContract}
+          />
         </div>
-        <div key={LayoutKeys.BytecodeLayout}>
-          <BytecodePanel />
+        <div key={LayoutKeys.ByteCodeLayout}>
+          <BytecodePanel inGridLayout />
         </div>
-        <div key={LayoutKeys.StructlogLayout}>
-          <StructlogPanel />
+        <div key={LayoutKeys.StructLogListLayout}>
+          <StructlogPanel inGridLayout />
+        </div>
+        <div key={LayoutKeys.QuickLinksLayout}>
+          <QuickLinksPanel inGridLayout />
+        </div>
+        <div key={LayoutKeys.MemoryLayout}>
+          <MemoryPanel inGridLayout />
+        </div>
+        <div key={LayoutKeys.StackLayout}>
+          <StackPanel inGridLayout />
         </div>
       </GridLayout>
     </Box>

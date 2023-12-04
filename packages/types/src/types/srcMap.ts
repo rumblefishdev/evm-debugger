@@ -5,6 +5,7 @@ export enum SrcMapStatus {
   SOURCE_DATA_FETCHING_QUEUED_PENDING = 'SOURCE_DATA_FETCHING_QUEUED_PENDING',
   SOURCE_DATA_FETCHING_QUEUED_FAILED = 'SOURCE_DATA_FETCHING_QUEUED_FAILED',
   SOURCE_DATA_FETCHING_QUEUED_SUCCESS = 'SOURCE_DATA_FETCHING_QUEUED_SUCCESS',
+  SOURCE_DATA_FETCHING_QUEUED_TO_DLQ = 'SOURCE_DATA_FETCHING_QUEUED_TO_DLQ',
   SOURCE_DATA_FETCHING_PENDING = 'SOURCE_DATA_FETCHING_PENDING',
   SOURCE_DATA_FETCHING_FAILED = 'SOURCE_DATA_FETCHING_FAILED',
   SOURCE_DATA_FETCHING_NOT_VERIFIED = 'SOURCE_DATA_FETCHING_NOT_VERIFIED',
@@ -105,6 +106,7 @@ export interface ISrcMapApiPayload {
   pathSourceFiles?: string[]
   pathSourceMaps?: string[]
   pathSourceData?: string
+  pathSources?: string
   pathCompilatorSettings?: string
   // sourceMaps?: TSourceMap[]
   // sourceData?: TEtherscanContractSourceCodeResult
@@ -124,20 +126,21 @@ export interface ISrcMapApiResponseBody {
   error?: string
 }
 
-export type TSourceMapConverstionPayload = {
-  sourceMap: string
-  sourceCode: string
-  opcodes: string
-  contractName: string
-  bytecode: string
-  address: string
-}
-
 export type TParsedSourceCode = {
   content: string
   sourceName: string
 }
 
 export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
+export type TParsedSourceCodesOutput = Record<string, TParseSourceCodeOutput>
+
+export type TSourceMapConverstionPayload = {
+  sourceMap: string
+  sourceFiles: TParseSourceCodeOutput
+  opcodes: string
+  contractName: string
+  bytecode: string
+  address: string
+}
 
 export type TSourceCodeObject = { sources: Record<string, { content: string }> }

@@ -12,10 +12,6 @@ import { SrcMapStatus } from '@evm-debuger/types'
 import { captureMessage } from '@sentry/serverless'
 
 import type { SolcOutput, TSourceFile } from './types'
-import { SourceMapElement } from './sourceMapElement'
-import { getLastOpcodeFile } from './opcodesFile'
-import { SourceMapElementTree } from './sourceMapElementTree'
-import { SourceMapContext } from './sourceMapContext'
 import solc from './solc'
 import { setDdbContractInfo } from './ddb'
 import { s3upload, s3download } from './s3'
@@ -48,66 +44,13 @@ const createSettingsObject = (
   }
 }
 
-const formatOpcodes = async (opcodesRaw: string): Promise<string> => {
-  const opcodeFile = await getLastOpcodeFile()
-
-  const parts = opcodesRaw.split(' ')
-  let lastCommand = ''
-  let formattedOpcodes: string[] = []
-  for (const part of parts)
-    if (opcodeFile.opcodes.includes(part)) {
-      formattedOpcodes = [...formattedOpcodes, lastCommand]
-
-      lastCommand = part
-    } else lastCommand = `${lastCommand} ${part}`
-
-  return formattedOpcodes.join('\n')
-}
-
-const formatSourceMap = (
-  sourceMapRaw: string,
-  sourceCode: string,
-  allOpCodes: string[],
-): SourceMapElementTree => {
-  const sourceMapContext = new SourceMapContext(sourceCode, allOpCodes)
-
-  return SourceMapElementTree.fromElements(
-    SourceMapElement.fromSourceMapString(sourceMapRaw, sourceMapContext),
-  )
-}
-
-const gatherSameSourceCodeElements = (
-  els: SourceMapElement[],
-): SourceMapElement[] => {
-  return els.reduce<SourceMapElement[]>(
-    (accumulator, item, index): SourceMapElement[] => {
-      const lastItem = accumulator.length > 0 ? accumulator.at(-1) : null
-      if (lastItem === null) {
-        console.log(1)
-        return [item]
-      }
-
-      if (
-        lastItem &&
-        lastItem.start === item.start &&
-        item.end === lastItem.end
-      ) {
-        const lastItemClone = lastItem.clone()
-        lastItemClone.addIds(item.ids)
-        accumulator.splice(-1)
-        return [...accumulator, lastItemClone]
-      }
-
-      return [...accumulator, item]
-    },
-    [],
-  )
-}
-
 const getSourceMap = async (
   files: TSourceFile[],
   settings: TEtherscanParsedSourceCode['settings'],
-): Promise<TSourceMap[]> => {
+): Promise<{
+  generatedSourceMaps: TSourceMap[]
+  sources: Record<number, string>
+}> => {
   const input = {
     sources: files.reduce((accumulator, current, index) => {
       const key: string = current.path.split('contract_files/').pop() || ''
@@ -129,15 +72,12 @@ const getSourceMap = async (
 
     language: 'Solidity',
   }
-  console.log('input', JSON.stringify(input))
 
   const rawCompilationResult = solc.compile(JSON.stringify(input))
 
   const output: SolcOutput = JSON.parse(rawCompilationResult) as SolcOutput
 
-  console.log('output', JSON.stringify(output))
-
-  let allEntries: TSourceMap[] = []
+  let generatedSourceMaps: TSourceMap[] = []
   for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
     const newerEntries: TSourceMap[] = await Promise.all(
       Object.entries(fileInternals).map(([contractName, contractInternals]) => {
@@ -157,9 +97,16 @@ const getSourceMap = async (
         }
       }),
     )
-    allEntries = [...allEntries, ...newerEntries]
+    generatedSourceMaps = [...generatedSourceMaps, ...newerEntries]
   }
-  return allEntries
+  const sources = Object.entries(output.sources).reduce(
+    (accumulator: Record<number, string>, [key, value]) => {
+      accumulator[value.id] = key
+      return accumulator
+    },
+    {},
+  )
+  return { sources, generatedSourceMaps }
 }
 
 export const compileFiles = async (
@@ -234,8 +181,14 @@ export const compileFiles = async (
   ).filter(Boolean) as TSourceFile[]
 
   let sourceMaps: TSourceMap[] = []
+  let sourcesOrder: Record<number, string> = {}
   try {
-    sourceMaps = await getSourceMap(sourceFiles, settings)
+    const { generatedSourceMaps, sources } = await getSourceMap(
+      sourceFiles,
+      settings,
+    )
+    sourceMaps = generatedSourceMaps
+    sourcesOrder = sources
     console.log(`${_payload.address} sourceMaps`, sourceMaps)
   } catch (error) {
     const message = `/Compilation/Unknow error while compiling:\n${error}`
@@ -261,9 +214,18 @@ export const compileFiles = async (
     }),
   )
 
+  const pathSources = `contracts/${_payload.chainId}/${_payload.address}/contractSources.json`
+  await s3upload({
+    Key: pathSources,
+    Bucket: BUCKET_NAME,
+    Body: JSON.stringify(sourcesOrder),
+  })
+
   return setDdbContractInfo({
     ..._payload,
     status: SrcMapStatus.COMPILATION_SUCCESS,
+    pathSources,
     pathSourceMaps,
+    message: '',
   })
 }

@@ -11,6 +11,7 @@
     "lint:fix": "eslint --quiet 'src/**/*.ts' --fix",
     "type-check": "tsc --noEmit",
     "test": "jest",
+    "test:snapshot-update": "jest --updateSnapshot",
     "clean": "npm run clean:build && npm run clean:js",
     "clean:build": "rimraf dist, src/*.tsbuildinfo",
     "clean:js": "rimraf src/**/*.{js,js.map}"

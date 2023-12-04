@@ -14,6 +14,7 @@ export const abisSlice = createSlice({
   reducers: {
     clearAbis: abisAdapter.removeAll,
     addAbis: abisAdapter.addMany,
+    addAbi: abisAdapter.addOne,
   },
   name: StoreKeys.ABIS,
   initialState: abisAdapter.getInitialState(),

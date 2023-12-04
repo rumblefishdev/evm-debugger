@@ -280,15 +280,16 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub evm-debugger-${Environment}-srcmap-contracts-fetcher-sqs-dead-letter
+      VisibilityTimeout: 900
 
   SrcMapContractsFetcherSqs:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub evm-debugger-${Environment}-srcmap-contracts-fetcher-sqs
-      VisibilityTimeout: 910
+      VisibilityTimeout: 900
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt SrcMapContractsFetcherSqsDeadLetter.Arn
-        maxReceiveCount: 1
+        maxReceiveCount: 3
 
   SrcMapApiFunction:
     Type: AWS::Serverless::Function
@@ -384,7 +385,7 @@ Resources:
           Properties:
             Queue: !GetAtt SrcMapContractsFetcherSqs.Arn
             ScalingConfig:
-              MaximumConcurrency: 5
+              MaximumConcurrency: 5 # based on etherscan rate limits https://docs.etherscan.io/support/rate-limits
       Policies:
         - Statement:
             - Effect: Allow
@@ -412,5 +413,46 @@ Resources:
               Resource:
                 - !Sub arn:aws:s3:::${TraceBucketName}
                 - !Sub arn:aws:s3:::${TraceBucketName}\/**
+    Metadata:
+      BuildMethod: makefile
+
+  SrcMapFetcherDeadLetterQueueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-srcmap-fetcher-dlq
+      CodeUri: ../srcmap-api
+      Handler: lambdaFetcherDlq.srcmapFetcherDeadLetterEntrypoint
+      Runtime: nodejs18.x
+      Timeout: 180
+      MemorySize: 256
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SRCMAP_CONTRACTS_TABLE_NAME: !Ref SrcMapContractsTable
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SrcMapContractsFetcherSqsDeadLetter.Arn
+            ScalingConfig:
+              MaximumConcurrency: 100
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt SrcMapContractsTable.Arn
+                - !Sub ${SrcMapContractsTable.Arn}/**
     Metadata:
       BuildMethod: makefile

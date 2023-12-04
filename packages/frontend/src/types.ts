@@ -28,8 +28,6 @@ export type TTreeMapData = {
 
 export type TTreeMapItemWithoutNested = Omit<TTreeMapData, 'nestedItems'>
 
-export type TSourceCodes = { address: string; sourceCode: string | null }
-
 export type TRawTxData = {
   txHash: string
   transactionInfo: TTransactionInfo

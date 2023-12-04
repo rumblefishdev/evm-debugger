@@ -1,4 +1,4 @@
-import type { APIGatewayProxyResult } from 'aws-lambda'
+import type { APIGatewayProxyResult, Context } from 'aws-lambda'
 import { mockClient } from 'aws-sdk-client-mock'
 import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb'
 import { SQSClient } from '@aws-sdk/client-sqs'
@@ -25,6 +25,24 @@ describe('Unit test for api', function () {
   }
   const testEvent = createLambdaEvent(txInitDetails)
 
+  // TODO: Mock this context in better way
+  // Do not use aws-lambda-mock-context because it is not maintained
+  const ctx: Context = {
+    succeed: () => {},
+    memoryLimitInMB: '128',
+    logStreamName: '2014/02/14/[HEAD]13370a84ca4ed8b77c427af260',
+    logGroupName: 'transaction-trace-api',
+    invokedFunctionArn:
+      'arn:aws:lambda:us-east-1:123456789012:function:transaction-trace-api',
+    getRemainingTimeInMillis: () => 1000,
+    functionVersion: '1',
+    functionName: 'transaction-trace-api',
+    fail: () => {},
+    done: () => {},
+    callbackWaitsForEmptyEventLoop: true,
+    awsRequestId: '123',
+  }
+
   beforeAll(() => {
     timekeeper.freeze(new Date('2014-01-01'))
   })
@@ -41,6 +59,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -75,6 +94,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)
@@ -103,6 +123,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(2)
     expect(sqsMock.calls().length).toEqual(1)
@@ -139,6 +160,7 @@ describe('Unit test for api', function () {
 
     const result: APIGatewayProxyResult = await analyzeTransactionHandler(
       testEvent,
+      ctx,
     )
     expect(ddbMock.calls().length).toEqual(1)
     expect(sqsMock.calls().length).toEqual(0)

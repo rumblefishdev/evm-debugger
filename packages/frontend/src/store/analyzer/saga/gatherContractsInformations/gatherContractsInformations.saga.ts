@@ -16,7 +16,7 @@ export function gatherContractsInformations(transactionInfo: TTransactionInfo, s
     transactionInfo,
     structLogs,
     sourceMaps: {},
-    sourceCodes: {},
+    sourceFiles: {},
     contractNames: {},
     bytecodeMaps: {},
     abis: {},
@@ -44,9 +44,12 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
 
     const { contractAddresses, contractSighashesInfo } = analyzeSummary
 
+    const sanitizedContractAddresses = contractAddresses.map((address) => address.toLowerCase())
+    const uniqueContractAddresses = [...new Set(sanitizedContractAddresses)]
+
     yield* put(sighashActions.addSighashes(contractSighashesInfo))
-    yield* put(contractNamesActions.initializeContractNames(contractAddresses))
-    yield* put(bytecodesActions.initializeBytecodes(contractAddresses))
+    yield* put(contractNamesActions.initializeContractNames(uniqueContractAddresses))
+    yield* put(bytecodesActions.initializeBytecodes(uniqueContractAddresses))
 
     yield* put(
       analyzerActions.updateStage({

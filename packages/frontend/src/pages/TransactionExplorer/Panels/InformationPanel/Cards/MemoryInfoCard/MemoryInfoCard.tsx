@@ -1,17 +1,27 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
-import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
+import { DEFAULT_STRING, activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useSelector(activeStructLogSelectors.selectParsedMemory)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
+  const hasMemory = React.useMemo(() => memory.length > 0, [memory])
+
+  const structLogParams = React.useMemo(() => {
+    if (!activeStructlog) return null
+    return Object.fromEntries(activeStructlog.args.map((v) => [v.name, v.value]))
+  }, [activeStructlog])
+
+  const memoryIndexPadded = React.useMemo(() => {
+    if (!structLogParams?.offset) return null
+    return structLogParams.offset.replace(/^0+/, '').padStart(DEFAULT_STRING.length, '0')
+  }, [structLogParams])
 
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}
@@ -22,12 +32,12 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       color: palette.colorWhite,
       background: palette.colorBrand.secondary,
     }
-    const params = Object.fromEntries(activeStructlog.args.map((v) => [v.name, v.value]))
+
     switch (activeStructlog.op) {
       case 'MSTORE':
       case 'MLOAD': {
-        if (params.offset) {
-          const highlightFrom = Number.parseInt(skipLeadingZeroes(params.offset), 16)
+        if (structLogParams.offset) {
+          const highlightFrom = Number.parseInt(skipLeadingZeroes(structLogParams.offset), 16)
           const highlightTo = highlightFrom + 32
           const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
@@ -38,9 +48,9 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       case 'CREATE2':
       case 'REVERT':
       case 'RETURN': {
-        if (params.offset) {
-          const highlightFrom = Number.parseInt(skipLeadingZeroes(params.offset), 16)
-          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(params['length'] || params['size']), 16)
+        if (structLogParams.offset) {
+          const highlightFrom = Number.parseInt(skipLeadingZeroes(structLogParams.offset), 16)
+          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(structLogParams['length'] || structLogParams['size']), 16)
           const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
         }
@@ -50,14 +60,14 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       case 'STATICCALL':
       case 'CALL': {
         const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
-        if (params.argsOffset && params.inSize) {
-          const highlightFrom = Number.parseInt(skipLeadingZeroes(params.inSize), 16)
-          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(params.inSize), 16)
+        if (structLogParams.argsOffset && structLogParams.inSize) {
+          const highlightFrom = Number.parseInt(skipLeadingZeroes(structLogParams.inSize), 16)
+          const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(structLogParams.inSize), 16)
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
         }
-        if (params.retOffset && params.outSize) {
-          const underlineFrom = Number.parseInt(skipLeadingZeroes(params.retOffset), 16)
-          const underlineTo = underlineFrom + Number.parseInt(skipLeadingZeroes(params.outSize), 16)
+        if (structLogParams.retOffset && structLogParams.outSize) {
+          const underlineFrom = Number.parseInt(skipLeadingZeroes(structLogParams.retOffset), 16)
+          const underlineTo = underlineFrom + Number.parseInt(skipLeadingZeroes(structLogParams.outSize), 16)
           if (currElem >= underlineFrom && currElem < underlineTo) cssProperties = { ...cssProperties, ...underlineCss }
         }
         break
@@ -68,30 +78,48 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
     }
     return cssProperties
   }
+
   return (
-    <StructlogAcordionPanel
-      text="Memory"
-      canExpand={memory.length > 0}
-    >
-      <StyledWrapper {...props}>
-        {memory.map((memoryItem) => {
-          return (
-            <StyledRecord
-              direction="row"
-              key={memoryItem.index}
-            >
-              <StyledRecordType>{memoryItem.index}</StyledRecordType>
-              {memoryItem.value.map((value, index) => {
-                return (
-                  <StyledRecordValue key={index}>
-                    <span style={decorateBytes(memoryItem.index, index)}>{value}</span>
+    <>
+      {hasMemory ? (
+        <StyledWrapper {...props}>
+          {memory.map((memoryItem) => {
+            if (memoryIndexPadded && memoryItem.index === memoryIndexPadded) {
+              return (
+                <StyledRecord
+                  direction="row"
+                  key={memoryItem.index}
+                >
+                  <StyledRecordType>{memoryItem.index}</StyledRecordType>
+                  <StyledRecordValue>
+                    {memoryItem.value.match(/.{1,2}/g).map((value, index) => {
+                      return (
+                        <span
+                          key={index}
+                          style={decorateBytes(memoryItem.index, index)}
+                        >
+                          {value}
+                        </span>
+                      )
+                    })}
                   </StyledRecordValue>
-                )
-              })}
-            </StyledRecord>
-          )
-        })}
-      </StyledWrapper>
-    </StructlogAcordionPanel>
+                </StyledRecord>
+              )
+            }
+            return (
+              <StyledRecord
+                direction="row"
+                key={memoryItem.index}
+              >
+                <StyledRecordType>{memoryItem.index}</StyledRecordType>
+                <StyledRecordValue>{memoryItem.value}</StyledRecordValue>
+              </StyledRecord>
+            )
+          })}
+        </StyledWrapper>
+      ) : (
+        <p>This EVM Step has no memory.</p>
+      )}
+    </>
   )
 }

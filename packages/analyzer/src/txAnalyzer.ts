@@ -25,7 +25,6 @@ import {
   isLogType,
   prepareTraceToSearch,
   readMemory,
-  parseSourceCode,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -149,7 +148,7 @@ export class TxAnalyzer {
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
     return mainTraceLogList.map((item) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input && item.output) {
+      if (checkIfOfCallType(item) && item.isContract && item.input) {
         const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
 
         return { ...item, ...result }
@@ -261,16 +260,18 @@ export class TxAnalyzer {
   public getContractsInstructions(): TStepInstrctionsMap {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
+    if (!this.transactionData.sourceMaps) return {}
+
     Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceCodes[address]) return
+      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceFiles[address]) return
 
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
-      const sourceCode = this.transactionData.sourceCodes[address]
+      const sourceFiles = this.transactionData.sourceFiles[address]
 
       dataToDecode.push({
         sourceMap: source.deployedBytecode.sourceMap,
-        sourceCode,
+        sourceFiles,
         opcodes: source.deployedBytecode.opcodes,
         contractName,
         bytecode: source.deployedBytecode.object,
@@ -279,17 +280,19 @@ export class TxAnalyzer {
     })
 
     return dataToDecode
-      .map(({ address, contractName, bytecode, opcodes, sourceMap, sourceCode }) => {
-        const parsedSourceCode = parseSourceCode(contractName, sourceCode)
+      .map(({ address, opcodes, sourceMap, sourceFiles }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
-        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps)
+        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(sourceFiles, uniqueSourceMaps)
 
         const parsedOpcodes = opcodesConverter(opcodes.trim())
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
+
+          if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
+          if (!parsedOpcodes[index]) return accumulator
 
           const { pc, opcode } = parsedOpcodes[index]
 

@@ -26,7 +26,8 @@ export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSour
       return (
         uniqueSourceMap.offset === sourceMap.offset &&
         uniqueSourceMap.length === sourceMap.length &&
-        uniqueSourceMap.fileId === sourceMap.fileId
+        uniqueSourceMap.fileId === sourceMap.fileId &&
+        uniqueSourceMap.jumpType === sourceMap.jumpType
       )
     })
 
@@ -37,7 +38,7 @@ export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSour
 }
 
 export const createSourceMapIdentifier = (sourceMap: TParsedSourceMap): string => {
-  return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}`
+  return `${sourceMap.offset}:${sourceMap.length}:${sourceMap.fileId}:${sourceMap.jumpType}`
 }
 
 export const createSourceMapToSourceCodeDictionary = (
@@ -48,8 +49,8 @@ export const createSourceMapToSourceCodeDictionary = (
 
   for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
-    const sourceCode = sourceCodes[sourceMap.fileId]
 
+    const sourceCode = sourceCodes[sourceMap.fileId]
     if (sourceCode) {
       const stringNewLineRegexp = /\r?\n|\r/g
       const sourceParts = sourceCode.content.split(stringNewLineRegexp)
@@ -63,11 +64,11 @@ export const createSourceMapToSourceCodeDictionary = (
         const codePartLength = sourceParts[index].length + 1
 
         if (accumulator + codePartLength >= sourceMap.offset && startLine === 0) {
-          startLine = index + 1
+          startLine = index
         }
 
         if (accumulator + codePartLength >= sourceMap.offset + sourceMap.length && endLine === 0) {
-          endLine = index + 1
+          endLine = index
           break
         }
 

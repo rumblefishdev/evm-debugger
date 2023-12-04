@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { ethers } from 'ethers'
 import type {
   ICallTypeStructLogs,
@@ -164,7 +165,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   if (to)
     return {
       ...defaultFields,
-      address: to,
+      address: to.toLowerCase(),
     } as ICallTypeTraceLog
 
   return {
@@ -177,23 +178,4 @@ export const isMultipleFilesJSON = (sourceCode: string) => sourceCode.startsWith
 
 export const removeEncapsulation = (sourceCode: string) => {
   return sourceCode.slice(1, -1).replace(/"/g, "'")
-}
-
-export const parseSourceCode = (sourceName: string, sourceCode: string): TParseSourceCodeOutput => {
-  if (isMultipleFilesJSON(sourceCode)) {
-    const contractsInfo: TSourceCodeObject = JSON.parse(sourceCode.slice(1, -1))
-
-    return Object.fromEntries(
-      Object.entries(contractsInfo.sources).map(([contractName, contractDetails], index) => {
-        return [
-          index,
-          {
-            sourceName: contractName,
-            content: removeEncapsulation(contractDetails.content),
-          },
-        ]
-      }),
-    )
-  }
-  return { 0: { sourceName, content: removeEncapsulation(sourceCode) } }
 }

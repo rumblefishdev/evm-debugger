@@ -2053,7 +2053,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
 {
   "analyzeSummary": {
     "contractAddresses": [
-      "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+      "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
       "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
@@ -2067,7 +2067,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
     "contractSighashesInfo": [
       {
         "addresses": Set {
-          "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+          "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
         },
         "found": true,
         "fragment": {
@@ -2612,7 +2612,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction 1`] = `
   "instructionsMap": {},
   "mainTraceLogList": [
     {
-      "address": "0x59728544B08AB483533076417FbBB2fD0B17CE3a",
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "blockNumber": "16868672",
       "decodedInput": [
         [
@@ -7359,17 +7359,50 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
 {
   "analyzeSummary": {
     "contractAddresses": [
-      "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+      "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
       "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
       "0x6bf5ed59de0e19999d264746843ff931c0133090",
     ],
     "contractSighashesInfo": [
       {
         "addresses": Set {
-          "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+          "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
         },
-        "found": false,
-        "fragment": null,
+        "found": true,
+        "fragment": {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "creatorContractAddress",
+              "type": "address",
+            },
+            {
+              "name": "claimIndex",
+              "type": "uint256",
+            },
+            {
+              "name": "mintCount",
+              "type": "uint16",
+            },
+            {
+              "name": "mintIndices",
+              "type": "uint32[]",
+            },
+            {
+              "name": "merkleProofs",
+              "type": "bytes32[][]",
+            },
+            {
+              "name": "mintFor",
+              "type": "address",
+            },
+          ],
+          "name": "mintBatch",
+          "outputs": [],
+          "payable": true,
+          "stateMutability": "payable",
+          "type": "function",
+        },
         "sighash": "0x26c858a4",
       },
       {
@@ -7406,9 +7439,22 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
   "instructionsMap": {},
   "mainTraceLogList": [
     {
-      "address": "0xE7d3982E214F9DFD53d23a7f72851a7044072250",
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
       "blockNumber": "16869282",
+      "decodedInput": [
+        "0x2ACa032684eC714210b91AbF7BB9DF0A3F2eE84b",
+        {
+          "hex": "0x3f7868f0",
+          "type": "BigNumber",
+        },
+        2,
+        [],
+        [],
+        "0x4cFF7990f598a956D17Ab11E80664bC8098D5DF2",
+      ],
+      "decodedOutput": null,
       "depth": 0,
+      "errorDescription": null,
       "events": [
         {
           "decodedEvent": [
@@ -7474,6 +7520,105 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
           },
         },
       ],
+      "functionFragment": FunctionFragment {
+        "_isFragment": true,
+        "constant": false,
+        "gas": null,
+        "inputs": [
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": null,
+            "arrayLength": null,
+            "baseType": "address",
+            "components": null,
+            "indexed": null,
+            "name": "creatorContractAddress",
+            "type": "address",
+          },
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": null,
+            "arrayLength": null,
+            "baseType": "uint256",
+            "components": null,
+            "indexed": null,
+            "name": "claimIndex",
+            "type": "uint256",
+          },
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": null,
+            "arrayLength": null,
+            "baseType": "uint16",
+            "components": null,
+            "indexed": null,
+            "name": "mintCount",
+            "type": "uint16",
+          },
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": ParamType {
+              "_isParamType": true,
+              "arrayChildren": null,
+              "arrayLength": null,
+              "baseType": "uint32",
+              "components": null,
+              "indexed": null,
+              "name": null,
+              "type": "uint32",
+            },
+            "arrayLength": -1,
+            "baseType": "array",
+            "components": null,
+            "indexed": null,
+            "name": "mintIndices",
+            "type": "uint32[]",
+          },
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": ParamType {
+              "_isParamType": true,
+              "arrayChildren": ParamType {
+                "_isParamType": true,
+                "arrayChildren": null,
+                "arrayLength": null,
+                "baseType": "bytes32",
+                "components": null,
+                "indexed": null,
+                "name": null,
+                "type": "bytes32",
+              },
+              "arrayLength": -1,
+              "baseType": "array",
+              "components": null,
+              "indexed": null,
+              "name": null,
+              "type": "bytes32[]",
+            },
+            "arrayLength": -1,
+            "baseType": "array",
+            "components": null,
+            "indexed": null,
+            "name": "merkleProofs",
+            "type": "bytes32[][]",
+          },
+          ParamType {
+            "_isParamType": true,
+            "arrayChildren": null,
+            "arrayLength": null,
+            "baseType": "address",
+            "components": null,
+            "indexed": null,
+            "name": "mintFor",
+            "type": "address",
+          },
+        ],
+        "name": "mintBatch",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
       "gasCost": 91209,
       "index": 0,
       "input": "0x26c858a40000000000000000000000002aca032684ec714210b91abf7bb9df0a3f2ee84b000000000000000000000000000000000000000000000000000000003f7868f0000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000004cff7990f598a956d17ab11e80664bc8098d5df200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",

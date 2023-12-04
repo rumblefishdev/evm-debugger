@@ -32,7 +32,7 @@ export const getDdbContractInfo = async (
     FilterExpression: 'chainId = :chainId',
     ExpressionAttributeValues: {
       ':chainId': { S: chainId.toString() },
-      ':address': { S: address },
+      ':address': { S: address.toLowerCase() },
     },
   }
 
@@ -61,6 +61,7 @@ export const setDdbContractInfo = async (
   const item = {
     timestamp: Date.now(),
     status: data.status,
+    pathSources: data.pathSources || '',
     pathSourceMaps: data.pathSourceMaps || [],
     pathSourceFiles: data.pathSourceFiles || [],
     pathSourceData: data.pathSourceData || '',
@@ -68,7 +69,7 @@ export const setDdbContractInfo = async (
     message: data.message || '',
     compilerVersion: data.compilerVersion || '',
     chainId: data.chainId,
-    address: data.address,
+    address: data.address.toLowerCase(),
   }
   const params: PutCommandInput = {
     TableName: process.env.SRCMAP_CONTRACTS_TABLE_NAME,

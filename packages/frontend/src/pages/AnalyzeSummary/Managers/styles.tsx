@@ -18,27 +18,26 @@ export const StyledWrapper = styled(Stack)(({ theme }) => ({
 
 export const StyledHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.headingUnknown,
-  marginBottom: theme.spacing(6),
+  margin: theme.spacing(4),
   color: theme.palette.rfSecondary,
 }))
 
 export const StyledAddress = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(2),
   fontWeight: 700,
   fontSize: '16px',
   fontFamily: 'Inter',
   color: theme.palette.rfDisabledDark,
 }))
 
-export const StyledAbisWrapper = styled(Stack)(({ theme }) => ({
+export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  paddingRight: theme.spacing(2),
   overflow: 'auto',
   boxSizing: 'border-box',
   ...theme.customStyles.scrollbar,
 }))
 
-export const StyledSighashesWrapper = styled(Stack)(({ theme }) => ({
+export const StyledSighashesWrapper = styled(Stack)({
   width: '100%',
-  marginBottom: theme.spacing(4),
-}))
+})
