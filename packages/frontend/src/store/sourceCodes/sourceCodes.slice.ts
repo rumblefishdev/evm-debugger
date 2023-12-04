@@ -1,9 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
-import type { TSourceCodes } from '../../types'
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
+
+import type { TSourceCodes } from './sourceCodes.types'
 
 export const sourceCodesAdapter = createEntityAdapter<TSourceCodes>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
@@ -14,7 +15,7 @@ export const sourceCodesSlice = createSlice({
   reducers: {
     updateSourceCode: sourceCodesAdapter.updateOne,
     startPoolingSources: () => {},
-    fetchSourceData: (_, __: PayloadAction<{ path: string; contractAddress: string }>) => {},
+    fetchSourceData: (_, __: PayloadAction<{ sourceDataPath: string; sourcesPath: string; contractAddress: string }>) => {},
     clearSourceCodes: sourceCodesAdapter.removeAll,
     addSourceCodes: sourceCodesAdapter.addMany,
     addSourceCode: sourceCodesAdapter.addOne,

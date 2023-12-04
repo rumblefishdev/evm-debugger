@@ -20,6 +20,7 @@ const TRANSACTION_HASH = '0x123'
 const firstMockedResponse: Record<string, ISrcMapApiPayload> = {
   [CONTRACT_ADDRESSES[0]]: {
     status: SrcMapStatus.COMPILATION_SUCCESS,
+    pathSources: 'pathSources',
     pathSourceMaps: ['pathSourceMaps'],
     pathSourceData: 'pathSourceData',
     chainId: CHAIN_ID,
@@ -35,6 +36,7 @@ const firstMockedResponse: Record<string, ISrcMapApiPayload> = {
 const secondMockedResponse: Record<string, ISrcMapApiPayload> = {
   [CONTRACT_ADDRESSES[1]]: {
     status: SrcMapStatus.COMPILATION_SUCCESS,
+    pathSources: 'pathSources',
     pathSourceMaps: ['pathSourceMaps'],
     pathSourceData: 'pathSourceData',
     chainId: CHAIN_ID,
@@ -74,7 +76,8 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .put(
         sourceCodesActions.fetchSourceData({
-          path: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceData,
+          sourcesPath: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSources,
+          sourceDataPath: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceData,
           contractAddress: CONTRACT_ADDRESSES[0],
         }),
       )
@@ -100,7 +103,8 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .put(
         sourceCodesActions.fetchSourceData({
-          path: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceData,
+          sourcesPath: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSources,
+          sourceDataPath: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceData,
           contractAddress: CONTRACT_ADDRESSES[1],
         }),
       )

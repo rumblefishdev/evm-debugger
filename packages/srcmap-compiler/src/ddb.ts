@@ -61,6 +61,7 @@ export const setDdbContractInfo = async (
   const item = {
     timestamp: Date.now(),
     status: data.status,
+    pathSources: data.pathSources || '',
     pathSourceMaps: data.pathSourceMaps || [],
     pathSourceFiles: data.pathSourceFiles || [],
     pathSourceData: data.pathSourceData || '',

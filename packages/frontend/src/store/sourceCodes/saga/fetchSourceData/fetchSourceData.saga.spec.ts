@@ -18,7 +18,8 @@ import { createMockedContractName } from '../../../contractNames/contractNames.m
 import { fetchSourceData, fetchSourceDataForContractSaga } from './fetchSourceData.saga'
 
 const MOCK_CONTRACT_ADDRESS = '0x123'
-const MOCK_SOURCE_MAP_PATH = 'mockPath'
+const MOCK_SOURCE_DATA_PATH = 'mockPath'
+const MOCK_SOURCES_PATH = 'sourcesPath'
 
 const MOCKED_ABI = createMockedAbi(MOCK_CONTRACT_ADDRESS)
 const MOCKED_SOURCECODE = createMockedSourceCode(MOCK_CONTRACT_ADDRESS)
@@ -62,7 +63,11 @@ describe('fetchSourceDataForContractSaga', () => {
 
     const { storeState } = await expectSaga(
       fetchSourceDataForContractSaga,
-      sourceCodesActions.fetchSourceData({ path: MOCK_SOURCE_MAP_PATH, contractAddress: MOCK_CONTRACT_ADDRESS }),
+      sourceCodesActions.fetchSourceData({
+        sourcesPath: MOCK_SOURCES_PATH,
+        sourceDataPath: MOCK_SOURCE_DATA_PATH,
+        contractAddress: MOCK_CONTRACT_ADDRESS,
+      }),
     )
       .withReducer(
         combineReducers({

@@ -32,7 +32,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
     const structLogs = yield* select(structlogsSelectors.selectAll)
     const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
-    const sourceCodes = yield* select(sourceCodesSelectors.selectGroupedByAddress)
+    const sourceFiles = yield* select(sourceCodesSelectors.selectParsedToSourceFiles)
     const contractNames = yield* select(contractNamesSelectors.selectGroupedByAddress)
     const bytecodes = yield* select(bytecodesSelectors.selectGroupedByAddress)
     const abis = yield* select(sighashSelectors.abis)
@@ -42,7 +42,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       transactionInfo,
       structLogs,
       sourceMaps,
-      sourceCodes,
+      sourceFiles,
       contractNames,
       bytecodeMaps: bytecodes,
       abis: { ...abis, ...addionalAbis },

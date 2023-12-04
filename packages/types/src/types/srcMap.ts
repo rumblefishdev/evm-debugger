@@ -106,6 +106,7 @@ export interface ISrcMapApiPayload {
   pathSourceFiles?: string[]
   pathSourceMaps?: string[]
   pathSourceData?: string
+  pathSources?: string
   pathCompilatorSettings?: string
   // sourceMaps?: TSourceMap[]
   // sourceData?: TEtherscanContractSourceCodeResult
@@ -125,20 +126,21 @@ export interface ISrcMapApiResponseBody {
   error?: string
 }
 
-export type TSourceMapConverstionPayload = {
-  sourceMap: string
-  sourceCode: string
-  opcodes: string
-  contractName: string
-  bytecode: string
-  address: string
-}
-
 export type TParsedSourceCode = {
   content: string
   sourceName: string
 }
 
 export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
+export type TParsedSourceCodesOutput = Record<string, TParseSourceCodeOutput>
+
+export type TSourceMapConverstionPayload = {
+  sourceMap: string
+  sourceFiles: TParseSourceCodeOutput
+  opcodes: string
+  contractName: string
+  bytecode: string
+  address: string
+}
 
 export type TSourceCodeObject = { sources: Record<string, { content: string }> }

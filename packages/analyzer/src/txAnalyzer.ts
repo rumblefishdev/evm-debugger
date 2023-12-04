@@ -25,7 +25,6 @@ import {
   isLogType,
   prepareTraceToSearch,
   readMemory,
-  parseSourceCode,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -261,16 +260,18 @@ export class TxAnalyzer {
   public getContractsInstructions(): TStepInstrctionsMap {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
+    if (!this.transactionData.sourceMaps) return {}
+
     Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceCodes[address]) return
+      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceFiles[address]) return
 
       const contractName = this.transactionData.contractNames[address]
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
-      const sourceCode = this.transactionData.sourceCodes[address]
+      const sourceFiles = this.transactionData.sourceFiles[address]
 
       dataToDecode.push({
         sourceMap: source.deployedBytecode.sourceMap,
-        sourceCode,
+        sourceFiles,
         opcodes: source.deployedBytecode.opcodes,
         contractName,
         bytecode: source.deployedBytecode.object,
@@ -279,16 +280,11 @@ export class TxAnalyzer {
     })
 
     return dataToDecode
-      .map(({ address, contractName, bytecode, opcodes, sourceMap, sourceCode }) => {
-        const parsedSourceCode = parseSourceCode(contractName, sourceCode, address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d')
+      .map(({ address, opcodes, sourceMap, sourceFiles }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
-        const offset = 1
-
-        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(parsedSourceCode, uniqueSourceMaps, offset)
-
-        // console.log('uniqueSoruceMapsCodeLinesDictionary', JSON.stringify(uniqueSoruceMapsCodeLinesDictionary, null, 2))
+        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(sourceFiles, uniqueSourceMaps)
 
         const parsedOpcodes = opcodesConverter(opcodes.trim())
 
@@ -300,18 +296,9 @@ export class TxAnalyzer {
 
           const { pc, opcode } = parsedOpcodes[index]
 
-          // if (address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d') {
-          // emptyArray.push({ pc: pc.toString(16), opcode, ...sourceMapEntry })
-          // console.log(pc.toString(16), sourceMapEntry)
-          // }
-
           accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
           return accumulator
         }, {} as TPcIndexedStepInstructions)
-
-        // if (address === '0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d') {
-        //   console.log(JSON.stringify(emptyArray, null, 2))
-        // }
 
         return { instructions, address }
       })

@@ -16,7 +16,7 @@ export function gatherContractsInformations(transactionInfo: TTransactionInfo, s
     transactionInfo,
     structLogs,
     sourceMaps: {},
-    sourceCodes: {},
+    sourceFiles: {},
     contractNames: {},
     bytecodeMaps: {},
     abis: {},
