@@ -15,7 +15,7 @@ import { createMockedAbi } from '../../../abis/abi.mock'
 import { createMockedSourceCode } from '../../sourceCodes.mock'
 import { createMockedContractName } from '../../../contractNames/contractNames.mock'
 
-import { fetchSourceData, fetchSourceDataForContractSaga, fetchSources } from './fetchSourceData.saga'
+import { fetchSourceData, fetchSourceDataForContractSaga, fetchSourcesOrder } from './fetchSourceData.saga'
 
 const MOCK_CONTRACT_ADDRESS = '0x123'
 const MOCK_SOURCE_DATA_PATH = 'mockPath'
@@ -82,7 +82,7 @@ describe('fetchSourceDataForContractSaga', () => {
       .withState(initialState)
       .provide([
         [matchers.call.fn(fetchSourceData), MOCKED_SOURCEDATA_RESPONSE],
-        [matchers.call.fn(fetchSources), MOCKED_SOURCES_RESPONSE],
+        [matchers.call.fn(fetchSourcesOrder), MOCKED_SOURCES_RESPONSE],
       ])
       .put(abisActions.addAbi(MOCKED_ABI))
       .put(sourceCodesActions.addSourceCode(MOCKED_SOURCECODE))

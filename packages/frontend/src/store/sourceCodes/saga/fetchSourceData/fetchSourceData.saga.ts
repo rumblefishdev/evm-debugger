@@ -14,7 +14,7 @@ export async function fetchSourceData(sourceDataPath: string) {
   return sourceData
 }
 
-export async function fetchSources(sourcesPath: string) {
+export async function fetchSourcesOrder(sourcesPath: string) {
   const rawSources = await fetch(`https://${traceStorageBucket}/${sourcesPath}`)
   const sources: Record<number, string> = await rawSources.json()
   return sources
@@ -25,7 +25,7 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
 
   try {
     const sourceData = yield* call(fetchSourceData, sourceDataPath)
-    const sourcesOrder = yield* call(fetchSources, sourcesPath)
+    const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
     if (sourceData.ABI) {
       yield* put(abisActions.addAbi({ address: contractAddress, abi: sourceData.ABI }))
     }
