@@ -31,7 +31,7 @@ export const mapSourceCode = ({ contractName, sourceCode, sourcesOrder, address 
   return { sources, address }
 }
 
-export const reduceToAddressSources = (accumulator: unknown, { sources, address }: { sources: unknown, address: unknown }) => {
+export const reduceToAddressSources = (accumulator: unknown, { sources, address }: { sources: unknown; address: unknown }) => {
   accumulator[address] = sources
   return accumulator
 }
