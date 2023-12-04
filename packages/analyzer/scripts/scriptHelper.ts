@@ -14,9 +14,9 @@ export const prepareAnalyzer = async (transactionData: TTransactionData) => {
   const abisAndSources = JSON.parse(await readFile(`${TEST_TRANSACTIONS_DIR}/abis/${transactionData.transactionInfo.hash}.json`, 'utf8'))
 
   transactionData.abis = { ...transactionData.abis, ...abisAndSources.abis }
-  transactionData.sourceCodes = {
-    ...transactionData.sourceCodes,
-    ...abisAndSources.sourceCodes,
+  transactionData.sourceFiles = {
+    ...transactionData.sourceFiles,
+    ...abisAndSources.sourceFiles,
   }
   transactionData.contractNames = {
     ...transactionData.contractNames,

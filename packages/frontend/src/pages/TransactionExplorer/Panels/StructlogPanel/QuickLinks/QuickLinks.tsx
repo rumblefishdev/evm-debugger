@@ -35,9 +35,6 @@ export const QuickLinks: React.FC = () => {
         .filter(({ gasCost }) => gasCost >= gasThreshold)
     : []
 
-  console.log('externalCalls', externalCalls)
-  console.log('expensiveOps', expensiveOps)
-
   const setActiveStructlog = useCallback(
     (structLog: IExtendedStructLog) => {
       dispatch(activeStructLogActions.setActiveStrucLog(structLog.index))

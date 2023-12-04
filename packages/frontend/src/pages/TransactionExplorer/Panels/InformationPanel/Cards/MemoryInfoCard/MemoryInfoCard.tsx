@@ -84,7 +84,6 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       {hasMemory ? (
         <StyledWrapper {...props}>
           {memory.map((memoryItem) => {
-            console.log('memoryItem', memoryItem)
             if (memoryIndexPadded && memoryItem.index === memoryIndexPadded) {
               return (
                 <StyledRecord
