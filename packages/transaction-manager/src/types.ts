@@ -6,25 +6,25 @@ export type TTempExecs = {
   forkingUrl: string
 }
 
-export type SolcOutput = Record<
-  string,
-  Record<
-    string,
-    {
-      evm: {
-        evm: {
-          bytecode: {
-            object: string
-            opcodes: string
-            sourceMap: string
-          }
-          deployedBytecode: {
-            object: string
-            opcodes: string
-            sourceMap: string
-          }
-        }
-      }
+export type Contract = {
+  evm: {
+    bytecode: {
+      object: string
+      opcodes: string
+      sourceMap: string
     }
-  >
->
+    deployedBytecode: {
+      object: string
+      opcodes: string
+      sourceMap: string
+    }
+    assembly: string
+  }
+}
+
+export type Source = { id: number }
+
+export type SolcOutput = {
+  contracts: Record<string, Record<string, Contract>>
+  sources: Record<string, Source>
+}

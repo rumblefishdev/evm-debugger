@@ -51,7 +51,7 @@ const wait = async (ms: number) => {
       transactionInfo: transactionInfoResult,
       structLogs: transactionTraceResult.structLogs,
       sourceMaps: {},
-      sourceCodes: {},
+      sourceFiles: {},
       contractNames: {},
       bytecodeMaps: {},
       abis: {},
@@ -88,13 +88,32 @@ const wait = async (ms: number) => {
                 '*': ['*'],
               },
             },
-            // evmVersion:"Default",
+            evmVersion: 'istanbul',
           },
+
           language,
         }))
 
         saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(output))
 
+
+
+        if (address === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"){
+          const solcOutput: SolcOutput = JSON.parse(output)
+          const {assembly} = solcOutput.contracts['UniswapV2Router02']['UniswapV2Router02'].evm
+          
+          const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+
+          saveToFile(path, assembly)
+        }
+        if (address === "0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d"){
+          const solcOutput: SolcOutput = JSON.parse(output)
+          const {assembly} = solcOutput.contracts['@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol']['TransparentUpgradeableProxy'].evm
+          
+          const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+
+          saveToFile(path, assembly)
+        }
 
       } else {
         console.log(`contract ${address} is not verified`)

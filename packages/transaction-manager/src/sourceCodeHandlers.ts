@@ -16,7 +16,7 @@ export const handleSingleSourceCode = (
     optimizer: { runs: Number(sourceCodeData.Runs), enabled: Boolean(sourceCodeData.OptimizationUsed) },
     evmVersion: sourceCodeData.CompilerVersion,
   }
-  const language = rawSourceCode.includes('pragma solidity') ? 'Solidity' : 'Vyper'
+  const language = sourceCodeData.SourceCode.includes('pragma solidity') ? 'Solidity' : 'Vyper'
   const sources = { [sourceCodeData.ContractName]: { content: sourceCodeData.SourceCode } }
 
   return { sources, settings, language }

@@ -36,7 +36,6 @@ export const saveToFile = (path: string, data: object | string) => {
   if (typeof data === 'string') {
     writeFileSync(absolutePath, data)
   } else {
-    console.log('Saving to file: ', absolutePath)
     writeFileSync(absolutePath, JSON.stringify(data, null, 2))
   }
 }
