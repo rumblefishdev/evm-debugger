@@ -161,7 +161,12 @@ const extractFiles = async (
       sourceCodeObj.sources[fileName].content,
     ])
   } catch {
-    toUpload = [['main.sol', fetcherPayload.sourceData?.SourceCode]]
+    toUpload = [
+      [
+        fetcherPayload.sourceData?.ContractName,
+        fetcherPayload.sourceData?.SourceCode,
+      ],
+    ]
   }
 
   const uploaded: string[] = (

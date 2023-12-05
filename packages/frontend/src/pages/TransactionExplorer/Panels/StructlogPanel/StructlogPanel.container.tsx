@@ -108,16 +108,17 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
     const handleKeyDown = (event: KeyboardEvent) => {
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
-      event.preventDefault()
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
         setActiveStructlog(nextStructlog.index)
+        event.preventDefault()
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
         setActiveStructlog(previousStructlog.index)
+        event.preventDefault()
       }
     }
 
-    // document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
