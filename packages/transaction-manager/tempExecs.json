@@ -1,5 +1,5 @@
 {
-  "forkingUrl": "https://polygon-mainnet.g.alchemy.com/v2/jBJP0IJH37KT6soF-3YCH82pItbkxDkA",
-  "forkBlockNumber": 50766963,
-  "chainId": 137
+  "forkingUrl": "https://eth-mainnet.alchemyapi.io/v2/jBJP0IJH37KT6soF-3YCH82pItbkxDkA",
+  "forkBlockNumber": 18669354,
+  "chainId": 1
 }

@@ -98,22 +98,22 @@ const wait = async (ms: number) => {
 
 
 
-        if (address === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"){
-          const solcOutput: SolcOutput = JSON.parse(output)
-          const {assembly} = solcOutput.contracts['UniswapV2Router02']['UniswapV2Router02'].evm
+        // if (address === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"){
+        //   const solcOutput: SolcOutput = JSON.parse(output)
+        //   const {assembly} = solcOutput.contracts['UniswapV2Router02']['UniswapV2Router02'].evm
           
-          const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+        //   const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
 
-          saveToFile(path, assembly)
-        }
-        if (address === "0x10b35407d9623b3f2597908a5bf1e0f00bbd4a91"){
-          const solcOutput: SolcOutput = JSON.parse(output)
-          const {assembly} = solcOutput.contracts['contracts/accumulators/UniswapV2PA.sol']['AdrastiaUniswapV2PA'].evm
+        //   saveToFile(path, assembly)
+        // }
+        // if (address === "0x10b35407d9623b3f2597908a5bf1e0f00bbd4a91"){
+        //   const solcOutput: SolcOutput = JSON.parse(output)
+        //   const {assembly} = solcOutput.contracts['contracts/accumulators/UniswapV2PA.sol']['AdrastiaUniswapV2PA'].evm
           
-          const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+        //   const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
 
-          saveToFile(path, assembly)
-        }
+        //   saveToFile(path, assembly)
+        // }
 
       } else {
         console.log(`contract ${address} is not verified`)
