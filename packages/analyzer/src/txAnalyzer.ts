@@ -288,11 +288,18 @@ export class TxAnalyzer {
 
         const parsedOpcodes = opcodesConverter(opcodes.trim())
 
+        if (address === '0x10b35407d9623b3f2597908a5bf1e0f00bbd4a91') {
+          console.log('parsedOpcodes', JSON.stringify(parsedOpcodes, null, 2))
+          console.log('convertedSourceMap', JSON.stringify(convertedSourceMap, null, 2))
+          console.log('parsedOpcodes => length', parsedOpcodes.length)
+          console.log('convertedSourceMap => length', convertedSourceMap.length)
+        }
+
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
 
-          if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
-          if (!parsedOpcodes[index]) return accumulator
+          // if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
+          // if (!parsedOpcodes[index]) return accumulator
 
           const { pc, opcode } = parsedOpcodes[index]
 

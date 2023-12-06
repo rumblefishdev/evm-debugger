@@ -106,9 +106,9 @@ const wait = async (ms: number) => {
 
           saveToFile(path, assembly)
         }
-        if (address === "0x9d9b975a31428fbf98dbd062c518db4d8ac31a8d"){
+        if (address === "0x10b35407d9623b3f2597908a5bf1e0f00bbd4a91"){
           const solcOutput: SolcOutput = JSON.parse(output)
-          const {assembly} = solcOutput.contracts['@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol']['TransparentUpgradeableProxy'].evm
+          const {assembly} = solcOutput.contracts['contracts/accumulators/UniswapV2PA.sol']['AdrastiaUniswapV2PA'].evm
           
           const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
 
