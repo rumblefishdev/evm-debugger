@@ -1,4 +1,10 @@
-import type { AbortMultipartUploadCommandInput, CompleteMultipartUploadCommandInput, CompletedPart, CreateMultipartUploadCommandInput, UploadPartCommandInput } from '@aws-sdk/client-s3'
+import type {
+  AbortMultipartUploadCommandInput,
+  CompleteMultipartUploadCommandInput,
+  CompletedPart,
+  CreateMultipartUploadCommandInput,
+  UploadPartCommandInput,
+} from '@aws-sdk/client-s3'
 import {
   CreateMultipartUploadCommand,
   UploadPartCommand,

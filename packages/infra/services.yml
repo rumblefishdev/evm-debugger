@@ -6,6 +6,8 @@ Parameters:
     Type: String
   HostedZoneId:
     Type: String
+  CloudFrontDistributionId:
+    Type: String
   Domain:
     Type: String
   CertificateArn:
@@ -161,6 +163,7 @@ Resources:
           ALCHEMY_KEY: !Ref AlchemyKey
           ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           # HardHat uses env-path for config files, so we need to set it to /tmp/home
@@ -195,6 +198,11 @@ Resources:
               Resource:
                 - !Sub arn:aws:s3:::${TraceBucketName}
                 - !Sub arn:aws:s3:::${TraceBucketName}/**
+            - Action:
+                - cloudfront:CreateInvalidation
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
 
     Metadata:
       BuildMethod: makefile

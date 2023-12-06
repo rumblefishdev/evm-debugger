@@ -11,8 +11,9 @@ import type { CompletedPart } from '@aws-sdk/client-s3'
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
-import { getFilePath, abortMultiPartUpload, completeMultiPartUpload, createMultiPartUpload, uploadPart } from './s3'
+import { getFilePath, completeMultiPartUpload, createMultiPartUpload, uploadPart, getFileName } from './s3'
 import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
+import { invalidateCloudFrontCache } from './cloudFront'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -105,6 +106,14 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
       }
       await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
       return
+    }
+
+    try {
+      const path = `/${getFileName(txHash, chainId)}`
+      await invalidateCloudFrontCache(process.env.CLOUDFRONT_DISTRIBUTION_ID!, [path])
+    } catch (error) {
+      captureException(error)
+      console.log(error)
     }
 
     const s3Location = getFilePath(txHash, chainId)
