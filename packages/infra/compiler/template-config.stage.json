@@ -10,7 +10,7 @@
     "TraceBucketName": "transaction-trace-storage-stage.rumblefish.dev",
     "ContractsTableName": "evm-debugger-stage-srcmap-contracts-ddb",
     "ApiGatewayAllowOrigin": "*",
-    "AlchemyKey": "3-iIzln-MQF8Lc5a7DL2BwTPK8D5XRwv",
+    "AlchemyKey": "AvNAkauAeKIYGvoi0TM68IJ647RwEN52",
     "SentryDsn": "https://8176811a1c53456aa4669573596c0f07@o4505125543477248.ingest.sentry.io/4505130540990464"
   }
 }
