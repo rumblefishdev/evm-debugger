@@ -11,8 +11,9 @@ import type { CompletedPart } from '@aws-sdk/client-s3'
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
-import { getFilePath, abortMultiPartUpload, completeMultiPartUpload, createMultiPartUpload, uploadPart } from './s3'
-import { DEFAULT_ERROR, knownErrors } from './errors'
+import { getFilePath, completeMultiPartUpload, createMultiPartUpload, uploadPart, getFileName } from './s3'
+import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
+import { invalidateCloudFrontCache } from './cloudFront'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -22,104 +23,107 @@ AWSLambda.init({
 })
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
-export const processTx = async (txHash: string, chainId: string, hardhatForkingUrl: string) => {
+export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
   })
-  console.log(`Provider for ${chainId} is ${hardhatProvider}`)
-  console.log(`Starting debug_traceTransaction for ${txHash}`)
+  console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
   // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
   // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
-  console.log(`Finished debug_traceTransaction for ${txHash}`)
+  console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
+  return traceResult
+}
 
+export const uploadTrace = async (txHash: string, chainId: string, traceResult: TRawTransactionTraceResult) => {
   const uploadId = await createMultiPartUpload(txHash, chainId)
 
-  const MAX_ELEMENTS_IN_PART = 1000
-
-  // Must be in range of 1-10000
-  let partNumberIndex = 1
-
-  const rootPartBody = JSON.stringify({
+  const body = JSON.stringify({
+    structLogs: traceResult.structLogs,
     returnValue: traceResult.returnValue,
     gas: traceResult.gas,
     failed: traceResult.failed,
   })
+  const bufferBody = Buffer.from(body)
+  const partSize = 1024 * 1024 * 10
+  const parts: { PartNumber: number; body: Buffer }[] = []
 
-  // first slice removes end bracket " } "
-  // then we add the structLogs field
-  // stringifying the structLogs array and removing the end bracket " ] "
-  // so we can add a comma to the end of the string and push more data
-  const rootPartBodyParsed = `${rootPartBody.slice(0, -1)},"structLogs": ${JSON.stringify(
-    traceResult.structLogs.slice(0, MAX_ELEMENTS_IN_PART),
-  ).slice(0, -1)},`
-
-  const rootPart = {
-    PartNumber: partNumberIndex,
-    body: rootPartBodyParsed,
+  for (let rangeStart = 0; rangeStart < bufferBody.length; rangeStart += partSize) {
+    const partNumber = Math.ceil(rangeStart / partSize) + 1
+    const end = Math.min(rangeStart + partSize, bufferBody.length)
+    const partBody = bufferBody.slice(rangeStart, end)
+    parts.push({ PartNumber: partNumber, body: partBody })
   }
 
-  try {
-    const parts: { PartNumber: number; body: string }[] = [rootPart]
-    const uploadedParts: CompletedPart[] = []
+  const uploadedParts: CompletedPart[] = []
+  for (const part of parts) {
+    console.log(`Uploading part ${part.PartNumber}/${parts.length}`)
+    console.log(`Part size: ${part.body.length}`)
 
-    for (let index = MAX_ELEMENTS_IN_PART; index < traceResult.structLogs.length; ) {
-      partNumberIndex++
-      // first slice gets part of data
-      // second slice removes end bracket " ] "
-      // then we add a comma to the end of the string and push more data
-      const body = `${JSON.stringify(traceResult.structLogs.slice(index, index + 1000)).slice(1, -1)},`
-      parts.push({ PartNumber: partNumberIndex, body })
-      index += 1000
-    }
+    const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
+    if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}/${parts.length}`)
 
-    // slice removes comma " , " from last element and closes the array " ] " and object " } "
-    parts[parts.length - 1].body = `${parts[parts.length - 1].body.slice(0, -1)}]}`
-
-    for (const part of parts) {
-      console.log(`Uploading part ${part.PartNumber}`)
-
-      const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
-      if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}`)
-
-      uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
-    }
-
-    await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
-
-    console.log(`Finished uploading parts for ${txHash}`)
-  } catch (error) {
-    console.log(`Failed to upload to s3 for ${txHash}`)
-    await abortMultiPartUpload(txHash, chainId, uploadId)
-    throw error
+    uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
   }
+
+  await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
+  console.log(`Finished uploading parts for ${chainId}/${txHash}`)
 }
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   const records = event.Records
-  if (records && records.length > 0) {
-    const txHash = records[0].messageAttributes.txHash.stringValue!
-    const chainId = records[0].messageAttributes.chainId.stringValue!
-    const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
-    console.log(JSON.stringify({ txHash, hardhatForkingUrl, chainId }))
-    await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
-    try {
-      await processTx(txHash, chainId, hardhatForkingUrl)
-      const s3Location = getFilePath(txHash, chainId)
-      putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
-      console.log(`Finished processing ${txHash}`)
-      console.log(`Trace saved to ${s3Location}`)
-    } catch (error) {
-      const errorMessage = { errorDetails: DEFAULT_ERROR }
-      if (error instanceof Error) {
-        console.log(error.message)
-        errorMessage['errorDetails'] = error.message
-        if (!knownErrors.includes(error.message)) captureException(error)
-      }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
-    }
+  if (records.length === 0) {
+    console.log('No records to process')
+    return 'No records to process'
   }
+
+  const txHash = records[0].messageAttributes.txHash.stringValue!
+  const chainId = records[0].messageAttributes.chainId.stringValue!
+  const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
+  console.log(JSON.stringify({ txHash, hardhatForkingUrl, chainId }))
+  await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
+
+  let traceResult: TRawTransactionTraceResult
+
+  try {
+    traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
+  } catch (error) {
+    const errorMessage = { errorDetails: DEFAULT_ERROR }
+    if (error instanceof Error) {
+      console.log(error.message)
+      errorMessage['errorDetails'] = error.message
+      if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
+    }
+    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+    return
+  }
+
+  try {
+    await uploadTrace(txHash, chainId, traceResult)
+  } catch (error) {
+    const errorMessage = { errorDetails: DEFAULT_ERROR }
+    if (error instanceof Error) {
+      console.log(error.message)
+      errorMessage['errorDetails'] = error.message
+      captureException(error)
+    }
+    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+    return
+  }
+
+  try {
+    const path = `/${getFileName(txHash, chainId)}`
+    await invalidateCloudFrontCache(process.env.CLOUDFRONT_DISTRIBUTION_ID!, [path])
+  } catch (error) {
+    captureException(error)
+    console.log(error)
+  }
+
+  const s3Location = getFilePath(txHash, chainId)
+  putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
+  console.log(`Finished processing ${chainId}/${txHash}`)
+  console.log(`Trace saved to ${s3Location}`)
 }
 
 export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)

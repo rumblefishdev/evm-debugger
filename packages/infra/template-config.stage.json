@@ -6,6 +6,7 @@
     "Domain": "evm-debugger-stage.rumblefish.dev",
     "Environment": "stage",
     "HostedZoneId": "Z1AXAHZLKLTXED",
+    "CloudFrontDistributionId": "E2PHPQU5VJQ7RQ",
     "CertificateArn": "arn:aws:acm:us-east-1:045028348791:certificate/3207fdd5-5483-46a1-848e-316447dd44d2",
     "TraceBucketName": "transaction-trace-storage-stage.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
