@@ -73,54 +73,57 @@ export const uploadTrace = async (txHash: string, chainId: string, traceResult: 
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   const records = event.Records
-  if (records && records.length > 0) {
-    const txHash = records[0].messageAttributes.txHash.stringValue!
-    const chainId = records[0].messageAttributes.chainId.stringValue!
-    const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
-    console.log(JSON.stringify({ txHash, hardhatForkingUrl, chainId }))
-    await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
-
-    let traceResult: TRawTransactionTraceResult
-
-    try {
-      traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
-    } catch (error) {
-      const errorMessage = { errorDetails: DEFAULT_ERROR }
-      if (error instanceof Error) {
-        console.log(error.message)
-        errorMessage['errorDetails'] = error.message
-        if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
-      }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
-      return
-    }
-
-    try {
-      await uploadTrace(txHash, chainId, traceResult)
-    } catch (error) {
-      const errorMessage = { errorDetails: DEFAULT_ERROR }
-      if (error instanceof Error) {
-        console.log(error.message)
-        errorMessage['errorDetails'] = error.message
-        captureException(error)
-      }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
-      return
-    }
-
-    try {
-      const path = `/${getFileName(txHash, chainId)}`
-      await invalidateCloudFrontCache(process.env.CLOUDFRONT_DISTRIBUTION_ID!, [path])
-    } catch (error) {
-      captureException(error)
-      console.log(error)
-    }
-
-    const s3Location = getFilePath(txHash, chainId)
-    putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
-    console.log(`Finished processing ${chainId}/${txHash}`)
-    console.log(`Trace saved to ${s3Location}`)
+  if (records.length === 0) {
+    console.log('No records to process')
+    return 'No records to process'
   }
+
+  const txHash = records[0].messageAttributes.txHash.stringValue!
+  const chainId = records[0].messageAttributes.chainId.stringValue!
+  const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
+  console.log(JSON.stringify({ txHash, hardhatForkingUrl, chainId }))
+  await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
+
+  let traceResult: TRawTransactionTraceResult
+
+  try {
+    traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
+  } catch (error) {
+    const errorMessage = { errorDetails: DEFAULT_ERROR }
+    if (error instanceof Error) {
+      console.log(error.message)
+      errorMessage['errorDetails'] = error.message
+      if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
+    }
+    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+    return
+  }
+
+  try {
+    await uploadTrace(txHash, chainId, traceResult)
+  } catch (error) {
+    const errorMessage = { errorDetails: DEFAULT_ERROR }
+    if (error instanceof Error) {
+      console.log(error.message)
+      errorMessage['errorDetails'] = error.message
+      captureException(error)
+    }
+    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+    return
+  }
+
+  try {
+    const path = `/${getFileName(txHash, chainId)}`
+    await invalidateCloudFrontCache(process.env.CLOUDFRONT_DISTRIBUTION_ID!, [path])
+  } catch (error) {
+    captureException(error)
+    console.log(error)
+  }
+
+  const s3Location = getFilePath(txHash, chainId)
+  putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
+  console.log(`Finished processing ${chainId}/${txHash}`)
+  console.log(`Trace saved to ${s3Location}`)
 }
 
 export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)
