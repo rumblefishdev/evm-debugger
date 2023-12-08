@@ -109,19 +109,17 @@ export const Supported = () => {
                   },
                 }}
               >
-                {supportedChainsIdList.map((chainId) => {
-                  if (!showChainOnStartScreen[chainId]) {
-                    return undefined
-                  }
-                  return (
-                    <StyledMenuItem
-                      key={chainId.toString()}
-                      value={chainId}
-                    >
-                      {chainNames[chainId]}
-                    </StyledMenuItem>
-                  )
-                })}
+                {supportedChainsIdList.map(
+                  (chainId) =>
+                    showChainOnStartScreen[chainId] && (
+                      <StyledMenuItem
+                        key={chainId.toString()}
+                        value={chainId}
+                      >
+                        {chainNames[chainId]}
+                      </StyledMenuItem>
+                    ),
+                )}
               </StyledSelect>
             </StyledInputWrapper>
           )}
