@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { ROUTES } from '../../routes'
 import { DebuggerProcessButton } from '../DebuggerProcessButton'
-import { chainNames, supportedChainsIdList } from '../../config'
+import { chainNames, supportedChainsIdList, showChainOnStartScreen } from '../../config'
 
 import { StyledErrorLabel, StyledInput, StyledInputLabel, StyledInputWrapper, StyledMenuItem, StyledSelect, StyledStack } from './styles'
 import type { IFormData } from './Supported.types'
@@ -109,14 +109,19 @@ export const Supported = () => {
                   },
                 }}
               >
-                {supportedChainsIdList.map((chainId) => (
-                  <StyledMenuItem
-                    key={chainId.toString()}
-                    value={chainId}
-                  >
-                    {chainNames[chainId]}
-                  </StyledMenuItem>
-                ))}
+                {supportedChainsIdList.map((chainId) => {
+                  if (!showChainOnStartScreen[chainId]) {
+                    return undefined
+                  }
+                  return (
+                    <StyledMenuItem
+                      key={chainId.toString()}
+                      value={chainId}
+                    >
+                      {chainNames[chainId]}
+                    </StyledMenuItem>
+                  )
+                })}
               </StyledSelect>
             </StyledInputWrapper>
           )}
