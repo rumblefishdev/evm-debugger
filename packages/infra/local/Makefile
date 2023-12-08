@@ -13,7 +13,7 @@ logs:
 	sam logs --stack-name ${STACK_NAME} --region $(REGION) --tail
 
 logs-api:
-	sam logs -n TransactionTraceFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
+	sam logs -n TransactionTraceApiFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
 
 logs-srcmap:
 	sam logs -n SrcMapApiFunction --stack-name ${STACK_NAME} --region $(REGION) --tail
