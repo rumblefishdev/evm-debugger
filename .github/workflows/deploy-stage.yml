@@ -64,7 +64,7 @@ jobs:
       - name: 'Deploy'
         run: |
           mkdir -p packages/frontend/build
-          cat "Hello world!" > packages/frontend/build/index.html
+          echo "Hello world!" > packages/frontend/build/index.html
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
         env:
           DISTRIBUTION_ID: E1TRXMZGQSBIBH
