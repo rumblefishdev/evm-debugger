@@ -72,7 +72,7 @@ jobs:
       - name: Assume role on main AWS account
         run: |
           aws sts get-caller-identity
-          output=$(aws sts assume-role --role-arn "arn:aws:iam::045028348791:role/rumblefish-website-stage--EvmDebuggerCrossAccountRo-gVxwFWdUWlGx" --role-session-name github-stage-frontend-Session)
+          output=$(aws sts assume-role --role-arn "arn:aws:iam::045028348791:role/rumblefish-website-stage--EvmDebuggerCrossAccountRo-RnqtJqxRg73C" --role-session-name github-stage-frontend-Session)
 
           echo "AWS_ACCESS_KEY_ID=$(echo $output | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=$(echo $output | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
