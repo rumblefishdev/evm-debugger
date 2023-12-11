@@ -11,7 +11,6 @@ S3_VERSION=current
 BUILD_DIR=.aws-sam/build
 CACHE_DIR=.aws-sam/cache
 TEMPLATE_FILE=.aws-sam/build/template.yaml
-OUTPUT_TEMPLATE_FILE=.aws-sam/main.yaml
 ARTIFACT_NAME=main.zip
 
 ###############################################
@@ -39,6 +38,7 @@ endef
 
 .PHONY: .package
 .package: ARTIFACTS_S3_PREFIX=$(ENV_NAME)/infrastructure/$(S3_VERSION)
+.package: OUTPUT_TEMPLATE_FILE=.aws-sam/main_$(ENV_NAME).yaml
 .package:
 	$(env-name-check)
 	sam package \
@@ -49,6 +49,7 @@ endef
 		--region $(REGION)
 
 .PHONY: .deploy
+.deploy: OUTPUT_TEMPLATE_FILE=.aws-sam/main_$(ENV_NAME).yaml
 .deploy: STACK_NAME=evm-transaction-trace-$(ENV_NAME)
 .deploy: PARAMETERS_FILE=template-config.$(ENV_NAME).json
 .deploy: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
@@ -183,16 +184,16 @@ prod-deploy:
 	@$(MAKE) -s .package ENV_NAME=prod
 	@$(MAKE) -s .deploy ENV_NAME=prod
 
-# .PHONY: prod-frontend-deploy
-# prod-frontend-deploy: ENV_NAME=prod
-# prod-frontend-deploy: CLOUD_FRONT_DISTRIBUTION_ID=E3IK5XITYN78AJ
-# prod-frontend-deploy: BUCKET_NAME=www.rumblefish.dev.evmdebugger
-# prod-frontend-deploy: 
-# 	@$(MAKE) -s .frontend-build ENV_NAME=$(ENV_NAME)
-# 	@$(MAKE) -s .frontend-deploy \
-# 		ENV_NAME=$(ENV_NAME) \
-# 		CLOUD_FRONT_DISTRIBUTION_ID=$(CLOUD_FRONT_DISTRIBUTION_ID) \
-# 		BUCKET_NAME=$(BUCKET_NAME)
+.PHONY: prod-frontend-deploy
+prod-frontend-deploy: ENV_NAME=prod
+prod-frontend-deploy: CLOUD_FRONT_DISTRIBUTION_ID=E3IK5XITYN78AJ
+prod-frontend-deploy: BUCKET_NAME=www.rumblefish.dev.evmdebugger
+prod-frontend-deploy: 
+	@$(MAKE) -s .frontend-build ENV_NAME=$(ENV_NAME)
+	@$(MAKE) -s .frontend-deploy \
+		ENV_NAME=$(ENV_NAME) \
+		CLOUD_FRONT_DISTRIBUTION_ID=$(CLOUD_FRONT_DISTRIBUTION_ID) \
+		BUCKET_NAME=$(BUCKET_NAME)
 
 .PHONY: prod-logs
 prod-logs:

@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "hardhat": "2.14.0"
+    "hardhat": "2.19.1"
   },
   "scripts": {
-    "postinstall": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js && cp patches/node_modules/hardhat/internal/hardhat-network/provider/node.js node_modules/hardhat/internal/hardhat-network/provider/node.js"
+    "postinstall": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js"
   }
 }

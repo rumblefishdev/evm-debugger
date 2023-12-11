@@ -6,6 +6,8 @@ Parameters:
     Type: String
   HostedZoneId:
     Type: String
+  CloudFrontDistributionId:
+    Type: String
   Domain:
     Type: String
   CertificateArn:
@@ -53,10 +55,10 @@ Resources:
   ###################################
   ###### Transaction Trace API ######
   ###################################
-  AnalyzerDataTable:
+  TransactionTraceDataTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${AWS::StackName}-analyzer-store
+      TableName: !Sub evm-debugger-${Environment}-trace-ddb
       AttributeDefinitions:
         - AttributeName: txHash
           AttributeType: S
@@ -74,20 +76,21 @@ Resources:
   TransactionTraceSqsDeadLetter:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-dlq
+      QueueName: !Sub evm-debugger-${Environment}-trace-sqs-dlq
 
   TransactionTraceSqs:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs
+      QueueName: !Sub evm-debugger-${Environment}-trace-sqs
       VisibilityTimeout: 910
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceFunction:
+  TransactionTraceApiFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-api
       CodeUri: ../transaction-trace-api
       Handler: txTraceApi.analyzeTransactionEntrypoint
       Runtime: nodejs18.x
@@ -97,7 +100,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
           SQS_ANALYZER_URL: !Ref TransactionTraceSqs
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
@@ -121,8 +124,8 @@ Resources:
                 - dynamodb:PutItem
                 - dynamodb:Query
               Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
+                - !GetAtt TransactionTraceDataTable.Arn
+                - !Sub ${TransactionTraceDataTable.Arn}/**
             - Effect: Allow
               Action:
                 - sqs:SendMessage
@@ -134,8 +137,8 @@ Resources:
   TransactionTraceProviderFunctionDepLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: transaction-trace-provider-dependencies
-      Description: Dependencies for transaction-trace-provider
+      LayerName: !Sub evm-debugger-${Environment}-transaction-trace-provider-dependencies
+      Description: Dependencies for evm-debugger transaction-trace-provider
       ContentUri: ../transaction-trace-provider/dependencies/
       CompatibleRuntimes:
         - nodejs18.x
@@ -147,6 +150,7 @@ Resources:
   TransactionTraceSqsHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-provider
       CodeUri: ../transaction-trace-provider
       Handler: src/sqsConsumer.consumeSqsAnalyzeTxEntrypoint
       Runtime: nodejs18.x
@@ -159,10 +163,16 @@ Resources:
       Environment:
         Variables:
           ALCHEMY_KEY: !Ref AlchemyKey
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
       Events:
         SqsEvent:
           Type: SQS
@@ -182,14 +192,19 @@ Resources:
               Action:
                 - dynamodb:PutItem
               Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
+                - !GetAtt TransactionTraceDataTable.Arn
+                - !Sub ${TransactionTraceDataTable.Arn}/**
             - Action:
                 - s3:*
               Effect: Allow
               Resource:
                 - !Sub arn:aws:s3:::${TraceBucketName}
                 - !Sub arn:aws:s3:::${TraceBucketName}/**
+            - Action:
+                - cloudfront:CreateInvalidation
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
 
     Metadata:
       BuildMethod: makefile
@@ -197,6 +212,7 @@ Resources:
   TransactionTraceSqsDeadLetterHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-provider-dlq
       CodeUri: ../transaction-trace-provider
       Handler: src/sqsDeadLetterConsumer.consumeSqsAnalyzeTxErrorEntrypoint
       Runtime: nodejs18.x
@@ -204,9 +220,14 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
       Events:
         SqsEvent:
           Type: SQS
@@ -225,14 +246,14 @@ Resources:
               Action:
                 - dynamodb:PutItem
               Resource:
-                - !GetAtt AnalyzerDataTable.Arn
-                - !Sub ${AnalyzerDataTable.Arn}/**
+                - !GetAtt TransactionTraceDataTable.Arn
+                - !Sub ${TransactionTraceDataTable.Arn}/**
     Metadata:
       BuildMethod: makefile
 
-  ###################################
-  ######### Source Map API ##########
-  ###################################
+  # ###################################
+  # ######### Source Map API ##########
+  # ###################################
   SrcMapContractsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -412,7 +433,7 @@ Resources:
               Effect: Allow
               Resource:
                 - !Sub arn:aws:s3:::${TraceBucketName}
-                - !Sub arn:aws:s3:::${TraceBucketName}\/**
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
     Metadata:
       BuildMethod: makefile
 

@@ -73,7 +73,7 @@ endef
 
 .PHONY: .package
 .package: TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/build/template.yaml
-.package: OUTPUT_TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/main.yaml
+.package: OUTPUT_TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/main_$(ENV_NAME).yaml
 .package: ARTIFACTS_S3_PREFIX=$(ENV_NAME)/infrastructure/compiler/$(S3_VERSION)
 .package:
 	$(solc-version-check)
@@ -87,7 +87,7 @@ endef
 		--region $(REGION)
 
 .PHONY: .deploy
-.deploy: OUTPUT_TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/main.yaml
+.deploy: OUTPUT_TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/main_$(ENV_NAME).yaml
 .deploy: STACK_NAME=emv-debugger-$(ENV_NAME)-srcmap-compiler-$(SOLC_VERSION)
 .deploy: PARAMETERS_FILE=template-config.$(ENV_NAME).json
 .deploy: PARAMETERS=$(shell cat $(PARAMETERS_FILE) | jqn 'get("Parameters") | entries | map(x => x[0] + "=" + x[1]) | join(" ")')
@@ -123,6 +123,9 @@ endef
 		$(MAKE) -s .package SOLC_VERSION=$${version} ENV_NAME=$(ENV_NAME); \
 		$(MAKE) -s .deploy SOLC_VERSION=$${version} ENV_NAME=$(ENV_NAME); \
 	done
+
+.PHONY: .deploy-in-background
+.deploy-in-background: OUTPUT_TEMPLATE_FILE=.aws-sam/$(SOLC_VERSION)/main_$(ENV_NAME).yaml
 
 .PHONY: .deploy-all-async
 .deploy-all-async: VERSIONS_FILE=solc-versions.$(ENV_NAME).json
@@ -220,19 +223,19 @@ stage-stacks-status:
 
 ################## Prod ####################
 
-# .PHONY: prod-deploy-single
-# prod-deploy-single:
-# 	$(solc-version-check)
-# 	@$(MAKE) -s .deploy-single SOLC_VERSION=$(SOLC_VERSION) ENV_NAME=prod
+.PHONY: prod-deploy-single
+prod-deploy-single:
+	$(solc-version-check)
+	@$(MAKE) -s .deploy-single SOLC_VERSION=$(SOLC_VERSION) ENV_NAME=prod
 
-# .PHONY: prod-deploy-all
-# prod-deploy-all:
-# 	@$(MAKE) -s .deploy-all ENV_NAME=prod
+.PHONY: prod-deploy-all
+prod-deploy-all:
+	@$(MAKE) -s .deploy-all ENV_NAME=prod
 
-# .PHONY: prod-deploy-all-async
-# prod-deploy-all-async:
-# 	@$(MAKE) -s .deploy-all-async ENV_NAME=prod
+.PHONY: prod-deploy-all-async
+prod-deploy-all-async:
+	@$(MAKE) -s .deploy-all-async ENV_NAME=prod
 
-# .PHONY: prod-stacks-status
-# prod-stacks-status:
-# 	@$(MAKE) -s .stacks-status ENV_NAME=prod
+.PHONY: prod-stacks-status
+prod-stacks-status:
+	@$(MAKE) -s .stacks-status ENV_NAME=prod
