@@ -35,25 +35,25 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-#      - name: 'Cache NPM dependencies'
-#        uses: pat-s/always-upload-cache@v2.1.5
-#        with:
-#          path: |
-#            **/node_modules
-#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
-#          restore-keys: |
-#            ${{ runner.OS }}-npm-cache-
-#
-#      - name: Install dependencies
-#        run: |
-#          npm i
-#          node_modules/.bin/lerna bootstrap
-#
-#      - name: 'Build'
-#        run: |
-#          npm run types:build
-#          npm run analyzer:build
-#          npm run frontend:build:stage
+      - name: 'Cache NPM dependencies'
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
+
+      - name: Install dependencies
+        run: |
+          npm i
+          node_modules/.bin/lerna bootstrap
+
+      - name: 'Build'
+        run: |
+          npm run types:build
+          npm run analyzer:build
+          npm run frontend:build:stage
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -61,10 +61,9 @@ jobs:
           role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-frontend-deploy-stage
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
+
       - name: 'Deploy'
         run: |
-          mkdir -p packages/frontend/build
-          echo "Hello world!" > packages/frontend/build/index.html
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
         env:
           DISTRIBUTION_ID: E1TRXMZGQSBIBH
