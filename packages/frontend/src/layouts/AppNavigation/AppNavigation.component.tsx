@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import { ROUTES } from '../../routes'
+import { uiActions } from '../../store/ui/ui.slice'
 
 import type { AppNavigationProps } from './AppNavigation.types'
-import { StyledButtonWrapper, StyledNewTransactionButton, StyledTab, StyledTabs } from './AppNavigation.styles'
+import { StyledButtonWrapper, StyledNewTransactionButton, StyledShowLogsButton, StyledTab, StyledTabs } from './AppNavigation.styles'
 
 export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const location = useLocation()
   const { chainId, txHash } = useParams()
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
@@ -21,6 +24,10 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
     [chainId, txHash],
   )
   const handleTabClick = React.useCallback((tabName: ROUTES) => navigate(convertNav(tabName)), [convertNav, navigate])
+
+  const showLogs = React.useCallback(() => {
+    dispatch(uiActions.setShouldShowProgressScreen(true))
+  }, [dispatch])
 
   return (
     <StyledButtonWrapper>
@@ -46,6 +53,13 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
           onClick={() => handleTabClick(ROUTES.TRANSACTION_EXPLORER)}
         />
       </StyledTabs>
+      <StyledShowLogsButton
+        variant="text"
+        size="small"
+        onClick={showLogs}
+      >
+        Show logs
+      </StyledShowLogsButton>
     </StyledButtonWrapper>
   )
 }

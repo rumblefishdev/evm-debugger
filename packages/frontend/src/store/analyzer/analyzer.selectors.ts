@@ -25,7 +25,7 @@ const selectIsAnalyzerSuccessfullyFinished = createSelector([selectAllStages], (
 const selectCriticalError = createSelector([selectAnalyzerState], (state) => state.criticalError)
 
 const selectHasProcessingFailed = createSelector([selectAllStages, selectCriticalError], (stages, criticalError) => {
-  return stages.some((stage) => stage.stageStatus === AnalyzerStagesStatus.FAILED) || criticalError
+  return Boolean(stages.some((stage) => stage.stageStatus === AnalyzerStagesStatus.FAILED) || criticalError)
 })
 
 export const analyzerSelectors = {
