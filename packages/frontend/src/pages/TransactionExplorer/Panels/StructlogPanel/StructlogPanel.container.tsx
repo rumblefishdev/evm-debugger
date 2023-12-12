@@ -27,9 +27,6 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
 
   // const previousTrace = React.useRef(null)
 
-  console.log('structLogs', structLogs)
-  console.log('traceLogs', traceLogs)
-
   const setActiveStructlog = useCallback(
     (index: number) => {
       // if (
