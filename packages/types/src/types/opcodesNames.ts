@@ -66,6 +66,7 @@ export type TAllOpCodes =
   | 'MSIZE'
   | 'GAS'
   | 'JUMPDEST'
+  | 'PUSH0'
   | 'PUSH1'
   | 'PUSH2'
   | 'PUSH3'
