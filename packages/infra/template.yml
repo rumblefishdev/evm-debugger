@@ -6,6 +6,8 @@ Parameters:
     Type: String
   HostedZoneId:
     Type: String
+  CloudFrontDistributionId:
+    Type: String
   Domain:
     Type: String
   TraceBucketName:
@@ -41,6 +43,7 @@ Resources:
       Parameters:
         Environment: !Ref Environment
         HostedZoneId: !Ref HostedZoneId
+        CloudFrontDistributionId: !Ref CloudFrontDistributionId
         Domain: !Ref Domain
         CertificateArn: !Ref CertificateArn
         TraceBucketName: !Ref TraceBucketName

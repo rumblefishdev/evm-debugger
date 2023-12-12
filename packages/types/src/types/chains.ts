@@ -29,7 +29,7 @@ export const etherscanUrls = {
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
   [ChainId.sepolia]: {
-    url: 'https://sepolia.etherscan.io',
+    url: 'https://api-sepolia.etherscan.io',
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
 

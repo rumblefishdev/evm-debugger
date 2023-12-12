@@ -286,7 +286,7 @@ export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: stri
     description: 'Mark a valid destination for jumps.',
     args: [],
   },
-  PUSH0: { opcode: 0x5f, description: 'Place value 0 on stack', args: [] },
+  PUSH0: { opcode: 0x5f, description: 'Place 0 byte item on stack.', args: [] },
   PUSH1: { opcode: 0x60, description: 'Place 1 byte item on stack.', args: [] },
   PUSH2: { opcode: 0x61, description: 'Place 2 byte item on stack.', args: [] },
   PUSH3: { opcode: 0x62, description: 'Place 3 byte item on stack.', args: [] },

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "2.19.1",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "patch": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js",
+    "debug": "ts-node debug.ts"
+  }
+}

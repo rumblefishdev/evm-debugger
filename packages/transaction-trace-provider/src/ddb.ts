@@ -11,7 +11,7 @@ export const putTxEventToDdb = async (event: string, txHash: string, additionalD
   console.log(`Adding event ${event} - ${txHash}`)
   const currentTimestamp = Date.now().toString()
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.TRANSACTION_TRACE_DATA_TABLE_NAME,
     Item: {
       'type#time': `EVENT#${currentTimestamp}`,
       txHash,

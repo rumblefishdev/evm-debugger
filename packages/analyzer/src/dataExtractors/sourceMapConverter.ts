@@ -63,6 +63,7 @@ export const createSourceMapToSourceCodeDictionary = (
   sourceMaps: TParsedSourceMap[],
 ): SourceCodeDictionary => {
   const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
+  const textEncoder = new TextEncoder()
 
   for (const sourceMap of sourceMaps) {
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
@@ -80,7 +81,7 @@ export const createSourceMapToSourceCodeDictionary = (
       let accumulator = 0
 
       for (let index = 0; index < sourceParts.length; index++) {
-        const codePartLength = sourceParts[index].length + numberOfCharsPerNewLine
+        const codePartLength = textEncoder.encode(sourceParts[index]).length + numberOfCharsPerNewLine
 
         if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
           startLine = index

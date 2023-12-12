@@ -14,7 +14,7 @@ const dynamoDbClient = DynamoDBDocumentClient.from(ddbClient)
 
 export const getTransactionDetails = async (txHash: string) => {
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.TRANSACTION_TRACE_DATA_TABLE_NAME,
     ScanIndexForward: false,
     Limit: 2,
     KeyConditionExpression: 'txHash = :txHash',
@@ -44,7 +44,7 @@ export const putTxDetailsToDdb = async (txHash: string, chainId: string) => {
     chainId,
   }
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.TRANSACTION_TRACE_DATA_TABLE_NAME,
     Item: initTxDetails,
   }
   const command = new PutCommand(params)
@@ -59,7 +59,7 @@ export const putTxEventToDdb = async (
 ) => {
   const currentTimestamp = Date.now().toString()
   const params = {
-    TableName: process.env.ANALYZER_DATA_TABLE_NAME,
+    TableName: process.env.TRANSACTION_TRACE_DATA_TABLE_NAME,
     Item: {
       'type#time': `EVENT#${currentTimestamp}`,
       txHash,
