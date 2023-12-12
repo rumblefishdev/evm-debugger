@@ -10,6 +10,8 @@ import { useTypedDispatch } from '../../store/storeHooks'
 import { ROUTES } from '../../routes'
 import { Section } from '../../importedComponents/components/Section'
 import { analyzerSelectors } from '../../store/analyzer/analyzer.selectors'
+import { uiSelectors } from '../../store/ui/ui.selectors'
+import { uiActions } from '../../store/ui/ui.slice'
 
 import { StyledContainer, StyledHeadlineCaption, StyledStack } from './AnalyzerProgressScreen.styles'
 import { Stepper } from './Steps'
@@ -19,12 +21,13 @@ export const AnalyzerProgressScreen = () => {
   const navigate = useNavigate()
   const dispatch = useTypedDispatch()
   const { chainId, txHash } = useParams()
-  const isRunOnce = React.useRef(false)
 
   const stages = useSelector(analyzerSelectors.selectAllStages)
-
+  const shouldShowAnalyzerProgressScreen = useSelector(uiSelectors.selectShouldShowProgressScreen)
   const hasProcessingFailed = useSelector(analyzerSelectors.selectHasProcessingFailed)
   const messages = useSelector(analyzerSelectors.selectAllMessages)
+
+  const isRunOnce = React.useRef(shouldShowAnalyzerProgressScreen)
 
   useEffect(() => {
     if (chainId && txHash && !isRunOnce.current) {
@@ -40,11 +43,15 @@ export const AnalyzerProgressScreen = () => {
   }, [navigate, dispatch])
 
   const restartHandler = useCallback(() => {
-    if (hasProcessingFailed) {
-      dispatch(analyzerActions.resetAnalyzer())
-      isRunOnce.current = false
-    }
-  }, [dispatch, hasProcessingFailed])
+    dispatch(analyzerActions.resetAnalyzer())
+    isRunOnce.current = false
+  }, [dispatch])
+
+  const closeAnalyzerProgressScreen = useCallback(() => {
+    dispatch(uiActions.setShouldShowProgressScreen(false))
+  }, [dispatch])
+
+  const shouldShowButtons = hasProcessingFailed || shouldShowAnalyzerProgressScreen
 
   return (
     <Section
@@ -65,7 +72,7 @@ export const AnalyzerProgressScreen = () => {
             <Typography variant="heading4">Fetching progress</Typography>
           </Stack>
           <Stepper stages={stages} />
-          {hasProcessingFailed && (
+          {shouldShowButtons && (
             <Stack
               justifyContent={'center'}
               alignItems={'center'}
@@ -76,9 +83,9 @@ export const AnalyzerProgressScreen = () => {
               <Button
                 variant="outlined"
                 sx={{ width: '45%', backgroundColor: 'white' }}
-                onClick={moveBackToStartingScreen}
+                onClick={shouldShowAnalyzerProgressScreen ? closeAnalyzerProgressScreen : moveBackToStartingScreen}
               >
-                Back
+                {shouldShowAnalyzerProgressScreen ? 'Close' : 'Back'}
               </Button>
 
               <Button

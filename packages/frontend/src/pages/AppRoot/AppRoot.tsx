@@ -8,15 +8,22 @@ import { defaultTheme } from '../../theme/default'
 import { AppNavigation } from '../../layouts/AppNavigation/AppNavigation.component'
 import { AnalyzerProgressScreen } from '../../containers/AnalyzerProgressScreen/AnalyzerProgressScreen'
 import { AppContainer } from '../../layouts/AppContainer/AppContainer.component'
+import { uiSelectors } from '../../store/ui/ui.selectors'
 
 export const AppRoot: React.FC = () => {
   const isAnalyzerSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
+  const shouldShowAnalyzerProgressScreen = useSelector(uiSelectors.selectShouldShowProgressScreen)
+
+  console.log('shouldShowAnalyzerProgressScreen', shouldShowAnalyzerProgressScreen)
+  console.log('isAnalyzerSuccessfullyFinished', isAnalyzerSuccessfullyFinished)
+
+  const shouldDisplayApp = isAnalyzerSuccessfullyFinished && !shouldShowAnalyzerProgressScreen
 
   return (
     <ThemeProvider theme={algaeTheme}>
-      {isAnalyzerSuccessfullyFinished && <AppNavigation />}
+      {shouldDisplayApp && <AppNavigation />}
       <AppContainer withNavbar>
-        <ThemeProvider theme={defaultTheme}>{isAnalyzerSuccessfullyFinished ? <Outlet /> : <AnalyzerProgressScreen />}</ThemeProvider>
+        <ThemeProvider theme={defaultTheme}>{shouldDisplayApp ? <Outlet /> : <AnalyzerProgressScreen />}</ThemeProvider>
       </AppContainer>
     </ThemeProvider>
   )
