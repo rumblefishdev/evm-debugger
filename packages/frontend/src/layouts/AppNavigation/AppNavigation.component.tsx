@@ -26,7 +26,6 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const handleTabClick = React.useCallback((tabName: ROUTES) => navigate(convertNav(tabName)), [convertNav, navigate])
 
   const showLogs = React.useCallback(() => {
-    console.log('fired')
     dispatch(uiActions.setShouldShowProgressScreen(true))
   }, [dispatch])
 

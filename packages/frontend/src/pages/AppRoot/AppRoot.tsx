@@ -14,9 +14,6 @@ export const AppRoot: React.FC = () => {
   const isAnalyzerSuccessfullyFinished = useSelector(analyzerSelectors.selectIsAnalyzerSuccessfullyFinished)
   const shouldShowAnalyzerProgressScreen = useSelector(uiSelectors.selectShouldShowProgressScreen)
 
-  console.log('shouldShowAnalyzerProgressScreen', shouldShowAnalyzerProgressScreen)
-  console.log('isAnalyzerSuccessfullyFinished', isAnalyzerSuccessfullyFinished)
-
   const shouldDisplayApp = isAnalyzerSuccessfullyFinished && !shouldShowAnalyzerProgressScreen
 
   return (
