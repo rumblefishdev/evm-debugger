@@ -10,7 +10,10 @@ export const MenuBoxIcon: React.FC<MenuBoxIconProps> = ({ iconIdle, iconHover, h
   const [isHovered, setHover] = useState(false)
 
   return (
-    <Link to={link}>
+    <Link
+      width={{ xs: '100%', md: '33%' }}
+      to={link}
+    >
       <StyledStack
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

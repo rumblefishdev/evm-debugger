@@ -38,6 +38,7 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
 }))
 export const StyledImage = styled(`img`)(({ theme }) => ({
   position: 'absolute',
+  maxWidth: '26px',
   opacity: 0,
   ...theme.mixins.defaultTransition,
 }))

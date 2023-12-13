@@ -21,7 +21,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 }))
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   width: '81%',
-  justifyContent: 'space-between',
+  // justifyContent: 's',
   flexFlow: 'row wrap',
   alignItems: 'flex-start',
   [theme.breakpoints.down(1040)]: {

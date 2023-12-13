@@ -16,6 +16,10 @@ import uiIconHover from '../../assets/svg/ui-hover.svg'
 import uiIcon from '../../assets/svg/ui.svg'
 import webIconHover from '../../assets/svg/web-hover.svg'
 import webIcon from '../../assets/svg/web.svg'
+import startupIcon from '../../assets/svg/startupIcon.svg'
+import startupIconHover from '../../assets/svg/startupIconHover.svg'
+import aiIcon from '../../assets/svg/aiIcon.svg'
+import aiIconHover from '../../assets/svg/aiIconHover.svg'
 
 export const data = [
   {
@@ -38,6 +42,13 @@ export const data = [
     link: '/services/mobile-development/',
     iconHover: mobileIconHover,
     icon: mobileIcon,
+  },
+  {
+    title: 'AI Chat Assistant Development',
+    text: 'Develop your custom AI chatbot with our team of AI experts',
+    link: '/services/ai-chat-assistant',
+    iconHover: aiIconHover,
+    icon: aiIcon,
   },
   {
     title: 'DeFi Development',
@@ -80,5 +91,12 @@ export const data = [
     link: '/services/product-design',
     iconHover: uiIconHover,
     icon: uiIcon,
+  },
+  {
+    title: 'IT Services for Startups',
+    text: 'End-to-end development services to boost your startup',
+    link: '/startup',
+    iconHover: startupIconHover,
+    icon: startupIcon,
   },
 ]
