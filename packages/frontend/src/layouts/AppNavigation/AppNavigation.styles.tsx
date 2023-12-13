@@ -37,7 +37,7 @@ export const StyledNewTransactionButton = styled(NewTransactionButton)({
   left: 10,
 })
 
-export const StyledShowLogsButton = styled(Button)(({ theme }) => ({
+export const StyledShowLogsButton = styled(Button)(() => ({
   zIndex: 10,
   whiteSpace: 'nowrap',
   right: 0,

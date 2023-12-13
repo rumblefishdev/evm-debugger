@@ -3,6 +3,8 @@
   "version": "0.2.31",
   "private": true,
   "dependencies": {
+    "node-fetch": "2.6.6",
+    "react-helmet": "^6.1.0",
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -78,6 +80,7 @@
     "clean:build": "rimraf build",
     "clean:js": "rimraf src/**/*.{js,js.map}",
     "type-check": "tsc --noEmit"
+
   },
   "eslintConfig": {
     "extends": [

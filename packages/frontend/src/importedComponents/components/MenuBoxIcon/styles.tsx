@@ -39,6 +39,7 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
 export const StyledImage = styled(`img`)(({ theme }) => ({
   position: 'absolute',
   opacity: 0,
+  maxWidth: '26px',
   ...theme.mixins.defaultTransition,
 }))
 export const StyledImageWrapper = styled(Box)(({ theme }) => ({
