@@ -1,32 +1,20 @@
-import { readFileSync, writeFileSync } from 'fs'
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+import { readFileSync } from 'fs'
 
-import type { TEtherscanParsedSourceCode, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import type { TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import solc from 'solc'
 
-import { inputPrompt, selectPrompt } from '../src/prompts'
-import {
-  ensureDirectoryExistance,
-  isMultipleFilesJSON,
-  isValidTransaction,
-  mapEnumToObject,
-  parseSourceCode,
-  saveToFile,
-} from '../src/utils'
+import { inputPrompt } from '../src/prompts'
+import { ensureDirectoryExistance, isValidTransaction, readFromFile, saveToFile } from '../src/utils'
 import { ErrorMessages } from '../src/errors'
 import { DefaultPaths, Paths } from '../src/paths'
-import { fetchTransactionInfo, handleTransactionInfoFetching } from '../src/transaction-data-getters/transactionInfo'
+import { handleTransactionInfoFetching } from '../src/transaction-data-getters/transactionInfo'
 import { handleTransactionTraceFetching } from '../src/transaction-data-getters/transactionTrace'
-import { fetchBytecode, handleBytecodeFetching } from '../src/transaction-data-getters/bytecodes'
-import { fetchSourceCodes, handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes'
-import type { SolcOutput, TTempExecs } from '../src/types'
+import { handleBytecodeFetching } from '../src/transaction-data-getters/bytecodes'
+import { handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes'
+import type { TTempExecs } from '../src/types'
 import { handleSourceCode } from '../src/sourceCodeHandlers'
-
-const wait = async (ms: number) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
 
 /* eslint-disable prettier/prettier */
 (async () => {
@@ -70,33 +58,58 @@ const wait = async (ms: number) => {
       const sourceCodesPath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sourceCodeData.json`
       const sourceCodesData = await handleSourceCodesFetching(address, currentHardhatEnvironment.chainId, sourceCodesPath)
 
-      // await wait(1000)
-
       const isCotractVerified = sourceCodesData.SourceCode
 
       if (isCotractVerified) {
 
+        console.log(`contract ${address} is being parsed`)
         const { language,settings,sources } = handleSourceCode(sourceCodesData, address)
 
 
-        const output: string = solc.compile(JSON.stringify({
-          sources,
+        const solcInput = JSON.stringify({
+          language,
           settings: {
             ...settings,
-            outputSelection: {
-              '*': {
-                '*': ['*'],
-              },
+          outputSelection: {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.legacyAssembly",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "evm.gasEstimates",
+                "evm.assembly"
+              ]
             },
-            evmVersion: 'istanbul',
           },
+          remappings: []
+          },
+          sources
+        })
 
-          language,
-        }))
+        const solcInput2 = address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" ? readFileSync(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput2.json`,'utf8') : ''
 
-        saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(output))
+        saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput.json`, JSON.parse(solcInput))
 
+        if (address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"){
+          console.log(solcInput2)
+        }
 
+        const output: string = solc.compile(address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" ? solcInput2 : solcInput)
+
+        try {
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(output))
+        } catch(error) {
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, output)
+        }
 
         // if (address === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"){
         //   const solcOutput: SolcOutput = JSON.parse(output)

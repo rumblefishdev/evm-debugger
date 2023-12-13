@@ -54,7 +54,10 @@ export const readFromFile = <T>(path: string): T => {
   return JSON.parse(rawFileData)
 }
 
-export const isMultipleFilesJSON = (sourceCode) => sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
+export const isMultipleFilesJSON = (sourceCode: string) => {
+  // if has multiple \"content\":\" fields - it's a multiple files JSON
+  return sourceCode.match(/"content":"/g)?.length > 1
+}
 
 export const parseSourceCode = (sourceName: string, sourceCode: string) => {
   if (isMultipleFilesJSON(sourceCode)) {
