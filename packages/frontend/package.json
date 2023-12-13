@@ -1,10 +1,8 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.2.31",
+  "version": "0.2.32-alpha.0",
   "private": true,
   "dependencies": {
-    "node-fetch": "2.6.6",
-    "react-helmet": "^6.1.0",
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -34,6 +32,7 @@
     "ethers": "^5.7.2",
     "fast-json": "^3.0.0",
     "get-line-from-pos": "^1.0.0",
+    "node-fetch": "2.6.6",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",
     "react-contentful": "^2.0.31",
@@ -41,6 +40,7 @@
     "react-ga4": "^2.1.0",
     "react-grid-layout": "^1.4.2",
     "react-gtm-module": "^2.0.11",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.41.1",
     "react-jsx-highcharts": "^5.0.0",
     "react-redux": "^8.0.5",
@@ -80,7 +80,6 @@
     "clean:build": "rimraf build",
     "clean:js": "rimraf src/**/*.{js,js.map}",
     "type-check": "tsc --noEmit"
-
   },
   "eslintConfig": {
     "extends": [
