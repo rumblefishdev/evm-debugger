@@ -7,4 +7,6 @@ const selectUIState = createSelector([selectReducer(StoreKeys.UI)], (state) => s
 
 const selectStructlogListOffset = createSelector([selectUIState], (state) => state.structLogsListOffset)
 
-export const uiSelectors = { selectStructlogListOffset }
+const selectShouldShowProgressScreen = createSelector([selectUIState], (state) => state.shouldShowProgressScreen)
+
+export const uiSelectors = { selectStructlogListOffset, selectShouldShowProgressScreen }

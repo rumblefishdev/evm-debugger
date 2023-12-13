@@ -29,7 +29,7 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  TransactionTraceFunction:
+  TransactionTraceApiFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../../transaction-trace-api
@@ -39,7 +39,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           SQS_ANALYZER_URL: !Ref TransactionTraceSqs
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
@@ -169,7 +169,7 @@ Resources:
       Environment:
         Variables:
           ALCHEMY_KEY: 3-iIzln-MQF8Lc5a7DL2BwTPK8D5XRwv
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ANALYZER_DATA_BUCKET_NAME: !Ref TransactionTraceBucket
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
@@ -213,7 +213,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          ANALYZER_DATA_TABLE_NAME: !Ref AnalyzerDataTable
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref AnalyzerDataTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
       Events:

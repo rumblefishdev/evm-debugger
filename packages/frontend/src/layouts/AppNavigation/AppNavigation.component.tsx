@@ -1,33 +1,46 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import { ROUTES } from '../../routes'
+import { uiActions } from '../../store/ui/ui.slice'
 
 import type { AppNavigationProps } from './AppNavigation.types'
-import { StyledButtonWrapper, StyledNewTransactionButton, StyledTab, StyledTabs } from './AppNavigation.styles'
+import { StyledButtonWrapper, StyledNewTransactionButton, StyledShowLogsButton, StyledTab, StyledTabs } from './AppNavigation.styles'
 
 export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const location = useLocation()
+
   const { chainId, txHash } = useParams()
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
-
-  const handleChange = React.useCallback((_event: React.SyntheticEvent, nextValue: ROUTES) => {
-    setValue(nextValue)
-  }, [])
 
   const convertNav = React.useCallback(
     (tabName: ROUTES): string => tabName.replace(':txHash', txHash).replace(':chainId', chainId),
     [chainId, txHash],
   )
-  const handleTabClick = React.useCallback((tabName: ROUTES) => navigate(convertNav(tabName)), [convertNav, navigate])
+  const handleTabClick = React.useCallback(
+    (tabName: ROUTES) => {
+      navigate(convertNav(tabName))
+    },
+    [convertNav, navigate],
+  )
+
+  // This way we handle changes in the URL by browser navigation
+  React.useEffect(() => {
+    setValue(location.pathname)
+  }, [location.pathname])
+
+  const showLogs = React.useCallback(() => {
+    dispatch(uiActions.setShouldShowProgressScreen(true))
+  }, [dispatch])
 
   return (
     <StyledButtonWrapper>
       <StyledNewTransactionButton />
       <StyledTabs
         value={value}
-        onChange={handleChange}
         centered
       >
         <StyledTab
@@ -46,6 +59,13 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
           onClick={() => handleTabClick(ROUTES.TRANSACTION_EXPLORER)}
         />
       </StyledTabs>
+      <StyledShowLogsButton
+        variant="text"
+        size="small"
+        onClick={showLogs}
+      >
+        Show logs
+      </StyledShowLogsButton>
     </StyledButtonWrapper>
   )
 }

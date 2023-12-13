@@ -39,3 +39,5 @@ transaction-trace-provider.zip
 
 temporary/
 scripts/.tmp
+
+packages/transaction-manager/results/
