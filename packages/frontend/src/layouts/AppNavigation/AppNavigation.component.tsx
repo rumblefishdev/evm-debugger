@@ -12,18 +12,25 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const location = useLocation()
+
   const { chainId, txHash } = useParams()
   const [value, setValue] = useState<ROUTES | string>(location.pathname)
-
-  const handleChange = React.useCallback((_event: React.SyntheticEvent, nextValue: ROUTES) => {
-    setValue(nextValue)
-  }, [])
 
   const convertNav = React.useCallback(
     (tabName: ROUTES): string => tabName.replace(':txHash', txHash).replace(':chainId', chainId),
     [chainId, txHash],
   )
-  const handleTabClick = React.useCallback((tabName: ROUTES) => navigate(convertNav(tabName)), [convertNav, navigate])
+  const handleTabClick = React.useCallback(
+    (tabName: ROUTES) => {
+      navigate(convertNav(tabName))
+    },
+    [convertNav, navigate],
+  )
+
+  // This way we handle changes in the URL by browser navigation
+  React.useEffect(() => {
+    setValue(location.pathname)
+  }, [location.pathname])
 
   const showLogs = React.useCallback(() => {
     dispatch(uiActions.setShouldShowProgressScreen(true))
@@ -34,7 +41,6 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
       <StyledNewTransactionButton />
       <StyledTabs
         value={value}
-        onChange={handleChange}
         centered
       >
         <StyledTab
