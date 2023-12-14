@@ -48,7 +48,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
           <StyledTextSpace>
             <StyledHeading>
               Debugging EVM <br />
-              smart contracts made easy!
+              smart contracts made easy for everyone from new AWS Account!
             </StyledHeading>
             <StyledDescription>
               <span>EVM Debugger</span> is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis
