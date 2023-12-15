@@ -175,6 +175,6 @@ jobs:
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 
       - name: Deploy stack
-        working-directory: ./packages/infra/compilerq
+        working-directory: ./packages/infra/compiler
         run: |
           make stage-deploy-all
