@@ -104,6 +104,7 @@ Resources:
                   - ssm:GetParameter
                   - ssm:GetParameters
                   - iam:PassRole
+                  - ssm:AddTagsToResource
                 Resource: "*"
               - Effect: Allow
                 Action:
@@ -160,6 +161,7 @@ Resources:
                   - ssm:GetParameter
                   - ssm:GetParameters
                   - iam:PassRole
+                  - ssm:AddTagsToResource
                 Resource: "*"
               - Effect: Allow
                 Action:
