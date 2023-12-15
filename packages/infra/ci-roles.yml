@@ -84,19 +84,22 @@ Resources:
                   - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - iam:PassRole
+                Resource: '*'
+              - Effect: Allow
+                Action:
                   - cloudformation:*
                   - sqs:Get*
                   - sqs:List*
                   - iam:GetRole
                   - iam:PutRolePolicy
-                  - iam:PassRole
                   - lambda:UpdateFunctionCode
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
                   - lambda:CreateFunction
-                  - ssm:GetParameter
-                  - ssm:GetParameters
                 Resource: "*"
                 Condition:
                   StringEquals:
@@ -136,19 +139,22 @@ Resources:
                   - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - iam:PassRole
+                Resource: '*'
+              - Effect: Allow
+                Action:
                   - cloudformation:*
                   - sqs:Get*
                   - sqs:List*
                   - iam:GetRole
                   - iam:PutRolePolicy
-                  - iam:PassRole
                   - lambda:UpdateFunctionCode
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
                   - lambda:CreateFunction
-                  - ssm:GetParameter
-                  - ssm:GetParameters
                 Resource: "*"
                 Condition:
                   StringEquals:
