@@ -1,3 +1,3 @@
-declare module 'solcv0.4.21' {
+declare module 'solcv0.4.17' {
   export function compile(input: string): string
 }
