@@ -129,7 +129,6 @@ jobs:
       - name: Deploy stack
         working-directory: ./packages/infra
         run: |
-          aws sts get-caller-identity
           make stage-deploy
 
 #  srcmap_compiler_deploy_stage:
