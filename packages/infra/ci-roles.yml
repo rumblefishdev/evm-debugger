@@ -85,9 +85,6 @@ Resources:
               - Effect: Allow
                 Action:
                   - apigateway:*
-                  - ssm:GetParameter
-                  - ssm:GetParameters
-                  - iam:PassRole
                   - cloudformation:*
                   - dynamodb:*
                   - sqs:Get*
@@ -96,10 +93,15 @@ Resources:
                   - iam:GetRole
                   - iam:PutRolePolicy
                   - lambda:UpdateFunctionCode
+                  - lambda:TagResource
+                  - lambda:GetLayerVersion
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
                   - lambda:CreateFunction
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - iam:PassRole
                 Resource: "*"
               - Effect: Allow
                 Action:
@@ -145,6 +147,8 @@ Resources:
                   - iam:GetRole
                   - iam:PutRolePolicy
                   - lambda:UpdateFunctionCode
+                  - lambda:TagResource
+                  - lambda:GetLayerVersion
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
