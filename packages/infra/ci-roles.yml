@@ -98,9 +98,6 @@ Resources:
                   - lambda:UpdateFunctionConfiguration
                   - lambda:CreateFunction
                 Resource: "*"
-                Condition:
-                  StringEquals:
-                    aws:ResourceTag/Environment: !Ref Environment
               - Effect: Allow
                 Action:
                   - cloudformation:*
@@ -150,9 +147,6 @@ Resources:
                   - ssm:GetParameters
                   - iam:PassRole
                 Resource: "*"
-                Condition:
-                  StringEquals:
-                    aws:ResourceTag/Environment: !Ref Environment
               - Effect: Allow
                 Action:
                   - cloudformation:*
