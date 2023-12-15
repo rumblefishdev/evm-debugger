@@ -84,12 +84,15 @@ Resources:
                   - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
+                  - apigateway:*
                   - ssm:GetParameter
                   - ssm:GetParameters
                   - iam:PassRole
                   - cloudformation:*
+                  - dynamodb:*
                   - sqs:Get*
                   - sqs:List*
+                  - sqs:SetQueueAttributes
                   - iam:GetRole
                   - iam:PutRolePolicy
                   - lambda:UpdateFunctionCode
@@ -133,9 +136,12 @@ Resources:
                   - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
               - Effect: Allow
                 Action:
+                  - apigateway:*
                   - cloudformation:*
+                  - dynamodb:*
                   - sqs:Get*
                   - sqs:List*
+                  - sqs:SetQueueAttributes
                   - iam:GetRole
                   - iam:PutRolePolicy
                   - lambda:UpdateFunctionCode
