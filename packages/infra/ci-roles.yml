@@ -95,6 +95,7 @@ Resources:
                   - lambda:UpdateFunctionCode
                   - lambda:TagResource
                   - lambda:GetLayerVersion
+                  - lambda:UpdateEventSourceMapping
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
@@ -149,6 +150,7 @@ Resources:
                   - lambda:UpdateFunctionCode
                   - lambda:TagResource
                   - lambda:GetLayerVersion
+                  - lambda:UpdateEventSourceMapping
                   - lambda:ListTags
                   - lambda:PublishLayerVersion
                   - lambda:UpdateFunctionConfiguration
