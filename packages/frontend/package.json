@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.2.32",
+  "version": "0.2.33-alpha.0",
   "private": true,
   "dependencies": {
     "@contentful/rich-text-types": "^15.11.1",
