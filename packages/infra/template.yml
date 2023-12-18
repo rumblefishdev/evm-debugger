@@ -35,7 +35,7 @@ Resources:
   TraceBucket:
     Type: AWS::Serverless::Application
     Properties:
-      Location: ./frontend.yml
+      Location: ./bucket.yml
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
@@ -44,7 +44,7 @@ Resources:
   FrontendBucket:
     Type: AWS::Serverless::Application
     Properties:
-      Location: ./frontend.yml
+      Location: ./bucket.yml
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
