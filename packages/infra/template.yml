@@ -28,8 +28,10 @@ Parameters:
     Type: String
   FrontendExternalCloudFrontOriginAccessIdentity:
     Type: String
-  CloudfrontInvalidationRoleArn:
+  FrontendDomainName:
     Type: String
+#  CloudfrontInvalidationRoleArn:
+#    Type: String
 
 Resources:
   TraceBucket:
@@ -48,7 +50,7 @@ Resources:
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
-        DomainName: "stage-front.evmdebugger.rumblefish.dev"
+        DomainName: !Ref FrontendDomainName
         CustomBucketName: !Ref FrontendBucketName
         ExternalCloudFrontOriginAccessIdentity: !Ref FrontendExternalCloudFrontOriginAccessIdentity
 
@@ -66,15 +68,15 @@ Resources:
         ApiGatewayAllowOrigin: !Ref ApiGatewayAllowOrigin
         AlchemyKey: !Ref AlchemyKey
         SentryDsn: !Ref SentryDsn
-
-  CIRoles:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: ./ci-roles.yml
-      Parameters:
-        RepositoryName: !Ref RepositoryName
-        Environment: !Ref Environment
-        StackArtifactsBucketName: !Ref StackArtifactsBucketName
-        FrontendBucketName: !Ref FrontendBucketName
-        GhOIDCProviderArn: !Ref GhOIDCProviderArn
-        CloudfrontInvalidationRoleArn: !Ref CloudfrontInvalidationRoleArn
+#
+#  CIRoles:
+#    Type: AWS::Serverless::Application
+#    Properties:
+#      Location: ./ci-roles.yml
+#      Parameters:
+#        RepositoryName: !Ref RepositoryName
+#        Environment: !Ref Environment
+#        StackArtifactsBucketName: !Ref StackArtifactsBucketName
+#        FrontendBucketName: !Ref FrontendBucketName
+#        GhOIDCProviderArn: !Ref GhOIDCProviderArn
+#        CloudfrontInvalidationRoleArn: !Ref CloudfrontInvalidationRoleArn

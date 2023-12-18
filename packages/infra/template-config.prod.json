@@ -9,6 +9,7 @@
     "CloudFrontDistributionId": "E37ASQIPZOTFRG",
     "CertificateArn": "arn:aws:acm:us-east-1:428196107266:certificate/204dfe35-3ff2-4f90-b06a-a6c06b857d46",
     "TraceBucketName": "transaction-trace-storage-prod.evmdebugger.rumblefish.dev",
+    "FrontendDomainName": "front.evmdebugger.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
     "AlchemyKey": "Hqhq4Kmez9e1D8TqzQJUXgHf-BT_doUO",
     "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752",
