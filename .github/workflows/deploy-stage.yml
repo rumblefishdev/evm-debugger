@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     env:
-      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evmdebugger
+      BUCKET_NAME: www-staging-aldnr.rumblefish.dev.evm-debugger
       PREFIX: evm-debugger
 
     if: |
@@ -57,17 +57,30 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/www-staging-aldnr.rumblefish.dev.evmdebugger-github-workflow
+          role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-frontend-deploy-stage
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
-          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
           DISTRIBUTION_ID: E1TRXMZGQSBIBH
 
+      - name: Assume role on main AWS account
+        run: |
+          role_name=$(aws cloudformation describe-stacks --stack-name evm-transaction-trace-stage | jq -r '.Stacks[0].Parameters | map(select(.ParameterKey == "CloudfrontInvalidationRoleArn"))[0].ParameterValue')
+          output=$(aws sts assume-role --role-arn "$role_name" --role-session-name github-stage-frontend-Session)
+
+          echo "AWS_ACCESS_KEY_ID=$(echo $output | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(echo $output | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$(echo $output | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
+
+      - name: Invalidate CloudFront
+        run: |
+            aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
+        env:
+            DISTRIBUTION_ID: E1TRXMZGQSBIBH
 
   transaction_trace_deploy_stage:
     runs-on: ubuntu-20.04
@@ -108,7 +121,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-github-workflow-stage
+          role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-transaction-trace-deploy-stage
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 
@@ -156,7 +169,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-github-workflow-stage
+          role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-srcmap-deploy-stage
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
 

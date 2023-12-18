@@ -5,7 +5,7 @@
 ###############################################
 
 REGION=us-east-1
-ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.rumblefish.com
+ARTIFACTS_BUCKET_NAME=artifacts.evm-transaction-trace.evmdebugger.rumblefish.com
 CAPABILITIES=CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
 S3_VERSION=current
 BUILD_DIR=.aws-sam/build
@@ -160,7 +160,7 @@ stage-deploy:
 .PHONY: stage-frontend-deploy
 stage-frontend-deploy: ENV_NAME=stage
 stage-frontend-deploy: CLOUD_FRONT_DISTRIBUTION_ID=E1TRXMZGQSBIBH
-stage-frontend-deploy: BUCKET_NAME=www-staging-aldnr.rumblefish.dev.evmdebugger
+stage-frontend-deploy: BUCKET_NAME=www-staging-aldnr.rumblefish.dev.evm-debugger
 stage-frontend-deploy:
 	@$(MAKE) -s .frontend-build ENV_NAME=$(ENV_NAME)
 	@$(MAKE) -s .frontend-deploy \
@@ -187,8 +187,8 @@ prod-deploy:
 .PHONY: prod-frontend-deploy
 prod-frontend-deploy: ENV_NAME=prod
 prod-frontend-deploy: CLOUD_FRONT_DISTRIBUTION_ID=E3IK5XITYN78AJ
-prod-frontend-deploy: BUCKET_NAME=www.rumblefish.dev.evmdebugger
-prod-frontend-deploy: 
+prod-frontend-deploy: BUCKET_NAME=www.rumblefish.dev.evm-debugger
+prod-frontend-deploy:
 	@$(MAKE) -s .frontend-build ENV_NAME=$(ENV_NAME)
 	@$(MAKE) -s .frontend-deploy \
 		ENV_NAME=$(ENV_NAME) \

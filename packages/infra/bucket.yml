@@ -1,6 +1,9 @@
 Parameters:
   DomainName:
     Type: String
+  CustomBucketName:
+    Type: String
+    Default: ""
   CertificateArn:
     Type: String
   HostedZoneId:
@@ -8,17 +11,30 @@ Parameters:
   DefaultObject:
     Type: String
     Default: "/index.html"
+  NotFoundObject:
+    Type: String
+    Default: "/index.html"
+  NotPermittedObject:
+    Type: String
+    Default: "/index.html"
   Prefix:
     Type: String
     Default: ""
     Description: Limit serving files only to specified prefix
+  ExternalCloudFrontOriginAccessIdentity:
+    Type: String
+    Default: ""
+
+Conditions:
+  ShouldCreateCloudFront: !Equals [!Ref ExternalCloudFrontOriginAccessIdentity, ""]
+  HasCustomBucketName: !Not [!Equals [!Ref CustomBucketName, ""]]
 
 Resources:
   FrontendBucket:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: Private
-      BucketName: !Ref DomainName
+      BucketName: !If [HasCustomBucketName, !Ref CustomBucketName, !Ref DomainName]
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
@@ -35,12 +51,14 @@ Resources:
 
   FrontendOriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Condition: ShouldCreateCloudFront
     Properties:
       CloudFrontOriginAccessIdentityConfig:
         Comment: !Sub access-identity-${DomainName}
 
   FrontendCloudFront:
     Type: AWS::CloudFront::Distribution
+    Condition: ShouldCreateCloudFront
     Properties:
       DistributionConfig:
         Aliases:
@@ -91,11 +109,11 @@ Resources:
           - ErrorCachingMinTTL: 86000
             ErrorCode: 403
             ResponseCode: 200
-            ResponsePagePath: !Ref DefaultObject
+            ResponsePagePath: !Ref NotPermittedObject
           - ErrorCachingMinTTL: 86000
             ErrorCode: 404
             ResponseCode: 200
-            ResponsePagePath: !Ref DefaultObject
+            ResponsePagePath: !Ref NotFoundObject
 
   FrontendAllowFromCloudFrontBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -120,12 +138,12 @@ Resources:
               AWS:
                 Fn::Join:
                   - " "
-                  -
-                    - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
-                    - Ref: FrontendOriginAccessIdentity
+                  - - "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity"
+                    - !If [ShouldCreateCloudFront, !Ref FrontendOriginAccessIdentity,  !Ref ExternalCloudFrontOriginAccessIdentity]
 
   FrontendRoute53:
     Type: AWS::Route53::RecordSet
+    Condition: ShouldCreateCloudFront
     Properties:
       AliasTarget:
         DNSName:
@@ -137,8 +155,8 @@ Resources:
 
 Outputs:
   CloudFrontDistributionId:
-    Value: !Ref FrontendCloudFront
+    Value: !If [ ShouldCreateCloudFront, !Ref FrontendCloudFront, "" ]
   FrontendBucketName:
-    Value: !Ref DomainName
+    Value: !If [ ShouldCreateCloudFront, !Ref DomainName, "" ]
   FrontendBucketArn:
     Value: !GetAtt FrontendBucket.Arn
