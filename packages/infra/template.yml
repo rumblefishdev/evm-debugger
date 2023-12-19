@@ -80,4 +80,3 @@ Resources:
         FrontendBucketName: !Ref FrontendBucketName
         GhOIDCProviderArn: !Ref GhOIDCProviderArn
         CloudfrontInvalidationRoleArn: !Ref CloudfrontInvalidationRoleArn
-        MainCloudformationStackArn: !Ref AWS::StackId
