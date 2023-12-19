@@ -55,6 +55,13 @@ jobs:
           npm run analyzer:build
           npm run frontend:build:prod
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-frontend-deploy-prod
+          aws-region: us-east-1
+          role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
+
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
