@@ -81,7 +81,7 @@ jobs:
         run: |
           aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
-          DISTRIBUTION_ID: E1TRXMZGQSBIBH
+          DISTRIBUTION_ID: E3IK5XITYN78AJ
 
 #  transaction_trace_deploy_prod:
 #    runs-on: ubuntu-20.04
