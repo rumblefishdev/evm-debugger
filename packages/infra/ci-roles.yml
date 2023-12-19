@@ -11,6 +11,8 @@ Parameters:
     Type: String
   CloudfrontInvalidationRoleArn:
     Type: String
+  MainCloudformationStackArn:
+    Type: String
 
 Resources:
   CIFrontendDeployRole:
@@ -48,11 +50,11 @@ Resources:
                 Action:
                   - cloudformation:DescribeStacks
                 Resource:
-                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-stage/*
-#              - Effect: Allow
-#                Action:
-#                  - sts:AssumeRole
-#                Resource: !Ref CloudfrontInvalidationRoleArn
+                  - !Ref MainCloudformationStackArn
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource: !Ref CloudfrontInvalidationRoleArn
 
   CITranasctionTraceDeployRole:
     Type: AWS::IAM::Role
