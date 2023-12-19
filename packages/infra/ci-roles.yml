@@ -47,7 +47,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudformation:DescribeStacks
-                Resource:q
+                Resource:
                   - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-stage/*
               - Effect: Allow
                 Action:
