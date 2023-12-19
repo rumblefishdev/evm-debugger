@@ -14,6 +14,7 @@
     "AlchemyKey": "Hqhq4Kmez9e1D8TqzQJUXgHf-BT_doUO",
     "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752",
     "FrontendExternalCloudFrontOriginAccessIdentity": "E3RYCXCTS68PZZ",
-    "FrontendBucketName": "www.rumblefish.dev.evm-debugger"
+    "FrontendBucketName": "www.rumblefish.dev.evm-debugger",
+    "CloudfrontInvalidationRoleArn": "arn:aws:iam::045028348791:role/rumblefish-website-prod-C-EvmDebuggerCrossAccountRo-jDA6muMPN1qL"
   }
 }

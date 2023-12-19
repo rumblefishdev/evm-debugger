@@ -1,9 +1,10 @@
 name: 'Deploy to prod'
 
 on:
-  release:
-    types:
-      - created
+  push:
+#  release:
+#    types:
+#      - created
 
 env:
   NODE_VERSION: 18.16.0
@@ -15,12 +16,12 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     env:
-      BUCKET_NAME: www.rumblefish.dev.evmdebugger
+      BUCKET_NAME: www.rumblefish.dev.evm-debugger
       PREFIX: evm-debugger
 
-    if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
-      !contains(github.ref, '-alpha.')
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/frontend') &&
+#      !contains(github.ref, '-alpha.')
 
     permissions:
       id-token: write
@@ -54,64 +55,69 @@ jobs:
           npm run analyzer:build
           npm run frontend:build:prod
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::045028348791:role/www.rumblefish.dev.evmdebugger-github-workflow
-          aws-region: us-east-1
-          role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
-
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
+
+      - name: Assume role on main AWS account
+        run: |
+          role_name=$(aws cloudformation describe-stacks --stack-name evm-transaction-trace-prod | jq -r '.Stacks[0].Parameters | map(select(.ParameterKey == "CloudfrontInvalidationRoleArn"))[0].ParameterValue')
+          output=$(aws sts assume-role --role-arn "$role_name" --role-session-name github-stage-frontend-Session)
+
+          echo "AWS_ACCESS_KEY_ID=$(echo $output | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(echo $output | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$(echo $output | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
+
+      - name: Invalidate CloudFront
+        run: |
           aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/${PREFIX}/*"
         env:
-          DISTRIBUTION_ID: E3IK5XITYN78AJ
+          DISTRIBUTION_ID: E1TRXMZGQSBIBH
 
-  transaction_trace_deploy_prod:
-    runs-on: ubuntu-20.04
-
-    if: |
-      startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
-      !contains(github.ref, '-alpha.')
-
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v2.3.1
-
-      - uses: actions/setup-node@master
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: 'Cache NPM dependencies'
-        uses: pat-s/always-upload-cache@v2.1.5
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-npm-cache-
-
-      - name: Install dependencies
-        run: |
-          npm i
-          npm install jq.node -g
-          lerna bootstrap
-
-      - name: Build
-        run: |
-          npm run types:build
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::045028348791:role/evm-debugger-github-workflow-prod
-          aws-region: us-east-1
-          role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
-
-      - name: Deploy stack
-        working-directory: ./packages/infra
-        run: |
-          make prod-deploy
+#  transaction_trace_deploy_prod:
+#    runs-on: ubuntu-20.04
+#
+#    if: |
+#      startsWith(github.ref, 'refs/tags/@evm-debuger/transaction-trace') &&
+#      !contains(github.ref, '-alpha.')
+#
+#    permissions:
+#      id-token: write
+#      contents: read
+#    steps:
+#      - name: 'Checkout'
+#        uses: actions/checkout@v2.3.1
+#
+#      - uses: actions/setup-node@master
+#        with:
+#          node-version: ${{ env.NODE_VERSION }}
+#
+#      - name: 'Cache NPM dependencies'
+#        uses: pat-s/always-upload-cache@v2.1.5
+#        with:
+#          path: |
+#            **/node_modules
+#          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
+#          restore-keys: |
+#            ${{ runner.OS }}-npm-cache-
+#
+#      - name: Install dependencies
+#        run: |
+#          npm i
+#          npm install jq.node -g
+#          lerna bootstrap
+#
+#      - name: Build
+#        run: |
+#          npm run types:build
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-transaction-trace-deploy-prod
+#          aws-region: us-east-1
+#          role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
+#
+#      - name: Deploy stack
+#        working-directory: ./packages/infra
+#        run: |
+#          make prod-deploy

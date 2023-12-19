@@ -64,8 +64,6 @@ jobs:
       - name: 'Deploy'
         run: |
           aws s3 sync packages/frontend/build s3://${BUCKET_NAME}/${PREFIX} --delete --exact-timestamps
-        env:
-          DISTRIBUTION_ID: E1TRXMZGQSBIBH
 
       - name: Assume role on main AWS account
         run: |
