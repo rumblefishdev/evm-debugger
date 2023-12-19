@@ -7,7 +7,7 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "patch": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js",
+    "patch": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js && cp patches/node_modules/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js node_modules/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js",
     "debug": "ts-node debug.ts"
   }
 }
