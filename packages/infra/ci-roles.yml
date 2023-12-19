@@ -47,12 +47,12 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudformation:DescribeStacks
-                Resource:
+                Resource:q
                   - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-stage/*
-#              - Effect: Allow
-#                Action:
-#                  - sts:AssumeRole
-#                Resource: !Ref CloudfrontInvalidationRoleArn
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource: !Ref CloudfrontInvalidationRoleArn
 
   CITranasctionTraceDeployRole:
     Type: AWS::IAM::Role
