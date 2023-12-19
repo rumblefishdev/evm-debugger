@@ -28,6 +28,8 @@ Parameters:
     Type: String
   FrontendExternalCloudFrontOriginAccessIdentity:
     Type: String
+  FrontendDomainName:
+    Type: String
   CloudfrontInvalidationRoleArn:
     Type: String
 
@@ -48,7 +50,7 @@ Resources:
       Parameters:
         CertificateArn: !Ref CertificateArn
         HostedZoneId: !Ref HostedZoneId
-        DomainName: "stage-front.evmdebugger.rumblefish.dev"
+        DomainName: !Ref FrontendDomainName
         CustomBucketName: !Ref FrontendBucketName
         ExternalCloudFrontOriginAccessIdentity: !Ref FrontendExternalCloudFrontOriginAccessIdentity
 

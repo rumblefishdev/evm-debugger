@@ -14,6 +14,7 @@
     "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752",
     "FrontendExternalCloudFrontOriginAccessIdentity": "E3M3L42A2POEPA",
     "FrontendBucketName": "www-staging-aldnr.rumblefish.dev.evm-debugger",
+    "FrontendDomainName": "stage-front.evmdebugger.rumblefish.dev",
     "CloudfrontInvalidationRoleArn": "arn:aws:iam::045028348791:role/rumblefish-website-stage--EvmDebuggerCrossAccountRo-RnqtJqxRg73C"
   }
 }
