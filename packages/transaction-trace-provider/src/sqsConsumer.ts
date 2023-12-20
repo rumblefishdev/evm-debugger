@@ -102,6 +102,7 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
 
   try {
     await debugTransaction(txHash, chainId, hardhatForkingUrl)
+    structLogsEmitter.removeListener('structLog', structLogHandler)
     await uploadTrace(uploadId, txHash, chainId)
 
     await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
