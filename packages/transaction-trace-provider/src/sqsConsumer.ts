@@ -3,7 +3,7 @@ import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
-import type { TRawTransactionTraceResult } from '@evm-debuger/types'
+import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 import type { CompletedPart } from '@aws-sdk/client-s3'
@@ -11,9 +11,12 @@ import type { CompletedPart } from '@aws-sdk/client-s3'
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
-import { getFilePath, completeMultiPartUpload, createMultiPartUpload, uploadPart, getFileName } from './s3'
+import { completeMultiPartUpload, createMultiPartUpload, getFileName, getFilePath, uploadPart } from './s3'
 import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { structLogsEmitter } = require('hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -22,6 +25,11 @@ AWSLambda.init({
   dsn: process.env.SENTRY_DSN,
 })
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
+
+let structLogs: IRawStructLog[] = []
+let totalSize = 0
+let partNumber = 1
+const uploadedParts: CompletedPart[] = []
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
@@ -36,39 +44,40 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   return traceResult
 }
 
-export const uploadTrace = async (txHash: string, chainId: string, traceResult: TRawTransactionTraceResult) => {
-  const uploadId = await createMultiPartUpload(txHash, chainId)
+export const uploadTrace = async (uploadId: string, txHash: string, chainId: string) => {
+  if (structLogs.length > 0) {
+    const body = JSON.stringify({ structLogs })
+    const bufferBody = Buffer.from(body)
+    const part: { partNumber: number; body: Buffer } = { partNumber: partNumber++, body: bufferBody }
 
-  const body = JSON.stringify({
-    structLogs: traceResult.structLogs,
-    returnValue: traceResult.returnValue,
-    gas: traceResult.gas,
-    failed: traceResult.failed,
-  })
-  const bufferBody = Buffer.from(body)
-  const partSize = 1024 * 1024 * 10
-  const parts: { PartNumber: number; body: Buffer }[] = []
-
-  for (let rangeStart = 0; rangeStart < bufferBody.length; rangeStart += partSize) {
-    const partNumber = Math.ceil(rangeStart / partSize) + 1
-    const end = Math.min(rangeStart + partSize, bufferBody.length)
-    const partBody = bufferBody.slice(rangeStart, end)
-    parts.push({ PartNumber: partNumber, body: partBody })
-  }
-
-  const uploadedParts: CompletedPart[] = []
-  for (const part of parts) {
-    console.log(`Uploading part ${part.PartNumber}/${parts.length}`)
+    console.log(`Uploading part ${part.partNumber}`)
     console.log(`Part size: ${part.body.length}`)
 
-    const partETag = await uploadPart(txHash, chainId, uploadId, part.PartNumber, part.body)
-    if (!partETag) throw new Error(`Failed to upload part: ${part.PartNumber}/${parts.length}`)
+    const partETag = await uploadPart(txHash, chainId, uploadId, part.partNumber, part.body)
+    if (!partETag) throw new Error(`Failed to upload part: ${part.partNumber}`)
 
-    uploadedParts.push({ PartNumber: part.PartNumber, ETag: partETag })
+    uploadedParts.push({ PartNumber: part.partNumber, ETag: partETag })
   }
+}
 
-  await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
-  console.log(`Finished uploading parts for ${chainId}/${txHash}`)
+export const maxSize = 10 * 1024 * 1024 // 10 MB
+export const structLogHandler = async (uploadId: string, structLog: IRawStructLog, txHash: string, chainId: string) => {
+  structLogs.push(structLog)
+  totalSize += Buffer.from(JSON.stringify(structLog)).length
+
+  if (totalSize >= maxSize) {
+    try {
+      await uploadTrace(uploadId, txHash, chainId)
+    } catch (error) {
+      const errorMessage = { errorDetails: DEFAULT_ERROR }
+      if (error instanceof Error) {
+        console.log(error.message)
+        errorMessage['errorDetails'] = error.message
+        captureException(error)
+      }
+      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+    }
+  }
 }
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
@@ -84,29 +93,25 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   console.log(JSON.stringify({ txHash, hardhatForkingUrl, chainId }))
   await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
 
-  let traceResult: TRawTransactionTraceResult
+  const uploadId = await createMultiPartUpload(txHash, chainId)
+  structLogsEmitter.on('structLog', async (structLog: IRawStructLog) => {
+    await structLogHandler(uploadId, structLog, txHash, chainId)
+    totalSize = 0
+    structLogs = []
+  })
 
   try {
-    traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
+    await debugTransaction(txHash, chainId, hardhatForkingUrl)
+    await uploadTrace(uploadId, txHash, chainId)
+
+    await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
+    console.log(`Finished uploading parts for ${chainId}/${txHash}`)
   } catch (error) {
     const errorMessage = { errorDetails: DEFAULT_ERROR }
     if (error instanceof Error) {
       console.log(error.message)
       errorMessage['errorDetails'] = error.message
       if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
-    }
-    await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
-    return
-  }
-
-  try {
-    await uploadTrace(txHash, chainId, traceResult)
-  } catch (error) {
-    const errorMessage = { errorDetails: DEFAULT_ERROR }
-    if (error instanceof Error) {
-      console.log(error.message)
-      errorMessage['errorDetails'] = error.message
-      captureException(error)
     }
     await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
     return
@@ -121,7 +126,7 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   }
 
   const s3Location = getFilePath(txHash, chainId)
-  putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
+  await putTxEventToDdb(TransactionTraceResponseStatus.SUCCESS, txHash, { s3Location })
   console.log(`Finished processing ${chainId}/${txHash}`)
   console.log(`Trace saved to ${s3Location}`)
 }
