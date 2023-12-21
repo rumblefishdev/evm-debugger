@@ -44,11 +44,9 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   return traceResult
 }
 
-export const uploadTrace = async (uploadId: string, txHash: string, chainId: string) => {
+export const uploadTrace = async (uploadId: string, txHash: string, chainId: string, trace: string) => {
   if (structLogs.length > 0) {
-    const body = JSON.stringify({ structLogs })
-    const bufferBody = Buffer.from(body)
-    const part: { partNumber: number; body: Buffer } = { partNumber: partNumber++, body: bufferBody }
+    const part: { partNumber: number; body: string } = { partNumber: partNumber++, body: trace }
 
     console.log(`Uploading part ${part.partNumber}`)
     console.log(`Part size: ${part.body.length}`)
@@ -60,6 +58,15 @@ export const uploadTrace = async (uploadId: string, txHash: string, chainId: str
   }
 }
 
+export const prepareBodyFromArray = (array: IRawStructLog[]): string => {
+  let body = JSON.stringify({ array })
+  body = body.substring(1, body.length - 1)
+  if (partNumber > 1) body = `,${body}`
+  if (partNumber === 1) body = `{"structLogs":[${body}`
+
+  return body
+}
+
 export const maxSize = 10 * 1024 * 1024 // 10 MB
 export const structLogHandler = async (uploadId: string, structLog: IRawStructLog, txHash: string, chainId: string) => {
   structLogs.push(structLog)
@@ -67,7 +74,8 @@ export const structLogHandler = async (uploadId: string, structLog: IRawStructLo
 
   if (totalSize >= maxSize) {
     try {
-      await uploadTrace(uploadId, txHash, chainId)
+      const body = prepareBodyFromArray(structLogs)
+      await uploadTrace(uploadId, txHash, chainId, body)
     } catch (error) {
       const errorMessage = { errorDetails: DEFAULT_ERROR }
       if (error instanceof Error) {
@@ -78,6 +86,11 @@ export const structLogHandler = async (uploadId: string, structLog: IRawStructLo
       await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
     }
   }
+}
+
+export const prepareTraceResultToUpload = (traceResult: TRawTransactionTraceResult): string => {
+  const traceResultAsString = JSON.stringify(traceResult)
+  return traceResultAsString.substring(1)
 }
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
@@ -101,9 +114,14 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   })
 
   try {
-    await debugTransaction(txHash, chainId, hardhatForkingUrl)
+    const traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
+
     structLogsEmitter.removeListener('structLog', structLogHandler)
-    await uploadTrace(uploadId, txHash, chainId)
+    const endOfStructLogArray = '[,'
+    await uploadTrace(uploadId, txHash, chainId, endOfStructLogArray)
+
+    const preparedTraceResult = prepareTraceResultToUpload(traceResult)
+    await uploadTrace(uploadId, txHash, chainId, preparedTraceResult)
 
     await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
     console.log(`Finished uploading parts for ${chainId}/${txHash}`)
