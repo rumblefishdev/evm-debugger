@@ -5,48 +5,22 @@ import type { PutObjectRequest } from '@aws-sdk/client-s3'
 import type {
   ISrcMapApiPayload,
   TEtherscanContractSourceCodeResult,
-  TEtherscanParsedSourceCode,
+  TSolcConfiguration,
   TSourceMap,
 } from '@evm-debuger/types'
 import { SrcMapStatus } from '@evm-debuger/types'
 import { captureMessage } from '@sentry/serverless'
 
-import type { SolcOutput, TSourceFile } from './types'
-import solc from './solc'
+import type { TSourceFile } from './types'
 import { setDdbContractInfo } from './ddb'
 import { s3upload, s3download } from './s3'
+import { SolcManager } from './solc.strategy'
 
 const { BUCKET_NAME } = process.env
 
-const isMultipleFilesJSON = (sourceCode: string) =>
-  sourceCode.startsWith('{{') && sourceCode.endsWith('}}')
-
-const createSettingsObject = (
-  sourceData: TEtherscanContractSourceCodeResult,
-): TEtherscanParsedSourceCode['settings'] => {
-  const hasMultipleSources = isMultipleFilesJSON(sourceData.SourceCode)
-
-  if (hasMultipleSources) {
-    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
-      1,
-      -1,
-    )
-
-    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
-
-    return sourceCodeObj.settings
-  }
-  return {
-    optimizer: {
-      runs: Number(sourceData.Runs),
-      enabled: sourceData.OptimizationUsed === '1',
-    },
-  }
-}
-
 const getSourceMap = async (
   files: TSourceFile[],
-  settings: TEtherscanParsedSourceCode['settings'],
+  solcConfiguration: TSolcConfiguration,
 ): Promise<{
   generatedSourceMaps: TSourceMap[]
   sources: Record<number, string>
@@ -62,44 +36,37 @@ const getSourceMap = async (
       }
     }, {}),
     settings: {
-      ...settings,
+      ...solcConfiguration.settings,
       outputSelection: {
         '*': {
           '*': ['*'],
         },
       },
     },
-
-    language: 'Solidity',
+    language: solcConfiguration.language,
   }
 
-  const rawCompilationResult = solc.compile(JSON.stringify(input))
+  const solcManager = new SolcManager('')
 
-  const output: SolcOutput = JSON.parse(rawCompilationResult) as SolcOutput
+  const compilationResult = solcManager.compile(input)
 
   let generatedSourceMaps: TSourceMap[] = []
-  for (const [fileName, fileInternals] of Object.entries(output.contracts)) {
+  for (const [fileName, fileInternals] of Object.entries(
+    compilationResult.contracts,
+  )) {
     const newerEntries: TSourceMap[] = await Promise.all(
       Object.entries(fileInternals).map(([contractName, contractInternals]) => {
         return {
           fileName,
-          deployedBytecode: {
-            sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
-            opcodes: contractInternals.evm.deployedBytecode.opcodes,
-            object: contractInternals.evm.deployedBytecode.object,
-          },
+          deployedBytecode: contractInternals.evm.deployedBytecode,
           contractName,
-          bytecode: {
-            sourceMap: contractInternals.evm.bytecode.sourceMap,
-            opcodes: contractInternals.evm.bytecode.opcodes,
-            object: contractInternals.evm.bytecode.object,
-          },
+          bytecode: contractInternals.evm.bytecode,
         }
       }),
     )
     generatedSourceMaps = [...generatedSourceMaps, ...newerEntries]
   }
-  const sources = Object.entries(output.sources).reduce(
+  const sources = Object.entries(compilationResult.sources).reduce(
     (accumulator: Record<number, string>, [key, value]) => {
       accumulator[value.id] = key
       return accumulator
@@ -153,9 +120,13 @@ export const compileFiles = async (
     })
   }
 
-  const settings = createSettingsObject(sourceData)
-
-  console.log(`Settings ${_payload.address}`, settings)
+  const settingsResponse = await s3download({
+    Key: _payload.pathCompilatorSettings,
+    Bucket: BUCKET_NAME,
+  })
+  const settings: TSolcConfiguration = JSON.parse(
+    (await settingsResponse.Body?.transformToString('utf8')) || '',
+  )
 
   const sourceFiles: TSourceFile[] = (
     await Promise.all(

@@ -4,7 +4,6 @@ import type { SQSEvent } from 'aws-lambda'
 import type {
   ISrcMapApiPayload,
   TEtherscanContractSourceCodeResp,
-  TEtherscanParsedSourceCode,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -14,6 +13,7 @@ import { version } from '../package.json'
 import { getDdbContractInfo, setDdbContractInfo } from './ddb'
 import { s3upload } from './s3'
 import type { IFetcherPayload } from './types'
+import { SoruceCodeManagerStrategy } from './sourceCodeManager.strategy'
 
 const { BUCKET_NAME, SENTRY_DSN, ENVIRONMENT } = process.env
 
@@ -133,41 +133,23 @@ const extractFiles = async (
     }
   }
 
-  const rawSourceCode = fetcherPayload.sourceData?.SourceCode.replace(
-    /(\r\n)/gm,
-    '',
-  ).slice(1, -1)
+  const sourceCodeManager = new SoruceCodeManagerStrategy(
+    fetcherPayload.sourceData?.SourceCode,
+  )
 
-  let toUpload: [string, string][] = []
+  const toUpload: [string, string][] = []
 
-  try {
-    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+  toUpload.push(...sourceCodeManager.extractFiles(fetcherPayload.sourceData))
 
-    if (!sourceCodeObj.sources) {
-      const message = "/Extract Files/Can't find source files"
-      console.warn(payload.address, message)
+  const settings = sourceCodeManager.createSettingsObject(
+    fetcherPayload.sourceData,
+  )
 
-      return {
-        payload: await setDdbContractInfo({
-          ...payload,
-          status: SrcMapStatus.FILES_EXTRACTING_FAILED,
-          message,
-        }),
-      }
-    }
-
-    toUpload = Object.keys(sourceCodeObj.sources).map((fileName) => [
-      fileName,
-      sourceCodeObj.sources[fileName].content,
-    ])
-  } catch {
-    toUpload = [
-      [
-        fetcherPayload.sourceData?.ContractName,
-        fetcherPayload.sourceData?.SourceCode,
-      ],
-    ]
-  }
+  await s3upload({
+    Key: `contracts/${payload.chainId}/${payload.address}/settings.json`,
+    Bucket: BUCKET_NAME,
+    Body: JSON.stringify(settings),
+  })
 
   const uploaded: string[] = (
     await Promise.all(

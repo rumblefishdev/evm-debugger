@@ -85,9 +85,16 @@ export type TEtherscanParsedSourceCode = {
     }
     remappings?: string[]
     viaIR?: boolean
+    outputSelection?: {
+      '*': {
+        '*': string[]
+      }
+    }
   }
   sources: Record<string, { content: string }>
 }
+
+export type TSolcConfiguration = Pick<TEtherscanParsedSourceCode, 'language' | 'settings'>
 
 export type TEtherscanContractSourceCodeResp = {
   // https://docs.etherscan.io/api-endpoints/contracts#get-contract-source-code-for-verified-contract-source-codes
