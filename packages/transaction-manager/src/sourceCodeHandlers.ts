@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import type { TEtherscanContractSourceCodeResult, TEtherscanParsedSourceCode } from '@evm-debuger/types'
 
 import { ensureDirectoryExistance, isMultipleFilesJSON, saveToFile } from './utils'
@@ -13,7 +14,7 @@ export const handleSingleSourceCode = (
   saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${contractAddress}/sourceFile.sol`, sourceCodeData.SourceCode)
 
   const settings = {
-    optimizer: {enabled: true, runs: Number(sourceCodeData.Runs)  }
+    optimizer: { enabled: Boolean(sourceCodeData.OptimizationUsed === '1'), runs: Number(sourceCodeData.Runs) },
     // evmVersion: sourceCodeData.EVMVersion.toLocaleLowerCase() === 'default' ? 'istanbul' : sourceCodeData.EVMVersion.toLocaleLowerCase(),
   }
   const language = sourceCodeData.SourceCode.includes('pragma solidity') ? 'Solidity' : 'Vyper'

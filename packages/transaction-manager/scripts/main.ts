@@ -1,12 +1,11 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
 import { readFileSync } from 'fs'
 
 import type { TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import solc from 'solc'
+import * as solc from 'solc'
 
 import { inputPrompt } from '../src/prompts'
-import { ensureDirectoryExistance, isValidTransaction, readFromFile, saveToFile } from '../src/utils'
+import { ensureDirectoryExistance, isValidTransaction, saveToFile } from '../src/utils'
 import { ErrorMessages } from '../src/errors'
 import { DefaultPaths, Paths } from '../src/paths'
 import { handleTransactionInfoFetching } from '../src/transaction-data-getters/transactionInfo'
@@ -62,71 +61,57 @@ import { handleSourceCode } from '../src/sourceCodeHandlers'
 
       if (isCotractVerified) {
 
-        console.log(`contract ${address} is being parsed`)
-        const { language,settings,sources } = handleSourceCode(sourceCodesData, address)
+          console.log(`contract ${address} is being parsed`)
+          const { language,settings,sources } = handleSourceCode(sourceCodesData, address)
 
 
-        const solcInput = JSON.stringify({
-          language,
-          settings: {
-            ...settings,
-          outputSelection: {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.legacyAssembly",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "evm.gasEstimates",
-                "evm.assembly"
-              ]
+          const solcInput = JSON.stringify({
+            sources,
+            settings: {
+              ...settings,
+              outputSelection: {
+                '*': {
+                  '*': ['*'],
+                },
+              }
             },
-          },
-          remappings: []
-          },
-          sources
-        })
 
-        const solcInput2 = address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" ? readFileSync(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput2.json`,'utf8') : ''
+            language,
+          })
 
-        saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput.json`, JSON.parse(solcInput))
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput.json`, JSON.parse(solcInput))
 
-        if (address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"){
-          console.log(solcInput2)
-        }
+          // console.log(solc)
 
-        const output: string = solc.compile(address === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" ? solcInput2 : solcInput)
+          const solcOutput = solc.compile(solcInput,1)
 
-        try {
-          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(output))
-        } catch(error) {
-          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, output)
-        }
+          try {
+            saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(solcOutput))
+          } catch(saveError) {
+            saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, solcOutput)
+          }
+          // solc.loadRemoteVersion(sourceCodesData.CompilerVersion, (error, solcSnapshot) => {
+          //   console.log(`solc version ${sourceCodesData.CompilerVersion} is being used`)
+          //   console.log(`solcSnapshot version ${solcSnapshot.version()} is being used`)
 
-        // if (address === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"){
-        //   const solcOutput: SolcOutput = JSON.parse(output)
-        //   const {assembly} = solcOutput.contracts['UniswapV2Router02']['UniswapV2Router02'].evm
-          
-        //   const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+          //   const output = solcSnapshot.compileStandard(solcInput)
+          //   console.log(output)
+          // })
 
-        //   saveToFile(path, assembly)
-        // }
-        // if (address === "0x10b35407d9623b3f2597908a5bf1e0f00bbd4a91"){
-        //   const solcOutput: SolcOutput = JSON.parse(output)
-        //   const {assembly} = solcOutput.contracts['contracts/accumulators/UniswapV2PA.sol']['AdrastiaUniswapV2PA'].evm
-          
-        //   const path = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly.json`
+          // solc.loadRemoteVersion(sourceCodesData.CompilerVersion, (error, solcSnapshot) => {
+          //   console.log(`solc version ${sourceCodesData.CompilerVersion} is being used`)
+          //   console.log(`solcSnapshot version ${solcSnapshot.version()} is being used`)
+          //   if (error) {
+          //     console.log(error)
+          //     return
+          //   } 
 
-        //   saveToFile(path, assembly)
-        // }
+          //   console.log(solcSnapshot)
+          // const output: string = solcSnapshot.lowlevel.compileStandard(solcInput)
+
+          // })          
+
+
 
       } else {
         console.log(`contract ${address} is not verified`)
