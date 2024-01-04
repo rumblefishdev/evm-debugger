@@ -25,8 +25,11 @@ const getSourceMap = async (
   generatedSourceMaps: TSourceMap[]
   sources: Record<number, string>
 }> => {
+  console.log('getSourceMap - files', files)
+  console.log('getSourceMap - solcConfiguration', solcConfiguration)
+
   const input = {
-    sources: files.reduce((accumulator, current, index) => {
+    sources: files.reduce((accumulator, current) => {
       const key: string = current.path.split('contract_files/').pop() || ''
       return {
         ...accumulator,
@@ -48,7 +51,11 @@ const getSourceMap = async (
 
   const solcManager = new SolcManager('')
 
+  console.log('solc input', input)
+
   const compilationResult = solcManager.compile(input)
+
+  console.log('compilation success')
 
   let generatedSourceMaps: TSourceMap[] = []
   for (const [fileName, fileInternals] of Object.entries(
@@ -153,6 +160,9 @@ export const compileFiles = async (
 
   let sourceMaps: TSourceMap[] = []
   let sourcesOrder: Record<number, string> = {}
+
+  console.log('Pres getSourceMap - sourceFiles', sourceFiles)
+
   try {
     const { generatedSourceMaps, sources } = await getSourceMap(
       sourceFiles,

@@ -145,8 +145,10 @@ const extractFiles = async (
     fetcherPayload.sourceData,
   )
 
+  const settingsKey = `contracts/${payload.chainId}/${payload.address}/settings.json`
+
   await s3upload({
-    Key: `contracts/${payload.chainId}/${payload.address}/settings.json`,
+    Key: settingsKey,
     Bucket: BUCKET_NAME,
     Body: JSON.stringify(settings),
   })
@@ -171,6 +173,7 @@ const extractFiles = async (
       ...payload,
       status: SrcMapStatus.FILES_EXTRACTING_SUCCESS,
       pathSourceFiles: uploaded,
+      pathCompilatorSettings: settingsKey,
       message: '',
     }),
   }

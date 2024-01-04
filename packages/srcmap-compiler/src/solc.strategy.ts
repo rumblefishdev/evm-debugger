@@ -24,7 +24,7 @@ const santizeSolcVersionToNumber = (solcVersion: string) => {
 class SolcOldLegacy {
   public compile(input: TEtherscanParsedSourceCode): string {
     return solc.compile(
-      JSON.stringify(input.sources[0].content),
+      JSON.stringify(input.sources[Object.keys(input.sources)[0]].content),
       input.settings.optimizer.enabled,
     )
   }
@@ -63,6 +63,7 @@ export class SolcManager {
 
   public compile(input: TEtherscanParsedSourceCode): SolcOutput {
     const rawCompilationResult = this.solcStrategy.compile(input)
+    console.log('rawCompilationResult', rawCompilationResult)
     return JSON.parse(rawCompilationResult)
   }
 }
