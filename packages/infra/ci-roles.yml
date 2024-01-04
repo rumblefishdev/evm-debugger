@@ -48,7 +48,7 @@ Resources:
                 Action:
                   - cloudformation:DescribeStacks
                 Resource:
-                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-stage/*
+                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-${Environment}/*
               - Effect: Allow
                 Action:
                   - sts:AssumeRole
