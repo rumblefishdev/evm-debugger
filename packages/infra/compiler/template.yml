@@ -32,6 +32,7 @@ Resources:
             Ref: Environment
           SENTRY_DSN:
             Ref: SentryDsn
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Policies:
       - Statement:
         - Effect: Allow
