@@ -142,6 +142,8 @@ const extractFiles = async (
 
   toUpload.push(...sourceCodeManager.extractFiles(fetcherPayload.sourceData))
 
+  // console.log('toUpload', JSON.stringify(toUpload, null, 2))
+
   const settings = sourceCodeManager.createSettingsObject(
     fetcherPayload.sourceData,
   )
@@ -158,6 +160,7 @@ const extractFiles = async (
     await Promise.all(
       toUpload.map(async ([fileName, content]) => {
         const key = `contracts/${payload.chainId}/${payload.address}/contract_files/${fileName}`
+        console.log(JSON.stringify({ key, content, BUCKET_NAME }, null, 2))
         await s3upload({
           Key: key,
           Bucket: BUCKET_NAME,

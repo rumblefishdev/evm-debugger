@@ -8,27 +8,12 @@ import type {
 import { createBaseSettingsObject } from './helpers'
 import type { SourceCodeManager } from './types'
 
-class SingleFileSourceManager {
-  public static isApplicable(sourceCode: string): boolean {
-    return sourceCode.match(/"content":"/g) === null
-  }
-
-  public extractFiles(
-    sourceData: TEtherscanContractSourceCodeResult,
-  ): TExtractedSourceFiles {
-    return [[sourceData.ContractName, sourceData.SourceCode]]
-  }
-
-  public createSettingsObject(
-    sourceData: TEtherscanContractSourceCodeResult,
-  ): TSolcConfiguration {
-    return createBaseSettingsObject(sourceData)
-  }
-}
-
 class MultiFileExtendedSourceManager {
   public static isApplicable(sourceCode: string): boolean {
-    return sourceCode.match(/"sources":/g) !== null
+    const matchingResult = sourceCode.match(/"sources": {/g)
+    console.log('matchingResult', matchingResult)
+    console.log('matchingResult !== null', matchingResult !== null)
+    return matchingResult !== null && matchingResult.length > 0
   }
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
@@ -63,11 +48,42 @@ class MultiFileExtendedSourceManager {
     }
   }
 }
+class SingleFileSourceManager {
+  public static isApplicable(sourceCode: string): boolean {
+    const matchingResult = sourceCode.match(/"content":/g)
+    console.log('matchingResult', matchingResult)
+    console.log('matchingResult === null', matchingResult === null)
+    return matchingResult === null
+  }
+
+  public extractFiles(
+    sourceData: TEtherscanContractSourceCodeResult,
+  ): TExtractedSourceFiles {
+    return [[sourceData.ContractName, sourceData.SourceCode]]
+  }
+
+  public createSettingsObject(
+    sourceData: TEtherscanContractSourceCodeResult,
+  ): TSolcConfiguration {
+    return createBaseSettingsObject(sourceData)
+  }
+}
+
 class MultiFileSourceManager {
   public static isApplicable(sourceCode: string): boolean {
-    const numberOfContents = sourceCode.match(/"content":"/g)?.length
-    const hasMoreThanZeroContent =
-      numberOfContents !== undefined && numberOfContents > 0
+    const matchingResult = sourceCode.match(/"content":/g)
+
+    console.log('matchingResult', matchingResult)
+
+    if (matchingResult === null) return false
+    console.log('matchingResult.length > 0', matchingResult.length > 0)
+
+    const hasMoreThanZeroContent = matchingResult.length > 0
+
+    console.log(
+      '!MultiFileExtendedSourceManager.isApplicable(sourceCode)',
+      !MultiFileExtendedSourceManager.isApplicable(sourceCode),
+    )
 
     return (
       hasMoreThanZeroContent &&
@@ -79,11 +95,14 @@ class MultiFileSourceManager {
   ): TExtractedSourceFiles {
     const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '')
 
-    const sourceCodeObj: Record<string, string> = JSON.parse(rawSourceCode)
+    const sourceCodeObj: Record<string, { content: string }> =
+      JSON.parse(rawSourceCode)
+
+    console.log('sourceCodeObj', sourceCodeObj)
 
     return Object.keys(sourceCodeObj).map((fileName) => [
       fileName,
-      sourceCodeObj[fileName],
+      sourceCodeObj[fileName].content,
     ])
   }
 
@@ -98,14 +117,20 @@ export class SoruceCodeManagerStrategy {
   private sourceCodeManager: SourceCodeManager
 
   constructor(sourceCode: string) {
+    console.log('sourceCode', sourceCode)
+    console.log('typeof sourceCode', typeof sourceCode)
+
     switch (true) {
       case SingleFileSourceManager.isApplicable(sourceCode):
+        console.log('SingleFileSourceManager')
         this.sourceCodeManager = new SingleFileSourceManager()
         break
       case MultiFileExtendedSourceManager.isApplicable(sourceCode):
+        console.log('MultiFileExtendedSourceManager')
         this.sourceCodeManager = new MultiFileExtendedSourceManager()
         break
       case MultiFileSourceManager.isApplicable(sourceCode):
+        console.log('MultiFileSourceManager')
         this.sourceCodeManager = new MultiFileSourceManager()
         break
       default:
