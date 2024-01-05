@@ -4,7 +4,7 @@ import type { SQSEvent } from 'aws-lambda'
 import type {
   ISrcMapApiPayload,
   TEtherscanContractSourceCodeResp,
-  TEtherscanParsedSourceCode,
+  TExtractedSourceFiles,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -14,6 +14,7 @@ import { version } from '../package.json'
 import { getDdbContractInfo, setDdbContractInfo } from './ddb'
 import { s3upload } from './s3'
 import type { IFetcherPayload } from './types'
+import { SoruceCodeManagerStrategy } from './sourceCodeManager.strategy'
 
 const { BUCKET_NAME, SENTRY_DSN, ENVIRONMENT } = process.env
 
@@ -133,46 +134,33 @@ const extractFiles = async (
     }
   }
 
-  const rawSourceCode = fetcherPayload.sourceData?.SourceCode.replace(
-    /(\r\n)/gm,
-    '',
-  ).slice(1, -1)
+  const sourceCodeManager = new SoruceCodeManagerStrategy(
+    fetcherPayload.sourceData?.SourceCode,
+  )
 
-  let toUpload: [string, string][] = []
+  const toUpload: TExtractedSourceFiles = []
 
-  try {
-    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+  toUpload.push(...sourceCodeManager.extractFiles(fetcherPayload.sourceData))
 
-    if (!sourceCodeObj.sources) {
-      const message = "/Extract Files/Can't find source files"
-      console.warn(payload.address, message)
+  // console.log('toUpload', JSON.stringify(toUpload, null, 2))
 
-      return {
-        payload: await setDdbContractInfo({
-          ...payload,
-          status: SrcMapStatus.FILES_EXTRACTING_FAILED,
-          message,
-        }),
-      }
-    }
+  const settings = sourceCodeManager.createSettingsObject(
+    fetcherPayload.sourceData,
+  )
 
-    toUpload = Object.keys(sourceCodeObj.sources).map((fileName) => [
-      fileName,
-      sourceCodeObj.sources[fileName].content,
-    ])
-  } catch {
-    toUpload = [
-      [
-        fetcherPayload.sourceData?.ContractName,
-        fetcherPayload.sourceData?.SourceCode,
-      ],
-    ]
-  }
+  const settingsKey = `contracts/${payload.chainId}/${payload.address}/settings.json`
+
+  await s3upload({
+    Key: settingsKey,
+    Bucket: BUCKET_NAME,
+    Body: JSON.stringify(settings),
+  })
 
   const uploaded: string[] = (
     await Promise.all(
       toUpload.map(async ([fileName, content]) => {
         const key = `contracts/${payload.chainId}/${payload.address}/contract_files/${fileName}`
+        console.log(JSON.stringify({ key, content, BUCKET_NAME }, null, 2))
         await s3upload({
           Key: key,
           Bucket: BUCKET_NAME,
@@ -189,6 +177,7 @@ const extractFiles = async (
       ...payload,
       status: SrcMapStatus.FILES_EXTRACTING_SUCCESS,
       pathSourceFiles: uploaded,
+      pathCompilatorSettings: settingsKey,
       message: '',
     }),
   }
