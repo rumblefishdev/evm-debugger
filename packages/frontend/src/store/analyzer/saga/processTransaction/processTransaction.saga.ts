@@ -7,9 +7,9 @@ import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { createErrorLogMessage, createInfoLogMessage, sendStatusMessageToDiscord } from '../../analyzer.utils'
+import { transactionTraceProviderUrl } from '../../../../config'
 
 import { processTransactionTakesMatchers } from './processTransaction.takes'
-import { transactionTraceProviderUrl } from '../../../../config'
 
 export function* processTransactionSaga({ payload }: TAnalyzerActions['processTransaction']): SagaGenerator<void> {
   const { chainId, transactionHash } = payload
@@ -44,7 +44,6 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
     yield* take(processTransactionTakesMatchers[AnalyzerStages.RUNNING_ANALYZER])
 
     sendStatusMessageToDiscord(`Analyzer finished for ${transactionHash} on ${chainId}`)
-
   } catch (error) {
     yield* put(analyzerActions.setCriticalError(error.message))
     yield* put(
@@ -52,6 +51,5 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
     )
 
     sendStatusMessageToDiscord(`Analyzer failed for ${transactionHash} on ${chainId}`)
-
   }
 }
