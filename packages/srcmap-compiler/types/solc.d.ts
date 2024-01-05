@@ -1,4 +1,4 @@
-declare module 'solcv0.4.19' {
+declare module 'solcv0.4.24' {
   export function compile(input: string, optimalization?: boolean): string
   export function compileStandard(input: string): string
 }

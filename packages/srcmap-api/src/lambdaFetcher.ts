@@ -4,6 +4,7 @@ import type { SQSEvent } from 'aws-lambda'
 import type {
   ISrcMapApiPayload,
   TEtherscanContractSourceCodeResp,
+  TExtractedSourceFiles,
 } from '@evm-debuger/types'
 import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
 import fetch from 'node-fetch'
@@ -137,7 +138,7 @@ const extractFiles = async (
     fetcherPayload.sourceData?.SourceCode,
   )
 
-  const toUpload: [string, string][] = []
+  const toUpload: TExtractedSourceFiles = []
 
   toUpload.push(...sourceCodeManager.extractFiles(fetcherPayload.sourceData))
 

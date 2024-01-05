@@ -1,11 +1,7 @@
 import type { TEtherscanParsedSourceCode } from '@evm-debuger/types'
 
 import solc from './solc'
-import type { SolcOutput } from './types'
-
-interface SolcStrategy {
-  compile: (input: TEtherscanParsedSourceCode) => string
-}
+import type { SolcOutput, SolcManager } from './types'
 
 const santizeSolcVersionToNumber = (solcVersion: string) => {
   // example solcVersion: v0.5.16+commit.9c3226ce
@@ -47,8 +43,8 @@ class SolcLatest {
   }
 }
 
-export class SolcManager {
-  private solcStrategy: SolcStrategy
+export class SolcManagerStrategy {
+  private solcManager: SolcManager
   constructor(solcVersion: string) {
     const version = santizeSolcVersionToNumber(solcVersion)
 
@@ -60,18 +56,18 @@ export class SolcManager {
 
     switch (true) {
       case version < 4.11:
-        this.solcStrategy = new SolcOldLegacy()
+        this.solcManager = new SolcOldLegacy()
         break
       case version < 5.0 && version >= 4.11:
-        this.solcStrategy = new SolcLegacy()
+        this.solcManager = new SolcLegacy()
         break
       default:
-        this.solcStrategy = new SolcLatest()
+        this.solcManager = new SolcLatest()
     }
   }
 
   public compile(input: TEtherscanParsedSourceCode): SolcOutput {
-    const rawCompilationResult = this.solcStrategy.compile(input)
+    const rawCompilationResult = this.solcManager.compile(input)
     console.log('rawCompilationResult', rawCompilationResult)
     return JSON.parse(rawCompilationResult)
   }

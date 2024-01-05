@@ -96,6 +96,8 @@ export type TEtherscanParsedSourceCode = {
 
 export type TSolcConfiguration = Pick<TEtherscanParsedSourceCode, 'language' | 'settings'> & { solcCompilerVersion: string }
 
+export type TExtractedSourceFiles = [string, string][]
+
 export type TEtherscanContractSourceCodeResp = {
   // https://docs.etherscan.io/api-endpoints/contracts#get-contract-source-code-for-verified-contract-source-codes
   status: string

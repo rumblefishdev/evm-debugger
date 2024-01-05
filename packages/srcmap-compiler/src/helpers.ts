@@ -13,7 +13,7 @@ import { captureMessage } from '@sentry/serverless'
 import type { TSourceFile } from './types'
 import { setDdbContractInfo } from './ddb'
 import { s3upload, s3download } from './s3'
-import { SolcManager } from './solc.strategy'
+import { SolcManagerStrategy } from './solc.strategy'
 
 const { BUCKET_NAME } = process.env
 
@@ -53,7 +53,9 @@ const getSourceMap = async (
     solcConfiguration.solcCompilerVersion,
   )
 
-  const solcManager = new SolcManager(solcConfiguration.solcCompilerVersion)
+  const solcManager = new SolcManagerStrategy(
+    solcConfiguration.solcCompilerVersion,
+  )
 
   console.log('solc input', input)
 
@@ -69,9 +71,17 @@ const getSourceMap = async (
       Object.entries(fileInternals).map(([contractName, contractInternals]) => {
         return {
           fileName,
-          deployedBytecode: contractInternals.evm.deployedBytecode,
+          deployedBytecode: {
+            sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
+            opcodes: contractInternals.evm.deployedBytecode.opcodes,
+            object: contractInternals.evm.deployedBytecode.object,
+          },
           contractName,
-          bytecode: contractInternals.evm.bytecode,
+          bytecode: {
+            sourceMap: contractInternals.evm.bytecode.sourceMap,
+            opcodes: contractInternals.evm.bytecode.opcodes,
+            object: contractInternals.evm.bytecode.object,
+          },
         }
       }),
     )
@@ -111,25 +121,6 @@ export const compileFiles = async (
       message,
     })
   }
-
-  // const sourceDataResp = await s3download({
-  //   Key: _payload.pathSourceData,
-  //   Bucket: BUCKET_NAME,
-  // })
-
-  // const sourceData: TEtherscanContractSourceCodeResult = JSON.parse(
-  //   (await sourceDataResp.Body?.transformToString('utf8')) || '',
-  // )
-
-  // if (!sourceData) {
-  //   const message = '/Compilation/No source data'
-  //   console.warn(_payload.address, message)
-  //   return setDdbContractInfo({
-  //     ..._payload,
-  //     status: SrcMapStatus.COMPILATION_FAILED,
-  //     message,
-  //   })
-  // }
 
   const settingsResponse = await s3download({
     Key: _payload.pathCompilatorSettings,

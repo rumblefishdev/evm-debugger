@@ -1,64 +1,35 @@
-/* eslint-disable sonarjs/no-identical-functions */
 import type {
   TEtherscanContractSourceCodeResult,
   TEtherscanParsedSourceCode,
+  TExtractedSourceFiles,
   TSolcConfiguration,
 } from '@evm-debuger/types'
 
-interface SourceCodeManager {
-  extractFiles: (
-    sourceData: TEtherscanContractSourceCodeResult,
-  ) => [string, string][]
-  createSettingsObject: (
-    sourceData: TEtherscanContractSourceCodeResult,
-  ) => TSolcConfiguration
-}
-
-const isSingleFile = (sourceCode: string): boolean => {
-  return sourceCode.match(/"content":"/g) === null
-}
-
-const isMultipleFilesSources = (sourceCode: string): boolean => {
-  return sourceCode.match(/"sources":/g) !== null
-}
-const isMultipleFilesPlain = (sourceCode: string): boolean => {
-  const numberOfContents = sourceCode.match(/"content":"/g)?.length
-  const hasMoreThanZeroContent =
-    numberOfContents !== undefined && numberOfContents > 0
-
-  return hasMoreThanZeroContent && !isMultipleFilesSources(sourceCode)
-}
+import {
+  createBaseSettingsObject,
+  isMultipleFilesPlain,
+  isMultipleFilesSources,
+  isSingleFile,
+} from './helpers'
+import type { SourceCodeManager } from './types'
 
 class SingleFileSourceManager {
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
-  ): [string, string][] {
+  ): TExtractedSourceFiles {
     return [[sourceData.ContractName, sourceData.SourceCode]]
   }
 
   public createSettingsObject(
     sourceData: TEtherscanContractSourceCodeResult,
   ): TSolcConfiguration {
-    const language = sourceData.SourceCode.includes('pragma solidity')
-      ? 'Solidity'
-      : 'Vyper'
-
-    return {
-      solcCompilerVersion: sourceData.CompilerVersion,
-      settings: {
-        optimizer: {
-          runs: Number(sourceData.Runs),
-          enabled: Boolean(sourceData.OptimizationUsed === '1'),
-        },
-      },
-      language,
-    }
+    return createBaseSettingsObject(sourceData)
   }
 }
 class MultiFileSourceManager {
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
-  ): [string, string][] {
+  ): TExtractedSourceFiles {
     const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '')
 
     const sourceCodeObj: Record<string, string> = JSON.parse(rawSourceCode)
@@ -89,7 +60,7 @@ class MultiFileSourceManager {
 class MultiFileExtendedSourceManager {
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
-  ): [string, string][] {
+  ): TExtractedSourceFiles {
     const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
       1,
       -1,
@@ -106,20 +77,7 @@ class MultiFileExtendedSourceManager {
   public createSettingsObject(
     sourceData: TEtherscanContractSourceCodeResult,
   ): TSolcConfiguration {
-    const language = sourceData.SourceCode.includes('pragma solidity')
-      ? 'Solidity'
-      : 'Vyper'
-
-    return {
-      solcCompilerVersion: sourceData.CompilerVersion,
-      settings: {
-        optimizer: {
-          runs: Number(sourceData.Runs),
-          enabled: Boolean(sourceData.OptimizationUsed === '1'),
-        },
-      },
-      language,
-    }
+    return createBaseSettingsObject(sourceData)
   }
 }
 
@@ -144,7 +102,7 @@ export class SoruceCodeManagerStrategy {
 
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
-  ): [string, string][] {
+  ): TExtractedSourceFiles {
     return this.sourceCodeManager.extractFiles(sourceData)
   }
 
