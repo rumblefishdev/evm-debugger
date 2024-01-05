@@ -7,7 +7,6 @@ import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { createErrorLogMessage, createInfoLogMessage, sendStatusMessageToDiscord } from '../../analyzer.utils'
-import { transactionTraceProviderUrl } from '../../../../config'
 
 import { processTransactionTakesMatchers } from './processTransaction.takes'
 
