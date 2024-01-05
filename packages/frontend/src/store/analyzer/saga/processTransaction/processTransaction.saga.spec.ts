@@ -16,8 +16,17 @@ import { processTransactionTakesMatchers } from './processTransaction.takes'
 const TRANSACTION_HASH = '0x1234567890'
 const CHAIN_ID = ChainId.mainnet
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve(),
+  }),
+)
+
 describe('processTransactionSaga', () => {
   const logMessage = createInfoLogMessage(`Running transaction: ${TRANSACTION_HASH} on chain: ${CHAIN_ID}`)
+  beforeEach(() => {
+    fetch.mockClear()
+  })
 
   it('should process transaction', () => {
     testSaga(processTransactionSaga, analyzerActions.processTransaction({ transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID }))
