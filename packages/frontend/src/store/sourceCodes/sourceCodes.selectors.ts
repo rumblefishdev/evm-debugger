@@ -44,7 +44,6 @@ const selectCurrentSourceCode = createSelector([selectAll, activeBlockSelectors.
 const selectIsSourceCodeAvailable = createSelector([selectCurrentSourceCode], (_sourceCode) => Boolean(_sourceCode))
 
 const selectParsedToSourceFiles = createSelector([selectAllWithContractNames], (_sourceCode) => {
-  console.log('selectParsedToSourceFiles', _sourceCode)
   return _sourceCode
     .filter(({ contractName }) => contractName !== null)
     .map(mapSourceCode)

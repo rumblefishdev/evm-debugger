@@ -27,9 +27,7 @@ export const createSources = (
 
 export const mapSourceCode = ({ contractName, sourceCode, sourcesOrder, address }: TSourceCodes & { contractName: string | null }) => {
   const parseSourceCodeResult = parseSourceCode(contractName, sourceCode || '')
-  console.log('parseSourceCodeResult', parseSourceCodeResult)
   const sources = createSources(sourcesOrder, parseSourceCodeResult)
-  console.log('sources', sources)
   return { sources, address }
 }
 
