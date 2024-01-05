@@ -24,9 +24,6 @@ const getSourceMap = async (
   generatedSourceMaps: TSourceMap[]
   sources: Record<number, string>
 }> => {
-  console.log('getSourceMap - files', files)
-  console.log('getSourceMap - solcConfiguration', solcConfiguration)
-
   const input = {
     sources: files.reduce((accumulator, current) => {
       const key: string = current.path.split('contract_files/').pop() || ''
@@ -48,20 +45,11 @@ const getSourceMap = async (
     language: solcConfiguration.language,
   }
 
-  console.log(
-    'solcConfiguration.solcCompilerVersion',
-    solcConfiguration.solcCompilerVersion,
-  )
-
   const solcManager = new SolcManagerStrategy(
     solcConfiguration.solcCompilerVersion,
   )
 
-  console.log('solc input', input)
-
   const compilationResult = solcManager.compile(input)
-
-  console.log('compilation success')
 
   let generatedSourceMaps: TSourceMap[] = []
   for (const [fileName, fileInternals] of Object.entries(
@@ -156,8 +144,6 @@ export const compileFiles = async (
   let sourceMaps: TSourceMap[] = []
   let sourcesOrder: Record<number, string> = {}
 
-  console.log('Pres getSourceMap - sourceFiles', sourceFiles)
-
   try {
     const { generatedSourceMaps, sources } = await getSourceMap(
       sourceFiles,
@@ -165,7 +151,6 @@ export const compileFiles = async (
     )
     sourceMaps = generatedSourceMaps
     sourcesOrder = sources
-    console.log(`${_payload.address} sourceMaps`, sourceMaps)
   } catch (error) {
     const message = `/Compilation/Unknow error while compiling:\n${error}`
     console.warn(_payload.address, message)
