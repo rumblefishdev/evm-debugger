@@ -4,7 +4,6 @@
 import type { PutObjectRequest } from '@aws-sdk/client-s3'
 import type {
   ISrcMapApiPayload,
-  TEtherscanContractSourceCodeResult,
   TSolcConfiguration,
   TSourceMap,
 } from '@evm-debuger/types'
@@ -49,7 +48,12 @@ const getSourceMap = async (
     language: solcConfiguration.language,
   }
 
-  const solcManager = new SolcManager('')
+  console.log(
+    'solcConfiguration.solcCompilerVersion',
+    solcConfiguration.solcCompilerVersion,
+  )
+
+  const solcManager = new SolcManager(solcConfiguration.solcCompilerVersion)
 
   console.log('solc input', input)
 
@@ -108,24 +112,24 @@ export const compileFiles = async (
     })
   }
 
-  const sourceDataResp = await s3download({
-    Key: _payload.pathSourceData,
-    Bucket: BUCKET_NAME,
-  })
+  // const sourceDataResp = await s3download({
+  //   Key: _payload.pathSourceData,
+  //   Bucket: BUCKET_NAME,
+  // })
 
-  const sourceData: TEtherscanContractSourceCodeResult = JSON.parse(
-    (await sourceDataResp.Body?.transformToString('utf8')) || '',
-  )
+  // const sourceData: TEtherscanContractSourceCodeResult = JSON.parse(
+  //   (await sourceDataResp.Body?.transformToString('utf8')) || '',
+  // )
 
-  if (!sourceData) {
-    const message = '/Compilation/No source data'
-    console.warn(_payload.address, message)
-    return setDdbContractInfo({
-      ..._payload,
-      status: SrcMapStatus.COMPILATION_FAILED,
-      message,
-    })
-  }
+  // if (!sourceData) {
+  //   const message = '/Compilation/No source data'
+  //   console.warn(_payload.address, message)
+  //   return setDdbContractInfo({
+  //     ..._payload,
+  //     status: SrcMapStatus.COMPILATION_FAILED,
+  //     message,
+  //   })
+  // }
 
   const settingsResponse = await s3download({
     Key: _payload.pathCompilatorSettings,

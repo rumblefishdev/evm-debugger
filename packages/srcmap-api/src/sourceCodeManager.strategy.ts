@@ -44,10 +44,11 @@ class SingleFileSourceManager {
       : 'Vyper'
 
     return {
+      solcCompilerVersion: sourceData.CompilerVersion,
       settings: {
         optimizer: {
           runs: Number(sourceData.Runs),
-          enabled: Boolean(sourceData.OptimizationUsed),
+          enabled: Boolean(sourceData.OptimizationUsed === '1'),
         },
       },
       language,
@@ -79,7 +80,10 @@ class MultiFileSourceManager {
 
     const { sources, ...sourceCodeSettings } = sourceCodeObj
 
-    return sourceCodeSettings
+    return {
+      ...sourceCodeSettings,
+      solcCompilerVersion: sourceData.CompilerVersion,
+    }
   }
 }
 class MultiFileExtendedSourceManager {
@@ -107,10 +111,11 @@ class MultiFileExtendedSourceManager {
       : 'Vyper'
 
     return {
+      solcCompilerVersion: sourceData.CompilerVersion,
       settings: {
         optimizer: {
           runs: Number(sourceData.Runs),
-          enabled: Boolean(sourceData.OptimizationUsed),
+          enabled: Boolean(sourceData.OptimizationUsed === '1'),
         },
       },
       language,

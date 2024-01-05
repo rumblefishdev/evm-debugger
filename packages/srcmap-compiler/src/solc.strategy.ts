@@ -23,6 +23,7 @@ const santizeSolcVersionToNumber = (solcVersion: string) => {
 // second parameter is if you want to optimize the code or not
 class SolcOldLegacy {
   public compile(input: TEtherscanParsedSourceCode): string {
+    console.log('Running solc.compile on SolcOldLegacy')
     return solc.compile(
       JSON.stringify(input.sources[Object.keys(input.sources)[0]].content),
       input.settings.optimizer.enabled,
@@ -33,6 +34,7 @@ class SolcOldLegacy {
 // solc version is higher than 0.4.11 and lower than 0.5.0
 class SolcLegacy {
   public compile(input: TEtherscanParsedSourceCode): string {
+    console.log('Running solc.compileStandard on SolcLegacy')
     return solc.compileStandard(JSON.stringify(input))
   }
 }
@@ -40,6 +42,7 @@ class SolcLegacy {
 // solc version is higher than 0.6.0
 class SolcLatest {
   public compile(input: TEtherscanParsedSourceCode): string {
+    console.log('Running solc.compile on SolcLatest')
     return solc.compile(JSON.stringify(input))
   }
 }
@@ -49,11 +52,17 @@ export class SolcManager {
   constructor(solcVersion: string) {
     const version = santizeSolcVersionToNumber(solcVersion)
 
+    console.log('santized version', version)
+
+    console.log('is OldLegacy', version < 4.11)
+    console.log('is Legacy', version < 5.0 && version >= 4.11)
+    console.log('is Latest', version >= 5.0)
+
     switch (true) {
-      case version < 0.4:
+      case version < 4.11:
         this.solcStrategy = new SolcOldLegacy()
         break
-      case version < 0.6:
+      case version < 5.0 && version >= 4.11:
         this.solcStrategy = new SolcLegacy()
         break
       default:
