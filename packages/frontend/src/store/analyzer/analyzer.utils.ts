@@ -2,6 +2,19 @@ import { v4 as createUUID } from 'uuid'
 
 import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
+import { transactionTraceProviderUrl } from '../../config'
+
+export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
+  return fetch(`https://${transactionTraceProviderUrl}/info`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "content": message
+    })
+  })
+}
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
   const timestamp = _timestamp || Date.now()

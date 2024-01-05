@@ -6,7 +6,7 @@ import { transactionInfoActions } from '../../../transactionInfo/transactionInfo
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
-import { createErrorLogMessage, createInfoLogMessage } from '../../analyzer.utils'
+import { createErrorLogMessage, createInfoLogMessage, sendStatusMessageToDiscord } from '../../analyzer.utils'
 
 import { processTransactionTakesMatchers } from './processTransaction.takes'
 import { transactionTraceProviderUrl } from '../../../../config'
@@ -15,15 +15,8 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
   const { chainId, transactionHash } = payload
 
   try {
-    fetch(`https://${transactionTraceProviderUrl}/info`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "content": `Analyzer starts for ${transactionHash} on ${chainId}`
-      })
-    })
+    sendStatusMessageToDiscord(`Analyzer starts for ${transactionHash} on ${chainId}`)
+
     yield* put(analyzerActions.initializeTransactionProcessing(payload))
     yield* take(processTransactionTakesMatchers[AnalyzerStages.INITIALIZING_ANALYZER])
 
@@ -49,28 +42,16 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
 
     yield* put(analyzerActions.runAnalyzer())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.RUNNING_ANALYZER])
-    fetch(`https://${transactionTraceProviderUrl}/info`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "content": `Analyzer finished for ${transactionHash} on ${chainId}`
-      })
-    })
+
+    sendStatusMessageToDiscord(`Analyzer finished for ${transactionHash} on ${chainId}`)
+
   } catch (error) {
     yield* put(analyzerActions.setCriticalError(error.message))
     yield* put(
       analyzerActions.addLogMessage(createErrorLogMessage(`Error while processing transaction: ${transactionHash} on chain: ${chainId}`)),
     )
-    fetch(`https://${transactionTraceProviderUrl}/info`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "content": `Analyzer failed for ${transactionHash} on ${chainId}`
-      })
-    })
+
+    sendStatusMessageToDiscord(`Analyzer failed for ${transactionHash} on ${chainId}`)
+
   }
 }
