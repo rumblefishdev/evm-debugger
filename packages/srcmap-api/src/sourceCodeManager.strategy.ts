@@ -5,15 +5,14 @@ import type {
   TSolcConfiguration,
 } from '@evm-debuger/types'
 
-import {
-  createBaseSettingsObject,
-  isMultipleFilesPlain,
-  isMultipleFilesSources,
-  isSingleFile,
-} from './helpers'
+import { createBaseSettingsObject } from './helpers'
 import type { SourceCodeManager } from './types'
 
 class SingleFileSourceManager {
+  public static isApplicable(sourceCode: string): boolean {
+    return sourceCode.match(/"content":"/g) === null
+  }
+
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
   ): TExtractedSourceFiles {
@@ -26,17 +25,24 @@ class SingleFileSourceManager {
     return createBaseSettingsObject(sourceData)
   }
 }
-class MultiFileSourceManager {
+
+class MultiFileExtendedSourceManager {
+  public static isApplicable(sourceCode: string): boolean {
+    return sourceCode.match(/"sources":/g) !== null
+  }
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
   ): TExtractedSourceFiles {
-    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '')
+    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
+      1,
+      -1,
+    )
 
-    const sourceCodeObj: Record<string, string> = JSON.parse(rawSourceCode)
+    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
 
-    return Object.keys(sourceCodeObj).map((fileName) => [
+    return Object.keys(sourceCodeObj.sources).map((fileName) => [
       fileName,
-      sourceCodeObj[fileName],
+      sourceCodeObj.sources[fileName].content,
     ])
   }
 
@@ -57,20 +63,27 @@ class MultiFileSourceManager {
     }
   }
 }
-class MultiFileExtendedSourceManager {
+class MultiFileSourceManager {
+  public static isApplicable(sourceCode: string): boolean {
+    const numberOfContents = sourceCode.match(/"content":"/g)?.length
+    const hasMoreThanZeroContent =
+      numberOfContents !== undefined && numberOfContents > 0
+
+    return (
+      hasMoreThanZeroContent &&
+      !MultiFileExtendedSourceManager.isApplicable(sourceCode)
+    )
+  }
   public extractFiles(
     sourceData: TEtherscanContractSourceCodeResult,
   ): TExtractedSourceFiles {
-    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '').slice(
-      1,
-      -1,
-    )
+    const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '')
 
-    const sourceCodeObj: TEtherscanParsedSourceCode = JSON.parse(rawSourceCode)
+    const sourceCodeObj: Record<string, string> = JSON.parse(rawSourceCode)
 
-    return Object.keys(sourceCodeObj.sources).map((fileName) => [
+    return Object.keys(sourceCodeObj).map((fileName) => [
       fileName,
-      sourceCodeObj.sources[fileName].content,
+      sourceCodeObj[fileName],
     ])
   }
 
@@ -86,14 +99,14 @@ export class SoruceCodeManagerStrategy {
 
   constructor(sourceCode: string) {
     switch (true) {
-      case isSingleFile(sourceCode):
+      case SingleFileSourceManager.isApplicable(sourceCode):
         this.sourceCodeManager = new SingleFileSourceManager()
         break
-      case isMultipleFilesSources(sourceCode):
-        this.sourceCodeManager = new MultiFileSourceManager()
-        break
-      case isMultipleFilesPlain(sourceCode):
+      case MultiFileExtendedSourceManager.isApplicable(sourceCode):
         this.sourceCodeManager = new MultiFileExtendedSourceManager()
+        break
+      case MultiFileSourceManager.isApplicable(sourceCode):
+        this.sourceCodeManager = new MultiFileSourceManager()
         break
       default:
         throw new Error('Unknown source code structure')
