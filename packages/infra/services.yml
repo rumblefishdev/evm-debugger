@@ -57,18 +57,20 @@ Resources:
     Properties:
       RestApiId: !Ref Api
       ParentId: !GetAtt Api.RootResourceId
-      PathPart: '/proxy'
+      PathPart: 'info'
 
   DiscordProxy:
     Type: AWS::ApiGateway::Method
     Properties:
       RestApiId: !Ref Api
-      ResourceId: !Ref ProxyResource
+      ResourceId: !Ref DiscordProxyResource
       HttpMethod: POST
       AuthorizationType: NONE
       Integration:
-        Type: AWS_PROXY
+        Type: HTTP_PROXY
         IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        ConnectionType: INTERNET
         Uri: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
 
   ###################################
