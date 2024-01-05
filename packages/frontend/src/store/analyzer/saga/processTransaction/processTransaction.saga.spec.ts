@@ -18,16 +18,12 @@ const CHAIN_ID = ChainId.mainnet
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
-    json: () => Promise.resolve(),
+    json: () => Promise.resolve({ test: 100 }),
   }),
-)
+) as jest.Mock
 
 describe('processTransactionSaga', () => {
   const logMessage = createInfoLogMessage(`Running transaction: ${TRANSACTION_HASH} on chain: ${CHAIN_ID}`)
-  beforeEach(() => {
-    fetch.mockClear()
-  })
-
   it('should process transaction', () => {
     testSaga(processTransactionSaga, analyzerActions.processTransaction({ transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID }))
       .next()
