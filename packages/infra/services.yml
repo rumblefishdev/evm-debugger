@@ -89,7 +89,6 @@ Resources:
           application/json: "{\n  \"statusCode\": 200\n}\n"
         PassthroughBehavior: WHEN_NO_MATCH
         TimeoutInMillis: 29000
-        CacheNamespace: j16wp2
         CacheKeyParameters: []
         IntegrationResponses:
         - StatusCode: 200
