@@ -54,6 +54,9 @@ Resources:
   
   DiscordProxyResource:
     Type: AWS::ApiGateway::Resource
+    DependsOn: 
+      - TransactionTraceApiFunction
+      - SrcMapApiFunction
     Properties:
       RestApiId: !Ref Api
       ParentId: !GetAtt Api.RootResourceId
@@ -72,6 +75,37 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         ConnectionType: INTERNET
         Uri: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+
+  InfoEndpointCors:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Api
+      ResourceId: !Ref DiscordProxyResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{\n  \"statusCode\": 200\n}\n"
+        PassthroughBehavior: WHEN_NO_MATCH
+        TimeoutInMillis: 29000
+        CacheNamespace: j16wp2
+        CacheKeyParameters: []
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            "method.response.header.Access-Control-Allow-Headers": "'content-type, x-api-key'"
+            "method.response.header.Access-Control-Allow-Methods": "'POST, GET, OPTIONS'"
+            "method.response.header.Access-Control-Allow-Origin": "'*'"
+          ResponseTemplates:
+            application/json: "{}\n"
+      MethodResponses:
+      - StatusCode: 200
+        ResponseParameters:
+          "method.response.header.Access-Control-Allow-Headers": true
+          "method.response.header.Access-Control-Allow-Methods": true
+          "method.response.header.Access-Control-Allow-Origin": true
+          
 
   ###################################
   ###### Transaction Trace API ######
