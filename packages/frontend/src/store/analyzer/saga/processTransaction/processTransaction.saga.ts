@@ -14,7 +14,7 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
   const { chainId, transactionHash } = payload
 
   try {
-    sendStatusMessageToDiscord(`Analyzer starts for ${transactionHash} on ${chainId}`)
+    sendStatusMessageToDiscord(`Analyzer starts for ${transactionHash} on chainId ${chainId}`)
 
     yield* put(analyzerActions.initializeTransactionProcessing(payload))
     yield* take(processTransactionTakesMatchers[AnalyzerStages.INITIALIZING_ANALYZER])
@@ -42,13 +42,13 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
     yield* put(analyzerActions.runAnalyzer())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.RUNNING_ANALYZER])
 
-    sendStatusMessageToDiscord(`Analyzer finished for ${transactionHash} on ${chainId}`)
+    sendStatusMessageToDiscord(`Analyzer finished for ${transactionHash} on chainId ${chainId}`)
   } catch (error) {
     yield* put(analyzerActions.setCriticalError(error.message))
     yield* put(
       analyzerActions.addLogMessage(createErrorLogMessage(`Error while processing transaction: ${transactionHash} on chain: ${chainId}`)),
     )
 
-    sendStatusMessageToDiscord(`Analyzer failed for ${transactionHash} on ${chainId}`)
+    sendStatusMessageToDiscord(`Analyzer failed for ${transactionHash} on chainId ${chainId}`)
   }
 }
