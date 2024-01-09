@@ -14,6 +14,23 @@ export const StyledHeader = styled(Box)<{ background?: string }>(({ background }
   display: 'flex',
   background,
 }))
+export const StyledHref = styled('a')(() => ({
+  justifyContent: 'center',
+  display: 'flex',
+  alignItems: 'center',
+}))
+export const StyledLogo = styled('img')(({ theme }) => ({
+  width: '200px',
+  [theme.breakpoints.down('lg')]: {
+    width: '190px',
+  },
+  [theme.breakpoints.down('md')]: {
+    width: '180px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '160px',
+  },
+}))
 export const StyledTextContainer = styled(Stack)(({ theme }) => ({
   width: '55%',
   'span, img': {
