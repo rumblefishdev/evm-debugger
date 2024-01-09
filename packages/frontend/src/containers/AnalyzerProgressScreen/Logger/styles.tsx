@@ -42,6 +42,7 @@ export const StyledMessage = styled(Typography, {
 })<{ status: LogMessageStatus }>(({ theme, status }) => ({
   marginTop: '-2px',
   ...(status === LogMessageStatus.ERROR && {
+    fontWeight: 700,
     color: theme.palette.rfBrandSecondary,
   }),
   ...(status === LogMessageStatus.INFO && {
@@ -52,7 +53,8 @@ export const StyledMessage = styled(Typography, {
     color: theme.palette.rfSuccess,
   }),
   ...(status === LogMessageStatus.WARNING && {
-    color: theme.palette.rfSecondary,
+    fontWeight: 700,
+    color: theme.palette.rfWarning,
   }),
 }))
 export const StyledTimestamp = styled(Stack)(({ theme }) => ({

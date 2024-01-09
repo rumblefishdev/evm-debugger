@@ -14,6 +14,7 @@ declare module '@mui/material/styles/createPalette' {
     rfLines?: string
     rfText?: string
     rfSuccess?: string
+    rfWarning?: string
     rfBox?: string
     rfBackground?: string
     rfAppBackground?: string
@@ -33,6 +34,7 @@ declare module '@mui/material/styles/createPalette' {
     rfLines?: string
     rfText?: string
     rfSuccess?: string
+    rfWarning?: string
     rfBox?: string
     rfBackground?: string
     rfAppBackground?: string
@@ -41,6 +43,7 @@ declare module '@mui/material/styles/createPalette' {
 
 export const palette: Partial<Palette> = {
   rfWhite: '#FFFFFF',
+  rfWarning: '#F0AD4E',
   rfText: '#1C1F22',
   rfSuccess: '#35CBB9',
   rfSecondary: '#343A3F',
