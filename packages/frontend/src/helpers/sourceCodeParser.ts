@@ -1,6 +1,6 @@
 const isSingleFile = (sourceCode: string) => sourceCode.match(/"content":/g) === null
-const isMultiFile = (sourceCode: string) => sourceCode.match(/"content":/g)?.length > 0
 const isMultiFileExtended = (sourceCode: string) => sourceCode.match(/"sources": {/g).length > 0
+const isMultiFile = (sourceCode: string) => sourceCode.match(/"content":/g)?.length > 0 && !isMultiFileExtended(sourceCode)
 
 export const parseSourceCode = (sourceName: string, sourceCode: string) => {
   switch (true) {
