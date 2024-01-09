@@ -189,12 +189,25 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
     margin: theme.spacing(7, 0, 2, 0),
   },
 }))
-export const StyledTextSpace = styled('div')(({ theme }) => ({
+
+export const StyledLogo = styled('img')(({ theme }) => ({
+  width: '120px',
+  margin: theme.spacing(-2, 0),
+  [theme.breakpoints.down('md')]: {
+    margin: theme.spacing(-3, 0, -2, 0),
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '90px',
+  },
+}))
+export const StyledTextSpace = styled(Stack)(({ theme }) => ({
   zIndex: 5,
   height: 'auto',
   width: '50%',
+
   [theme.breakpoints.down('md')]: {
     width: '100%',
+    alignItems: 'center',
   },
 }))
 

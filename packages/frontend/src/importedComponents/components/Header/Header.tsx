@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback, useReducer, useRef } from 'rea
 
 import CrossIcon from '../../assets/svg/cross.svg'
 import HamburgerIcon from '../../assets/svg/hamburger.svg'
-import { Logo } from '../Logo'
 import { Button } from '../Button'
 import { CareersSubmenu } from '../CareersSubmenu'
 import { MenuItem } from '../MenuItem'
@@ -17,6 +16,7 @@ import { Link } from '../Link'
 import { SUBMENUS, submenusWhichAction } from '../../utils/SubmenusUtils'
 import { MenuItemWithCollapse } from '../MenuItemWithCollapse'
 import { SubmenuInsideContainer } from '../SubmenuInsideContainer'
+import whiteRumbleLogo from '../../../assets/svg/rumbleLogoWhite.svg'
 
 import type { AnimateIconProps, HeaderProps, IState, IView, TMenu } from './Header.types'
 import {
@@ -29,6 +29,8 @@ import {
   StyledMenuItemIcon,
   StyledButtonWrapper,
   StyledButtonAnimationWrapper,
+  StyledLogo,
+  StyledHref,
 } from './styles'
 import {
   reducer,
@@ -108,7 +110,10 @@ const MobileView = ({ displayHandler, display, closeAll, blogs, background }: IV
             justifyContent="space-between"
             alignItems="center"
           >
-            <Logo algeaTheme />
+            <StyledHref href="/">
+              <StyledLogo src={whiteRumbleLogo} />
+            </StyledHref>
+
             <Stack
               direction="row"
               spacing={2}
@@ -312,7 +317,9 @@ const DesktopView = ({ closeAll, blogs, background }: IView) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Logo algeaTheme />
+            <StyledHref href="/">
+              <StyledLogo src={whiteRumbleLogo} />
+            </StyledHref>
             <StyledTextContainer
               direction="row"
               justifyContent="space-around"
