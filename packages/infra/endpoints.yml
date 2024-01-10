@@ -29,7 +29,7 @@ Resources:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       BasePath: !Ref Environment
-      DomainName: !Ref ApiGatewayDomain
+      DomainName: !Sub "info-${DomainName}"
       RestApiId: !Ref Api
 
   ApiGatewayStage:
@@ -47,11 +47,6 @@ Resources:
       RecordSets:
         - Name: !Sub "info-${DomainName}."
           Type: A
-          AliasTarget:
-            HostedZoneId: !GetAtt ApiGatewayDomain.RegionalHostedZoneId
-            DNSName: !GetAtt ApiGatewayDomain.RegionalDomainName
-        - Name: !Sub "info-${DomainName}."
-          Type: AAAA
           AliasTarget:
             HostedZoneId: !GetAtt ApiGatewayDomain.RegionalHostedZoneId
             DNSName: !GetAtt ApiGatewayDomain.RegionalDomainName
