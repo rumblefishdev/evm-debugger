@@ -28,9 +28,9 @@ Resources:
   ApiGatewayBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
-      BasePath: !Ref Environment
       DomainName: !Sub "info-${DomainName}"
       RestApiId: !Ref Api
+      Stage: !Ref ApiGatewayStage
 
   ApiGatewayStage:
     Type: AWS::ApiGateway::Stage
@@ -39,6 +39,9 @@ Resources:
       StageName: !Ref Environment
       DeploymentId: !Ref ApiGatewayDeployment
       RestApiId: !Ref Api
+      MethodSettings:
+      - HttpMethod: "*"
+        ResourcePath: "/*"
 
   ApiRoute53RecordSetGroup:
     Type: AWS::Route53::RecordSetGroup
