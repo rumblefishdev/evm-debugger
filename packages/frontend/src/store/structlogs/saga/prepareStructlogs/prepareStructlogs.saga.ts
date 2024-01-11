@@ -8,7 +8,13 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { transactionTraceProviderUrl } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import {
+  createErrorLogMessage,
+  createInfoLogMessage,
+  createSuccessLogMessage,
+  createWarningLogMessage,
+} from '../../../analyzer/analyzer.utils'
+import { StructlogsErrors } from '../../structlogs.errors'
 
 export async function prepareStructlogs(chainId: ChainId, transactionHash: string): Promise<TStructlogResponse> {
   const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
@@ -57,7 +63,16 @@ export function* startPreparingStructlogsSaga(): SagaGenerator<void> {
       }
     }
   } catch (error) {
-    console.log(error)
+    if (error instanceof Error && error.message === StructlogsErrors.BLOCK_NOT_FOUND) {
+      yield* put(
+        analyzerActions.addLogMessage(
+          createWarningLogMessage(
+            `It looks like you trying to analyze transaction from latest block. Sometimes the Alechemy nodes that we use are a bit behind and don't have the latest block. Please try again in a few minutes. If you still see this error, please contact us at our discord server: https://discord.gg/c4fSnd22`,
+          ),
+        ),
+      )
+    }
+
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.PREPARING_STRUCTLOGS }))
     yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while preparing structlogs: ${error.message}`)))
   }
