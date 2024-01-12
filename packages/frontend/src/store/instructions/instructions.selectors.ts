@@ -1,6 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import type { IStructLog, TStepInstruction } from '@evm-debuger/types'
-import { AlternativeOpcodes, Opcodes } from '@evm-debuger/analyzer'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
