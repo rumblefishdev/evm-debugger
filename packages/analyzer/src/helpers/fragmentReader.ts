@@ -86,14 +86,15 @@ export class FragmentReader {
 
     const abiInterface = new ethers.utils.Interface([functionFragment])
 
-    const decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
-    let decodedOutput
+    let decodedInput: ethers.utils.Result | null
+    let decodedOutput: ethers.utils.Result | null
     try {
+      decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
       decodedOutput = abiInterface.decodeFunctionResult(functionFragment.name, outputData)
     } catch {
       decodedOutput = null
+      decodedInput = null
     }
-
     return {
       functionFragment,
       errorDescription: null,
