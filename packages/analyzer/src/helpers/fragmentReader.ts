@@ -88,12 +88,17 @@ export class FragmentReader {
 
     let decodedInput: ethers.utils.Result | null
     let decodedOutput: ethers.utils.Result | null
+
     try {
       decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
+    } catch {
+      decodedInput = null
+    }
+
+    try {
       decodedOutput = abiInterface.decodeFunctionResult(functionFragment.name, outputData)
     } catch {
       decodedOutput = null
-      decodedInput = null
     }
     return {
       functionFragment,
