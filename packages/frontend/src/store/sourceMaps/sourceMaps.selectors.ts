@@ -4,6 +4,7 @@ import type { TMappedSourceMap } from '@evm-debuger/types'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
+import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 
 import { sourceMapsAdapter } from './sourceMaps.slice'
 
