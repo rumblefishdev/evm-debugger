@@ -68,7 +68,7 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
 
   useEffect(() => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
-    if (activeStructlog && currentInstructions && currentInstruction) {
+    if (currentInstruction) {
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
     }
   }, [currentInstructions, structLogs, activeStructlog, dispatch])
