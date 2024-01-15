@@ -65,6 +65,7 @@ Resources:
   ###################################
   ###### Transaction Trace API ######
   ###################################
+
   TransactionTraceDataTable:
     Type: AWS::DynamoDB::Table
     Properties:

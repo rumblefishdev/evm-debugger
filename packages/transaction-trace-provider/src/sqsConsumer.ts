@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prefer-at */
 import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
-import hardhat from 'hardhat'
+import hardhat from '@rumblefishdev/hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
@@ -16,7 +16,7 @@ import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { structLogsEmitter } = require('hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
+const { structLogsEmitter } = require('@rumblefishdev/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
 
 AWSLambda.init({
   tracesSampleRate: 1,

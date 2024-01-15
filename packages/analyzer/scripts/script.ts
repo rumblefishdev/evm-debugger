@@ -1,4 +1,4 @@
-import { network } from 'hardhat'
+import { network } from '@rumblefishdev/hardhat'
 import type { TTransactionData } from '@evm-debuger/types'
 import { prepareAnalyzer } from './scriptHelper'
 

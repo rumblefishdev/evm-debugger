@@ -34,7 +34,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@evm-debuger/types": "^0.1.2",
     "evm": "^0.2.0",
-    "hardhat": "^2.12.0",
+    "@rumblefishdev/hardhat": "2.19.4",
     "node-fetch": "2.6.6"
   },
   "jest": {

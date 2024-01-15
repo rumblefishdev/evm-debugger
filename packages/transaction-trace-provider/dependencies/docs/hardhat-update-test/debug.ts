@@ -1,4 +1,4 @@
-import hardhat from 'hardhat'
+import hardhat from '@rumblefishdev/hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import 'dotenv/config'
