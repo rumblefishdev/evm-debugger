@@ -13,6 +13,7 @@
     "@rumblefishdev/hardhat": "2.19.4"
   },
   "scripts": {
+    "postinstall": "cd dependencies/nodejs && npm install",
     "build": "esbuild hardhat.config.ts src/* --bundle --external:hardhat --loader:.node=file --sourcemap --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",

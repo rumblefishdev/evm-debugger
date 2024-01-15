@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "@rumblefishdev/hardhat": "2.19.4"
+    }
+}
