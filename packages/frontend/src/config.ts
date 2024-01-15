@@ -4,6 +4,8 @@ import { ethers } from 'ethers'
 
 export const transactionTraceProviderUrl = process.env.REACT_APP_EVM_DEBUGGER_URL
 
+export const infoApiGatewayUrl = process.env.REACT_APP_INFO_GATEWAY_URL
+
 export const srcMapProviderUrl = process.env.REACT_APP_EVM_DEBUGGER_URL
 
 export const sentryDsn = process.env.REACT_APP_EVM_SENTRY_DSN
