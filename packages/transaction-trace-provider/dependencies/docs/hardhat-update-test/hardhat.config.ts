@@ -1,5 +1,5 @@
 import '@nomicfoundation/hardhat-toolbox'
-import { HardhatUserConfig } from 'hardhat/types'
+import { HardhatUserConfig } from '@rumblefishdev/hardhat/types'
 import 'dotenv/config'
 
 if (!process.env.ALCHEMY_KEY) throw Error("No ALCHEMY_KEY in .env")

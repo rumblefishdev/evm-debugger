@@ -1,4 +1,4 @@
-import type { HardhatUserConfig } from 'hardhat/config'
+import type { HardhatUserConfig } from '@rumblefishdev/hardhat/config'
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
 import '@nomicfoundation/hardhat-toolbox'

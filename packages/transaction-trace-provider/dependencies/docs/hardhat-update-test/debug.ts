@@ -1,9 +1,9 @@
 import hardhat from '@rumblefishdev/hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
-import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
+import { TASK_NODE_GET_PROVIDER } from '@rumblefishdev/hardhat/builtin-tasks/task-names'
 import 'dotenv/config'
 import {forkingUrlMap} from "./hardhat.config";
-const { structLogsEmitter } = require('hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js');
+const { structLogsEmitter } = require('@rumblefishdev/hardhatinternal/hardhat-network/stack-traces/vm-debug-tracer.js');
 
 if (!process.env.ALCHEMY_KEY) throw Error("No ALCHEMY_KEY in .env")
 

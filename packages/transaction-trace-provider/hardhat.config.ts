@@ -1,4 +1,4 @@
-import type { HardhatUserConfig } from 'hardhat/config'
+import type { HardhatUserConfig } from '@rumblefishdev/hardhat/config'
 import { ChainId } from '@evm-debuger/types'
 
 export const config: HardhatUserConfig = {

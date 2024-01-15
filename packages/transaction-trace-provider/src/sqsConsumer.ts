@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/prefer-at */
 import type { Handler, SQSEvent } from 'aws-lambda'
-import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
+import { TASK_NODE_GET_PROVIDER } from '@rumblefishdev/hardhat/builtin-tasks/task-names'
 import hardhat from '@rumblefishdev/hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/types'
