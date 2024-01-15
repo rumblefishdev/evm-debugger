@@ -1,0 +1,113 @@
+Transform: AWS::Serverless-2016-10-31
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  Environment:
+    Type: String
+  DomainName:
+    Type: String
+  CertificateArn:
+    Type: String
+  HostedZoneId:
+    Type: String
+Resources:
+  Api:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub evm-custom-endpoints-${Environment}
+
+  ApiGatewayDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      RegionalCertificateArn: !Ref CertificateArn
+      DomainName: !Sub "info-${DomainName}"
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  ApiGatewayBasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      DomainName: !Sub "info-${DomainName}"
+      RestApiId: !Ref Api
+      Stage: !Ref ApiGatewayStage
+
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: ApiGatewayDeployment
+    Properties:
+      StageName: !Ref Environment
+      DeploymentId: !Ref ApiGatewayDeployment
+      RestApiId: !Ref Api
+      MethodSettings:
+      - HttpMethod: "*"
+        ResourcePath: "/*"
+
+  ApiRoute53RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - Name: !Sub "info-${DomainName}."
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt ApiGatewayDomain.RegionalHostedZoneId
+            DNSName: !GetAtt ApiGatewayDomain.RegionalDomainName
+
+  DiscordProxyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref Api
+      ParentId: !GetAtt Api.RootResourceId
+      PathPart: 'info'
+
+  DiscordProxy:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Api
+      ResourceId: !Ref DiscordProxyResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: HTTP_PROXY
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        ConnectionType: INTERNET
+        Uri: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+
+  InfoEndpointCors:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Api
+      ResourceId: !Ref DiscordProxyResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: "{\n  \"statusCode\": 200\n}\n"
+        PassthroughBehavior: WHEN_NO_MATCH
+        TimeoutInMillis: 29000
+        CacheKeyParameters: []
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            "method.response.header.Access-Control-Allow-Headers": "'content-type, x-api-key'"
+            "method.response.header.Access-Control-Allow-Methods": "'POST, GET, OPTIONS'"
+            "method.response.header.Access-Control-Allow-Origin": "'*'"
+          ResponseTemplates:
+            application/json: "{}\n"
+      MethodResponses:
+      - StatusCode: 200
+        ResponseParameters:
+          "method.response.header.Access-Control-Allow-Headers": true
+          "method.response.header.Access-Control-Allow-Methods": true
+          "method.response.header.Access-Control-Allow-Origin": true
+          
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - DiscordProxy
+      - InfoEndpointCors
+    Properties:
+      RestApiId: !Ref Api
