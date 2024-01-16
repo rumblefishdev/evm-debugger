@@ -8,8 +8,7 @@ import type {
   TPcIndexedStepInstructions,
   TTransactionData,
 } from '@evm-debuger/types'
-import { ethers } from 'ethers'
-import { FormatTypes } from '@ethersproject/abi'
+import { toBigInt } from 'ethers'
 
 import {
   checkIfOfCallType,
@@ -145,10 +144,13 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const { abis } = this.transactionData
 
+    // console.log('mainTraceLogList', mainTraceLogList)
+
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
-    return mainTraceLogList.map((item) => {
+    return mainTraceLogList.map((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
+        // console.log(index)
         const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
 
         return { ...item, ...result }
@@ -212,7 +214,7 @@ export class TxAnalyzer {
   private extendWithBlockNumber(transactionList: TMainTraceLogs[]) {
     return transactionList.map((item) => ({
       ...item,
-      blockNumber: ethers.BigNumber.from(this.transactionData.transactionInfo.blockNumber).toString(),
+      blockNumber: toBigInt(this.transactionData.transactionInfo.blockNumber).toString(),
     }))
   }
 
@@ -232,14 +234,14 @@ export class TxAnalyzer {
         const { input, address, errorDescription, functionFragment } = traceLog
         const sighash = input.slice(0, 10)
 
-        if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format(FormatTypes.json)))
+        if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format('json')))
         else sighashStatues.add(address, sighash, null)
 
         if (errorDescription)
           sighashStatues.add(address, sighash, {
-            type: errorDescription.errorFragment.type,
-            name: errorDescription.errorFragment.name,
-            inputs: errorDescription.errorFragment.inputs,
+            type: errorDescription.fragment.type,
+            name: errorDescription.fragment.name,
+            inputs: errorDescription.fragment.inputs,
           })
         else sighashStatues.add(address, sighash, null)
       }

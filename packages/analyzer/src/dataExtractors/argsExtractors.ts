@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { formatEther } from 'ethers'
 import type {
   TCallTypeArgs,
   TCreateTypeArgs,
@@ -43,7 +43,7 @@ export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
 export const extractCallTypeArgsData = (item: TCallTypeArgs, memory: string[]) => {
   // IF CALL OR CALLCODE THEN ENSURE THAT VALUE IS EXTRACTED
   const rawValue = 'value' in item ? getSafeHex(item.value) : '0x0'
-  const value = ethers.utils.formatEther(rawValue)
+  const value = formatEther(rawValue)
 
   const { address, inputLength, inputOffset, returnLength, returnOffset } = item
 
@@ -68,7 +68,7 @@ export const extractCreateTypeArgsData = (item: TCreateTypeArgs, memory: string[
 
   const input = getSafeHex(readMemory(memory, byteCodePosition, byteCodeSize))
 
-  const defaultReturn = { value: ethers.utils.formatEther(value), input }
+  const defaultReturn = { value: formatEther(value), input }
 
   if ('salt' in item) return { ...defaultReturn, salt: item.salt }
 
