@@ -7,6 +7,7 @@ import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/typ
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 import type { CompletedPart } from '@aws-sdk/client-s3'
+import { structLogsEmitter } from '@rumblefishdev/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer'
 
 import { version } from '../package.json'
 
@@ -16,7 +17,7 @@ import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { structLogsEmitter } = require('@rumblefishdev/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
+// const { structLogsEmitter } = require('@rumblefishdev/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
 
 AWSLambda.init({
   tracesSampleRate: 1,

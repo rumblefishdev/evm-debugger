@@ -26,6 +26,12 @@
     "clean:js": "rimraf src/**/*.{js,js.map}",
     "clean:dep": "rimraf dependencies/nodejs/{node_modules,package-lock.json}"
   },
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "hardhat": ["node_modules/@rumblefishdev/hardhat"]
+    }
+  },
   "devDependencies": {
     "@aws-sdk/client-cloudfront": "^3.315.0",
     "@aws-sdk/client-dynamodb": "^3.315.0",
