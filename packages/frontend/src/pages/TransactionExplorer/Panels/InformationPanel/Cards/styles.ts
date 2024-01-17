@@ -16,8 +16,8 @@ export const StyledRecord = styled(Stack)(() => ({
 }))
 
 export const StyledRecordType = styled(Typography)(({ theme }) => ({
-  width: '72px',
   textAlign: 'left',
+  minWidth: '72px',
   marginRight: theme.spacing(4),
   fontWeight: 500,
   fontSize: '13px',
