@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import type { ThemeOptions } from '@mui/material/styles'
 import { createTheme } from '@mui/material/styles'
+import { isMobile, fluidSize, getViewportHeight, isPhone, isWebkit } from '@rumblefishdev/ui/lib/src/theme/rumblefish23Theme/utils'
 
 import { breakpoints } from './breakpoints'
 import { mixins } from './mixins'
@@ -15,23 +16,16 @@ import { fluidFont } from './utilis'
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides extends ExtendedTypographyPropsVariantOverrides1, ExtendedTypographyPropsVariantOverrides2 {}
 }
-declare module '@mui/material/styles' {
-  interface Theme {
-    utils: {
-      fluidFont: (min: number, max: number) => string
-    }
-  }
-  interface ThemeOptions {
-    utils?: {
-      fluidFont: (min: number, max: number) => string
-    }
-  }
-}
 
 const spacing = 8
 
 export const theme = createTheme({
   utils: {
+    isWebkit,
+    isPhone,
+    isMobile,
+    getViewportHeight,
+    fluidSize,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
