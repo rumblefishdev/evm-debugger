@@ -1,8 +1,10 @@
-import type { StackProps } from '@mui/material'
+import { Box, type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
 
 import { Section } from '../../../importedComponents/components/Section'
+import { Link } from '../../../importedComponents/components/Link'
+import { Button } from '../../../importedComponents/components/Button'
 
 import { StyledStack, StyledBlocksStack, StyledHeading, StyledDescription, Block, StyledBlocksText, CenterEllipse, Line } from './styles'
 
@@ -39,6 +41,15 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             </Block>
           ))}
         </StyledBlocksStack>
+        <Box mt={2}>
+          <Link
+            to="https://discord.gg/GWqQ5DWgnd"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="contained">Join EVM Debugger community on Discord</Button>
+          </Link>
+        </Box>
         <Line></Line>
       </StyledStack>
     </Section>
