@@ -53,7 +53,8 @@ export class FragmentReader {
 
     abiInterface.forEachEvent((fragment) => {
       const eventFragment = abiInterface.getEvent(fragment.name, [...fragment.inputs])
-      this.storeFragment(eventFragment.name, eventFragment, 'event')
+      console.log('eventFragment', eventFragment)
+      this.storeFragment(eventFragment.topicHash.slice(0, 10), eventFragment, 'event')
     })
 
     abiInterface.forEachError((fragment) => {
@@ -171,7 +172,7 @@ export class FragmentReader {
     let decodedEvent
 
     try {
-      decodedEvent = abiInterface.decodeEventLog(eventFragment.name, eventData, topics)
+      decodedEvent = abiInterface.decodeEventLog(eventFragment, eventData, topics)
     } catch {
       return { eventDescription: null, decodedEvent: null }
     }
