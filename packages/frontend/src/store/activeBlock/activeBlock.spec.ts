@@ -1,8 +1,8 @@
-import { BigNumber, ethers } from 'ethers'
+import { ParamType } from 'ethers'
 
 import { parseParameter, parseParameters } from './activeBlock.utils'
 
-const ADDRESS_TYPE = ethers.utils.ParamType.fromObject({
+const ADDRESS_TYPE = ParamType.from({
   type: 'address',
   name: 'recipient',
   indexed: false,
@@ -13,7 +13,7 @@ const ADDRESS_TYPE = ethers.utils.ParamType.fromObject({
   _isParamType: true,
 })
 
-const UINT256_TYPE = ethers.utils.ParamType.fromObject({
+const UINT256_TYPE = ParamType.from({
   type: 'uint256',
   name: null,
   indexed: null,
@@ -24,7 +24,7 @@ const UINT256_TYPE = ethers.utils.ParamType.fromObject({
   _isParamType: true,
 })
 
-const BYTES_TYPE = ethers.utils.ParamType.fromObject({
+const BYTES_TYPE = ParamType.from({
   type: 'bytes',
   name: 'permit',
   indexed: null,
@@ -35,7 +35,7 @@ const BYTES_TYPE = ethers.utils.ParamType.fromObject({
   _isParamType: true,
 })
 
-const ADDRESS_ARRAY_TYPE = ethers.utils.ParamType.fromObject({
+const ADDRESS_ARRAY_TYPE = ParamType.from({
   type: 'address[]',
   name: 'srcReceivers',
   indexed: null,
@@ -46,7 +46,7 @@ const ADDRESS_ARRAY_TYPE = ethers.utils.ParamType.fromObject({
   _isParamType: true,
 })
 
-const UNIT256_ARRAY_TYPE = ethers.utils.ParamType.fromObject({
+const UNIT256_ARRAY_TYPE = ParamType.from({
   type: 'uint256[]',
   name: 'srcAmounts',
   indexed: null,
@@ -57,7 +57,7 @@ const UNIT256_ARRAY_TYPE = ethers.utils.ParamType.fromObject({
   _isParamType: true,
 })
 
-const TUPLE_TYPE = ethers.utils.ParamType.fromObject({
+const TUPLE_TYPE = ParamType.from({
   type: 'tuple',
   name: 'desc',
   indexed: null,
@@ -118,7 +118,7 @@ describe('parseParameter tests', () => {
     })
 
     it('unit256 type', () => {
-      const value = BigNumber.from('1')
+      const value = BigInt('1')
       const result = parseParameter(UINT256_TYPE, value)
       expect(result).toStrictEqual({
         value: '0.000000000000000001 ETH',
@@ -152,7 +152,7 @@ describe('parseParameter tests', () => {
     })
 
     it('uint256 array', () => {
-      const values = [BigNumber.from('1'), BigNumber.from('2')]
+      const values = [BigInt('1'), BigInt('2')]
       const result = parseParameter(UNIT256_ARRAY_TYPE, values)
       expect(result).toStrictEqual({
         value: ['0.000000000000000001 ETH', '0.000000000000000002 ETH'],
@@ -166,10 +166,10 @@ describe('parseParameter tests', () => {
         '0x00000000000000000000000096c195f6643a3d797cb90cb6ba0ae2776d51b5f30000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000001e'
       const values = [
         '0x30dcBa0405004cF124045793E1933C798Af9E66a',
-        BigNumber.from('1'),
+        BigInt('1'),
         bytes,
         ['0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'],
-        [BigNumber.from('2'), BigNumber.from('3')],
+        [BigInt('2'), BigInt('3')],
       ]
       const result = parseParameter(TUPLE_TYPE, values)
       expect(result).toMatchSnapshot()
@@ -181,17 +181,17 @@ describe('parseParameter tests', () => {
       const values = [
         [
           '0x30dcBa0405004cF124045793E1933C798Af9E66a',
-          BigNumber.from('1'),
+          BigInt('1'),
           bytes,
           ['0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', '0xEaaaaaEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'],
-          [BigNumber.from('2'), BigNumber.from('3')],
+          [BigInt('2'), BigInt('3')],
         ],
         [
           '0xbbbBa0405004cF124045793E1933C798Af9E66a',
-          BigNumber.from('5'),
+          BigInt('5'),
           bytes,
           ['0xEeeeeEeeeEeEeeEeEeEeeffffffffffFAFFFfffE', '0xEaaaaaEeEeeEeEeEeeEffffffffffffffffffff'],
-          [BigNumber.from('62'), BigNumber.from('33')],
+          [BigInt('62'), BigInt('33')],
         ],
       ]
       const result = parseParameter(ARRAY_TYPE, values)

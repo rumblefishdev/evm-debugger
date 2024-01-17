@@ -18,8 +18,8 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
     if (!eventLog.eventDescription) return { signature: null, parsedArgs: null, name: null }
     const { eventDescription } = eventLog
-    const { name, signature, args, eventFragment } = eventDescription
-    const { inputs } = eventFragment
+    const { name, signature, args, fragment } = eventDescription
+    const { inputs } = fragment
     const parsedArgs = inputs.map((parameterType, index) => {
       const parameterValue = args[index]
       return parseParameter(parameterType, parameterValue)
@@ -83,8 +83,8 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     if (functionFragment) {
       const { inputs, outputs } = functionFragment
 
-      const parsedInput = parseParameters(inputs, decodedInput)
-      const parsedOutput = parseParameters(outputs, decodedOutput)
+      const parsedInput = parseParameters([...inputs], decodedInput)
+      const parsedOutput = parseParameters([...outputs], decodedOutput)
 
       const signature = getSignature(functionFragment)
 
@@ -94,10 +94,10 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     }
 
     if (errorDescription) {
-      const { signature, errorFragment, args } = errorDescription
-      const { inputs } = errorFragment
+      const { signature, fragment, args } = errorDescription
+      const { inputs } = fragment
 
-      const parsedError = parseParameters(inputs, args)
+      const parsedError = parseParameters([...inputs], args)
 
       callResult.errorSignature = signature
       callResult.parsedError = parsedError
