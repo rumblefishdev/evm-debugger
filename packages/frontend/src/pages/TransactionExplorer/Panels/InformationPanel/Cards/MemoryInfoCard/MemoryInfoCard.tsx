@@ -118,7 +118,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
           })}
         </StyledWrapper>
       ) : (
-        <p>This EVM Step has no memory.</p>
+        <p>No memory was used at this point yet.</p>
       )}
     </>
   )

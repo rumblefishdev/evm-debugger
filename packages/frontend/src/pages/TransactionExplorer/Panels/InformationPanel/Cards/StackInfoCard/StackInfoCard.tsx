@@ -34,7 +34,7 @@ export const StackInfoCard = () => {
           })}
         </StyledWrapper>
       ) : (
-        <div>This EVM Step has no stack.</div>
+        <p>This EVM Step has no stack.</p>
       )}
     </>
   )
