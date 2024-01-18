@@ -4,7 +4,7 @@
 
 Setup your local environment for the evm-debugger frontend.
 
-### Setup Local Environment
+### Setup Local Frontend
 
 1. **Clone Repository**
 
@@ -30,15 +30,7 @@ Setup your local environment for the evm-debugger frontend.
      npm i -g lerna@^6.0.3
      ```
 
-4. **Install Dependencies**
-
-   - Install all necessary project dependencies by running::
-
-     ```bash
-     npm install
-     ```
-
-5. **Run Lerna Bootstrap**
+4. **Run Lerna Bootstrap**
 
    - Let's set things up with Lerna. Run the following command:
 
@@ -46,7 +38,7 @@ Setup your local environment for the evm-debugger frontend.
      lerna bootstrap
      ```
 
-6. **Build Every Package**
+5. **Build Every Package**
 
    - It's time to build all the packages in one go. Execute:
 
@@ -54,11 +46,11 @@ Setup your local environment for the evm-debugger frontend.
      lerna run build
      ```
 
-7. **Set Up Environment Variables**
+6. **Set Up Environment Variables**
 
    - Head into the `package/frontend` directory and create a file named `.env.local`. Populate it with the necessary data.
 
-8. **Start the Frontend**
+7. **Start the Frontend**
 
    - Back in the root directory, run:
 
@@ -66,7 +58,7 @@ Setup your local environment for the evm-debugger frontend.
      npm run frontend:start
      ```
 
-9. **Ready to code!**
+8. **Ready to code!**
    - Your application is up and running at `localhost:3000`.
 
 ## Testing
