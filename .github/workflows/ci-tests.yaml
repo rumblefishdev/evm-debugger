@@ -28,10 +28,13 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
+      - name: Set NPM Registry
+        command: |
+          echo "//npm.pkg.github.com/:_authToken=${{secrets.GH_TOKEN}}" > .npmrc
+          echo "@rumblefishdev:registry=https://npm.pkg.github.com/" >> .npmrc
 
       - name: Install dependencies
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{secrets.GH_TOKEN}}" >> ~/.npmrc
           node_modules/.bin/lerna bootstrap
 
       - name: Build types
