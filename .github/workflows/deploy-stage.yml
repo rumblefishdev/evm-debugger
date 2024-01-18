@@ -44,14 +44,16 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install dependencies
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+          scope: "@rumblefishdev"
+          always-auth: true
         run: |
           npm i
           node_modules/.bin/lerna bootstrap
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@rumblefishdev"
-          always-auth: true
+
 
       - name: 'Build'
         run: |
