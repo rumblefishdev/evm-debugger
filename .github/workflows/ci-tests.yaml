@@ -15,9 +15,8 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ env.NODE_VERSION }}
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://npm.pkg.github.com'
           scope: "@rumblefishdev"
-          always-auth: true
 
       - name: 'Cache NPM dependencies'
         uses: pat-s/always-upload-cache@v2.1.5
@@ -28,14 +27,15 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
-      - name: Set NPM Registry
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
-          echo "@rumblefishdev:registry=https://npm.pkg.github.com/" >> .npmrc
+      # - name: Set NPM Registry
+      #   run: |
+      #     echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+      #     echo "@rumblefishdev:registry=https://npm.pkg.github.com/" >> .npmrc
 
       - name: Install dependencies
-        run: |
-          node_modules/.bin/lerna bootstrap
+        run: node_modules/.bin/lerna bootstrap
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build types
         run: |
