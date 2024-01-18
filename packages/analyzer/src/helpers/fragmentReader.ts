@@ -1,15 +1,15 @@
 import type { IFragmentDecodeResult, TAbi, TFragmentStore } from '@evm-debuger/types'
-import type { Fragment, Result, ErrorDescription, BytesLike, LogDescription, EventFragment, FunctionFragment, ErrorFragment } from 'ethers'
-import { AbiCoder, Interface, getBytes, dataSlice, getBytesCopy } from 'ethers'
+import type { Fragment, Result, ErrorDescription, LogDescription, EventFragment, FunctionFragment, ErrorFragment } from 'ethers'
+import { Interface, dataSlice, getBytesCopy } from 'ethers'
 
-import { BUILTIN_ERRORS } from '../resources/builtinErrors'
+import { BUILTIN_ERRORS, createErrorDescription } from '../resources/builtinErrors'
 import { cachedAbis } from '../resources/predefinedAbis'
 
 export class FragmentReader {
   private fragmentStore: TFragmentStore = {
     function: {},
     event: {},
-    error: {},
+    error: { ...BUILTIN_ERRORS },
   }
 
   constructor() {
@@ -68,14 +68,6 @@ export class FragmentReader {
     })
   }
 
-  private decodeBuiltinErrorResult = (sighash: string, data: BytesLike) => {
-    const builtin = BUILTIN_ERRORS[sighash]
-
-    const arrayify = getBytes(data)
-
-    return new AbiCoder().decode(builtin.inputs, arrayify.slice(4))
-  }
-
   public decodeFragment(isReverted: boolean, inputData: string, outputData: string): IFragmentDecodeResult {
     return isReverted ? this.decodeFragmentWithError(inputData, outputData) : this.decodeFragmentWithSuccess(inputData, outputData)
   }
@@ -97,13 +89,17 @@ export class FragmentReader {
 
     let decodedInput: Result | null
     let decodedOutput: Result | null
+    let errorDescription: ErrorDescription | null = null
 
     try {
       decodedInput = abiInterface.decodeFunctionData(functionFragment, inputData)
     } catch {
       try {
         decodedInput = abiInterface.getAbiCoder().decode(functionFragment.inputs, dataSlice(inputData, 4), true)
-      } catch {
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          errorDescription = createErrorDescription(error.message)
+        }
         decodedInput = null
       }
     }
@@ -113,13 +109,16 @@ export class FragmentReader {
     } catch {
       try {
         decodedOutput = abiInterface.getAbiCoder().decode(functionFragment.outputs, getBytesCopy(outputData), true)
-      } catch {
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          errorDescription = createErrorDescription(error.message)
+        }
         decodedOutput = null
       }
     }
     return {
       functionFragment,
-      errorDescription: null,
+      errorDescription,
       decodedOutput,
       decodedInput,
     }
@@ -139,16 +138,31 @@ export class FragmentReader {
     if (functionFragment) {
       const abiInterface = new Interface([functionFragment])
 
-      decodedInput = abiInterface.decodeFunctionData(functionFragment.name, inputData)
+      try {
+        decodedInput = abiInterface.decodeFunctionData(functionFragment, inputData)
+      } catch {
+        try {
+          decodedInput = abiInterface.getAbiCoder().decode(functionFragment.inputs, dataSlice(inputData, 4), true)
+        } catch (error) {
+          if (error instanceof Error && error.message) {
+            errorDescription = createErrorDescription(error.message)
+          }
+          decodedInput = null
+        }
+      }
     }
-
-    if (BUILTIN_ERRORS[errorSighash]) decodedOutput = this.decodeBuiltinErrorResult(errorSighash, output)
 
     if (errorFragment) {
       const abiInterface = new Interface([errorFragment])
 
-      decodedOutput = new AbiCoder().decode(errorFragment.inputs, output)
-      errorDescription = abiInterface.parseError(output)
+      try {
+        decodedOutput = abiInterface.decodeErrorResult(errorFragment, output)
+        errorDescription = abiInterface.parseError(output)
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          errorDescription = createErrorDescription(error.message)
+        }
+      }
     }
 
     return {

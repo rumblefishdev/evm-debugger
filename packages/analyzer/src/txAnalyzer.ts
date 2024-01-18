@@ -9,6 +9,7 @@ import type {
   TTransactionData,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
+import type { ErrorDescription, ParamType } from 'ethers'
 
 import {
   checkIfOfCallType,
@@ -38,6 +39,7 @@ import {
   opcodesConverter,
   sourceMapConverter,
 } from './dataExtractors/sourceMapConverter'
+import { createErrorDescription } from './resources/builtinErrors'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -103,6 +105,14 @@ export class TxAnalyzer {
 
         const lastItemInCallContext = getLastItemInCallTypeContext(traceLogs, rootIndex, item.depth)
 
+        if (!lastItemInCallContext && item.gasCost > item.passedGas) {
+          return {
+            ...item,
+            isSuccess: false,
+            isReverted: true,
+            errorDescription: createErrorDescription('OUT_OF_GAS'),
+          }
+        }
         if (!lastItemInCallContext) return { ...item, isSuccess: false }
 
         const { index, passedGas } = lastItemInCallContext
@@ -144,16 +154,17 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
     const { abis } = this.transactionData
 
-    // console.log('mainTraceLogList', mainTraceLogList)
-
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
     return mainTraceLogList.map((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        // console.log(index)
-        const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
+        const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
+          item.isReverted,
+          item.input,
+          item.output,
+        )
 
-        return { ...item, ...result }
+        return { ...item, functionFragment, errorDescription: item.errorDescription || errorDescription, decodedOutput, decodedInput }
       }
       return item
     })
@@ -237,7 +248,7 @@ export class TxAnalyzer {
         if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format('json')))
         else sighashStatues.add(address, sighash, null)
 
-        if (errorDescription)
+        if (errorDescription && errorDescription.fragment)
           sighashStatues.add(address, sighash, {
             type: errorDescription.fragment.type,
             name: errorDescription.fragment.name,

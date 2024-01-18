@@ -1,6 +1,7 @@
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
+import type { ErrorDescription } from 'ethers'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TParsedEventLog } from '../../types'
@@ -126,8 +127,17 @@ export const selectParsedActiveBlock = createSelector(
 
 export const selectActiveBlock = createSelector([selectActiveBlockState], (state) => state)
 
+export const extractErrorInfoFromErrorDescription = (errorDescription: ErrorDescription) => {
+  const { signature, args } = errorDescription
+
+  if (args.length === 0) return signature
+
+  return args[0]
+}
+
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
-  const errorSignature = checkIfOfCallType(block) ? block.errorDescription?.signature : null
+  const errorSignature =
+    checkIfOfCallType(block) && block.errorDescription ? extractErrorInfoFromErrorDescription(block.errorDescription) : null
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }
