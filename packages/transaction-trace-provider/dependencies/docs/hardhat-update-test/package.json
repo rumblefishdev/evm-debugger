@@ -1,15 +1,17 @@
 {
   "dependencies": {
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
+    "@rumblefishdev/hardhat-network-helpers": "^1.0.13",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "dotenv": "^16.3.1",
-    "@rumblefishdev/hardhat": "2.19.1",
+    "@rumblefishdev/hardhat": "2.19.4",
     "ts-node": "^10.9.1"
   },
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "hardhat": ["node_modules/@rumblefishdev/hardhat"]
+  "overrides": {
+    "@nomicfoundation/hardhat-network-helpers": {
+      "@rumblefishdev/hardhat-network-helpers": "^1.0.13"
+    },
+    "hardhat": {
+      "@rumblefishdev/hardhat": "2.19.4"
     }
   },
   "scripts": {

@@ -8,9 +8,17 @@
   "license": "MIT",
   "dependencies": {
     "@evm-debuger/types": "^0.1.2",
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@rumblefishdev/hardhat-network-helpers": "^1.0.15",
     "@sentry/serverless": "^7.51.0",
     "@rumblefishdev/hardhat": "2.19.4"
+  },
+  "overrides": {
+    "@nomicfoundation/hardhat-network-helpers": {
+      "@rumblefishdev/hardhat-network-helpers": "^1.0.15"
+    },
+    "hardhat": {
+      "@rumblefishdev/hardhat": "2.19.4"
+    }
   },
   "scripts": {
     "postinstall": "cd dependencies/nodejs && npm install",
@@ -25,12 +33,6 @@
     "clean:build": "rimraf dist",
     "clean:js": "rimraf src/**/*.{js,js.map}",
     "clean:dep": "rimraf dependencies/nodejs/{node_modules,package-lock.json}"
-  },
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "hardhat": ["node_modules/@rumblefishdev/hardhat"]
-    }
   },
   "devDependencies": {
     "@aws-sdk/client-cloudfront": "^3.315.0",

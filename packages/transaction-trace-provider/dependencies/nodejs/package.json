@@ -1,5 +1,15 @@
 {
     "dependencies": {
-        "@rumblefishdev/hardhat": "2.19.4"
+        "@rumblefishdev/hardhat": "2.19.4",
+        "@rumblefishdev/hardhat-network-helpers": "^1.0.15"
+    },
+    "overrides": {
+        "@nomicfoundation/hardhat-network-helpers": {
+            "@rumblefishdev/hardhat-network-helpers": "^1.0.15"
+        },
+        "hardhat": {
+            "@rumblefishdev/hardhat": "2.19.4"
+        }
+        
     }
 }

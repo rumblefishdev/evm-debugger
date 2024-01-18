@@ -1,5 +1,5 @@
 import hardhat from '@rumblefishdev/hardhat'
-import { reset } from '@nomicfoundation/hardhat-network-helpers'
+import { reset } from '@rumblefishdev/hardhat-network-helpers'
 import { TASK_NODE_GET_PROVIDER } from '@rumblefishdev/hardhat/builtin-tasks/task-names'
 import 'dotenv/config'
 import {forkingUrlMap} from "./hardhat.config";

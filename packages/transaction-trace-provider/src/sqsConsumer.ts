@@ -2,7 +2,7 @@
 import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from '@rumblefishdev/hardhat/builtin-tasks/task-names'
 import hardhat from '@rumblefishdev/hardhat'
-import { reset } from '@nomicfoundation/hardhat-network-helpers'
+import { reset } from '@rumblefishdev/hardhat-network-helpers'
 import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
