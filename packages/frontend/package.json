@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.17",
-    "@rumblefishdev/ui": "0.1.15",
+    "@rumblefishdev/ui": "0.1.16",
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
