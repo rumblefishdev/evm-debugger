@@ -1,4 +1,4 @@
-import type { ethers } from 'ethers'
+import type { FunctionFragment, ErrorFragment, EventFragment, Result, LogDescription, ErrorDescription } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
 
 import type { IRawStructLog, IStructLog } from './structLogs'
@@ -53,31 +53,23 @@ export interface TDataProvider {
   fetchAbiCode: (address: string) => Promise<string>
 }
 
-export interface IErrorDescription {
-  readonly errorFragment: ethers.utils.ErrorFragment
-  readonly name: string
-  readonly args: ethers.utils.Result
-  readonly signature: string
-  readonly sighash: string
-}
-
 export type TFragmentStoreTypes = 'function' | 'event' | 'error'
 export type TFragmentStore = {
-  function: Record<string, ethers.utils.FunctionFragment>
-  event: Record<string, ethers.utils.EventFragment>
-  error: Record<string, ethers.utils.ErrorFragment>
+  function: Record<string, FunctionFragment>
+  event: Record<string, EventFragment>
+  error: Record<string, ErrorFragment>
 }
 
 export interface IFragmentDecodeResult {
-  readonly functionFragment: ethers.utils.FunctionFragment
-  readonly errorDescription: IErrorDescription | null
-  readonly decodedOutput: ethers.utils.Result | null
-  readonly decodedInput: ethers.utils.Result | null
+  readonly functionFragment: FunctionFragment
+  readonly errorDescription: ErrorDescription | null
+  readonly decodedOutput: Result | null
+  readonly decodedInput: Result | null
 }
 
 export type TEventInfo = {
-  eventDescription: ethers.utils.LogDescription
-  decodedEvent: ethers.utils.Result
+  eventDescription: LogDescription
+  decodedEvent: Result
 }
 
 export type TParsedSourceMap = {

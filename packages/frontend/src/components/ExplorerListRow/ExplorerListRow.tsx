@@ -1,5 +1,5 @@
 import { Box, Stack, Tooltip } from '@mui/material'
-import { ethers } from 'ethers'
+import { toBeHex } from 'ethers'
 import { useMemo, useRef } from 'react'
 
 import { opcodesDictionary } from '../../helpers/opcodesDictionary'
@@ -16,7 +16,7 @@ export const ExplorerListRow = ({ chipValue, pc, opCode, isActive, onClick, disp
   }, [opCode])
 
   const counter = useMemo(() => {
-    return typeof pc === 'number' ? ethers.utils.hexlify(pc) : ethers.utils.hexlify(ethers.BigNumber.from(pc))
+    return typeof pc === 'number' ? toBeHex(pc) : toBeHex(BigInt(pc))
   }, [pc])
 
   return (

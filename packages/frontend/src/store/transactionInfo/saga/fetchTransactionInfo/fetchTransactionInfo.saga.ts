@@ -54,6 +54,7 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     )
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Transaction data fetched')))
   } catch (error) {
+    console.log(error)
     if (error instanceof Error && error.message === TransactionInfoErrors.TRANSACTION_NOT_FOUND) {
       yield* put(
         analyzerActions.addLogMessage(createWarningLogMessage('Most likely you are trying to analyze transaction on the wrong network')),
