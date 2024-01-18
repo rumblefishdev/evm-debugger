@@ -594,7 +594,29 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
         "Too little received",
       ],
       "depth": 0,
-      "errorDescription": null,
+      "errorDescription": ErrorDescription {
+        "args":  [
+          "Too little received",
+        ],
+        "fragment": ErrorFragment {
+          "inputs": [
+            ParamType {
+              "arrayChildren": null,
+              "arrayLength": null,
+              "baseType": "string",
+              "components": null,
+              "indexed": null,
+              "name": "",
+              "type": "string",
+            },
+          ],
+          "name": "Error",
+          "type": "error",
+        },
+        "name": "Error",
+        "selector": "0x08c379a0",
+        "signature": "Error(string)",
+      },
       "events": [],
       "functionFragment": FunctionFragment {
         "constant": false,
@@ -688,7 +710,29 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert 1`] = `
         "Too little received",
       ],
       "depth": 1,
-      "errorDescription": null,
+      "errorDescription": ErrorDescription {
+        "args":  [
+          "Too little received",
+        ],
+        "fragment": ErrorFragment {
+          "inputs": [
+            ParamType {
+              "arrayChildren": null,
+              "arrayLength": null,
+              "baseType": "string",
+              "components": null,
+              "indexed": null,
+              "name": "",
+              "type": "string",
+            },
+          ],
+          "name": "Error",
+          "type": "error",
+        },
+        "name": "Error",
+        "selector": "0x08c379a0",
+        "signature": "Error(string)",
+      },
       "events": [],
       "functionFragment": FunctionFragment {
         "constant": false,
@@ -6961,7 +7005,29 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction 1`] = `
       ],
       "decodedOutput": null,
       "depth": 0,
-      "errorDescription": null,
+      "errorDescription": {
+        "args": [
+          "invalid BytesLike value (argument="value", value=null, code=INVALID_ARGUMENT, version=6.10.0)",
+        ],
+        "fragment": {
+          "format": [Function],
+          "inputs": [
+            {
+              "baseType": "string",
+              "components": null,
+              "indexed": null,
+              "name": "Message",
+              "type": "string",
+            },
+          ],
+          "name": "Error",
+          "selector": "0x08c379a0",
+          "type": "error",
+        },
+        "name": "Error",
+        "selector": "0x08c379a0",
+        "signature": "Error(string)",
+      },
       "events": [
         {
           "decodedEvent":  [
@@ -9093,7 +9159,29 @@ exports[`TxAnalyzer analyze transaction analyzes transaction with invalid functi
       ],
       "decodedOutput": null,
       "depth": 2,
-      "errorDescription": null,
+      "errorDescription": {
+        "args": [
+          "data out-of-bounds (buffer=0x, length=0, offset=32, code=BUFFER_OVERRUN, version=6.10.0)",
+        ],
+        "fragment": {
+          "format": [Function],
+          "inputs": [
+            {
+              "baseType": "string",
+              "components": null,
+              "indexed": null,
+              "name": "Message",
+              "type": "string",
+            },
+          ],
+          "name": "Error",
+          "selector": "0x08c379a0",
+          "type": "error",
+        },
+        "name": "Error",
+        "selector": "0x08c379a0",
+        "signature": "Error(string)",
+      },
       "events": [],
       "functionFragment": FunctionFragment {
         "constant": false,
@@ -9216,7 +9304,29 @@ exports[`TxAnalyzer analyze transaction analyzes transaction with invalid functi
       ],
       "decodedOutput": null,
       "depth": 3,
-      "errorDescription": null,
+      "errorDescription": {
+        "args": [
+          "data out-of-bounds (buffer=0x, length=0, offset=32, code=BUFFER_OVERRUN, version=6.10.0)",
+        ],
+        "fragment": {
+          "format": [Function],
+          "inputs": [
+            {
+              "baseType": "string",
+              "components": null,
+              "indexed": null,
+              "name": "Message",
+              "type": "string",
+            },
+          ],
+          "name": "Error",
+          "selector": "0x08c379a0",
+          "type": "error",
+        },
+        "name": "Error",
+        "selector": "0x08c379a0",
+        "signature": "Error(string)",
+      },
       "events": [
         {
           "decodedEvent": null,
