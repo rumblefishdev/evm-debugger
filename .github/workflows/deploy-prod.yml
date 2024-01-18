@@ -48,10 +48,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
+          scope: "@rumblefishdev"
+          always-auth: true
         run: |
-          npm config set //registry.npmjs.org/:_authToken=${{secrets.GITHUB_TOKEN}}
-          npm config set scope "@rumblefishdev"
-          npm i
+          npm config set //registry.npmjs.org/:_authToken=${{ secrets.GH_TOKEN }}
           node_modules/.bin/lerna bootstrap
 
       - name: 'Build'
