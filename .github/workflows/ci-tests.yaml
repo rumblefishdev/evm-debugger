@@ -25,13 +25,14 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
-      - name: Install dependencies
-        uses: actions/setup-node@master
+      - uses: actions/setup-node@master
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
           scope: "@rumblefishdev"
           always-auth: true
+          
+      - name: Install dependencies
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.GH_TOKEN }}
           node_modules/.bin/lerna bootstrap
