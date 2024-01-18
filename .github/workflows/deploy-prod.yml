@@ -51,6 +51,7 @@ jobs:
           scope: "@rumblefishdev"
           always-auth: true
         run: |
+          npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           npm i
           node_modules/.bin/lerna bootstrap
 
