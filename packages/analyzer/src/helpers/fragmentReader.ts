@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import type { IFragmentDecodeResult, TAbi, TFragmentStore } from '@evm-debuger/types'
 import type { Fragment, Result, ErrorDescription, LogDescription, EventFragment, FunctionFragment, ErrorFragment } from 'ethers'
 import { Interface, dataSlice, getBytesCopy } from 'ethers'
