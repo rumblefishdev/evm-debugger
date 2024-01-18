@@ -3,7 +3,8 @@
   "version": "0.2.41",
   "private": true,
   "dependencies": {
-    "@rumblefishdev/ui": "0.1.12",
+    "@apollo/client": "^3.7.17",
+    "@rumblefishdev/ui": "0.1.15",
     "@contentful/rich-text-types": "^15.11.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -101,7 +102,6 @@
       "last 1 safari version"
     ]
   },
-
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
