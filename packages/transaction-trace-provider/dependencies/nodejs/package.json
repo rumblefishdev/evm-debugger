@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@rumblefishdev/hardhat": "0.19.1"
+    "hardhat": "npm:@rumblefishdev/hardhat@0.19.1"
   },
   "scripts": {
   }
