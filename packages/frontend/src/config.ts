@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/numeric-separators-style, sort-keys-fix/sort-keys-fix */
 import { ChainId } from '@evm-debuger/types'
-import { ethers } from 'ethers'
+import { JsonRpcProvider, Network } from 'ethers'
 
 export const transactionTraceProviderUrl = process.env.REACT_APP_EVM_DEBUGGER_URL
 
@@ -17,14 +17,28 @@ export const traceStorageBucket = process.env.REACT_APP_TRACE_STORAGE_BUCKET
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const { version } = require('../package.json')
 
-export const jsonRpcProvider: Record<ChainId, ethers.providers.StaticJsonRpcProvider> = {
-  [ChainId.mainnet]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet'),
-  [ChainId.goerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli'),
-  [ChainId.polygon]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic'),
-  [ChainId.mumbai]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_MUMBAI_JSONRPC, 'maticmum'),
-  [ChainId.sepolia]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_SEPOLIA_JSONRPC, 'sepolia'),
-  [ChainId.arbitrum]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_ONE_JSONRPC, 'arbitrum'),
-  [ChainId.arbitrumGoerli]: new ethers.providers.StaticJsonRpcProvider(process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC, 'arbitrum-goerli'),
+export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
+  [ChainId.mainnet]: new JsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet', {
+    staticNetwork: new Network('mainnet', ChainId.mainnet),
+  }),
+  [ChainId.goerli]: new JsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli', {
+    staticNetwork: new Network('goerli', ChainId.goerli),
+  }),
+  [ChainId.polygon]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic', {
+    staticNetwork: new Network('matic', ChainId.polygon),
+  }),
+  [ChainId.mumbai]: new JsonRpcProvider(process.env.REACT_APP_MUMBAI_JSONRPC, 'maticmum', {
+    staticNetwork: new Network('maticmum', ChainId.mumbai),
+  }),
+  [ChainId.sepolia]: new JsonRpcProvider(process.env.REACT_APP_SEPOLIA_JSONRPC, 'sepolia', {
+    staticNetwork: new Network('sepolia', ChainId.sepolia),
+  }),
+  [ChainId.arbitrum]: new JsonRpcProvider(process.env.REACT_APP_ARBITRUM_ONE_JSONRPC, 'arbitrum', {
+    staticNetwork: new Network('arbitrum', ChainId.arbitrum),
+  }),
+  [ChainId.arbitrumGoerli]: new JsonRpcProvider(process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC, 'arbitrum-goerli', {
+    staticNetwork: new Network('arbitrum-goerli', ChainId.arbitrumGoerli),
+  }),
 }
 
 export const chainNames = {

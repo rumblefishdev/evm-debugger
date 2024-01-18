@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import type {
   IFilteredStructLog,
   TEventInfo,
@@ -8,8 +9,8 @@ import type {
   TPcIndexedStepInstructions,
   TTransactionData,
 } from '@evm-debuger/types'
-import { ethers } from 'ethers'
-import { FormatTypes } from '@ethersproject/abi'
+import { toBigInt } from 'ethers'
+import type { ErrorDescription, ParamType } from 'ethers'
 
 import {
   checkIfOfCallType,
@@ -39,6 +40,7 @@ import {
   opcodesConverter,
   sourceMapConverter,
 } from './dataExtractors/sourceMapConverter'
+import { createErrorDescription } from './resources/builtinErrors'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -104,6 +106,14 @@ export class TxAnalyzer {
 
         const lastItemInCallContext = getLastItemInCallTypeContext(traceLogs, rootIndex, item.depth)
 
+        if (!lastItemInCallContext && item.gasCost > item.passedGas) {
+          return {
+            ...item,
+            isSuccess: false,
+            isReverted: true,
+            errorDescription: createErrorDescription('OUT_OF_GAS'),
+          }
+        }
         if (!lastItemInCallContext) return { ...item, isSuccess: false }
 
         const { index, passedGas } = lastItemInCallContext
@@ -147,11 +157,15 @@ export class TxAnalyzer {
 
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
-    return mainTraceLogList.map((item) => {
+    return mainTraceLogList.map((item, index) => {
       if (checkIfOfCallType(item) && item.isContract && item.input) {
-        const result = this.fragmentReader.decodeFragment(item.isReverted, item.input, item.output)
+        const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
+          item.isReverted,
+          item.input,
+          item.output,
+        )
 
-        return { ...item, ...result }
+        return { ...item, functionFragment, errorDescription: item.errorDescription || errorDescription, decodedOutput, decodedInput }
       }
       return item
     })
@@ -212,7 +226,7 @@ export class TxAnalyzer {
   private extendWithBlockNumber(transactionList: TMainTraceLogs[]) {
     return transactionList.map((item) => ({
       ...item,
-      blockNumber: ethers.BigNumber.from(this.transactionData.transactionInfo.blockNumber).toString(),
+      blockNumber: toBigInt(this.transactionData.transactionInfo.blockNumber).toString(),
     }))
   }
 
@@ -232,14 +246,14 @@ export class TxAnalyzer {
         const { input, address, errorDescription, functionFragment } = traceLog
         const sighash = input.slice(0, 10)
 
-        if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format(FormatTypes.json)))
+        if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format('json')))
         else sighashStatues.add(address, sighash, null)
 
-        if (errorDescription)
+        if (errorDescription && errorDescription.fragment)
           sighashStatues.add(address, sighash, {
-            type: errorDescription.errorFragment.type,
-            name: errorDescription.errorFragment.name,
-            inputs: errorDescription.errorFragment.inputs,
+            type: errorDescription.fragment.type,
+            name: errorDescription.fragment.name,
+            inputs: errorDescription.fragment.inputs,
           })
         else sighashStatues.add(address, sighash, null)
       }

@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { ethers } from 'ethers'
+import type { BytesLike } from 'ethers'
+import { getBytes, toBeHex, AbiCoder, formatEther, getCreateAddress } from 'ethers'
 import type {
   ICallTypeStructLogs,
   ICallTypeTraceLog,
@@ -12,9 +13,7 @@ import type {
   IStopTypeTraceLog,
   IStructLog,
   TMainTraceLogs,
-  TParseSourceCodeOutput,
   TReturnedTraceLog,
-  TSourceCodeObject,
   TTransactionInfo,
 } from '@evm-debuger/types'
 
@@ -96,14 +95,14 @@ export const safeJsonParse = (text: string): any | null => {
 
 export const getSafeHex = (value: string | undefined) => (value ? `0x${value}` : `0x`)
 
-export const decodeErrorResult = (data: ethers.utils.BytesLike) => {
-  const bytes = ethers.utils.arrayify(data)
+export const decodeErrorResult = (data: BytesLike) => {
+  const bytes = getBytes(data)
 
-  const selectorSignature = ethers.utils.hexlify(bytes.slice(0, 4))
+  const selectorSignature = toBeHex(bytes.slice(0, 4).toString())
 
   const builtin = BuiltinErrors[selectorSignature]
 
-  if (builtin) return new ethers.utils.AbiCoder().decode(builtin.inputs, bytes.slice(4))
+  if (builtin) return new AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
 export const prepareTraceToSearch = (
@@ -139,7 +138,7 @@ export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], dep
 
 export const getStorageAddressFromTransactionInfo = (txInfo: TTransactionInfo) => {
   const { nonce, to, from } = txInfo
-  return to || ethers.utils.getContractAddress({ nonce, from })
+  return to || getCreateAddress({ nonce, from })
 }
 
 export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
@@ -148,7 +147,7 @@ export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo
   const storageAddress = getStorageAddressFromTransactionInfo(txInfo)
 
   const defaultFields = {
-    value: ethers.utils.formatEther(value),
+    value: formatEther(value),
     type: 'CALL',
     storageAddress,
     startIndex: 0,
