@@ -31,10 +31,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ secrets.GH_TOKEN }}
+          echo "//npm.pkg.github.com/:_authToken=${{secrets.GH_TOKEN}}" >> ~/.npmrc
           node_modules/.bin/lerna bootstrap
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
 
       - name: Build types
         run: |
