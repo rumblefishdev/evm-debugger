@@ -168,8 +168,10 @@ export const NetworksStyledStack = styled(Stack)(({ theme }) => ({
   width: '100%',
   gap: theme.spacing(5),
   marginTop: theme.spacing(10),
+  marginBottom: theme.spacing(10),
   [theme.breakpoints.down('sm')]: {
     marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(6),
   },
 }))
 export const CurrentsNetworksStyledStack = styled(Stack)(({ theme }) => ({
