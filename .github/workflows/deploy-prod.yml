@@ -47,12 +47,19 @@ jobs:
         run: |
           npm i
           node_modules/.bin/lerna bootstrap
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@rumblefishdev"
+          always-auth: true
 
       - name: 'Build'
         run: |
           npm run types:build
           npm run analyzer:build
           npm run frontend:build:prod
+        env:
+            REACT_APP_STRAPI_AUTH_TOKEN: ${{ secrets.STRAPI_AUTH_TOKEN }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
