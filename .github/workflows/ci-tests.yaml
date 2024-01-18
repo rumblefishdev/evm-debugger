@@ -29,7 +29,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Set NPM Registry
-        command: |
+        run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GH_TOKEN}}" > .npmrc
           echo "@rumblefishdev:registry=https://npm.pkg.github.com/" >> .npmrc
 
