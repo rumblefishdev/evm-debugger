@@ -2,71 +2,89 @@ import { ParamType } from 'ethers'
 
 import { parseParameter, parseParameters } from './activeBlock.utils'
 
-const ADDRESS_TYPE = ParamType.from({
-  type: 'address',
-  name: 'recipient',
-  indexed: false,
-  components: null,
-  baseType: 'address',
-  arrayLength: null,
-  arrayChildren: null,
-  _isParamType: true,
-})
+const ADDRESS_TYPE = ParamType.from(
+  {
+    type: 'address',
+    name: 'recipient',
+    indexed: false,
+    components: null,
+    baseType: 'address',
+    arrayLength: null,
+    arrayChildren: null,
+    _isParamType: true,
+  },
+  true,
+)
 
-const UINT256_TYPE = ParamType.from({
-  type: 'uint256',
-  name: null,
-  indexed: null,
-  components: null,
-  baseType: 'uint256',
-  arrayLength: null,
-  arrayChildren: null,
-  _isParamType: true,
-})
+const UINT256_TYPE = ParamType.from(
+  {
+    type: 'uint256',
+    name: null,
+    indexed: null,
+    components: null,
+    baseType: 'uint256',
+    arrayLength: null,
+    arrayChildren: null,
+    _isParamType: true,
+  },
+  true,
+)
 
-const BYTES_TYPE = ParamType.from({
-  type: 'bytes',
-  name: 'permit',
-  indexed: null,
-  components: null,
-  baseType: 'bytes',
-  arrayLength: null,
-  arrayChildren: null,
-  _isParamType: true,
-})
+const BYTES_TYPE = ParamType.from(
+  {
+    type: 'bytes',
+    name: 'permit',
+    indexed: null,
+    components: null,
+    baseType: 'bytes',
+    arrayLength: null,
+    arrayChildren: null,
+    _isParamType: true,
+  },
+  true,
+)
 
-const ADDRESS_ARRAY_TYPE = ParamType.from({
-  type: 'address[]',
-  name: 'srcReceivers',
-  indexed: null,
-  components: null,
-  baseType: 'array',
-  arrayLength: -1,
-  arrayChildren: ADDRESS_TYPE,
-  _isParamType: true,
-})
+const ADDRESS_ARRAY_TYPE = ParamType.from(
+  {
+    type: 'address[]',
+    name: 'srcReceivers',
+    indexed: null,
+    components: null,
+    baseType: 'array',
+    arrayLength: -1,
+    arrayChildren: ADDRESS_TYPE,
+    _isParamType: true,
+  },
+  true,
+)
 
-const UNIT256_ARRAY_TYPE = ParamType.from({
-  type: 'uint256[]',
-  name: 'srcAmounts',
-  indexed: null,
-  components: null,
-  baseType: 'array',
-  arrayLength: -1,
-  arrayChildren: UINT256_TYPE,
-  _isParamType: true,
-})
+const UNIT256_ARRAY_TYPE = ParamType.from(
+  {
+    type: 'uint256[]',
+    name: 'srcAmounts',
+    indexed: null,
+    components: null,
+    baseType: 'array',
+    arrayLength: -1,
+    arrayChildren: UINT256_TYPE,
+    _isParamType: true,
+  },
+  true,
+)
 
-const TUPLE_TYPE = ParamType.from({
-  type: 'tuple',
-  name: 'desc',
-  indexed: null,
-  components: [ADDRESS_TYPE, UINT256_TYPE, BYTES_TYPE, ADDRESS_ARRAY_TYPE, UNIT256_ARRAY_TYPE],
-  baseType: 'tuple',
-  arrayLength: null,
-  arrayChildren: null,
-  _isParamType: true,
-})
+const TUPLE_TYPE = ParamType.from(
+  {
+    type: 'tuple',
+    name: 'desc',
+    indexed: null,
+    components: [ADDRESS_TYPE, UINT256_TYPE, BYTES_TYPE, ADDRESS_ARRAY_TYPE, UNIT256_ARRAY_TYPE],
+    baseType: 'tuple',
+    arrayLength: null,
+    arrayChildren: null,
+    _isParamType: true,
+  },
+  true,
+)
 
 const ARRAY_TYPE = {
   type: 'tuple[]',
@@ -123,7 +141,7 @@ describe('parseParameter tests', () => {
       expect(result).toStrictEqual({
         value: '0.000000000000000001 ETH',
         type: 'uint256',
-        name: null,
+        name: '',
       })
     })
 
