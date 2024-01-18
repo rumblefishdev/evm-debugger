@@ -1,7 +1,7 @@
-import type { ethers } from 'ethers'
+import type { ErrorDescription, FunctionFragment, Result } from 'ethers'
 
 import type { TCallTypeOpcodes, TCreateTypeOpcodes, TOpCodes, TReturnTypeOpcodes } from './opcodes'
-import type { IErrorDescription, TEventInfo, TStorageLogs } from './types'
+import type { TEventInfo, TStorageLogs } from './types'
 
 export interface ITraceLog {
   type: TOpCodes
@@ -22,10 +22,10 @@ export interface ICallTypeTraceLog extends ITraceLog {
   stackTrace: number[]
   value: string
 
-  decodedInput?: ethers.utils.Result
-  decodedOutput?: ethers.utils.Result
-  functionFragment?: ethers.utils.FunctionFragment
-  errorDescription?: IErrorDescription
+  decodedInput?: Result
+  decodedOutput?: Result
+  functionFragment?: FunctionFragment
+  errorDescription?: ErrorDescription
   events: TEventInfo[]
   returnIndex?: number
   isSuccess?: boolean
