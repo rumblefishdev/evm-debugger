@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { Box, useMediaQuery } from '@mui/material'
+import { Box } from '@mui/material'
 import DescriptionIcon from '@mui/icons-material/Description'
 
 import { ROUTES } from '../../routes'
@@ -39,33 +39,17 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
     dispatch(uiActions.setShouldShowProgressScreen(true))
   }, [dispatch])
 
-  const isHeaderBreakPoint = useMediaQuery('(max-width:740px)')
-  const shouldRenderVerticalTabs = useMediaQuery('(max-width:500px)')
-
   return (
-    <StyledButtonWrapper
-      sx={{
-        justifyContent: isHeaderBreakPoint ? 'center' : 'space-between',
-        flexDirection: isHeaderBreakPoint ? 'column' : 'row',
-        alignItems: isHeaderBreakPoint ? 'flex-start' : 'center',
-      }}
-    >
+    <StyledButtonWrapper>
       <StyledNewTransactionButton />
 
-      <Box sx={{ order: isHeaderBreakPoint ? 2 : 1, marginTop: shouldRenderVerticalTabs ? 1 : 0 }}>
+      <Box>
         <StyledTabs
           value={value}
-          centered={!isHeaderBreakPoint}
-          TabIndicatorProps={{
-            sx: { display: shouldRenderVerticalTabs ? 'none' : 'block' },
-          }}
+          centered
           sx={{
-            '& .MuiTabs-scroller .MuiTabs-flexContainer': {
-              display: isHeaderBreakPoint ? 'block' : 'flex',
-            },
             '& .MuiTabs-flexContainer .MuiButtonBase-root ': {
-              margin: isHeaderBreakPoint ? 0 : 0.5,
-              display: shouldRenderVerticalTabs ? 'block' : 'inline-flex',
+              margin: 0.5,
             },
           }}
         >
@@ -87,7 +71,7 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
         </StyledTabs>
       </Box>
 
-      <Box order={isHeaderBreakPoint ? 1 : 2}>
+      <Box>
         <Button
           variant="text"
           size="small"

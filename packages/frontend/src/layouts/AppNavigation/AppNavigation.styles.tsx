@@ -22,7 +22,7 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
 }))
 
 export const StyledButtonWrapper = styled(Stack)(({ theme }) => ({
-  width: '100%',
+  minWidth: '900px',
 
   justifyContent: 'space-between',
   flexDirection: 'row',

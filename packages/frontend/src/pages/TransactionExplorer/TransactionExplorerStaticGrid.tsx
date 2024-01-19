@@ -54,8 +54,7 @@ export const TransactionExplorerStaticGrid: React.FC = () => {
         item
         lg={3}
         md={4}
-        sm={6}
-        xs={12}
+        xs={6}
         style={{ height: '600px' }}
       >
         <StructlogPanel />
@@ -65,8 +64,7 @@ export const TransactionExplorerStaticGrid: React.FC = () => {
         item
         lg={3}
         md={4}
-        sm={6}
-        xs={12}
+        xs={6}
         style={{ height: '600px' }}
       >
         <BytecodePanel />
@@ -76,8 +74,7 @@ export const TransactionExplorerStaticGrid: React.FC = () => {
         item
         lg={3}
         md={4}
-        sm={6}
-        xs={12}
+        xs={6}
         style={{ height: '600px' }}
       >
         <MemoryPanel />
@@ -87,8 +84,7 @@ export const TransactionExplorerStaticGrid: React.FC = () => {
         item
         lg={3}
         md={4}
-        sm={6}
-        xs={12}
+        xs={6}
         style={{ height: '600px' }}
       >
         <StackPanel />
