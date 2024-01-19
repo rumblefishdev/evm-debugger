@@ -60,7 +60,8 @@ export const QuickLinks: React.FC = () => {
             return (
               <ExplorerListRow
                 key={index}
-                chipValue={`gas: ${gasCost}`}
+                displayGasIcon
+                chipValue={gasCost}
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStrucLog?.index}
@@ -95,7 +96,8 @@ export const QuickLinks: React.FC = () => {
             return (
               <ExplorerListRow
                 key={index}
-                chipValue={`gas: ${gasCost}`}
+                displayGasIcon
+                chipValue={gasCost}
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStrucLog?.index}
