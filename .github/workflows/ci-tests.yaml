@@ -28,7 +28,9 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install dependencies
-        run: node_modules/.bin/lerna bootstrap
+        run: |
+          npm i
+          node_modules/.bin/lerna bootstrap
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
