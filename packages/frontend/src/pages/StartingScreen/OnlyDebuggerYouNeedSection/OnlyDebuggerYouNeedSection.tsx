@@ -61,7 +61,7 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
           >
             <StyledButton variant="outlined">
               <DiscordIcon src={discordIcon} />
-              Join EVM Debugger community on Discord
+              <b>Join EVM Debugger community on Discord</b>
             </StyledButton>
           </Link>
         </ButtonWrapper>
