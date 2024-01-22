@@ -1,12 +1,24 @@
-import { Box, type StackProps } from '@mui/material'
+import { Typography, type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
 
 import { Section } from '../../../importedComponents/components/Section'
 import { Link } from '../../../importedComponents/components/Link'
-import { Button } from '../../../importedComponents/components/Button'
+import discordIcon from '../../../assets/svg/discord.svg'
 
-import { StyledStack, StyledBlocksStack, StyledHeading, StyledDescription, Block, StyledBlocksText, CenterEllipse, Line } from './styles'
+import {
+  StyledStack,
+  StyledBlocksStack,
+  StyledHeading,
+  StyledDescription,
+  Block,
+  StyledBlocksText,
+  CenterEllipse,
+  Line,
+  StyledButton,
+  DiscordIcon,
+  ButtonWrapper,
+} from './styles'
 
 export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...props }: StackProps, ref: LegacyRef<HTMLDivElement>) {
   const blocks = [
@@ -41,15 +53,29 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             </Block>
           ))}
         </StyledBlocksStack>
-        <Box mt={2}>
+        <ButtonWrapper>
           <Link
             to="https://discord.gg/GWqQ5DWgnd"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="contained">Join EVM Debugger community on Discord</Button>
+            <StyledButton variant="outlined">
+              <DiscordIcon src={discordIcon} />
+              <Typography
+                fontWeight={700}
+                display={{ sm: 'none' }}
+              >
+                Join community on Discord
+              </Typography>
+              <Typography
+                fontWeight={700}
+                display={{ xs: 'none', sm: 'block' }}
+              >
+                Join EVM Debugger community on Discord
+              </Typography>
+            </StyledButton>
           </Link>
-        </Box>
+        </ButtonWrapper>
         <Line></Line>
       </StyledStack>
     </Section>
