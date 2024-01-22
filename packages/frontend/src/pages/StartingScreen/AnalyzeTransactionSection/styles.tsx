@@ -81,17 +81,6 @@ export const BlockIconStack = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {},
 }))
 
-export const Line = styled('div')(({ theme }) => ({
-  height: '1px',
-  width: '100%',
-  backgroundColor: '#FFFFFF',
-  opacity: 0.15,
-  marginTop: theme.spacing(10),
-  [theme.breakpoints.down('sm')]: {
-    marginTop: theme.spacing(6),
-  },
-}))
-
 export const IconCircleStack = styled(Stack)(({ theme }) => ({
   background:
     'radial-gradient(47.45% 48.31% at -0.77% 0%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 40%),radial-gradient(52.75% 141.29% at 0% 0%, rgba(255, 255, 255, 0.09) 0%, rgba(249, 39, 127, 0) 60%, rgba(255, 255, 255, 0) 100%),radial-gradient(58.93% 157.84% at 98.5% 10%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%),linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03))',

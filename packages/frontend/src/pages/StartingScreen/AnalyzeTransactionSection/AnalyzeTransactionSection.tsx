@@ -15,7 +15,6 @@ import {
   IconCircleStack,
   StyledBlocksText,
   StyledIcon,
-  Line,
   NetworksStyledStack,
   NetworksHeading,
   CurrentsNetworksStyledStack,
