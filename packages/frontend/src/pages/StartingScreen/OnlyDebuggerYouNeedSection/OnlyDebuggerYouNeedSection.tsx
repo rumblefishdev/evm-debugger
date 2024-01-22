@@ -1,4 +1,4 @@
-import { type StackProps } from '@mui/material'
+import { Typography, type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
 
@@ -61,7 +61,18 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
           >
             <StyledButton variant="outlined">
               <DiscordIcon src={discordIcon} />
-              <b>Join EVM Debugger community on Discord</b>
+              <Typography
+                fontWeight={700}
+                display={{ sm: 'none' }}
+              >
+                Join community on Discord
+              </Typography>
+              <Typography
+                fontWeight={700}
+                display={{ xs: 'none', sm: 'block' }}
+              >
+                Join EVM Debugger community on Discord
+              </Typography>
             </StyledButton>
           </Link>
         </ButtonWrapper>

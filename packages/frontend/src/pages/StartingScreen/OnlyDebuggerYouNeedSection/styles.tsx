@@ -94,9 +94,8 @@ export const StyledBlocksText = styled(Typography)(({ theme }) => ({
   },
 }))
 export const DiscordIcon = styled('img')(({ theme }) => ({
-  width: theme.spacing(6),
-  margin: theme.spacing(-2),
-  marginRight: theme.spacing(-0.5),
+  width: theme.spacing(3),
+  marginRight: theme.spacing(1),
 }))
 export const ButtonWrapper = styled(Stack)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -105,6 +104,9 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   borderColor: 'rgba(255,255,255,0.15) !important',
   '&:hover': {
     borderColor: 'rgba(255,255,255,0.25) !important',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.spacing(1, 2)} !important`,
   },
 }))
 export const StyledHeading = styled(Typography)(({ theme }) => ({
