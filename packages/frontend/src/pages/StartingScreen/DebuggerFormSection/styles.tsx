@@ -38,7 +38,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
     height: `113%`,
     width: `100%`,
     left: '0%',
-    top: `10%`,
+    top: `5%`,
     position: 'absolute',
     backgroundImage: `url(${leftEllipse})`,
     backgroundSize: `100% 100%, 100%, 100%`,
@@ -47,7 +47,6 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
     backgroundPositionY: `10%, 2%`,
     [theme.breakpoints.down('xl')]: {
       top: '0%',
-      // width: `100vw`,
     },
     [theme.breakpoints.down('lg')]: {
       backgroundSize: `auto 85%`,
