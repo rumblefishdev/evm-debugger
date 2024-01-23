@@ -6,7 +6,9 @@ import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
-  return fetch(`${infoApiGatewayUrl}/info`, {
+  // eslint-disable-next-line import/exports-last
+  const isMessageOff = document.cookie.replace(/(?:(?:^|.*;\s*)disable_info\s*=\s*([^;]*).*$)|^.*$/, '$1') === 'true'
+  return !isMessageOff ? fetch(`${infoApiGatewayUrl}/info`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -14,7 +16,7 @@ export const sendStatusMessageToDiscord = (message: string): Promise<Response> =
     body: JSON.stringify({
       content: message,
     }),
-  })
+  }) : 
 }
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
