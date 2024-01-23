@@ -11,7 +11,7 @@ Object {
       "value": "0x30dcBa0405004cF124045793E1933C798Af9E66a",
     },
     Object {
-      "name": null,
+      "name": "",
       "type": "uint256",
       "value": "0.000000000000000001 ETH",
     },
@@ -55,7 +55,7 @@ Object {
           "value": "0x30dcBa0405004cF124045793E1933C798Af9E66a",
         },
         Object {
-          "name": null,
+          "name": "",
           "type": "uint256",
           "value": "0.000000000000000001 ETH",
         },
@@ -92,7 +92,7 @@ Object {
           "value": "0xbbbBa0405004cF124045793E1933C798Af9E66a",
         },
         Object {
-          "name": null,
+          "name": "",
           "type": "uint256",
           "value": "0.000000000000000005 ETH",
         },

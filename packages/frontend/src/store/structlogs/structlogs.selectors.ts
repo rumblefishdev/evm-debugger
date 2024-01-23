@@ -17,8 +17,9 @@ const selectAll = createSelector([selectStructlogsState], (state) => structLogsA
 
 const selectAllOffCurrentBlock = createSelector(
   [selectAll, activeBlockSelectors.selectActiveBlock],
-  (structLogs, { startIndex, returnIndex }) =>
-    structLogs.slice(startIndex, returnIndex + 1 || -1).filter((item) => item.depth === structLogs[startIndex].depth),
+  (structLogs, { startIndex, returnIndex }) => {
+    return structLogs.slice(startIndex, returnIndex + 1).filter((item) => item.depth === structLogs[startIndex].depth)
+  },
 )
 
 export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>

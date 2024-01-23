@@ -1,4 +1,7 @@
-import type { ISrcMapApiPayload } from '@evm-debuger/types'
+import type {
+  ISrcMapApiPayload,
+  TEtherscanParsedSourceCode,
+} from '@evm-debuger/types'
 
 export type TSourceFile = {
   path: string
@@ -32,4 +35,8 @@ export type Source = { id: number }
 export type SolcOutput = {
   contracts: Record<string, Contract>
   sources: Record<string, Source>
+}
+
+export interface SolcManager {
+  compile: (input: TEtherscanParsedSourceCode) => string
 }

@@ -15,7 +15,6 @@ import {
   IconCircleStack,
   StyledBlocksText,
   StyledIcon,
-  Line,
   NetworksStyledStack,
   NetworksHeading,
   CurrentsNetworksStyledStack,
@@ -63,7 +62,6 @@ export const AnalyzeTransactionSection: React.FC<StackProps> = ({ ...props }: St
             Stay tuned!
           </NetworksHeading>
         </NetworksStyledStack>
-        <Line />
       </StyledStack>
     </Section>
   )

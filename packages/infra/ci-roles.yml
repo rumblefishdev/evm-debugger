@@ -1,0 +1,169 @@
+Parameters:
+  FrontendBucketName:
+    Type: String
+  RepositoryName:
+    Type: String
+  Environment:
+    Type: String
+  StackArtifactsBucketName:
+    Type: String
+  GhOIDCProviderArn:
+    Type: String
+  CloudfrontInvalidationRoleArn:
+    Type: String
+
+Resources:
+  CIFrontendDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RepositoryName}-frontend-deploy-${Environment}
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GhOIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:rumblefishdev/${RepositoryName}:*
+      Path: "/"
+      Policies:
+        - PolicyName: allow-ci-to-update-frontend
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub arn:aws:s3:::${FrontendBucketName}
+                  - !Sub arn:aws:s3:::${FrontendBucketName}/*
+              - Effect: Allow
+                Action:
+                  - cloudformation:DescribeStacks
+                Resource:
+                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/evm-transaction-trace-${Environment}/*
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource: !Ref CloudfrontInvalidationRoleArn
+
+  CITranasctionTraceDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RepositoryName}-transaction-trace-deploy-${Environment}
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GhOIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:rumblefishdev/${RepositoryName}:*
+      Path: "/"
+      Policies:
+        - PolicyName: allow-ci-to-update-transactiontrace
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
+              - Effect: Allow
+                Action:
+                  - apigateway:*
+                  - cloudformation:*
+                  - dynamodb:*
+                  - sqs:Get*
+                  - sqs:List*
+                  - sqs:SetQueueAttributes
+                  - iam:GetRole
+                  - iam:PutRolePolicy
+                  - lambda:UpdateFunctionCode
+                  - lambda:TagResource
+                  - lambda:GetLayerVersion
+                  - lambda:UpdateEventSourceMapping
+                  - lambda:GetEventSourceMapping
+                  - lambda:ListTags
+                  - lambda:PublishLayerVersion
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:CreateFunction
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - iam:PassRole
+                  - ssm:AddTagsToResource
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource: arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31
+
+  CISrcMapDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RepositoryName}-srcmap-deploy-${Environment}
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GhOIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:rumblefishdev/${RepositoryName}:*
+      Path: "/"
+      Policies:
+        - PolicyName: allow-ci-to-update-srcmap
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}
+                  - !Sub arn:aws:s3:::${StackArtifactsBucketName}/*
+              - Effect: Allow
+                Action:
+                  - apigateway:*
+                  - cloudformation:*
+                  - dynamodb:*
+                  - sqs:Get*
+                  - sqs:List*
+                  - sqs:SetQueueAttributes
+                  - iam:GetRole
+                  - iam:PutRolePolicy
+                  - lambda:UpdateFunctionCode
+                  - lambda:TagResource
+                  - lambda:GetLayerVersion
+                  - lambda:UpdateEventSourceMapping
+                  - lambda:GetEventSourceMapping
+                  - lambda:ListTags
+                  - lambda:PublishLayerVersion
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:CreateFunction
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - iam:PassRole
+                  - ssm:AddTagsToResource
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource: arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31

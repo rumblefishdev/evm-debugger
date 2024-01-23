@@ -93,6 +93,9 @@ const Services: React.FC<{ boxWidth?: string }> = ({ boxWidth }) => {
       <Link to="/services/blockchain-software-development/">
         <StyledItem variant="caption">Blockchain Development</StyledItem>
       </Link>
+      <Link to="/services/ai-chat-assistant/">
+        <StyledItem variant="caption">AI Chat Assistant Development</StyledItem>
+      </Link>
       <Link to="/startup/">
         <StyledItem variant="caption">IT Services for Startups</StyledItem>
       </Link>

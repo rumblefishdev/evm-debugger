@@ -1,10 +1,24 @@
-import type { StackProps } from '@mui/material'
+import { Typography, type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
 
 import { Section } from '../../../importedComponents/components/Section'
+import { Link } from '../../../importedComponents/components/Link'
+import discordIcon from '../../../assets/svg/discord.svg'
 
-import { StyledStack, StyledBlocksStack, StyledHeading, StyledDescription, Block, StyledBlocksText, CenterEllipse, Line } from './styles'
+import {
+  StyledStack,
+  StyledBlocksStack,
+  StyledHeading,
+  StyledDescription,
+  Block,
+  StyledBlocksText,
+  CenterEllipse,
+  Line,
+  StyledButton,
+  DiscordIcon,
+  ButtonWrapper,
+} from './styles'
 
 export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...props }: StackProps, ref: LegacyRef<HTMLDivElement>) {
   const blocks = [
@@ -39,6 +53,29 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             </Block>
           ))}
         </StyledBlocksStack>
+        <ButtonWrapper>
+          <Link
+            to="https://discord.gg/GWqQ5DWgnd"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledButton variant="outlined">
+              <DiscordIcon src={discordIcon} />
+              <Typography
+                fontWeight={700}
+                display={{ sm: 'none' }}
+              >
+                Join community on Discord
+              </Typography>
+              <Typography
+                fontWeight={700}
+                display={{ xs: 'none', sm: 'block' }}
+              >
+                Join EVM Debugger community on Discord
+              </Typography>
+            </StyledButton>
+          </Link>
+        </ButtonWrapper>
         <Line></Line>
       </StyledStack>
     </Section>

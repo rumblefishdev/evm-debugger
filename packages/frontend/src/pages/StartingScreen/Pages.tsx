@@ -2,12 +2,17 @@ import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { useRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
+import { Header } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Header'
+import { Footer } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Footer'
+import { themeDark } from '@rumblefishdev/ui/lib/src/theme/rumblefish23Theme'
+import { ThemeContextProvider } from '@rumblefishdev/ui/lib/context/themeContext/themeContext'
+import type { CustomBlogPostEntity } from '@rumblefishdev/ui/lib/src/customStrapiTypes'
 
+import '@rumblefishdev/ui/lib/src/assets/fonts.css'
 import FacebookLogo from '../../importedComponents/assets/socialDebuggerLogo.png'
-import type { IBlogPost } from '../../importedComponents/contentful-ui.types'
-import { Header, Footer, contentfulClient } from '../../importedComponents'
 import { themeNavy } from '../../theme/algaeTheme'
 import { GAnalytics } from '../../components/GAnalytics'
+import { fetchBlogPosts } from '../../helpers/api/fetchStrapiData'
 
 import { DebuggerFormSection } from './DebuggerFormSection'
 import { AnalyzeTransactionSection } from './AnalyzeTransactionSection'
@@ -15,21 +20,12 @@ import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 
 const isPrerender = process.env.REACT_APP_IS_PRERENDER === 'true'
 
-const getPosts = async () => {
-  const entries = await contentfulClient.getEntries({
-    order: '-fields.pubDate',
-    content_type: 'blogPost',
-  })
-
-  return { blogPosts: entries.items }
-}
-
 export const StartingScreen: () => JSX.Element = () => {
-  const [fetchedBlogPosts, setFetchedBlogPosts] = useState([])
+  const [fetchedBlogPosts, setFetchedBlogPosts] = useState<CustomBlogPostEntity[]>(null)
   useEffect(() => {
     if (isPrerender) return
     const fetchData = async () => {
-      const { blogPosts } = (await getPosts()) as { blogPosts: IBlogPost[] }
+      const blogPosts = await fetchBlogPosts()
       setFetchedBlogPosts(blogPosts)
     }
     fetchData().catch(console.error)
@@ -57,20 +53,28 @@ export const StartingScreen: () => JSX.Element = () => {
           content="1024"
         />
       </Helmet>
-      <ThemeProvider theme={themeNavy}>
-        <CssBaseline>
-          <Header
-            blogs={fetchedBlogPosts}
-            background={'rgba(7, 29, 90)'}
-          />
-          <GAnalytics />
-          <DebuggerFormSection ref={offerRef} />
-          <OnlyDebuggerYouNeedSection ref={offerRef} />
-          <AnalyzeTransactionSection />
+      <ThemeContextProvider>
+        <ThemeProvider theme={themeNavy}>
+          <CssBaseline>
+            <ThemeProvider theme={themeDark}>
+              <Header
+                blogPosts={fetchedBlogPosts}
+                withoutThemeSwitch
+                useSolidColorLogo
+                backgroundColor="rgba(7,29,90)"
+              />
+            </ThemeProvider>
 
-          <Footer />
-        </CssBaseline>
-      </ThemeProvider>
+            <GAnalytics />
+            <DebuggerFormSection ref={offerRef} />
+            <OnlyDebuggerYouNeedSection ref={offerRef} />
+            <AnalyzeTransactionSection />
+            <ThemeProvider theme={themeDark}>
+              <Footer />
+            </ThemeProvider>
+          </CssBaseline>
+        </ThemeProvider>
+      </ThemeContextProvider>
     </>
   )
 }

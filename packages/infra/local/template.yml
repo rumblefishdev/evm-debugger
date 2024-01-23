@@ -257,6 +257,7 @@ Resources:
           REACT_APP_ETHERSCAN_KEY: !Ref EtherscanKey
           REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
           REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Policies:
         - Statement:
             - Effect: Allow

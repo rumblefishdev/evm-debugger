@@ -1,7 +1,21 @@
 import { v4 as createUUID } from 'uuid'
 
+import { infoApiGatewayUrl } from '../../config'
+
 import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
+
+export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
+  return fetch(`${infoApiGatewayUrl}/info`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: message,
+    }),
+  })
+}
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
   const timestamp = _timestamp || Date.now()

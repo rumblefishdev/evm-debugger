@@ -19,14 +19,17 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   }, [activeStructlog])
 
   const memoryIndexPadded = React.useMemo(() => {
-    if (!structLogParams?.offset) return null
-    return structLogParams.offset.replace(/^0+/, '').padStart(DEFAULT_STRING.length, '0')
+    if (structLogParams?.offset) return structLogParams.offset.replace(/^0+/, '').padStart(DEFAULT_STRING.length, '0')
+
+    if (structLogParams?.inOffset) return structLogParams.inOffset.replace(/^0+/, '').padStart(DEFAULT_STRING.length, '0')
+
+    return null
   }, [structLogParams])
 
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}
     const underlineCss: React.CSSProperties = {
-      borderBottom: `1px solid ${palette.colorLink}`,
+      borderBottom: `2px solid ${palette.colorLink}`,
     }
     const highLightCss: React.CSSProperties = {
       color: palette.colorWhite,
@@ -60,13 +63,13 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       case 'STATICCALL':
       case 'CALL': {
         const currElem = Number.parseInt(skipLeadingZeroes(offset), 16) + index
-        if (structLogParams.argsOffset && structLogParams.inSize) {
-          const highlightFrom = Number.parseInt(skipLeadingZeroes(structLogParams.inSize), 16)
+        if (structLogParams.inOffset && structLogParams.inSize) {
+          const highlightFrom = Number.parseInt(skipLeadingZeroes(structLogParams.inOffset), 16)
           const highlightTo = highlightFrom + Number.parseInt(skipLeadingZeroes(structLogParams.inSize), 16)
           if (currElem >= highlightFrom && currElem < highlightTo) cssProperties = highLightCss
         }
-        if (structLogParams.retOffset && structLogParams.outSize) {
-          const underlineFrom = Number.parseInt(skipLeadingZeroes(structLogParams.retOffset), 16)
+        if (structLogParams.outOffset && structLogParams.outSize) {
+          const underlineFrom = Number.parseInt(skipLeadingZeroes(structLogParams.outOffset), 16)
           const underlineTo = underlineFrom + Number.parseInt(skipLeadingZeroes(structLogParams.outSize), 16)
           if (currElem >= underlineFrom && currElem < underlineTo) cssProperties = { ...cssProperties, ...underlineCss }
         }
@@ -84,7 +87,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
       {hasMemory ? (
         <StyledWrapper {...props}>
           {memory.map((memoryItem) => {
-            if (memoryIndexPadded && memoryItem.index === memoryIndexPadded) {
+            if (memoryIndexPadded) {
               return (
                 <StyledRecord
                   direction="row"
@@ -118,7 +121,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
           })}
         </StyledWrapper>
       ) : (
-        <p>This EVM Step has no memory.</p>
+        <p>No memory was used at this point yet.</p>
       )}
     </>
   )

@@ -1,5 +1,5 @@
 import type { TOpCodes } from '@evm-debuger/types'
-import type { ethers } from 'ethers'
+import type { FunctionFragment } from 'ethers'
 import type { Theme } from '@mui/material'
 
 import type { TExtendedStack } from '../types'
@@ -53,7 +53,7 @@ export const isArrayOfStrings = (value: unknown): value is string[] => {
   return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }
 
-export const getSignature = (fragment: ethers.utils.FunctionFragment) => {
+export const getSignature = (fragment: FunctionFragment) => {
   const { inputs, name } = fragment
 
   return `${name}(${inputs.map((inputItem) => inputItem.type).join(',')})`

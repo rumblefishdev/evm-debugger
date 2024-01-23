@@ -5,6 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { analyzerSelectors } from '../../store/analyzer/analyzer.selectors'
 import { algaeTheme } from '../../theme/algaeTheme'
 import { defaultTheme } from '../../theme/default'
+import '@rumblefishdev/ui/lib/src/theme/rumblefish23Theme'
 import { AppNavigation } from '../../layouts/AppNavigation/AppNavigation.component'
 import { AnalyzerProgressScreen } from '../../containers/AnalyzerProgressScreen/AnalyzerProgressScreen'
 import { AppContainer } from '../../layouts/AppContainer/AppContainer.component'
@@ -19,7 +20,10 @@ export const AppRoot: React.FC = () => {
   return (
     <ThemeProvider theme={algaeTheme}>
       {shouldDisplayApp && <AppNavigation />}
-      <AppContainer withNavbar>
+      <AppContainer
+        withNavbar
+        sx={{ minWidth: '900px' }}
+      >
         <ThemeProvider theme={defaultTheme}>{shouldDisplayApp ? <Outlet /> : <AnalyzerProgressScreen />}</ThemeProvider>
       </AppContainer>
     </ThemeProvider>

@@ -6,6 +6,7 @@ import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.
 import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.selectors'
 import { Button } from '../../../../importedComponents/components/Button'
 import { GridLayoutHandler } from '../../../../components/GridLayout'
+import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 
 import { StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
@@ -19,8 +20,9 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout, hasC
   const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
   const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
   const hasMultipleSourceFiles = useSelector(sourceCodesSelectors.selectHasMultipleSourceFiles)
-  const hasSourceCode = isSourceCodeAvailable && isSourceMapAvailable
-  const willShowSourceCode = hasSourceCode && hasContract
+  const isInstructionsValid = useSelector(instructionsSelectors.selectIsCurrentInstructionsValid)
+
+  const willShowSourceCode = isSourceCodeAvailable && isSourceMapAvailable && isInstructionsValid
 
   const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(hasMultipleSourceFiles)
 
@@ -34,7 +36,7 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout, hasC
     <StyledSourceCodePanel>
       <StyledHeadingWrapper>
         <StyledHeading>Source Code</StyledHeading>
-        {hasMultipleSourceFiles && (
+        {hasMultipleSourceFiles && willShowSourceCode && (
           <Button
             onTouchStart={(event) => event.stopPropagation()}
             onMouseDown={(event) => event.stopPropagation()}
@@ -49,14 +51,18 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout, hasC
         {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
       <StyledSourceWrapper>
-        {willShowSourceCode && (
-          <>
-            {isTreeViewExpanded && <TreeFileViewContainer />}
-            <SourceCodeViewContainer />
-          </>
+        {hasContract ? (
+          willShowSourceCode ? (
+            <>
+              {isTreeViewExpanded && hasMultipleSourceFiles && <TreeFileViewContainer />}
+              <SourceCodeViewContainer />
+            </>
+          ) : (
+            <p>No source code avalible for this contract!</p>
+          )
+        ) : (
+          <p>Selected trace is not a contract!</p>
         )}
-        {hasContract && !hasSourceCode && <p>No source code avalible for this contract!</p>}
-        {!hasContract && <p>Selected trace is not a contract!</p>}
       </StyledSourceWrapper>
     </StyledSourceCodePanel>
   )

@@ -72,6 +72,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       }),
     )
   } catch (error) {
+    console.error(error)
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.RUNNING_ANALYZER }))
     yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while running analyzer: ${error.message}`)))
   }

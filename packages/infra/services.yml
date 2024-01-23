@@ -51,7 +51,17 @@ Resources:
         DomainName: !Ref Domain
         Route53:
           HostedZoneId: !Ref HostedZoneId
-
+  
+  CustomApiEndpoints:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./endpoints.yml
+      Parameters:
+        Environment: !Ref Environment
+        CertificateArn: !Ref CertificateArn
+        DomainName: !Ref Domain
+        HostedZoneId: !Ref HostedZoneId
+          
   ###################################
   ###### Transaction Trace API ######
   ###################################
@@ -104,6 +114,7 @@ Resources:
           SQS_ANALYZER_URL: !Ref TransactionTraceSqs
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         TransactionTraceApiEvent:
           Type: Api
@@ -173,6 +184,7 @@ Resources:
           XDG_CONFIG_HOME: /tmp/home/.config
           XDG_CACHE_HOME: /tmp/home/.cache
           XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SqsEvent:
           Type: SQS
@@ -228,6 +240,7 @@ Resources:
           XDG_CONFIG_HOME: /tmp/home/.config
           XDG_CACHE_HOME: /tmp/home/.cache
           XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SqsEvent:
           Type: SQS
@@ -333,6 +346,7 @@ Resources:
           REACT_APP_ETHERSCAN_KEY: !Ref EtherscanKey
           REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
           REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SrcMapApiEvent:
           Type: Api
@@ -400,6 +414,7 @@ Resources:
           REACT_APP_ETHERSCAN_KEY: !Ref EtherscanKey
           REACT_APP_POLYGONSCAN_KEY: !Ref PolygonscanKey
           REACT_APP_ARBITRUMSCAN_KEY: !Ref ArbitrumscanKey
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SqsEvent:
           Type: SQS
@@ -453,6 +468,7 @@ Resources:
           SRCMAP_CONTRACTS_TABLE_NAME: !Ref SrcMapContractsTable
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SqsEvent:
           Type: SQS

@@ -27,8 +27,6 @@ export const SourceCodeViewContainer: React.FC = () => {
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
 
-  console.log('currentInstruction', instructions[activeStrucLog?.pc])
-
   return (
     <SourceCodeView
       endCodeLine={isOnSameFile ? endCodeLine : -1}

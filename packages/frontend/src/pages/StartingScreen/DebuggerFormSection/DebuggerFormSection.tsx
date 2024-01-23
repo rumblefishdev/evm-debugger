@@ -6,6 +6,7 @@ import downArrow from '../../../importedComponents/assets/svg/arrow-down-white.s
 import { Section } from '../../../importedComponents/components/Section'
 import { Debugger } from '../../../components/Debugger'
 import { generateArrowAnimation } from '../../../importedComponents/utils/arrowAnimationStyles'
+import evmLogo from '../../../assets/svg/evm.svg'
 
 import {
   StyledStack,
@@ -21,6 +22,7 @@ import {
   Line,
   StyledIcon,
   ArrowCircle,
+  StyledLogo,
 } from './styles'
 
 export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: StackProps, ref: RefObject<HTMLDivElement>) {
@@ -46,6 +48,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
         <WaveVector />
         <StyledDiversionStack>
           <StyledTextSpace>
+            <StyledLogo src={evmLogo} />
             <StyledHeading>
               Debugging EVM <br />
               smart contracts made easy!

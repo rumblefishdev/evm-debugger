@@ -60,6 +60,7 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Gathering contracts information success')))
   } catch (error) {
+    console.log(error)
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION }),
     )
