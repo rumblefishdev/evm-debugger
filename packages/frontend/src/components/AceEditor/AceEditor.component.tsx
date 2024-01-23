@@ -3,9 +3,9 @@ import type ReactAceEditor from 'react-ace'
 import type { IMarker } from 'react-ace'
 
 import { StyledAceEditor } from './AceEditor.styles'
-import type { AceEditorProps } from './AceEditor.types'
+import type { AceEditorClickEvent, AceEditorProps } from './AceEditor.types'
 
-export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highlightEndLine, source, mode = 'json', ...props }) => {
+export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highlightEndLine, source, mode = 'json', onClick, ...props }) => {
   const editorRef = React.useRef<ReactAceEditor>(null)
   const shouldHighlight = highlightStartLine && highlightEndLine
 
@@ -27,6 +27,18 @@ export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highli
     }
   }, [highlightStartLine])
 
+  React.useEffect(() => {
+    const editor = editorRef.current?.editor
+    if (onClick) {
+      editor.on('click', onClick)
+    }
+    return () => {
+      if (onClick) {
+        editor.off('click', onClick)
+      }
+    }
+  }, [onClick])
+
   return (
     <StyledAceEditor
       ref={editorRef}
@@ -35,7 +47,7 @@ export const AceEditor: React.FC<AceEditorProps> = ({ highlightStartLine, highli
       aceTheme="dawn"
       name={React.useId()}
       value={source}
-      readOnly
+      readOnly={true}
       markers={shouldHighlight && [highlightMarker]}
       mode={mode}
       {...props}

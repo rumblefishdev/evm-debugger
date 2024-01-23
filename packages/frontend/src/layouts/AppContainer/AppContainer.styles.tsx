@@ -14,7 +14,7 @@ export const StyledAppContainer = styled(Stack, {
   padding: theme.spacing(2),
   overflow: 'auto',
   justifyContent: 'center',
-  height: withNavbar ? 'calc(100vh - 48px)' : '100vh',
+  height: withNavbar ? 'calc(100vh - 58px)' : '100vh',
   gap: theme.spacing(6),
   flexDirection: 'row',
   boxSizing: 'border-box',

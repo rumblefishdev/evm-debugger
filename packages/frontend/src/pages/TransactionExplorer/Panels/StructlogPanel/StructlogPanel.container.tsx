@@ -8,6 +8,7 @@ import { activeStructLogActions } from '../../../../store/activeStructLog/active
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
+import { activeLineSelectors } from '../../../../store/activeLine/activeLine.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
@@ -26,6 +27,14 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
 
   // const previousTrace = React.useRef(null)
+
+  const activeLineInstructions = useSelector(activeLineSelectors.selectActiveLineInstruction)
+
+  console.log('activeLineInstructions', activeLineInstructions)
+  console.log(
+    'structlogs',
+    activeLineInstructions.map((instruction) => structLogs[instruction.pc]),
+  )
 
   const setActiveStructlog = useCallback(
     (index: number) => {

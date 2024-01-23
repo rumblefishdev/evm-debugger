@@ -31,10 +31,10 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   '.ace_gutter-active-line': {
     background: 'unset',
   },
+
   '.ace_fold-widget': {
     display: 'none !important',
   },
-
   '.ace_cursor-layer': {
     display: 'none',
   },

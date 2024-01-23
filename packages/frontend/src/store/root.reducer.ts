@@ -17,6 +17,7 @@ import { transactionInfoReducer } from './transactionInfo/transactionInfo.slice'
 import { transactionConfigReducer } from './transactionConfig/transactionConfig.slice'
 import { analyzerReducer } from './analyzer/analyzer.slice'
 import { abisReducer } from './abis/abis.slice'
+import { activeLineReducer } from './activeLine/activeLine.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
@@ -35,4 +36,5 @@ export const rootReducer = combineReducers({
   [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
   [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
   [StoreKeys.ABIS]: abisReducer,
+  [StoreKeys.ACTIVE_LINE]: activeLineReducer,
 })

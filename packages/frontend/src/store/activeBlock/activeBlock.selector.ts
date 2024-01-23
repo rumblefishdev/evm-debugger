@@ -84,6 +84,8 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     if (functionFragment) {
       const { inputs, outputs } = functionFragment
 
+      console.log('decodedInput', decodedInput)
+      console.log('inputs', inputs)
       const parsedInput = parseParameters([...inputs], decodedInput)
       const parsedOutput = parseParameters([...outputs], decodedOutput)
 
