@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 
-import type { TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
+import type { TEtherscanParsedSourceCode, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 import * as solc from 'solc'
 
@@ -13,7 +13,8 @@ import { handleTransactionTraceFetching } from '../src/transaction-data-getters/
 import { handleBytecodeFetching } from '../src/transaction-data-getters/bytecodes'
 import { handleSourceCodesFetching } from '../src/transaction-data-getters/sourceCodes'
 import type { TTempExecs } from '../src/types'
-import { handleSourceCode } from '../src/sourceCodeHandlers'
+import { SolcManagerStrategy } from '../src/helpers/solc.strategy'
+import { SoruceCodeManagerStrategy } from '../src/helpers/sourceCodeManager.strategy'
 
 /* eslint-disable prettier/prettier */
 (async () => {
@@ -48,7 +49,13 @@ import { handleSourceCode } from '../src/sourceCodeHandlers'
 
     ensureDirectoryExistance(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}`)
 
+
+
     for (const address of contractAddresses) {
+      
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+
       ensureDirectoryExistance(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}`)
 
       const bytecodePath = `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/bytecode.json`
@@ -61,57 +68,50 @@ import { handleSourceCode } from '../src/sourceCodeHandlers'
 
       if (isCotractVerified) {
 
-          console.log(`contract ${address} is being parsed`)
-          const { language,settings,sources } = handleSourceCode(sourceCodesData, address)
+        const sourceCodeManager = new SoruceCodeManagerStrategy(sourceCodesData.SourceCode)
+        const settings = sourceCodeManager.createSettingsObject(sourceCodesData)
+        const sources = sourceCodeManager.extractFiles(sourceCodesData)
 
+        sources.forEach(([path, content]) => {
+          ensureDirectoryExistance(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sources/${path.slice(0, path.lastIndexOf('/'))}`)
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/sources/${path}`, content)
+        })
 
-          const solcInput = JSON.stringify({
-            sources,
+        const parsedSources: Record<string, { content: string }> = sources.reduce((accumulator, [path, content]) => ({ ...accumulator, [path]: { content } }), {})
+
+        const solcManager = new SolcManagerStrategy(settings.solcCompilerVersion)
+          
+          const solcInput: TEtherscanParsedSourceCode = {
+            sources: parsedSources,
             settings: {
-              ...settings,
+              ...settings.settings,
               outputSelection: {
                 '*': {
                   '*': ['*'],
                 },
               }
             },
-
-            language,
-          })
-
-          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput.json`, JSON.parse(solcInput))
-
-          // console.log(solc)
-
-          const solcOutput = solc.compile(solcInput,1)
-
-          try {
-            saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, JSON.parse(solcOutput))
-          } catch(saveError) {
-            saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, solcOutput)
+            language: settings.language,
           }
-          // solc.loadRemoteVersion(sourceCodesData.CompilerVersion, (error, solcSnapshot) => {
-          //   console.log(`solc version ${sourceCodesData.CompilerVersion} is being used`)
-          //   console.log(`solcSnapshot version ${solcSnapshot.version()} is being used`)
 
-          //   const output = solcSnapshot.compileStandard(solcInput)
-          //   console.log(output)
-          // })
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcInput.json`, solcInput)
+          
 
-          // solc.loadRemoteVersion(sourceCodesData.CompilerVersion, (error, solcSnapshot) => {
-          //   console.log(`solc version ${sourceCodesData.CompilerVersion} is being used`)
-          //   console.log(`solcSnapshot version ${solcSnapshot.version()} is being used`)
-          //   if (error) {
-          //     console.log(error)
-          //     return
-          //   } 
+          const solcOutput = solcManager.compile(solcInput)
 
-          //   console.log(solcSnapshot)
-          // const output: string = solcSnapshot.lowlevel.compileStandard(solcInput)
+          saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, solcOutput)
+        
 
-          // })          
-
-
+          Object.entries(solcOutput.contracts).forEach(([fileName, fileInternals]) => {
+            Object.entries(fileInternals).forEach(([contractName, contractInternals]) => {
+              if (contractInternals.evm.assembly) {
+                ensureDirectoryExistance(
+                  `${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly/${fileName.slice(0, fileName.lastIndexOf('/'))}`,
+                )
+                saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/assembly/${fileName}_${contractName}.json`, contractInternals.evm.assembly)
+              }
+            })
+          })
 
       } else {
         console.log(`contract ${address} is not verified`)

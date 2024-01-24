@@ -17,9 +17,6 @@ export const fetchSourceCodes = async (contractAddress: string, chainId: ChainId
 
   const response = await fetch(fetchSourceCodesApiEndpoint)
 
-  // eslint-disable-next-line no-promise-executor-return
-  await new Promise((resolve) => setTimeout(resolve, 5000))
-
   const sourceCodes: TEtherscanContractSourceCodeResp = await response.json()
 
   return sourceCodes

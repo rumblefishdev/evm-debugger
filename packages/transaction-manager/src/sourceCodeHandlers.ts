@@ -51,8 +51,6 @@ export const handleMultipleSourceCodes = (
     saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${contractAddress}/files/${path}`, content)
   })
 
-  console.log('dupa')
-
   const settings = sourceCodeObj.settings || {
     optimizer: { runs: Number(sourceCodeData.Runs), enabled: Boolean(sourceCodeData.OptimizationUsed) },
     evmVersion: sourceCodeData.EVMVersion.toLocaleLowerCase() === 'default' ? 'istanbul' : sourceCodeData.EVMVersion.toLocaleLowerCase(),

@@ -1,5 +1,7 @@
 import { existsSync, mkdir, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
+import type { TEtherscanContractSourceCodeResult, TSolcConfiguration } from '@evm-debuger/types'
+
 type TParsedEnum = { value: number; name: string }
 export const mapEnumToObject = (enumObject: Record<string, number | string>): TParsedEnum[] => {
   const parsedObject: TParsedEnum[] = []
@@ -72,4 +74,19 @@ export const parseSourceCode = (sourceName: string, sourceCode: string) => {
     )
   }
   return { [sourceName]: sourceCode }
+}
+
+export const createBaseSettingsObject = (sourceData: TEtherscanContractSourceCodeResult): TSolcConfiguration => {
+  const language = sourceData.SourceCode.includes('pragma solidity') ? 'Solidity' : 'Vyper'
+
+  return {
+    solcCompilerVersion: sourceData.CompilerVersion,
+    settings: {
+      optimizer: {
+        runs: Number(sourceData.Runs),
+        enabled: Boolean(sourceData.OptimizationUsed === '1'),
+      },
+    },
+    language,
+  }
 }
