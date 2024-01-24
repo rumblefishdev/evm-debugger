@@ -5,12 +5,13 @@ import { Helmet } from 'react-helmet'
 import { Header } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Header'
 import { Footer } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Footer'
 import { themeDark } from '@rumblefishdev/ui/lib/src/theme/rumblefish23Theme'
+import { themeNavy } from '@rumblefishdev/ui/lib/src/theme/algaeTheme'
 import { ThemeContextProvider } from '@rumblefishdev/ui/lib/context/themeContext/themeContext'
 import type { CustomBlogPostEntity } from '@rumblefishdev/ui/lib/src/customStrapiTypes'
 
 import '@rumblefishdev/ui/lib/src/assets/fonts.css'
-import FacebookLogo from '../../importedComponents/assets/socialDebuggerLogo.png'
-import { themeNavy } from '../../theme/algaeTheme'
+
+import FacebookLogo from '../../assets/png/socialDebuggerLogo.png'
 import { GAnalytics } from '../../components/GAnalytics'
 import { fetchBlogPosts } from '../../helpers/api/fetchStrapiData'
 

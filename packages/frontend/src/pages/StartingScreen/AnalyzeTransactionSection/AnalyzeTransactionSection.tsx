@@ -1,7 +1,6 @@
 import React from 'react'
 import type { StackProps } from '@mui/material'
-
-import { Section } from '../../../importedComponents/components/Section'
+import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
 
 import { data } from './data'
 import {

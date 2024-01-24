@@ -1,8 +1,8 @@
 /* eslint sort-keys-fix/sort-keys-fix:0*/ // eslint reorders css styles, causing it to not work properly. So this rule is off.
 import React from 'react'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
 import { reportIssuePageUrl } from '../../config'
-import { Button } from '../../importedComponents/components/Button'
 
 import type { ButtonProps } from './DebuggerProcessButton.types'
 import { IssueTextContainer, StyledLink, StyledBtnText } from './styles'

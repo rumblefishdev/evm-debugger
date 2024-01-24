@@ -1,6 +1,6 @@
 import { Stack, styled, Typography } from '@mui/material'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
-import { Button } from '../../../importedComponents/components/Button'
 import centerEllipse from '../../../assets/png/centerEllipse.png'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 
