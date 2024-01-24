@@ -3,12 +3,12 @@ import React, { useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { ChainId } from '@evm-debuger/types'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
+import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
 
-import { Button } from '../../importedComponents/components/Button'
 import { analyzerActions } from '../../store/analyzer/analyzer.slice'
 import { useTypedDispatch } from '../../store/storeHooks'
 import { ROUTES } from '../../routes'
-import { Section } from '../../importedComponents/components/Section'
 import { analyzerSelectors } from '../../store/analyzer/analyzer.selectors'
 import { uiSelectors } from '../../store/ui/ui.selectors'
 import { uiActions } from '../../store/ui/ui.slice'
@@ -56,7 +56,7 @@ export const AnalyzerProgressScreen = () => {
   return (
     <Section
       mobilePadding={false}
-      height="fullHeight"
+      useFullHeight
       width="full"
       backgroundColor="transparent"
     >
