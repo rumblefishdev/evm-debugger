@@ -59,6 +59,7 @@ export const AnalyzerProgressScreen = () => {
       useFullHeight
       width="full"
       backgroundColor="transparent"
+      sx={{ height: '100%' }}
     >
       <StyledStack>
         <StyledContainer>
