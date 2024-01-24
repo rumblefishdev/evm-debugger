@@ -1,6 +1,5 @@
 module.exports = {
-  extends: ['../../.eslintrc.js',
-    "plugin:react/recommended",],
+  extends: ['../../.eslintrc.js', 'plugin:react/recommended'],
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: ['tsconfig.json'],
@@ -9,19 +8,10 @@ module.exports = {
     'sonarjs/cognitive-complexity': 'off',
 
     //React
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-first-prop-new-line": [2, "multiline"],
-    "react/prop-types": "off",
-    "react/display-name": "off",
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-first-prop-new-line': [2, 'multiline'],
+    'react/prop-types': 'off',
+    'react/display-name': 'off',
     // "import/no-cycle": "off"
   },
-  overrides: [
-    {
-      files: ['src/importedComponents/contentful-ui.types.ts'],
-      rules: {
-        'no-use-before-define': 'off',
-        '@typescript-eslint/naming-convention': 'off',
-      },
-    },
-  ],
 }

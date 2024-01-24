@@ -1,1 +1,0 @@
-export { ResourcesSubmenu } from './ResourcesSubmenu'
