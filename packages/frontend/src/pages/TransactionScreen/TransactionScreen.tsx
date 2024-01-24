@@ -6,7 +6,7 @@ import { BlockSummary } from './BlockSummary'
 import { ContentMap } from './ContentMap'
 import { StyledContentWrapper } from './styles'
 
-export const TranscationScreen: React.FC = () => (
+export const TransactionScreen: React.FC = () => (
   <StyledContentWrapper>
     <TraceLogsList />
     <ContentMap />
