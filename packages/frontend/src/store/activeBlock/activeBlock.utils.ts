@@ -21,7 +21,7 @@ export const safeArgParse = (arg: string | bigint | boolean | string[] | BytesLi
 
   if (Array.isArray(arg) && arg.every((item) => BigInt(item))) return arg.map((item) => `${formatEther(BigInt(item).toString())} ETH`)
 
-  return arg.toString()
+  if (typeof arg === 'bigint') return arg.toString()
 }
 
 export const parseParameter = (parameterType, parameterValue) => {

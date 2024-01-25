@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
 import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.selectors'
-import { Button } from '../../../../importedComponents/components/Button'
 import { GridLayoutHandler } from '../../../../components/GridLayout'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 

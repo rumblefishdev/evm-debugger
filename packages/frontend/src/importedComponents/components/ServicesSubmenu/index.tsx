@@ -1,1 +1,0 @@
-export { ServicesSubmenu } from './ServicesSubmenu'

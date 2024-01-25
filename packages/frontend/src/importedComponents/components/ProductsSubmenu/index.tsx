@@ -1,1 +1,0 @@
-export { ProductsSubmenu } from './ProductsSubmenu'

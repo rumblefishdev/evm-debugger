@@ -1,1 +1,0 @@
-export { MenuBoxImage } from './MenuBoxImage'
