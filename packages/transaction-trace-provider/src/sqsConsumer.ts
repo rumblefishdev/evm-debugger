@@ -7,7 +7,7 @@ import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/typ
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
 import type { CompletedPart } from '@aws-sdk/client-s3'
-import { structLogsEmitter } from 'hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer'
+// import { structLogsEmitter } from 'hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer'
 
 import { version } from '../package.json'
 
@@ -17,7 +17,7 @@ import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const { structLogsEmitter } = require('@rumblefishdev/hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
+const { structLogsEmitter } = require('hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer.js')
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -31,6 +31,33 @@ let structLogs: IRawStructLog[] = []
 let totalSize = 0
 let partNumber = 1
 const uploadedParts: CompletedPart[] = []
+
+enum STATUS {
+  PENDING,
+  FINISHED,
+  SENT,
+  ERROR,
+}
+
+interface ChunksContainter {
+  status: STATUS
+  partNumber: number
+  lock: boolean
+  chunks: IRawStructLog[]
+  txHash: string
+  chainId: string
+  uploadId: string
+}
+
+const uploadChunking: ChunksContainter = {
+  uploadId: '',
+  txHash: '',
+  status: STATUS.PENDING,
+  partNumber: 1,
+  lock: false,
+  chunks: [],
+  chainId: '',
+}
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
@@ -48,7 +75,7 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
 export const uploadTrace = async (uploadId: string, txHash: string, chainId: string, trace: string) => {
   if (structLogs.length > 0) {
     const part: { partNumber: number; body: string } = { partNumber: partNumber++, body: trace }
-
+    console.log('HEEEREE', { trace })
     console.log(`Uploading part ${part.partNumber}`)
     console.log(`Part size: ${part.body.length}`)
 
@@ -59,41 +86,63 @@ export const uploadTrace = async (uploadId: string, txHash: string, chainId: str
   }
 }
 
-export const prepareBodyFromArray = (array: IRawStructLog[]): string => {
-  let body = JSON.stringify({ array })
-  body = body.substring(1, body.length - 1)
-  if (partNumber > 1) body = `,${body}`
-  if (partNumber === 1) body = `{"structLogs":[${body}`
-
+export const prepareBodyFromArray = (): string => {
+  let body = JSON.stringify(uploadChunking.chunks).slice(1, -1)
+  if (uploadChunking.partNumber > 1) body = `,${body}`
   return body
 }
 
 export const maxSize = 10 * 1024 * 1024 // 10 MB
-export const structLogHandler = async (uploadId: string, structLog: IRawStructLog, txHash: string, chainId: string) => {
-  structLogs.push(structLog)
-  totalSize += Buffer.from(JSON.stringify(structLog)).length
-
-  if (totalSize >= maxSize) {
-    try {
-      const body = prepareBodyFromArray(structLogs)
-      await uploadTrace(uploadId, txHash, chainId, body)
-    } catch (error) {
-      const errorMessage = { errorDetails: DEFAULT_ERROR }
-      if (error instanceof Error) {
-        console.log(error.message)
-        errorMessage['errorDetails'] = error.message
-        captureException(error)
-      }
-      await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
-    }
-  }
+export const structLogHandler = (uploadId: string, structLog: IRawStructLog, txHash: string, chainId: string) => {
+  // totalSize += Buffer.from(JSON.stringify(structLog)).length
+  // if (totalSize >= maxSize) {
+  //   try {
+  //     const body = prepareBodyFromArray()
+  //     await uploadTrace(uploadId, txHash, chainId, body)
+  //   } catch (error) {
+  //     const errorMessage = { errorDetails: DEFAULT_ERROR }
+  //     if (error instanceof Error) {
+  //       console.log(error.message)
+  //       errorMessage['errorDetails'] = error.message
+  //       captureException(error)
+  //     }
+  //     await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
+  //   }
+  // }
+  uploadChunking.chunks.push(structLog)
+  uploadChunking.txHash = txHash
+  uploadChunking.chainId = chainId
 }
 
 export const prepareTraceResultToUpload = (traceResult: TRawTransactionTraceResult): string => {
-  const traceResultAsString = JSON.stringify(traceResult)
+  const traceResultAsString = JSON.stringify({
+    returnValue: traceResult.returnValue,
+    gas: traceResult.gas,
+    failed: traceResult.failed,
+  })
+  console.log('HEEEEEREEEE traceResultAsString!!!!!')
+  console.log(traceResultAsString)
   return traceResultAsString.substring(1)
 }
 
+export const processChunks = async (): Promise<void> => {
+  while (uploadChunking.status === STATUS.PENDING) {
+    if (!uploadChunking.lock) {
+      uploadChunking.lock = true
+
+      const body = prepareBodyFromArray()
+      // eslint-disable-next-line no-await-in-loop
+      await uploadTrace(uploadChunking.uploadId, uploadChunking.txHash, uploadChunking.chainId, body)
+      uploadChunking.partNumber++
+      uploadChunking.chunks = []
+      uploadChunking.lock = false
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => {
+      setTimeout(resolve, 200)
+    })
+  }
+}
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   const records = event.Records
   if (records.length === 0) {
@@ -115,11 +164,15 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   })
 
   try {
+    await uploadTrace(uploadId, txHash, chainId, '{"structLogs":[')
+
     const traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
 
-    structLogsEmitter.removeListener('structLog', structLogHandler)
-    const endOfStructLogArray = '[,'
-    await uploadTrace(uploadId, txHash, chainId, endOfStructLogArray)
+    console.log('HELLO')
+    setTimeout(function () {
+      console.log('THIS IS')
+    }, 2000)
+    console.log('DOG')
 
     const preparedTraceResult = prepareTraceResultToUpload(traceResult)
     await uploadTrace(uploadId, txHash, chainId, preparedTraceResult)

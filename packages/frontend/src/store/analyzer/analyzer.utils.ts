@@ -6,7 +6,7 @@ import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
-  return fetch(`${infoApiGatewayUrl}/info`, {
+  return fetch(`/info`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

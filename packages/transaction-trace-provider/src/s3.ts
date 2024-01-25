@@ -60,6 +60,11 @@ export const uploadPart = async (txHash: string, chainId: string, uploadId: stri
     Bucket: process.env.ANALYZER_DATA_BUCKET_NAME,
     Body: body,
   }
+  console.log('UploadPartCommand for', {
+    UploadId: uploadId,
+    PartNumber: partNumber,
+    Key: fileName,
+  })
   const command = new UploadPartCommand(params)
   const response = await s3Client.send(command)
   return response.ETag
