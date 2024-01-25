@@ -2,7 +2,6 @@ import { readFileSync } from 'fs'
 
 import type { TEtherscanParsedSourceCode, TTransactionInfo, TTransactionTraceResult } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
-import * as solc from 'solc'
 
 import { inputPrompt } from '../src/prompts'
 import { ensureDirectoryExistance, isValidTransaction, saveToFile } from '../src/utils'

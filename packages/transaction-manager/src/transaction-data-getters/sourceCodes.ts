@@ -3,7 +3,6 @@ import { getBlockchainApiUrl } from '@evm-debuger/config'
 import type { TEtherscanContractSourceCodeResp, TEtherscanContractSourceCodeResult } from '@evm-debuger/types'
 
 import { checkIfPathExists, readFromFile, saveToFile } from '../utils'
-// import fetch from 'node-fetch'
 
 export const fetchSourceCodes = async (contractAddress: string, chainId: ChainIds): Promise<TEtherscanContractSourceCodeResp> => {
   const { blockchainApiKey, blockchainApiUrl } = getBlockchainApiUrl(chainId)
