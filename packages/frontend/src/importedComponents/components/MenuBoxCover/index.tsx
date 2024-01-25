@@ -1,1 +1,0 @@
-export { MenuBoxCover } from './MenuBoxCover'

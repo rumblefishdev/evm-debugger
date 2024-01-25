@@ -2,7 +2,7 @@
 import type { ThemeOptions } from '@mui/material/styles'
 import { createTheme } from '@mui/material/styles'
 
-import noiseBg from '../../importedComponents/assets/png/noise.png'
+import noiseBg from '../../assets/png/noise.png'
 
 import { scrollbar } from './customScrollbar'
 import { breakpoints } from './breakpoints'

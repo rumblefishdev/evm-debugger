@@ -1,6 +1,7 @@
 import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
+import type { ErrorDescription } from 'ethers'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TParsedEventLog } from '../../types'
@@ -18,8 +19,8 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
   return eventLogs.map((eventLog) => {
     if (!eventLog.eventDescription) return { signature: null, parsedArgs: null, name: null }
     const { eventDescription } = eventLog
-    const { name, signature, args, eventFragment } = eventDescription
-    const { inputs } = eventFragment
+    const { name, signature, args, fragment } = eventDescription
+    const { inputs } = fragment
     const parsedArgs = inputs.map((parameterType, index) => {
       const parameterValue = args[index]
       return parseParameter(parameterType, parameterValue)
@@ -83,8 +84,8 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     if (functionFragment) {
       const { inputs, outputs } = functionFragment
 
-      const parsedInput = parseParameters(inputs, decodedInput)
-      const parsedOutput = parseParameters(outputs, decodedOutput)
+      const parsedInput = parseParameters([...inputs], decodedInput)
+      const parsedOutput = parseParameters([...outputs], decodedOutput)
 
       const signature = getSignature(functionFragment)
 
@@ -94,10 +95,10 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     }
 
     if (errorDescription) {
-      const { signature, errorFragment, args } = errorDescription
-      const { inputs } = errorFragment
+      const { signature, fragment, args } = errorDescription
+      const { inputs } = fragment
 
-      const parsedError = parseParameters(inputs, args)
+      const parsedError = parseParameters([...inputs], args)
 
       callResult.errorSignature = signature
       callResult.parsedError = parsedError
@@ -126,8 +127,17 @@ export const selectParsedActiveBlock = createSelector(
 
 export const selectActiveBlock = createSelector([selectActiveBlockState], (state) => state)
 
+export const extractErrorInfoFromErrorDescription = (errorDescription: ErrorDescription) => {
+  const { signature, args } = errorDescription
+
+  if (args.length === 0) return signature
+
+  return args[0]
+}
+
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
-  const errorSignature = checkIfOfCallType(block) ? block.errorDescription?.signature : null
+  const errorSignature =
+    checkIfOfCallType(block) && block.errorDescription ? extractErrorInfoFromErrorDescription(block.errorDescription) : null
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }

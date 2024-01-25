@@ -1,9 +1,12 @@
 import type { ChainId, TTransactionInfo } from '@evm-debuger/types'
-import type { ethers } from 'ethers'
+import type { JsonRpcProvider } from 'ethers'
 
 export type TTransactionInfoState = TTransactionInfo | null
 
-export type TEthersTransactionReposnse = Awaited<ReturnType<ethers.providers.StaticJsonRpcProvider['getTransaction']>>
+export type TEthersTransactionReposnse = Pick<
+  Awaited<ReturnType<JsonRpcProvider['getTransaction']>>,
+  'blockNumber' | 'blockHash' | 'from' | 'hash' | 'data' | 'to' | 'value' | 'chainId' | 'nonce'
+>
 
 export type TFetchTransactionInfoPayload = {
   transactionHash: string

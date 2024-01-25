@@ -16,10 +16,6 @@ const Ace = React.forwardRef<AceEditor, AceProps>(({ aceTheme, ...props }, ref) 
 ))
 
 export const StyledAceEditor = styled(Ace)(({ theme }) => ({
-  textarea: {
-    display: 'none',
-  },
-
   boxSizing: 'border-box',
 
   border: `1px solid ${theme.palette.rfLinesLight}`,

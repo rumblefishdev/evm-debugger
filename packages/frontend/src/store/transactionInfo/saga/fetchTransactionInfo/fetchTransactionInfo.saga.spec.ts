@@ -1,7 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { ChainId } from '@evm-debuger/types'
-import { BigNumber } from 'ethers'
 import { combineReducers } from 'redux'
 
 import { transactionInfoActions, transactionInfoReducer } from '../../transactionInfo.slice'
@@ -23,17 +22,13 @@ const TRANSACTION_HASH = '0x1234567890'
 const CHAIN_ID = ChainId.mainnet
 
 const transactionInfo: TEthersTransactionReposnse = {
-  wait: () => Promise.resolve(undefined),
-  value: BigNumber.from(0),
+  value: BigInt(0),
   to: '0x1234567890',
   nonce: 0,
   hash: TRANSACTION_HASH,
-  gasPrice: BigNumber.from(0),
-  gasLimit: BigNumber.from(0),
   from: '0x1234567890',
   data: '0x1234567890',
-  confirmations: 0,
-  chainId: CHAIN_ID,
+  chainId: BigInt(CHAIN_ID),
   blockNumber: 0,
   blockHash: '0x1234567890',
 }

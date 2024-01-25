@@ -1,4 +1,5 @@
 import { Stack, styled, Typography } from '@mui/material'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
 import centerEllipse from '../../../assets/png/centerEllipse.png'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
@@ -33,7 +34,7 @@ export const Line = styled('div')(({ theme }) => ({
   width: '100%',
   backgroundColor: '#FFFFFF',
   opacity: 0.15,
-  marginTop: theme.spacing(10),
+  marginTop: theme.spacing(8),
   [theme.breakpoints.down('sm')]: {
     display: 'none',
   },
@@ -92,7 +93,22 @@ export const StyledBlocksText = styled(Typography)(({ theme }) => ({
     textAlign: 'center',
   },
 }))
-
+export const DiscordIcon = styled('img')(({ theme }) => ({
+  width: theme.spacing(3),
+  marginRight: theme.spacing(1),
+}))
+export const ButtonWrapper = styled(Stack)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+}))
+export const StyledButton = styled(Button)(({ theme }) => ({
+  borderColor: 'rgba(255,255,255,0.15) !important',
+  '&:hover': {
+    borderColor: 'rgba(255,255,255,0.25) !important',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.spacing(1, 2)} !important`,
+  },
+}))
 export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Grid from '@mui/material/Grid'
+import { Box } from '@mui/material'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { TraceLogsList } from '../../components/TraceLogsList'
@@ -17,83 +18,76 @@ export const TransactionExplorerStaticGrid: React.FC = () => {
     <Grid
       container
       spacing={2}
-      alignItems={'start'}
-      alignSelf={'start'}
+      alignItems="start"
+      alignSelf="start"
     >
       <Grid
-        id="left-panel" // trace, quicklinks, bytecode, structlog
-        md={4}
-        spacing={2}
-        container
+        id="trace-panel"
         item
-        alignItems={'start'}
+        md={4}
+        xs={12}
+        height={600}
       >
-        <Grid
-          id="trace-panel"
-          item
-          md={12}
-          style={{ height: '300px' }}
-        >
+        <Box height={250}>
           <TraceLogsList />
-        </Grid>
-        <Grid
-          id="quicklinks-panel"
-          item
-          md={12}
-          style={{ height: '300px' }}
+        </Box>
+        <Box
+          mt={2}
+          height={318}
         >
           <QuickLinksPanel />
-        </Grid>
-        <Grid
-          id="structlog-panel"
-          item
-          md={6}
-          style={{ height: '600px' }}
-        >
-          <StructlogPanel />
-        </Grid>
-        <Grid
-          id="bytecode-panel"
-          item
-          md={6}
-          style={{ height: '600px' }}
-        >
-          <BytecodePanel />
-        </Grid>
+        </Box>
       </Grid>
 
       <Grid
-        id="right-panel" // src-code, memory, stack
-        md={8}
-        spacing={2}
+        id="structlog-panel"
         item
-        container
-        alignItems={'start'}
+        md={8}
+        xs={12}
+        height={600}
       >
-        <Grid
-          id="sourcecode-panel"
-          item
-          md={12}
-          style={{ height: '600px' }}
-        >
-          <SourceCodePanel hasContract={activeBlock.isContract} />
-        </Grid>
-        <Grid
-          id="memory-panel"
-          item
-          md={6}
-          style={{ height: '600px' }}
-        >
-          <MemoryPanel />
-        </Grid>
-        <Grid
-          id="stack-panel"
-          item
-          md={6}
-          style={{ height: '600px' }}
-        >
-          <StackPanel />
-        </Grid>
+        <SourceCodePanel hasContract={activeBlock.isContract} />
+      </Grid>
+
+      <Grid
+        id="memory-panel"
+        item
+        lg={3}
+        md={4}
+        xs={6}
+        style={{ height: '600px' }}
+      >
+        <StructlogPanel />
+      </Grid>
+      <Grid
+        id="stack-panel"
+        item
+        lg={3}
+        md={4}
+        xs={6}
+        style={{ height: '600px' }}
+      >
+        <BytecodePanel />
+      </Grid>
+      <Grid
+        id="memory-panel"
+        item
+        lg={3}
+        md={4}
+        xs={6}
+        style={{ height: '600px' }}
+      >
+        <MemoryPanel />
+      </Grid>
+      <Grid
+        id="stack-panel"
+        item
+        lg={3}
+        md={4}
+        xs={6}
+        style={{ height: '600px' }}
+      >
+        <StackPanel />
       </Grid>
     </Grid>
   )

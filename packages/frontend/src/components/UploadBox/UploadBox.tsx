@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tooltip, Stack } from '@mui/material'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
-import { Button } from '../../importedComponents/components/Button'
 import { TickFilledBlue, Error } from '../../icons'
 import { safeJsonParse } from '../../helpers/helpers'
 import { DataAdder } from '../DataAdder'

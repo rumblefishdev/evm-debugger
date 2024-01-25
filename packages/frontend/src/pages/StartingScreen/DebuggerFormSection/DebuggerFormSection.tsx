@@ -1,11 +1,11 @@
 import type { RefObject } from 'react'
 import React, { useCallback, useState } from 'react'
 import type { StackProps } from '@mui/material'
+import downArrow from '@rumblefishdev/ui/lib/src/assets/svg/AlgeaTheme/arrow-down-white.svg'
+import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
+import { generateArrowAnimation } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/utils/arrowAnimationStyles'
 
-import downArrow from '../../../importedComponents/assets/svg/arrow-down-white.svg'
-import { Section } from '../../../importedComponents/components/Section'
 import { Debugger } from '../../../components/Debugger'
-import { generateArrowAnimation } from '../../../importedComponents/utils/arrowAnimationStyles'
 import evmLogo from '../../../assets/svg/evm.svg'
 
 import {

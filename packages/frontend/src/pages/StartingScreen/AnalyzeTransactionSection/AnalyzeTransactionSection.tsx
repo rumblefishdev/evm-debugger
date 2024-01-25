@@ -1,7 +1,6 @@
 import React from 'react'
 import type { StackProps } from '@mui/material'
-
-import { Section } from '../../../importedComponents/components/Section'
+import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
 
 import { data } from './data'
 import {
@@ -15,7 +14,6 @@ import {
   IconCircleStack,
   StyledBlocksText,
   StyledIcon,
-  Line,
   NetworksStyledStack,
   NetworksHeading,
   CurrentsNetworksStyledStack,
@@ -63,7 +61,6 @@ export const AnalyzeTransactionSection: React.FC<StackProps> = ({ ...props }: St
             Stay tuned!
           </NetworksHeading>
         </NetworksStyledStack>
-        <Line />
       </StyledStack>
     </Section>
   )

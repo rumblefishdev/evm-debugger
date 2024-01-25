@@ -55,7 +55,7 @@ declare module '@mui/material/styles/createPalette' {
   }
   // eslint-disable-next-line @typescript-eslint/no-shadow
   interface Palette {
-    type: string
+    type: 'navy' | 'light' | 'dark'
     primaryTextButtonColor: string
     primaryButtonHoverBgColor: string
     colorBrand?: BrandPaletteColor

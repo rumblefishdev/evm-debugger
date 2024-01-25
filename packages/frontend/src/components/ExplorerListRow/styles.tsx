@@ -43,9 +43,11 @@ export const StyledCounter = styled(Typography, {
 }))
 
 export const StyledTypeWrapper = styled(Stack)(() => ({
-  width: '224px',
-  justifyContent: 'flex-start',
+  width: '100%',
+  justifyContent: 'space-between',
+
   flexDirection: 'row',
+
   alignItems: 'center',
 }))
 
@@ -54,7 +56,7 @@ export const StyledType = styled(Typography, {
 })<TActive>(({ theme, active }) => ({
   ...theme.typography.buttonSmall,
   textAlign: 'left',
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
   display: 'flex',
   color: theme.palette.rfDisabledDark,
   alignItems: 'center',
