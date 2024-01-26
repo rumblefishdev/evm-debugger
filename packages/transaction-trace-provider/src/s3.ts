@@ -3,6 +3,7 @@ import type {
   CompleteMultipartUploadCommandInput,
   CompletedPart,
   CreateMultipartUploadCommandInput,
+  PutObjectCommandInput,
   UploadPartCommandInput,
 } from '@aws-sdk/client-s3'
 import {
@@ -11,6 +12,7 @@ import {
   CompleteMultipartUploadCommand,
   AbortMultipartUploadCommand,
   S3Client,
+  PutObjectCommand,
 } from '@aws-sdk/client-s3'
 
 const s3Client = new S3Client({
@@ -66,6 +68,18 @@ export const uploadPart = async (txHash: string, chainId: string, uploadId: stri
     Key: fileName,
   })
   const command = new UploadPartCommand(params)
+  const response = await s3Client.send(command)
+  return response.ETag
+}
+
+export const uploadFile = async (txHash: string, chainId: string, body: string | Buffer) => {
+  const fileName = getFileName(txHash, chainId)
+  const params: PutObjectCommandInput = {
+    Key: fileName,
+    Bucket: process.env.ANALYZER_DATA_BUCKET_NAME,
+    Body: body,
+  }
+  const command = new PutObjectCommand(params)
   const response = await s3Client.send(command)
   return response.ETag
 }
