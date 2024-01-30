@@ -8,7 +8,7 @@ export interface StructlogPanelProps {
 export interface StructlogPanelComponentProps {
   structlogs: IExtendedStructLog[]
   activeStructlogIndex: number
-  handleSelect: (index: number) => void
+  handleSelect: (structlog: IExtendedStructLog & { listIndex: number }) => void
   inGridLayout?: boolean
 }
 

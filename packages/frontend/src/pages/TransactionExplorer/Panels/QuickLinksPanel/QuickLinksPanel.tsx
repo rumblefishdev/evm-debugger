@@ -2,7 +2,8 @@ import React from 'react'
 
 import { StyledBigPanel, StyledHeading, StyledHeadingWrapper } from '../styles'
 import { GridLayoutHandler } from '../../../../components/GridLayout'
-import { QuickLinks } from '../StructlogPanel/QuickLinks/QuickLinks'
+
+import { QuickLinks } from './QuickLinks'
 
 export interface IQuickLinksPanel {
   inGridLayout?: boolean

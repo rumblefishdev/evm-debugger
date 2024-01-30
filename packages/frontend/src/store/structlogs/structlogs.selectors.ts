@@ -22,7 +22,7 @@ const selectAllOffCurrentBlock = createSelector(
   },
 )
 
-export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
+const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
   structLogs
     .map((item) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item))
@@ -43,7 +43,15 @@ export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, 
     }, {} as Record<number, IExtendedStructLog & { listIndex: number }>),
 )
 
+const selectPcIndexedStructLogs = createSelector([selectParsedStructLogs], (_structlogs) => {
+  return Object.values(_structlogs).reduce((accumulator, item) => {
+    accumulator[item.pc] = item
+    return accumulator
+  }, {} as Record<number, IExtendedStructLog & { listIndex: number }>)
+})
+
 export const structlogsSelectors = {
+  selectPcIndexedStructLogs,
   selectParsedStructLogs,
   selectAllOffCurrentBlock,
   selectAll,

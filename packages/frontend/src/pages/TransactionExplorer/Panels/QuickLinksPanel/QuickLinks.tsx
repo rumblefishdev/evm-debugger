@@ -5,14 +5,14 @@ import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/he
 import type { TReturnedTraceLog } from '@evm-debuger/types'
 import { useSelector } from 'react-redux'
 
-import type { IExtendedStructLog } from '../../../../../types'
-import { StyledListWrapper } from '../../styles'
-import { ExplorerListRow } from '../../../../../components/ExplorerListRow'
-import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
-import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
-import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
-import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from '../styles'
-import { useTypedDispatch } from '../../../../../store/storeHooks'
+import type { IExtendedStructLog } from '../../../../types'
+import { ExplorerListRow } from '../../../../components/ExplorerListRow'
+import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
+import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
+import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
+import { useTypedDispatch } from '../../../../store/storeHooks'
+import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from '../StructlogPanel/styles'
+import { StyledListWrapper } from '../styles'
 
 export const QuickLinks: React.FC = () => {
   const dispatch = useTypedDispatch()
@@ -36,8 +36,8 @@ export const QuickLinks: React.FC = () => {
     : []
 
   const setActiveStructlog = useCallback(
-    (structLog: IExtendedStructLog) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLog.index))
+    (structLog: IExtendedStructLog & { listIndex: number }) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],
   )

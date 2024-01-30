@@ -16,6 +16,7 @@ const Ace = React.forwardRef<AceEditor, AceProps>(({ aceTheme, ...props }, ref) 
 ))
 
 export const StyledAceEditor = styled(Ace)(({ theme }) => ({
+  cursor: 'pointer',
   boxSizing: 'border-box',
 
   border: `1px solid ${theme.palette.rfLinesLight}`,
@@ -24,17 +25,29 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
     backgroundColor: 'yellow',
   },
 
+  '.ace_scroller': {
+    cursor: 'pointer',
+  },
+  '.ace_line': {
+    pointerEvents: 'auto',
+    '&:hover': {
+      backgroundColor: 'red',
+    },
+  },
   '.ace_gutter-active-line': {
+    cursor: 'pointer',
     background: 'unset',
   },
-
   '.ace_fold-widget': {
     display: 'none !important',
+    cursor: 'pointer',
   },
   '.ace_cursor-layer': {
     display: 'none',
+    cursor: 'pointer',
   },
   '.ace_active-line': {
     display: 'none',
+    cursor: 'pointer',
   },
 }))

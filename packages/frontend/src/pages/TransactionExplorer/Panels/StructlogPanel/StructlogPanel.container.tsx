@@ -9,6 +9,7 @@ import { activeSourceFileActions } from '../../../../store/activeSourceFile/acti
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import { activeLineSelectors } from '../../../../store/activeLine/activeLine.selectors'
+import type { IExtendedStructLog } from '../../../../types'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
@@ -21,23 +22,30 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-
+  const activeLineStructlogs = useSelector(activeLineSelectors.selectStructLogsForActiveLine)
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
-  const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
+  const structlogsArray = useMemo(
+    () => (activeLineStructlogs.length > 0 ? activeLineStructlogs : Object.values(structLogs)),
+    [structLogs, activeLineStructlogs],
+  )
+
+  console.log('structlogsArray', structlogsArray)
+  console.log('activeLineStructlogs', activeLineStructlogs)
+
+  console.log('activeStructlog', activeStructlog)
 
   // const previousTrace = React.useRef(null)
 
-  const activeLineInstructions = useSelector(activeLineSelectors.selectActiveLineInstruction)
-
-  console.log('activeLineInstructions', activeLineInstructions)
-  console.log(
-    'structlogs',
-    activeLineInstructions.map((instruction) => structLogs[instruction.pc]),
-  )
+  React.useEffect(() => {
+    if (activeLineStructlogs.length > 0) {
+      console.log('activeLineStructlogs[0].index', activeLineStructlogs[0])
+      dispatch(activeStructLogActions.setActiveStrucLog(activeLineStructlogs[0]))
+    }
+  }, [activeLineStructlogs, dispatch])
 
   const setActiveStructlog = useCallback(
-    (index: number) => {
+    (structLog: IExtendedStructLog & { listIndex: number }) => {
       // if (
       //   structLogs[index].op === 'CALL' ||
       //   structLogs[index].op === 'DELEGATECALL' ||
@@ -59,19 +67,20 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
       //   previousTrace.current = index + 1
       //   return
       // }
-      dispatch(activeStructLogActions.setActiveStrucLog(index))
+      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],
   )
 
   useEffect(() => {
-    if (activeStructlog === undefined && structlogsArray.length > 0) {
+    if (!activeStructlog && structlogsArray.length > 0) {
+      console.log('structlogsArray[0]', structlogsArray[0])
       // if (previousTrace.current) {
       //   dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
       //   previousTrace.current = null
       //   return
       // }
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0].index))
+      dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0]))
     }
   }, [activeStructlog, structlogsArray, dispatch])
 
@@ -87,6 +96,9 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
 
     const { listRef, wrapperRef } = componentRefs.current
     const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
+
+    console.log('activeStructlog', activeStructlog)
+    console.log('element', element)
 
     if (!element) {
       listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })
@@ -121,11 +133,11 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        setActiveStructlog(nextStructlog.index)
+        setActiveStructlog(nextStructlog)
         event.preventDefault()
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        setActiveStructlog(previousStructlog.index)
+        setActiveStructlog(previousStructlog)
         event.preventDefault()
       }
     }

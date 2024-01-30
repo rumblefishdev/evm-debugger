@@ -96,7 +96,11 @@ export type TPcIndexedStepInstructions = Record<number, TStepInstruction>
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
 export type TMappedContractNames = Record<string, string>
-export type TStepInstrctionsMap = Record<string, TPcIndexedStepInstructions>
+export type TStructlogsPerStartLine = Record<number, Record<number, Set<IStructLog>>>
+export type TStepInstrctionsMap = Record<
+  string,
+  { instructions: TPcIndexedStepInstructions; structlogsPerStartLine: TStructlogsPerStartLine }
+>
 
 export type TContractData = {
   abi: TAbi

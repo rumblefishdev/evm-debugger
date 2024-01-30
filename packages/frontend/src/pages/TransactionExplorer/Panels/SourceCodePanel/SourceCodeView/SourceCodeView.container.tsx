@@ -31,9 +31,9 @@ export const SourceCodeViewContainer: React.FC = () => {
 
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
-      dispatch(activeLineActions.setActiveLine(event.$pos.row))
+      dispatch(activeLineActions.setActiveLine({ line: event.$pos.row, fileId }))
     },
-    [dispatch],
+    [dispatch, fileId],
   )
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
