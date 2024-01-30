@@ -13,7 +13,6 @@ import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
-import { GridLayoutHandler } from '../GridLayout'
 
 import {
   StyledHeading,
@@ -26,11 +25,7 @@ import {
   StyledFailureIcon,
 } from './styles'
 
-export interface ITraceLogsListProps {
-  inGridLayout?: boolean
-}
-
-export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): JSX.Element => {
+export const TraceLogsList: React.FC = () => {
   const dispatch = useTypedDispatch()
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
@@ -65,7 +60,6 @@ export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): 
     <StyledSmallPanel>
       <StyledHeadingWrapper>
         <StyledHeading>Trace</StyledHeading>
-        {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
       <StyledListWrapper ref={ref}>
         <ViewportList

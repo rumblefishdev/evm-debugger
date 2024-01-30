@@ -12,11 +12,11 @@ import { activeLineSelectors } from '../../../../store/activeLine/activeLine.sel
 import type { IExtendedStructLog } from '../../../../types'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
-import type { StructlogPanelComponentRef, StructlogPanelProps } from './StructlogPanel.types'
+import type { StructlogPanelComponentRef } from './StructlogPanel.types'
 
 const DEFAULT_ELEMENT_HEIGHT = 74
 
-export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) => {
+export const StructlogPanel: React.FC = () => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
@@ -155,7 +155,6 @@ export const StructlogPanel: React.FC<StructlogPanelProps> = ({ inGridLayout }) 
       activeStructlogIndex={activeStructlog?.index}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
-      inGridLayout={inGridLayout}
     />
   )
 }

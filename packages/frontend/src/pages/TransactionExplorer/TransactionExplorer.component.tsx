@@ -9,9 +9,9 @@ import { TraceLogsList } from '../../components/TraceLogsList'
 import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
 import { MemoryPanel } from './Panels/MemoryPanel/MemoryPanel'
 import { StackPanel } from './Panels/StackPanel/StackPanel'
-import { QuickLinksPanel } from './Panels/QuickLinksPanel/QuickLinksPanel'
+import { QuickLinksPanel } from './Panels/NavigationPanel/QuickLinks/QuickLinksPanel'
 
-export const TransactionExplorerStaticGrid: React.FC = () => {
+export const TransactionExplorer: React.FC = () => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   return (

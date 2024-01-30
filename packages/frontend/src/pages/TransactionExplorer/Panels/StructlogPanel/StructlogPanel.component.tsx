@@ -2,15 +2,14 @@ import type { VirtuosoHandle } from 'react-virtuoso'
 import React, { useImperativeHandle } from 'react'
 import { Stack } from '@mui/material'
 
-import { StyledHeading, StyledHeadingWrapper, StyledSmallPanel } from '../styles'
+import { StyledHeading, StyledHeadingWrapper, StyledPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
-import { GridLayoutHandler } from '../../../../components/GridLayout'
 
 import type { StructlogPanelComponentProps, StructlogPanelComponentRef } from './StructlogPanel.types'
 
 export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentRef, StructlogPanelComponentProps>(
-  ({ structlogs, activeStructlogIndex, handleSelect, inGridLayout }, ref) => {
+  ({ structlogs, activeStructlogIndex, handleSelect }, ref) => {
     const listRef = React.useRef<VirtuosoHandle>(null)
     const wrapperRef = React.useRef<HTMLDivElement>(null)
 
@@ -20,11 +19,9 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
     }))
 
     return (
-      <StyledSmallPanel>
+      <StyledPanel>
         <StyledHeadingWrapper>
           <StyledHeading>EVM steps</StyledHeading>
-          <div style={{ flex: 1 }} />
-          {inGridLayout && <GridLayoutHandler />}
         </StyledHeadingWrapper>
         <Stack
           width="100%"
@@ -53,7 +50,7 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
             }}
           </VirtualizedList>
         </Stack>
-      </StyledSmallPanel>
+      </StyledPanel>
     )
   },
 )
