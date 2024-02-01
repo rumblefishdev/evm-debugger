@@ -23,6 +23,7 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
+  Object.assign(global, { txHash, chainId })
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
