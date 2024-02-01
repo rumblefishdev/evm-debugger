@@ -22,7 +22,7 @@ export const AppRoot: React.FC = () => {
       {shouldDisplayApp && <AppNavigation />}
       <AppContainer
         withNavbar
-        sx={{ minWidth: { md: '900px' } }}
+        sx={shouldDisplayApp ? { minWidth: '900px' } : undefined}
       >
         <ThemeProvider theme={defaultTheme}>{shouldDisplayApp ? <Outlet /> : <AnalyzerProgressScreen />}</ThemeProvider>
       </AppContainer>
