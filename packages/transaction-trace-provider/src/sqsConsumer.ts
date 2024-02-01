@@ -3,24 +3,14 @@ import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
-import type { IRawStructLog, TRawTransactionTraceResult } from '@evm-debuger/types'
+import type { TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import { AWSLambda, captureException } from '@sentry/serverless'
-import type { CompletedPart } from '@aws-sdk/client-s3'
-import { structLogsEmitter } from 'hardhat/internal/hardhat-network/stack-traces/vm-debug-tracer'
 
 import { version } from '../package.json'
 
 import { putTxEventToDdb } from './ddb'
-import {
-  abortMultiPartUpload,
-  completeMultiPartUpload,
-  createMultiPartUpload,
-  getFileName,
-  getFilePath,
-  uploadFile,
-  uploadPart,
-} from './s3'
+import { getFileName, getFilePath } from './s3'
 import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
 
@@ -31,38 +21,6 @@ AWSLambda.init({
   dsn: process.env.SENTRY_DSN,
 })
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
-
-const uploadedParts: CompletedPart[] = []
-
-enum STATUS {
-  PENDING,
-  FINISHED,
-  SENT,
-  TOO_SMALL,
-  ERROR,
-}
-
-interface ChunksContainter {
-  status: STATUS
-  partNumber: number
-  lock: boolean
-  structLogs: IRawStructLog[]
-  txHash: string
-  chainId: string
-  uploadId: string
-  currentChunkIndex: number
-}
-
-const uploadChunking: ChunksContainter = {
-  uploadId: '',
-  txHash: '',
-  structLogs: [],
-  status: STATUS.PENDING,
-  partNumber: 1,
-  lock: false,
-  currentChunkIndex: -1,
-  chainId: '',
-}
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
@@ -77,109 +35,6 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   return traceResult
 }
 
-export const uploadTrace = async (uploadId: string, txHash: string, chainId: string, trace: string) => {
-  if (trace.length > 0) {
-    const part: { partNumber: number; body: string } = { partNumber: uploadChunking.partNumber, body: trace }
-    console.log(`Uploading part ${part.partNumber}`)
-    console.log(`Part size: ${part.body.length}`)
-
-    const partETag = await uploadPart(txHash, chainId, uploadId, part.partNumber, part.body)
-    if (!partETag) throw new Error(`Failed to upload part: ${part.partNumber}`)
-    uploadedParts.push({ PartNumber: part.partNumber, ETag: partETag })
-    console.log(uploadedParts)
-    uploadChunking.partNumber++
-  }
-}
-export const maxSize = 10 * 1024 * 1024 // 10 MB
-export const structLogHandler = (uploadId: string, structLog: IRawStructLog, txHash: string, chainId: string) => {
-  uploadChunking.structLogs.push(structLog)
-  uploadChunking.txHash = txHash
-  uploadChunking.chainId = chainId
-  uploadChunking.uploadId = uploadId
-}
-
-export const prepareTraceResultToUpload = (traceResult: TRawTransactionTraceResult): string => {
-  const traceResultAsString = JSON.stringify({
-    returnValue: traceResult.returnValue,
-    gas: traceResult.gas,
-    failed: traceResult.failed,
-  })
-  return traceResultAsString.substring(1)
-}
-
-// eslint-disable-next-line sonarjs/cognitive-complexity
-export const processChunks = async (): Promise<void> => {
-  while ([STATUS.PENDING, STATUS.FINISHED].includes(uploadChunking.status)) {
-    if (!uploadChunking.lock) {
-      uploadChunking.lock = true
-      let currentChunkSize = 0
-      const currentChunk: IRawStructLog[] = []
-      let currentIndex = uploadChunking.currentChunkIndex
-      console.log(`Starting with index: ${currentIndex}`)
-      if (uploadChunking.status === STATUS.FINISHED && currentIndex + 1 >= uploadChunking.structLogs.length) {
-        console.log(
-          `Setting status to SENT as current status is ${uploadChunking.status}, index: ${currentIndex}, we have total structlogs: ${uploadChunking.structLogs.length}`,
-        )
-        uploadChunking.status = STATUS.SENT
-      } else {
-        while (currentChunkSize < maxSize && currentIndex + 1 < uploadChunking.structLogs.length) {
-          currentIndex++
-          if (uploadChunking.structLogs[currentIndex]) {
-            const currentStructLogSize = Buffer.from(JSON.stringify(uploadChunking.structLogs[currentIndex])).length
-            if (currentChunkSize + currentStructLogSize < maxSize) {
-              currentChunkSize += currentStructLogSize
-              currentChunk.push(uploadChunking.structLogs[currentIndex])
-            } else {
-              break
-            }
-          }
-        }
-        console.log(`Chunked with index: ${currentIndex}`)
-        console.log(`Gathered chunks: ${currentChunk.length}`)
-        if (currentChunk.length > 0) {
-          let body = JSON.stringify(currentChunk).slice(1, -1)
-          console.log(`Prepared part ${uploadChunking.partNumber} with payload size ${body.length}`)
-          body = uploadChunking.partNumber > 1 ? `,${body}` : `{"structLogs":[${body}`
-          if (body.length) {
-            try {
-              console.log(`Trying to upload part ${uploadChunking.partNumber}`)
-              uploadChunking.currentChunkIndex = currentIndex
-              // eslint-disable-next-line no-await-in-loop
-              await uploadTrace(uploadChunking.uploadId, uploadChunking.txHash, uploadChunking.chainId, body)
-            } catch (error) {
-              if (error instanceof Error) {
-                // eslint-disable-next-line sonarjs/no-small-switch
-                switch (error.message) {
-                  case 'Your proposed upload is smaller than the minimum allowed size':
-                    // eslint-disable-next-line require-atomic-updates
-                    uploadChunking.status = STATUS.TOO_SMALL
-                    break
-                  default:
-                    console.log(error)
-                    // eslint-disable-next-line require-atomic-updates
-                    uploadChunking.status = STATUS.ERROR
-                    throw new Error(error.message)
-                }
-              }
-            }
-          } else {
-            break
-          }
-        } else {
-          console.log(`No more chunks to send, currentChunk.length : ${currentChunk.length}, setting status to SENT`)
-          uploadChunking.status = STATUS.SENT
-          break
-        }
-      }
-    }
-    // eslint-disable-next-line require-atomic-updates
-    uploadChunking.lock = false
-    // eslint-disable-next-line no-await-in-loop
-    await new Promise((resolve) => {
-      setTimeout(resolve, 10)
-    })
-  }
-}
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   const records = event.Records
   if (records.length === 0) {
@@ -192,57 +47,8 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
 
   await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
-
-  const uploadId = await createMultiPartUpload(txHash, chainId)
-  structLogsEmitter.on('finish', () => {
-    if (uploadChunking.status === STATUS.PENDING) {
-      uploadChunking.status = STATUS.FINISHED
-    }
-  })
-  structLogsEmitter.on('structLog', async (structLog: IRawStructLog) => {
-    if (structLog.op) {
-      await structLogHandler(uploadId, structLog, txHash, chainId)
-    }
-  })
-
   try {
-    const traceResult = await debugTransaction(txHash, chainId, hardhatForkingUrl)
-    await processChunks()
-    const preparedTraceResult = prepareTraceResultToUpload(traceResult)
-    switch (uploadChunking.status) {
-      case STATUS.SENT:
-        try {
-          await uploadTrace(uploadId, txHash, chainId, preparedTraceResult)
-          await completeMultiPartUpload(txHash, chainId, uploadId, uploadedParts)
-          console.log(`Finished uploading parts for ${chainId}/${txHash}`)
-        } catch (error) {
-          if (error instanceof Error) {
-            console.log(error.message)
-            if (error.message === 'Your proposed upload is smaller than the minimum allowed size') {
-              await abortMultiPartUpload(txHash, chainId, uploadId)
-              console.log(`abortMultiPartUpload(${txHash}, ${chainId}, ${uploadId})`)
-              const params = { ...traceResult, structLogs: uploadChunking.structLogs }
-              await uploadFile(txHash, chainId, JSON.stringify(params))
-              console.log(`Finished uploading single file for ${chainId}/${txHash}`)
-            }
-          }
-        }
-        break
-      case STATUS.TOO_SMALL:
-        await abortMultiPartUpload(txHash, chainId, uploadId)
-        try {
-          const params = { ...traceResult, structLogs: uploadChunking.structLogs }
-          await uploadFile(txHash, chainId, JSON.stringify(params))
-          console.log(`Finished uploading single file for ${chainId}/${txHash}`)
-        } catch (error) {
-          throw new Error(`Couldnt upload single file for ${chainId}/${txHash}`)
-        }
-        break
-      default:
-        await abortMultiPartUpload(txHash, chainId, uploadId)
-        console.log('Couldnt finish upload')
-        break
-    }
+    await debugTransaction(txHash, chainId, hardhatForkingUrl)
   } catch (error) {
     const errorMessage = { errorDetails: DEFAULT_ERROR }
     if (error instanceof Error) {
