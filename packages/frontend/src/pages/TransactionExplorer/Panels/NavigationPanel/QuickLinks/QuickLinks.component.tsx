@@ -1,46 +1,24 @@
-import { useCallback, useRef, useState } from 'react'
+import React from 'react'
 import { ViewportList } from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
-import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/helpers'
-import type { TReturnedTraceLog } from '@evm-debuger/types'
-import { useSelector } from 'react-redux'
 
-import type { IExtendedStructLog } from '../../../../../types'
 import { ExplorerListRow } from '../../../../../components/ExplorerListRow'
-import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
-import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
-import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
-import { useTypedDispatch } from '../../../../../store/storeHooks'
-import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from '../../StructlogPanel/styles'
 import { StyledListWrapper } from '../../styles'
 
-export const QuickLinks: React.FC = () => {
-  const dispatch = useTypedDispatch()
-  const [gasThreshold, setGasThreshold] = useState(1000)
+import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from './QuickLinks.styles'
+import type { TQuickLinksComponentProps } from './QuickLinks.types'
 
-  const ref = useRef<HTMLDivElement>(null)
-  const externalCallsListRef = useRef<ViewportListRef>(null)
-  const expensiveOpsListRef = useRef<ViewportListRef>(null)
-
-  const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
-
-  const externalCalls = Object.entries(structLogs)
-    .map(([_, structLog]) => structLog)
-    .filter((structLog) => checkIfOfCreateOrCallType(structLog as unknown as TReturnedTraceLog))
-
-  const expensiveOps = gasThreshold
-    ? Object.entries(structLogs)
-        .map(([_, structLog]) => structLog)
-        .filter(({ gasCost }) => gasCost >= gasThreshold)
-    : []
-
-  const setActiveStructlog = useCallback(
-    (structLog: IExtendedStructLog & { listIndex: number }) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
-    },
-    [dispatch],
-  )
+export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
+  externalCalls,
+  activeStructlog,
+  expensiveOps,
+  gasThreshold,
+  handleSetGasThreshold,
+  setActiveStructlog,
+}) => {
+  const ref = React.useRef<HTMLDivElement>(null)
+  const externalCallsListRef = React.useRef<ViewportListRef>(null)
+  const expensiveOpsListRef = React.useRef<ViewportListRef>(null)
 
   return (
     <StyledListWrapper ref={ref}>
@@ -64,7 +42,7 @@ export const QuickLinks: React.FC = () => {
                 chipValue={gasCost}
                 opCode={op}
                 pc={pc}
-                isActive={index === activeStrucLog?.index}
+                isActive={index === activeStructlog?.index}
                 onClick={() => setActiveStructlog(item)}
               />
             )
@@ -80,7 +58,7 @@ export const QuickLinks: React.FC = () => {
         <StyledTextField
           variant="standard"
           value={gasThreshold || ''}
-          onChange={(event) => setGasThreshold(Number(event.target.value))}
+          onChange={(event) => handleSetGasThreshold(Number(event.target.value))}
         />
       </StyledHeadingWrapper>
 
@@ -100,7 +78,7 @@ export const QuickLinks: React.FC = () => {
                 chipValue={gasCost}
                 opCode={op}
                 pc={pc}
-                isActive={index === activeStrucLog?.index}
+                isActive={index === activeStructlog?.index}
                 onClick={() => setActiveStructlog(item)}
               />
             )

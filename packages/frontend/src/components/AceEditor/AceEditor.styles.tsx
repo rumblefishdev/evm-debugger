@@ -20,9 +20,41 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   boxSizing: 'border-box',
 
   border: `1px solid ${theme.palette.rfLinesLight}`,
+  '.selectedHighlightMarker': {
+    // add dot at the start of line with :before
+    position: 'absolute',
+    backgroundColor: '#DEC792',
+    '&:before': {
+      zIndex: 100,
+      width: '8px',
+      top: '2px',
+      right: '5px',
+      position: 'absolute',
+      height: '8px',
+      content: '""',
+      borderRadius: '50%',
+      backgroundColor: 'green',
+    },
+  },
+
   '.highlightMarker': {
     position: 'absolute',
-    backgroundColor: 'yellow',
+    backgroundColor: '#FFEAA7',
+  },
+
+  '.availableLinesHighlightMarker': {
+    position: 'absolute',
+    '&:before': {
+      zIndex: 100,
+      width: '8px',
+      top: '1px',
+      right: '4px',
+      position: 'absolute',
+      height: '8px',
+      content: '""',
+      borderRadius: '50%',
+      border: '1px solid green',
+    },
   },
 
   '.ace_scroller': {
@@ -31,7 +63,7 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   '.ace_line': {
     pointerEvents: 'auto',
     '&:hover': {
-      backgroundColor: 'red',
+      backgroundColor: '#DEC792',
     },
   },
   '.ace_gutter-active-line': {

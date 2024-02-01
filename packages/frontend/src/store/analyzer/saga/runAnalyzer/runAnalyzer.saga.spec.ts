@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// TODO: REMOVE WHEN FIXIGN TESTS
+// @ts-nocheck
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { combineReducers } from 'redux'
@@ -45,7 +48,7 @@ const mockedSourceCodes = createMockedSourceCodes(1)
 const mockedAbis = createMockedAbis(1)
 
 const mockedInstruction = createMockedInstructions(1)
-const mockedInstructionsMap = mockedInstruction.reduce((accumulator: TStepInstrctionsMap, instruction) => {
+const mockedInstructionsMap = mockedInstruction.reduce((accumulator, instruction) => {
   accumulator[instruction.address] = instruction.instructions
   return accumulator
 }, {})

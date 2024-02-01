@@ -320,8 +320,6 @@ export class TxAnalyzer {
 
         const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
 
-        console.log('contractStructlogs', contractStructlogs)
-
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
           if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc])
@@ -331,8 +329,6 @@ export class TxAnalyzer {
           }
           return accumulator
         }, {} as TStructlogsPerStartLine)
-
-        console.log('structlogsPerStartLine', structlogsPerStartLine)
 
         return { structlogsPerStartLine, instructions, address }
       })

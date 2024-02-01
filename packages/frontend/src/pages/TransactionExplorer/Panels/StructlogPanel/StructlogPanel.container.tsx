@@ -9,7 +9,7 @@ import { activeSourceFileActions } from '../../../../store/activeSourceFile/acti
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import { activeLineSelectors } from '../../../../store/activeLine/activeLine.selectors'
-import type { IExtendedStructLog } from '../../../../types'
+import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -22,30 +22,13 @@ export const StructlogPanel: React.FC = () => {
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-  const activeLineStructlogs = useSelector(activeLineSelectors.selectStructLogsForActiveLine)
+
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
-  const structlogsArray = useMemo(
-    () => (activeLineStructlogs.length > 0 ? activeLineStructlogs : Object.values(structLogs)),
-    [structLogs, activeLineStructlogs],
-  )
-
-  console.log('structlogsArray', structlogsArray)
-  console.log('activeLineStructlogs', activeLineStructlogs)
-
-  console.log('activeStructlog', activeStructlog)
-
-  // const previousTrace = React.useRef(null)
-
-  React.useEffect(() => {
-    if (activeLineStructlogs.length > 0) {
-      console.log('activeLineStructlogs[0].index', activeLineStructlogs[0])
-      dispatch(activeStructLogActions.setActiveStrucLog(activeLineStructlogs[0]))
-    }
-  }, [activeLineStructlogs, dispatch])
+  const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
 
   const setActiveStructlog = useCallback(
-    (structLog: IExtendedStructLog & { listIndex: number }) => {
+    (structLog: TStructlogWithListIndex) => {
       // if (
       //   structLogs[index].op === 'CALL' ||
       //   structLogs[index].op === 'DELEGATECALL' ||
@@ -74,7 +57,6 @@ export const StructlogPanel: React.FC = () => {
 
   useEffect(() => {
     if (!activeStructlog && structlogsArray.length > 0) {
-      console.log('structlogsArray[0]', structlogsArray[0])
       // if (previousTrace.current) {
       //   dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
       //   previousTrace.current = null
@@ -96,9 +78,6 @@ export const StructlogPanel: React.FC = () => {
 
     const { listRef, wrapperRef } = componentRefs.current
     const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
-
-    console.log('activeStructlog', activeStructlog)
-    console.log('element', element)
 
     if (!element) {
       listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })

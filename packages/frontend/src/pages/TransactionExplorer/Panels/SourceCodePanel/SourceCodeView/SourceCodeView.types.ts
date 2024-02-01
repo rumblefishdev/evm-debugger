@@ -5,5 +5,7 @@ export interface ISourceCodeViewProps {
   activeSourceCode: string
   startCodeLine: number
   endCodeLine: number
+  currentSelectedLine: number | null
+  lineRowsAvailableForSelections: number[]
   onClick: (event: AceEditorClickEvent) => void
 }
