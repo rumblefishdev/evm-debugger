@@ -67,14 +67,14 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       ),
     )
 
-    const test = Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
-      accumulator[address] = structlogsPerStartLine
-      return accumulator
-    }, {})
-
-    console.log('test', test)
-
-    yield* put(activeLineActions.setStructlogsPerActiveLine(test))
+    yield* put(
+      activeLineActions.setStructlogsPerActiveLine(
+        Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
+          accumulator[address] = structlogsPerStartLine
+          return accumulator
+        }, {}),
+      ),
+    )
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
     yield* put(

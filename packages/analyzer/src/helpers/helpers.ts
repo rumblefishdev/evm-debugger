@@ -134,9 +134,7 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
 
 export const getPcIndexedStructlogsForContractAddress = (traceLogs: TReturnedTraceLog[], structLogs: IStructLog[], address: string) => {
   const traceLogsForAddress = traceLogs.filter(checkIfOfCreateOrCallType).filter((log) => log.address === address)
-  console.log('traceLogsForAddress', traceLogsForAddress)
   const structLogsForAddressSet = new Set(traceLogsForAddress.map((log) => structLogs.slice(log.startIndex, log.returnIndex)).flat())
-  console.log('structLogsForAddressSet', structLogsForAddressSet)
   return Array.from(structLogsForAddressSet).reduce((accumulator, log) => {
     accumulator[log.pc] = log
     return accumulator

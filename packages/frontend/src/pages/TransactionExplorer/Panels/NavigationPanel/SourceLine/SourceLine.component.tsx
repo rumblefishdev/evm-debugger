@@ -31,8 +31,6 @@ export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
   setActiveStructlog,
   activeStructlog,
 }) => {
-  console.log('currentStructLogsByBlocks', currentStructLogsByBlocks.length)
-
   return (
     <StyledWrapper>
       <StyledCodeSectionWrapper>
