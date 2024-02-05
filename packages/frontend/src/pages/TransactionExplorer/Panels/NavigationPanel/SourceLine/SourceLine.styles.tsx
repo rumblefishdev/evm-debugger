@@ -44,12 +44,8 @@ export const StyledPassesThroughSection = styled(Stack)(({ theme }) => ({
   height: '100%',
 }))
 
-export const StyledStepCount = styled(Typography)(({ theme }) => ({
-  ...theme.typography.label,
-  padding: theme.spacing(1),
-  lineHeight: '1.2rem',
-  fontSize: '1rem',
-  color: '#436850',
+export const StyledStepCount = styled(StyledCode)(({ theme }) => ({
+  color: theme.palette.rfBlack,
 }))
 
 export const StyledListWrapper = styled(Stack)(({ theme }) => ({
