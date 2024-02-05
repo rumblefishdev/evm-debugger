@@ -22,7 +22,6 @@ export const SourceCodeViewContainer: React.FC = () => {
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
-  const activeLineStructlogs = useSelector(activeLineSelectors.selectStructLogsForActiveLine)
 
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
@@ -35,20 +34,11 @@ export const SourceCodeViewContainer: React.FC = () => {
     endCodeLine: null,
   }
 
-  React.useEffect(() => {
-    if (activeStrucLog && activeStrucLog.pc >= 0 && instructions[activeStrucLog.pc]) {
-      dispatch(activeLineActions.setActiveLine({ line: startCodeLine, fileId }))
-    }
-  }, [activeStrucLog, startCodeLine, fileId, dispatch, instructions])
-
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
       dispatch(activeLineActions.setActiveLine({ line: event.$pos.row, fileId }))
-      if (activeLineStructlogs && activeLineStructlogs.length > 0) {
-        dispatch(activeStructLogActions.setActiveStrucLog(activeLineStructlogs[0]))
-      }
     },
-    [dispatch, fileId, activeLineStructlogs],
+    [dispatch, fileId],
   )
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId

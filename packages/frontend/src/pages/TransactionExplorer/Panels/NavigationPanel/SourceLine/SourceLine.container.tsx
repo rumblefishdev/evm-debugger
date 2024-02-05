@@ -6,6 +6,7 @@ import { activeLineActions } from '../../../../../store/activeLine/activeLine.sl
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
+import { structLogsActions } from '../../../../../store/structlogs/structlogs.slice'
 
 import { SourceLineComponent } from './SourceLine.component'
 
@@ -20,6 +21,12 @@ export const SourceLineContainer: React.FC = () => {
   const currentLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const currentFileId = useSelector(activeLineSelectors.selectActiveLineFileId)
   const currentSourceLineContet = useSelector(activeLineSelectors.selectCurrentSelectedSourceLineContent)
+
+  React.useEffect(() => {
+    if (Object.values(currentStructLogs).length > 0) {
+      dispatch(activeStructLogActions.setActiveStrucLog(Object.values(currentStructLogs)[0]))
+    }
+  }, [currentStructLogs, currentSourceLineContet, dispatch])
 
   const clearSelectedLine = React.useCallback(() => {
     dispatch(activeLineActions.clearActiveLine())
