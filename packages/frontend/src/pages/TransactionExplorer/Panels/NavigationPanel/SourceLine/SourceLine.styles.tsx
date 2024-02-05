@@ -45,6 +45,7 @@ export const StyledPassesThroughSection = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledStepCount = styled(StyledCode)(({ theme }) => ({
+  padding: theme.spacing(0),
   color: theme.palette.rfBlack,
 }))
 
