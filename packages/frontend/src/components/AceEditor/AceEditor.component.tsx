@@ -55,8 +55,6 @@ export const AceEditor: React.FC<AceEditorProps> = ({
     [lineAvailableForSelection],
   )
 
-  console.log('lineAvailableForSelectionMarker', lineAvailableForSelectionMarker)
-
   React.useEffect(() => {
     if (editorRef.current && highlightStartLine) {
       editorRef.current.editor.scrollToLine(highlightStartLine, true, true, () => {})
@@ -93,8 +91,6 @@ export const AceEditor: React.FC<AceEditorProps> = ({
 
     return items
   }, [highlightMarker, shouldHighlight, shouldHighlightActiveLine, currentSelectedLine, lineAvailableForSelectionMarker])
-
-  console.log('markers', markers)
 
   return (
     <StyledAceEditor

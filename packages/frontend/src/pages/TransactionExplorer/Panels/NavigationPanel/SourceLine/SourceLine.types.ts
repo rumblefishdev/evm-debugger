@@ -1,13 +1,14 @@
+import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
+
 export type TSourceLineComponentProps = {
   activeLineContent: string
+  currentStructLogsByBlocks: TStructlogWithListIndex[][]
   clearSelectedLine: () => void
   moveToNextAvailableLine: () => void
   moveToPreviousAvailableLine: () => void
   isNextLineAvailable: boolean
   isPreviousLineAvailable: boolean
-  isNextStructlogAvailable: boolean
-  isPreviousStructlogAvailable: boolean
-  moveNextStructlog: () => void
-  movePreviousStructlog: () => void
   areStructLogsAvailableForCurrentLine: boolean
+  setActiveStructlog: (structlog: TStructlogWithListIndex) => void
+  activeStructlog: TStructlogWithListIndex | null
 }

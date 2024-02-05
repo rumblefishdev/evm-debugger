@@ -1,63 +1,78 @@
 import React from 'react'
 
 import { Button } from '../../../../../components/Button'
+import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
+import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
 
 import type { TSourceLineComponentProps } from './SourceLine.types'
-import { StyledCode, StyledHeading, StyledHeadingWrapper, StyledNavigationButtonsWrapper, StyledWrapper } from './SourceLine.styles'
+import {
+  StyledPassesThroughSection,
+  StyledCode,
+  StyledCodeSectionWrapper,
+  StyledHeading,
+  StyledHeadingWrapper,
+  StyledWrapper,
+  StyledListWrapper,
+  StyledStepElement,
+  StyledStepCount,
+  StyledChip,
+  StyledPassElementText,
+} from './SourceLine.styles'
+
+const checkIfStepIsSelected = (activeStructlog: TStructlogWithListIndex, list: TStructlogWithListIndex[]) => {
+  return list.some((structlog) => structlog.index === activeStructlog.index)
+}
 
 export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
   activeLineContent,
   clearSelectedLine,
-  isNextLineAvailable,
-  isPreviousLineAvailable,
-  moveToNextAvailableLine,
-  moveToPreviousAvailableLine,
   areStructLogsAvailableForCurrentLine,
-  isNextStructlogAvailable,
-  isPreviousStructlogAvailable,
-  moveNextStructlog,
-  movePreviousStructlog,
+  currentStructLogsByBlocks,
+  setActiveStructlog,
+  activeStructlog,
 }) => {
+  console.log('currentStructLogsByBlocks', currentStructLogsByBlocks.length)
+
   return (
     <StyledWrapper>
-      <StyledHeadingWrapper>
-        <StyledHeading>Current Selected Line:</StyledHeading>
-        <Button onClick={clearSelectedLine}>Clear Selection</Button>
-      </StyledHeadingWrapper>
-      <StyledCode>{activeLineContent}</StyledCode>
-      {!areStructLogsAvailableForCurrentLine && (
+      <StyledCodeSectionWrapper>
         <StyledHeadingWrapper>
-          <StyledHeading>No structlogs available for this code line </StyledHeading>
+          <StyledHeading>Current Selected Line:</StyledHeading>
+          <Button
+            variant="text"
+            color="primary"
+            size="small"
+            onClick={clearSelectedLine}
+          >
+            Clear Selection
+          </Button>
         </StyledHeadingWrapper>
-      )}
-      <StyledNavigationButtonsWrapper>
-        <Button
-          onClick={movePreviousStructlog}
-          disabled={!isPreviousStructlogAvailable}
-        >
-          Previous structlog
-        </Button>
-        <Button
-          onClick={moveNextStructlog}
-          disabled={!isNextStructlogAvailable}
-        >
-          Next structlog
-        </Button>
-      </StyledNavigationButtonsWrapper>
-      <StyledNavigationButtonsWrapper>
-        <Button
-          onClick={moveToPreviousAvailableLine}
-          disabled={!isPreviousLineAvailable}
-        >
-          Previous available line
-        </Button>
-        <Button
-          onClick={moveToNextAvailableLine}
-          disabled={!isNextLineAvailable}
-        >
-          Next available line
-        </Button>
-      </StyledNavigationButtonsWrapper>
+        <StyledCode>{!areStructLogsAvailableForCurrentLine ? 'No structlogs available for this code line ' : activeLineContent}</StyledCode>
+      </StyledCodeSectionWrapper>
+      <StyledPassesThroughSection>
+        <StyledHeadingWrapper>
+          <StyledHeading>Passes through selected line:</StyledHeading>
+          <StyledStepCount>Steps count</StyledStepCount>
+        </StyledHeadingWrapper>
+        <StyledListWrapper>
+          <VirtualizedList items={currentStructLogsByBlocks}>
+            {(index, item) => {
+              const isActive = checkIfStepIsSelected(activeStructlog, item)
+
+              return (
+                <StyledStepElement
+                  active={isActive}
+                  key={index}
+                  onClick={() => setActiveStructlog(item[0])}
+                >
+                  <StyledPassElementText active={isActive}>Pass through {index}</StyledPassElementText>
+                  <StyledChip active={isActive}>{item.length} steps</StyledChip>
+                </StyledStepElement>
+              )
+            }}
+          </VirtualizedList>
+        </StyledListWrapper>
+      </StyledPassesThroughSection>
     </StyledWrapper>
   )
 }

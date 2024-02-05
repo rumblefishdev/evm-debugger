@@ -157,8 +157,6 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
 export const BlockSummary: React.FC<BlockSummaryProps> = () => {
   const currentBlock = useSelector(activeBlockSelectors.selectParsedActiveBlock)
 
-  console.log('currentBlock', currentBlock)
-
   const { callSpecificData, createSpecificData, defaultData } = currentBlock
 
   return (

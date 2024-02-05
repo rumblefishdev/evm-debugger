@@ -13,6 +13,7 @@ import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
+import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
 
 import {
   StyledHeading,
@@ -30,6 +31,7 @@ export const TraceLogsList: React.FC = () => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
+  const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
 
   const ref = React.useRef<HTMLDivElement>(null)
 
@@ -37,9 +39,9 @@ export const TraceLogsList: React.FC = () => {
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
-      dispatch(activeStructLogActions.setActiveStrucLog(null))
+      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[0]))
     },
-    [dispatch],
+    [dispatch, structlogs],
   )
 
   const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
