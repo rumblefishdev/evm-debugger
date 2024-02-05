@@ -10,6 +10,7 @@ import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import { activeLineSelectors } from '../../../../store/activeLine/activeLine.selectors'
 import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
+import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -70,6 +71,7 @@ export const StructlogPanel: React.FC = () => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
     if (currentInstruction) {
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
+      dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine, fileId: currentInstruction.fileId }))
     }
   }, [currentInstructions, structLogs, activeStructlog, dispatch])
 
