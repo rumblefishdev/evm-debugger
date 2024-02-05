@@ -70,7 +70,7 @@ export const StructlogPanel: React.FC = () => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
     if (currentInstruction) {
       dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
-      dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine, fileId: currentInstruction.fileId }))
+      dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine }))
     }
   }, [currentInstructions, structLogs, activeStructlog, dispatch])
 

@@ -10,7 +10,7 @@ import { activeStructLogSelectors } from '../../../../../store/activeStructLog/a
 import type { AceEditorClickEvent } from '../../../../../components/AceEditor/AceEditor.types'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
-import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
+import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
@@ -36,9 +36,9 @@ export const SourceCodeViewContainer: React.FC = () => {
 
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
-      dispatch(activeLineActions.setActiveLine({ line: event.$pos.row, fileId }))
+      dispatch(activeLineActions.setActiveLine({ line: event.$pos.row }))
     },
-    [dispatch, fileId],
+    [dispatch],
   )
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId

@@ -14,9 +14,7 @@ const selectActiveLineState = createSelector([selectReducer(StoreKeys.ACTIVE_LIN
 
 const selectActiveLine = createSelector([selectActiveLineState], (state) => state.line)
 
-const selectActiveLineFileId = createSelector([selectActiveLineState], (state) => state.fileId)
-
-const selectIsLineSelected = createSelector([selectActiveLineState], (state) => Boolean(state.fileId && state.line))
+const selectIsLineSelected = createSelector([selectActiveLineState], (state) => Boolean(state.line))
 
 const selectStructlogsPerLine = createSelector([selectActiveLineState], (state) => state.structlogsPerActiveLine)
 
@@ -26,7 +24,7 @@ const selectStructlogsPerLineForActiveBlock = createSelector(
 )
 
 const selectActiveLineInstruction = createSelector(
-  [selectActiveLine, selectActiveLineFileId, instructionsSelectors.selectCurrentInstructions],
+  [selectActiveLine, activeSourceFileSelectors.selectActiveSourceFile, instructionsSelectors.selectCurrentInstructions],
   (line, fileId, instructions) => {
     return Object.values(instructions).filter(
       (instruction) => line === instruction.startCodeLine && line <= instruction.endCodeLine && fileId === instruction.fileId,
@@ -37,7 +35,7 @@ const selectActiveLineInstruction = createSelector(
 const selectStructLogsForActiveLine = createSelector(
   [
     selectActiveLine,
-    selectActiveLineFileId,
+    activeSourceFileSelectors.selectActiveSourceFile,
     selectStructlogsPerLine,
     activeBlockSelectors.selectActiveBlock,
     structlogsSelectors.selectPcIndexedStructLogs,
@@ -61,7 +59,7 @@ const selectStructLogsForActiveLineMappedToIndex = createSelector([selectStructL
 })
 
 const selectCurrentSelectedSourceLineContent = createSelector(
-  [sourceCodesSelectors.selectCurrentSourceFiles, selectActiveLine, selectActiveLineFileId],
+  [sourceCodesSelectors.selectCurrentSourceFiles, selectActiveLine, activeSourceFileSelectors.selectActiveSourceFile],
   (sourceFiles, activeLine, fileId) => {
     const currentSourceFile = sourceFiles[fileId]
     if (!currentSourceFile) return ''
@@ -122,6 +120,5 @@ export const activeLineSelectors = {
   selectCurrentSelectedSourceLineContent,
   selectAvailableLinesForCurrentFile,
   selectActiveLineInstruction,
-  selectActiveLineFileId,
   selectActiveLine,
 }

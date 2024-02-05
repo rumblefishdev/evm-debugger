@@ -7,7 +7,7 @@ import { StoreKeys } from '../store.keys'
 import { ActiveLineState } from './activeLine.state'
 import type { TActiveLineState } from './activeLine.types'
 
-const initialState = new ActiveLineState(null, null, {})
+const initialState = new ActiveLineState(null, {})
 
 const activeLineSlice = createSlice({
   reducers: {
@@ -16,15 +16,13 @@ const activeLineSlice = createSlice({
       newState.structlogsPerActiveLine = action.payload
       return newState
     },
-    setActiveLine: (state, action: PayloadAction<Pick<TActiveLineState, 'fileId' | 'line'>>) => {
+    setActiveLine: (state, action: PayloadAction<Pick<TActiveLineState, 'line'>>) => {
       const newState = { ...state }
       newState.line = action.payload.line
-      newState.fileId = action.payload.fileId
       return newState
     },
     clearActiveLine: (state) => {
       state.line = null
-      state.fileId = null
       return state
     },
   },
