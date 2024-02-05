@@ -7,7 +7,7 @@ export const StyledWrapper = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1, 0.5, 1),
   justifyContent: 'space-between',
   flexDirection: 'row',
   alignItems: 'center',
@@ -26,7 +26,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 
 export const StyledCode = styled(Typography)(({ theme }) => ({
   ...theme.typography.label,
-  padding: theme.spacing(1),
+  padding: theme.spacing(0, 1, 1, 1),
   lineHeight: '1.2rem',
   fontSize: '1rem',
   color: '#436850',

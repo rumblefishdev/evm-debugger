@@ -1,4 +1,5 @@
 import React from 'react'
+import { indicator } from 'ordinal'
 
 import { Button } from '../../../../../components/Button'
 import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
@@ -63,7 +64,10 @@ export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
                   key={index}
                   onClick={() => setActiveStructlog(item[0])}
                 >
-                  <StyledPassElementText active={isActive}>Pass through {index}</StyledPassElementText>
+                  <StyledPassElementText active={isActive}>
+                    {index + 1}
+                    {indicator(index + 1)} Pass through
+                  </StyledPassElementText>
                   <StyledChip active={isActive}>{item.length} steps</StyledChip>
                 </StyledStepElement>
               )
