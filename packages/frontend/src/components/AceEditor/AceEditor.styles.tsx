@@ -21,7 +21,6 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
 
   border: `1px solid ${theme.palette.rfLinesLight}`,
   '.selectedHighlightMarker': {
-    // add dot at the start of line with :before
     position: 'absolute',
     backgroundColor: '#DEC792',
     '&:before': {

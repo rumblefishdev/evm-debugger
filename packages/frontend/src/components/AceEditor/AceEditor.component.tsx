@@ -4,6 +4,7 @@ import type { IMarker } from 'react-ace'
 
 import { StyledAceEditor } from './AceEditor.styles'
 import type { AceEditorProps } from './AceEditor.types'
+import { useMarkers } from './AceEditor.markers'
 
 export const AceEditor: React.FC<AceEditorProps> = ({
   highlightStartLine,
@@ -18,42 +19,12 @@ export const AceEditor: React.FC<AceEditorProps> = ({
   const editorRef = React.useRef<ReactAceEditor>(null)
   const shouldHighlight = highlightStartLine && highlightEndLine
 
-  const shouldHighlightActiveLine: IMarker = React.useMemo(
-    () => ({
-      type: 'fullLine',
-      startRow: currentSelectedLine,
-      startCol: 1,
-      endRow: currentSelectedLine,
-      endCol: 0,
-      className: 'selectedHighlightMarker',
-    }),
-    [currentSelectedLine],
-  )
-
-  const highlightMarker: IMarker = React.useMemo(
-    () => ({
-      type: 'fullLine',
-      startRow: highlightStartLine,
-      startCol: 1,
-      endRow: highlightEndLine,
-      endCol: 0,
-      className: 'highlightMarker',
-    }),
-    [highlightStartLine, highlightEndLine],
-  )
-
-  const lineAvailableForSelectionMarker: IMarker[] = React.useMemo(
-    () =>
-      lineAvailableForSelection.map((line) => ({
-        type: 'fullLine',
-        startRow: line,
-        startCol: 1,
-        endRow: line,
-        endCol: 0,
-        className: 'availableLinesHighlightMarker',
-      })),
-    [lineAvailableForSelection],
-  )
+  const MARKERS = useMarkers({
+    lineAvailableForSelection,
+    highlightStartLine,
+    highlightEndLine,
+    currentSelectedLine,
+  })
 
   React.useEffect(() => {
     if (editorRef.current && highlightStartLine) {
@@ -78,19 +49,19 @@ export const AceEditor: React.FC<AceEditorProps> = ({
     const items: IMarker[] = []
 
     if (shouldHighlight) {
-      items.push(highlightMarker)
+      items.push(MARKERS.highlightMarker)
     }
 
     if (currentSelectedLine) {
-      items.push(shouldHighlightActiveLine)
+      items.push(MARKERS.shouldHighlightActiveLine)
     }
 
-    if (lineAvailableForSelectionMarker.length > 0) {
-      items.push(...lineAvailableForSelectionMarker)
+    if (MARKERS.lineAvailableForSelectionMarker.length > 0) {
+      items.push(...MARKERS.lineAvailableForSelectionMarker)
     }
 
     return items
-  }, [highlightMarker, shouldHighlight, shouldHighlightActiveLine, currentSelectedLine, lineAvailableForSelectionMarker])
+  }, [shouldHighlight, currentSelectedLine, MARKERS])
 
   return (
     <StyledAceEditor
