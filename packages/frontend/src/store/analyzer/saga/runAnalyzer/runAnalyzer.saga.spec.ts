@@ -71,7 +71,6 @@ const addressesList = mockedBytecodes.map((bytecode) => bytecode.address)
 
 describe('runAnalyzer', () => {
   it('should run analyzer', async () => {
-    console.log('mockedInstruction', mockedInstruction)
     const initialState = {
       [StoreKeys.BYTECODES]: bytecodesAdapter.addMany(bytecodesAdapter.getInitialState(), mockedBytecodes),
       [StoreKeys.SIGHASH]: sighashAdapter.addMany(sighashAdapter.getInitialState(), mockedSighashes),
@@ -140,8 +139,6 @@ describe('runAnalyzer', () => {
         return accumulator
       }, {}),
     }
-
-    console.log('stepInstructionsMap', stepInstructionsMap)
 
     const { storeState } = await expectSaga(runAnalyzerSaga)
       .withReducer(
