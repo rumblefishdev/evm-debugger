@@ -48,33 +48,35 @@ export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
         </StyledHeadingWrapper>
         <StyledCode>{!areStructLogsAvailableForCurrentLine ? 'No structlogs available for this code line ' : activeLineContent}</StyledCode>
       </StyledCodeSectionWrapper>
-      <StyledPassesThroughSection>
-        <StyledHeadingWrapper>
-          <StyledHeading>Passes through selected line:</StyledHeading>
-          <StyledStepCount>Steps count</StyledStepCount>
-        </StyledHeadingWrapper>
-        <StyledListWrapper>
-          <VirtualizedList items={currentStructLogsByBlocks}>
-            {(index, item) => {
-              const isActive = checkIfStepIsSelected(activeStructlog, item)
+      {areStructLogsAvailableForCurrentLine && (
+        <StyledPassesThroughSection>
+          <StyledHeadingWrapper>
+            <StyledHeading>Passes through selected line:</StyledHeading>
+            <StyledStepCount>Steps count</StyledStepCount>
+          </StyledHeadingWrapper>
+          <StyledListWrapper>
+            <VirtualizedList items={currentStructLogsByBlocks}>
+              {(index, item) => {
+                const isActive = checkIfStepIsSelected(activeStructlog, item)
 
-              return (
-                <StyledStepElement
-                  active={isActive}
-                  key={index}
-                  onClick={() => setActiveStructlog(item[0])}
-                >
-                  <StyledPassElementText active={isActive}>
-                    {index + 1}
-                    {indicator(index + 1)} Pass through
-                  </StyledPassElementText>
-                  <StyledChip active={isActive}>{item.length} steps</StyledChip>
-                </StyledStepElement>
-              )
-            }}
-          </VirtualizedList>
-        </StyledListWrapper>
-      </StyledPassesThroughSection>
+                return (
+                  <StyledStepElement
+                    active={isActive}
+                    key={index}
+                    onClick={() => setActiveStructlog(item[0])}
+                  >
+                    <StyledPassElementText active={isActive}>
+                      {index + 1}
+                      {indicator(index + 1)} Pass through
+                    </StyledPassElementText>
+                    <StyledChip active={isActive}>{item.length} steps</StyledChip>
+                  </StyledStepElement>
+                )
+              }}
+            </VirtualizedList>
+          </StyledListWrapper>
+        </StyledPassesThroughSection>
+      )}
     </StyledWrapper>
   )
 }
