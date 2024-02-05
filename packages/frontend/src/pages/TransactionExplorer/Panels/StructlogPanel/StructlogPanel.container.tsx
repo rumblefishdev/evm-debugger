@@ -8,7 +8,6 @@ import { activeStructLogActions } from '../../../../store/activeStructLog/active
 import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
-import { activeLineSelectors } from '../../../../store/activeLine/activeLine.selectors'
 import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 
