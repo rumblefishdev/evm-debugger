@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "hardhat": "npm:@rumblefishdev/hardhat@0.19.104"
+    "@aws-sdk/client-s3": "^3.315.0",
+    "hardhat": "npm:@rumblefishdev/hardhat@0.19.105"
   },
   "scripts": {
   }
