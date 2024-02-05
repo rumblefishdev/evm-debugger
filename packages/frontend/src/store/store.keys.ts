@@ -15,4 +15,5 @@ export enum StoreKeys {
   UI = 'ui',
   TRANSACTION_CONFIG = 'transactionConfig',
   ABIS = 'abis',
+  ACTIVE_LINE = 'activeLine',
 }

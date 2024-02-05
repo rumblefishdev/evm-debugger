@@ -10,6 +10,7 @@ import { argStackExtractor } from '../../helpers/argStackExtractor'
 import type { IExtendedStructLog } from '../../types'
 
 import { structLogsAdapter } from './structlogs.slice'
+import type { TStructlogWithListIndex } from './structlogs.types'
 
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
 
@@ -22,7 +23,7 @@ const selectAllOffCurrentBlock = createSelector(
   },
 )
 
-export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
+const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
   structLogs
     .map((item) => {
       if (checkIfOfCallType(item) || checkIfOfCreateType(item))
@@ -40,10 +41,18 @@ export const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, 
     .reduce((accumulator, item, index) => {
       accumulator[item.index] = { ...item, listIndex: index }
       return accumulator
-    }, {} as Record<number, IExtendedStructLog & { listIndex: number }>),
+    }, {} as Record<number, TStructlogWithListIndex>),
 )
 
+const selectPcIndexedStructLogs = createSelector([selectParsedStructLogs], (_structlogs) => {
+  return Object.values(_structlogs).reduce((accumulator, item) => {
+    accumulator[item.pc] = item
+    return accumulator
+  }, {} as Record<number, TStructlogWithListIndex>)
+})
+
 export const structlogsSelectors = {
+  selectPcIndexedStructLogs,
   selectParsedStructLogs,
   selectAllOffCurrentBlock,
   selectAll,

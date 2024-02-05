@@ -132,6 +132,15 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
   ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
+export const getPcIndexedStructlogsForContractAddress = (traceLogs: TReturnedTraceLog[], structLogs: IStructLog[], address: string) => {
+  const traceLogsForAddress = traceLogs.filter(checkIfOfCreateOrCallType).filter((log) => log.address === address)
+  const structLogsForAddressSet = new Set(traceLogsForAddress.map((log) => structLogs.slice(log.startIndex, log.returnIndex)).flat())
+  return Array.from(structLogsForAddressSet).reduce((accumulator, log) => {
+    accumulator[log.pc] = log
+    return accumulator
+  }, {} as Record<number, IStructLog>)
+}
+
 export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], depth: number) => {
   return traceToSearch.find((iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.type === 'REVERT') as IReturnTypeTraceLog
 }

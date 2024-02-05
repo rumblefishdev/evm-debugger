@@ -1,15 +1,12 @@
 import type { VirtuosoHandle } from 'react-virtuoso'
 
 import type { IExtendedStructLog } from '../../../../types'
+import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 
-export interface StructlogPanelProps {
-  inGridLayout?: boolean
-}
 export interface StructlogPanelComponentProps {
   structlogs: IExtendedStructLog[]
   activeStructlogIndex: number
-  handleSelect: (index: number) => void
-  inGridLayout?: boolean
+  handleSelect: (structlog: TStructlogWithListIndex) => void
 }
 
 export type StructlogPanelComponentRef = {
