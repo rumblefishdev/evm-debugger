@@ -73,8 +73,9 @@ export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
             Clear Selection
           </Button>
         </StyledHeadingWrapper>
-        <StyledCode>{!areStructLogsAvailableForCurrentLine ? 'No structlogs available for this code line ' : activeLineContent}</StyledCode>
+        <StyledCode>{activeLineContent}</StyledCode>
       </StyledCodeSectionWrapper>
+      {!areStructLogsAvailableForCurrentLine && <StyledCode sx={{ marginTop: 1 }}>No structlogs available for this code line </StyledCode>}
       {areStructLogsAvailableForCurrentLine && (
         <StyledPassesThroughSection>
           <StyledHeadingWrapper>

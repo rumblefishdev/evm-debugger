@@ -44,15 +44,7 @@ const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLo
     }, {} as Record<number, TStructlogWithListIndex>),
 )
 
-const selectPcIndexedStructLogs = createSelector([selectParsedStructLogs], (_structlogs) => {
-  return Object.values(_structlogs).reduce((accumulator, item) => {
-    accumulator[item.pc] = item
-    return accumulator
-  }, {} as Record<number, TStructlogWithListIndex>)
-})
-
 export const structlogsSelectors = {
-  selectPcIndexedStructLogs,
   selectParsedStructLogs,
   selectAllOffCurrentBlock,
   selectAll,

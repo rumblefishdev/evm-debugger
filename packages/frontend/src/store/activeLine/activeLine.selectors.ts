@@ -38,14 +38,23 @@ const selectStructLogsForActiveLine = createSelector(
     activeSourceFileSelectors.selectActiveSourceFile,
     selectStructlogsPerLine,
     activeBlockSelectors.selectActiveBlock,
-    structlogsSelectors.selectPcIndexedStructLogs,
+    structlogsSelectors.selectParsedStructLogs,
   ],
   (line, fileId, structLogsPerLine, { address }, structLogs) => {
     const currentStructLogsLineSet = structLogsPerLine[address]?.[fileId]?.[line]
     if (!currentStructLogsLineSet) return null
 
+    console.log('selectStructLogsForActiveLine')
+    console.log('currentStructLogsLineSet', currentStructLogsLineSet)
+    console.log('structLogs', structLogs)
+
+    console.log(
+      'Mapping',
+      Array.from(currentStructLogsLineSet).map((structLog) => structLogs[structLog.index]),
+    )
+
     return Array.from(currentStructLogsLineSet)
-      .map((structLog) => structLogs[structLog.pc])
+      .map((structLog) => structLogs[structLog.index])
       .filter((item) => Boolean(item))
   },
 )
