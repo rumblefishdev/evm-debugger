@@ -323,14 +323,16 @@ export class TxAnalyzer {
 
         console.log('contractStructlogs', contractStructlogs)
 
-        console.log('Object.values(contractStructlogs).length', Object.values(contractStructlogs).length)
+        console.log('Object.values(contractStructlogs).length', Object.values(contractStructlogs)?.length)
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
-          if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc])
+          if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc]?.length > 0)
             accumulator[instruction.fileId][instruction.startCodeLine] = new Set()
-          if (contractStructlogs[instruction.pc]) {
-            accumulator[instruction.fileId][instruction.startCodeLine].add(contractStructlogs[instruction.pc])
+          if (contractStructlogs[instruction.pc]?.length > 0) {
+            contractStructlogs[instruction.pc].forEach((structlog) => {
+              accumulator[instruction.fileId][instruction.startCodeLine].add(structlog)
+            })
           }
           return accumulator
         }, {} as TStructlogsPerStartLine)

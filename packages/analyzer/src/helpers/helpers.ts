@@ -139,10 +139,11 @@ export const getPcIndexedStructlogsForContractAddress = (traceLogs: TReturnedTra
       .map((log) => structLogs.slice(log.startIndex, log.returnIndex + 1).filter((structlog) => structlog.depth === log.depth + 1))
       .flat(),
   )
-  return Array.from(structLogsForAddressSet).reduce((accumulator, log, index) => {
-    accumulator[log.pc] = log
+  return Array.from(structLogsForAddressSet).reduce((accumulator, log) => {
+    if (!accumulator[log.pc]) accumulator[log.pc] = []
+    accumulator[log.pc].push(log)
     return accumulator
-  }, {} as Record<number, IStructLog>)
+  }, {} as Record<number, IStructLog[]>)
 }
 
 export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], depth: number) => {
