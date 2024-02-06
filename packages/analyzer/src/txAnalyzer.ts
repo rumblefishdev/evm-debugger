@@ -318,7 +318,12 @@ export class TxAnalyzer {
           return accumulator
         }, {} as TPcIndexedStepInstructions)
 
+        console.log('this.transactionData.structLogs', this.transactionData.structLogs)
         const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
+
+        console.log('contractStructlogs', contractStructlogs)
+
+        console.log('Object.values(contractStructlogs).length', Object.values(contractStructlogs).length)
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}

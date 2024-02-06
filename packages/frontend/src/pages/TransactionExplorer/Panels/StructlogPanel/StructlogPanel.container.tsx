@@ -29,27 +29,6 @@ export const StructlogPanel: React.FC = () => {
 
   const setActiveStructlog = useCallback(
     (structLog: TStructlogWithListIndex) => {
-      // if (
-      //   structLogs[index].op === 'CALL' ||
-      //   structLogs[index].op === 'DELEGATECALL' ||
-      //   structLogs[index].op === 'STATICCALL' ||
-      //   structLogs[index].op === 'CREATE' ||
-      //   structLogs[index].op === 'CREATE2'
-      // ) {
-      //   dispatch(activeBlockActions.loadActiveBlock(traceLogs.find((traceLog) => traceLog.index === structLogs[index].index)))
-      //   return
-      // }
-      // if (structLogs[index].op === 'RETURN' || structLogs[index].op === 'REVERT') {
-      //   const currentBlockArrayIndex = traceLogs.findIndex((traceLog) => traceLog.index === structlogsArray[0].index - 1)
-      //   const currentBlock = traceLogs[currentBlockArrayIndex]
-      //   const previousBlock = traceLogs
-      //     .slice(0, currentBlockArrayIndex)
-      //     .filter((trace) => trace.depth === currentBlock.depth - 1)
-      //     .pop()
-      //   dispatch(activeBlockActions.loadActiveBlock(previousBlock))
-      //   previousTrace.current = index + 1
-      //   return
-      // }
       dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],
@@ -57,11 +36,6 @@ export const StructlogPanel: React.FC = () => {
 
   useEffect(() => {
     if (!activeStructlog && structlogsArray.length > 0) {
-      // if (previousTrace.current) {
-      //   dispatch(activeStructLogActions.setActiveStrucLog(previousTrace.current))
-      //   previousTrace.current = null
-      //   return
-      // }
       dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0]))
     }
   }, [activeStructlog, structlogsArray, dispatch])

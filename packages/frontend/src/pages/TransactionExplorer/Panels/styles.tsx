@@ -10,7 +10,7 @@ export const StyledPanel = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(1.5),
   gap: theme.spacing(2),
   flexDirection: 'row',
   alignItems: 'center',

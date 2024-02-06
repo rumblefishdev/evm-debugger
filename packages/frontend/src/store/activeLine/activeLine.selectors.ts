@@ -113,6 +113,7 @@ const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForA
 })
 
 export const activeLineSelectors = {
+  selectStructlogsPerLineForActiveBlock,
   selectStructlogsGroupedByIndexRange,
   selectStructLogsForActiveLineMappedToIndex,
   selectStructLogsForActiveLine,

@@ -1,5 +1,7 @@
 import React from 'react'
 import { indicator } from 'ordinal'
+import { IconButton, Stack } from '@mui/material'
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 
 import { Button } from '../../../../../components/Button'
 import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
@@ -26,17 +28,42 @@ const checkIfStepIsSelected = (activeStructlog: TStructlogWithListIndex, list: T
 
 export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({
   activeLineContent,
-  clearSelectedLine,
   areStructLogsAvailableForCurrentLine,
   currentStructLogsByBlocks,
-  setActiveStructlog,
   activeStructlog,
+  isNextLineAvailable,
+  isPreviousLineAvailable,
+  clearSelectedLine,
+  setActiveStructlog,
+  moveToNextAvailableLine,
+  moveToPreviousAvailableLine,
 }) => {
   return (
     <StyledWrapper>
       <StyledCodeSectionWrapper>
         <StyledHeadingWrapper>
-          <StyledHeading>Current Selected Line:</StyledHeading>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+          >
+            <StyledHeading>Current Selected Line</StyledHeading>
+            <IconButton
+              size="small"
+              color="primary"
+              disabled={!isPreviousLineAvailable}
+              onClick={moveToPreviousAvailableLine}
+            >
+              <KeyboardArrowLeft />
+            </IconButton>
+            <IconButton
+              size="small"
+              color="primary"
+              disabled={!isNextLineAvailable}
+              onClick={moveToNextAvailableLine}
+            >
+              <KeyboardArrowRight />
+            </IconButton>
+          </Stack>
           <Button
             variant="text"
             color="primary"
