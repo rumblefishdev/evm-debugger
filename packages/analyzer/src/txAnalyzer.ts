@@ -322,10 +322,10 @@ export class TxAnalyzer {
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
-          if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc])
-            accumulator[instruction.fileId][instruction.startCodeLine] = new Set()
-          if (contractStructlogs[instruction.pc]) {
-            accumulator[instruction.fileId][instruction.startCodeLine].add(contractStructlogs[instruction.pc])
+          if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc]?.length > 0)
+            accumulator[instruction.fileId][instruction.startCodeLine] = []
+          if (contractStructlogs[instruction.pc]?.length > 0) {
+            accumulator[instruction.fileId][instruction.startCodeLine].push(...contractStructlogs[instruction.pc])
           }
           return accumulator
         }, {} as TStructlogsPerStartLine)

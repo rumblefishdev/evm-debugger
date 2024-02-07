@@ -4,11 +4,11 @@ export const createMockedStructlogsPerActiveLine = (address?: string): Record<st
   return {
     [address || '0x0']: {
       1: {
-        0: new Set(),
+        0: [],
       },
       0: {
-        1: new Set(),
-        0: new Set(),
+        1: [],
+        0: [],
       },
     },
   }

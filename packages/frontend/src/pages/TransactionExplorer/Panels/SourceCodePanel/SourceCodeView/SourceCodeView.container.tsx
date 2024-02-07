@@ -10,7 +10,8 @@ import { activeStructLogSelectors } from '../../../../../store/activeStructLog/a
 import type { AceEditorClickEvent } from '../../../../../components/AceEditor/AceEditor.types'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
-import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
+import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
+import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
@@ -18,11 +19,13 @@ export const SourceCodeViewContainer: React.FC = () => {
   const dispatch = useDispatch()
 
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
+  const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
 
+  const structlogsPerLine = useSelector(activeLineSelectors.selectStructlogsPerLineForActiveBlock)
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
@@ -37,8 +40,11 @@ export const SourceCodeViewContainer: React.FC = () => {
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
       dispatch(activeLineActions.setActiveLine({ line: event.$pos.row }))
+      if (!structlogsPerLine[fileId][event.$pos.row] || structlogsPerLine[fileId][event.$pos.row].length === 0) return
+      const firstStructlogForLine = structlogs[structlogsPerLine[fileId][event.$pos.row][0].index]
+      dispatch(activeStructLogActions.setActiveStrucLog(firstStructlogForLine))
     },
-    [dispatch],
+    [dispatch, fileId, structlogs, structlogsPerLine],
   )
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId

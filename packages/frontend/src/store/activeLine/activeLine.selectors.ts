@@ -38,15 +38,13 @@ const selectStructLogsForActiveLine = createSelector(
     activeSourceFileSelectors.selectActiveSourceFile,
     selectStructlogsPerLine,
     activeBlockSelectors.selectActiveBlock,
-    structlogsSelectors.selectPcIndexedStructLogs,
+    structlogsSelectors.selectParsedStructLogs,
   ],
   (line, fileId, structLogsPerLine, { address }, structLogs) => {
     const currentStructLogsLineSet = structLogsPerLine[address]?.[fileId]?.[line]
     if (!currentStructLogsLineSet) return null
 
-    return Array.from(currentStructLogsLineSet)
-      .map((structLog) => structLogs[structLog.pc])
-      .filter((item) => Boolean(item))
+    return currentStructLogsLineSet.map((structLog) => structLogs[structLog.index]).filter((item) => Boolean(item))
   },
 )
 
@@ -86,7 +84,7 @@ const selectAvailableLinesForCurrentFile = createSelector(
 const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForActiveLineMappedToIndex], (structLogs) => {
   if (!Object.keys(structLogs)) return []
 
-  return Object.entries(structLogs).reduce<TStructlogWithListIndex[][]>((accumulator, [index, structLog]) => {
+  return Object.entries(structLogs).reduce<TStructlogWithListIndex[][]>((accumulator, [_, structLog]) => {
     if (accumulator.length === 0) {
       accumulator.push([structLog])
       return accumulator
@@ -113,6 +111,7 @@ const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForA
 })
 
 export const activeLineSelectors = {
+  selectStructlogsPerLineForActiveBlock,
   selectStructlogsGroupedByIndexRange,
   selectStructLogsForActiveLineMappedToIndex,
   selectStructLogsForActiveLine,

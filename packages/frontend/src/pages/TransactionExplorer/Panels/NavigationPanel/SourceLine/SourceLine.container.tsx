@@ -6,6 +6,9 @@ import { activeLineActions } from '../../../../../store/activeLine/activeLine.sl
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
+import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
+import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
+import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
 
 import { SourceLineComponent } from './SourceLine.component'
 
@@ -18,31 +21,58 @@ export const SourceLineContainer: React.FC = () => {
 
   const currentSourceLineContet = useSelector(activeLineSelectors.selectCurrentSelectedSourceLineContent)
 
-  React.useEffect(() => {
-    if (Object.values(currentStructLogs).length > 0) {
-      dispatch(activeStructLogActions.setActiveStrucLog(Object.values(currentStructLogs)[0]))
-    }
-  }, [currentStructLogs, currentSourceLineContet, dispatch])
+  const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
+  const allStructlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const allStructlogsArray = Object.values(allStructlogs)
 
   const clearSelectedLine = React.useCallback(() => {
     dispatch(activeLineActions.clearActiveLine())
   }, [dispatch])
 
-  // const isNextLineAvailable = React.useMemo(() => {
-  //   return [...availableSourceLines].find((lineNumber: number) => lineNumber > currentLineNumber)
-  // }, [availableSourceLines, currentLineNumber])
+  const nextLineCoordinates = React.useMemo(() => {
+    if (currentStructLogsByBlocks.length === 0 || !activeStructlog) return {}
+    const blockIndex = currentStructLogsByBlocks.findIndex((block) => block.some((structlog) => structlog.index === activeStructlog?.index))
+    if (blockIndex === -1) return {}
 
-  // const isPreviousLineAvailable = React.useMemo(() => {
-  //   return [...availableSourceLines].reverse().find((lineNumber: number) => lineNumber < currentLineNumber)
-  // }, [availableSourceLines, currentLineNumber])
+    const lastElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(-1)?.listIndex
+    const nextElementInstruction = currentInstructions[allStructlogsArray[lastElementListIndex + 1]?.pc]
 
-  // const moveToPreviousAvailableLine = React.useCallback(() => {
-  //   dispatch(activeLineActions.setActiveLine({ line: isPreviousLineAvailable, fileId: currentFileId }))
-  // }, [currentFileId, isPreviousLineAvailable, dispatch])
+    return {
+      startCodeLine: nextElementInstruction?.startCodeLine,
+      nextStructlog: allStructlogsArray[lastElementListIndex + 1],
+      fileId: nextElementInstruction?.fileId,
+    }
+  }, [currentStructLogsByBlocks, currentInstructions, activeStructlog, allStructlogsArray])
 
-  // const moveToNextAvailableLine = React.useCallback(() => {
-  //   dispatch(activeLineActions.setActiveLine({ line: isNextLineAvailable, fileId: currentFileId }))
-  // }, [currentFileId, isNextLineAvailable, dispatch])
+  const previousLineCoordinates = React.useMemo(() => {
+    if (currentStructLogsByBlocks.length === 0 || !activeStructlog) return {}
+    const blockIndex = currentStructLogsByBlocks.findIndex((block) => block.some((structlog) => structlog.index === activeStructlog?.index))
+
+    if (blockIndex === -1) return {}
+
+    const firstElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(0)?.listIndex
+    const previousElementInstruction = currentInstructions[allStructlogsArray[firstElementListIndex - 1]?.pc]
+
+    return {
+      startCodeLine: previousElementInstruction?.startCodeLine,
+      nextStructlog: allStructlogsArray[firstElementListIndex - 1],
+      fileId: previousElementInstruction?.fileId,
+    }
+  }, [currentStructLogsByBlocks, currentInstructions, activeStructlog, allStructlogsArray])
+
+  const moveToPreviousAvailableLine = React.useCallback(() => {
+    if (!previousLineCoordinates.startCodeLine) return
+    dispatch(activeLineActions.setActiveLine({ line: previousLineCoordinates.startCodeLine }))
+    dispatch(activeSourceFileActions.setActiveSourceFile(previousLineCoordinates.fileId))
+    dispatch(activeStructLogActions.setActiveStrucLog(previousLineCoordinates.nextStructlog))
+  }, [previousLineCoordinates, dispatch])
+
+  const moveToNextAvailableLine = React.useCallback(() => {
+    if (!nextLineCoordinates.startCodeLine) return
+    dispatch(activeLineActions.setActiveLine({ line: nextLineCoordinates.startCodeLine }))
+    dispatch(activeSourceFileActions.setActiveSourceFile(nextLineCoordinates.fileId))
+    dispatch(activeStructLogActions.setActiveStrucLog(nextLineCoordinates.nextStructlog))
+  }, [nextLineCoordinates, dispatch])
 
   const setActiveStructlog = React.useCallback(
     (structlog: TStructlogWithListIndex) => {
@@ -58,10 +88,10 @@ export const SourceLineContainer: React.FC = () => {
       currentStructLogsByBlocks={currentStructLogsByBlocks}
       activeLineContent={currentSourceLineContet}
       clearSelectedLine={clearSelectedLine}
-      // moveToNextAvailableLine={moveToNextAvailableLine}
-      // moveToPreviousAvailableLine={moveToPreviousAvailableLine}
-      // isNextLineAvailable={Boolean(isNextLineAvailable)}
-      // isPreviousLineAvailable={Boolean(isPreviousLineAvailable)}
+      moveToNextAvailableLine={moveToNextAvailableLine}
+      moveToPreviousAvailableLine={moveToPreviousAvailableLine}
+      isNextLineAvailable={Boolean(nextLineCoordinates.startCodeLine)}
+      isPreviousLineAvailable={Boolean(previousLineCoordinates.startCodeLine)}
       areStructLogsAvailableForCurrentLine={Boolean(Object.keys(currentStructLogs).length)}
     />
   )

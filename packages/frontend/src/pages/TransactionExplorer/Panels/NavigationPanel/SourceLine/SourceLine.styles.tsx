@@ -1,10 +1,10 @@
 import { Box, Stack, Typography, styled } from '@mui/material'
 
-export const StyledWrapper = styled(Stack)(({ theme }) => ({
+export const StyledWrapper = styled(Stack)({
   height: '100%',
 
   flexDirection: 'column',
-}))
+})
 
 export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1, 0.5, 1),
@@ -32,17 +32,17 @@ export const StyledCode = styled(Typography)(({ theme }) => ({
   color: '#436850',
 }))
 
-export const StyledNavigationButtonsWrapper = styled(Stack)(({ theme }) => ({
+export const StyledNavigationButtonsWrapper = styled(Stack)({
   marginTop: '1rem',
   justifyContent: 'space-between',
   flexDirection: 'row',
   alignItems: 'center',
-}))
+})
 
-export const StyledPassesThroughSection = styled(Stack)(({ theme }) => ({
+export const StyledPassesThroughSection = styled(Stack)({
   width: '100%',
   height: '100%',
-}))
+})
 
 export const StyledStepCount = styled(StyledCode)(({ theme }) => ({
   padding: theme.spacing(0),
