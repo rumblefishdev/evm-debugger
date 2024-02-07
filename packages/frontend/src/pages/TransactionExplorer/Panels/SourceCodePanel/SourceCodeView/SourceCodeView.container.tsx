@@ -40,8 +40,8 @@ export const SourceCodeViewContainer: React.FC = () => {
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
       dispatch(activeLineActions.setActiveLine({ line: event.$pos.row }))
-      if (!structlogsPerLine[fileId][event.$pos.row] || structlogsPerLine[fileId][event.$pos.row].size === 0) return
-      const firstStructlogForLine = structlogs[Array.from(structlogsPerLine[fileId][event.$pos.row])[0].index]
+      if (!structlogsPerLine[fileId][event.$pos.row] || structlogsPerLine[fileId][event.$pos.row].length === 0) return
+      const firstStructlogForLine = structlogs[structlogsPerLine[fileId][event.$pos.row][0].index]
       dispatch(activeStructLogActions.setActiveStrucLog(firstStructlogForLine))
     },
     [dispatch, fileId, structlogs, structlogsPerLine],
