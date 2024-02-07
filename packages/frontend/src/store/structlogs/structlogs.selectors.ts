@@ -1,16 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../traceLogs/traceLogs.selectors'
-import { extendStack } from '../../helpers/helpers'
-import { argStackExtractor } from '../../helpers/argStackExtractor'
-import type { IExtendedStructLog } from '../../types'
 
 import { structLogsAdapter } from './structlogs.slice'
 import type { TStructlogWithListIndex } from './structlogs.types'
+import { parseStructlogs } from './structlogs.utils'
 
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
 
@@ -23,29 +20,23 @@ const selectAllOffCurrentBlock = createSelector(
   },
 )
 
-const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
-  structLogs
-    .map((item) => {
-      if (checkIfOfCallType(item) || checkIfOfCreateType(item))
-        return {
-          ...argStackExtractor(item),
-          stack: extendStack(item.stack),
-          gasCost: traceLogs.find((traceLog) => traceLog.pc === item.pc)?.gasCost,
-        }
+const selectAllParsedStructLogs = createSelector([selectAll, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
+  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item, index) => {
+    accumulator[item.index] = { ...item, listIndex: index }
+    return accumulator
+  }, {} as Record<number, TStructlogWithListIndex>),
+)
 
-      return {
-        ...argStackExtractor(item),
-        stack: extendStack(item.stack),
-      }
-    })
-    .reduce((accumulator, item, index) => {
-      accumulator[item.index] = { ...item, listIndex: index }
-      return accumulator
-    }, {} as Record<number, TStructlogWithListIndex>),
+const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
+  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item, index) => {
+    accumulator[item.index] = { ...item, listIndex: index }
+    return accumulator
+  }, {} as Record<number, TStructlogWithListIndex>),
 )
 
 export const structlogsSelectors = {
   selectParsedStructLogs,
+  selectAllParsedStructLogs,
   selectAllOffCurrentBlock,
   selectAll,
 }

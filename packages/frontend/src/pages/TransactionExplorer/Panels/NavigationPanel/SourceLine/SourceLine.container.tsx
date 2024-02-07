@@ -25,24 +25,17 @@ export const SourceLineContainer: React.FC = () => {
   const allStructlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
   const allStructlogsArray = Object.values(allStructlogs)
 
-  console.log('currentStructLogs', currentStructLogs)
-  console.log('allStructlogs', allStructlogs)
-
   const clearSelectedLine = React.useCallback(() => {
     dispatch(activeLineActions.clearActiveLine())
   }, [dispatch])
 
   const nextLineCoordinates = React.useMemo(() => {
-    console.log('activeStructlog', activeStructlog)
     if (currentStructLogsByBlocks.length === 0 || !activeStructlog) return {}
     const blockIndex = currentStructLogsByBlocks.findIndex((block) => block.some((structlog) => structlog.index === activeStructlog?.index))
-    console.log('blockIndex', blockIndex)
     if (blockIndex === -1) return {}
 
     const lastElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(-1)?.listIndex
-    console.log('lastElementListIndex', lastElementListIndex)
     const nextElementInstruction = currentInstructions[allStructlogsArray[lastElementListIndex + 1]?.pc]
-    console.log('nextElementInstruction', nextElementInstruction)
 
     return {
       startCodeLine: nextElementInstruction?.startCodeLine,

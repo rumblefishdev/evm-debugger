@@ -14,6 +14,7 @@ import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
+import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 
 import {
   StyledHeading,
@@ -39,7 +40,8 @@ export const TraceLogsList: React.FC = () => {
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[0]))
+      dispatch(activeLineActions.setActiveLine({ line: null }))
+      dispatch(activeStructLogActions.setActiveStrucLog(Object.values(structlogs)[0]))
     },
     [dispatch, structlogs],
   )

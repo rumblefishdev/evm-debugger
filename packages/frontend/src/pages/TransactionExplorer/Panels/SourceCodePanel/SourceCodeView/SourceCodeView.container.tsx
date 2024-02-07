@@ -37,10 +37,6 @@ export const SourceCodeViewContainer: React.FC = () => {
     endCodeLine: null,
   }
 
-  // console.log('structlogs', structlogs)
-  // console.log('structlogsPerLine', structlogsPerLine)
-  // console.log('activeStrucLog', activeStrucLog)
-
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
       dispatch(activeLineActions.setActiveLine({ line: event.$pos.row }))
@@ -52,6 +48,8 @@ export const SourceCodeViewContainer: React.FC = () => {
   )
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
+
+  console.log('currentSelectedLineNumber', currentSelectedLineNumber)
 
   return (
     <SourceCodeView
