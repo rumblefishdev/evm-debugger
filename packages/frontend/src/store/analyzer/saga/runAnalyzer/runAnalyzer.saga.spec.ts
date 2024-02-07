@@ -1,15 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { combineReducers } from 'redux'
-import type {
-  TAbis,
-  TByteCodeMap,
-  TMappedContractNames,
-  TMappedSourceMap,
-  TPcIndexedStepInstructions,
-  TStepInstrctionsMap,
-  TTransactionData,
-} from '@evm-debuger/types'
+import type { TAbis, TByteCodeMap, TMappedContractNames, TMappedSourceMap, TStepInstrctionsMap, TTransactionData } from '@evm-debuger/types'
 
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { AnalyzerState, analyzerStagesAdapter } from '../../analyzer.state'
@@ -37,7 +29,7 @@ import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.mock'
 import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.mock'
 import { createMockedAbis } from '../../../abis/abi.mock'
 import { createMockedTracelogs } from '../../../traceLogs/traceLogs.mock'
-import { createMockedInstruction, createMockedInstructions } from '../../../instructions/instructions.mock'
+import { createMockedInstruction } from '../../../instructions/instructions.mock'
 import { activeLineActions, activeLineReducer } from '../../../activeLine/activeLine.slice'
 import { ActiveLineState } from '../../../activeLine/activeLine.state'
 import { createMockedStructlogsPerActiveLine } from '../../../activeLine/activeLine.mock'

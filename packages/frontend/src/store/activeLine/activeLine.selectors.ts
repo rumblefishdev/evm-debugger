@@ -84,7 +84,7 @@ const selectAvailableLinesForCurrentFile = createSelector(
 const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForActiveLineMappedToIndex], (structLogs) => {
   if (!Object.keys(structLogs)) return []
 
-  return Object.entries(structLogs).reduce<TStructlogWithListIndex[][]>((accumulator, [index, structLog]) => {
+  return Object.entries(structLogs).reduce<TStructlogWithListIndex[][]>((accumulator, [_, structLog]) => {
     if (accumulator.length === 0) {
       accumulator.push([structLog])
       return accumulator
