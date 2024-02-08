@@ -12,10 +12,13 @@ import type {
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
   IStructLog,
+  TIndexedStructLog,
   TMainTraceLogs,
+  TRawStructLog,
   TReturnedTraceLog,
   TTransactionInfo,
 } from '@evm-debuger/types'
+import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes } from '@evm-debuger/types'
 
 import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
 
@@ -27,6 +30,18 @@ export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStruct
   })
 
   return filteredLogs
+}
+
+export const indexRawStructLogs = (structLogs: TRawStructLog[]): TIndexedStructLog[] => {
+  return structLogs.map((log, index) => ({ ...log, index }))
+}
+
+export const getFunctionBlockStartStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {
+  return structLogs.filter((log) => Boolean(FunctionBlockStartOpcodes[log.op]))
+}
+
+export const getFunctionBlockEndStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {
+  return structLogs.filter((log) => Boolean(FunctionBlockEndOpcodes[log.op]))
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {

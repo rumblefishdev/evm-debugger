@@ -8,12 +8,10 @@ import type {
   TStepInstrctionsMap,
   TPcIndexedStepInstructions,
   TTransactionData,
-  TStepInstruction,
-  IStructLog,
   TStructlogsPerStartLine,
+  TIndexedStructLog,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
-import type { ErrorDescription, ParamType } from 'ethers'
 
 import {
   checkIfOfCallType,
@@ -22,6 +20,7 @@ import {
   checkIfOfReturnType,
   convertTxInfoToTraceLog,
   getFilteredStructLogs,
+  indexRawStructLogs,
   getStorageAddressFromTransactionInfo,
   getLastItemInCallTypeContext,
   getLastLogWithRevertType,
@@ -30,6 +29,8 @@ import {
   prepareTraceToSearch,
   readMemory,
   getPcIndexedStructlogsForContractAddress,
+  getFunctionBlockStartStructLogs,
+  getFunctionBlockEndStructLogs,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -58,6 +59,8 @@ export class TxAnalyzer {
   private readonly storageHandler = new StorageHandler()
   private readonly stackCounter
   private fragmentReader: FragmentReader
+
+  private convertToTraceLog(structLog: TIndexedStructLog): TReturnedTraceLog {}
 
   private getParsedTraceLogs(filteredStructLogs: IFilteredStructLog[]): TReturnedTraceLog[] {
     return filteredStructLogs.map((item) => {
@@ -336,6 +339,37 @@ export class TxAnalyzer {
         accumulator[address] = { structlogsPerStartLine, instructions }
         return accumulator
       }, {} as TStepInstrctionsMap)
+  }
+
+  public analyze2() {
+    this.fragmentReader = new FragmentReader()
+
+    const indexedStructLogs = indexRawStructLogs(this.transactionData.structLogs)
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(indexedStructLogs)
+    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(indexedStructLogs)
+
+    const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
+    const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
+    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
+    const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsListWithContractFlag)
+    const traceLogsListWithSuccessFlag = this.markLogEntryAsFailureIfParentReverted(traceLogsListWithReturnData)
+    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithSuccessFlag)
+
+    mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
+    mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
+    mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
+    mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
+
+    const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
+    const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
+
+    const instructionsMap = this.getContractsInstructions(mainTraceLogList)
+
+    return {
+      mainTraceLogList,
+      instructionsMap,
+      analyzeSummary: { contractSighashesInfo, contractAddresses },
+    }
   }
 
   public analyze() {

@@ -11,7 +11,7 @@ import {
   TStepInstruction,
 } from '@evm-debuger/types'
 
-import { AlternativeOpcodes, Opcodes } from '../opcodes'
+import { AlternativeOpcodes, Opcodes } from '../opcodes/opcodes'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
