@@ -1,16 +1,5 @@
 import { Stack, TextField, Typography, styled } from '@mui/material'
 
-import { StyledListWrapper } from '../styles'
-
-export const StyledCollapse = styled(StyledListWrapper, {
-  shouldForwardProp: (prop) => prop !== 'in',
-})<{ in: boolean }>(({ in: $in, theme }) => ({
-  transition: 'height 0.3s ease',
-  marginBottom: theme.spacing(2),
-  height: $in ? '30%' : '0px',
-  border: 'none',
-}))
-
 export const StyledQuickLinksHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.headingUnknown,
   fontSize: '18px',

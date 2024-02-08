@@ -2,12 +2,13 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
+import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
 
-const initialState: number | null = null
+const initialState: TStructlogWithListIndex | null = null
 
 const activeStructLogSlice = createSlice({
   reducers: {
-    setActiveStrucLog: (_, action: PayloadAction<number | null>) => {
+    setActiveStrucLog: (_, action: PayloadAction<TStructlogWithListIndex | null>) => {
       return action.payload
     },
   },

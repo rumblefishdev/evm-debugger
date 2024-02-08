@@ -29,7 +29,10 @@ import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.mock'
 import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.mock'
 import { createMockedAbis } from '../../../abis/abi.mock'
 import { createMockedTracelogs } from '../../../traceLogs/traceLogs.mock'
-import { createMockedInstructions } from '../../../instructions/instructions.mock'
+import { createMockedInstruction } from '../../../instructions/instructions.mock'
+import { activeLineActions, activeLineReducer } from '../../../activeLine/activeLine.slice'
+import { ActiveLineState } from '../../../activeLine/activeLine.state'
+import { createMockedStructlogsPerActiveLine } from '../../../activeLine/activeLine.mock'
 
 import { runAnalyzer, runAnalyzerSaga } from './runAnalyzer.saga'
 
@@ -44,11 +47,14 @@ const mockedSourceMaps = createMockedSourceMaps(1)
 const mockedSourceCodes = createMockedSourceCodes(1)
 const mockedAbis = createMockedAbis(1)
 
-const mockedInstruction = createMockedInstructions(1)
-const mockedInstructionsMap = mockedInstruction.reduce((accumulator: TStepInstrctionsMap, instruction) => {
-  accumulator[instruction.address] = instruction.instructions
-  return accumulator
-}, {})
+const mockedInstruction = createMockedInstruction('0x0')
+
+const mockedStructlogsPerLine = createMockedStructlogsPerActiveLine('0x0')
+
+const stepInstructionsMap: TStepInstrctionsMap = {
+  '0x0': { structlogsPerStartLine: mockedStructlogsPerLine['0x0'], instructions: mockedInstruction.instructions },
+}
+
 const mockedTraceLogs = createMockedTracelogs(1)
 
 const mockedActiveBlock = { ...mockedTraceLogs[0] }
@@ -70,6 +76,7 @@ describe('runAnalyzer', () => {
       [StoreKeys.INSTRUCTIONS]: instructionsAdapter.getInitialState(),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.getInitialState(),
       [StoreKeys.ACTIVE_BLOCK]: null,
+      [StoreKeys.ACTIVE_LINE]: new ActiveLineState(null, null),
     }
 
     const inProgresStage = { stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }
@@ -83,9 +90,10 @@ describe('runAnalyzer', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.INSTRUCTIONS]: instructionsAdapter.addMany(initialState[StoreKeys.INSTRUCTIONS], mockedInstruction),
+      [StoreKeys.INSTRUCTIONS]: instructionsAdapter.addOne(initialState[StoreKeys.INSTRUCTIONS], mockedInstruction),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.addMany(initialState[StoreKeys.TRACE_LOGS], mockedTraceLogs),
       [StoreKeys.ACTIVE_BLOCK]: mockedActiveBlock,
+      [StoreKeys.ACTIVE_LINE]: { ...initialState[StoreKeys.ACTIVE_LINE], structlogsPerActiveLine: mockedStructlogsPerLine },
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -139,6 +147,7 @@ describe('runAnalyzer', () => {
           [StoreKeys.INSTRUCTIONS]: instructionsReducer,
           [StoreKeys.TRACE_LOGS]: traceLogsReducer,
           [StoreKeys.ACTIVE_BLOCK]: activeBlockReducer,
+          [StoreKeys.ACTIVE_LINE]: activeLineReducer,
         }),
       )
       .provide([
@@ -146,7 +155,7 @@ describe('runAnalyzer', () => {
           matchers.call.fn(runAnalyzer),
           {
             mainTraceLogList: mockedTraceLogs,
-            instructionsMap: mockedInstructionsMap,
+            instructionsMap: stepInstructionsMap,
             analyzeSummary: {
               contractSighashesInfo: mockedSighashes,
               contractAddresses: addressesList,
@@ -163,7 +172,15 @@ describe('runAnalyzer', () => {
       .put(activeBlockActions.loadActiveBlock(mockedActiveBlock))
       .put(
         instructionsActions.addInstructions(
-          Object.entries(mockedInstructionsMap).map(([address, instructions]) => ({ instructions, address })),
+          Object.entries(stepInstructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
+        ),
+      )
+      .put(
+        activeLineActions.setStructlogsPerActiveLine(
+          Object.entries(stepInstructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
+            accumulator[address] = structlogsPerStartLine
+            return accumulator
+          }, {}),
         ),
       )
       .put.like({ action: addSecondLogAction })

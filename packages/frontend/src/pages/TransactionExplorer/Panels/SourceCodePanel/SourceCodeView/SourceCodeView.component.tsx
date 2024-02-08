@@ -5,7 +5,15 @@ import { AceEditor } from '../../../../../components/AceEditor'
 import type { ISourceCodeViewProps } from './SourceCodeView.types'
 import { StyledSourceSection, StyledSourceSectionHeading } from './SourceCodeView.styles'
 
-export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({ activeSourceCode, endCodeLine, contractName, startCodeLine }) => {
+export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({
+  activeSourceCode,
+  endCodeLine,
+  currentSelectedLine,
+  contractName,
+  lineRowsAvailableForSelections,
+  startCodeLine,
+  onClick,
+}) => {
   return (
     <Stack
       height="100%"
@@ -17,7 +25,10 @@ export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({ activeSourceCod
           source={activeSourceCode}
           highlightStartLine={startCodeLine}
           highlightEndLine={endCodeLine}
+          currentSelectedLine={currentSelectedLine}
+          lineAvailableForSelection={lineRowsAvailableForSelections}
           mode="solidity"
+          onClick={onClick}
         />
       </StyledSourceSection>
     </Stack>

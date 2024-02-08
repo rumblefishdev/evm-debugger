@@ -13,7 +13,8 @@ import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { contractNamesSelectors } from '../../store/contractNames/contractNames.selectors'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
-import { GridLayoutHandler } from '../GridLayout'
+import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
+import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 
 import {
   StyledHeading,
@@ -26,15 +27,12 @@ import {
   StyledFailureIcon,
 } from './styles'
 
-export interface ITraceLogsListProps {
-  inGridLayout?: boolean
-}
-
-export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): JSX.Element => {
+export const TraceLogsList: React.FC = () => {
   const dispatch = useTypedDispatch()
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractNamesSelectors.selectAll)
+  const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
 
   const ref = React.useRef<HTMLDivElement>(null)
 
@@ -42,9 +40,10 @@ export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): 
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
-      dispatch(activeStructLogActions.setActiveStrucLog(null))
+      dispatch(activeLineActions.clearActiveLine())
+      dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLog.startIndex], listIndex: 0 }))
     },
-    [dispatch],
+    [dispatch, structlogs],
   )
 
   const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
@@ -65,7 +64,6 @@ export const TraceLogsList: React.FC<ITraceLogsListProps> = ({ inGridLayout }): 
     <StyledSmallPanel>
       <StyledHeadingWrapper>
         <StyledHeading>Trace</StyledHeading>
-        {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
       <StyledListWrapper ref={ref}>
         <ViewportList

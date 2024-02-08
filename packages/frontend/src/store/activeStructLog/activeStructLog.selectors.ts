@@ -3,18 +3,14 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
-import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 
 const selectActiveStructLogState = createSelector([selectReducer(StoreKeys.ACTIVE_STRUCT_LOG)], (state) => state)
 
-const selectIndex = createSelector([selectActiveStructLogState], (state) => state)
+const selectIndex = createSelector([selectActiveStructLogState], (state) => state.index)
 
 export const DEFAULT_STRING = '0000'
 
-const selectActiveStructLog = createSelector(
-  [structlogsSelectors.selectParsedStructLogs, selectActiveStructLogState],
-  (structLogs, currentStructlogIndex) => structLogs[currentStructlogIndex],
-)
+const selectActiveStructLog = createSelector([selectActiveStructLogState], (currentStructlog) => currentStructlog)
 
 export const selectParsedStack = createSelector(
   [selectActiveStructLog],

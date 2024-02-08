@@ -3,5 +3,4 @@ import type { TDisassembledBytecode } from '../../../../store/bytecodes/bytecode
 export interface BytecodePanelComponentProps {
   dissasembledBytecode: TDisassembledBytecode[]
   currentElementIndex: number
-  inGridLayout?: boolean
 }
