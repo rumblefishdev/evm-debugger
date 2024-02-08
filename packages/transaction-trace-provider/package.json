@@ -16,7 +16,6 @@
     "hardhat@^2.9.5": "hardhat"
   },
   "scripts": {
-    "postinstall": "cd dependencies/nodejs && npm install --legacy-peer-deps",
     "build": "esbuild hardhat.config.ts src/* --bundle --external:hardhat --loader:.node=file --sourcemap --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",
@@ -33,6 +32,7 @@
     "@aws-sdk/client-cloudfront": "^3.315.0",
     "@aws-sdk/client-dynamodb": "^3.315.0",
     "@aws-sdk/client-s3": "^3.315.0",
+    "@aws-sdk/client-ecs": "^3.315.0",
     "@aws-sdk/lib-dynamodb": "^3.315.0",
     "@types/aws-lambda": "^8.10.92",
     "aws-sdk-client-mock": "^2.1.1",

@@ -20,6 +20,15 @@ Parameters:
     Type: String
   SentryDsn:
     Type: String
+  TransactionTraceProviderImage:
+    Type: String
+    Default: 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v0.0.1
+  TransactionTraceMemory:
+    Type: Number
+    Default: 4096
+  TransactionTraceCpu:
+    Type: String
+    Default: 1 vCPU
 
   # Adding new SSM parameters via AWS console, remember to add tag 'Owner: evm-debugger' to them
   EtherscanKey:
@@ -145,46 +154,131 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
-  TransactionTraceProviderFunctionDepLayer:
-    Type: AWS::Serverless::LayerVersion
+  ECSCluster:
+    Type: AWS::ECS::Cluster
     Properties:
-      LayerName: !Sub evm-debugger-${Environment}-transaction-trace-provider-dependencies
-      Description: Dependencies for evm-debugger transaction-trace-provider
-      ContentUri: ../transaction-trace-provider/dependencies/
-      CompatibleRuntimes:
-        - nodejs18.x
-      LicenseInfo: 'MIT'
-      RetentionPolicy: Retain
-    Metadata:
-      BuildMethod: makefile
+      ClusterName: TransactionTraceProviderCluster
+
+  TransactionTraceTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${AWS::StackName}-transactionTrace
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      ExecutionRoleArn: !GetAtt TaskRole.Arn
+      RequiresCompatibilities:
+        - FARGATE
+      Memory: !Ref TransactionTraceMemory
+      Cpu: !Ref TransactionTraceCpu
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Image: !Ref TransactionTraceProviderImage
+          Essential: true
+          Memory: !Ref TransactionTraceMemory
+          Name: transactionTraceProvider
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: hardhat
+          Environment:
+            - Name: ALCHEMY_KEY
+              Value: !Ref AlchemyKey
+            - Name: TRANSACTION_TRACE_DATA_TABLE_NAME
+              Value: !Ref TransactionTraceDataTable
+            - Name: ANALYZER_DATA_BUCKET_NAME
+              Value: !Ref TraceBucketName
+            - Name: CLOUDFRONT_DISTRIBUTION_ID
+              Value: !Ref CloudFrontDistributionId
+            - Name: ENVIRONMENT
+              Value: !Ref Environment
+            - Name: SENTRY_DSN
+              Value: !Ref SentryDsn
+            # HardHat uses env-path for config files, so we need to set it to /tmp/home
+            - Name: XDG_DATA_HOME
+              Value: /tmp/home/.local/share
+            - Name: XDG_CONFIG_HOME
+              Value: /tmp/home/.config
+            - Name: XDG_CACHE_HOME
+              Value: /tmp/home/.cache
+            - Name: XDG_STATE_HOME
+              Value: /tmp/home/.local/state
+            - Name: DISCORD_WEBHOOK
+              Value: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      Policies:
+        - PolicyName: AmazonECSTaskExecutionRolePolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - ec2:DescribeNetworkInterfaces
+                  - ecs:DescribeTasks
+                  - ssm:GetParameters
+                  - secretsmanager:GetSecretValue
+                  - kms:Decrypt
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource:
+                  - !GetAtt TransactionTraceDataTable.Arn
+                  - !Sub ${TransactionTraceDataTable.Arn}/**
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:s3:::${TraceBucketName}
+                  - !Sub arn:aws:s3:::${TraceBucketName}/**
+              - Action:
+                  - cloudfront:CreateInvalidation
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${AWS::StackName}/hardhat
 
   TransactionTraceSqsHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-provider
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-sqs-handler
       CodeUri: ../transaction-trace-provider
-      Handler: src/sqsConsumer.consumeSqsAnalyzeTxEntrypoint
+      Handler: src/triggerEcsTask.triggerEcsTaskEntrypoint
       Runtime: nodejs18.x
-      Layers:
-        - !Ref TransactionTraceProviderFunctionDepLayer
-      Timeout: 900
-      MemorySize: 6144
+      Timeout: 60
+      MemorySize: 128
       Architectures:
         - x86_64
       Environment:
         Variables:
-          ALCHEMY_KEY: !Ref AlchemyKey
-          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
-          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
-          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
-          ENVIRONMENT: !Ref Environment
-          SENTRY_DSN: !Ref SentryDsn
-          # HardHat uses env-path for config files, so we need to set it to /tmp/home
-          XDG_DATA_HOME: /tmp/home/.local/share
-          XDG_CONFIG_HOME: /tmp/home/.config
-          XDG_CACHE_HOME: /tmp/home/.cache
-          XDG_STATE_HOME: /tmp/home/.local/state
-          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+          ECS_TASK_ARN: !Ref TransactionTraceTaskDefinition
+          ECS_CLUSTER_ARN: !Ref ECSCluster
       Events:
         SqsEvent:
           Type: SQS
@@ -217,7 +311,26 @@ Resources:
               Effect: Allow
               Resource:
                 - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
+            - Effect: Allow
+              Action:
+                - ecs:RunTask
+                - ecs:StopTask
+                - ecs:DescribeTasks
+              Resource: "*"
 
+    Metadata:
+      BuildMethod: makefile
+
+  TransactionTraceProviderFunctionDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub evm-debugger-${Environment}-transaction-trace-provider-dependencies
+      Description: Dependencies for evm-debugger transaction-trace-provider
+      ContentUri: ../transaction-trace-provider/dependencies/
+      CompatibleRuntimes:
+        - nodejs18.x
+      LicenseInfo: 'MIT'
+      RetentionPolicy: Retain
     Metadata:
       BuildMethod: makefile
 

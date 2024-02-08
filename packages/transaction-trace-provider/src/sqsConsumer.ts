@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable import/exports-last */
 /* eslint-disable unicorn/prefer-at */
-import type { Handler, SQSEvent } from 'aws-lambda'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import hardhat from 'hardhat'
 import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import type { TRawTransactionTraceResult } from '@evm-debuger/types'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
-import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
@@ -13,14 +13,6 @@ import { putTxEventToDdb } from './ddb'
 import { getFileName, getFilePath } from './s3'
 import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
-
-AWSLambda.init({
-  tracesSampleRate: 1,
-  release: version,
-  environment: process.env.ENVIRONMENT,
-  dsn: process.env.SENTRY_DSN,
-})
-AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   Object.assign(global, { txHash, chainId })
@@ -36,16 +28,14 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   return traceResult
 }
 
-export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
-  const records = event.Records
-  if (records.length === 0) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const consumeSqsAnalyzeTx = async (event: any) => {
+  if (!event) {
     console.log('No records to process')
     return 'No records to process'
   }
-
-  const txHash = records[0].messageAttributes.txHash.stringValue!
-  const chainId = records[0].messageAttributes.chainId.stringValue!
-  const hardhatForkingUrl = records[0].messageAttributes.hardhatForkingUrl.stringValue!
+  console.log(JSON.stringify(event))
+  const { txHash, chainId, hardhatForkingUrl } = event
 
   await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
   try {
@@ -55,7 +45,7 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
     if (error instanceof Error) {
       console.log(error.message)
       errorMessage['errorDetails'] = error.message
-      if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
+      // if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
     }
     await putTxEventToDdb(TransactionTraceResponseStatus.FAILED, txHash, errorMessage)
     return
@@ -65,7 +55,6 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
     const path = `/${getFileName(txHash, chainId)}`
     await invalidateCloudFrontCache(process.env.CLOUDFRONT_DISTRIBUTION_ID!, [path])
   } catch (error) {
-    captureException(error)
     console.log(error)
   }
 
@@ -75,4 +64,6 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   console.log(`Trace saved to ${s3Location}`)
 }
 
-export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)
+console.log(`started with: ${process.env.SQSEvent}`)
+const parsedEvent = JSON.parse(process.env.SQSEvent as string)
+consumeSqsAnalyzeTx(JSON.parse(parsedEvent))
