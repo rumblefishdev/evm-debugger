@@ -1,7 +1,7 @@
 import type { ErrorDescription, FunctionFragment, Result } from 'ethers'
 
-import type { FunctionBlockEndOpcodes, FunctionBlockStartOpcodes } from './opcodes/opcodesGroups'
 import type { TEventInfo, TStorageLogs } from './types'
+import type { BaseOpcodesHex } from './opcodes/opcodesHex'
 
 export type TTraceLogBase = {
   depth: number
@@ -9,6 +9,7 @@ export type TTraceLogBase = {
   gasCost: number
   pc: number
   index: number
+  op: keyof typeof BaseOpcodesHex
 }
 
 export type TCallTypeData = {
@@ -27,12 +28,7 @@ export type TCreateTypeData = {
   salt?: string
 }
 
-export type TTraceLog = TTraceLogBase & {
-  op: keyof typeof FunctionBlockStartOpcodes
-  depth: number
-  passedGas: number
-  gasCost: number
-  pc: number
+export type TTraceLogData = {
   stackTrace: number[]
 
   startIndex: number
@@ -48,12 +44,15 @@ export type TTraceLog = TTraceLogBase & {
 
   value: string
   input: string
-
-  callTypeData?: TCallTypeData
-  createTypeData?: TCreateTypeData
+  passedGas: number
 }
 
+export type TTraceLog = TTraceLogBase &
+  TTraceLogData & {
+    callTypeData?: TCallTypeData
+    createTypeData?: TCreateTypeData
+  }
+
 export type TTraceReturnLog = TTraceLogBase & {
-  op: FunctionBlockEndOpcodes
   output?: string
 }

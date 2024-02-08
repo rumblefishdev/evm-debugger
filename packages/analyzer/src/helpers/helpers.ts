@@ -11,7 +11,6 @@ import type {
   IReturnTypeStructLogs,
   IReturnTypeTraceLog,
   IStopTypeTraceLog,
-  IStructLog,
   TIndexedStructLog,
   TMainTraceLogs,
   TRawStructLog,
@@ -20,9 +19,10 @@ import type {
 } from '@evm-debuger/types'
 import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes } from '@evm-debuger/types'
 
-import { BuiltinErrors, OpcodesNamesArray } from '../constants/constants'
+import { OpcodesNamesArray } from '../constants/constants'
+import { BUILTIN_ERRORS } from '../resources/builtinErrors'
 
-export const getFilteredStructLogs = (structLogs: IStructLog[]): IFilteredStructLog[] => {
+export const getFilteredStructLogs = (structLogs: TIndexedStructLog[]): IFilteredStructLog[] => {
   const filteredLogs = []
   structLogs.forEach((log, index) => {
     const { op } = log
@@ -56,21 +56,23 @@ export const readMemory = (memory: string[], rawStart: string, rawLength: string
   return memoryString.slice(readStartIndex, readEndIndex)
 }
 
-export const checkIfOfCallType = (item: TReturnedTraceLog | Omit<IStructLog, 'stack'>): item is ICallTypeTraceLog | ICallTypeStructLogs => {
+export const checkIfOfCallType = (
+  item: TReturnedTraceLog | Omit<TIndexedStructLog, 'stack'>,
+): item is ICallTypeTraceLog | ICallTypeStructLogs => {
   if ('type' in item) return item.type === 'CALL' || item.type === 'CALLCODE' || item.type === 'DELEGATECALL' || item.type === 'STATICCALL'
 
   return item.op === 'CALL' || item.op === 'CALLCODE' || item.op === 'DELEGATECALL' || item.op === 'STATICCALL'
 }
 
 export const checkIfOfCreateType = (
-  item: TReturnedTraceLog | Omit<IStructLog, 'stack'>,
+  item: TReturnedTraceLog | Omit<TIndexedStructLog, 'stack'>,
 ): item is ICreateTypeTraceLog | ICreateTypeStructLogs => {
   if ('type' in item) return item.type === 'CREATE' || item.type === 'CREATE2'
 
   return item.op === 'CREATE' || item.op === 'CREATE2'
 }
 
-export const checkIfOfCreateOrCallType = (item: TReturnedTraceLog | Omit<IStructLog, 'stack'>): item is TMainTraceLogs => {
+export const checkIfOfCreateOrCallType = (item: TReturnedTraceLog | Omit<TIndexedStructLog, 'stack'>): item is TMainTraceLogs => {
   return checkIfOfCallType(item) || checkIfOfCreateType(item)
 }
 
@@ -96,7 +98,7 @@ export const checkIfOfReturnType = (item: TReturnedTraceLog | IFilteredStructLog
   return item.op === 'RETURN' || item.op === 'REVERT'
 }
 
-export const isLogType = (item: IStructLog): item is ILogTypeStructLogs => {
+export const isLogType = (item: TIndexedStructLog): item is ILogTypeStructLogs => {
   return item.op === 'LOG0' || item.op === 'LOG1' || item.op === 'LOG2' || item.op === 'LOG3' || item.op === 'LOG4'
 }
 
@@ -115,13 +117,13 @@ export const decodeErrorResult = (data: BytesLike) => {
 
   const selectorSignature = toBeHex(bytes.slice(0, 4).toString())
 
-  const builtin = BuiltinErrors[selectorSignature]
+  const builtin = BUILTIN_ERRORS[selectorSignature]
 
   if (builtin) return new AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
 export const prepareTraceToSearch = (
-  logs: TReturnedTraceLog[] | IStructLog[],
+  logs: TReturnedTraceLog[] | TIndexedStructLog[],
   currentIndex: number,
   depth: number,
   inclusiveLastElement: boolean,
@@ -132,9 +134,9 @@ export const prepareTraceToSearch = (
   return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0, maxLastCallIndex)
 }
 
-export const getNextItemOnSameDepth = (traceLogs: IStructLog[], currentIndex: number, depth: number): IStructLog => {
+export const getNextItemOnSameDepth = (traceLogs: TIndexedStructLog[], currentIndex: number, depth: number): TIndexedStructLog => {
   const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, true)
-  return traceToSearch.at(-1) as IStructLog
+  return traceToSearch.at(-1) as TIndexedStructLog
 }
 
 export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
@@ -147,7 +149,11 @@ export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], cur
   ) as IReturnTypeTraceLog | IStopTypeTraceLog
 }
 
-export const getPcIndexedStructlogsForContractAddress = (traceLogs: TReturnedTraceLog[], structLogs: IStructLog[], address: string) => {
+export const getPcIndexedStructlogsForContractAddress = (
+  traceLogs: TReturnedTraceLog[],
+  structLogs: TIndexedStructLog[],
+  address: string,
+) => {
   const traceLogsForAddress = traceLogs.filter(checkIfOfCreateOrCallType).filter((log) => log.address === address)
   const structLogsForAddress = traceLogsForAddress
     .map((log) => structLogs.slice(log.startIndex, log.returnIndex + 1).filter((structlog) => structlog.depth === log.depth + 1))
@@ -157,7 +163,7 @@ export const getPcIndexedStructlogsForContractAddress = (traceLogs: TReturnedTra
     if (!accumulator[log.pc]) accumulator[log.pc] = []
     accumulator[log.pc].push(log)
     return accumulator
-  }, {} as Record<number, IStructLog[]>)
+  }, {} as Record<number, TIndexedStructLog[]>)
 }
 
 export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], depth: number) => {
@@ -169,7 +175,7 @@ export const getStorageAddressFromTransactionInfo = (txInfo: TTransactionInfo) =
   return to || getCreateAddress({ nonce, from })
 }
 
-export const convertTxInfoToTraceLog = (firstNestedStructLog: IStructLog, txInfo: TTransactionInfo) => {
+export const convertTxInfoToTraceLog = (firstNestedStructLog: TIndexedStructLog, txInfo: TTransactionInfo) => {
   const { to, input, value, blockNumber } = txInfo
 
   const storageAddress = getStorageAddressFromTransactionInfo(txInfo)

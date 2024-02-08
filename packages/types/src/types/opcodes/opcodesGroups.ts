@@ -1,43 +1,16 @@
-export enum StorageOpcodes {
-  SSTORE = 'SSTORE',
-  SLOAD = 'SLOAD',
-}
+import { BaseOpcodesHex } from './opcodesHex'
 
-export enum LogOpcodes {
-  LOG0 = 'LOG0',
-  LOG1 = 'LOG1',
-  LOG2 = 'LOG2',
-  LOG3 = 'LOG3',
-  LOG4 = 'LOG4',
-}
-export enum ReturnTypeOpcodes {
-  RETURN = 'RETURN',
-  REVERT = 'REVERT',
-}
-
-export enum CallOpcodes {
-  CALL = 'CALL',
-  CALLCODE = 'CALLCODE',
-  DELEGATECALL = 'DELEGATECALL',
-  STATICCALL = 'STATICCALL',
-}
-
-export enum CreateOpcodes {
-  CREATE = 'CREATE',
-  CREATE2 = 'CREATE2',
-}
-
-export enum FunctionBlockStartOpcodes {
-  CALL = 'CALL',
-  CALLCODE = 'CALLCODE',
-  DELEGATECALL = 'DELEGATECALL',
-  STATICCALL = 'STATICCALL',
-  CREATE = 'CREATE',
-  CREATE2 = 'CREATE2',
-}
-
-export enum FunctionBlockEndOpcodes {
-  STOP = 'STOP',
-  RETURN = 'RETURN',
-  REVERT = 'REVERT',
-}
+export const StorageGroupOpcodes = [BaseOpcodesHex.SSTORE, BaseOpcodesHex.SLOAD]
+export const LogGroupOpcodes = [BaseOpcodesHex.LOG0, BaseOpcodesHex.LOG1, BaseOpcodesHex.LOG2, BaseOpcodesHex.LOG3, BaseOpcodesHex.LOG4]
+export const ReturnGroupTypeOpcodes = [BaseOpcodesHex.RETURN, BaseOpcodesHex.REVERT]
+export const CallGroupOpcodes = [BaseOpcodesHex.CALL, BaseOpcodesHex.CALLCODE, BaseOpcodesHex.DELEGATECALL, BaseOpcodesHex.STATICCALL]
+export const CreateGroupOpcodes = [BaseOpcodesHex.CREATE, BaseOpcodesHex.CREATE2]
+export const FunctionBlockStartOpcodes = [
+  BaseOpcodesHex.CALL,
+  BaseOpcodesHex.CALLCODE,
+  BaseOpcodesHex.DELEGATECALL,
+  BaseOpcodesHex.STATICCALL,
+  BaseOpcodesHex.CREATE,
+  BaseOpcodesHex.CREATE2,
+]
+export const FunctionBlockEndOpcodes = [BaseOpcodesHex.STOP, BaseOpcodesHex.RETURN, BaseOpcodesHex.REVERT]

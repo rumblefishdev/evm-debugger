@@ -1,15 +1,16 @@
-import type { ICallTypeTraceLog, ICreateTypeTraceLog, IStorageTypeStructLogs, IStructLog, TStorage } from '@evm-debuger/types'
+import type {
+  ICallTypeTraceLog,
+  ICreateTypeTraceLog,
+  IStorageTypeStructLogs,
+  IStructLog,
+  TIndexedStructLog,
+  TStorage,
+} from '@evm-debuger/types'
 
-import {
-  checkIfOfCallOrStaticCallType,
-  checkIfOfCreateType,
-  checkIfOfDelegateCallType,
-  getNextItemOnSameDepth,
-  getSafeHex,
-} from '../helpers/helpers'
+import { checkIfOfCallOrStaticCallType, checkIfOfCreateType, checkIfOfDelegateCallType } from '../helpers/helpers'
 
 export class StorageHandler {
-  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: TIndexedStructLog[]) {
     const { returnIndex, isSuccess, index } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
@@ -25,11 +26,7 @@ export class StorageHandler {
     return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  public resolveStorageAddress(
-    traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
-    previousTransactionLog: ICallTypeTraceLog,
-    structLogs: IStructLog[],
-  ) {
+  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog) {
     if (checkIfOfDelegateCallType(traceLog)) return previousTransactionLog.address
     if (checkIfOfCallOrStaticCallType(traceLog)) return traceLog.address
     if (checkIfOfCreateType(traceLog)) return traceLog.address
@@ -50,12 +47,12 @@ export class StorageHandler {
     return { loadedStorage, changedStorage }
   }
 
-  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: TIndexedStructLog[]) {
     const { startIndex, returnIndex, depth } = traceLog
     return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
   }
 
-  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLogIndex: number) {
+  private extractStorageLogs(callContextStructLogs: TIndexedStructLog[], traceLogIndex: number) {
     const storageLogs = []
     callContextStructLogs.forEach((log, index) => {
       const isStorage = log.op === 'SSTORE' || log.op === 'SLOAD'
