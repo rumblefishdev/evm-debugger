@@ -34,7 +34,7 @@ export const consumeSqsAnalyzeTx = async (event: any) => {
     console.log('No records to process')
     return 'No records to process'
   }
-  console.log(JSON.stringify(event))
+
   const { txHash, chainId, hardhatForkingUrl } = event
 
   await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
