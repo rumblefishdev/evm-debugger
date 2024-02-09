@@ -10,7 +10,7 @@ import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
 
-import type { TBlockCallSpecificData, TParsedActiveBlock, TParsedCallTypeData } from './activeBlock.types'
+import type { TParsedActiveBlock, TParsedCallTypeData } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
 
 const selectActiveBlockState = createSelector([selectReducer(StoreKeys.ACTIVE_BLOCK)], (state) => state)
