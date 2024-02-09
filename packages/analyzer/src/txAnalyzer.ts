@@ -324,43 +324,27 @@ export class TxAnalyzer {
     this.fragmentReader = new FragmentReader()
 
     const indexedStructLogs = indexRawStructLogs(this.transactionData.structLogs)
-    console.log('indexedStructLogs', indexedStructLogs)
     const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(indexedStructLogs)
-    console.log('functionBlockStartStructLogs', functionBlockStartStructLogs)
     const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(indexedStructLogs)
-    console.log('functionBlockEndStructLogs', functionBlockEndStructLogs)
 
     const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
-    console.log('traceLogs', traceLogs)
     const traceReturnLogs = this.convertToTraceReturnLog(functionBlockEndStructLogs)
-    console.log('traceReturnLogs', traceReturnLogs)
 
     const traceLogsWithRoot = this.parseAndAddRootTraceLog(traceLogs)
 
-    console.log('traceLogsList', traceLogsWithRoot)
     const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsWithRoot, traceReturnLogs)
 
-    console.log('traceLogsListWithReturnData', traceLogsListWithReturnData)
     const traceLogsListWithSuccessFlag = this.markLogEntryAsFailureIfParentReverted(traceLogsListWithReturnData)
-    console.log('traceLogsListWithSuccessFlag', traceLogsListWithSuccessFlag)
 
     const traceLogsWithDecodedIO = this.decodeCallInputOutput(traceLogsListWithSuccessFlag)
-    console.log('traceLogsWithDecodedIO', traceLogsWithDecodedIO)
     const traceLogsWithStorageData = this.extendWithStorageData(traceLogsWithDecodedIO)
-    console.log('traceLogsWithStorageData', traceLogsWithStorageData)
     const traceLogsWithLogsData = this.extendWithLogsData(traceLogsWithStorageData)
-    console.log('traceLogsWithLogsData', traceLogsWithLogsData)
     const traceLogsWithBlockNumber = this.extendWithBlockNumber(traceLogsWithLogsData)
-    console.log('traceLogsWithBlockNumber', traceLogsWithBlockNumber)
 
     const contractAddresses = this.getTraceLogsContractAddresses(traceLogsWithBlockNumber)
-    console.log('contractAddresses', contractAddresses)
     const contractSighashesInfo = this.getContractSighashList(traceLogsWithBlockNumber)
-    console.log('contractSighashesInfo', contractSighashesInfo)
 
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
-    console.log('instructionsMap', instructionsMap)
-
     return {
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
