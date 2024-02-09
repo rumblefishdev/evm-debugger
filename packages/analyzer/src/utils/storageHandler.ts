@@ -1,13 +1,10 @@
-import type {
-  ICallTypeTraceLog,
-  ICreateTypeTraceLog,
-  IStorageTypeStructLogs,
-  TIndexedStructLog,
-  TStorage,
-  TTraceLog,
-} from '@evm-debuger/types'
+import type { TIndexedStructLog, TStorage, TTraceLog } from '@evm-debuger/types'
 
-import { checkIfOfCallOrStaticCallType, checkIfOfCreateType, checkIfOfDelegateCallType } from '../helpers/helpers'
+import {
+  checkOpcodeIfOfCallOrStaticType,
+  checkOpcodeIfOfCreateGroupType,
+  checkOpcodeIfOfDelegateCallType,
+} from '../helpers/structLogTypeGuards'
 
 export class StorageHandler {
   public getParsedStorageLogs(traceLog: TTraceLog, structLogs: TIndexedStructLog[]) {
@@ -26,13 +23,13 @@ export class StorageHandler {
     return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  public resolveStorageAddress(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, previousTransactionLog: ICallTypeTraceLog) {
-    if (checkIfOfDelegateCallType(traceLog)) return previousTransactionLog.address
-    if (checkIfOfCallOrStaticCallType(traceLog)) return traceLog.address
-    if (checkIfOfCreateType(traceLog)) return traceLog.address
+  public resolveStorageAddress(traceLog: TTraceLog, previousTransactionLog: TTraceLog) {
+    if (checkOpcodeIfOfDelegateCallType(traceLog.op)) return previousTransactionLog.address
+    if (checkOpcodeIfOfCallOrStaticType(traceLog.op)) return traceLog.address
+    if (checkOpcodeIfOfCreateGroupType(traceLog.op)) return traceLog.address
   }
 
-  private getLoadedAndChangedStorage(storageLogs: IStorageTypeStructLogs[]) {
+  private getLoadedAndChangedStorage(storageLogs: TIndexedStructLog[]) {
     const loadedStorage = []
     const changedStorage = []
     storageLogs.forEach((element, rootIndex) => {
@@ -62,7 +59,7 @@ export class StorageHandler {
     return storageLogs
   }
 
-  private getLoadStorageElement(log: IStorageTypeStructLogs) {
+  private getLoadStorageElement(log: TIndexedStructLog) {
     const { op, stack, storage, index } = log
 
     if (op === 'SLOAD') {
@@ -71,7 +68,7 @@ export class StorageHandler {
     }
   }
 
-  private getChangeStorageElement(item: IStorageTypeStructLogs, previousStructLog: IStorageTypeStructLogs) {
+  private getChangeStorageElement(item: TIndexedStructLog, previousStructLog: TIndexedStructLog) {
     const { op, stack, index } = item
 
     if (op === 'SSTORE') {

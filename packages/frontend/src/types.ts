@@ -1,4 +1,4 @@
-import type { IStructLog, TTransactionInfo } from '@evm-debuger/types'
+import type { TIndexedStructLog, TTransactionInfo } from '@evm-debuger/types'
 
 import type { TMainTraceLogsWithId } from './store/traceLogs/traceLogs.types'
 
@@ -36,7 +36,7 @@ export type TRawTxData = {
 
 export type TExtendedStack = { value: string; isSelected: boolean }[]
 
-export interface IExtendedStructLog extends Omit<IStructLog, 'stack'> {
+export interface IExtendedStructLog extends Omit<TIndexedStructLog, 'stack'> {
   description: string
   args: {
     name: string

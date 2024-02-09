@@ -1,4 +1,4 @@
-import type { AlternativeOpcodesHex, BaseOpcodesHex, TOpCodes } from '@evm-debuger/types'
+import type { AlternativeOpcodesHex, BaseOpcodesHex } from '@evm-debuger/types'
 import type { FunctionFragment } from 'ethers'
 import type { Theme } from '@mui/material'
 

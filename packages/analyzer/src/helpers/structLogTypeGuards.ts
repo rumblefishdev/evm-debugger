@@ -1,4 +1,11 @@
-import { BaseOpcodesHex, CallGroupOpcodes, CreateGroupOpcodes, FunctionBlockEndOpcodes, ReturnGroupTypeOpcodes } from '@evm-debuger/types'
+import {
+  BaseOpcodesHex,
+  CallGroupOpcodes,
+  CreateGroupOpcodes,
+  FunctionBlockEndOpcodes,
+  ReturnGroupTypeOpcodes,
+  LogGroupTypeOpcodes,
+} from '@evm-debuger/types'
 
 export const checkOpcodeIfOfCallGroupType = (opcode: string) => {
   return Object.values(CallGroupOpcodes).includes(BaseOpcodesHex[opcode])
@@ -6,6 +13,10 @@ export const checkOpcodeIfOfCallGroupType = (opcode: string) => {
 
 export const checkOpcodeIfOfDelegateCallType = (opcode: string) => {
   return BaseOpcodesHex[opcode] === BaseOpcodesHex.DELEGATECALL
+}
+
+export const checkOpcodeIfOfCallOrStaticType = (opcode: string) => {
+  return BaseOpcodesHex[opcode] === BaseOpcodesHex.CALL || BaseOpcodesHex[opcode] === BaseOpcodesHex.STATICCALL
 }
 
 export const checkOpcodeIfOfCreateGroupType = (opcode: string) => {
@@ -18,4 +29,8 @@ export const checkOpcodeIfOfReturnGroupType = (opcode: string) => {
 
 export const checkOpcodeIfOfFunctionBlockEndType = (opcode: string) => {
   return Object.values(FunctionBlockEndOpcodes).includes(BaseOpcodesHex[opcode])
+}
+
+export const checkOpcodeIfOfLogGroupType = (opcode: string) => {
+  return Object.values(LogGroupTypeOpcodes).includes(BaseOpcodesHex[opcode])
 }

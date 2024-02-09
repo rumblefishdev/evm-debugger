@@ -1,10 +1,9 @@
 import type { FunctionFragment, ErrorFragment, EventFragment, Result, LogDescription, ErrorDescription } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
 
-import type { IRawStructLog, IStructLog } from './structLogs'
+import type { TRawStructLog, TIndexedStructLog } from './structLogs'
 import type { ChainId } from './chains'
 import type { SourceFileType, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
-import type { TIndexedStructLog } from './structLogs2'
 
 export type TStorage = Record<string, string>
 
@@ -40,11 +39,11 @@ export interface TRawTransactionTraceResult {
   gas: number
   failed: boolean
   returnValue: string
-  structLogs: IRawStructLog[]
+  structLogs: TRawStructLog[]
 }
 
 export interface TTransactionTraceResult extends TRawTransactionTraceResult {
-  structLogs: IStructLog[]
+  structLogs: TRawStructLog[]
 }
 
 export interface TDataProvider {

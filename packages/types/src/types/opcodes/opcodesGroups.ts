@@ -14,3 +14,5 @@ export const FunctionBlockStartOpcodes = [
   BaseOpcodesHex.CREATE2,
 ]
 export const FunctionBlockEndOpcodes = [BaseOpcodesHex.STOP, BaseOpcodesHex.RETURN, BaseOpcodesHex.REVERT]
+
+export const LogGroupTypeOpcodes = [BaseOpcodesHex.LOG0, BaseOpcodesHex.LOG1, BaseOpcodesHex.LOG2, BaseOpcodesHex.LOG3, BaseOpcodesHex.LOG4]

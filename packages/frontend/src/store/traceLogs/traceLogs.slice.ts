@@ -4,7 +4,7 @@
 
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TMainTraceLogs, TTraceLog } from '@evm-debuger/types'
+import type { TTraceLog } from '@evm-debuger/types'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { StoreKeys } from '../store.keys'

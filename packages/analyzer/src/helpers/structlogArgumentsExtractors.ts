@@ -1,9 +1,6 @@
 import { formatEther } from 'ethers'
 import { BaseOpcodesHex, OpcodesArguments } from '@evm-debuger/types'
 import type {
-  TOpCodesArgs,
-  TOpCodesWithArgs,
-  ILogTypeStructLogs,
   TIndexedStructLog,
   TCallGroupOpcodesArgumentNames,
   TCreateGroupOpcodesArgumentNames,
@@ -11,23 +8,11 @@ import type {
   TTraceReturnLog,
 } from '@evm-debuger/types'
 
-import { LogArgsArray, OpCodesArgsArray } from '../constants/constants'
+import { LogArgsArray } from '../constants/constants'
 
 import { getSafeHex, readMemory } from './helpers'
 
-export const extractArgsFromStack = (stack: string[], op: TOpCodesWithArgs) => {
-  const opCodeArgumentsNames = OpCodesArgsArray[op]
-
-  const opCodeArguments = {} as TOpCodesArgs[typeof op]
-
-  opCodeArgumentsNames.forEach((arg: string, index: number) => {
-    opCodeArguments[arg] = stack[stack.length - index - 1]
-  })
-
-  return opCodeArguments
-}
-
-export const extractLogTypeArgsData = (item: ILogTypeStructLogs) => {
+export const extractLogTypeArgsData = (item: TIndexedStructLog) => {
   const { stack, op } = item
 
   const stackCopy = [...stack]

@@ -1,5 +1,5 @@
 import { select, type SagaGenerator, put, call } from 'typed-redux-saga'
-import type { IStructLog, TTransactionData, TTransactionInfo } from '@evm-debuger/types'
+import type { TIndexedStructLog, TTransactionData, TTransactionInfo } from '@evm-debuger/types'
 import { TxAnalyzer } from '@evm-debuger/analyzer'
 
 import { transactionInfoSelectors } from '../../../transactionInfo/transactionInfo.selectors'
@@ -11,7 +11,7 @@ import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 
-export function gatherContractsInformations(transactionInfo: TTransactionInfo, structLogs: IStructLog[]) {
+export function gatherContractsInformations(transactionInfo: TTransactionInfo, structLogs: TIndexedStructLog[]) {
   const analyzerPayload: TTransactionData = {
     transactionInfo,
     structLogs,

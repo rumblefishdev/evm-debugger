@@ -1,4 +1,4 @@
-import type { TCallTypeData, TEventInfo } from '@evm-debuger/types'
+import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 import type { ErrorDescription } from 'ethers'
 import { checkOpcodeIfOfCallGroupType } from '@evm-debuger/analyzer'

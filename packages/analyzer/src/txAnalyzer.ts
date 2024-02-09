@@ -2,8 +2,6 @@
 
 import {
   type TEventInfo,
-  type TMainTraceLogs,
-  type TReturnedTraceLog,
   type TSourceMapConverstionPayload,
   type TStepInstrctionsMap,
   type TPcIndexedStepInstructions,
@@ -17,12 +15,10 @@ import {
 import { toBigInt } from 'ethers'
 
 import {
-  checkIfOfCreateOrCallType,
   convertTxInfoToTraceLog,
   indexRawStructLogs,
   getStorageAddressFromTransactionInfo,
   getSafeHex,
-  isLogType,
   readMemory,
   getPcIndexedStructlogsForContractAddress,
   getFunctionBlockStartStructLogs,
@@ -44,7 +40,7 @@ import {
   sourceMapConverter,
 } from './utils/sourceMapConverter'
 import { createErrorDescription } from './resources/builtinErrors'
-import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
+import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfLogGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -173,7 +169,7 @@ export class TxAnalyzer {
             .slice(startIndex, returnIndex)
             .filter((element) => element.depth === depth + 1)
 
-          const logTypeStructLogs = callStructLogContext.filter(isLogType)
+          const logTypeStructLogs = callStructLogContext.filter((log) => checkOpcodeIfOfLogGroupType(log.op))
 
           logTypeStructLogs.forEach((logTypeStructLog) => {
             const { memory } = logTypeStructLog
@@ -220,10 +216,6 @@ export class TxAnalyzer {
       ...item,
       blockNumber: toBigInt(this.transactionData.transactionInfo.blockNumber).toString(),
     }))
-  }
-
-  private getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
-    return transactionList.filter(checkIfOfCreateOrCallType)
   }
 
   private getContractSighashList(mainTraceLogList: TTraceLog[]) {
@@ -298,6 +290,8 @@ export class TxAnalyzer {
         }, {} as TPcIndexedStepInstructions)
 
         const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
+
+        console.log('contractStructlogs', contractStructlogs)
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
