@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react'
 import { ViewportList } from 'react-viewport-list'
-import { checkIfOfCallType } from '@evm-debuger/analyzer'
 import { Tooltip } from '@mui/material'
 import { useSelector } from 'react-redux'
+import type { TTraceLog } from '@evm-debuger/types'
+import { BaseOpcodesHex } from '@evm-debuger/types'
 
 import { useTypedDispatch } from '../../store/storeHooks'
 import { getSignature } from '../../helpers/helpers'
@@ -46,16 +47,15 @@ export const TraceLogsList: React.FC = () => {
     [dispatch, structlogs],
   )
 
-  const constructSignature = (traceLog: TMainTraceLogsWithId): string => {
+  const constructSignature = (traceLog: TTraceLog): string => {
     let signature = ''
-    if (traceLog.type === 'CALL' && traceLog.input === '0x' && traceLog.isContract !== null)
+    if (BaseOpcodesHex[traceLog.op] === BaseOpcodesHex.CALL && traceLog.input === '0x' && traceLog.isContract !== null)
       signature = `Send ${traceLog.value} ETH to ${traceLog.isContract ? 'SC' : 'EOA'}`
     else {
       const contractName = contractNames.find((item) => item.address === traceLog.address)?.contractName || traceLog.address
       signature = traceLog.input.slice(0, 10)
-      if (checkIfOfCallType(traceLog) && traceLog.isContract) {
-        const { functionFragment } = traceLog
-        if (functionFragment) signature = `${contractName}.${getSignature(functionFragment)}`
+      if (traceLog.callTypeData?.functionFragment && traceLog.isContract) {
+        signature = `${contractName}.${getSignature(traceLog.callTypeData?.functionFragment)}`
       }
     }
     return signature
@@ -72,7 +72,7 @@ export const TraceLogsList: React.FC = () => {
           withCache={true}
         >
           {(traceLog) => {
-            const { index, depth, type, isReverted } = traceLog
+            const { index, depth, op, isReverted } = traceLog
             const isActive = activeBlock?.index === index
             const signature = constructSignature(traceLog) // sighash
             return (
@@ -92,7 +92,7 @@ export const TraceLogsList: React.FC = () => {
                       <StyledFailureIcon>❌</StyledFailureIcon>
                     </Tooltip>
                   )}
-                  {`${type} ${signature}`}
+                  {`${op} ${signature}`}
                 </OpWrapper>
               </TraceLogElement>
             )

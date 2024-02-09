@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { checkIfOfCallType } from '@evm-debuger/analyzer'
+import { checkOpcodeIfOfCallGroupType } from '@evm-debuger/analyzer'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -93,7 +93,7 @@ const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForA
     const blockIndexForThisStructlog = accumulator.findIndex((block) => {
       const lastItemInBlock = block.at(-1)
 
-      if (checkIfOfCallType(lastItemInBlock)) {
+      if (checkOpcodeIfOfCallGroupType(lastItemInBlock.op)) {
         return true
       }
 

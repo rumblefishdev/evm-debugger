@@ -7,18 +7,17 @@ export const createMockedTraceLog = (stackCount?: number): TMainTraceLogsWithId 
 
   return {
     value: 'some value',
-    type: 'CALL',
     startIndex: 0,
     stackTrace,
     pc: 0,
     passedGas: 0,
-    output: 'some output',
+    op: 'CALL',
     input: 'some input',
     index: 0,
     id: createCallIdentifier(stackTrace, 'CALL'),
     gasCost: 0,
-    events: [],
     depth: 0,
+    callTypeData: { output: 'some output', events: [] },
     address: 'some address',
   }
 }

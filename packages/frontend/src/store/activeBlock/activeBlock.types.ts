@@ -1,4 +1,4 @@
-import type { TCallTypeOpcodes, TCreateTypeOpcodes, TStorageLogs } from '@evm-debuger/types'
+import type { AlternativeOpcodesHex, BaseOpcodesHex, TCallTypeData, TStorageLogs, TTraceLog } from '@evm-debuger/types'
 
 import type { TParsedEventLog } from '../../types'
 
@@ -10,7 +10,7 @@ export type TParsedParams = {
 
 export type TBlockDefaultData = {
   value: string
-  type: TCallTypeOpcodes | TCreateTypeOpcodes
+  op: keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex
   stackTrace: string
   passedGas: number
   gasCost: number
@@ -25,7 +25,7 @@ export type TBlockCallSpecificData = {
   storageAddress: string
   parsedOutput: null | TParsedParams[]
   parsedInput: null | TParsedParams[]
-  parsedEvents: TParsedEventLog[]
+  events: TParsedEventLog[]
   parsedError: null | TParsedParams[]
   isContract: boolean
   functionSignature: null | string
@@ -41,8 +41,17 @@ export type TBlockCreateSpecificData = {
   salt: string
 }
 
-export type TParsedActiveBlock = {
-  defaultData: null | TBlockDefaultData
-  createSpecificData: null | TBlockCreateSpecificData
-  callSpecificData: null | TBlockCallSpecificData
+export type TParsedCallTypeData = Omit<TCallTypeData, 'events'> & {
+  events: TParsedEventLog[]
+  parsedOutput: null | TParsedParams[]
+  parsedInput: null | TParsedParams[]
+  parsedError: null | TParsedParams[]
+  errorSignature: null | string
+  functionSignature: null | string
+  contractName: string | null
+}
+
+export type TParsedActiveBlock = Omit<TTraceLog, 'stackTrace' | 'callTypeData'> & {
+  stackTrace: string
+  callTypeData: TParsedCallTypeData
 }
