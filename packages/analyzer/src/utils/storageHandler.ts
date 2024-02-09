@@ -2,15 +2,15 @@ import type {
   ICallTypeTraceLog,
   ICreateTypeTraceLog,
   IStorageTypeStructLogs,
-  IStructLog,
   TIndexedStructLog,
   TStorage,
+  TTraceLog,
 } from '@evm-debuger/types'
 
 import { checkIfOfCallOrStaticCallType, checkIfOfCreateType, checkIfOfDelegateCallType } from '../helpers/helpers'
 
 export class StorageHandler {
-  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: TIndexedStructLog[]) {
+  public getParsedStorageLogs(traceLog: TTraceLog, structLogs: TIndexedStructLog[]) {
     const { returnIndex, isSuccess, index } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
@@ -47,7 +47,7 @@ export class StorageHandler {
     return { loadedStorage, changedStorage }
   }
 
-  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: TIndexedStructLog[]) {
+  private getCallContextStructLogs(traceLog: TTraceLog, structLogs: TIndexedStructLog[]) {
     const { startIndex, returnIndex, depth } = traceLog
     return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
   }

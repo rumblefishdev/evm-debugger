@@ -10,17 +10,19 @@ import type {
   ILogTypeStructLogs,
   IReturnTypeStructLogs,
   IReturnTypeTraceLog,
-  IStopTypeTraceLog,
   TIndexedStructLog,
   TMainTraceLogs,
   TRawStructLog,
   TReturnedTraceLog,
+  TTraceLog,
   TTransactionInfo,
 } from '@evm-debuger/types'
-import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes } from '@evm-debuger/types'
+import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes, BaseOpcodesHex } from '@evm-debuger/types'
 
 import { OpcodesNamesArray } from '../constants/constants'
 import { BUILTIN_ERRORS } from '../resources/builtinErrors'
+
+import { checkOpcodeIfOfFunctionBlockEndType } from './structLogTypeGuards'
 
 export const getFilteredStructLogs = (structLogs: TIndexedStructLog[]): IFilteredStructLog[] => {
   const filteredLogs = []
@@ -37,11 +39,11 @@ export const indexRawStructLogs = (structLogs: TRawStructLog[]): TIndexedStructL
 }
 
 export const getFunctionBlockStartStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {
-  return structLogs.filter((log) => Boolean(FunctionBlockStartOpcodes[log.op]))
+  return structLogs.filter((log) => Boolean(FunctionBlockStartOpcodes.includes(BaseOpcodesHex[log.op])))
 }
 
 export const getFunctionBlockEndStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {
-  return structLogs.filter((log) => Boolean(FunctionBlockEndOpcodes[log.op]))
+  return structLogs.filter((log) => Boolean(FunctionBlockEndOpcodes.includes(BaseOpcodesHex[log.op])))
 }
 
 export const readMemory = (memory: string[], rawStart: string, rawLength: string): string => {
@@ -122,39 +124,45 @@ export const decodeErrorResult = (data: BytesLike) => {
   if (builtin) return new AbiCoder().decode(builtin.inputs, bytes.slice(4))
 }
 
-export const prepareTraceToSearch = (
-  logs: TReturnedTraceLog[] | TIndexedStructLog[],
-  currentIndex: number,
-  depth: number,
-  inclusiveLastElement: boolean,
-) => {
-  const slicedTraceLogs = logs.slice(currentIndex + 1)
-  let maxLastCallIndex = slicedTraceLogs.findIndex((log) => log.depth === depth)
-  maxLastCallIndex = inclusiveLastElement ? maxLastCallIndex + 1 : maxLastCallIndex
-  return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0, maxLastCallIndex)
+export const selectFunctionBlockContextForLog = <T extends TIndexedStructLog | TTraceLog>(
+  structLogs: T[],
+  log: TIndexedStructLog | TTraceLog,
+): T[] => {
+  const { depth, index } = log
+  const context = structLogs.slice(index + 1)
+  const lastElement = context.find((contextLog) => contextLog.depth === depth)
+
+  return lastElement === undefined ? context : structLogs.slice(index + 1, lastElement.index)
 }
 
-export const getNextItemOnSameDepth = (traceLogs: TIndexedStructLog[], currentIndex: number, depth: number): TIndexedStructLog => {
-  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, true)
-  return traceToSearch.at(-1) as TIndexedStructLog
+export const selectFirstStructLogOnSameDepth = (structLogs: TIndexedStructLog[], structLog: TIndexedStructLog) => {
+  const currentBlockContenxt = selectFunctionBlockContextForLog<TIndexedStructLog>(structLogs, structLog)
+  const lastElementInCurrentBlockContext = currentBlockContenxt.at(-1)
+
+  return structLogs[lastElementInCurrentBlockContext.index + 1]
 }
 
-export const getLastItemInCallTypeContext = (traceLogs: TReturnedTraceLog[], currentIndex: number, depth: number) => {
-  const traceToSearch = prepareTraceToSearch(traceLogs, currentIndex, depth, false) as TReturnedTraceLog[]
-
-  return traceToSearch.find(
-    (iteratedItem) =>
-      iteratedItem.depth === depth + 1 &&
-      (iteratedItem.type === 'RETURN' || iteratedItem.type === 'REVERT' || iteratedItem.type === 'STOP'),
-  ) as IReturnTypeTraceLog | IStopTypeTraceLog
+export const selectLastStructLogInFunctionBlockContext = (structLogs: TIndexedStructLog[], log: TIndexedStructLog | TTraceLog) => {
+  const currentBlockContenxt = selectFunctionBlockContextForLog<TIndexedStructLog>(structLogs, log)
+  return currentBlockContenxt.at(-1)
 }
 
-export const getPcIndexedStructlogsForContractAddress = (
-  traceLogs: TReturnedTraceLog[],
-  structLogs: TIndexedStructLog[],
-  address: string,
-) => {
-  const traceLogsForAddress = traceLogs.filter(checkIfOfCreateOrCallType).filter((log) => log.address === address)
+// export const prepareTraceToSearch = (
+//   logs: TTraceLog[] | TIndexedStructLog[],
+//   currentIndex: number,
+//   depth: number,
+//   inclusiveLastElement: boolean,
+// ) => {
+//   const slicedTraceLogs = logs.slice(currentIndex + 1)
+//   let maxLastCallIndex = slicedTraceLogs.findIndex((log) => log.depth === depth)
+//   maxLastCallIndex = inclusiveLastElement ? maxLastCallIndex + 1 : maxLastCallIndex
+//   return maxLastCallIndex === -1 ? slicedTraceLogs : slicedTraceLogs.slice(0, maxLastCallIndex)
+// }
+
+export const getPcIndexedStructlogsForContractAddress = (traceLogs: TTraceLog[], structLogs: TIndexedStructLog[], address: string) => {
+  const traceLogsForAddress = traceLogs
+    .filter((traceLog) => checkOpcodeIfOfFunctionBlockEndType(traceLog.op))
+    .filter((log) => log.address === address)
   const structLogsForAddress = traceLogsForAddress
     .map((log) => structLogs.slice(log.startIndex, log.returnIndex + 1).filter((structlog) => structlog.depth === log.depth + 1))
     .flat()
@@ -166,8 +174,8 @@ export const getPcIndexedStructlogsForContractAddress = (
   }, {} as Record<number, TIndexedStructLog[]>)
 }
 
-export const getLastLogWithRevertType = (traceToSearch: TReturnedTraceLog[], depth: number) => {
-  return traceToSearch.find((iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.type === 'REVERT') as IReturnTypeTraceLog
+export const getLastLogWithRevertType = (traceToSearch: TTraceLog[], depth: number) => {
+  return traceToSearch.find((iteratedItem) => iteratedItem.depth === depth + 1 && iteratedItem.op === 'REVERT')
 }
 
 export const getStorageAddressFromTransactionInfo = (txInfo: TTransactionInfo) => {
@@ -175,36 +183,29 @@ export const getStorageAddressFromTransactionInfo = (txInfo: TTransactionInfo) =
   return to || getCreateAddress({ nonce, from })
 }
 
-export const convertTxInfoToTraceLog = (firstNestedStructLog: TIndexedStructLog, txInfo: TTransactionInfo) => {
+export const convertTxInfoToTraceLog = (firstNestedStructLog: TIndexedStructLog, txInfo: TTransactionInfo): TTraceLog => {
   const { to, input, value, blockNumber } = txInfo
 
   const storageAddress = getStorageAddressFromTransactionInfo(txInfo)
 
-  const defaultFields = {
+  return {
     value: formatEther(value),
-    type: 'CALL',
     storageAddress,
     startIndex: 0,
-    stackTrace: [] as number[],
+    stackTrace: [],
     pc: 0,
     passedGas: firstNestedStructLog.gas,
+    op: to ? 'CALL' : 'CREATE',
+    isContract: true,
     input,
     index: 0,
     gasCost: 0,
     depth: 0,
+    createTypeData: to ? undefined : { salt: undefined },
+    callTypeData: to ? { output: '0x', events: [] } : undefined,
     blockNumber,
-  } as ICallTypeTraceLog | ICreateTypeTraceLog
-
-  if (to)
-    return {
-      ...defaultFields,
-      address: to.toLowerCase(),
-    } as ICallTypeTraceLog
-
-  return {
-    ...defaultFields,
-    type: 'CREATE',
-  } as ICreateTypeTraceLog
+    address: to ? to.toLowerCase() : storageAddress,
+  }
 }
 
 export const isMultipleFilesJSON = (sourceCode: string) => sourceCode.startsWith('{{') && sourceCode.endsWith('}}')

@@ -1,7 +1,7 @@
 import type { TIndexedStructLog, TTraceLog, TTraceReturnLog, TTraceLogBase, TTraceLogData } from '@evm-debuger/types'
 
-import { getNextItemOnSameDepth, getSafeHex } from '../helpers/helpers'
-import { checkOpcodeIfOfDelegateCallType } from '../helpers/structLogTypeGuards'
+import { getSafeHex, selectFirstStructLogOnSameDepth } from '../helpers/helpers'
+import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfDelegateCallType } from '../helpers/structLogTypeGuards'
 import {
   getCallGroupOpcodesArgumentsData,
   getCreateGroupOpcodesArgumentsData,
@@ -38,6 +38,7 @@ export class StructLogParser {
       startIndex: index + 1,
       stackTrace,
       passedGas: nextStructLog.depth === depth ? gas : nextStructLog.gas,
+      isContract: nextStructLog.depth === depth + 1,
       input,
       callTypeData: { output, events: [] },
       address,
@@ -47,7 +48,8 @@ export class StructLogParser {
   private getCreateTypeData(structLog: TIndexedStructLog): Pick<TTraceLog, keyof TTraceLogData | 'createTypeData'> {
     const { depth, index } = structLog
     const { input, value, ...restArguments } = getCreateGroupOpcodesArgumentsData(structLog)
-    const contractAddress = getSafeHex(getNextItemOnSameDepth(this.structLogs, index, depth).stack.at(-1).slice(-40))
+    const firstStructLogInNextBlockContext = selectFirstStructLogOnSameDepth(this.structLogs, structLog)
+    const contractAddress = getSafeHex(firstStructLogInNextBlockContext.stack.at(-1).slice(-40))
 
     return {
       value,
@@ -55,6 +57,7 @@ export class StructLogParser {
       startIndex: index + 1,
       stackTrace: this.createStackTrace(depth, contractAddress),
       passedGas: this.structLogs[index + 1].gas,
+      isContract: true,
       input,
       createTypeData: 'salt' in restArguments ? { salt: restArguments.salt } : undefined,
       address: contractAddress,
@@ -69,10 +72,12 @@ export class StructLogParser {
 
   public parseStructLogToTraceLog(structLog: TIndexedStructLog): TTraceLog {
     const traceLogBaseData = this.extractDefaultData(structLog)
-    const traceLogCallTypeData = this.getCallTypeData(structLog)
-    const traceLogCreateTypeData = this.getCreateTypeData(structLog)
 
-    return { ...traceLogBaseData, ...traceLogCreateTypeData, ...traceLogCallTypeData }
+    if (checkOpcodeIfOfCallGroupType(structLog.op)) {
+      return { ...traceLogBaseData, ...this.getCallTypeData(structLog), createTypeData: undefined }
+    }
+
+    return { ...traceLogBaseData, ...this.getCreateTypeData(structLog), callTypeData: undefined }
   }
   public parseStructLogToTraceReturnLog(structLog: TIndexedStructLog): TTraceReturnLog {
     const traceLogBaseData = this.extractDefaultData(structLog)

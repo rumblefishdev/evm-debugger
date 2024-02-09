@@ -1,5 +1,5 @@
 import { formatEther } from 'ethers'
-import { OpcodesArguments } from '@evm-debuger/types'
+import { BaseOpcodesHex, OpcodesArguments } from '@evm-debuger/types'
 import type {
   TOpCodesArgs,
   TOpCodesWithArgs,
@@ -80,7 +80,7 @@ export const extractCreateTypeArgsData = (item: TCreateGroupOpcodesArgumentNames
 }
 
 export const extractStackByteWords = <T>(stack: string[], op: string): T => {
-  const opCodeArgumentsNames: string[] = OpcodesArguments[op]
+  const opCodeArgumentsNames: string[] = OpcodesArguments[BaseOpcodesHex[op]]
 
   return opCodeArgumentsNames.reduce((accumulator, argumentName, index) => {
     accumulator[argumentName] = stack[stack.length - index - 1]
@@ -89,27 +89,27 @@ export const extractStackByteWords = <T>(stack: string[], op: string): T => {
 }
 
 export const getCallGroupOpcodesArgumentsData = (structLog: TIndexedStructLog) => {
-  const { stack, op } = structLog
+  const { stack, op, memory } = structLog
 
   const opCodeArguments = extractStackByteWords<TCallGroupOpcodesArgumentNames>(stack, op)
 
-  return extractCallTypeArgsData(opCodeArguments, [])
+  return extractCallTypeArgsData(opCodeArguments, memory)
 }
 
 export const getCreateGroupOpcodesArgumentsData = (structLog: TIndexedStructLog) => {
-  const { stack, op } = structLog
+  const { stack, op, memory } = structLog
 
   const opCodeArguments = extractStackByteWords<TCreateGroupOpcodesArgumentNames>(stack, op)
 
-  return extractCreateTypeArgsData(opCodeArguments, [])
+  return extractCreateTypeArgsData(opCodeArguments, memory)
 }
 
 export const getReturnGroupTypeOpcodesArgumentsData = (structLog: TIndexedStructLog): Pick<TTraceReturnLog, 'output'> => {
-  const { stack, op } = structLog
+  const { stack, op, memory } = structLog
 
   const opCodeArguments = extractStackByteWords<TReturnGroupTypeOpcodesArgumentNames>(stack, op)
 
-  if (Object.keys(opCodeArguments).length === 0) return { output: undefined }
+  if (Object.keys(opCodeArguments).length === 0) return { output: '0x' }
 
-  return extractReturnTypeArgsData(opCodeArguments, [])
+  return extractReturnTypeArgsData(opCodeArguments, memory)
 }
