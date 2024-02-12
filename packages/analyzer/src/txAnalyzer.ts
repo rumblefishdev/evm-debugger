@@ -52,7 +52,7 @@ export class TxAnalyzer {
   }
 
   private readonly storageHandler = new StorageHandler()
-  private readonly stackCounter
+  private readonly stackCounter: StackCounter
   private fragmentReader: FragmentReader
 
   private convertToTraceLog(structLog: TIndexedStructLog[]): TTraceLog[] {
@@ -290,8 +290,6 @@ export class TxAnalyzer {
         }, {} as TPcIndexedStepInstructions)
 
         const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
-
-        console.log('contractStructlogs', contractStructlogs)
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
