@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { palette } from '@rumblefishdev/ui/lib/src/theme/algaeTheme/palette'
 
 import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
-import { palette } from '../../../../../../importedComponents/theme/algaeTheme/palette'
 import { DEFAULT_STRING, activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'

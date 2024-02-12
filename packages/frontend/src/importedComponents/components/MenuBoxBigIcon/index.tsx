@@ -1,1 +1,0 @@
-export { MenuBoxBigIcon } from './MenuBoxBigIcon'

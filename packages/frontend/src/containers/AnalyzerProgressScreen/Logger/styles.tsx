@@ -5,7 +5,6 @@ import { LogMessageStatus } from '../../../store/analyzer/analyzer.const'
 export const StyledLogPanel = styled(Stack)(({ theme }) => ({
   width: '70%',
   padding: theme.spacing(6),
-
   height: '100%',
   boxSizing: 'border-box',
   borderRadius: '16px',
@@ -24,11 +23,16 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 }))
 
 export const StyledLogContiner = styled(Stack)(({ theme }) => ({
-  overflowX: 'hidden',
+  overflowX: 'auto',
   marginTop: theme.spacing(4),
+  height: '100%',
   gap: theme.spacing(2),
   ...theme.customStyles.scrollbar,
   widows: '100%',
+  '&::-webkit-scrollbar': {
+    width: '2px',
+    height: '2px',
+  },
 }))
 
 export const StyledMessageContainer = styled(Stack)(({ theme }) => ({

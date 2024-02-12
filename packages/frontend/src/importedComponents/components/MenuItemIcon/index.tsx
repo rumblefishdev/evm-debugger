@@ -1,1 +1,0 @@
-export { MenuItemIcon } from './MenuItemIcon'

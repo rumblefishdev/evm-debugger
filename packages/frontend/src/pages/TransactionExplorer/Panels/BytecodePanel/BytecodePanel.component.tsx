@@ -1,22 +1,19 @@
 import React from 'react'
 import type { VirtuosoHandle } from 'react-virtuoso'
 
-import { StyledHeading, StyledHeadingWrapper, StyledSmallPanel } from '../styles'
+import { StyledHeading, StyledHeadingWrapper, StyledPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
 import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
-import { GridLayoutHandler } from '../../../../components/GridLayout'
 
 import type { BytecodePanelComponentProps } from './BytecodePanel.types'
 
 export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodePanelComponentProps>(
-  ({ currentElementIndex, dissasembledBytecode, inGridLayout }, ref) => {
+  ({ currentElementIndex, dissasembledBytecode }, ref) => {
     return (
-      <StyledSmallPanel>
+      <StyledPanel>
         <StyledHeadingWrapper>
           <StyledHeading sx={{ fontSize: 22 }}>Disassembled Bytecode</StyledHeading>
-          <div style={{ flex: 1 }} />
-          {inGridLayout && <GridLayoutHandler />}
         </StyledHeadingWrapper>
         <VirtualizedList
           ref={ref}
@@ -35,7 +32,7 @@ export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodeP
             )
           }}
         </VirtualizedList>
-      </StyledSmallPanel>
+      </StyledPanel>
     )
   },
 )

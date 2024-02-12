@@ -18,6 +18,7 @@ import { sighashActions } from '../../../sighash/sighash.slice'
 import { abisSelectors } from '../../../abis/abis.selectors'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
+import { activeLineActions } from '../../../activeLine/activeLine.slice'
 
 export function runAnalyzer(payload: TTransactionData) {
   const analyzer = new TxAnalyzer(payload)
@@ -61,7 +62,18 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     )
 
     yield* put(
-      instructionsActions.addInstructions(Object.entries(instructionsMap).map(([address, instructions]) => ({ instructions, address }))),
+      instructionsActions.addInstructions(
+        Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
+      ),
+    )
+
+    yield* put(
+      activeLineActions.setStructlogsPerActiveLine(
+        Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
+          accumulator[address] = structlogsPerStartLine
+          return accumulator
+        }, {}),
+      ),
     )
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))

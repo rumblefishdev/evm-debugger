@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
+import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
 import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.selectors'
-import { Button } from '../../../../importedComponents/components/Button'
-import { GridLayoutHandler } from '../../../../components/GridLayout'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 
 import { StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
@@ -13,10 +12,9 @@ import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.contain
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 
 interface ISourceCodePanel {
-  inGridLayout?: boolean
   hasContract?: boolean
 }
-export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout, hasContract }) => {
+export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => {
   const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
   const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
   const hasMultipleSourceFiles = useSelector(sourceCodesSelectors.selectHasMultipleSourceFiles)
@@ -47,8 +45,6 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ inGridLayout, hasC
             {treeFileButtonText}
           </Button>
         )}
-        <div style={{ flex: 1 }} />
-        {inGridLayout && <GridLayoutHandler />}
       </StyledHeadingWrapper>
       <StyledSourceWrapper>
         {hasContract ? (

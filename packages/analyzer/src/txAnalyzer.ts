@@ -8,6 +8,9 @@ import type {
   TStepInstrctionsMap,
   TPcIndexedStepInstructions,
   TTransactionData,
+  TStepInstruction,
+  IStructLog,
+  TStructlogsPerStartLine,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
 import type { ErrorDescription, ParamType } from 'ethers'
@@ -26,6 +29,7 @@ import {
   isLogType,
   prepareTraceToSearch,
   readMemory,
+  getPcIndexedStructlogsForContractAddress,
 } from './helpers/helpers'
 import { StructLogParser } from './dataExtractors/structLogParser'
 import { StackCounter } from './helpers/stackCounter'
@@ -271,7 +275,7 @@ export class TxAnalyzer {
     return this.getTraceLogsContractAddresses(mainTraceLogList)
   }
 
-  public getContractsInstructions(): TStepInstrctionsMap {
+  public getContractsInstructions(traceLogs: TReturnedTraceLog[]): TStepInstrctionsMap {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
     if (!this.transactionData.sourceMaps) return {}
@@ -321,10 +325,22 @@ export class TxAnalyzer {
           return accumulator
         }, {} as TPcIndexedStepInstructions)
 
-        return { instructions, address }
+        const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
+
+        const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
+          if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
+          if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc]?.length > 0)
+            accumulator[instruction.fileId][instruction.startCodeLine] = []
+          if (contractStructlogs[instruction.pc]?.length > 0) {
+            accumulator[instruction.fileId][instruction.startCodeLine].push(...contractStructlogs[instruction.pc])
+          }
+          return accumulator
+        }, {} as TStructlogsPerStartLine)
+
+        return { structlogsPerStartLine, instructions, address }
       })
-      .reduce((accumulator, { address, instructions }) => {
-        accumulator[address] = instructions
+      .reduce((accumulator, { address, instructions, structlogsPerStartLine }) => {
+        accumulator[address] = { structlogsPerStartLine, instructions }
         return accumulator
       }, {} as TStepInstrctionsMap)
   }
@@ -347,7 +363,7 @@ export class TxAnalyzer {
     const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
     const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
 
-    const instructionsMap = this.getContractsInstructions()
+    const instructionsMap = this.getContractsInstructions(mainTraceLogList)
 
     return {
       mainTraceLogList,

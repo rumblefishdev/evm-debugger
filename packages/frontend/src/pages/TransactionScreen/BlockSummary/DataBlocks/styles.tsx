@@ -53,18 +53,18 @@ export const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 export const StyledInfoRow = styled(Stack)(() => ({
   width: '100%',
+  marginTop: '8px',
+  justifyContent: 'space-between',
+  flexWrap: 'wrap',
   flexDirection: 'row',
 }))
 
 export const StyledInfoType = styled(Typography)(({ theme }) => ({
-  minWidth: '144px',
   ...theme.typography.bodySmallBold,
   color: theme.palette.rfDisabled,
 }))
 
 export const StyledInfoValue = styled(Typography)(({ theme }) => ({
-  minWidth: '360px',
-  marginLeft: theme.spacing(2),
   ...theme.typography.bodySmall,
   overflowWrap: 'anywhere',
   fontFamily: 'IBM Plex Mono',

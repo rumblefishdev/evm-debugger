@@ -1,9 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { StartingScreen, AnalyzeSummary, TranscationScreen, AppRoot } from './pages'
+import { StartingScreen, AnalyzeSummary, TransactionScreen, AppRoot } from './pages'
 import { ROUTES as ORIG_ROUTES } from './routes'
-// import { TransactionExplorer } from './pages/TransactionExplorer/TransactionExplorer'
-import { TransactionExplorerStaticGrid } from './pages/TransactionExplorer/TransactionExplorerStaticGrid'
+import { TransactionExplorer } from './pages/TransactionExplorer/TransactionExplorer.component'
 
 export const ROUTES = ORIG_ROUTES
 
@@ -19,7 +18,7 @@ export const appRouter = createBrowserRouter(
       children: [
         {
           path: ROUTES.TRANSACTION_SCREEN,
-          element: <TranscationScreen />,
+          element: <TransactionScreen />,
         },
         {
           path: ROUTES.DATA_MANAGER,
@@ -27,7 +26,7 @@ export const appRouter = createBrowserRouter(
         },
         {
           path: ROUTES.TRANSACTION_EXPLORER,
-          element: <TransactionExplorerStaticGrid />,
+          element: <TransactionExplorer />,
         },
       ],
     },

@@ -12,6 +12,7 @@ import {
 import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
 import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
+import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 
 import { TreeFileView } from './TreeFileView.component'
 
@@ -23,6 +24,8 @@ export const TreeFileViewContainer: React.FC = () => {
 
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
+
+  // const test = useSelector(sourceCodesSelectors.)
 
   const sourceFilesNameToIdMap = useMemo<Record<string, number>>(
     () => sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}),
@@ -50,6 +53,7 @@ export const TreeFileViewContainer: React.FC = () => {
     const fileName = getPathByNodeId(nodeId)
     if (sourceFiles.some((file) => file.name === fileName)) {
       dispatch(activeSourceFileActions.setActiveSourceFile(sourceFilesNameToIdMap[fileName]))
+      dispatch(activeLineActions.clearActiveLine())
     }
   }
 

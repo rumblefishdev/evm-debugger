@@ -41,14 +41,12 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
 
     yield* put(analyzerActions.runAnalyzer())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.RUNNING_ANALYZER])
-
     sendStatusMessageToDiscord(`Analyzer finished for ${transactionHash} on chainId ${chainId}`)
   } catch (error) {
     yield* put(analyzerActions.setCriticalError(error.message))
     yield* put(
       analyzerActions.addLogMessage(createErrorLogMessage(`Error while processing transaction: ${transactionHash} on chain: ${chainId}`)),
     )
-
     sendStatusMessageToDiscord(`Analyzer failed for ${transactionHash} on chainId ${chainId}`)
   }
 }
