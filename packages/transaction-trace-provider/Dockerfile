@@ -5,4 +5,4 @@ COPY ./dist/ ./dist/
 COPY ./node_modules/ ./node_modules/
 COPY ./dist/hardhat.config.js .
 
-CMD [ "node", "dist/src/sqsConsumer.js" ]
+CMD [ "node", "dist/src/ecsWrapper.js" ]

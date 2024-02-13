@@ -45,6 +45,7 @@ export const analyzeTransactionHandler = async (
   event: APIGatewayProxyEvent,
   context: Context,
 ): Promise<APIGatewayProxyResult> => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { txHash, chainId } = event.pathParameters!
   if (!txHash || !chainId)
     return createResponse(
