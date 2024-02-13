@@ -22,7 +22,7 @@ Parameters:
     Type: String
   TransactionTraceProviderImage:
     Type: String
-    Default: 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v0.0.1
+    Default: 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v0.0.2
   TransactionTraceMemory:
     Type: Number
     Default: 4096
@@ -271,14 +271,28 @@ Resources:
       CodeUri: ../transaction-trace-provider
       Handler: src/lambdaWrapper.consumeSqsAnalyzeTxEntrypoint
       Runtime: nodejs18.x
-      Timeout: 60
-      MemorySize: 128
+      Layers:
+        - !Ref TransactionTraceProviderFunctionDepLayer
+      Timeout: 900
+      MemorySize: 6144
       Architectures:
         - x86_64
       Environment:
         Variables:
           ECS_TASK_ARN: !Ref TransactionTraceTaskDefinition
           ECS_CLUSTER_ARN: !Ref ECSCluster
+          ALCHEMY_KEY: !Ref AlchemyKey
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
+          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
       Events:
         SqsEvent:
           Type: SQS
