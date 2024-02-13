@@ -5,7 +5,7 @@ export type TTransactionInfoState = TTransactionInfo | null
 
 export type TEthersTransactionReposnse = Pick<
   Awaited<ReturnType<JsonRpcProvider['getTransaction']>>,
-  'blockNumber' | 'blockHash' | 'from' | 'hash' | 'data' | 'to' | 'value' | 'chainId' | 'nonce'
+  'blockNumber' | 'blockHash' | 'from' | 'hash' | 'data' | 'to' | 'value' | 'chainId' | 'nonce' | 'gasLimit'
 >
 
 export type TFetchTransactionInfoPayload = {

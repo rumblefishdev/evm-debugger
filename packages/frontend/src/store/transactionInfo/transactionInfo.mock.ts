@@ -9,6 +9,7 @@ export const mockTransactionInfoState = (): TransactionInfoState => ({
   nonce: 0,
   input: createUUID(),
   hash: createUUID(),
+  gasLimit: BigInt(44444),
   from: createUUID(),
   chainId: ChainId.mainnet,
   blockNumber: '',

@@ -14,6 +14,7 @@ export enum AnalyzerStagesStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
+  NOT_SUPPORTED = 'NOT_SUPPORTED',
 }
 
 export enum LogMessageStatus {
