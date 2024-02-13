@@ -26,4 +26,4 @@ export const consumeSqsAnalyzeTx = async (event: any) => {
 
 console.log(`started with: ${process.env.SQSEvent}`)
 const parsedEvent = JSON.parse(process.env.SQSEvent as string)
-consumeSqsAnalyzeTx(JSON.parse(parsedEvent))
+consumeSqsAnalyzeTx(parsedEvent)
