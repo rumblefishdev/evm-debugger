@@ -46,8 +46,8 @@ export const analyzeTransactionHandler = async (
   context: Context,
 ): Promise<APIGatewayProxyResult> => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const { txHash, chainId } = event.pathParameters!
-  if (!txHash || !chainId)
+  const { txHash, chainId, gasLimit } = event.pathParameters!
+  if (!txHash || !chainId || !gasLimit)
     return createResponse(
       TransactionTraceResponseStatus.FAILED,
       'Invalid params',
@@ -58,12 +58,12 @@ export const analyzeTransactionHandler = async (
 
     if (txDetails === null) {
       txDetails = await putTxDetailsToDdb(txHash, chainId)
-      await putTxDetailsToSqs(txHash, chainId)
+      await putTxDetailsToSqs(txHash, chainId, gasLimit)
     }
 
     if (txDetails.status === TransactionTraceResponseStatus.FAILED) {
       await putTxEventToDdb(TransactionTraceResponseStatus.PENDING, txHash)
-      await putTxDetailsToSqs(txHash, chainId)
+      await putTxDetailsToSqs(txHash, chainId, gasLimit)
     }
     return createResponse(
       TransactionTraceResponseStatus.SUCCESS,

@@ -21,6 +21,7 @@ describe('Unit test for api', function () {
   const CHAIN_ID = '1'
   const txInitDetails = {
     txHash: TX_HASH,
+    gasLimit: '4444',
     chainId: CHAIN_ID,
   }
   const testEvent = createLambdaEvent(txInitDetails)

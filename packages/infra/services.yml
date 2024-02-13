@@ -129,7 +129,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /analyzerData/{txHash}/{chainId}
+            Path: /analyzerData/{txHash}/{chainId}/{gasLimit}
             Method: get
       Policies:
         - Statement:
@@ -269,7 +269,7 @@ Resources:
     Properties:
       FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-sqs-handler
       CodeUri: ../transaction-trace-provider
-      Handler: src/triggerEcsTask.triggerEcsTaskEntrypoint
+      Handler: src/lambdaWrapper.consumeSqsAnalyzeTxEntrypoint
       Runtime: nodejs18.x
       Timeout: 60
       MemorySize: 128

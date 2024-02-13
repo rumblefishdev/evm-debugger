@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
 
-import type { TSetChainIdPayload, TSetS3LocationPayload, TSetTransactionHashPayload } from './transactionConfig.types'
+import type { TSetChainIdPayload, TSetGasLimitPayload, TSetS3LocationPayload, TSetTransactionHashPayload } from './transactionConfig.types'
 import { TransactionConfigState } from './transactionConfig.state'
 
 export const transactionConfigSlice = createSlice({
@@ -13,6 +13,9 @@ export const transactionConfigSlice = createSlice({
     },
     setS3Location: (state, { payload }: PayloadAction<TSetS3LocationPayload>) => {
       state.s3Location = payload.s3Location
+    },
+    setGasLimit: (state, { payload }: PayloadAction<TSetGasLimitPayload>) => {
+      state.gasLimit = payload.gasLimit
     },
     setChainId: (state, { payload }: PayloadAction<TSetChainIdPayload>) => {
       state.chainId = payload.chainId

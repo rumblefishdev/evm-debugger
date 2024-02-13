@@ -16,8 +16,8 @@ import {
 } from '../../../analyzer/analyzer.utils'
 import { StructlogsErrors } from '../../structlogs.errors'
 
-export async function prepareStructlogs(chainId: ChainId, transactionHash: string): Promise<TStructlogResponse> {
-  const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
+export async function prepareStructlogs(chainId: ChainId, transactionHash: string, gasLimit: bigint): Promise<TStructlogResponse> {
+  const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}/${gasLimit}`)
   const responseJson: TStructlogResponse = await response.json()
 
   return responseJson
@@ -31,11 +31,12 @@ export function* startPreparingStructlogsSaga(): SagaGenerator<void> {
     )
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
     const transactionHash = yield* select(transactionConfigSelectors.selectTransactionHash)
-
+    const gasLimit = yield* select(transactionConfigSelectors.selectGasLimit)
+    console.log({ gasLimit })
     while (true) {
       let shouldBreak = false
 
-      const response = yield* call(prepareStructlogs, chainId, transactionHash)
+      const response = yield* call(prepareStructlogs, chainId, transactionHash, gasLimit)
       const { status } = response
 
       switch (status) {
