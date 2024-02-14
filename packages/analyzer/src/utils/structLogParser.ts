@@ -38,9 +38,10 @@ export class StructLogParser {
       startIndex: index + 1,
       stackTrace,
       passedGas: nextStructLog.depth === depth ? gas : nextStructLog.gas,
+      output,
       isContract: nextStructLog.depth === depth + 1,
       input,
-      callTypeData: { output, events: [] },
+      callTypeData: { events: [] },
       address,
     }
   }

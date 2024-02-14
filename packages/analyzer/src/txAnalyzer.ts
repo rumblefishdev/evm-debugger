@@ -30,7 +30,7 @@ import { StructLogParser } from './utils/structLogParser'
 import { StackCounter } from './utils/stackCounter'
 import { StorageHandler } from './utils/storageHandler'
 import { FragmentReader } from './utils/fragmentReader'
-import { extractLogTypeArgsData, getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
+import { getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
 import { SigHashStatuses } from './sigHashes'
 import {
   createSourceMapIdentifier,
@@ -106,10 +106,11 @@ export class TxAnalyzer {
         return {
           ...traceLog,
           returnIndex: index,
+          output,
           isSuccess,
           isReverted,
           gasCost,
-          callTypeData: { ...traceLog.callTypeData, output },
+          callTypeData: { ...traceLog.callTypeData },
         }
       }
       return { ...traceLog, returnIndex: index, isSuccess: true, gasCost }
@@ -138,7 +139,7 @@ export class TxAnalyzer {
         const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
           item.isReverted,
           item.input,
-          item.callTypeData.output,
+          item.output,
         )
 
         return {
@@ -327,8 +328,6 @@ export class TxAnalyzer {
 
     const traceLogsWithRoot = this.parseAndAddRootTraceLog(traceLogs)
 
-    console.log('traceLogsWithRoot', traceLogsWithRoot)
-
     const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsWithRoot, traceReturnLogs)
 
     const traceLogsListWithSuccessFlag = this.markLogEntryAsFailureIfParentReverted(traceLogsListWithReturnData)
@@ -342,6 +341,8 @@ export class TxAnalyzer {
     const contractSighashesInfo = this.getContractSighashList(traceLogsWithBlockNumber)
 
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
+
+    console.log('traceLogsWithBlockNumber', traceLogsWithBlockNumber)
 
     return {
       mainTraceLogList: traceLogsWithBlockNumber,

@@ -13,8 +13,6 @@ export type TTraceLogBase = {
 }
 
 export type TCallTypeData = {
-  output: string
-
   decodedInput?: Result
   decodedOutput?: Result
 
@@ -45,6 +43,7 @@ export type TTraceLogData = {
 
   value: string
   input: string
+  output?: string
   passedGas: number
 }
 
