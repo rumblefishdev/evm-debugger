@@ -6,7 +6,7 @@ import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 import type { Callback, Context } from 'aws-lambda'
 
 import { createSQSRecordEvent } from '../utils/lambdaMocks'
-import { consumeSqsAnalyzeTx } from '../../src/sqsConsumer'
+import { consumeSqsAnalyzeTx } from '../../src/lambdaWrapper'
 import { sampleTraceResult } from '../utils/testStructs'
 import { getMockCalledInput, getMockCalledInputItem } from '../utils/awsMocksHelper'
 
