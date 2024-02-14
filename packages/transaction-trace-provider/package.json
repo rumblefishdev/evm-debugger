@@ -17,7 +17,7 @@
     "hardhat@^2.9.5": "hardhat"
   },
   "scripts": {
-    "postinstall": "cp -R node_modules ./dependencies/nodejs/node_modules",
+    "postinstall": "cd ./dependencies/nodejs && npm i",
     "build": "esbuild hardhat.config.ts src/* --bundle --external:hardhat --loader:.node=file --sourcemap --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest",
     "unit-watch": "jest --watch",
