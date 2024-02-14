@@ -342,8 +342,6 @@ export class TxAnalyzer {
 
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
-    console.log('traceLogsWithBlockNumber', traceLogsWithBlockNumber)
-
     return {
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,

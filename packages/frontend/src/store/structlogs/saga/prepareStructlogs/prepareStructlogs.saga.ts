@@ -17,8 +17,6 @@ import {
 import { StructlogsErrors } from '../../structlogs.errors'
 
 export async function prepareStructlogs(chainId: ChainId, transactionHash: string): Promise<TStructlogResponse> {
-  console.log('prepareStructlogs', transactionTraceProviderUrl)
-  console.log('prepareStructlogs', `${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
   const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}`)
   const responseJson: TStructlogResponse = await response.json()
 
