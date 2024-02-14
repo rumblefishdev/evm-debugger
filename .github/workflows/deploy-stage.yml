@@ -107,6 +107,8 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: "@rumblefishdev"
 
       - name: 'Cache NPM dependencies'
         uses: pat-s/always-upload-cache@v2.1.5
@@ -164,6 +166,8 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: "@rumblefishdev"
 
       - name: 'Cache NPM dependencies'
         uses: pat-s/always-upload-cache@v2.1.5
