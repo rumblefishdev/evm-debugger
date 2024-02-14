@@ -7,5 +7,6 @@ export {
   checkOpcodeIfOfFunctionBlockEndType,
   checkOpcodeIfOfLogGroupType,
   checkOpcodeIfOfReturnGroupType,
+  checkOpcodeIfOfCallOrCreateGroupType,
 } from './helpers/structLogTypeGuards'
 export { Opcodes, AlternativeOpcodes } from './opcodes/opcodes'

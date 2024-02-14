@@ -1,4 +1,4 @@
-import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfCreateGroupType } from '@evm-debuger/analyzer'
+import { checkOpcodeIfOfCallOrCreateGroupType } from '@evm-debuger/analyzer'
 import type { TIndexedStructLog } from '@evm-debuger/types'
 
 import { extendStack } from '../../helpers/helpers'
@@ -7,7 +7,7 @@ import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
 
 export const parseStructlogs = (structLogs: TIndexedStructLog[], traceLogs: TMainTraceLogsWithId[]) => {
   return structLogs.map((item) => {
-    if (checkOpcodeIfOfCallGroupType(item.op) || checkOpcodeIfOfCreateGroupType(item.op))
+    if (checkOpcodeIfOfCallOrCreateGroupType(item.op))
       return {
         ...argStackExtractor(item),
         stack: extendStack(item.stack),
