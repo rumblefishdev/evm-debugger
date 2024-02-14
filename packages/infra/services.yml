@@ -157,7 +157,7 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: TransactionTraceProviderCluster
+      ClusterName: !Sub TransactionTraceProviderCluster-${Environment}
 
   TransactionTraceTaskDefinition:
     Type: AWS::ECS::TaskDefinition
