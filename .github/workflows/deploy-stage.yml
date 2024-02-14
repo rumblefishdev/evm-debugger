@@ -100,6 +100,10 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.1
 
+      - name: Extract version from tag
+        id: extract_version
+        run: echo "::set-output name=VERSION::${GITHUB_REF#refs/tags/@evm-debuger/transaction-trace@}"
+  
       - uses: actions/setup-node@master
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -124,14 +128,20 @@ jobs:
           npm run types:build
       - name: Build Docker Image
         run: |
-          docker build -t current ./packages/transaction-trace-provider 
+          npm run transaction-trace-provider:build
+          docker build -t 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v${{ steps.extract_version.outputs.VERSION }} ./packages/transaction-trace-provider 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::428196107266:role/evm-debugger-transaction-trace-deploy-stage
           aws-region: us-east-1
           role-session-name: ${{ github.event.repository.name }}-${{ github.job }}
-
+      - name: ECR login
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 428196107266.dkr.ecr.us-east-1.amazonaws.com
+      - name: Push image
+        run: |
+          docker push 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v${{ steps.extract_version.outputs.VERSION }}
       - name: Deploy stack
         working-directory: ./packages/infra
         run: |
