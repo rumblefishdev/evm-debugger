@@ -22,7 +22,7 @@ export const traceLogsSlice = createSlice({
     addTraceLogs: (state, action: PayloadAction<TTraceLog[]>) => {
       const traceLogs = action.payload.map<TMainTraceLogsWithId>((traceLog) => ({
         ...traceLog,
-        id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
+        id: createCallIdentifier(traceLog.stackTrace, traceLog.op),
       }))
       traceLogsAdapter.addMany(state, traceLogs)
     },
