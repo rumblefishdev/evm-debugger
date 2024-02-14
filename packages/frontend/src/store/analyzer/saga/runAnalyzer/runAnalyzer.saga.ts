@@ -57,8 +57,8 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
       yield* put(
         activeBlockActions.loadActiveBlock({
-         ...mainTraceLogList[0],
-         id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].op),
+          ...mainTraceLogList[0],
+          id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].op),
         }),
       )
 

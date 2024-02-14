@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfCallOrCreateGroupType, checkOpcodeIfOfCreateGroupType } from '@evm-debuger/analyzer'
+import { checkOpcodeIfOfCallOrCreateGroupType } from '@evm-debuger/analyzer'
 
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
