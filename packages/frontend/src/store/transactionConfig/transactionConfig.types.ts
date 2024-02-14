@@ -4,7 +4,7 @@ export type TTransactionConfigState = {
   chainId?: ChainId
   transactionHash?: string
   s3Location?: string
-  gasLimit?: bigint
+  gasLimit?: string
 }
 
 export type TSetTransactionHashPayload = {
@@ -20,5 +20,5 @@ export type TSetChainIdPayload = {
 }
 
 export type TSetGasLimitPayload = {
-  gasLimit: bigint
+  gasLimit: string
 }
