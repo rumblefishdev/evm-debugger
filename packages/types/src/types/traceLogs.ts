@@ -1,7 +1,7 @@
 import type { ErrorDescription, FunctionFragment, Result } from 'ethers'
 
 import type { TEventInfo, TStorageLogs } from './types'
-import type { BaseOpcodesHex, AlternativeOpcodesHex } from './opcodes/opcodesHex'
+import type { TOpcodesNames } from './opcodes/opcodesHex'
 
 export type TTraceLogBase = {
   depth: number
@@ -9,7 +9,7 @@ export type TTraceLogBase = {
   gasCost: number
   pc: number
   index: number
-  op: keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex
+  op: TOpcodesNames
 }
 
 export type TCallTypeData = {

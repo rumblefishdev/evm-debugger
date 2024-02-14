@@ -1,4 +1,4 @@
-import type { AlternativeOpcodesHex, BaseOpcodesHex } from '@evm-debuger/types'
+import type { TOpcodesNames } from '@evm-debuger/types'
 import type { FunctionFragment } from 'ethers'
 import type { Theme } from '@mui/material'
 
@@ -40,7 +40,7 @@ export const extendStack = (stack: string[]): TExtendedStack => {
   return stack.map((item) => ({ value: item, isSelected: false }))
 }
 
-export const createCallIdentifier = (stackTrace: number[], type: keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex) => {
+export const createCallIdentifier = (stackTrace: number[], type: TOpcodesNames) => {
   const stack = stackTrace.join('__')
   return stackTrace.length > 0 ? `${type}__${stack}` : `${type}__ROOT`
 }

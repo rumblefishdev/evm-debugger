@@ -11,23 +11,6 @@ import type {
 
 import { getSafeHex, readMemory } from './helpers'
 
-// export const extractLogTypeArgsData = (item: TIndexedStructLog) => {
-//   const { stack, op } = item
-
-//   const stackCopy = [...stack]
-
-//   const logArgsNames = LogArgsArray[op]
-
-//   const topicsList = logArgsNames.slice(2)
-
-//   const logDataOffset = stackCopy.pop()
-//   const logDataLength = stackCopy.pop()
-
-//   const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
-
-//   return { topics: extractedTopics, logDataOffset, logDataLength }
-// }
-
 export const extractLogTypeArgsData = (item: ILogGroupTypeOpcodesArgumentNames) => {
   const { offset, size, topic1, topic2, topic3, topic4 } = item
 
@@ -84,7 +67,7 @@ export const extractStackByteWords = <T>(stack: string[], op: string): T => {
 }
 
 export const getLogGroupTypeOpcodesArgumentsData = (structLog: TIndexedStructLog) => {
-  const { stack, op, memory } = structLog
+  const { stack, op } = structLog
 
   const opCodeArguments = extractStackByteWords<ILogGroupTypeOpcodesArgumentNames>(stack, op)
 

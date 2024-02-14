@@ -11,13 +11,14 @@ export const createMockedTraceLog = (stackCount?: number): TMainTraceLogsWithId 
     stackTrace,
     pc: 0,
     passedGas: 0,
+    output: 'some output',
     op: 'CALL',
     input: 'some input',
     index: 0,
     id: createCallIdentifier(stackTrace, 'CALL'),
     gasCost: 0,
     depth: 0,
-    callTypeData: { output: 'some output', events: [] },
+    callTypeData: { events: [] },
     address: 'some address',
   }
 }

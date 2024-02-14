@@ -1,4 +1,4 @@
-import type { AlternativeOpcodesHex, BaseOpcodesHex, TCallTypeData, TStorageLogs, TTraceLog } from '@evm-debuger/types'
+import type { TCallTypeData, TOpcodesNames, TStorageLogs, TTraceLog } from '@evm-debuger/types'
 
 import type { TParsedEventLog } from '../../types'
 
@@ -10,7 +10,7 @@ export type TParsedParams = {
 
 export type TBlockDefaultData = {
   value: string
-  op: keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex
+  op: TOpcodesNames
   stackTrace: string
   passedGas: number
   gasCost: number

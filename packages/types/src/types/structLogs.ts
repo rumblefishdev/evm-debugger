@@ -1,10 +1,10 @@
-import type { BaseOpcodesHex, AlternativeOpcodesHex } from './opcodes/opcodesHex'
+import type { TOpcodesNames } from './opcodes/opcodesHex'
 
 export type TRawStructLogStorage = Record<string, string>
 
 export type TRawStructLog = {
   pc: number
-  op: keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex
+  op: TOpcodesNames
   gas: number
   gasCost: number
   depth: number

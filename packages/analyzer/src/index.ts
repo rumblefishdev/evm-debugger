@@ -1,12 +1,3 @@
 export { TxAnalyzer } from './txAnalyzer'
-export {
-  checkOpcodeIfOfCallGroupType,
-  checkOpcodeIfOfCallOrStaticType,
-  checkOpcodeIfOfCreateGroupType,
-  checkOpcodeIfOfDelegateCallType,
-  checkOpcodeIfOfFunctionBlockEndType,
-  checkOpcodeIfOfLogGroupType,
-  checkOpcodeIfOfReturnGroupType,
-  checkOpcodeIfOfCallOrCreateGroupType,
-} from './helpers/structLogTypeGuards'
+export * from './helpers/structLogTypeGuards'
 export { Opcodes, AlternativeOpcodes } from './opcodes/opcodes'

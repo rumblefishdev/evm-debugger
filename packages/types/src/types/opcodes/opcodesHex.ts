@@ -148,3 +148,5 @@ export enum BaseOpcodesHex {
 export enum AlternativeOpcodesHex {
   'KECCAK256' = 0x20,
 }
+
+export type TOpcodesNames = keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex

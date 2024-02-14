@@ -174,9 +174,10 @@ export const BlockSummary: React.FC<BlockSummaryProps> = () => {
     returnIndex,
     storageAddress,
     storageLogs,
+    output,
   } = currentBlock
 
-  const { errorSignature, events, functionSignature, output, parsedError, parsedInput, parsedOutput, contractName } = callTypeData
+  const { errorSignature, events, functionSignature, parsedError, parsedInput, parsedOutput, contractName } = callTypeData
 
   const defaultBlockSummaryProps: DefaultBlockSummaryProps['data'] = {
     value,
