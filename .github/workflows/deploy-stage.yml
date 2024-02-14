@@ -122,6 +122,9 @@ jobs:
       - name: Build
         run: |
           npm run types:build
+      - name: Build Docker Image
+        run: |
+          docker build -t current ./packages/transaction-trace-provider 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
