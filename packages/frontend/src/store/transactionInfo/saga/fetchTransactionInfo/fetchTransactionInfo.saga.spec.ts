@@ -26,6 +26,7 @@ const transactionInfo: TEthersTransactionReposnse = {
   to: '0x1234567890',
   nonce: 0,
   hash: TRANSACTION_HASH,
+  gasLimit: BigInt(60599),
   from: '0x1234567890',
   data: '0x1234567890',
   chainId: BigInt(CHAIN_ID),

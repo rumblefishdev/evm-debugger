@@ -5,6 +5,7 @@
 !.yarn/sdks
 !.yarn/versions
 
+.npmrc
 
 #yarn
 .yarn/*

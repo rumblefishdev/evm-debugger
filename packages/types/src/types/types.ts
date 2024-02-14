@@ -27,6 +27,7 @@ export type TTransactionInfo = {
   blockNumber: string
   blockHash?: string
   from: string
+  gasLimit?: bigint
   hash: string
   input?: string
   to?: string
