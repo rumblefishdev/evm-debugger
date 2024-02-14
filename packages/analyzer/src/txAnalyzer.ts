@@ -30,7 +30,7 @@ import { StructLogParser } from './utils/structLogParser'
 import { StackCounter } from './utils/stackCounter'
 import { StorageHandler } from './utils/storageHandler'
 import { FragmentReader } from './utils/fragmentReader'
-import { extractLogTypeArgsData } from './helpers/structlogArgumentsExtractors'
+import { extractLogTypeArgsData, getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
 import { SigHashStatuses } from './sigHashes'
 import {
   createSourceMapIdentifier,
@@ -71,51 +71,49 @@ export class TxAnalyzer {
   }
 
   private combineCallWithItsReturn(traceLogs: TTraceLog[], traceReturnLogs: TTraceReturnLog[]): TTraceLog[] {
-    return traceLogs
-      .filter((traceLog) => checkOpcodeIfOfCallGroupType(traceLog.op))
-      .map((traceLog) => {
-        if (!traceLog.isContract) {
-          const result = {
-            ...traceLog,
-            returnIndex: traceLog.startIndex,
-            gasCost: traceLog.passedGas - this.transactionData.structLogs[traceLog.index + 1].gas,
-          }
-          if (traceLog.input === '0x') result.isSuccess = true
-          return result
+    return traceLogs.map((traceLog) => {
+      if (!traceLog.isContract) {
+        const result = {
+          ...traceLog,
+          returnIndex: traceLog.startIndex,
+          gasCost: traceLog.passedGas - this.transactionData.structLogs[traceLog.index + 1].gas,
         }
+        if (traceLog.input === '0x') result.isSuccess = true
+        return result
+      }
 
-        const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.transactionData.structLogs, traceLog)
+      const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.transactionData.structLogs, traceLog)
 
-        const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
+      const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
 
-        if (!lastItemInTraceReturnLogs && traceLog.gasCost > traceLog.passedGas) {
-          return {
-            ...traceLog,
-            isSuccess: false,
-            isReverted: true,
-            callTypeData: { ...traceLog.callTypeData, errorDescription: createErrorDescription('OUT_OF_GAS') },
-          }
+      if (!lastItemInTraceReturnLogs && traceLog.gasCost > traceLog.passedGas) {
+        return {
+          ...traceLog,
+          isSuccess: false,
+          isReverted: true,
+          callTypeData: { ...traceLog.callTypeData, errorDescription: createErrorDescription('OUT_OF_GAS') },
         }
-        if (!lastItemInTraceReturnLogs) return { ...traceLog, isSuccess: false }
+      }
+      if (!lastItemInTraceReturnLogs) return { ...traceLog, isSuccess: false }
 
-        const { index, passedGas } = lastItemInTraceReturnLogs
-        const gasCost = traceLog.passedGas - passedGas
+      const { index, passedGas } = lastItemInTraceReturnLogs
+      const gasCost = traceLog.passedGas - passedGas
 
-        if (checkOpcodeIfOfReturnGroupType(lastItemInCallContext.op)) {
-          const { output } = lastItemInTraceReturnLogs
-          const isSuccess = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN
-          const isReverted = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.REVERT
-          return {
-            ...traceLog,
-            returnIndex: index,
-            isSuccess,
-            isReverted,
-            gasCost,
-            callTypeData: { ...traceLog.callTypeData, output },
-          }
+      if (checkOpcodeIfOfReturnGroupType(lastItemInCallContext.op)) {
+        const { output } = lastItemInTraceReturnLogs
+        const isSuccess = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN
+        const isReverted = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.REVERT
+        return {
+          ...traceLog,
+          returnIndex: index,
+          isSuccess,
+          isReverted,
+          gasCost,
+          callTypeData: { ...traceLog.callTypeData, output },
         }
-        return { ...traceLog, returnIndex: index, isSuccess: true, gasCost }
-      })
+      }
+      return { ...traceLog, returnIndex: index, isSuccess: true, gasCost }
+    })
   }
 
   private markLogEntryAsFailureIfParentReverted(traceLogs: TTraceLog[]) {
@@ -172,10 +170,9 @@ export class TxAnalyzer {
           const logTypeStructLogs = callStructLogContext.filter((log) => checkOpcodeIfOfLogGroupType(log.op))
 
           logTypeStructLogs.forEach((logTypeStructLog) => {
-            const { memory } = logTypeStructLog
-            const { logDataLength, logDataOffset, topics } = extractLogTypeArgsData(logTypeStructLog)
+            const { logDataLength, logDataOffset, topics } = getLogGroupTypeOpcodesArgumentsData(logTypeStructLog)
 
-            const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
+            const logData = getSafeHex(readMemory(logTypeStructLog.memory, logDataOffset, logDataLength))
 
             const eventResult = this.fragmentReader.decodeEvent(logData, topics)
             events.push(eventResult)
@@ -320,15 +317,17 @@ export class TxAnalyzer {
 
   public analyze() {
     this.fragmentReader = new FragmentReader()
+    this.transactionData.structLogs = indexRawStructLogs(this.transactionData.structLogs)
 
-    const indexedStructLogs = indexRawStructLogs(this.transactionData.structLogs)
-    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(indexedStructLogs)
-    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(indexedStructLogs)
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.transactionData.structLogs)
+    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.transactionData.structLogs)
 
     const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
     const traceReturnLogs = this.convertToTraceReturnLog(functionBlockEndStructLogs)
 
     const traceLogsWithRoot = this.parseAndAddRootTraceLog(traceLogs)
+
+    console.log('traceLogsWithRoot', traceLogsWithRoot)
 
     const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsWithRoot, traceReturnLogs)
 
@@ -343,6 +342,7 @@ export class TxAnalyzer {
     const contractSighashesInfo = this.getContractSighashList(traceLogsWithBlockNumber)
 
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
+
     return {
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,

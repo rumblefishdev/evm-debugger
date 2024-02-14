@@ -6,25 +6,35 @@ import type {
   TCreateGroupOpcodesArgumentNames,
   TReturnGroupTypeOpcodesArgumentNames,
   TTraceReturnLog,
+  ILogGroupTypeOpcodesArgumentNames,
 } from '@evm-debuger/types'
-
-import { LogArgsArray } from '../constants/constants'
 
 import { getSafeHex, readMemory } from './helpers'
 
-export const extractLogTypeArgsData = (item: TIndexedStructLog) => {
-  const { stack, op } = item
+// export const extractLogTypeArgsData = (item: TIndexedStructLog) => {
+//   const { stack, op } = item
 
-  const stackCopy = [...stack]
+//   const stackCopy = [...stack]
 
-  const logArgsNames = LogArgsArray[op]
+//   const logArgsNames = LogArgsArray[op]
 
-  const topicsList = logArgsNames.slice(2)
+//   const topicsList = logArgsNames.slice(2)
 
-  const logDataOffset = stackCopy.pop()
-  const logDataLength = stackCopy.pop()
+//   const logDataOffset = stackCopy.pop()
+//   const logDataLength = stackCopy.pop()
 
-  const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
+//   const extractedTopics = topicsList.map(() => getSafeHex(stackCopy.pop()))
+
+//   return { topics: extractedTopics, logDataOffset, logDataLength }
+// }
+
+export const extractLogTypeArgsData = (item: ILogGroupTypeOpcodesArgumentNames) => {
+  const { offset, size, topic1, topic2, topic3, topic4 } = item
+
+  const logDataOffset = getSafeHex(offset)
+  const logDataLength = getSafeHex(size)
+
+  const extractedTopics = [topic1, topic2, topic3, topic4].filter(Boolean).map((topic) => getSafeHex(topic))
 
   return { topics: extractedTopics, logDataOffset, logDataLength }
 }
@@ -71,6 +81,14 @@ export const extractStackByteWords = <T>(stack: string[], op: string): T => {
     accumulator[argumentName] = stack[stack.length - index - 1]
     return accumulator
   }, {} as T)
+}
+
+export const getLogGroupTypeOpcodesArgumentsData = (structLog: TIndexedStructLog) => {
+  const { stack, op, memory } = structLog
+
+  const opCodeArguments = extractStackByteWords<ILogGroupTypeOpcodesArgumentNames>(stack, op)
+
+  return extractLogTypeArgsData(opCodeArguments)
 }
 
 export const getCallGroupOpcodesArgumentsData = (structLog: TIndexedStructLog) => {

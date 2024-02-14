@@ -168,3 +168,12 @@ export type TReturnGroupTypeOpcodesArgumentNames = {
   offset: string
   size: string
 }
+
+export type ILogGroupTypeOpcodesArgumentNames = {
+  offset: string
+  size: string
+  topic1?: string
+  topic2?: string
+  topic3?: string
+  topic4?: string
+}

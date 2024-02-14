@@ -23,6 +23,10 @@ export const checkOpcodeIfOfCreateGroupType = (opcode: string) => {
   return Object.values(CreateGroupOpcodes).includes(BaseOpcodesHex[opcode])
 }
 
+export const checkOpcodeIfOfCallOrCreateGroupType = (opcode: string) => {
+  return checkOpcodeIfOfCallGroupType(opcode) || checkOpcodeIfOfCreateGroupType(opcode)
+}
+
 export const checkOpcodeIfOfReturnGroupType = (opcode: string) => {
   return Object.values(ReturnGroupTypeOpcodes).includes(BaseOpcodesHex[opcode])
 }
