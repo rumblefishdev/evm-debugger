@@ -23,7 +23,7 @@ tsconfig.build.tsbuildinfo
 # Packages
 packages/*/dist/
 packages/*/node_modules/
-
+.npmrc
 # others
 lerna-debug.log
 

@@ -10,7 +10,7 @@ export class TransactionInfoState implements TTransactionInfo {
   nonce: number
   to: string
   value: string
-  gasLimit?: bigint
+  gasLimit?: string
   constructor() {
     this.blockHash = ''
     this.blockNumber = ''
@@ -21,6 +21,6 @@ export class TransactionInfoState implements TTransactionInfo {
     this.nonce = 0
     this.to = ''
     this.value = ''
-    this.gasLimit = BigInt(0)
+    this.gasLimit = ''
   }
 }

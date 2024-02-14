@@ -1,13 +1,15 @@
 {
   "dependencies": {
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "dotenv": "^16.3.1",
-    "hardhat": "2.19.1",
-    "ts-node": "^10.9.1"
+    "@aws-sdk/client-s3": "^3.315.0",
+    "@evm-debuger/types": "^0.1.2",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@sentry/serverless": "^7.51.0",
+    "hardhat": "npm:@rumblefishdev/hardhat@0.19.105"
+  },
+  "overrides": {
+    "hardhat@^2.9.5": "hardhat"
   },
   "scripts": {
-    "patch": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js",
     "debug": "ts-node debug.ts"
   }
 }

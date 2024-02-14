@@ -1,4 +1,4 @@
-export const createSQSRecordEvent = (txHash: string, chainId: string, hardhatForkingUrl: string) => {
+export const createSQSRecordEvent = (txHash: string, chainId: string, hardhatForkingUrl: string, gasLimit: string) => {
   return {
     Records: [
       {
@@ -10,6 +10,10 @@ export const createSQSRecordEvent = (txHash: string, chainId: string, hardhatFor
           },
           hardhatForkingUrl: {
             stringValue: hardhatForkingUrl,
+            dataType: 'String',
+          },
+          gasLimit: {
+            stringValue: gasLimit,
             dataType: 'String',
           },
           chainId: {

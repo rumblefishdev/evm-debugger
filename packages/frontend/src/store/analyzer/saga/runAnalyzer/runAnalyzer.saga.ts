@@ -31,7 +31,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
-    if (transactionInfo.gasLimit < BigInt(2000000)) {
+    if (BigInt(transactionInfo.gasLimit) < BigInt(2000000)) {
       const structLogs = yield* select(structlogsSelectors.selectAll)
       const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
       const sourceFiles = yield* select(sourceCodesSelectors.selectParsedToSourceFiles)

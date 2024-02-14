@@ -1,8 +1,7 @@
 {
   "dependencies": {
-    "hardhat": "2.19.1"
+    "hardhat": "npm:@rumblefishdev/hardhat@0.19.104"
   },
   "scripts": {
-    "postinstall": "cp patches/node_modules/hardhat/internal/core/providers/http.js node_modules/hardhat/internal/core/providers/http.js"
   }
 }
