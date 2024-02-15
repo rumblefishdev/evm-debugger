@@ -31,71 +31,58 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
     const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
-    if (BigInt(transactionInfo.gasLimit) < BigInt(2000000)) {
-      const structLogs = yield* select(structlogsSelectors.selectAll)
-      const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
-      const sourceFiles = yield* select(sourceCodesSelectors.selectParsedToSourceFiles)
-      const contractNames = yield* select(contractNamesSelectors.selectGroupedByAddress)
-      const bytecodes = yield* select(bytecodesSelectors.selectGroupedByAddress)
-      const abis = yield* select(sighashSelectors.abis)
-      const addionalAbis = yield* select(abisSelectors.selectGroupedByAddress)
+    const structLogs = yield* select(structlogsSelectors.selectAll)
+    const sourceMaps = yield* select(sourceMapsSelectors.selectGroupedByAddress)
+    const sourceFiles = yield* select(sourceCodesSelectors.selectParsedToSourceFiles)
+    const contractNames = yield* select(contractNamesSelectors.selectGroupedByAddress)
+    const bytecodes = yield* select(bytecodesSelectors.selectGroupedByAddress)
+    const abis = yield* select(sighashSelectors.abis)
+    const addionalAbis = yield* select(abisSelectors.selectGroupedByAddress)
 
-      const analyzerPayload: TTransactionData = {
-        transactionInfo,
-        structLogs,
-        sourceMaps,
-        sourceFiles,
-        contractNames,
-        bytecodeMaps: bytecodes,
-        abis: { ...abis, ...addionalAbis },
-      }
-
-      const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* call(runAnalyzer, analyzerPayload)
-
-      yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
-
-      yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
-      yield* put(
-        activeBlockActions.loadActiveBlock({
-          ...mainTraceLogList[0],
-          id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].op),
-        }),
-      )
-
-      yield* put(
-        instructionsActions.addInstructions(
-          Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
-        ),
-      )
-
-      yield* put(
-        activeLineActions.setStructlogsPerActiveLine(
-          Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
-            accumulator[address] = structlogsPerStartLine
-            return accumulator
-          }, {}),
-        ),
-      )
-
-      yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
-      yield* put(
-        analyzerActions.updateStage({
-          stageStatus: AnalyzerStagesStatus.SUCCESS,
-          stageName: AnalyzerStages.RUNNING_ANALYZER,
-        }),
-      )
-    } else {
-      yield* put(
-        analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.NOT_SUPPORTED, stageName: AnalyzerStages.RUNNING_ANALYZER }),
-      )
-      yield* put(
-        analyzerActions.addLogMessage(
-          createErrorLogMessage(
-            `Currently, we do not support transactions over 2 million gas. Your transaction has ${transactionInfo.gasLimit} gas`,
-          ),
-        ),
-      )
+    const analyzerPayload: TTransactionData = {
+      transactionInfo,
+      structLogs,
+      sourceMaps,
+      sourceFiles,
+      contractNames,
+      bytecodeMaps: bytecodes,
+      abis: { ...abis, ...addionalAbis },
     }
+
+    const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* call(runAnalyzer, analyzerPayload)
+
+    yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
+
+    yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
+    yield* put(
+      activeBlockActions.loadActiveBlock({
+        ...mainTraceLogList[0],
+        id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].op),
+      }),
+    )
+
+    yield* put(
+      instructionsActions.addInstructions(
+        Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
+      ),
+    )
+
+    yield* put(
+      activeLineActions.setStructlogsPerActiveLine(
+        Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
+          accumulator[address] = structlogsPerStartLine
+          return accumulator
+        }, {}),
+      ),
+    )
+
+    yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
+    yield* put(
+      analyzerActions.updateStage({
+        stageStatus: AnalyzerStagesStatus.SUCCESS,
+        stageName: AnalyzerStages.RUNNING_ANALYZER,
+      }),
+    )
   } catch (error) {
     console.error(error)
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.RUNNING_ANALYZER }))
