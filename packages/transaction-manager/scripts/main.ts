@@ -99,7 +99,6 @@ import { SoruceCodeManagerStrategy } from '../src/helpers/sourceCodeManager.stra
           const solcOutput = solcManager.compile(solcInput)
 
           saveToFile(`${Paths.RESULTS_PERSISTED}/${Paths.CONTRACTS}/${address}/solcOutput.json`, solcOutput)
-        
 
           Object.entries(solcOutput.contracts).forEach(([fileName, fileInternals]) => {
             Object.entries(fileInternals).forEach(([contractName, contractInternals]) => {

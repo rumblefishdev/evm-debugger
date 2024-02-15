@@ -12,6 +12,8 @@ import { activeLineActions } from '../../../../../store/activeLine/activeLine.sl
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
+import { sourceMapsSelectors } from '../../../../../store/sourceMaps/sourceMaps.selectors'
+import { bytecodesSelectors } from '../../../../../store/bytecodes/bytecodes.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
@@ -28,6 +30,12 @@ export const SourceCodeViewContainer: React.FC = () => {
   const structlogsPerLine = useSelector(activeLineSelectors.selectStructlogsPerLineForActiveBlock)
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
+
+  // const currentBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, activeBlock.address))
+  // const sourceMaps = useSelector(sourceMapsSelectors.selectGroupedByAddress)
+
+  // console.log('sourceMap', sourceMaps)
+  // console.log('currentBytecode', currentBytecode)
 
   const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
 
@@ -46,6 +54,8 @@ export const SourceCodeViewContainer: React.FC = () => {
     },
     [dispatch, fileId, structlogs, structlogsPerLine],
   )
+
+  console.log('instructions[activeStrucLog?.pc]', instructions[activeStrucLog?.pc])
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
 

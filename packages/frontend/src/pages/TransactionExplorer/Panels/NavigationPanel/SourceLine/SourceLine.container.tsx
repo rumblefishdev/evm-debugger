@@ -19,6 +19,8 @@ export const SourceLineContainer: React.FC = () => {
   const currentStructLogsByBlocks = useSelector(activeLineSelectors.selectStructlogsGroupedByIndexRange)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
+  console.log('currentStructLogsByBlocks', currentStructLogsByBlocks)
+
   const currentSourceLineContet = useSelector(activeLineSelectors.selectCurrentSelectedSourceLineContent)
 
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
