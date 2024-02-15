@@ -38,8 +38,6 @@ export function* initializeTransactionProcessingSaga({
 
     const gasUsed = yield* call(estimateGasUsage, chainId, transactionHash)
 
-    console.log(gasUsed)
-
     if (gasUsed > BigInt(2000000)) {
       throw new Error(`Currently, we do not support transactions with over 2 milion gas usage. Your transaction used ${gasUsed} gas`)
     }
