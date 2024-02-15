@@ -12,7 +12,7 @@ export const formatTransactionReposne = (transactionInfo: TEthersTransactionRepo
     hash: transactionInfo.hash,
     gasLimit: transactionInfo.gasLimit.toString(),
     from: transactionInfo.from,
-    chainId: toNumber(transactionInfo.chainId),
+    chainId: toNumber(transactionInfo?.chainId || 0),
     blockNumber: transactionInfo.blockNumber.toString(),
     blockHash: transactionInfo.blockHash,
   }

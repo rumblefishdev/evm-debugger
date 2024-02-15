@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-import type { TAllOpCodes } from '@evm-debuger/types'
 
-export const opcodesDictionary: Record<TAllOpCodes, { opcode: number; args: string[]; description: string }> = {
+export const opcodesDictionary: Record<string, { opcode: number; args: string[]; description: string }> = {
   STOP: { opcode: 0x0, description: 'Halts execution.', args: [] },
   ADD: { opcode: 0x1, description: 'Addition operation.', args: ['a', 'b'] },
   MUL: {

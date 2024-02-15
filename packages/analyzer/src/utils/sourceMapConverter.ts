@@ -2,16 +2,13 @@
 /* eslint-disable no-undefined */
 import {
   SourceFileType,
-  TPcIndexedStepInstructions,
   type TOpcodeFromSourceMap,
   type TParseSourceCodeOutput,
   type TParsedSourceMap,
   type TSourceMapCodeRepresentation,
-  IStructLog,
-  TStepInstruction,
 } from '@evm-debuger/types'
 
-import { AlternativeOpcodes, Opcodes } from '../opcodes'
+import { AlternativeOpcodes, Opcodes } from '../opcodes/opcodes'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 

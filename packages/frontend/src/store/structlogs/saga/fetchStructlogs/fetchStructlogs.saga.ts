@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 
 import { call, put, select, type SagaGenerator } from 'typed-redux-saga'
-import type { IStructLog } from '@evm-debuger/types'
+import type { TIndexedStructLog } from '@evm-debuger/types'
 import { FastJson } from 'fast-json'
 
 import { structLogsActions } from '../../structlogs.slice'
@@ -15,10 +15,10 @@ export async function fetchStructlogs(s3Location: string): Promise<ArrayBuffer> 
   return await transactionTrace.arrayBuffer()
 }
 
-export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): IStructLog[] {
+export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): TIndexedStructLog[] {
   const fastJson = new FastJson()
 
-  const structLogs: IStructLog[] = []
+  const structLogs: TIndexedStructLog[] = []
 
   fastJson.on('structLogs[*]', (structLog) => {
     structLogs.push(JSON.parse(structLog.toString()))
@@ -27,7 +27,7 @@ export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): IStructLog[
   fastJson.write(Buffer.from(structlogsArrayBuffer))
 
   // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-  return structLogs.map((structLog: IStructLog, index) => ({ ...structLog, index }))
+  return structLogs.map((structLog: TIndexedStructLog, index) => ({ ...structLog, index }))
 }
 
 export function* fetchStructlogsSaga(): SagaGenerator<void> {

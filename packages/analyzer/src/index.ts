@@ -1,3 +1,3 @@
 export { TxAnalyzer } from './txAnalyzer'
-export { checkIfOfCallType, checkIfOfCreateType } from './helpers/helpers'
-export { Opcodes, AlternativeOpcodes } from './opcodes'
+export * from './helpers/structLogTypeGuards'
+export { Opcodes, AlternativeOpcodes } from './opcodes/opcodes'

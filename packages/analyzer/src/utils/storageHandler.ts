@@ -1,15 +1,13 @@
-import type { ICallTypeTraceLog, ICreateTypeTraceLog, IStorageTypeStructLogs, IStructLog, TStorage } from '@evm-debuger/types'
+import type { TIndexedStructLog, TStorage, TTraceLog } from '@evm-debuger/types'
 
 import {
-  checkIfOfCallOrStaticCallType,
-  checkIfOfCreateType,
-  checkIfOfDelegateCallType,
-  getNextItemOnSameDepth,
-  getSafeHex,
-} from '../helpers/helpers'
+  checkOpcodeIfOfCallOrStaticType,
+  checkOpcodeIfOfCreateGroupType,
+  checkOpcodeIfOfDelegateCallType,
+} from '../helpers/structLogTypeGuards'
 
 export class StorageHandler {
-  public getParsedStorageLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+  public getParsedStorageLogs(traceLog: TTraceLog, structLogs: TIndexedStructLog[]) {
     const { returnIndex, isSuccess, index } = traceLog
 
     const callContextStructLogs = this.getCallContextStructLogs(traceLog, structLogs)
@@ -25,17 +23,13 @@ export class StorageHandler {
     return { returnedStorage, loadedStorage, changedStorage }
   }
 
-  public resolveStorageAddress(
-    traceLog: ICallTypeTraceLog | ICreateTypeTraceLog,
-    previousTransactionLog: ICallTypeTraceLog,
-    structLogs: IStructLog[],
-  ) {
-    if (checkIfOfDelegateCallType(traceLog)) return previousTransactionLog.address
-    if (checkIfOfCallOrStaticCallType(traceLog)) return traceLog.address
-    if (checkIfOfCreateType(traceLog)) return traceLog.address
+  public resolveStorageAddress(traceLog: TTraceLog, previousTransactionLog: TTraceLog) {
+    if (checkOpcodeIfOfDelegateCallType(traceLog.op)) return previousTransactionLog.address
+    if (checkOpcodeIfOfCallOrStaticType(traceLog.op)) return traceLog.address
+    if (checkOpcodeIfOfCreateGroupType(traceLog.op)) return traceLog.address
   }
 
-  private getLoadedAndChangedStorage(storageLogs: IStorageTypeStructLogs[]) {
+  private getLoadedAndChangedStorage(storageLogs: TIndexedStructLog[]) {
     const loadedStorage = []
     const changedStorage = []
     storageLogs.forEach((element, rootIndex) => {
@@ -50,12 +44,12 @@ export class StorageHandler {
     return { loadedStorage, changedStorage }
   }
 
-  private getCallContextStructLogs(traceLog: ICallTypeTraceLog | ICreateTypeTraceLog, structLogs: IStructLog[]) {
+  private getCallContextStructLogs(traceLog: TTraceLog, structLogs: TIndexedStructLog[]) {
     const { startIndex, returnIndex, depth } = traceLog
     return structLogs.slice(startIndex, returnIndex).filter((item) => item.depth === depth + 1)
   }
 
-  private extractStorageLogs(callContextStructLogs: IStructLog[], traceLogIndex: number) {
+  private extractStorageLogs(callContextStructLogs: TIndexedStructLog[], traceLogIndex: number) {
     const storageLogs = []
     callContextStructLogs.forEach((log, index) => {
       const isStorage = log.op === 'SSTORE' || log.op === 'SLOAD'
@@ -65,7 +59,7 @@ export class StorageHandler {
     return storageLogs
   }
 
-  private getLoadStorageElement(log: IStorageTypeStructLogs) {
+  private getLoadStorageElement(log: TIndexedStructLog) {
     const { op, stack, storage, index } = log
 
     if (op === 'SLOAD') {
@@ -74,7 +68,7 @@ export class StorageHandler {
     }
   }
 
-  private getChangeStorageElement(item: IStorageTypeStructLogs, previousStructLog: IStorageTypeStructLogs) {
+  private getChangeStorageElement(item: TIndexedStructLog, previousStructLog: TIndexedStructLog) {
     const { op, stack, index } = item
 
     if (op === 'SSTORE') {
