@@ -4,6 +4,7 @@ import { toBeHex, toNumber } from 'ethers'
 import type { TEthersTransactionReposnse } from './transactionInfo.types'
 
 export const formatTransactionReposne = (transactionInfo: TEthersTransactionReposnse): TTransactionInfo => {
+  console.log(transactionInfo)
   const formattedTransactionInfo: TTransactionInfo = {
     value: toBeHex(transactionInfo.value),
     to: transactionInfo.to,
