@@ -1,5 +1,5 @@
-import type { TMainTraceLogs } from '@evm-debuger/types'
+import type { TTraceLog } from '@evm-debuger/types'
 
-export type TMainTraceLogsWithId = TMainTraceLogs & {
+export type TMainTraceLogsWithId = TTraceLog & {
   id: string
 }

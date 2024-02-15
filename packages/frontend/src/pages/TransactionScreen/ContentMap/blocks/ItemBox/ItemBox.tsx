@@ -8,7 +8,7 @@ import type { ItemBoxProps } from './ItemBox.types'
 import { StyledStack } from './styles'
 
 export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxProps) => {
-  const { type, stackTrace, gasCost, index, id } = treeMapItem.item
+  const { op, stackTrace, gasCost, index, id } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimensions
 
@@ -61,7 +61,7 @@ export const ItemBox = ({ treeMapItem, parentHoverHandler, ...props }: ItemBoxPr
   return (
     <TreemapTooltip
       open={isHovered}
-      type={type}
+      type={op}
       stackTrace={stackTrace}
       gasCost={gasCost}
       onMouseOver={hovered}

@@ -1,7 +1,7 @@
 import type { FunctionFragment, ErrorFragment, EventFragment, Result, LogDescription, ErrorDescription } from 'ethers'
 import type { JsonFragment } from '@ethersproject/abi'
 
-import type { IRawStructLog, IStructLog } from './structLogs'
+import type { TRawStructLog, TIndexedStructLog } from './structLogs'
 import type { ChainId } from './chains'
 import type { SourceFileType, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
 
@@ -27,6 +27,7 @@ export type TTransactionInfo = {
   blockNumber: string
   blockHash?: string
   from: string
+  gasLimit?: string
   hash: string
   input?: string
   to?: string
@@ -39,11 +40,11 @@ export interface TRawTransactionTraceResult {
   gas: number
   failed: boolean
   returnValue: string
-  structLogs: IRawStructLog[]
+  structLogs: TRawStructLog[]
 }
 
 export interface TTransactionTraceResult extends TRawTransactionTraceResult {
-  structLogs: IStructLog[]
+  structLogs: TRawStructLog[]
 }
 
 export interface TDataProvider {
@@ -96,7 +97,7 @@ export type TPcIndexedStepInstructions = Record<number, TStepInstruction>
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
 export type TMappedContractNames = Record<string, string>
-export type TStructlogsPerStartLine = Record<number, Record<number, IStructLog[]>>
+export type TStructlogsPerStartLine = Record<number, Record<number, TIndexedStructLog[]>>
 export type TStepInstrctionsMap = Record<
   string,
   { instructions: TPcIndexedStepInstructions; structlogsPerStartLine: TStructlogsPerStartLine }
@@ -111,7 +112,7 @@ export type TContractData = {
 export type TContractDataByAddress = Record<string, TContractData>
 
 export type TTransactionData = {
-  structLogs: IStructLog[]
+  structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
   abis: TAbis
   sourceFiles: TParsedSourceCodesOutput

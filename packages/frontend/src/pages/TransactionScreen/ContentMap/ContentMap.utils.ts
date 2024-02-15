@@ -33,7 +33,7 @@ export const parseNestedArrayRecursive = (
 
   const intrinsicLog: TIntrinsicLog = {
     owningLog: {
-      type: rootItem.item.type,
+      type: rootItem.item.op,
       stackTrace: rootItem.item.stackTrace,
     },
     id: rootItem.item.id,

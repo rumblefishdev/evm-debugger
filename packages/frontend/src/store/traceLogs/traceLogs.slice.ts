@@ -4,7 +4,7 @@
 
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TMainTraceLogs } from '@evm-debuger/types'
+import type { TTraceLog } from '@evm-debuger/types'
 
 import { createCallIdentifier } from '../../helpers/helpers'
 import { StoreKeys } from '../store.keys'
@@ -19,10 +19,10 @@ export const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
 export const traceLogsSlice = createSlice({
   reducers: {
     clearTraceLogs: (state) => traceLogsAdapter.removeAll(state),
-    addTraceLogs: (state, action: PayloadAction<TMainTraceLogs[]>) => {
+    addTraceLogs: (state, action: PayloadAction<TTraceLog[]>) => {
       const traceLogs = action.payload.map<TMainTraceLogsWithId>((traceLog) => ({
         ...traceLog,
-        id: createCallIdentifier(traceLog.stackTrace, traceLog.type),
+        id: createCallIdentifier(traceLog.stackTrace, traceLog.op),
       }))
       traceLogsAdapter.addMany(state, traceLogs)
     },

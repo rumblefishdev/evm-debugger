@@ -15,7 +15,7 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
     functionSignature,
     isContract,
     parsedError,
-    parsedEvents,
+    events,
     parsedOutput,
     parsedInput,
     storageAddress,
@@ -65,9 +65,9 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
           />
         )}
       </StyledBlockWrapper>
-      {parsedEvents && parsedEvents.length > 0 && (
+      {events && events.length > 0 && (
         <DataSection title="Events data">
-          <EventBlock eventLogs={parsedEvents} />
+          <EventBlock eventLogs={events} />
         </DataSection>
       )}
 
@@ -112,7 +112,7 @@ const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
 }
 
 const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
-  const { address, blockNumber, gasCost, passedGas, stackTrace, type, value, isSuccess } = data
+  const { address, blockNumber, gasCost, passedGas, stackTrace, op, value, isSuccess } = data
 
   return (
     <DataSection title="Trace Information">
@@ -128,7 +128,7 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
       )}
       <StyledInfoRow>
         <StyledInfoType>Type</StyledInfoType>
-        <StyledInfoValue>{type}</StyledInfoValue>
+        <StyledInfoValue>{op}</StyledInfoValue>
       </StyledInfoRow>
       <StyledInfoRow>
         <StyledInfoType>Stack trace</StyledInfoType>
@@ -157,11 +157,66 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
 export const BlockSummary: React.FC<BlockSummaryProps> = () => {
   const currentBlock = useSelector(activeBlockSelectors.selectParsedActiveBlock)
 
-  const { callSpecificData, createSpecificData, defaultData } = currentBlock
+  const {
+    address,
+    callTypeData,
+    gasCost,
+    input,
+    op,
+    passedGas,
+    stackTrace,
+    startIndex,
+    value,
+    blockNumber,
+    createTypeData,
+    isContract,
+    isSuccess,
+    returnIndex,
+    storageAddress,
+    storageLogs,
+    output,
+  } = currentBlock
+
+  const { errorSignature, events, functionSignature, parsedError, parsedInput, parsedOutput, contractName } = callTypeData
+
+  const defaultBlockSummaryProps: DefaultBlockSummaryProps['data'] = {
+    value,
+    startIndex,
+    stackTrace,
+    returnIndex,
+    passedGas,
+    op,
+    isSuccess,
+    gasCost,
+    blockNumber,
+    address,
+  }
+
+  const callSpecificData: CallBlockSummaryProps['data'] = {
+    storageLogs,
+    storageAddress,
+    parsedOutput,
+    parsedInput,
+    parsedError,
+    output,
+    isContract,
+    input,
+    functionSignature,
+    events,
+    errorSignature,
+    contractName,
+  }
+
+  const createSpecificData: CreateBlockSummaryProps['data'] = {
+    storageLogs,
+    storageAddress,
+    salt: createTypeData?.salt,
+    input,
+  }
 
   return (
     <StyledStack>
-      {defaultData ? <DefaultBlockSummary data={defaultData} /> : null}
+      {defaultBlockSummaryProps ? <DefaultBlockSummary data={defaultBlockSummaryProps} /> : null}
       {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
       {createSpecificData ? <CreateBlockSummary data={createSpecificData} /> : null}
     </StyledStack>

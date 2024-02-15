@@ -1,7 +1,7 @@
-import { checkIfOfCallType, checkIfOfCreateType } from '@evm-debuger/analyzer'
 import type { TEventInfo } from '@evm-debuger/types'
 import { createSelector } from '@reduxjs/toolkit'
 import type { ErrorDescription } from 'ethers'
+import { checkOpcodeIfOfCallGroupType } from '@evm-debuger/analyzer'
 
 import { getSignature, parseStackTrace } from '../../helpers/helpers'
 import type { TParsedEventLog } from '../../types'
@@ -10,7 +10,7 @@ import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
 
-import type { TBlockCallSpecificData, TParsedActiveBlock } from './activeBlock.types'
+import type { TParsedActiveBlock, TParsedCallTypeData } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
 
 const selectActiveBlockState = createSelector([selectReducer(StoreKeys.ACTIVE_BLOCK)], (state) => state)
@@ -31,87 +31,45 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
 }
 
 const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | null) => {
-  const result: TParsedActiveBlock = {
-    defaultData: null,
-    createSpecificData: null,
-    callSpecificData: null,
-  }
-
-  const { address, gasCost, passedGas, stackTrace, type, value, blockNumber, isSuccess, startIndex, returnIndex } = block
-  result.defaultData = {
-    value,
-    type,
-    startIndex,
-    stackTrace: parseStackTrace(stackTrace),
-    returnIndex,
-    passedGas,
-    isSuccess,
-    gasCost,
-    blockNumber,
-    address,
-  }
-
   // eslint-disable-next-line unicorn/consistent-destructuring
-  if (checkIfOfCallType(block) && block.isContract) {
-    const {
-      events,
-      functionFragment,
-      errorDescription,
-      decodedInput,
-      decodedOutput,
-      storageAddress,
-      storageLogs,
-      input,
-      output,
-      isContract,
-    } = block
+  const { callTypeData } = block
 
-    const callResult: TBlockCallSpecificData = {
-      storageLogs,
-      storageAddress,
-      parsedOutput: null,
-      parsedInput: null,
-      parsedEvents: parseEventLog(events),
-      parsedError: null,
-      output,
-      isContract,
-      input,
-      functionSignature: null,
-      errorSignature: null,
-      contractName,
-    }
-
-    if (functionFragment) {
-      const { inputs, outputs } = functionFragment
-
-      const parsedInput = parseParameters([...inputs], decodedInput)
-      const parsedOutput = parseParameters([...outputs], decodedOutput)
-
-      const signature = getSignature(functionFragment)
-
-      callResult.parsedInput = parsedInput
-      callResult.parsedOutput = parsedOutput
-      callResult.functionSignature = signature
-    }
-
-    if (errorDescription) {
-      const { signature, fragment, args } = errorDescription
-      const { inputs } = fragment
-
-      const parsedError = parseParameters([...inputs], args)
-
-      callResult.errorSignature = signature
-      callResult.parsedError = parsedError
-    }
-
-    result.callSpecificData = callResult
+  const callResult: TParsedCallTypeData = {
+    ...block.callTypeData,
+    parsedOutput: null,
+    parsedInput: null,
+    parsedError: null,
+    functionSignature: null,
+    functionFragment: null,
+    events: parseEventLog(callTypeData.events),
+    errorSignature: null,
+    contractName,
   }
 
-  if (checkIfOfCreateType(block)) {
-    const { storageAddress, storageLogs, salt, input } = block
+  if (callTypeData.functionFragment) {
+    const { inputs, outputs } = callTypeData.functionFragment
 
-    result.createSpecificData = { storageLogs, storageAddress, salt, input }
+    const parsedInput = parseParameters([...inputs], callTypeData.decodedInput)
+    const parsedOutput = parseParameters([...outputs], callTypeData.decodedOutput)
+
+    const signature = getSignature(callTypeData.functionFragment)
+
+    callResult.parsedInput = parsedInput
+    callResult.parsedOutput = parsedOutput
+    callResult.functionSignature = signature
   }
+
+  if (callTypeData.errorDescription) {
+    const { signature, fragment, args } = callTypeData.errorDescription
+    const { inputs } = fragment
+
+    const parsedError = parseParameters([...inputs], args)
+
+    callResult.errorSignature = signature
+    callResult.parsedError = parsedError
+  }
+
+  const result: TParsedActiveBlock = { ...block, stackTrace: parseStackTrace(block.stackTrace), callTypeData: callResult }
 
   return result
 }
@@ -137,7 +95,9 @@ export const extractErrorInfoFromErrorDescription = (errorDescription: ErrorDesc
 
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
   const errorSignature =
-    checkIfOfCallType(block) && block.errorDescription ? extractErrorInfoFromErrorDescription(block.errorDescription) : null
+    checkOpcodeIfOfCallGroupType(block.op) && block.callTypeData?.errorDescription
+      ? extractErrorInfoFromErrorDescription(block.callTypeData?.errorDescription)
+      : null
 
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }

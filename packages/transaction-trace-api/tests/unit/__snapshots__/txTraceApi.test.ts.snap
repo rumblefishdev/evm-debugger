@@ -3,6 +3,7 @@
 exports[`Unit test for api already in progress, return status 1`] = `
 {
   "chainId": "1",
+  "gasLimit": "4444",
   "status": "RUNNING",
   "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
 }
@@ -24,6 +25,10 @@ exports[`Unit test for api create analyze if 1st time 1`] = `
     "chainId": {
       "DataType": "String",
       "StringValue": "1",
+    },
+    "gasLimit": {
+      "DataType": "String",
+      "StringValue": "4444",
     },
     "hardhatForkingUrl": {
       "DataType": "String",
@@ -52,6 +57,7 @@ exports[`Unit test for api create analyze if 1st time 2`] = `
 exports[`Unit test for api rerun analyze on failed tx 1`] = `
 {
   "chainId": "1",
+  "gasLimit": "4444",
   "status": "FAILED",
   "txHash": "0xf2a56c4a9edc31fd3a8ed3c3e256d500f548035e84e55df6e1c6b631d91c04f9",
 }
