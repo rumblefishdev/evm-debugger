@@ -124,6 +124,7 @@ jobs:
           npm i
           npm install jq.node -g
           node_modules/.bin/lerna bootstrap
+          npm --prefix packages/transaction-trace-provider/dependencies/nodejs install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
