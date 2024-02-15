@@ -14,7 +14,6 @@ import {
 } from '../../../analyzer/analyzer.utils'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import { TransactionInfoErrors } from '../../transactionInfo.errors'
-import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 
 export async function getTransactionInfo(transactionHash: string, chainId: ChainId): Promise<TTransactionInfo> {
   const provider = jsonRpcProvider[chainId]
@@ -49,7 +48,6 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     const formattedTransactionInfo = yield* call(getTransactionInfo, transactionHash, chainId)
 
     yield* put(transactionInfoActions.setTransactionInfo(formattedTransactionInfo))
-    yield* put(transactionConfigActions.setGasLimit({ gasLimit: formattedTransactionInfo.gasLimit }))
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )

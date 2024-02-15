@@ -11,6 +11,6 @@ const selectTransactionHash = createSelector([selectTransactionConfigState], (st
 
 const selectS3Location = createSelector([selectTransactionConfigState], (state) => state.s3Location)
 
-const selectGasLimit = createSelector([selectTransactionConfigState], (state) => state.gasLimit)
+const selectGasUsed = createSelector([selectTransactionConfigState], (state) => state.gasUsed)
 
-export const transactionConfigSelectors = { selectTransactionHash, selectS3Location, selectGasLimit, selectChainId }
+export const transactionConfigSelectors = { selectTransactionHash, selectS3Location, selectGasUsed, selectChainId }
