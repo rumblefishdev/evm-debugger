@@ -1,6 +1,6 @@
 import React from 'react'
-import { checkIfOfCreateOrCallType } from '@evm-debuger/analyzer/dist/helpers/helpers'
 import { useSelector } from 'react-redux'
+import { checkOpcodeIfOfCallOrCreateGroupType } from '@evm-debuger/analyzer'
 
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
@@ -31,7 +31,7 @@ export const QuickLinksContainer: React.FC = () => {
   const externalCalls = React.useMemo(() => {
     return Object.entries(structLogs)
       .map(([_, structLog]) => structLog)
-      .filter((structLog) => checkIfOfCreateOrCallType(structLog))
+      .filter(({ op }) => checkOpcodeIfOfCallOrCreateGroupType(op))
   }, [structLogs])
 
   const expensiveOps = React.useMemo(() => {

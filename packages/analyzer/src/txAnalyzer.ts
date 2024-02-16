@@ -1,41 +1,36 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import type {
-  IFilteredStructLog,
-  TEventInfo,
-  TMainTraceLogs,
-  TReturnedTraceLog,
-  TSourceMapConverstionPayload,
-  TStepInstrctionsMap,
-  TPcIndexedStepInstructions,
-  TTransactionData,
-  TStepInstruction,
-  IStructLog,
-  TStructlogsPerStartLine,
-} from '@evm-debuger/types'
-import { toBigInt } from 'ethers'
-import type { ErrorDescription, ParamType } from 'ethers'
 
 import {
-  checkIfOfCallType,
-  checkIfOfCreateOrCallType,
-  checkIfOfCreateType,
-  checkIfOfReturnType,
+  type TEventInfo,
+  type TSourceMapConverstionPayload,
+  type TStepInstrctionsMap,
+  type TPcIndexedStepInstructions,
+  type TTransactionData,
+  type TStructlogsPerStartLine,
+  type TIndexedStructLog,
+  type TTraceLog,
+  type TTraceReturnLog,
+  BaseOpcodesHex,
+} from '@evm-debuger/types'
+import { toBigInt } from 'ethers'
+
+import {
   convertTxInfoToTraceLog,
-  getFilteredStructLogs,
+  indexRawStructLogs,
   getStorageAddressFromTransactionInfo,
-  getLastItemInCallTypeContext,
-  getLastLogWithRevertType,
   getSafeHex,
-  isLogType,
-  prepareTraceToSearch,
   readMemory,
   getPcIndexedStructlogsForContractAddress,
+  getFunctionBlockStartStructLogs,
+  getFunctionBlockEndStructLogs,
+  selectLastStructLogInFunctionBlockContext,
+  selectFunctionBlockContextForLog,
 } from './helpers/helpers'
-import { StructLogParser } from './dataExtractors/structLogParser'
-import { StackCounter } from './helpers/stackCounter'
-import { StorageHandler } from './dataExtractors/storageHandler'
-import { FragmentReader } from './helpers/fragmentReader'
-import { extractLogTypeArgsData } from './dataExtractors/argsExtractors'
+import { StructLogParser } from './utils/structLogParser'
+import { StackCounter } from './utils/stackCounter'
+import { StorageHandler } from './utils/storageHandler'
+import { FragmentReader } from './utils/fragmentReader'
+import { getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
 import { SigHashStatuses } from './sigHashes'
 import {
   createSourceMapIdentifier,
@@ -43,8 +38,9 @@ import {
   getUniqueSourceMaps,
   opcodesConverter,
   sourceMapConverter,
-} from './dataExtractors/sourceMapConverter'
+} from './utils/sourceMapConverter'
 import { createErrorDescription } from './resources/builtinErrors'
+import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfLogGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
 
 export class TxAnalyzer {
   constructor(public readonly transactionData: TTransactionData) {
@@ -56,128 +52,114 @@ export class TxAnalyzer {
   }
 
   private readonly storageHandler = new StorageHandler()
-  private readonly stackCounter
+  private readonly stackCounter: StackCounter
   private fragmentReader: FragmentReader
 
-  private getParsedTraceLogs(filteredStructLogs: IFilteredStructLog[]): TReturnedTraceLog[] {
-    return filteredStructLogs.map((item) => {
-      const structLogParser = new StructLogParser(item, this.transactionData.structLogs, this.stackCounter)
-
-      // CALL | CALLCODE | DELEGATECALL | STATICCALL
-      if (checkIfOfCallType(item)) return structLogParser.parseCallStructLog()
-
-      // CREATE | CREATE2
-      if (checkIfOfCreateType(item)) return structLogParser.parseCreateStructLog()
-
-      // REVERT AND RETURN
-      if (checkIfOfReturnType(item)) return structLogParser.parseReturnStructLog()
-
-      // STOP
-      if (item.op === 'STOP') return structLogParser.parseStopStructLog()
-    })
+  private convertToTraceLog(structLog: TIndexedStructLog[]): TTraceLog[] {
+    const structLogParser = new StructLogParser(this.transactionData.structLogs, this.stackCounter)
+    return structLog.map((item) => structLogParser.parseStructLogToTraceLog(item))
   }
 
-  private parseAndAddRootTraceLog(transactionList: TReturnedTraceLog[]) {
+  private convertToTraceReturnLog(structLog: TIndexedStructLog[]): TTraceReturnLog[] {
+    const structLogParser = new StructLogParser(this.transactionData.structLogs, this.stackCounter)
+    return structLog.map((item) => structLogParser.parseStructLogToTraceReturnLog(item))
+  }
+
+  private parseAndAddRootTraceLog(transactionList: TTraceLog[]) {
     const rootTraceLog = convertTxInfoToTraceLog(this.transactionData.structLogs[0], this.transactionData.transactionInfo)
     return [rootTraceLog, ...transactionList]
   }
 
-  private returnTransactionListWithContractFlag(traceLogs: TReturnedTraceLog[]) {
-    return traceLogs.map((item) => {
-      if (checkIfOfCallType(item)) {
-        const { index, depth } = item
-        const nextStructLog = this.transactionData.structLogs[index + 1]
-
-        if (nextStructLog.depth === depth + 1) return { ...item, isContract: true }
+  private combineCallWithItsReturn(traceLogs: TTraceLog[], traceReturnLogs: TTraceReturnLog[]): TTraceLog[] {
+    return traceLogs.map((traceLog) => {
+      if (!traceLog.isContract) {
+        const result = {
+          ...traceLog,
+          returnIndex: traceLog.startIndex,
+          gasCost: traceLog.passedGas - this.transactionData.structLogs[traceLog.index + 1].gas,
+        }
+        if (traceLog.input === '0x') result.isSuccess = true
+        return result
       }
-      if (checkIfOfCreateType(item)) return { ...item, isContract: true }
-      return { ...item, isContract: false }
+
+      const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.transactionData.structLogs, traceLog)
+
+      const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
+
+      if (!lastItemInTraceReturnLogs && traceLog.gasCost > traceLog.passedGas) {
+        return {
+          ...traceLog,
+          isSuccess: false,
+          isReverted: true,
+          callTypeData: { ...traceLog.callTypeData, errorDescription: createErrorDescription('OUT_OF_GAS') },
+        }
+      }
+      if (!lastItemInTraceReturnLogs) return { ...traceLog, isSuccess: false }
+
+      const { index, passedGas } = lastItemInTraceReturnLogs
+      const gasCost = traceLog.passedGas - passedGas
+
+      if (checkOpcodeIfOfReturnGroupType(lastItemInCallContext.op)) {
+        const { output } = lastItemInTraceReturnLogs
+        const isSuccess = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN
+        const isReverted = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.REVERT
+        return {
+          ...traceLog,
+          returnIndex: index,
+          output,
+          isSuccess,
+          isReverted,
+          gasCost,
+          callTypeData: { ...traceLog.callTypeData },
+        }
+      }
+      return { ...traceLog, returnIndex: index, isSuccess: true, gasCost }
     })
   }
 
-  private combineCallWithItsReturn(traceLogs: TReturnedTraceLog[]) {
-    return traceLogs.map((item, rootIndex) => {
-      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
-        if (checkIfOfCallType(item) && !item.isContract) {
-          const result = {
-            ...item,
-            returnIndex: item.startIndex,
-            gasCost: item.passedGas - this.transactionData.structLogs[item.index + 1].gas,
-          }
-          if (item.input === '0x') result.isSuccess = true
-          return result
-        }
-
-        const lastItemInCallContext = getLastItemInCallTypeContext(traceLogs, rootIndex, item.depth)
-
-        if (!lastItemInCallContext && item.gasCost > item.passedGas) {
-          return {
-            ...item,
-            isSuccess: false,
-            isReverted: true,
-            errorDescription: createErrorDescription('OUT_OF_GAS'),
-          }
-        }
-        if (!lastItemInCallContext) return { ...item, isSuccess: false }
-
-        const { index, passedGas } = lastItemInCallContext
-        const gasCost = item.passedGas - passedGas
-
-        if (lastItemInCallContext.type === 'RETURN' || lastItemInCallContext.type === 'REVERT') {
-          const { output } = lastItemInCallContext
-          const isSuccess = lastItemInCallContext.type === 'RETURN'
-          const isReverted = lastItemInCallContext.type === 'REVERT'
-          return {
-            ...item,
-            returnIndex: index,
-            output,
-            isSuccess,
-            isReverted,
-            gasCost,
-          }
-        }
-        return { ...item, returnIndex: index, isSuccess: true, gasCost }
-      }
-      return item
-    })
-  }
-
-  private markLogEntryAsFailureIfParentReverted(traceLogs: TReturnedTraceLog[]) {
+  private markLogEntryAsFailureIfParentReverted(traceLogs: TTraceLog[]) {
     const logIndexesToMarkAsFailure = new Set()
-    for (const [rootIndex, item] of traceLogs.entries())
-      if (checkIfOfCallType(item) || checkIfOfCreateType(item)) {
-        const childrenLogs = prepareTraceToSearch(traceLogs, rootIndex, item.depth, false) as TReturnedTraceLog[]
-        const lastItemWithRevertType = getLastLogWithRevertType(childrenLogs, item.depth)
-        if (lastItemWithRevertType) childrenLogs.forEach((log) => logIndexesToMarkAsFailure.add(log.index))
-      }
+    for (const traceLog of traceLogs) {
+      const childrenLogs = selectFunctionBlockContextForLog(traceLogs, traceLog)
+      if (traceLog.isReverted) childrenLogs.forEach((log) => logIndexesToMarkAsFailure.add(log.index))
+    }
 
     return traceLogs.map((log) => {
       return logIndexesToMarkAsFailure.has(log.index) ? { ...log, isSuccess: false } : log
     })
   }
 
-  private decodeCallInputOutput(mainTraceLogList: TMainTraceLogs[]) {
+  private decodeCallInputOutput(mainTraceLogList: TTraceLog[]): TTraceLog[] {
     const { abis } = this.transactionData
 
     for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
 
-    return mainTraceLogList.map((item, index) => {
-      if (checkIfOfCallType(item) && item.isContract && item.input) {
+    return mainTraceLogList.map((item) => {
+      if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract && item.input) {
         const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
           item.isReverted,
           item.input,
           item.output,
         )
 
-        return { ...item, functionFragment, errorDescription: item.errorDescription || errorDescription, decodedOutput, decodedInput }
+        return {
+          ...item,
+          callTypeData: {
+            ...item.callTypeData,
+            functionFragment,
+            errorDescription: item.callTypeData.errorDescription || errorDescription,
+            decodedOutput,
+            decodedInput,
+          },
+        }
       }
       return item
     })
   }
 
-  private extendWithLogsData(mainTraceLogList: TMainTraceLogs[]) {
+  private extendWithLogsData(mainTraceLogList: TTraceLog[]) {
     mainTraceLogList.forEach((item, index) => {
-      if (checkIfOfCallType(item) && item.isContract) {
+      if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract) {
         const events: TEventInfo[] = []
         if (item.isSuccess) {
           const { startIndex, returnIndex, depth } = item
@@ -186,30 +168,29 @@ export class TxAnalyzer {
             .slice(startIndex, returnIndex)
             .filter((element) => element.depth === depth + 1)
 
-          const logTypeStructLogs = callStructLogContext.filter(isLogType)
+          const logTypeStructLogs = callStructLogContext.filter((log) => checkOpcodeIfOfLogGroupType(log.op))
 
           logTypeStructLogs.forEach((logTypeStructLog) => {
-            const { memory } = logTypeStructLog
-            const { logDataLength, logDataOffset, topics } = extractLogTypeArgsData(logTypeStructLog)
+            const { logDataLength, logDataOffset, topics } = getLogGroupTypeOpcodesArgumentsData(logTypeStructLog)
 
-            const logData = getSafeHex(readMemory(memory, logDataOffset, logDataLength))
+            const logData = getSafeHex(readMemory(logTypeStructLog.memory, logDataOffset, logDataLength))
 
             const eventResult = this.fragmentReader.decodeEvent(logData, topics)
             events.push(eventResult)
           })
         }
-        mainTraceLogList[index] = { ...item, events }
+        mainTraceLogList[index] = { ...item, callTypeData: { ...item.callTypeData, events } }
       }
     })
 
     return mainTraceLogList
   }
 
-  private extendWithStorageData(transactionList: TMainTraceLogs[]) {
+  private extendWithStorageData(transactionList: TTraceLog[]) {
     for (let index = 0; index < transactionList.length; index++) {
       const traceLog = transactionList[index]
 
-      if (checkIfOfCreateOrCallType(traceLog) && traceLog.isContract) {
+      if (traceLog.isContract) {
         const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.transactionData.structLogs)
         transactionList[index] = { ...traceLog, storageLogs }
       }
@@ -218,36 +199,34 @@ export class TxAnalyzer {
     return transactionList
   }
 
-  private getTraceLogsContractAddresses(transactionList: TMainTraceLogs[]): string[] {
+  private getTraceLogsContractAddresses(transactionList: TTraceLog[]): string[] {
     const contractAddressList = []
     transactionList.forEach((item) => {
-      if (checkIfOfCallType(item) && item.isContract && !contractAddressList.includes(item.address)) contractAddressList.push(item.address)
+      if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract && !contractAddressList.includes(item.address))
+        contractAddressList.push(item.address)
     })
 
     return contractAddressList
   }
 
-  private extendWithBlockNumber(transactionList: TMainTraceLogs[]) {
+  private extendWithBlockNumber(transactionList: TTraceLog[]) {
     return transactionList.map((item) => ({
       ...item,
       blockNumber: toBigInt(this.transactionData.transactionInfo.blockNumber).toString(),
     }))
   }
 
-  private getCallAndCreateType = (transactionList: TReturnedTraceLog[]): TMainTraceLogs[] => {
-    return transactionList.filter(checkIfOfCreateOrCallType)
-  }
-
-  private getContractSighashList(mainTraceLogList: TMainTraceLogs[]) {
+  private getContractSighashList(mainTraceLogList: TTraceLog[]) {
     const sighashStatues = new SigHashStatuses()
     for (const traceLog of mainTraceLogList)
       if (
-        checkIfOfCallType(traceLog) &&
+        checkOpcodeIfOfCallGroupType(traceLog.op) &&
         traceLog.isContract &&
         traceLog.input &&
         traceLog.input !== '0x' // this is pure transfer of ETH
       ) {
-        const { input, address, errorDescription, functionFragment } = traceLog
+        const { input, address, callTypeData } = traceLog
+        const { functionFragment, errorDescription } = callTypeData
         const sighash = input.slice(0, 10)
 
         if (functionFragment) sighashStatues.add(address, sighash, JSON.parse(functionFragment.format('json')))
@@ -265,17 +244,7 @@ export class TxAnalyzer {
     return sighashStatues.sighashStatusList
   }
 
-  public getContractAddressesInTransaction() {
-    const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
-    const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
-    const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
-    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
-    const mainTraceLogList = this.getCallAndCreateType(traceLogsListWithContractFlag)
-
-    return this.getTraceLogsContractAddresses(mainTraceLogList)
-  }
-
-  public getContractsInstructions(traceLogs: TReturnedTraceLog[]): TStepInstrctionsMap {
+  public getContractsInstructions(traceLogs: TTraceLog[]): TStepInstrctionsMap {
     const dataToDecode: TSourceMapConverstionPayload[] = []
 
     if (!this.transactionData.sourceMaps) return {}
@@ -338,28 +307,43 @@ export class TxAnalyzer {
       }, {} as TStepInstrctionsMap)
   }
 
+  public getContractAddressesInTransaction() {
+    const indexedStructLogs = indexRawStructLogs(this.transactionData.structLogs)
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(indexedStructLogs)
+    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
+    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
+
+    return this.getTraceLogsContractAddresses(traceLogsList)
+  }
+
   public analyze() {
     this.fragmentReader = new FragmentReader()
-    const baseStructLogs = getFilteredStructLogs(this.transactionData.structLogs)
-    const parsedTraceLogs = this.getParsedTraceLogs(baseStructLogs)
-    const traceLogsList = this.parseAndAddRootTraceLog(parsedTraceLogs)
-    const traceLogsListWithContractFlag = this.returnTransactionListWithContractFlag(traceLogsList)
-    const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsListWithContractFlag)
+    this.transactionData.structLogs = indexRawStructLogs(this.transactionData.structLogs)
+
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.transactionData.structLogs)
+    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.transactionData.structLogs)
+
+    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
+    const traceReturnLogs = this.convertToTraceReturnLog(functionBlockEndStructLogs)
+
+    const traceLogsWithRoot = this.parseAndAddRootTraceLog(traceLogs)
+
+    const traceLogsListWithReturnData = this.combineCallWithItsReturn(traceLogsWithRoot, traceReturnLogs)
+
     const traceLogsListWithSuccessFlag = this.markLogEntryAsFailureIfParentReverted(traceLogsListWithReturnData)
-    let mainTraceLogList = this.getCallAndCreateType(traceLogsListWithSuccessFlag)
 
-    mainTraceLogList = this.decodeCallInputOutput(mainTraceLogList)
-    mainTraceLogList = this.extendWithStorageData(mainTraceLogList)
-    mainTraceLogList = this.extendWithLogsData(mainTraceLogList)
-    mainTraceLogList = this.extendWithBlockNumber(mainTraceLogList)
+    const traceLogsWithDecodedIO = this.decodeCallInputOutput(traceLogsListWithSuccessFlag)
+    const traceLogsWithStorageData = this.extendWithStorageData(traceLogsWithDecodedIO)
+    const traceLogsWithLogsData = this.extendWithLogsData(traceLogsWithStorageData)
+    const traceLogsWithBlockNumber = this.extendWithBlockNumber(traceLogsWithLogsData)
 
-    const contractAddresses = this.getTraceLogsContractAddresses(mainTraceLogList)
-    const contractSighashesInfo = this.getContractSighashList(mainTraceLogList)
+    const contractAddresses = this.getTraceLogsContractAddresses(traceLogsWithBlockNumber)
+    const contractSighashesInfo = this.getContractSighashList(traceLogsWithBlockNumber)
 
-    const instructionsMap = this.getContractsInstructions(mainTraceLogList)
+    const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
     return {
-      mainTraceLogList,
+      mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
       analyzeSummary: { contractSighashesInfo, contractAddresses },
     }

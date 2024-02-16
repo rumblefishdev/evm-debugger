@@ -59,7 +59,7 @@ export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => 
     )
   }
 
-  const { gasCost, index, type, stackTrace, id } = treeMapItem.item
+  const { gasCost, index, op, stackTrace, id } = treeMapItem.item
 
   const { width, height, x, y } = treeMapItem.dimensions
 
@@ -75,7 +75,7 @@ export const NestedItemBox = ({ treeMapItem, ...props }: NestedItemBoxProps) => 
 
   return (
     <TreemapTooltip
-      type={type}
+      type={op}
       stackTrace={stackTrace}
       gasCost={gasCost}
       open={isTooltipActive}

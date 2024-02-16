@@ -1,8 +1,8 @@
-import type { IStructLog } from '@evm-debuger/types'
+import type { TIndexedStructLog } from '@evm-debuger/types'
 
 import { opcodesDictionary } from './opcodesDictionary'
 
-export const argStackExtractor = (structLog: IStructLog) => {
+export const argStackExtractor = (structLog: TIndexedStructLog) => {
   const { op, stack } = structLog
 
   const currentOpcode = opcodesDictionary[op]

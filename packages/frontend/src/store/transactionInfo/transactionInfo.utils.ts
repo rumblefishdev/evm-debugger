@@ -13,14 +13,9 @@ export const formatTransactionReposne = (transactionInfo: TEthersTransactionRepo
     hash: transactionInfo.hash,
     gasLimit: transactionInfo.gasLimit.toString(),
     from: transactionInfo.from,
-    chainId: toNumber(transactionInfo.chainId),
+    chainId: toNumber(transactionInfo?.chainId || 0),
     blockNumber: transactionInfo.blockNumber.toString(),
     blockHash: transactionInfo.blockHash,
-  }
-  if (transactionInfo.gasLimit > BigInt(2000000)) {
-    throw Error(
-      `Currently, we do not support transactions over 2 million gas. Your transaction has ${transactionInfo.gasLimit.toString()} gas`,
-    )
   }
   return formattedTransactionInfo
 }

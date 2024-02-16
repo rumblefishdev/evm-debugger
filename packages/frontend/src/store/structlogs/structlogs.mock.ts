@@ -1,6 +1,6 @@
-import type { IStructLog } from '@evm-debuger/types'
+import type { TIndexedStructLog } from '@evm-debuger/types'
 
-export const createMockedStructlog = (index: number): IStructLog => ({
+export const createMockedStructlog = (index: number): TIndexedStructLog => ({
   storage: {},
   stack: [],
   pc: index,
@@ -12,8 +12,8 @@ export const createMockedStructlog = (index: number): IStructLog => ({
   depth: 0,
 })
 
-export const createMockedStructLogs = (length: number): IStructLog[] => {
-  const structLogs: IStructLog[] = []
+export const createMockedStructLogs = (length: number): TIndexedStructLog[] => {
+  const structLogs: TIndexedStructLog[] = []
 
   for (let index = 0; index < length; index++) {
     structLogs.push(createMockedStructlog(index))

@@ -1,6 +1,6 @@
 {
   "name": "@evm-debuger/frontend",
-  "version": "0.2.42",
+  "version": "0.2.43-alpha.3",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.17",
