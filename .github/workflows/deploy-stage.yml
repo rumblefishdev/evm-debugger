@@ -5,6 +5,10 @@ on:
     types:
       - created
 
+permissions:
+      contents: read
+      packages: read
+
 env:
   NODE_VERSION: 18.16.0
   ENV: stage
@@ -51,7 +55,7 @@ jobs:
           npm i
           node_modules/.bin/lerna bootstrap
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 'Build'
         run: |
