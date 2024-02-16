@@ -5,10 +5,6 @@ on:
     types:
       - created
 
-permissions:
-      contents: read
-      packages: read
-
 env:
   NODE_VERSION: 18.16.0
   ENV: stage
@@ -29,6 +25,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      packages: read
 
     steps:
       - name: 'Checkout'
