@@ -6,5 +6,5 @@ export class TransactionConfigState implements TTransactionConfigState {
   chainId: ChainId
   transactionHash: string
   s3Location: string
-  gasLimit: string
+  gasUsed: string
 }
