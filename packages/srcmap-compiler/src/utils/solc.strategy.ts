@@ -1,7 +1,7 @@
 import type { SolcOutput, TEtherscanParsedSourceCode } from '@evm-debuger/types'
 
-import solc from './solc'
-import type { SolcManager } from './types'
+import solc from '../solc'
+import type { SolcManager } from '../types'
 
 const santizeSolcVersionToNumber = (solcVersion: string) => {
   // example solcVersion: v0.5.16+commit.9c3226ce

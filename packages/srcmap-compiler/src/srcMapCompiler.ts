@@ -8,7 +8,7 @@ import { SrcMapStatus } from '@evm-debuger/types'
 
 import { version } from '../package.json'
 
-import { compileFiles } from './helpers'
+import { compileFiles } from './compiler'
 import { solcVersion } from './solc'
 import { setDdbContractInfo } from './ddb'
 import type { TSrcMapCompilerHandler } from './types'

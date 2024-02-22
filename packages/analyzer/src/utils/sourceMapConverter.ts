@@ -34,6 +34,9 @@ export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSour
     if (isUnique) uniqueSourceMaps.push(sourceMap)
   })
 
+  // console.log('sourceMaps', sourceMaps)
+  // console.log('uniqueSourceMaps', uniqueSourceMaps)
+
   return uniqueSourceMaps
 }
 
@@ -102,11 +105,11 @@ export const createSourceMapToSourceCodeDictionary = (
         endCodeLine: endLine,
       }
     } else {
-      const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
-      const previousSourceMapId = createSourceMapIdentifier(previousSourceMap)
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
-        ...sourceMapToSourceCodeDictionary[previousSourceMapId],
+        ...sourceMap,
+        startCodeLine: 0,
         fileType: SourceFileType.YUL,
+        endCodeLine: 0,
       }
     }
   }
