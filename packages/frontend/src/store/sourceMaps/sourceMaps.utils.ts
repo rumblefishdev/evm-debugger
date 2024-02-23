@@ -1,7 +1,9 @@
 import { NodeType } from '@evm-debuger/types'
 import type { TYulBlock, TYulNode, TYulNodeBase } from '@evm-debuger/types'
 
-export const convertYulTreeToArray = (yulTree: TYulBlock): Record<string, TYulNodeBase> => {
+import type { TYulNodeElements } from '../yulNodes/yulNodes.types'
+
+export const convertYulTreeToArray = (yulTree: TYulBlock): TYulNodeElements => {
   const yulArray: TYulNodeBase[] = []
 
   const traverse = (node: TYulNode) => {
@@ -61,8 +63,8 @@ export const convertYulTreeToArray = (yulTree: TYulBlock): Record<string, TYulNo
 
   traverse(yulTree)
 
-  return yulArray.reduce<Record<string, TYulNodeBase>>((accumulator, node) => {
-    accumulator[node.src] = node
+  return yulArray.reduce<TYulNodeElements>((accumulator, node, index) => {
+    accumulator[node.src] = { ...node, listIndex: index }
     return accumulator
   }, {})
 }

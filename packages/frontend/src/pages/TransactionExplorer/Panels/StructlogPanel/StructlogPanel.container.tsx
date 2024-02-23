@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { SourceFileType } from '@evm-debuger/types'
 
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
@@ -43,8 +44,9 @@ export const StructlogPanel: React.FC = () => {
   useEffect(() => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
     if (currentInstruction) {
-      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
       dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine }))
+      if (currentInstruction.fileType !== SourceFileType.YUL)
+        dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
     }
   }, [currentInstructions, activeStructlog, dispatch])
 

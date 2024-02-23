@@ -7,6 +7,7 @@ import { traceStorageBucket } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { convertYulTreeToArray } from '../../sourceMaps.utils'
+import { yulNodesActions } from '../../../yulNodes/yulNodes.slice'
 
 export async function fetchSourceMaps(paths: string[]): Promise<TSourceMap[]> {
   return await Promise.all(
@@ -28,12 +29,9 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
       (sourceMap) => sourceMap.deployedBytecode.ast !== undefined && Object.keys(sourceMap.deployedBytecode.ast).length > 0,
     )
 
-    const converted = convertYulTreeToArray(test[0].deployedBytecode.ast)
+    const convertedYulNodes = convertYulTreeToArray(test[0].deployedBytecode.ast)
 
-    console.log('converted legth', Object.keys(converted).length)
-    console.log('converted', converted)
-
-    console.log('sourceMaps', sourceMaps)
+    yield* put(yulNodesActions.addYulNode({ yulNodes: convertedYulNodes, address: contractAddress }))
 
     const sourceMapsWithAddress = sourceMaps.map((sourceMap) => ({ ...sourceMap, address: contractAddress }))
     yield* put(sourceMapsActions.addSourceMaps(sourceMapsWithAddress))

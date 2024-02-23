@@ -104,6 +104,16 @@ export const createSourceMapToSourceCodeDictionary = (
         fileType,
         endCodeLine: endLine,
       }
+    } else if (sourceMap.offset === -1 && sourceMap.length === -1 && sourceMap.fileId === -1) {
+      const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
+      const previousSourceMapIdentifier = createSourceMapIdentifier(previousSourceMap)
+
+      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
+        ...previousSourceMap,
+        startCodeLine: sourceMapToSourceCodeDictionary[previousSourceMapIdentifier].endCodeLine,
+        fileType: sourceMapToSourceCodeDictionary[previousSourceMapIdentifier].fileType,
+        endCodeLine: sourceMapToSourceCodeDictionary[previousSourceMapIdentifier].endCodeLine,
+      }
     } else {
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
