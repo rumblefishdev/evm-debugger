@@ -59,6 +59,9 @@ export const StyledAceEditor = styled(Ace)(({ theme }) => ({
   '.ace_scroller': {
     cursor: 'pointer',
   },
+  '.ace_scrollbar': {
+    ...theme.customStyles.scrollbar,
+  },
   '.ace_line': {
     pointerEvents: 'auto',
     '&:hover': {
