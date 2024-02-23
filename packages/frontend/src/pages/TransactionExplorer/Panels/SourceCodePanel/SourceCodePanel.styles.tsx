@@ -1,4 +1,4 @@
-import { Stack, Typography, styled } from '@mui/material'
+import { Box, Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
   width: '100%',
@@ -24,4 +24,26 @@ export const NoSourceCodeHero = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   display: 'flex',
   alignItems: 'center',
+}))
+
+export const StyledIsYulOptions = {
+  shouldForwardProp: (prop) => prop !== 'isYulView',
+}
+
+export const StyledYulBar = styled(
+  Stack,
+  StyledIsYulOptions,
+)<{ isYulView: boolean }>(({ theme, isYulView }) => ({
+  justifyContent: 'center',
+  height: '48px',
+  backgroundColor: isYulView ? '#FFEAA7' : theme.palette.rfLinesLight,
+  alignItems: 'center',
+}))
+
+export const StyledYulWrapper = styled(
+  Stack,
+  StyledIsYulOptions,
+)<{ isYulView: boolean }>(({ isYulView }) => ({
+  overflowY: 'hidden',
+  height: isYulView ? '264px' : '48px',
 }))

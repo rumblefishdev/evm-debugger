@@ -7,7 +7,7 @@ export const convertYulTreeToArray = (yulTree: TYulBlock): TYulNodeElements => {
   const yulArray: TYulNodeBase[] = []
 
   const traverse = (node: TYulNode) => {
-    yulArray.push({ src: node.src, nodeType: node.nodeType })
+    yulArray.push({ src: node.src.split(':').slice(0, 2).join(':'), nodeType: node.nodeType })
 
     if (node.nodeType === NodeType.YulBlock) {
       node.statements.forEach(traverse)

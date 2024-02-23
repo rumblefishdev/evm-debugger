@@ -1,4 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
+import type { TIndexedStructLog, TPcIndexedStepInstructions, TStepInstruction } from '@evm-debuger/types'
+import { SourceFileType } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -6,6 +8,7 @@ import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.sel
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 import { sourceMapsSelectors } from '../sourceMaps/sourceMaps.selectors'
+import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
 
 import { instructionsAdapter } from './instructions.slice'
 import { validateInstruction } from './instructions.helpers'
@@ -43,11 +46,34 @@ const selectCurrentInstruction = createSelector(
   },
 )
 
+const checkPreviousInstruction = (
+  instructions: TPcIndexedStepInstructions,
+  structlogs: TIndexedStructLog[],
+  activeStructlog: TIndexedStructLog | TStructlogWithListIndex,
+): TStepInstruction => {
+  const currentInstruction = instructions[activeStructlog.pc]
+  if (currentInstruction.fileType === SourceFileType.YUL || currentInstruction.fileType === SourceFileType.UNKNOWN) {
+    const previousStructlog = structlogs[activeStructlog.index - 1]
+    return checkPreviousInstruction(instructions, structlogs, previousStructlog)
+  }
+
+  return currentInstruction
+}
+
+const selectCurrentSourceCodeInstruction = createSelector(
+  [selectCurrentInstructions, activeStructLogSelectors.selectActiveStructLog, structlogsSelectors.selectAll],
+  (instructions, activeStructlog, structLogs) => {
+    if (!activeStructlog) return null
+    return checkPreviousInstruction(instructions, structLogs, activeStructlog)
+  },
+)
+
 const selectCurrentFileId = createSelector([selectCurrentInstruction], (instruction) => instruction?.fileId)
 
 export const instructionsSelectors = {
   selectIsCurrentInstructionsValid,
   selectEntities,
+  selectCurrentSourceCodeInstruction,
   selectCurrentInstructions,
   selectCurrentInstruction,
   selectCurrentFileId,

@@ -29,13 +29,19 @@ export const SourceCodeViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
-
-  const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
+  const { fileId, endCodeLine, startCodeLine } = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction) || {
     startCodeLine: null,
     fileId: null,
     endCodeLine: null,
   }
+
+  // const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
+
+  // const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
+  //   startCodeLine: null,
+  //   fileId: null,
+  //   endCodeLine: null,
+  // }
 
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {

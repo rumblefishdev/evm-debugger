@@ -9,7 +9,7 @@ import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.sel
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { yulNodesSelectors } from '../../../../store/yulNodes/yulNodes.selectors'
 
-import { StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
+import { StyledSourceCodePanel, StyledSourceWrapper, StyledYulBar, StyledYulWrapper } from './SourceCodePanel.styles'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
 import { TreeFileViewContainer } from './TreeFileView/TreeFileView.container'
 import { YulNodesViewContainer } from './YulNodesView/YulNodesView.container'
@@ -32,14 +32,14 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
 
   const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(hasMultipleSourceFiles)
 
-  React.useEffect(() => {
-    if (activeYulNode) {
-      setIsYulView(true)
-    }
-    if (!activeYulNode) {
-      setIsYulView(false)
-    }
-  }, [setIsYulView, activeYulNode])
+  // React.useEffect(() => {
+  //   if (activeYulNode) {
+  //     setIsYulView(true)
+  //   }
+  //   if (!activeYulNode) {
+  //     setIsYulView(false)
+  //   }
+  // }, [setIsYulView, activeYulNode])
 
   const handleCollapseButtonClick = () => {
     setIsTreeViewExpanded((prevState) => !prevState)
@@ -50,7 +50,7 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
   }
 
   const treeFileButtonText = isTreeViewExpanded ? 'Collapse File Tree' : 'Expand File Tree'
-  const switchViewButtonText = isYulView ? 'Switch to source code view' : 'Switch to Yul View'
+  const switchViewButtonText = isYulView ? 'Collapse Yul View' : 'Expand Yul View'
 
   return (
     <StyledSourceCodePanel>
@@ -72,22 +72,10 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
             </Button>
           )}
         </StyledHeadingWrapper>
-        <Button
-          onTouchStart={(event) => event.stopPropagation()}
-          onMouseDown={(event) => event.stopPropagation()}
-          variant="text"
-          size="medium"
-          onClick={toggleYulView}
-          disabled={!hasCurrentContractYulNodes}
-        >
-          {switchViewButtonText}
-        </Button>
       </Stack>
       <StyledSourceWrapper>
         {hasContract ? (
-          isYulView && hasCurrentContractYulNodes ? (
-            <YulNodesViewContainer />
-          ) : willShowSourceCode ? (
+          willShowSourceCode ? (
             <>
               {isTreeViewExpanded && hasMultipleSourceFiles && <TreeFileViewContainer />}
               <SourceCodeViewContainer />
@@ -99,6 +87,21 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
           <p>Selected trace is not a contract!</p>
         )}
       </StyledSourceWrapper>
+      <StyledYulWrapper isYulView={isYulView}>
+        <StyledYulBar isYulView={Boolean(activeYulNode)}>
+          <Button
+            onTouchStart={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
+            variant="text"
+            size="medium"
+            onClick={toggleYulView}
+            disabled={!hasCurrentContractYulNodes}
+          >
+            {switchViewButtonText}
+          </Button>
+        </StyledYulBar>
+        {isYulView && <YulNodesViewContainer />}
+      </StyledYulWrapper>
     </StyledSourceCodePanel>
   )
 }

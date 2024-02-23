@@ -34,6 +34,7 @@ export enum SourceFileType {
   SOLIDITY = 'SOLIDITY',
   VYPER = 'VYPER',
   YUL = 'YUL',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export type TSrcMapAddres = {
