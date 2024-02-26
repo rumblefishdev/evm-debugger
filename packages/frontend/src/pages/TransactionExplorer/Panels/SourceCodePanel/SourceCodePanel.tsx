@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
 import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
-import { Stack } from '@mui/material'
+import { Box, Collapse, Stack } from '@mui/material'
 
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
@@ -77,7 +77,12 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
         {hasContract ? (
           willShowSourceCode ? (
             <>
-              {isTreeViewExpanded && hasMultipleSourceFiles && <TreeFileViewContainer />}
+              <Collapse
+                in={isTreeViewExpanded && hasMultipleSourceFiles}
+                orientation="horizontal"
+              >
+                <TreeFileViewContainer />
+              </Collapse>
               <SourceCodeViewContainer />
             </>
           ) : (
@@ -100,7 +105,11 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
             {switchViewButtonText}
           </Button>
         </StyledYulBar>
-        {isYulView && <YulNodesViewContainer />}
+        <Collapse in={isYulView}>
+          <Box height={264}>
+            <YulNodesViewContainer />
+          </Box>
+        </Collapse>
       </StyledYulWrapper>
     </StyledSourceCodePanel>
   )

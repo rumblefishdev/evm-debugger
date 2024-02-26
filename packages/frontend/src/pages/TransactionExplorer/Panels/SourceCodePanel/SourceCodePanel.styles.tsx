@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, styled } from '@mui/material'
+import { Box, Collapse, Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
   width: '100%',
@@ -45,5 +45,4 @@ export const StyledYulWrapper = styled(
   StyledIsYulOptions,
 )<{ isYulView: boolean }>(({ isYulView }) => ({
   overflowY: 'hidden',
-  height: isYulView ? '264px' : '48px',
 }))

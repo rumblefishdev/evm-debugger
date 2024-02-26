@@ -1,4 +1,4 @@
-import { Typography, styled } from '@mui/material'
+import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   zIndex: 10,
@@ -12,7 +12,7 @@ export const StyledSourceSectionHeading = styled(Typography)(({ theme }) => ({
   background: 'white',
 }))
 
-export const StyledSourceSection = styled('div')({
+export const StyledSourceSection = styled(Stack)({
   width: '100%',
   height: '100%',
 })

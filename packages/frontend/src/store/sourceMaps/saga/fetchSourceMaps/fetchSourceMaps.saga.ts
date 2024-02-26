@@ -31,6 +31,8 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
 
     const convertedYulNodes = convertYulTreeToArray(test[0].deployedBytecode.ast)
 
+    console.log('convertedYulNodes', convertedYulNodes)
+
     yield* put(yulNodesActions.addYulNode({ yulNodes: convertedYulNodes, address: contractAddress }))
 
     const sourceMapsWithAddress = sourceMaps.map((sourceMap) => ({ ...sourceMap, address: contractAddress }))
