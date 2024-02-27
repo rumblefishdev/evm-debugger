@@ -1,4 +1,4 @@
-import { Stack, styled } from '@mui/material'
+import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
@@ -21,17 +21,32 @@ export const StyledNodeElementContainer = styled(
   margin: theme.spacing(0.5, 0),
   gap: theme.spacing(2),
   flexDirection: 'row',
-  backgroundColor: active ? '#DEC792' : theme.palette.rfBackground,
+  // backgroundColor: active ? '#DEC792' : theme.palette.rfBackground,
+  backgroundColor: active ? '#FFEAA7' : theme.palette.rfBackground,
+  alignItems: 'center',
 }))
 
 export const StyledNodeElementContentWrapper = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(2),
   flexWrap: 'wrap',
   flexDirection: 'row',
+  alignItems: 'center',
 }))
 
 export const StyledNodeElementParametersWrapper = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(1),
   flexWrap: 'nowrap',
   flexDirection: 'row',
+  alignItems: 'center',
+}))
+
+export const StyledNodeElementParametersOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'active',
+}
+
+export const StyledNodeElementParameters = styled(
+  Typography,
+  StyledNodeElementParametersOptions,
+)<{ active?: boolean }>(({ theme, active }) => ({
+  fontWeight: active ? 'bold' : 'normal',
 }))

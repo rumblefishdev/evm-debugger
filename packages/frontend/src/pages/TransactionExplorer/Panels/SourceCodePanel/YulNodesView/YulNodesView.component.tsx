@@ -7,21 +7,43 @@ import type { TExtendedYulNodeElement } from '../../../../../store/yulNodes/yulN
 import {
   StyledNodeElementContainer,
   StyledNodeElementContentWrapper,
+  StyledNodeElementParameters,
   StyledNodeElementParametersWrapper,
   StyledWrapper,
 } from './YulNodesView.styles'
 import type { TYulNodeViewComponentProps } from './YulNodesView.types'
 
-export const YulNodeElement: React.FC<{ allNodes: TExtendedYulNodeElement[]; node: TExtendedYulNodeElement; active?: boolean }> = ({
-  node,
-  active,
-}) => {
+export const YulNodeElement: React.FC<{
+  allNodes: TExtendedYulNodeElement[]
+  node: TExtendedYulNodeElement
+  activeElement?: boolean
+  activeNodeSrc?: string
+}> = ({ node, activeElement, activeNodeSrc }) => {
   return (
-    <StyledNodeElementContainer active={active}>
+    <StyledNodeElementContainer active={activeElement}>
       {node.rootSrc} {node.rootNodeType}
       {node.typedName && <span>{node.typedName.name}</span>}
       {node.literal && <span>{node.literal.value}</span>}
       {node.identifier && <span>{node.identifier.name}</span>}
+      {node.block && (
+        <StyledNodeElementContentWrapper>
+          <StyledNodeElementParametersWrapper>
+            <span>Statements: </span>
+            <StyledNodeElementParametersWrapper>
+              {node.block.statements.map((statement) => {
+                return (
+                  <StyledNodeElementParameters
+                    active={statement === activeNodeSrc && activeElement}
+                    key={statement}
+                  >
+                    {statement}
+                  </StyledNodeElementParameters>
+                )
+              })}
+            </StyledNodeElementParametersWrapper>
+          </StyledNodeElementParametersWrapper>
+        </StyledNodeElementContentWrapper>
+      )}
       {node.functionDefinition && (
         <StyledNodeElementContentWrapper>
           <StyledNodeElementParametersWrapper>
@@ -30,11 +52,33 @@ export const YulNodeElement: React.FC<{ allNodes: TExtendedYulNodeElement[]; nod
           </StyledNodeElementParametersWrapper>
           <StyledNodeElementParametersWrapper>
             <span>Parameters: </span>
-            <span>{node.functionDefinition.parameters?.map((param) => param.name).join(' | ')}</span>
+            <StyledNodeElementParametersWrapper>
+              {node.functionDefinition.parameters?.map((param) => (
+                <StyledNodeElementParameters
+                  active={param.src === activeNodeSrc && activeElement}
+                  key={param.name}
+                >
+                  {param.name}
+                </StyledNodeElementParameters>
+              ))}
+            </StyledNodeElementParametersWrapper>
           </StyledNodeElementParametersWrapper>
           <StyledNodeElementParametersWrapper>
             <span>ReturnVariables: </span>
-            <span>{node.functionDefinition.returnVariables?.map((param) => param.name).join(' | ')}</span>
+            <StyledNodeElementParametersWrapper>
+              {node.functionDefinition.returnVariables?.map((param) => (
+                <StyledNodeElementParameters
+                  active={param.src === activeNodeSrc && activeElement}
+                  key={param.name}
+                >
+                  {param.name}
+                </StyledNodeElementParameters>
+              ))}
+            </StyledNodeElementParametersWrapper>
+          </StyledNodeElementParametersWrapper>
+          <StyledNodeElementParametersWrapper>
+            <span>Body: </span>
+            <span>{node.functionDefinition.body}</span>
           </StyledNodeElementParametersWrapper>
         </StyledNodeElementContentWrapper>
       )}
@@ -42,11 +86,22 @@ export const YulNodeElement: React.FC<{ allNodes: TExtendedYulNodeElement[]; nod
         <StyledNodeElementContentWrapper>
           <StyledNodeElementParametersWrapper>
             <span>FunctionName: </span>
-            <span>{node.functionCall.functionName.name}</span>
+            <StyledNodeElementParameters active={node.functionCall.functionName.src === activeNodeSrc && activeElement}>
+              {node.functionCall.functionName.name}
+            </StyledNodeElementParameters>
           </StyledNodeElementParametersWrapper>
           <StyledNodeElementParametersWrapper>
             <span>Arguments: </span>
-            <span>{node.functionCall.arguments?.map((param) => param.name).join(' | ')}</span>
+            <StyledNodeElementParametersWrapper>
+              {node.functionCall.arguments?.map((param) => (
+                <StyledNodeElementParameters
+                  active={param.src === activeNodeSrc && activeElement}
+                  key={param.name}
+                >
+                  {param.name}
+                </StyledNodeElementParameters>
+              ))}
+            </StyledNodeElementParametersWrapper>
           </StyledNodeElementParametersWrapper>
         </StyledNodeElementContentWrapper>
       )}
@@ -54,11 +109,36 @@ export const YulNodeElement: React.FC<{ allNodes: TExtendedYulNodeElement[]; nod
         <StyledNodeElementContentWrapper>
           <StyledNodeElementParametersWrapper>
             <span>VariableNames: </span>
-            <span>{node.assignment.variableNames?.map((param) => param.name).join(' | ')}</span>
+            <StyledNodeElementParametersWrapper>
+              {node.assignment.variableNames?.map((param) => (
+                <StyledNodeElementParameters
+                  active={param.src === activeNodeSrc && activeElement}
+                  key={param.name}
+                >
+                  {param.name}
+                </StyledNodeElementParameters>
+              ))}
+            </StyledNodeElementParametersWrapper>
           </StyledNodeElementParametersWrapper>
           <StyledNodeElementParametersWrapper>
             <span>Value: </span>
-            <span>{node.assignment.value.name}</span>
+            <StyledNodeElementParameters active={node.assignment.value.src === activeNodeSrc && activeElement}>
+              {node.assignment.value.name}
+            </StyledNodeElementParameters>
+          </StyledNodeElementParametersWrapper>
+        </StyledNodeElementContentWrapper>
+      )}
+      {node.if && (
+        <StyledNodeElementContentWrapper>
+          <StyledNodeElementParametersWrapper>
+            <span>Condition: </span>
+            <StyledNodeElementParameters active={node.if.condition.src === activeNodeSrc && activeElement}>
+              {node.if.condition.name}
+            </StyledNodeElementParameters>
+          </StyledNodeElementParametersWrapper>
+          <StyledNodeElementParametersWrapper>
+            <span>Body: </span>
+            <span>{node.if.body}</span>
           </StyledNodeElementParametersWrapper>
         </StyledNodeElementContentWrapper>
       )}
@@ -79,7 +159,8 @@ export const YulNodesViewComponent = React.forwardRef<VirtuosoHandle, TYulNodeVi
               key={listIndex}
               node={nodeData}
               allNodes={yulNodes}
-              active={activeYulNode && activeYulNode.rootSrc === nodeData.rootSrc}
+              activeElement={activeYulNode && activeYulNode.elementSrc === nodeData.rootSrc}
+              activeNodeSrc={activeYulNode && activeYulNode.rootSrc}
             />
           )
         }}

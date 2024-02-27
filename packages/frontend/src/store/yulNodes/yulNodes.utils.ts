@@ -42,7 +42,7 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulAssignment: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        traverse(node.value)
+        traverse(node.value, node)
         node.variableNames.forEach((child) => traverse(child, node))
         yulNodeAssignments.push({
           ...node,
@@ -57,7 +57,7 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulExpressionStatement: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedExpression = traverse(node.expression)
+        const mappedExpression = traverse(node.expression, node)
         yulExpressionStatements.push({ ...node, src: identifier, expression: mappedExpression })
         break
       }
@@ -65,7 +65,7 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
         node.parameters?.forEach((child) => traverse(child, node))
         node.returnVariables?.forEach((child) => traverse(child, node))
-        const mappedBody = traverse(node.body)
+        const mappedBody = traverse(node.body, node)
         yulFunctionDefinitions.push({
           ...node,
           src: identifier,
@@ -77,30 +77,35 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulVariableDeclaration: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedValue = traverse(node.value)
+        const mappedValue = traverse(node.value, node)
         const mappedVariables = node.variables.map((child) => traverse(child, node))
         yulVariableDeclarations.push({ ...node, variables: mappedVariables, value: mappedValue, src: identifier })
         break
       }
       case NodeType.YulForLoop: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedCondition = traverse(node.condition)
-        const mappedPost = traverse(node.post)
-        const mappedPre = traverse(node.pre)
-        const mappedBody = traverse(node.body)
+        const mappedCondition = traverse(node.condition, node)
+        const mappedPost = traverse(node.post, node)
+        const mappedPre = traverse(node.pre, node)
+        const mappedBody = traverse(node.body, node)
         yulForLoops.push({ ...node, src: identifier, pre: mappedPre, post: mappedPost, condition: mappedCondition, body: mappedBody })
         break
       }
       case NodeType.YulIf: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedCondition = traverse(node.condition)
-        const mappedBody = traverse(node.body)
-        yulIfs.push({ ...node, src: identifier, condition: mappedCondition, body: mappedBody })
+        traverse(node.condition, node)
+        traverse(node.body, node)
+        yulIfs.push({
+          ...node,
+          src: identifier,
+          condition: { src: createIdentifier(node.condition.src), name: node.condition.functionName.name },
+          body: createIdentifier(node.body.src),
+        })
         break
       }
       case NodeType.YulFunctionCall: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        traverse(node.functionName)
+        traverse(node.functionName, node)
         node.arguments.forEach((child) => traverse(child, node))
         yulFunctionCalls.push({
           ...node,
@@ -119,17 +124,32 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
         break
       }
       case NodeType.YulTypedName: {
-        yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
+        yulNodesLinkArray.push({
+          rootSrc: identifier,
+          rootNodeType: node.nodeType,
+          elementSrc: createIdentifier(parentNode.src),
+          elementNodeType: parentNode.nodeType,
+        })
         yulTypedNames.push({ ...node, src: identifier })
         break
       }
       case NodeType.YulLiteral: {
-        yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
+        yulNodesLinkArray.push({
+          rootSrc: identifier,
+          rootNodeType: node.nodeType,
+          elementSrc: createIdentifier(parentNode.src),
+          elementNodeType: parentNode.nodeType,
+        })
         yulLiterals.push({ ...node, src: identifier })
         break
       }
       case NodeType.YulIdentifier: {
-        yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
+        yulNodesLinkArray.push({
+          rootSrc: identifier,
+          rootNodeType: node.nodeType,
+          elementSrc: createIdentifier(parentNode.src),
+          elementNodeType: parentNode.nodeType,
+        })
         yulIdentifiers.push({ ...node, src: identifier })
         break
       }

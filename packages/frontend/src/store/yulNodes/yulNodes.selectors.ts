@@ -121,41 +121,43 @@ const selectCurrentBaseYulNodesWithExtendedData = createSelector(
     _currentYulTypedNameNodes,
     _currentYulVariableDeclarationNodes,
   ) => {
-    console.log('_currentYulNodes', _currentYulNodes)
-    console.log('_currentYulBlockNodes', _currentYulBlockNodes)
-    console.log('_currentYulAssigmentNodes', _currentYulAssigmentNodes)
-    console.log('_currentYulExpressionStatementNodes', _currentYulExpressionStatementNodes)
-    console.log('_currentYulForLoopNodes', _currentYulForLoopNodes)
-    console.log('_currentYulFunctionCallNodes', _currentYulFunctionCallNodes)
-    console.log('_currentYulFunctionDefinitionNodes', _currentYulFunctionDefinitionNodes)
-    console.log('_currentYulIdentifierNodes', _currentYulIdentifierNodes)
-    console.log('_currentYulIfNodes', _currentYulIfNodes)
-    console.log('_currentYulLiteralNodes', _currentYulLiteralNodes)
-    console.log('_currentYulTypedNameNodes', _currentYulTypedNameNodes)
-    console.log('_currentYulVariableDeclarationNodes', _currentYulVariableDeclarationNodes)
+    // console.log('_currentYulNodes', _currentYulNodes)
+    // console.log('_currentYulBlockNodes', _currentYulBlockNodes)
+    // console.log('_currentYulAssigmentNodes', _currentYulAssigmentNodes)
+    // console.log('_currentYulExpressionStatementNodes', _currentYulExpressionStatementNodes)
+    // console.log('_currentYulForLoopNodes', _currentYulForLoopNodes)
+    // console.log('_currentYulFunctionCallNodes', _currentYulFunctionCallNodes)
+    // console.log('_currentYulFunctionDefinitionNodes', _currentYulFunctionDefinitionNodes)
+    // console.log('_currentYulIdentifierNodes', _currentYulIdentifierNodes)
+    // console.log('_currentYulIfNodes', _currentYulIfNodes)
+    // console.log('_currentYulLiteralNodes', _currentYulLiteralNodes)
+    // console.log('_currentYulTypedNameNodes', _currentYulTypedNameNodes)
+    // console.log('_currentYulVariableDeclarationNodes', _currentYulVariableDeclarationNodes)
 
-    return Object.values(_currentYulNodes).map<TExtendedYulNodeElement>((yulNode) => {
-      return {
-        ...yulNode,
-        variableDeclaration: _currentYulVariableDeclarationNodes[yulNode.rootSrc],
-        typedName: _currentYulTypedNameNodes[yulNode.rootSrc],
-        literal: _currentYulLiteralNodes[yulNode.rootSrc],
-        if: _currentYulIfNodes[yulNode.rootSrc],
-        identifier: _currentYulIdentifierNodes[yulNode.rootSrc],
-        functionDefinition: _currentYulFunctionDefinitionNodes[yulNode.rootSrc],
-        functionCall: _currentYulFunctionCallNodes[yulNode.rootSrc],
-        forLoop: _currentYulForLoopNodes[yulNode.rootSrc],
-        expressionStatement: _currentYulExpressionStatementNodes[yulNode.rootSrc],
-        block: _currentYulBlockNodes[yulNode.rootSrc],
-        assignment: _currentYulAssigmentNodes[yulNode.rootSrc],
-      }
-    })
-    // .filter(
-    //   (node) =>
-    //     node.rootNodeType !== NodeType.YulTypedName &&
-    //     node.rootNodeType !== NodeType.YulLiteral &&
-    //     node.rootNodeType !== NodeType.YulIdentifier,
-    // )
+    return Object.values(_currentYulNodes)
+      .map<TExtendedYulNodeElement>((yulNode) => {
+        return {
+          ...yulNode,
+          variableDeclaration: _currentYulVariableDeclarationNodes[yulNode.rootSrc],
+          typedName: _currentYulTypedNameNodes[yulNode.rootSrc],
+          literal: _currentYulLiteralNodes[yulNode.rootSrc],
+          if: _currentYulIfNodes[yulNode.rootSrc],
+          identifier: _currentYulIdentifierNodes[yulNode.rootSrc],
+          functionDefinition: _currentYulFunctionDefinitionNodes[yulNode.rootSrc],
+          functionCall: _currentYulFunctionCallNodes[yulNode.rootSrc],
+          forLoop: _currentYulForLoopNodes[yulNode.rootSrc],
+          expressionStatement: _currentYulExpressionStatementNodes[yulNode.rootSrc],
+          block: _currentYulBlockNodes[yulNode.rootSrc],
+          assignment: _currentYulAssigmentNodes[yulNode.rootSrc],
+        }
+      })
+      .filter(
+        (node) =>
+          node.rootNodeType !== NodeType.YulTypedName &&
+          node.rootNodeType !== NodeType.YulLiteral &&
+          node.rootNodeType !== NodeType.YulIdentifier,
+      )
+      .map((node, listIndex) => ({ ...node, listIndex }))
   },
 )
 
@@ -170,11 +172,20 @@ const selectActiveYulNode = createSelector(
   },
 )
 
+const selectActiveYulNodeElement = createSelector(
+  [selectActiveYulNode, selectCurrentBaseYulNodesWithExtendedData],
+  (activeYulNode, currentYulNodes) => {
+    if (!activeYulNode) return null
+    return currentYulNodes.find((node) => node.rootSrc === activeYulNode.elementSrc)
+  },
+)
+
 export const yulNodesSelectors = {
   selectYulNodesState,
   selectCurrentHasYulNodes,
   selectCurrentBaseYulNodesWithListIndex,
   selectCurrentBaseYulNodesWithExtendedData,
   selectCurrentBaseYulNodes,
+  selectActiveYulNodeElement,
   selectActiveYulNode,
 }

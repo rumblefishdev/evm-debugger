@@ -43,10 +43,13 @@ export const StructlogPanel: React.FC = () => {
 
   useEffect(() => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
-    if (currentInstruction) {
+    if (
+      currentInstruction &&
+      currentInstruction.fileType !== SourceFileType.YUL &&
+      currentInstruction.fileType !== SourceFileType.UNKNOWN
+    ) {
+      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
       dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine }))
-      if (currentInstruction.fileType !== SourceFileType.YUL)
-        dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
     }
   }, [currentInstructions, activeStructlog, dispatch])
 

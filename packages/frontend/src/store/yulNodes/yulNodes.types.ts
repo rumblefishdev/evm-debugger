@@ -32,7 +32,7 @@ export type TParsedYulForLoop = Omit<TYulForLoop, 'condition' | 'pre' | 'post' |
   post: string
   body: string
 }
-export type TParsedYulIf = Omit<TYulIf, 'condition' | 'body'> & { condition: string; body: string }
+export type TParsedYulIf = Omit<TYulIf, 'condition' | 'body'> & { condition: { src: string; name: string }; body: string }
 export type TParsedYulFunctionCall = Omit<TYulFunctionCall, 'functionName' | 'arguments'> & {
   functionName: { src: string; name: string }
   arguments: { src: string; name: string }[]
