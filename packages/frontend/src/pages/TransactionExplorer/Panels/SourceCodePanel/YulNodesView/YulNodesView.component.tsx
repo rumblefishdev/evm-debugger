@@ -1,16 +1,19 @@
 import React from 'react'
-import type { TYulNodeBase } from '@evm-debuger/types'
 import type { VirtuosoHandle } from 'react-virtuoso'
 
 import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
+import type { TExtendedYulNodeElement, TYulNodeBaseWithListIndex } from '../../../../../store/yulNodes/yulNodes.types'
 
 import { StyledNodeElementContainer, StyledWrapper } from './YulNodesView.styles'
 import type { TYulNodeViewComponentProps } from './YulNodesView.types'
 
-export const YulNodeElement: React.FC<{ node: TYulNodeBase; active?: boolean }> = ({ node, active }) => {
+export const YulNodeElement: React.FC<{ node: TExtendedYulNodeElement; active?: boolean }> = ({ node, active }) => {
   return (
     <StyledNodeElementContainer active={active}>
-      {node.src} {node.nodeType}
+      {node.rootSrc} {node.rootNodeType}
+      {node.typedName && <span>{node.typedName.name}</span>}
+      {node.literal && <span>{node.literal.value}</span>}
+      {node.identifier && <span>{node.identifier.name}</span>}
     </StyledNodeElementContainer>
   )
 }
@@ -19,7 +22,7 @@ export const YulNodesViewComponent = React.forwardRef<VirtuosoHandle, TYulNodeVi
   return (
     <StyledWrapper>
       <VirtualizedList
-        items={Object.values(yulNodes)}
+        items={yulNodes}
         ref={ref}
       >
         {(listIndex, nodeData) => {
@@ -27,7 +30,7 @@ export const YulNodesViewComponent = React.forwardRef<VirtuosoHandle, TYulNodeVi
             <YulNodeElement
               key={listIndex}
               node={nodeData}
-              active={activeYulNode && activeYulNode.src === nodeData.src}
+              active={activeYulNode && activeYulNode.rootSrc === nodeData.rootSrc}
             />
           )
         }}

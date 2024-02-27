@@ -92,7 +92,10 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
           <p>Selected trace is not a contract!</p>
         )}
       </StyledSourceWrapper>
-      <StyledYulWrapper isYulView={isYulView}>
+      <StyledYulWrapper
+        isYulView={isYulView}
+        flexGrow={10}
+      >
         <StyledYulBar isYulView={Boolean(activeYulNode)}>
           <Button
             onTouchStart={(event) => event.stopPropagation()}
@@ -106,7 +109,7 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
           </Button>
         </StyledYulBar>
         <Collapse in={isYulView}>
-          <Box height={264}>
+          <Box height={200}>
             <YulNodesViewContainer />
           </Box>
         </Collapse>

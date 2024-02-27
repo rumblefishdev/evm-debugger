@@ -19,5 +19,7 @@ export const StyledNodeElementContainer = styled(
   padding: theme.spacing(2, 3),
   minHeight: '16px',
   margin: theme.spacing(0.5, 0),
+  gap: theme.spacing(2),
+  flexDirection: 'row',
   backgroundColor: active ? '#DEC792' : theme.palette.rfBackground,
 }))

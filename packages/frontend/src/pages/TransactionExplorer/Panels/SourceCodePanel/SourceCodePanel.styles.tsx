@@ -15,6 +15,7 @@ export const StyledSourceWrapper = styled(Stack)(({ theme }) => ({
   overflowY: 'hidden',
   height: '100%',
   gap: theme.spacing(1),
+  flexShrink: 100,
   flexDirection: 'row',
 }))
 
@@ -45,4 +46,5 @@ export const StyledYulWrapper = styled(
   StyledIsYulOptions,
 )<{ isYulView: boolean }>(({ isYulView }) => ({
   overflowY: 'hidden',
+  height: 'auto',
 }))

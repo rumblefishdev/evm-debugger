@@ -6,8 +6,8 @@ import { sourceMapsActions, type TSourceMapsActions } from '../../sourceMaps.sli
 import { traceStorageBucket } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
-import { convertYulTreeToArray } from '../../sourceMaps.utils'
 import { yulNodesActions } from '../../../yulNodes/yulNodes.slice'
+import { convertYulTreeToArray } from '../../../yulNodes/yulNodes.utils'
 
 export async function fetchSourceMaps(paths: string[]): Promise<TSourceMap[]> {
   return await Promise.all(
@@ -29,11 +29,32 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
       (sourceMap) => sourceMap.deployedBytecode.ast !== undefined && Object.keys(sourceMap.deployedBytecode.ast).length > 0,
     )
 
-    const convertedYulNodes = convertYulTreeToArray(test[0].deployedBytecode.ast)
+    const {
+      yulExpressionStatements,
+      yulForLoops,
+      yulFunctionCalls,
+      yulFunctionDefinitions,
+      yulIdentifiers,
+      yulIfs,
+      yulLiterals,
+      yulNodeAssignments,
+      yulNodeBlocks,
+      yulNodesLinkArray,
+      yulTypedNames,
+    } = convertYulTreeToArray(test[0].deployedBytecode.ast)
 
-    console.log('convertedYulNodes', convertedYulNodes)
-
-    yield* put(yulNodesActions.addYulNode({ yulNodes: convertedYulNodes, address: contractAddress }))
+    yield* put(yulNodesActions.initializeYulNodesForContract({ address: contractAddress }))
+    yield* put(yulNodesActions.addYulExpressionStatements({ yulExpressionStatements, address: contractAddress }))
+    yield* put(yulNodesActions.addYulForLoops({ yulForLoops, address: contractAddress }))
+    yield* put(yulNodesActions.addYulFunctionCalls({ yulFunctionCalls, address: contractAddress }))
+    yield* put(yulNodesActions.addYulFunctionDefinitions({ yulFunctionDefinitions, address: contractAddress }))
+    yield* put(yulNodesActions.addYulIdentifiers({ yulIdentifiers, address: contractAddress }))
+    yield* put(yulNodesActions.addYulIfs({ yulIfs, address: contractAddress }))
+    yield* put(yulNodesActions.addYulLiterals({ yulLiterals, address: contractAddress }))
+    yield* put(yulNodesActions.addYulAssignments({ yulAssignments: yulNodeAssignments, address: contractAddress }))
+    yield* put(yulNodesActions.addYulBlocks({ yulBlocks: yulNodeBlocks, address: contractAddress }))
+    yield* put(yulNodesActions.addYulTypedNames({ yulTypedNames, address: contractAddress }))
+    yield* put(yulNodesActions.addYulNodes({ yulNodes: yulNodesLinkArray, address: contractAddress }))
 
     const sourceMapsWithAddress = sourceMaps.map((sourceMap) => ({ ...sourceMap, address: contractAddress }))
     yield* put(sourceMapsActions.addSourceMaps(sourceMapsWithAddress))
