@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
+import { NodeType } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -149,6 +150,12 @@ const selectCurrentBaseYulNodesWithExtendedData = createSelector(
         assignment: _currentYulAssigmentNodes[yulNode.rootSrc],
       }
     })
+    // .filter(
+    //   (node) =>
+    //     node.rootNodeType !== NodeType.YulTypedName &&
+    //     node.rootNodeType !== NodeType.YulLiteral &&
+    //     node.rootNodeType !== NodeType.YulIdentifier,
+    // )
   },
 )
 

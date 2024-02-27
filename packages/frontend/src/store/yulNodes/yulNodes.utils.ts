@@ -42,9 +42,17 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulAssignment: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedValue = traverse(node.value)
-        const mappedVariableNames = node.variableNames.map((child) => traverse(child, node))
-        yulNodeAssignments.push({ ...node, variableNames: mappedVariableNames, value: mappedValue, src: identifier })
+        traverse(node.value)
+        node.variableNames.forEach((child) => traverse(child, node))
+        yulNodeAssignments.push({
+          ...node,
+          variableNames: node.variableNames.map((child) => ({ src: createIdentifier(child.src), name: child.name })),
+          value:
+            node.value.nodeType === NodeType.YulFunctionCall
+              ? { src: createIdentifier(node.value.src), name: node.value.functionName.name }
+              : { src: createIdentifier(node.value.src), name: node.value.name },
+          src: identifier,
+        })
         break
       }
       case NodeType.YulExpressionStatement: {
@@ -55,14 +63,14 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulFunctionDefinition: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedParameters = node.parameters?.map((child) => traverse(child, node))
-        const mappedReturnVariables = node.returnVariables?.map((child) => traverse(child, node))
+        node.parameters?.forEach((child) => traverse(child, node))
+        node.returnVariables?.forEach((child) => traverse(child, node))
         const mappedBody = traverse(node.body)
         yulFunctionDefinitions.push({
           ...node,
           src: identifier,
-          returnVariables: mappedReturnVariables,
-          parameters: mappedParameters,
+          returnVariables: node?.returnVariables?.map((child) => ({ src: createIdentifier(child.src), name: child.name })),
+          parameters: node?.parameters?.map((child) => ({ src: createIdentifier(child.src), name: child.name })),
           body: mappedBody,
         })
         break
@@ -92,9 +100,22 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
       }
       case NodeType.YulFunctionCall: {
         yulNodesLinkArray.push({ rootSrc: identifier, rootNodeType: node.nodeType, elementSrc: identifier, elementNodeType: node.nodeType })
-        const mappedFunctionName = traverse(node.functionName)
-        const mappedArguments = node.arguments.map((child) => traverse(child, node))
-        yulFunctionCalls.push({ ...node, src: identifier, functionName: mappedFunctionName, arguments: mappedArguments })
+        traverse(node.functionName)
+        node.arguments.forEach((child) => traverse(child, node))
+        yulFunctionCalls.push({
+          ...node,
+          src: identifier,
+          functionName: { src: createIdentifier(node.functionName.src), name: node.functionName.name },
+          arguments: node.arguments?.map((child) => {
+            if (child.nodeType === NodeType.YulLiteral) {
+              return { src: createIdentifier(child.src), name: child.value }
+            }
+            if (child.nodeType === NodeType.YulIdentifier) {
+              return { src: createIdentifier(child.src), name: child.name }
+            }
+            return { src: createIdentifier(child.src), name: child.functionName.name }
+          }),
+        })
         break
       }
       case NodeType.YulTypedName: {
@@ -120,22 +141,6 @@ export const convertYulTreeToArray = (yulTree: TYulBlock) => {
   }
 
   traverse(yulTree)
-
-  console.log('yulNodesLinkArray', yulNodesLinkArray)
-
-  console.log('yulNodeBlocks', yulNodeBlocks)
-  console.log('yulNodeAssignments', yulNodeAssignments)
-  console.log('yulExpressionStatements', yulExpressionStatements)
-  console.log('yulFunctionDefinitions', yulFunctionDefinitions)
-  console.log('yulVariableDeclarations', yulVariableDeclarations)
-  console.log('yulForLoops', yulForLoops)
-  console.log('yulIfs', yulIfs)
-  console.log('yulFunctionCalls', yulFunctionCalls)
-  console.log('yulTypedNames', yulTypedNames)
-  console.log('yulLiterals', yulLiterals)
-  console.log('yulIdentifiers', yulIdentifiers)
-
-  console.log('===================================')
 
   return {
     yulVariableDeclarations,

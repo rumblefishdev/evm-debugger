@@ -23,3 +23,15 @@ export const StyledNodeElementContainer = styled(
   flexDirection: 'row',
   backgroundColor: active ? '#DEC792' : theme.palette.rfBackground,
 }))
+
+export const StyledNodeElementContentWrapper = styled(Stack)(({ theme }) => ({
+  gap: theme.spacing(2),
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+}))
+
+export const StyledNodeElementParametersWrapper = styled(Stack)(({ theme }) => ({
+  gap: theme.spacing(1),
+  flexWrap: 'nowrap',
+  flexDirection: 'row',
+}))

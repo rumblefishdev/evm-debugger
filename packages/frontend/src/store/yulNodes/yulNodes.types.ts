@@ -15,11 +15,14 @@ import type {
 import type { EntityState } from '@reduxjs/toolkit'
 
 export type TParsedYulBlock = Omit<TYulBlock, 'statements'> & { statements: string[] }
-export type TParsedYulAssignment = Omit<TYulAssignment, 'variableNames' | 'value'> & { variableNames: string[]; value: string }
+export type TParsedYulAssignment = Omit<TYulAssignment, 'variableNames' | 'value'> & {
+  variableNames: { src: string; name: string }[]
+  value: { src: string; name: string }
+}
 export type TParsedYulExpressionStatement = Omit<TYulExpressionStatement, 'expression'> & { expression: string }
 export type TParsedYulFunctionDefinition = Omit<TYulFunctionDefinition, 'parameters' | 'returnVariables' | 'body'> & {
-  parameters: string[]
-  returnVariables: string[]
+  parameters: { src: string; name: string }[]
+  returnVariables: { src: string; name: string }[]
   body: string
 }
 export type TParsedYulVariableDeclaration = Omit<TYulVariableDeclaration, 'variables' | 'value'> & { variables: string[]; value: string }
@@ -30,7 +33,10 @@ export type TParsedYulForLoop = Omit<TYulForLoop, 'condition' | 'pre' | 'post' |
   body: string
 }
 export type TParsedYulIf = Omit<TYulIf, 'condition' | 'body'> & { condition: string; body: string }
-export type TParsedYulFunctionCall = Omit<TYulFunctionCall, 'functionName' | 'arguments'> & { functionName: string; arguments: string[] }
+export type TParsedYulFunctionCall = Omit<TYulFunctionCall, 'functionName' | 'arguments'> & {
+  functionName: { src: string; name: string }
+  arguments: { src: string; name: string }[]
+}
 
 export type TYulNodeLinkedElement = { elementSrc: string; elementNodeType: NodeType; rootNodeType: NodeType; rootSrc: string }
 
