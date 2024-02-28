@@ -42,7 +42,7 @@ export const getDdbContractInfo = async (
     (item: Record<string, { N: string; S: string; L: { S: string }[] }>) => ({
       timestamp: parseInt(item.timestamp.N, 10),
       status: item.status.S as SrcMapStatus,
-      pathSourceMaps: item.pathSourceMaps?.L?.map((map) => map.S) || [],
+      pathSourceMap: item.pathSourceMap?.S || '',
       pathSourceFiles: item.pathSourceFiles?.L?.map((file) => file.S) || [],
       pathSourceData: item.pathSourceData?.S || '',
       pathCompilatorSettings: item.pathCompilatorSettings?.S || '',
@@ -62,7 +62,7 @@ export const setDdbContractInfo = async (
     timestamp: Date.now(),
     status: data.status,
     pathSources: data.pathSources || '',
-    pathSourceMaps: data.pathSourceMaps || [],
+    pathSourceMap: data.pathSourceMap || '',
     pathSourceFiles: data.pathSourceFiles || [],
     pathSourceData: data.pathSourceData || '',
     pathCompilatorSettings: data.pathCompilatorSettings || '',

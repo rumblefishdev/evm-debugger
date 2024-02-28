@@ -1,7 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
+import type { TYulBlock } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
+import type { ActionsType } from '../store.types'
 
 import type {
   TAddYulNodesPayload,
@@ -55,6 +57,9 @@ export const yulNodesSlice = createSlice({
         address: payload.address,
       }
     },
+
+    createYulNodesStructure: (state, action: PayloadAction<{ content: TYulBlock; address: string }>) => {},
+
     addYulVariableDeclarations: (state, { payload }: PayloadAction<TAddYulVariableDeclarationsPayload>) => {
       state[payload.address].yulVariableDeclarations = yulVariableDeclarationNodeAdapter.addMany(
         state[payload.address].yulVariableDeclarations,
@@ -116,6 +121,5 @@ export const yulNodesSlice = createSlice({
 
 export const yulNodesActions = yulNodesSlice.actions
 export const yulNodesReducer = yulNodesSlice.reducer
-// export const yulNodeAdapterSelectors = yulNodesAdapter.getSelectors()
 
-export type TYulNodesActions = typeof yulNodesActions
+export type TYulNodesActions = ActionsType<typeof yulNodesActions>

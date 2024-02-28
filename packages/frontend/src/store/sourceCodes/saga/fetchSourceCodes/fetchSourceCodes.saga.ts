@@ -96,7 +96,7 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
               )
               yield* take(analyzerActions.addLogMessage)
 
-              yield* put(sourceMapsActions.fetchSourceMaps({ paths: payload.pathSourceMaps, contractAddress: address }))
+              yield* put(sourceMapsActions.fetchSourceMaps({ path: payload.pathSourceMap, contractAddress: address }))
               yield* take(analyzerActions.addLogMessage)
               break
             default:

@@ -21,7 +21,7 @@ const firstMockedResponse: Record<string, ISrcMapApiPayload> = {
   [CONTRACT_ADDRESSES[0]]: {
     status: SrcMapStatus.COMPILATION_SUCCESS,
     pathSources: 'pathSources',
-    pathSourceMaps: ['pathSourceMaps'],
+    pathSourceMap: 'pathSourceMaps',
     pathSourceData: 'pathSourceData',
     chainId: CHAIN_ID,
     address: CONTRACT_ADDRESSES[0],
@@ -37,7 +37,7 @@ const secondMockedResponse: Record<string, ISrcMapApiPayload> = {
   [CONTRACT_ADDRESSES[1]]: {
     status: SrcMapStatus.COMPILATION_SUCCESS,
     pathSources: 'pathSources',
-    pathSourceMaps: ['pathSourceMaps'],
+    pathSourceMap: 'pathSourceMaps',
     pathSourceData: 'pathSourceData',
     chainId: CHAIN_ID,
     address: CONTRACT_ADDRESSES[1],
@@ -86,7 +86,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .put(
         sourceMapsActions.fetchSourceMaps({
-          paths: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceMaps,
+          path: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceMap,
           contractAddress: CONTRACT_ADDRESSES[0],
         }),
       )
@@ -113,7 +113,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .put(
         sourceMapsActions.fetchSourceMaps({
-          paths: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceMaps,
+          path: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceMap,
           contractAddress: CONTRACT_ADDRESSES[1],
         }),
       )

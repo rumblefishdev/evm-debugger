@@ -112,7 +112,7 @@ export interface ISrcMapApiPayload {
   timestamp?: number
   message?: string
   pathSourceFiles?: string[]
-  pathSourceMaps?: string[]
+  pathSourceMap?: string
   pathSourceData?: string
   pathSources?: string
   pathCompilatorSettings?: string

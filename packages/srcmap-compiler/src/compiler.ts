@@ -140,38 +140,33 @@ export const createSoruceMapsOrder = (
   )
 }
 
-export const createSourceMapsEntries = async (
+export const createSourceMapEntry = (
   solcOutput: SolcOutput,
   rootContractName: string,
-): Promise<TSourceMap[]> => {
-  let generatedSourceMaps: TSourceMap[] = []
-  for (const [fileName, fileInternals] of Object.entries(
-    solcOutput.contracts,
-  )) {
-    const newerEntries: TSourceMap[] = await Promise.all(
-      Object.entries(fileInternals).map(([contractName, contractInternals]) => {
-        return {
-          fileName,
-          deployedBytecode: {
-            sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
-            opcodes: contractInternals.evm.deployedBytecode.opcodes,
-            object: contractInternals.evm.deployedBytecode.object,
-            contents:
-              contractInternals.evm.deployedBytecode.generatedSources[0]
-                ?.contents,
-            ast: contractInternals.evm.deployedBytecode.generatedSources[0]
-              ?.ast,
-          },
-          contractName,
-        }
-      }),
-    )
-    generatedSourceMaps = [...generatedSourceMaps, ...newerEntries]
-  }
-
-  return generatedSourceMaps.filter(
-    (item) => item.contractName === rootContractName,
+): TSourceMap => {
+  const solcOutputContractEntries = Object.entries(solcOutput.contracts)
+  const rootContract = solcOutputContractEntries.find(
+    ([, contract]) => contract[rootContractName],
   )
+  if (rootContract) {
+    const [fileName, fileInternals] = rootContract
+    const contractInternals = fileInternals[rootContractName]
+    return {
+      fileName,
+      deployedBytecode: {
+        sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
+        opcodes: contractInternals.evm.deployedBytecode.opcodes,
+        object: contractInternals.evm.deployedBytecode.object,
+        contents:
+          contractInternals.evm.deployedBytecode.generatedSources[0]?.contents,
+        ast: contractInternals.evm.deployedBytecode.generatedSources[0]?.ast,
+      },
+      contractName: rootContractName,
+    }
+  }
+  const message = `/Compilation/No root contract found: ${rootContractName}`
+  captureMessage(message, 'error')
+  throw new Error(message)
 }
 
 // =================== || =================== //
@@ -195,13 +190,13 @@ export const compileFiles = async (
     )
   ).filter(Boolean) as TSourceFile[]
 
-  let sourceMaps: TSourceMap[] = []
+  let sourceMap: TSourceMap
   let sourcesOrder: Record<number, string> = {}
 
   try {
     const solcOutput = compile(sourceFiles, settings)
 
-    sourceMaps = await createSourceMapsEntries(
+    sourceMap = await createSourceMapEntry(
       solcOutput,
       settings.rootContractName,
     )
@@ -213,17 +208,13 @@ export const compileFiles = async (
   }
 
   console.log(_payload.address, '/Compilation/Done')
-  const pathSourceMaps = await Promise.all(
-    sourceMaps.map(async (sourceMap) => {
-      const path = `contracts/${_payload.chainId}/${_payload.address}/source_maps/${sourceMap.fileName}_${sourceMap.contractName}`
-      await s3upload({
-        Key: path,
-        Bucket: BUCKET_NAME,
-        Body: JSON.stringify(sourceMap),
-      })
-      return path
-    }),
-  )
+
+  const pathSourceMap = `contracts/${_payload.chainId}/${_payload.address}/sourceMap.json`
+  await s3upload({
+    Key: pathSourceMap,
+    Bucket: BUCKET_NAME,
+    Body: JSON.stringify(sourceMap),
+  })
 
   const pathSources = `contracts/${_payload.chainId}/${_payload.address}/contractSources.json`
   await s3upload({
@@ -236,7 +227,7 @@ export const compileFiles = async (
     ..._payload,
     status: SrcMapStatus.COMPILATION_SUCCESS,
     pathSources,
-    pathSourceMaps,
+    pathSourceMap,
     message: '',
   })
 }

@@ -10,10 +10,10 @@ import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } fr
 import { sourceMapsActions, sourceMapsAdapter, sourceMapsReducer } from '../../sourceMaps.slice'
 import { createMockedSourceMap } from '../../sourceMaps.mock'
 
-import { fetchSourceMaps, fetchSourceMapsForContractSaga } from './fetchSourceMaps.saga'
+import { fetchSourceMap, fetchSourceMapsForContractSaga } from './fetchSourceMaps.saga'
 
 const MOCK_CONTRACT_ADDRESS = '0x123'
-const MOCK_SOURCE_MAP_PATHS = ['mockPath']
+const MOCK_SOURCE_MAP_PATH = 'mockPath'
 
 const mockedSourceMap = createMockedSourceMap()
 
@@ -42,12 +42,12 @@ describe('fetchSourceMapsForContractSaga', () => {
 
     const { storeState } = await expectSaga(
       fetchSourceMapsForContractSaga,
-      sourceMapsActions.fetchSourceMaps({ paths: MOCK_SOURCE_MAP_PATHS, contractAddress: MOCK_CONTRACT_ADDRESS }),
+      sourceMapsActions.fetchSourceMaps({ path: MOCK_SOURCE_MAP_PATH, contractAddress: MOCK_CONTRACT_ADDRESS }),
     )
       .withReducer(combineReducers({ [StoreKeys.SOURCE_MAPS]: sourceMapsReducer, [StoreKeys.ANALYZER]: analyzerReducer }), initialState)
       .withState(initialState)
-      .provide([[matchers.call.fn(fetchSourceMaps), [mockedSourceMap]]])
-      .call(fetchSourceMaps, MOCK_SOURCE_MAP_PATHS)
+      .provide([[matchers.call.fn(fetchSourceMap), mockedSourceMap]])
+      .call(fetchSourceMap, MOCK_SOURCE_MAP_PATH)
       .put(sourceMapsActions.addSourceMaps([{ ...mockedSourceMap, address: MOCK_CONTRACT_ADDRESS }]))
       .put.like({ action: addLogAction })
       .run()
