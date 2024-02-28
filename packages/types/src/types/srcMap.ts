@@ -45,7 +45,7 @@ export type TSrcMapAddres = {
 export type TSourceMap = {
   fileName: string
   contractName: string
-  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & { ast: TYulBlock }
+  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & { ast?: TYulBlock; contents?: string }
 }
 
 export type TEtherscanContractSourceCodeResult = {

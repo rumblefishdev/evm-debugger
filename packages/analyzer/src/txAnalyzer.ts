@@ -256,6 +256,8 @@ export class TxAnalyzer {
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
       const sourceFiles = this.transactionData.sourceFiles[address]
 
+      console.log('sourceFiles', sourceFiles)
+
       dataToDecode.push({
         sourceMap: source.deployedBytecode.sourceMap,
         sourceFiles,

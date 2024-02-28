@@ -156,9 +156,11 @@ export const createSourceMapsEntries = async (
             sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
             opcodes: contractInternals.evm.deployedBytecode.opcodes,
             object: contractInternals.evm.deployedBytecode.object,
-            ast:
-              contractInternals.evm.deployedBytecode.generatedSources[0]?.ast ||
-              {},
+            contents:
+              contractInternals.evm.deployedBytecode.generatedSources[0]
+                ?.contents,
+            ast: contractInternals.evm.deployedBytecode.generatedSources[0]
+              ?.ast,
           },
           contractName,
         }
@@ -198,6 +200,7 @@ export const compileFiles = async (
 
   try {
     const solcOutput = compile(sourceFiles, settings)
+
     sourceMaps = await createSourceMapsEntries(
       solcOutput,
       settings.rootContractName,

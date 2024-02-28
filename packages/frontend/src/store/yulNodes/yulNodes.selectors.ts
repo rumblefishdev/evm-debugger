@@ -121,19 +121,6 @@ const selectCurrentBaseYulNodesWithExtendedData = createSelector(
     _currentYulTypedNameNodes,
     _currentYulVariableDeclarationNodes,
   ) => {
-    // console.log('_currentYulNodes', _currentYulNodes)
-    // console.log('_currentYulBlockNodes', _currentYulBlockNodes)
-    // console.log('_currentYulAssigmentNodes', _currentYulAssigmentNodes)
-    // console.log('_currentYulExpressionStatementNodes', _currentYulExpressionStatementNodes)
-    // console.log('_currentYulForLoopNodes', _currentYulForLoopNodes)
-    // console.log('_currentYulFunctionCallNodes', _currentYulFunctionCallNodes)
-    // console.log('_currentYulFunctionDefinitionNodes', _currentYulFunctionDefinitionNodes)
-    // console.log('_currentYulIdentifierNodes', _currentYulIdentifierNodes)
-    // console.log('_currentYulIfNodes', _currentYulIfNodes)
-    // console.log('_currentYulLiteralNodes', _currentYulLiteralNodes)
-    // console.log('_currentYulTypedNameNodes', _currentYulTypedNameNodes)
-    // console.log('_currentYulVariableDeclarationNodes', _currentYulVariableDeclarationNodes)
-
     return Object.values(_currentYulNodes)
       .map<TExtendedYulNodeElement>((yulNode) => {
         return {

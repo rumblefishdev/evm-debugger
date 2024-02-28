@@ -11,9 +11,6 @@ export const YulNodesViewContainer: React.FC = () => {
   const activeYulNode = useSelector(yulNodesSelectors.selectActiveYulNode)
   const activeYulNodeElement = useSelector(yulNodesSelectors.selectActiveYulNodeElement)
 
-  console.log('activeYulNode', activeYulNode)
-  console.log('activeYulNodeElement', activeYulNodeElement)
-
   const listRef = React.useRef<VirtuosoHandle>(null)
 
   // React.useEffect(() => {

@@ -1,4 +1,4 @@
-import * as solc from 'solcv0.4.0'
+import * as solc from 'solcv0.8.9'
 
-export const solcVersion = 'v0.4.0'
+export const solcVersion = 'v0.8.9'
 export default solc

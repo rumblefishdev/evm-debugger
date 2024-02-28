@@ -8,6 +8,7 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { yulNodesActions } from '../../../yulNodes/yulNodes.slice'
 import { convertYulTreeToArray } from '../../../yulNodes/yulNodes.utils'
+import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 
 export async function fetchSourceMaps(paths: string[]): Promise<TSourceMap[]> {
   return await Promise.all(
@@ -55,6 +56,9 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
     yield* put(yulNodesActions.addYulBlocks({ yulBlocks: yulNodeBlocks, address: contractAddress }))
     yield* put(yulNodesActions.addYulTypedNames({ yulTypedNames, address: contractAddress }))
     yield* put(yulNodesActions.addYulNodes({ yulNodes: yulNodesLinkArray, address: contractAddress }))
+
+    if (test[0].deployedBytecode.contents)
+      yield* put(sourceCodesActions.addYulSource({ yulSource: test[0].deployedBytecode.contents, address: contractAddress }))
 
     const sourceMapsWithAddress = sourceMaps.map((sourceMap) => ({ ...sourceMap, address: contractAddress }))
     yield* put(sourceMapsActions.addSourceMaps(sourceMapsWithAddress))

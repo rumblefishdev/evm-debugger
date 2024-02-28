@@ -51,8 +51,6 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
 
     const { mainTraceLogList, instructionsMap, analyzeSummary } = yield* call(runAnalyzer, analyzerPayload)
 
-    console.log('instructionsMap', instructionsMap)
-
     yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
 
     yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))

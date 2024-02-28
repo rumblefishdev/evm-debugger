@@ -9,7 +9,7 @@ export type TFunctionDebugData = {
 
 export type TContractBytecodeObject = {
   functionDebugData: Record<string, TFunctionDebugData>
-  generatedSources: { ast: TYulBlock }[]
+  generatedSources: { ast: TYulBlock; contents: string }[]
   immutableReferences: Record<string, { length: number; start: number }[]>
   linkReferences: string
   object: string

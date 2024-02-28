@@ -34,9 +34,6 @@ export const getUniqueSourceMaps = (sourceMaps: TParsedSourceMap[]): TParsedSour
     if (isUnique) uniqueSourceMaps.push(sourceMap)
   })
 
-  // console.log('sourceMaps', sourceMaps)
-  // console.log('uniqueSourceMaps', uniqueSourceMaps)
-
   return uniqueSourceMaps
 }
 
