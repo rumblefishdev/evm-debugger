@@ -272,6 +272,7 @@ export class TxAnalyzer {
       .map(({ address, opcodes, sourceMap, sourceFiles }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
+        console.log('uniqueSourceMaps', uniqueSourceMaps)
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(sourceFiles, uniqueSourceMaps)
 

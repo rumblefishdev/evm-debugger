@@ -77,7 +77,9 @@ export const createSourceMapToSourceCodeDictionary = (
       const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
 
       let startLine = 0
+      let startColumn = 0
       let endLine = 0
+      let endColumn = 0
       let accumulator = 0
 
       for (let index = 0; index < sourceParts.length; index++) {
@@ -85,34 +87,42 @@ export const createSourceMapToSourceCodeDictionary = (
 
         if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
           startLine = index
+          startColumn = sourceMap.offset - accumulator
         }
 
         if (accumulator + codePartLength > sourceMap.offset + sourceMap.length && endLine === 0) {
           endLine = index
+          endColumn = sourceMap.offset + sourceMap.length - accumulator
           break
         }
 
         accumulator += codePartLength
       }
 
+      if (startLine === endLine) {
+        // console.log('startLine === endLine', sourceParts[startLine].slice(startColumn, endColumn))
+      } else {
+        const startWord = sourceParts[startLine].slice(startColumn)
+        const endWord = sourceParts[endLine].slice(0, endColumn)
+
+        // console.log('startLine !== endLine', startWord.concat('', endWord))
+      }
+
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
+        startColumn,
         startCodeLine: startLine,
         fileType,
+        endColumn,
         endCodeLine: endLine,
-      }
-    } else if (sourceMap.offset === -1 && sourceMap.length === -1 && sourceMap.fileId === -1) {
-      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
-        ...sourceMap,
-        startCodeLine: 0,
-        fileType: SourceFileType.UNKNOWN,
-        endCodeLine: 0,
       }
     } else {
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
+        startColumn: 0,
         startCodeLine: 0,
-        fileType: SourceFileType.YUL,
+        fileType: SourceFileType.UNKNOWN,
+        endColumn: 0,
         endCodeLine: 0,
       }
     }

@@ -18,9 +18,7 @@ import { SourceCodeView } from './SourceCodeView.component'
 export const SourceCodeViewContainer: React.FC = () => {
   const dispatch = useDispatch()
 
-  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
@@ -29,11 +27,23 @@ export const SourceCodeViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  const { fileId, endCodeLine, startCodeLine } = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction) || {
+  // const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
+  // console.log('currentInstructions', currentInstructions)
+  const currentInstruction = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction)
+
+  const { fileId, endCodeLine, startCodeLine, endColumn, startColumn } = currentInstruction || {
     startCodeLine: null,
     fileId: null,
     endCodeLine: null,
   }
+
+  console.log('currentInstruction', {
+    startColumn,
+    startCodeLine,
+    fileId,
+    endColumn,
+    endCodeLine,
+  })
 
   // const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
 
@@ -53,6 +63,9 @@ export const SourceCodeViewContainer: React.FC = () => {
     [dispatch, fileId, structlogs, structlogsPerLine],
   )
 
+  console.log('fileId', fileId)
+  console.log('activeSourceFileId', activeSourceFileId)
+
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
 
   return (
@@ -64,6 +77,8 @@ export const SourceCodeViewContainer: React.FC = () => {
       currentSelectedLine={currentSelectedLineNumber}
       onClick={handleLineSelection}
       lineRowsAvailableForSelections={lineRowsAvailableForSelections}
+      startCodeColumn={startColumn}
+      endCodeColumn={endColumn}
     />
   )
 }

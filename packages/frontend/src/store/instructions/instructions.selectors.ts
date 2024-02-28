@@ -52,7 +52,7 @@ const checkPreviousInstruction = (
   activeStructlog: TIndexedStructLog | TStructlogWithListIndex,
 ): TStepInstruction => {
   const currentInstruction = instructions[activeStructlog.pc]
-  if (currentInstruction.fileType === SourceFileType.YUL || currentInstruction.fileType === SourceFileType.UNKNOWN) {
+  if (currentInstruction.fileType === SourceFileType.UNKNOWN) {
     const previousStructlog = structlogs[activeStructlog.index - 1]
     return checkPreviousInstruction(instructions, structlogs, previousStructlog)
   }
@@ -63,6 +63,7 @@ const checkPreviousInstruction = (
 const selectCurrentSourceCodeInstruction = createSelector(
   [selectCurrentInstructions, activeStructLogSelectors.selectActiveStructLog, structlogsSelectors.selectAll],
   (instructions, activeStructlog, structLogs) => {
+    console.log('selectCurrentSourceCodeInstruction', { activeStructlog })
     if (!activeStructlog) return null
     return checkPreviousInstruction(instructions, structLogs, activeStructlog)
   },
