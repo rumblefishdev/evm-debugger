@@ -99,15 +99,6 @@ export const createSourceMapToSourceCodeDictionary = (
         accumulator += codePartLength
       }
 
-      if (startLine === endLine) {
-        // console.log('startLine === endLine', sourceParts[startLine].slice(startColumn, endColumn))
-      } else {
-        const startWord = sourceParts[startLine].slice(startColumn)
-        const endWord = sourceParts[endLine].slice(0, endColumn)
-
-        // console.log('startLine !== endLine', startWord.concat('', endWord))
-      }
-
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startColumn,
