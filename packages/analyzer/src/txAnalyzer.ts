@@ -256,8 +256,6 @@ export class TxAnalyzer {
       const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
       const sourceFiles = this.transactionData.sourceFiles[address]
 
-      console.log('sourceFiles', sourceFiles)
-
       dataToDecode.push({
         sourceMap: source.deployedBytecode.sourceMap,
         sourceFiles,
@@ -272,7 +270,6 @@ export class TxAnalyzer {
       .map(({ address, opcodes, sourceMap, sourceFiles }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
-        console.log('uniqueSourceMaps', uniqueSourceMaps)
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(sourceFiles, uniqueSourceMaps)
 
