@@ -9,6 +9,7 @@ export const createMockedSourceMap = (address?: string): TSourceMapSlice => {
       sourceMap: 'some source map',
       opcodes: 'some opcodes',
       object: 'some object',
+      contents: null,
       ast: null,
     },
     contractName: 'some contract name',

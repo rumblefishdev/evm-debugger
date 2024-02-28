@@ -21,8 +21,8 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
   try {
     const sourceMap = yield* call(fetchSourceMap, path)
 
-    const hasAst = sourceMap.deployedBytecode.ast !== undefined && Object.keys(sourceMap.deployedBytecode.ast).length > 0
-    const hasYulContents = sourceMap.deployedBytecode.contents !== undefined && sourceMap.deployedBytecode.contents.length > 0
+    const hasAst = sourceMap.deployedBytecode.ast !== undefined || sourceMap.deployedBytecode.ast !== null
+    const hasYulContents = sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0
 
     if (hasAst) {
       yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.deployedBytecode.ast, address: contractAddress }))

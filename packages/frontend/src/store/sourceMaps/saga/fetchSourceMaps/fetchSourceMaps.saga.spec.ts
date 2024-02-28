@@ -48,7 +48,7 @@ describe('fetchSourceMapsForContractSaga', () => {
       .withState(initialState)
       .provide([[matchers.call.fn(fetchSourceMap), mockedSourceMap]])
       .call(fetchSourceMap, MOCK_SOURCE_MAP_PATH)
-      .put(sourceMapsActions.addSourceMaps([{ ...mockedSourceMap, address: MOCK_CONTRACT_ADDRESS }]))
+      .put(sourceMapsActions.addSourceMap({ ...mockedSourceMap, address: MOCK_CONTRACT_ADDRESS }))
       .put.like({ action: addLogAction })
       .run()
 
