@@ -27,8 +27,6 @@ export const SourceCodeViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  // const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-  // console.log('currentInstructions', currentInstructions)
   const currentInstruction = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction)
 
   const { fileId, endCodeLine, startCodeLine, endColumn, startColumn } = currentInstruction || {
@@ -36,22 +34,6 @@ export const SourceCodeViewContainer: React.FC = () => {
     fileId: null,
     endCodeLine: null,
   }
-
-  console.log('currentInstruction', {
-    startColumn,
-    startCodeLine,
-    fileId,
-    endColumn,
-    endCodeLine,
-  })
-
-  // const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
-
-  // const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
-  //   startCodeLine: null,
-  //   fileId: null,
-  //   endCodeLine: null,
-  // }
 
   const handleLineSelection = React.useCallback(
     (event: AceEditorClickEvent) => {
@@ -62,9 +44,6 @@ export const SourceCodeViewContainer: React.FC = () => {
     },
     [dispatch, fileId, structlogs, structlogsPerLine],
   )
-
-  console.log('fileId', fileId)
-  console.log('activeSourceFileId', activeSourceFileId)
 
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
 

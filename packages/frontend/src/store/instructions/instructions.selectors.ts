@@ -63,7 +63,6 @@ const checkPreviousInstruction = (
 const selectCurrentSourceCodeInstruction = createSelector(
   [selectCurrentInstructions, activeStructLogSelectors.selectActiveStructLog, structlogsSelectors.selectAll],
   (instructions, activeStructlog, structLogs) => {
-    console.log('selectCurrentSourceCodeInstruction', { activeStructlog })
     if (!activeStructlog) return null
     return checkPreviousInstruction(instructions, structLogs, activeStructlog)
   },

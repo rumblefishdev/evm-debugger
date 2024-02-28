@@ -18,15 +18,6 @@ export const useMarkers = ({
   highlightEndColumn,
   highlightStartColumn,
 }: TUseMarkersProps) => {
-  console.log('TUseMarkersProps', {
-    lineAvailableForSelection,
-    highlightStartLine,
-    highlightStartColumn,
-    highlightEndLine,
-    highlightEndColumn,
-    currentSelectedLine,
-  })
-
   const shouldHighlightActiveLine: IMarker = React.useMemo(
     () => ({
       type: 'fullLine',
