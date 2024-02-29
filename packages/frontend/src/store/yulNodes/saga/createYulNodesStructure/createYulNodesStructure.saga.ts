@@ -1,4 +1,4 @@
-import { put, type SagaGenerator } from 'typed-redux-saga'
+import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 
 import { convertYulTreeToArray } from '../../yulNodes.utils'
 import type { TYulNodesActions } from '../../yulNodes.slice'
@@ -20,7 +20,7 @@ export function* createYulNodesStructure({ payload }: TYulNodesActions['createYu
       yulNodeBlocks,
       yulNodesLinkArray,
       yulTypedNames,
-    } = convertYulTreeToArray(content)
+    } = yield* call(convertYulTreeToArray, content)
 
     yield* put(yulNodesActions.initializeYulNodesForContract({ address }))
     yield* put(yulNodesActions.addYulExpressionStatements({ yulExpressionStatements, address }))

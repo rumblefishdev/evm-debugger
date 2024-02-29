@@ -36,7 +36,7 @@ import {
   yulVariableDeclarationNodeAdapter,
 } from './yulNodes.adapters'
 
-export const initialState: TYulNodeState = {}
+export const yulNodesInitialState: TYulNodeState = {}
 
 export const yulNodesSlice = createSlice({
   reducers: {
@@ -116,7 +116,7 @@ export const yulNodesSlice = createSlice({
     },
   },
   name: StoreKeys.YUL_NODES,
-  initialState,
+  initialState: yulNodesInitialState,
 })
 
 export const yulNodesActions = yulNodesSlice.actions
