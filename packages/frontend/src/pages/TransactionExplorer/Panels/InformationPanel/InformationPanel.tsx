@@ -25,12 +25,7 @@ export const InformationPanel: React.FC = () => {
           {isExpanded ? 'Collapse' : 'Expand'}
         </Button>
       </StyledHeadingWrapper>
-      <StyledCardsWrapper
-        expanded={isExpanded}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <StyledCardsWrapper expanded={isExpanded}>
         <StackInfoCard />
         <MemoryInfoCard />
         <StorageInfoCard />
