@@ -2,7 +2,15 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { palette } from '@rumblefishdev/ui/lib/src/theme/algaeTheme/palette'
 
-import { StyledRecordType, StyledRecordValue, StyledWrapper, StyledRecord } from '../styles'
+import {
+  StyledRecordType,
+  StyledRecordValue,
+  StyledWrapper,
+  StyledRecord,
+  StyledCard,
+  StyledCardHeadingWrapper,
+  StyledCardHeading,
+} from '../styles'
 import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { DEFAULT_STRING, activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
@@ -83,8 +91,12 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   }
 
   return (
-    <>
-      {hasMemory ? (
+    <StyledCard>
+      <StyledCardHeadingWrapper>
+        <StyledCardHeading>Memory</StyledCardHeading>
+      </StyledCardHeadingWrapper>
+      {!hasMemory && <p>No memory was used at this point yet.</p>}
+      {hasMemory && (
         <StyledWrapper {...props}>
           {memory.map((memoryItem) => {
             if (memoryIndexPadded) {
@@ -120,9 +132,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
             )
           })}
         </StyledWrapper>
-      ) : (
-        <p>No memory was used at this point yet.</p>
       )}
-    </>
+    </StyledCard>
   )
 }

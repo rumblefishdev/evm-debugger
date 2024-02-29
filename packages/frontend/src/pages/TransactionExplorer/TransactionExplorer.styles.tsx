@@ -2,10 +2,10 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  spacing: theme.spacing(1),
   minHeight: '100%',
-  marginTop: theme.spacing(8),
   justifyContent: 'flex-start',
+  gap: theme.spacing(1),
+  alignSelf: 'flex-start',
 
   // ...theme.customStyles.scrollbar,
 }))

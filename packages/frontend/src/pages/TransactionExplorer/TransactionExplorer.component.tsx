@@ -6,9 +6,7 @@ import { Box, Stack } from '@mui/material'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { TraceLogsList } from '../../components/TraceLogsList'
 
-import { BytecodePanel, SourceCodePanel, StructlogPanel } from './Panels'
-import { MemoryPanel } from './Panels/MemoryPanel/MemoryPanel'
-import { StackPanel } from './Panels/StackPanel/StackPanel'
+import { BytecodePanel, SourceCodePanel, StructlogPanel, InformationPanel } from './Panels'
 import { NavigationPanel } from './Panels/NavigationPanel/NavigationPanel'
 import { StyledContentWrapper } from './TransactionExplorer.styles'
 
@@ -16,21 +14,14 @@ export const TransactionExplorer: React.FC = () => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   return (
-    <StyledContentWrapper
-      width="100%"
-      minHeight="100%"
-      justifyContent="flex-start"
-      marginTop={8}
-      spacing={1}
-    >
+    <StyledContentWrapper>
       <Stack
         direction="row"
         width="100%"
-        height={112}
+        minHeight={112}
         spacing={1}
       >
-        <StackPanel />
-        <MemoryPanel />
+        <InformationPanel />
       </Stack>
       <Stack
         direction="row"
