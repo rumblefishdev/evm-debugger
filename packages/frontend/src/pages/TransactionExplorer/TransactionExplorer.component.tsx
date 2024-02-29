@@ -14,44 +14,47 @@ export const TransactionExplorer: React.FC = () => {
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   return (
-    <StyledContentWrapper>
-      <Stack
-        direction="row"
-        width="100%"
-        minHeight={112}
-        spacing={1}
-      >
-        <InformationPanel />
-      </Stack>
-      <Stack
-        direction="row"
-        width="100%"
-        height="100%"
-        minHeight={800}
-        spacing={1}
-      >
+    <>
+      <StyledContentWrapper>
         <Stack
-          width="60%"
-          justifyContent="flex-start"
+          direction="row"
+          width="100%"
+          minHeight={112}
           spacing={1}
         >
-          <Stack flex={2}>
-            <NavigationPanel />
-          </Stack>
+          <InformationPanel />
+        </Stack>
+        <Stack
+          direction="row"
+          width="100%"
+          height="100%"
+          minHeight={800}
+          spacing={1}
+        >
           <Stack
+            width="60%"
+            justifyContent="flex-start"
             spacing={1}
-            direction="row"
-            height="100%"
-            flex={3}
           >
-            <StructlogPanel />
-            <BytecodePanel />
+            <Stack flex={2}>
+              <NavigationPanel />
+            </Stack>
+            <Stack
+              spacing={1}
+              direction="row"
+              height="100%"
+              flex={3}
+            >
+              <StructlogPanel />
+              <BytecodePanel />
+            </Stack>
+          </Stack>
+          <Stack width="100%">
+            <SourceCodePanel hasContract={activeBlock.isContract} />
           </Stack>
         </Stack>
-        <Stack width="100%">
-          <SourceCodePanel hasContract={activeBlock.isContract} />
-        </Stack>
-      </Stack>
-    </StyledContentWrapper>
+      </StyledContentWrapper>
+      <TraceLogsList />
+    </>
   )
 }
