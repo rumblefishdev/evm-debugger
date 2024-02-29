@@ -1,6 +1,6 @@
 import { Tabs, styled, Tab, Stack } from '@mui/material'
 
-import { NewTransactionButton } from '../../containers/NewTransactionButton'
+import { NewTransactionButton } from '../NewTransactionButton'
 
 export const StyledTabs = styled(Tabs)(({ theme }) => ({
   width: '100%',

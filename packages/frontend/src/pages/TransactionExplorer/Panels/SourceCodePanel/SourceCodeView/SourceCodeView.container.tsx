@@ -18,9 +18,7 @@ import { SourceCodeView } from './SourceCodeView.component'
 export const SourceCodeViewContainer: React.FC = () => {
   const dispatch = useDispatch()
 
-  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
@@ -29,9 +27,9 @@ export const SourceCodeViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
+  const currentInstruction = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction)
 
-  const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
+  const { fileId, endCodeLine, startCodeLine, endColumn, startColumn } = currentInstruction || {
     startCodeLine: null,
     fileId: null,
     endCodeLine: null,
@@ -58,6 +56,8 @@ export const SourceCodeViewContainer: React.FC = () => {
       currentSelectedLine={currentSelectedLineNumber}
       onClick={handleLineSelection}
       lineRowsAvailableForSelections={lineRowsAvailableForSelections}
+      startCodeColumn={startColumn}
+      endCodeColumn={endColumn}
     />
   )
 }

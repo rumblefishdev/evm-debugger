@@ -77,7 +77,9 @@ export const createSourceMapToSourceCodeDictionary = (
       const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
 
       let startLine = 0
+      let startColumn = 0
       let endLine = 0
+      let endColumn = 0
       let accumulator = 0
 
       for (let index = 0; index < sourceParts.length; index++) {
@@ -85,10 +87,12 @@ export const createSourceMapToSourceCodeDictionary = (
 
         if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
           startLine = index
+          startColumn = sourceMap.offset - accumulator
         }
 
         if (accumulator + codePartLength > sourceMap.offset + sourceMap.length && endLine === 0) {
           endLine = index
+          endColumn = sourceMap.offset + sourceMap.length - accumulator
           break
         }
 
@@ -97,16 +101,20 @@ export const createSourceMapToSourceCodeDictionary = (
 
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
+        startColumn,
         startCodeLine: startLine,
         fileType,
+        endColumn,
         endCodeLine: endLine,
       }
     } else {
-      const previousSourceMap = sourceMaps[sourceMaps.indexOf(sourceMap) - 1]
-      const previousSourceMapId = createSourceMapIdentifier(previousSourceMap)
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
-        ...sourceMapToSourceCodeDictionary[previousSourceMapId],
-        fileType: SourceFileType.YUL,
+        ...sourceMap,
+        startColumn: 0,
+        startCodeLine: 0,
+        fileType: SourceFileType.UNKNOWN,
+        endColumn: 0,
+        endCodeLine: 0,
       }
     }
   }

@@ -6,16 +6,25 @@ export type TUseMarkersProps = {
   highlightStartLine: number
   highlightEndLine: number
   currentSelectedLine: number
+  highlightStartColumn: number
+  highlightEndColumn: number
 }
 
-export const useMarkers = ({ lineAvailableForSelection, highlightStartLine, highlightEndLine, currentSelectedLine }: TUseMarkersProps) => {
+export const useMarkers = ({
+  lineAvailableForSelection,
+  highlightStartLine,
+  highlightEndLine,
+  currentSelectedLine,
+  highlightEndColumn,
+  highlightStartColumn,
+}: TUseMarkersProps) => {
   const shouldHighlightActiveLine: IMarker = React.useMemo(
     () => ({
       type: 'fullLine',
       startRow: currentSelectedLine,
-      startCol: 1,
+      startCol: 0,
       endRow: currentSelectedLine,
-      endCol: 0,
+      endCol: 1,
       className: 'selectedHighlightMarker',
     }),
     [currentSelectedLine],
@@ -23,14 +32,14 @@ export const useMarkers = ({ lineAvailableForSelection, highlightStartLine, high
 
   const highlightMarker: IMarker = React.useMemo(
     () => ({
-      type: 'fullLine',
+      type: highlightStartLine === highlightEndLine ? 'text' : 'fullLine',
       startRow: highlightStartLine,
-      startCol: 1,
+      startCol: highlightStartColumn,
       endRow: highlightEndLine,
-      endCol: 0,
+      endCol: highlightEndColumn,
       className: 'highlightMarker',
     }),
-    [highlightStartLine, highlightEndLine],
+    [highlightStartLine, highlightEndLine, highlightStartColumn, highlightEndColumn],
   )
 
   const lineAvailableForSelectionMarker: IMarker[] = React.useMemo(

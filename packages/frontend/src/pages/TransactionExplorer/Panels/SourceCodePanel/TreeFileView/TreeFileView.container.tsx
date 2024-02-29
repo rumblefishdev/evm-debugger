@@ -25,8 +25,6 @@ export const TreeFileViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  // const test = useSelector(sourceCodesSelectors.)
-
   const sourceFilesNameToIdMap = useMemo<Record<string, number>>(
     () => sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}),
     [sourceFiles],

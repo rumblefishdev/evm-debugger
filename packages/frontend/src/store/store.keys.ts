@@ -16,4 +16,5 @@ export enum StoreKeys {
   TRANSACTION_CONFIG = 'transactionConfig',
   ABIS = 'abis',
   ACTIVE_LINE = 'activeLine',
+  YUL_NODES = 'yulNodes',
 }

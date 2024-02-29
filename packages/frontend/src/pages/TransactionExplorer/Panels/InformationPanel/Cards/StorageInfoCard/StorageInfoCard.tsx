@@ -2,8 +2,15 @@ import React from 'react'
 import { Stack } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { StructlogAcordionPanel } from '../../../../../../components/StructlogAcordionPanel'
-import { StyledRecord, StyledRecordType, StyledRecordValue, StyledWrapper } from '../styles'
+import {
+  StyledRecordType,
+  StyledRecordValue,
+  StyledWrapper,
+  StyledRecord,
+  StyledCard,
+  StyledCardHeading,
+  StyledCardHeadingWrapper,
+} from '../styles'
 import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { StorageInfoCardProps } from './StorageInfoCard.types'
@@ -11,27 +18,32 @@ import type { StorageInfoCardProps } from './StorageInfoCard.types'
 export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
   const storage = useSelector(activeStructLogSelectors.selectStructlogStorage)
   const keys = Object.keys(storage)
+  const hasStorage = React.useMemo(() => keys.length > 0, [keys])
+
   return (
-    <StructlogAcordionPanel
-      text="Storage"
-      canExpand={keys.length > 0}
-    >
-      <StyledWrapper {...props}>
-        {keys.map((key, index) => {
-          return (
-            <Stack key={index}>
-              <StyledRecord>
-                <StyledRecordType>Key: </StyledRecordType>
-                <StyledRecordValue>{key}</StyledRecordValue>
-              </StyledRecord>
-              <StyledRecord>
-                <StyledRecordType>Value: </StyledRecordType>
-                <StyledRecordValue>{storage[key]}</StyledRecordValue>
-              </StyledRecord>
-            </Stack>
-          )
-        })}
-      </StyledWrapper>
-    </StructlogAcordionPanel>
+    <StyledCard>
+      <StyledCardHeadingWrapper>
+        <StyledCardHeading>Storage</StyledCardHeading>
+      </StyledCardHeadingWrapper>
+      {!hasStorage && <p>This EVM Step has no storage.</p>}
+      {hasStorage && (
+        <StyledWrapper>
+          {keys.map((key, index) => {
+            return (
+              <Stack key={index}>
+                <StyledRecord>
+                  <StyledRecordType>Key: </StyledRecordType>
+                  <StyledRecordValue>{key}</StyledRecordValue>
+                </StyledRecord>
+                <StyledRecord>
+                  <StyledRecordType>Value: </StyledRecordType>
+                  <StyledRecordValue>{storage[key]}</StyledRecordValue>
+                </StyledRecord>
+              </Stack>
+            )
+          })}
+        </StyledWrapper>
+      )}
+    </StyledCard>
   )
 }

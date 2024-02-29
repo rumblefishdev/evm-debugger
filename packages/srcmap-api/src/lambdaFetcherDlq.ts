@@ -1,15 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AWSLambda, captureMessage } from '@sentry/serverless'
-import type { Handler, SQSEvent } from 'aws-lambda'
-import type {
-  ISrcMapApiPayload,
-  TSrcMapAddres,
-  TEtherscanContractSourceCodeResp,
-  TEtherscanParsedSourceCode,
-  ChainId,
-} from '@evm-debuger/types'
-import { etherscanUrls, SrcMapStatus } from '@evm-debuger/types'
-import fetch from 'node-fetch'
+import { AWSLambda } from '@sentry/serverless'
+import type { SQSEvent } from 'aws-lambda'
+import { SrcMapStatus } from '@evm-debuger/types'
 
 import { version } from '../package.json'
 

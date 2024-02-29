@@ -33,6 +33,7 @@ export const createBaseSettingsObject = (
         enabled: Boolean(sourceData.OptimizationUsed === '1'),
       },
     },
+    rootContractName: sourceData.ContractName,
     language,
   }
 }

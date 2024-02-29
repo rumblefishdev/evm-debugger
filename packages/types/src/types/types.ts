@@ -85,7 +85,13 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
-export type TSourceMapCodeRepresentation = { startCodeLine: number; endCodeLine: number; fileType: SourceFileType }
+export type TSourceMapCodeRepresentation = {
+  startCodeLine: number
+  endCodeLine: number
+  fileType: SourceFileType
+  startColumn: number
+  endColumn: number
+}
 
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]

@@ -12,4 +12,4 @@ export type TContractsSources = Record<
 
 export type TRawContractsData = Record<string, ISrcMapApiPayload>
 
-export type TSourceCodes = { address: string; sourceCode: string | null; sourcesOrder: Record<number, string> | null }
+export type TSourceCodes = { address: string; sourceCode: string | null; sourcesOrder: Record<number, string> | null; yulSource?: string }

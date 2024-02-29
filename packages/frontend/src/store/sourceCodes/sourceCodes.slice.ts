@@ -17,6 +17,10 @@ export const sourceCodesSlice = createSlice({
     startPoolingSources: () => {},
     fetchSourceData: (_, __: PayloadAction<{ sourceDataPath: string; sourcesPath: string; contractAddress: string }>) => {},
     clearSourceCodes: sourceCodesAdapter.removeAll,
+    addYulSource: (state, action: PayloadAction<{ address: string; yulSource: string }>) => {
+      const { address, yulSource } = action.payload
+      sourceCodesAdapter.updateOne(state, { id: address, changes: { yulSource } })
+    },
     addSourceCodes: sourceCodesAdapter.addMany,
     addSourceCode: sourceCodesAdapter.addOne,
   },
