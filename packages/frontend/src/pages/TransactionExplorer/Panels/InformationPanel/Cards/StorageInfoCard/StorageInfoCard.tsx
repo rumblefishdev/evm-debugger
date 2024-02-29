@@ -13,9 +13,7 @@ import {
 } from '../styles'
 import { activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
-import type { StorageInfoCardProps } from './StorageInfoCard.types'
-
-export const StorageInfoCard = ({ ...props }: StorageInfoCardProps) => {
+export const StorageInfoCard = () => {
   const storage = useSelector(activeStructLogSelectors.selectStructlogStorage)
   const keys = Object.keys(storage)
   const hasStorage = React.useMemo(() => keys.length > 0, [keys])

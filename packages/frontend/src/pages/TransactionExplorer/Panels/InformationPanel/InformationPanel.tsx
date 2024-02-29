@@ -1,5 +1,4 @@
 import React from 'react'
-import { Stack } from '@mui/material'
 
 import { StyledPanel, StyledHeading, StyledHeadingWrapper } from '../styles'
 import { Button } from '../../../../components/Button'

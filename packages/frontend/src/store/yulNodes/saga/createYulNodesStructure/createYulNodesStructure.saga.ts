@@ -1,4 +1,4 @@
-import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
+import { call, put, type SagaGenerator } from 'typed-redux-saga'
 
 import { convertYulTreeToArray } from '../../yulNodes.utils'
 import type { TYulNodesActions } from '../../yulNodes.slice'

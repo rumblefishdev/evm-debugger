@@ -58,7 +58,7 @@ export const yulNodesSlice = createSlice({
       }
     },
 
-    createYulNodesStructure: (state, action: PayloadAction<{ content: TYulBlock; address: string }>) => {},
+    createYulNodesStructure: (_, __: PayloadAction<{ content: TYulBlock; address: string }>) => {},
 
     addYulVariableDeclarations: (state, { payload }: PayloadAction<TAddYulVariableDeclarationsPayload>) => {
       state[payload.address].yulVariableDeclarations = yulVariableDeclarationNodeAdapter.addMany(

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 
 import { TraceLogsList } from '../../components/TraceLogsList'
 

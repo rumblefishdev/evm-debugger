@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { ViewportList } from 'react-viewport-list'
-import { Box, Drawer, Stack, Tooltip, Typography } from '@mui/material'
+import { Drawer, Tooltip } from '@mui/material'
 import { useSelector } from 'react-redux'
 import type { TTraceLog } from '@evm-debuger/types'
 import { BaseOpcodesHex } from '@evm-debuger/types'
@@ -16,7 +16,6 @@ import { contractNamesSelectors } from '../../store/contractNames/contractNames.
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
-import { Button } from '../Button'
 
 import {
   StyledHeading,

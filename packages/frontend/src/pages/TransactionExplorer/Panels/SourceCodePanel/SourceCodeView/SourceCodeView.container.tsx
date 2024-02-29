@@ -1,12 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../../../store/storeHooks'
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
-import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
-import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import type { AceEditorClickEvent } from '../../../../../components/AceEditor/AceEditor.types'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
