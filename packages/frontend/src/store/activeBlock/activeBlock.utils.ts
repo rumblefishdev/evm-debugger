@@ -46,7 +46,7 @@ export const parseParameter = (parameterType, parameterValue) => {
 
 export const parseParameters = (params: ParamType[], result: Result) => {
   return params.map((parameterType, index) => {
-    if (result.length > 0) {
+    if (result?.length > 0) {
       const parameterValue = result[index]
       return parseParameter(parameterType, parameterValue)
     }
