@@ -14,20 +14,28 @@ export const convertAddressesToStatuses = (addresses: string[]): Record<string, 
 export const createSources = (
   sourcesOrder: Record<number, string>,
   parseSourceCodeResult: Record<string, string>,
+  yulSource: string | undefined,
 ): TParseSourceCodeOutput => {
   return Object.entries(sourcesOrder)
     .map(([_, name]) => {
       return [name, parseSourceCodeResult[name] || '']
     })
+    .concat(yulSource ? [['Utility.yul', yulSource]] : [])
     .reduce((accumulator, [name, content], index) => {
       accumulator[index] = { sourceName: name, content }
       return accumulator
     }, {})
 }
 
-export const mapSourceCode = ({ contractName, sourceCode, sourcesOrder, address }: TSourceCodes & { contractName: string | null }) => {
+export const mapSourceCode = ({
+  contractName,
+  sourceCode,
+  sourcesOrder,
+  address,
+  yulSource,
+}: TSourceCodes & { contractName: string | null }) => {
   const parseSourceCodeResult = parseSourceCode(contractName, sourceCode || '')
-  const sources = createSources(sourcesOrder, parseSourceCodeResult)
+  const sources = createSources(sourcesOrder, parseSourceCodeResult, yulSource)
   return { sources, address }
 }
 

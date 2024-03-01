@@ -12,6 +12,8 @@ export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({
   contractName,
   lineRowsAvailableForSelections,
   startCodeLine,
+  endCodeColumn,
+  startCodeColumn,
   onClick,
 }) => {
   return (
@@ -27,6 +29,8 @@ export const SourceCodeView: React.FC<ISourceCodeViewProps> = ({
           highlightEndLine={endCodeLine}
           currentSelectedLine={currentSelectedLine}
           lineAvailableForSelection={lineRowsAvailableForSelections}
+          highlightStartColumn={startCodeColumn}
+          highlightEndColumn={endCodeColumn}
           mode="solidity"
           onClick={onClick}
         />

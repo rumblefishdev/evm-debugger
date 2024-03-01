@@ -4,7 +4,7 @@ import { ChainId } from '@evm-debuger/types'
 import { combineReducers } from 'redux'
 
 import { transactionInfoActions, transactionInfoReducer } from '../../transactionInfo.slice'
-import { transactionConfigActions, transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
+import { transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { TransactionInfoState } from '../../transactionInfo.state'

@@ -3,8 +3,6 @@ import { Stack, styled, Typography } from '@mui/material'
 export const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0, 2, 0, 0),
   overflow: 'auto',
-  minWidth: '460px',
-  maxWidth: '728px',
   height: '100%',
   ...theme.customStyles.scrollbar,
 }))

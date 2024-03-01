@@ -1,5 +1,30 @@
 import { Stack, Typography, styled } from '@mui/material'
 
+export const StyledBar = styled(Stack)(({ theme }) => ({
+  zIndex: 10,
+  width: '101vw',
+  transition: 'all 0.3s ease',
+  position: 'fixed',
+  padding: theme.spacing(2),
+  justifyContent: 'center',
+  height: 32,
+  cursor: 'pointer',
+  boxSizing: 'border-box',
+  bottom: 0,
+
+  backgroundColor: theme.palette.rfWhite,
+  alignItems: 'center',
+
+  '&:hover': {
+    backgroundColor: '#f5f5f5',
+  },
+}))
+
+export const StyledBarText = styled(Typography)(({ theme }) => ({
+  ...theme.typography.buttonBig,
+  color: theme.palette.rfButton,
+}))
+
 export const TraceLogElement = styled('div')(({ theme }) => ({
   minHeight: theme.spacing(4),
   height: theme.spacing(4),

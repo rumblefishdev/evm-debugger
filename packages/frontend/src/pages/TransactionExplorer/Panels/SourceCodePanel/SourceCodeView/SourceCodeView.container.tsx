@@ -1,28 +1,21 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useTypedSelector } from '../../../../../store/storeHooks'
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
-import { activeBlockSelectors } from '../../../../../store/activeBlock/activeBlock.selector'
 import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
 import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
-import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import type { AceEditorClickEvent } from '../../../../../components/AceEditor/AceEditor.types'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
-import { sourceMapsSelectors } from '../../../../../store/sourceMaps/sourceMaps.selectors'
-import { bytecodesSelectors } from '../../../../../store/bytecodes/bytecodes.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
 export const SourceCodeViewContainer: React.FC = () => {
   const dispatch = useDispatch()
 
-  const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
@@ -31,15 +24,9 @@ export const SourceCodeViewContainer: React.FC = () => {
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
 
-  // const currentBytecode = useTypedSelector((state) => bytecodesSelectors.selectByAddress(state, activeBlock.address))
-  // const sourceMaps = useSelector(sourceMapsSelectors.selectGroupedByAddress)
+  const currentInstruction = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction)
 
-  // console.log('sourceMap', sourceMaps)
-  // console.log('currentBytecode', currentBytecode)
-
-  const { instructions } = useTypedSelector((state) => instructionsSelectors.selectByAddress(state, activeBlock.address))
-
-  const { endCodeLine, startCodeLine, fileId } = instructions[activeStrucLog?.pc] || {
+  const { fileId, endCodeLine, startCodeLine, endColumn, startColumn } = currentInstruction || {
     startCodeLine: null,
     fileId: null,
     endCodeLine: null,
@@ -55,8 +42,6 @@ export const SourceCodeViewContainer: React.FC = () => {
     [dispatch, fileId, structlogs, structlogsPerLine],
   )
 
-  console.log('instructions[activeStrucLog?.pc]', instructions[activeStrucLog?.pc])
-
   const isOnSameFile = fileId >= 0 && activeSourceFileId >= 0 && fileId === activeSourceFileId
 
   return (
@@ -68,6 +53,8 @@ export const SourceCodeViewContainer: React.FC = () => {
       currentSelectedLine={currentSelectedLineNumber}
       onClick={handleLineSelection}
       lineRowsAvailableForSelections={lineRowsAvailableForSelections}
+      startCodeColumn={startColumn}
+      endCodeColumn={endColumn}
     />
   )
 }

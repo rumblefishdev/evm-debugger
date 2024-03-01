@@ -13,30 +13,6 @@ export type TSrcMapCompilerHandler = {
   initialLambdaRequestId: string
 }
 
-export type Contract = {
-  evm: {
-    evm: {
-      bytecode: {
-        object: string
-        opcodes: string
-        sourceMap: string
-      }
-      deployedBytecode: {
-        object: string
-        opcodes: string
-        sourceMap: string
-      }
-    }
-  }
-}
-
-export type Source = { id: number }
-
-export type SolcOutput = {
-  contracts: Record<string, Contract>
-  sources: Record<string, Source>
-}
-
 export interface SolcManager {
   compile: (input: TEtherscanParsedSourceCode) => string
 }

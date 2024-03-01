@@ -1,5 +1,7 @@
 import type { ChainId } from './chains'
+import type { TContractBytecodeObject } from './solc'
 import type { TAbi } from './types'
+import type { TYulBlock } from './yulSources'
 
 export enum SrcMapStatus {
   SOURCE_DATA_FETCHING_QUEUED_PENDING = 'SOURCE_DATA_FETCHING_QUEUED_PENDING',
@@ -32,6 +34,7 @@ export enum SourceFileType {
   SOLIDITY = 'SOLIDITY',
   VYPER = 'VYPER',
   YUL = 'YUL',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export type TSrcMapAddres = {
@@ -42,16 +45,7 @@ export type TSrcMapAddres = {
 export type TSourceMap = {
   fileName: string
   contractName: string
-  bytecode: {
-    object: string
-    opcodes: string
-    sourceMap: string
-  }
-  deployedBytecode: {
-    object: string
-    opcodes: string
-    sourceMap: string
-  }
+  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & { ast?: TYulBlock; contents?: string }
 }
 
 export type TEtherscanContractSourceCodeResult = {
@@ -69,6 +63,8 @@ export type TEtherscanContractSourceCodeResult = {
   Implementation: string
   SwarmSource: string
 }
+
+export type TInputSources = Record<string, { content: string }>
 
 export type TEtherscanParsedSourceCode = {
   language: string
@@ -91,10 +87,13 @@ export type TEtherscanParsedSourceCode = {
       }
     }
   }
-  sources: Record<string, { content: string }>
+  sources: TInputSources
 }
 
-export type TSolcConfiguration = Pick<TEtherscanParsedSourceCode, 'language' | 'settings'> & { solcCompilerVersion: string }
+export type TSolcConfiguration = Pick<TEtherscanParsedSourceCode, 'language' | 'settings'> & {
+  solcCompilerVersion: string
+  rootContractName: string
+}
 
 export type TExtractedSourceFiles = [string, string][]
 
@@ -113,12 +112,10 @@ export interface ISrcMapApiPayload {
   timestamp?: number
   message?: string
   pathSourceFiles?: string[]
-  pathSourceMaps?: string[]
+  pathSourceMap?: string
   pathSourceData?: string
   pathSources?: string
   pathCompilatorSettings?: string
-  // sourceMaps?: TSourceMap[]
-  // sourceData?: TEtherscanContractSourceCodeResult
 }
 
 export interface ISrcMapApiStatusResponse {
@@ -152,4 +149,4 @@ export type TSourceMapConverstionPayload = {
   address: string
 }
 
-export type TSourceCodeObject = { sources: Record<string, { content: string }> }
+export type TSourceCodeObject = { sources: TInputSources }

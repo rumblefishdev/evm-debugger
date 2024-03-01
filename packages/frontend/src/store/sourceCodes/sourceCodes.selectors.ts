@@ -62,7 +62,9 @@ const selectCurrentSourceFiles = createSelector(
       return [name, sourceCode]
     })
 
-    return sources.map(([name, sourceCode]) => ({ sourceCode, name }))
+    const mappedSources = sources.map(([name, sourceCode]) => ({ sourceCode, name }))
+    if (_sourceCode?.yulSource) mappedSources.push({ sourceCode: _sourceCode.yulSource, name: 'Utility.yul' })
+    return mappedSources
   },
 )
 

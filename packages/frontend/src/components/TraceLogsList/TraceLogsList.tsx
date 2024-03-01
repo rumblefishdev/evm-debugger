@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { ViewportList } from 'react-viewport-list'
-import { Tooltip } from '@mui/material'
+import { Drawer, Tooltip } from '@mui/material'
 import { useSelector } from 'react-redux'
 import type { TTraceLog } from '@evm-debuger/types'
 import { BaseOpcodesHex } from '@evm-debuger/types'
@@ -26,6 +26,8 @@ import {
   Indent,
   OpWrapper,
   StyledFailureIcon,
+  StyledBar,
+  StyledBarText,
 } from './styles'
 
 export const TraceLogsList: React.FC = () => {
@@ -35,7 +37,13 @@ export const TraceLogsList: React.FC = () => {
   const contractNames = useSelector(contractNamesSelectors.selectAll)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
 
+  const [isDrawerVisible, setDrawerVisibility] = React.useState(false)
+
   const ref = React.useRef<HTMLDivElement>(null)
+
+  const toggleDrawer = () => {
+    setDrawerVisibility(!isDrawerVisible)
+  }
 
   const activate = useCallback(
     (traceLog: TMainTraceLogsWithId) => {
@@ -60,45 +68,62 @@ export const TraceLogsList: React.FC = () => {
     }
     return signature
   }
+
   return (
-    <StyledSmallPanel>
-      <StyledHeadingWrapper>
-        <StyledHeading>Trace</StyledHeading>
-      </StyledHeadingWrapper>
-      <StyledListWrapper ref={ref}>
-        <ViewportList
-          viewportRef={ref}
-          items={traceLogs}
-          withCache={true}
+    <>
+      <StyledBar onClick={toggleDrawer}>
+        <StyledBarText
+          variant="buttonBig"
+          color="rfPrimary"
         >
-          {(traceLog) => {
-            const { index, depth, op, isReverted } = traceLog
-            const isActive = activeBlock?.index === index
-            const signature = constructSignature(traceLog) // sighash
-            return (
-              <TraceLogElement
-                key={index}
-                onClick={() => activate(traceLog)}
-              >
-                {Array.from({ length: depth }).map((_, depthIndex) => (
-                  <Indent key={depthIndex} />
-                ))}
-                <OpWrapper isActive={isActive}>
-                  {isReverted && (
-                    <Tooltip
-                      title={getTraceLogErrorOutput(traceLog)}
-                      followCursor
-                    >
-                      <StyledFailureIcon>❌</StyledFailureIcon>
-                    </Tooltip>
-                  )}
-                  {`${op} ${signature}`}
-                </OpWrapper>
-              </TraceLogElement>
-            )
-          }}
-        </ViewportList>
-      </StyledListWrapper>
-    </StyledSmallPanel>
+          Show Trace
+        </StyledBarText>
+      </StyledBar>
+      <Drawer
+        anchor="bottom"
+        open={isDrawerVisible}
+        onClose={toggleDrawer}
+      >
+        <StyledSmallPanel>
+          <StyledHeadingWrapper>
+            <StyledHeading>Trace</StyledHeading>
+          </StyledHeadingWrapper>
+          <StyledListWrapper ref={ref}>
+            <ViewportList
+              viewportRef={ref}
+              items={traceLogs}
+              withCache={true}
+            >
+              {(traceLog) => {
+                const { index, depth, op, isReverted } = traceLog
+                const isActive = activeBlock?.index === index
+                const signature = constructSignature(traceLog) // sighash
+                return (
+                  <TraceLogElement
+                    key={index}
+                    onClick={() => activate(traceLog)}
+                  >
+                    {Array.from({ length: depth }).map((_, depthIndex) => (
+                      <Indent key={depthIndex} />
+                    ))}
+                    <OpWrapper isActive={isActive}>
+                      {isReverted && (
+                        <Tooltip
+                          title={getTraceLogErrorOutput(traceLog)}
+                          followCursor
+                        >
+                          <StyledFailureIcon>❌</StyledFailureIcon>
+                        </Tooltip>
+                      )}
+                      {`${op} ${signature}`}
+                    </OpWrapper>
+                  </TraceLogElement>
+                )
+              }}
+            </ViewportList>
+          </StyledListWrapper>
+        </StyledSmallPanel>
+      </Drawer>
+    </>
   )
 }

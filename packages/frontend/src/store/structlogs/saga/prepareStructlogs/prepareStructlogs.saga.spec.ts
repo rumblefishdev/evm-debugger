@@ -34,7 +34,7 @@ describe('startPreparingStructlogsSaga', () => {
       .next(CHAIN_ID)
       .select(transactionConfigSelectors.selectTransactionHash)
       .next(TRANSACTION_HASH)
-      .select(transactionConfigSelectors.selectGasLimit)
+      .select(transactionConfigSelectors.selectGasUsed)
       .next(BigInt(4444))
       .call(prepareStructlogs, CHAIN_ID, TRANSACTION_HASH, BigInt(4444))
       .next({ status: TransactionTraceResponseStatus.PENDING })

@@ -10,3 +10,7 @@ export const validateInstruction = (instruction: TStepInstruction, structlog: TI
 
   return !(instruction.opcode !== structlogOpcodeHex)
 }
+
+export const createSourceMapIdentifier = (instruction: TStepInstruction): string => {
+  return `${instruction.offset}:${instruction.length}`
+}

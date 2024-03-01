@@ -11,6 +11,8 @@ export const AceEditor: React.FC<AceEditorProps> = ({
   currentSelectedLine,
   highlightEndLine,
   lineAvailableForSelection,
+  highlightEndColumn,
+  highlightStartColumn,
   source,
   mode = 'json',
   onClick,
@@ -22,7 +24,9 @@ export const AceEditor: React.FC<AceEditorProps> = ({
   const MARKERS = useMarkers({
     lineAvailableForSelection,
     highlightStartLine,
+    highlightStartColumn,
     highlightEndLine,
+    highlightEndColumn,
     currentSelectedLine,
   })
 
@@ -47,13 +51,12 @@ export const AceEditor: React.FC<AceEditorProps> = ({
 
   const markers: IMarker[] = React.useMemo(() => {
     const items: IMarker[] = []
+    if (currentSelectedLine) {
+      items.push(MARKERS.shouldHighlightActiveLine)
+    }
 
     if (shouldHighlight) {
       items.push(MARKERS.highlightMarker)
-    }
-
-    if (currentSelectedLine) {
-      items.push(MARKERS.shouldHighlightActiveLine)
     }
 
     if (MARKERS.lineAvailableForSelectionMarker.length > 0) {

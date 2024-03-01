@@ -8,4 +8,6 @@ export interface ISourceCodeViewProps {
   currentSelectedLine: number | null
   lineRowsAvailableForSelections: number[]
   onClick: (event: AceEditorClickEvent) => void
+  startCodeColumn: number
+  endCodeColumn: number
 }

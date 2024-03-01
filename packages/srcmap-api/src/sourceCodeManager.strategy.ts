@@ -2,6 +2,7 @@ import type {
   TEtherscanContractSourceCodeResult,
   TEtherscanParsedSourceCode,
   TExtractedSourceFiles,
+  TInputSources,
   TSolcConfiguration,
 } from '@evm-debuger/types'
 
@@ -43,6 +44,7 @@ class MultiFileExtendedSourceManager {
     return {
       ...sourceCodeSettings,
       solcCompilerVersion: sourceData.CompilerVersion,
+      rootContractName: sourceData.ContractName,
     }
   }
 }
@@ -83,8 +85,7 @@ class MultiFileSourceManager {
   ): TExtractedSourceFiles {
     const rawSourceCode = sourceData.SourceCode.replace(/(\r\n)/gm, '')
 
-    const sourceCodeObj: Record<string, { content: string }> =
-      JSON.parse(rawSourceCode)
+    const sourceCodeObj: TInputSources = JSON.parse(rawSourceCode)
 
     return Object.keys(sourceCodeObj).map((fileName) => [
       fileName,

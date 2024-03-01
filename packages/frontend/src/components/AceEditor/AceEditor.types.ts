@@ -7,6 +7,8 @@ export interface AceEditorProps extends Omit<IAceEditorProps, 'theme'> {
   source: string
   highlightStartLine?: number
   highlightEndLine?: number
+  highlightStartColumn?: number
+  highlightEndColumn?: number
   currentSelectedLine?: number
   lineAvailableForSelection?: number[]
   onClick?: (event: AceEditorClickEvent) => void

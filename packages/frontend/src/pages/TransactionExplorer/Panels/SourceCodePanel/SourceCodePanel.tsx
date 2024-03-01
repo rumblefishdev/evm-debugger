@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
 import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
+import { Collapse, Stack } from '@mui/material'
 
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
@@ -32,25 +33,35 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
 
   return (
     <StyledSourceCodePanel>
-      <StyledHeadingWrapper>
-        <StyledHeading>Source Code</StyledHeading>
-        {hasMultipleSourceFiles && willShowSourceCode && (
-          <Button
-            onTouchStart={(event) => event.stopPropagation()}
-            onMouseDown={(event) => event.stopPropagation()}
-            variant="text"
-            size="medium"
-            onClick={handleCollapseButtonClick}
-          >
-            {treeFileButtonText}
-          </Button>
-        )}
-      </StyledHeadingWrapper>
+      <Stack
+        flexDirection="row"
+        justifyContent="space-between"
+      >
+        <StyledHeadingWrapper>
+          <StyledHeading>Source Code</StyledHeading>
+          {hasMultipleSourceFiles && willShowSourceCode && (
+            <Button
+              onTouchStart={(event) => event.stopPropagation()}
+              onMouseDown={(event) => event.stopPropagation()}
+              variant="text"
+              size="medium"
+              onClick={handleCollapseButtonClick}
+            >
+              {treeFileButtonText}
+            </Button>
+          )}
+        </StyledHeadingWrapper>
+      </Stack>
       <StyledSourceWrapper>
         {hasContract ? (
           willShowSourceCode ? (
             <>
-              {isTreeViewExpanded && hasMultipleSourceFiles && <TreeFileViewContainer />}
+              <Collapse
+                in={isTreeViewExpanded && hasMultipleSourceFiles}
+                orientation="horizontal"
+              >
+                <TreeFileViewContainer />
+              </Collapse>
               <SourceCodeViewContainer />
             </>
           ) : (

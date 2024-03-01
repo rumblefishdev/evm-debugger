@@ -1,6 +1,7 @@
 import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledSourceCodePanel = styled(Stack)(({ theme }) => ({
+  width: '100%',
   padding: theme.spacing(2),
   height: '100%',
   boxSizing: 'border-box',
@@ -14,6 +15,7 @@ export const StyledSourceWrapper = styled(Stack)(({ theme }) => ({
   overflowY: 'hidden',
   height: '100%',
   gap: theme.spacing(1),
+  flexShrink: 100,
   flexDirection: 'row',
 }))
 
