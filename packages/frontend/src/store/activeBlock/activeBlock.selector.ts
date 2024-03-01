@@ -32,6 +32,8 @@ const parseEventLog = (eventLogs: TEventInfo[]): TParsedEventLog[] => {
 
 const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | null) => {
   // eslint-disable-next-line unicorn/consistent-destructuring
+  // TODO: refactor and move to analyzer
+
   const { callTypeData } = block
 
   const callResult: TParsedCallTypeData = {
@@ -41,12 +43,17 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     parsedError: null,
     functionSignature: null,
     functionFragment: null,
-    events: parseEventLog(callTypeData.events),
+    events: null,
     errorSignature: null,
     contractName,
   }
 
-  if (callTypeData.functionFragment) {
+  if (callTypeData?.events) {
+    const events = parseEventLog(callTypeData.events)
+    callResult.events = events
+  }
+
+  if (callTypeData?.functionFragment) {
     const { inputs, outputs } = callTypeData.functionFragment
 
     const parsedInput = parseParameters([...inputs], callTypeData.decodedInput)
@@ -59,7 +66,7 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
     callResult.functionSignature = signature
   }
 
-  if (callTypeData.errorDescription) {
+  if (callTypeData?.errorDescription) {
     const { signature, fragment, args } = callTypeData.errorDescription
     const { inputs } = fragment
 

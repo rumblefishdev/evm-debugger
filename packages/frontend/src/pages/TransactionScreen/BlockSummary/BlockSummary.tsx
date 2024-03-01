@@ -1,3 +1,5 @@
+// TODO: Refactor this component to better work with new structure
+
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -11,34 +13,10 @@ import { EventBlock } from './DataBlocks/EventBlock'
 import { DataSection } from './DataSection'
 
 const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
-  const {
-    functionSignature,
-    isContract,
-    parsedError,
-    events,
-    parsedOutput,
-    parsedInput,
-    storageAddress,
-    storageLogs,
-    input,
-    output,
-    contractName,
-  } = data
-
-  if (!isContract) return null
+  const { functionSignature, parsedError, events, parsedInput, parsedOutput } = data
 
   return (
     <DataSection title="Call specific data">
-      <StyledInfoRow>
-        <StyledInfoType>Is contract</StyledInfoType>
-        <StyledInfoValue>{isContract ? 'true' : 'false'}</StyledInfoValue>
-      </StyledInfoRow>
-      {contractName && (
-        <StyledInfoRow>
-          <StyledInfoType>Contract name</StyledInfoType>
-          <StyledInfoValue>{contractName}</StyledInfoValue>
-        </StyledInfoRow>
-      )}
       {functionSignature && (
         <StyledInfoRow>
           <StyledInfoType>Function signature</StyledInfoType>
@@ -70,49 +48,39 @@ const CallBlockSummary = ({ data }: CallBlockSummaryProps) => {
           <EventBlock eventLogs={events} />
         </DataSection>
       )}
-
-      <DataSection title="Storage data">
-        <StorageBlock
-          storageAddress={storageAddress}
-          storageLogs={storageLogs}
-        />
-      </DataSection>
-      <StyledInfoRow>
-        <StyledInfoType>Raw input</StyledInfoType>
-        <StyledInfoValue>{input}</StyledInfoValue>
-      </StyledInfoRow>
-      <StyledInfoRow>
-        <StyledInfoType>Raw output</StyledInfoType>
-        <StyledInfoValue>{output}</StyledInfoValue>
-      </StyledInfoRow>
     </DataSection>
   )
 }
 
 const CreateBlockSummary = ({ data }: CreateBlockSummaryProps) => {
-  const { input, salt, storageAddress, storageLogs } = data
+  const { salt } = data
   return (
     <DataSection title="Create specific data">
       <StyledInfoRow>
         <StyledInfoType>Salt</StyledInfoType>
         <StyledInfoValue>{salt}</StyledInfoValue>
       </StyledInfoRow>
-      <StyledInfoRow>
-        <StyledInfoType>Raw input</StyledInfoType>
-        <StyledInfoValue>{input}</StyledInfoValue>
-      </StyledInfoRow>
-      <DataSection title="Storage data">
-        <StorageBlock
-          storageAddress={storageAddress}
-          storageLogs={storageLogs}
-        />
-      </DataSection>
     </DataSection>
   )
 }
 
 const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
-  const { address, blockNumber, gasCost, passedGas, stackTrace, op, value, isSuccess } = data
+  const {
+    address,
+    blockNumber,
+    gasCost,
+    passedGas,
+    stackTrace,
+    op,
+    value,
+    isSuccess,
+    contractName,
+    input,
+    isContract,
+    output,
+    storageAddress,
+    storageLogs,
+  } = data
 
   return (
     <DataSection title="Trace Information">
@@ -124,6 +92,16 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
         <StyledInfoRow>
           <StyledInfoType>Is Success</StyledInfoType>
           <StyledInfoValue>{isSuccess ? 'true' : 'false'}</StyledInfoValue>
+        </StyledInfoRow>
+      )}
+      <StyledInfoRow>
+        <StyledInfoType>Is contract</StyledInfoType>
+        <StyledInfoValue>{isContract ? 'true' : 'false'}</StyledInfoValue>
+      </StyledInfoRow>
+      {contractName && (
+        <StyledInfoRow>
+          <StyledInfoType>Contract name</StyledInfoType>
+          <StyledInfoValue>{contractName}</StyledInfoValue>
         </StyledInfoRow>
       )}
       <StyledInfoRow>
@@ -150,6 +128,23 @@ const DefaultBlockSummary = ({ data }: DefaultBlockSummaryProps) => {
         <StyledInfoType>Value</StyledInfoType>
         <StyledInfoValue>{value}</StyledInfoValue>
       </StyledInfoRow>
+
+      <StyledInfoRow>
+        <StyledInfoType>Raw input</StyledInfoType>
+        <StyledInfoValue>{input}</StyledInfoValue>
+      </StyledInfoRow>
+      <StyledInfoRow>
+        <StyledInfoType>Raw output</StyledInfoType>
+        <StyledInfoValue>{output}</StyledInfoValue>
+      </StyledInfoRow>
+      {storageLogs && (
+        <DataSection title="Storage data">
+          <StorageBlock
+            storageAddress={storageAddress}
+            storageLogs={storageLogs}
+          />
+        </DataSection>
+      )}
     </DataSection>
   )
 }
@@ -181,44 +176,41 @@ export const BlockSummary: React.FC<BlockSummaryProps> = () => {
 
   const defaultBlockSummaryProps: DefaultBlockSummaryProps['data'] = {
     value,
+    storageLogs,
+    storageAddress,
     startIndex,
     stackTrace,
     returnIndex,
     passedGas,
+    output,
     op,
     isSuccess,
+    isContract,
+    input,
     gasCost,
+    contractName,
     blockNumber,
     address,
   }
 
   const callSpecificData: CallBlockSummaryProps['data'] = {
-    storageLogs,
-    storageAddress,
     parsedOutput,
     parsedInput,
     parsedError,
-    output,
-    isContract,
-    input,
     functionSignature,
     events,
     errorSignature,
-    contractName,
   }
 
   const createSpecificData: CreateBlockSummaryProps['data'] = {
-    storageLogs,
-    storageAddress,
     salt: createTypeData?.salt,
-    input,
   }
 
   return (
     <StyledStack>
-      {defaultBlockSummaryProps ? <DefaultBlockSummary data={defaultBlockSummaryProps} /> : null}
-      {callSpecificData ? <CallBlockSummary data={callSpecificData} /> : null}
-      {createSpecificData ? <CreateBlockSummary data={createSpecificData} /> : null}
+      {defaultBlockSummaryProps && <DefaultBlockSummary data={defaultBlockSummaryProps} />}
+      {callTypeData?.functionSignature && <CallBlockSummary data={callSpecificData} />}
+      {createTypeData && <CreateBlockSummary data={createSpecificData} />}
     </StyledStack>
   )
 }
