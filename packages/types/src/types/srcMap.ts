@@ -1,5 +1,5 @@
 import type { ChainId } from './chains'
-import type { TContractBytecodeObject } from './solc'
+import type { TContractBytecodeObject, TGeneratedSourcesElement } from './solc'
 import type { TAbi } from './types'
 import type { TYulBlock } from './yulSources'
 
@@ -45,7 +45,7 @@ export type TSrcMapAddres = {
 export type TSourceMap = {
   fileName: string
   contractName: string
-  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & { ast?: TYulBlock; contents?: string }
+  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & Partial<TGeneratedSourcesElement>
 }
 
 export type TEtherscanContractSourceCodeResult = {
