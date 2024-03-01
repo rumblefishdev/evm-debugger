@@ -101,7 +101,7 @@
     "solcv0.8.24": "npm:solc@0.8.24"
   },
   "scripts": {
-    "build": "esbuild src/* --sourcemap --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
+    "build": "esbuild src/* --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",
     "unit": "jest --passWithNoTests",
     "unit-watch": "jest --watch",
     "lint:check": "eslint --quiet 'src/**/*.ts' 'tests/**/*.ts'",

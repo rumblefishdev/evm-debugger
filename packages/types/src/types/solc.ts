@@ -7,11 +7,14 @@ export type TFunctionDebugData = {
   returnSlots: number
 }
 
+export type TGeneratedSourcesElement = { ast: TYulBlock; contents: string }
+export type ImmutableReferencesElement = { length: number; start: number }
+
 export type TContractBytecodeObject = {
-  functionDebugData: Record<string, TFunctionDebugData>
-  generatedSources: { ast: TYulBlock; contents: string }[]
-  immutableReferences: Record<string, { length: number; start: number }[]>
-  linkReferences: string
+  functionDebugData?: Record<string, TFunctionDebugData>
+  generatedSources?: TGeneratedSourcesElement[]
+  immutableReferences?: Record<string, ImmutableReferencesElement[]>
+  linkReferences?: string
   object: string
   opcodes: string
   sourceMap: string

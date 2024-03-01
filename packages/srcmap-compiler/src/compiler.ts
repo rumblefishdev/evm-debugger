@@ -151,18 +151,37 @@ export const createSourceMapEntry = (
   if (rootContract) {
     const [fileName, fileInternals] = rootContract
     const contractInternals = fileInternals[rootContractName]
-    return {
+    const contractDeployedBytecode = contractInternals.evm.deployedBytecode
+
+    const baseSourceMapContent: TSourceMap = {
       fileName,
       deployedBytecode: {
-        sourceMap: contractInternals.evm.deployedBytecode.sourceMap,
-        opcodes: contractInternals.evm.deployedBytecode.opcodes,
-        object: contractInternals.evm.deployedBytecode.object,
-        contents:
-          contractInternals.evm.deployedBytecode.generatedSources[0]?.contents,
-        ast: contractInternals.evm.deployedBytecode.generatedSources[0]?.ast,
+        sourceMap: contractDeployedBytecode.sourceMap,
+        opcodes: contractDeployedBytecode.opcodes,
+        object: contractDeployedBytecode.object,
       },
       contractName: rootContractName,
     }
+
+    // If the contract has generated sources with Utility.yul it will have array with one element
+    // Which is the Utility.yul data
+    if (
+      contractDeployedBytecode.generatedSources &&
+      contractDeployedBytecode.generatedSources.length > 0
+    ) {
+      const extendedSourceMapContent: TSourceMap = {
+        ...baseSourceMapContent,
+        deployedBytecode: {
+          ...baseSourceMapContent.deployedBytecode,
+          contents: contractDeployedBytecode.generatedSources[0].contents,
+          ast: contractDeployedBytecode.generatedSources[0].ast,
+        },
+      }
+
+      return extendedSourceMapContent
+    }
+
+    return baseSourceMapContent
   }
   const message = `/Compilation/No root contract found: ${rootContractName}`
   captureMessage(message, 'error')
