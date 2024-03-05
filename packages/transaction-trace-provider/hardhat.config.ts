@@ -20,7 +20,7 @@ export const config: HardhatUserConfig = {
         // too many requests per second
         [ChainId.polygon]: {
           hardforkHistory: {
-            london: 0,
+            shanghai: 0,
           },
         },
         [ChainId.mumbai]: {

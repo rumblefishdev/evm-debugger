@@ -17,7 +17,11 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
   })
+
+  console.log(`Provider for ${chainId} is ready`)
+  console.log(`hardhat config ${hardhat.config}`)
   console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
+
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
   // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
   // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
