@@ -2,15 +2,18 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledBar = styled(Stack)(({ theme }) => ({
   zIndex: 10,
-  width: '101vw',
+  width: '100%',
   transition: 'all 0.3s ease',
   position: 'fixed',
   padding: theme.spacing(2),
+  left: 0,
   justifyContent: 'center',
   height: 32,
   cursor: 'pointer',
   boxSizing: 'border-box',
   bottom: 0,
+
+  borderTop: `1px solid #eeeeee`,
 
   backgroundColor: theme.palette.rfWhite,
   alignItems: 'center',

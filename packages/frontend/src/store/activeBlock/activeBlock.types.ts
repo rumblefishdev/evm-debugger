@@ -19,25 +19,22 @@ export type TBlockDefaultData = {
   isSuccess: boolean
   startIndex: number
   returnIndex: number
-}
-export type TBlockCallSpecificData = {
   storageLogs: TStorageLogs
   storageAddress: string
-  parsedOutput: null | TParsedParams[]
-  parsedInput: null | TParsedParams[]
-  events: TParsedEventLog[]
-  parsedError: null | TParsedParams[]
   isContract: boolean
-  functionSignature: null | string
-  errorSignature: null | string
   input: string
   output: string
   contractName: string | null
 }
+export type TBlockCallSpecificData = {
+  parsedOutput: null | TParsedParams[]
+  parsedInput: null | TParsedParams[]
+  events: TParsedEventLog[]
+  parsedError: null | TParsedParams[]
+  functionSignature: null | string
+  errorSignature: null | string
+}
 export type TBlockCreateSpecificData = {
-  storageLogs: TStorageLogs
-  storageAddress: string
-  input: string
   salt: string
 }
 

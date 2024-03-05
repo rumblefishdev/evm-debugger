@@ -35,7 +35,10 @@ export const TransactionExplorer: React.FC = () => {
             justifyContent="flex-start"
             spacing={1}
           >
-            <Stack flex={2}>
+            <Stack
+              flex={2}
+              maxHeight={280}
+            >
               <NavigationPanel />
             </Stack>
             <Stack
