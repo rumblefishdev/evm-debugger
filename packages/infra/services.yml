@@ -22,7 +22,7 @@ Parameters:
     Type: String
   TransactionTraceProviderImage:
     Type: String
-    Default: 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v0.0.2
+    Default: 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v0.0.5
   TransactionTraceMemory:
     Type: Number
     Default: 4096

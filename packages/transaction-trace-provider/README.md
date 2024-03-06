@@ -38,3 +38,15 @@ To provide full flow experience please use `packages/infra/local` stack.
 `make clean`
 
 Stack output contain url to API and lambdas are in the sync with life code thanks to SAM configuration.
+
+# Build docker image and push to ECR
+
+run `make rebootstrap` in root directory
+cd to `packages/transaction-trace-provider`
+run `npm run build` to build package
+run `docker build .` to build docker image
+run `docker tag <tag-from-docker-build> 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v<new-version>` to tag the image
+login to ecr by running `aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 428196107266.dkr.ecr.us-east-1.amazonaws.com`
+run `docker push 428196107266.dkr.ecr.us-east-1.amazonaws.com/transaction-trace-provider:v<new-version>` to push the image to ecr
+update version in `packages/infra/services.yml` -> `TransactionTraceProviderImage` to the new version
+run `make stage-deploy` in infra directory to deploy the new version of the image to staging

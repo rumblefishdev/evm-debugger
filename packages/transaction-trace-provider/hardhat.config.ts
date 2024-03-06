@@ -20,27 +20,27 @@ export const config: HardhatUserConfig = {
         // too many requests per second
         [ChainId.polygon]: {
           hardforkHistory: {
-            london: 0,
+            shanghai: 0,
           },
         },
         [ChainId.mumbai]: {
           hardforkHistory: {
-            london: 33_130_000,
+            shanghai: 33_130_000,
           },
         },
         [ChainId.sepolia]: {
           hardforkHistory: {
-            london: 3_100_000,
+            shanghai: 3_100_000,
           },
         },
         [ChainId.arbitrum]: {
           hardforkHistory: {
-            london: 70_000_000,
+            shanghai: 70_000_000,
           },
         },
         [ChainId.arbitrumGoerli]: {
           hardforkHistory: {
-            london: 11_500_000,
+            shanghai: 11_500_000,
           },
         },
       },

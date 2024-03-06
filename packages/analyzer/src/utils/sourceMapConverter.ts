@@ -175,10 +175,15 @@ export const getOpcode = (opcode: string): Opcodes => {
 export const isPushType = (opcode: Opcodes): number => {
   const decimalOpcode = parseInt(opcode, 16)
 
+  const decimalPush1Opcode = parseInt(Opcodes.PUSH1, 16)
   const decimalPush0Opcode = parseInt(Opcodes.PUSH0, 16)
   const decimalPush32Opcode = parseInt(Opcodes.PUSH32, 16)
 
-  return decimalOpcode >= decimalPush0Opcode && decimalOpcode <= decimalPush32Opcode ? decimalOpcode - decimalPush0Opcode + 1 : 0
+  if (decimalOpcode >= decimalPush1Opcode && decimalOpcode <= decimalPush32Opcode) {
+    return decimalOpcode - decimalPush0Opcode + 1
+  }
+
+  return 0
 }
 
 export const opcodesConverter = (opcodes: string): TOpcodeFromSourceMap[] => {
