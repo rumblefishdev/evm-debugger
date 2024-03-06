@@ -19,7 +19,7 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   })
 
   console.log(`Provider for ${chainId} is ready`)
-  console.log(`hardhat config ${hardhat.config}`)
+  console.log(`hardhat config ${JSON.stringify(hardhat.config, null, 2)}`)
   console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
 
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
