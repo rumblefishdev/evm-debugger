@@ -6,7 +6,7 @@
     "Domain": "prod.evmdebugger.rumblefish.dev",
     "Environment": "prod",
     "HostedZoneId": "Z09170481U3L849853BSA",
-    "CloudFrontDistributionId": "E37ASQIPZOTFRG",
+    "CloudFrontDistributionId": "EGUCKQR167G6T",
     "CertificateArn": "arn:aws:acm:us-east-1:428196107266:certificate/204dfe35-3ff2-4f90-b06a-a6c06b857d46",
     "TraceBucketName": "transaction-trace-storage-prod.evmdebugger.rumblefish.dev",
     "FrontendDomainName": "front.evmdebugger.rumblefish.dev",
