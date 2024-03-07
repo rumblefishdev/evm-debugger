@@ -20,18 +20,10 @@ export class DataLoader {
     this.structLogs = structLogs.map((log, index) => ({ ...log, index }))
   }
 
-  public loadContractsData(contractsData: TContractData[]) {
-    this.contractsData = contractsData.reduce<TContractsData>(
-      (accumulator, contractData) => {
-        accumulator[contractData.address] = contractData
-        return accumulator
-      },
-      { ...this.contractsData },
-    )
-  }
-
-  public loadContractData(contractData: TContractData) {
-    this.contractsData[contractData.address] = contractData
+  public initializeNewContracts = (addresses: string[]) => {
+    addresses.forEach((address) => {
+      this.contractsData[address] = { address } as TContractData
+    })
   }
 
   public loadContractBytecode(address: string, bytecode: string) {

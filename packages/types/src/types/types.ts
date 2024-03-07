@@ -110,16 +110,16 @@ export type TStepInstrctionsMap = Record<
 >
 
 export type TContractData = {
-  name: string
   address: string
-  applicationBinaryInterface: TAbi
-  bytecode: string
-  opcodes: string
-  etherscanBytecode: string
-  files: TParseSourceCodeOutput
-  sourceMap: string
-  yulTree: string
-  yulFileContent: string
+  name?: string
+  applicationBinaryInterface?: TAbi
+  bytecode?: string
+  opcodes?: string
+  etherscanBytecode?: string
+  files?: TParseSourceCodeOutput
+  sourceMap?: string
+  yulTree?: string
+  yulFileContent?: string
 }
 
 export type TContractsData = Record<string, TContractData>

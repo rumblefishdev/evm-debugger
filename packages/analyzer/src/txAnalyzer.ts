@@ -242,8 +242,16 @@ export class TxAnalyzer {
     for (const contract of transactionContractsList) {
       if (!contract.sourceMap || !contract.files) continue
 
-      const { applicationBinaryInterface, etherscanBytecode, yulTree, ...rest } = contract
-      dataToDecode.push(rest)
+      const { sourceMap, opcodes, name, files, bytecode, address } = contract
+
+      dataToDecode.push({
+        sourceMap,
+        opcodes,
+        name,
+        files,
+        bytecode,
+        address,
+      })
     }
 
     return dataToDecode
@@ -326,6 +334,7 @@ export class TxAnalyzer {
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
     return {
+      structLogs: this.dataLoader.getStructLogs(),
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
       analyzeSummary: { contractSighashesInfo, contractAddresses },
