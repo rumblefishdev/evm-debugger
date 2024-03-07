@@ -145,7 +145,6 @@ export type TSourceMapConverstionPayload = {
   files: TParseSourceCodeOutput
   name: string
   bytecode: string
-  opcodes: string
   address: string
 }
 

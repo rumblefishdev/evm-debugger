@@ -114,7 +114,6 @@ export type TContractData = {
   name?: string
   applicationBinaryInterface?: TAbi
   bytecode?: string
-  opcodes?: string
   etherscanBytecode?: string
   files?: TParseSourceCodeOutput
   sourceMap?: string
@@ -123,16 +122,6 @@ export type TContractData = {
 }
 
 export type TContractsData = Record<string, TContractData>
-
-export type TTransactionData = {
-  structLogs: TIndexedStructLog[]
-  transactionInfo: TTransactionInfo
-  abis: TAbis
-  sourceFiles: TParsedSourceCodesOutput
-  sourceMaps: TMappedSourceMap
-  bytecodeMaps: TAddressToBytecodeDictionary
-  contractNames: TAddressToContractNameDictionary
-}
 
 export type TSighashStatus = {
   sighash: string

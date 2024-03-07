@@ -54,10 +54,6 @@ export class DataLoader {
     this.contractsData[address] = { ...this.contractsData[address], yulFileContent }
   }
 
-  public loadContractOpcodes(address: string, opcodes: string) {
-    this.contractsData[address] = { ...this.contractsData[address], opcodes }
-  }
-
   public loadContractYulTree(address: string, yulTree: string) {
     this.contractsData[address] = { ...this.contractsData[address], yulTree }
   }

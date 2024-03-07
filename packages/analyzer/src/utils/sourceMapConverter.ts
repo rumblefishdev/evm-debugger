@@ -1,14 +1,13 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
 import {
+  BaseOpcodesHex,
   SourceFileType,
   type TOpcodeFromSourceMap,
   type TParseSourceCodeOutput,
   type TParsedSourceMap,
   type TSourceMapCodeRepresentation,
 } from '@evm-debuger/types'
-
-import { AlternativeOpcodes, Opcodes } from '../opcodes/opcodes'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
@@ -168,19 +167,13 @@ export const sourceMapConverter = (sourceMap: string): TParsedSourceMap[] => {
   return convertedSourceMap
 }
 
-export const getOpcode = (opcode: string): Opcodes => {
-  return Opcodes[opcode] || AlternativeOpcodes[opcode] || opcode
-}
+export const getPushLength = (opcodeByte: number): number => {
+  const decimalPush1Opcode = BaseOpcodesHex.PUSH1
+  const decimalPush0Opcode = BaseOpcodesHex.PUSH0
+  const decimalPush32Opcode = BaseOpcodesHex.PUSH32
 
-export const isPushType = (opcode: Opcodes): number => {
-  const decimalOpcode = parseInt(opcode, 16)
-
-  const decimalPush1Opcode = parseInt(Opcodes.PUSH1, 16)
-  const decimalPush0Opcode = parseInt(Opcodes.PUSH0, 16)
-  const decimalPush32Opcode = parseInt(Opcodes.PUSH32, 16)
-
-  if (decimalOpcode >= decimalPush1Opcode && decimalOpcode <= decimalPush32Opcode) {
-    return decimalOpcode - decimalPush0Opcode + 1
+  if (opcodeByte >= decimalPush1Opcode && opcodeByte <= decimalPush32Opcode) {
+    return opcodeByte - decimalPush0Opcode
   }
 
   return 0
@@ -188,46 +181,25 @@ export const isPushType = (opcode: Opcodes): number => {
 
 export const bytecodeDisassembler = (bytecode: string) => {
   const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
-
-  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
-    const opcode = bytecodeAsBuffer[index]
-    const opcodeElement = getOpcode(opcode.toString(16))
-
-    const isPush = isPushType(opcodeElement)
-
-    if (isPush) {
-      index += isPush
-    }
-  }
-}
-
-export const opcodesConverter = (bytecode: string): TOpcodeFromSourceMap[] => {
-  const opcodesArray: string[] = bytecode.split(' ')
   const convertedOpcodes: TOpcodeFromSourceMap[] = []
 
-  let pc = 0
-  for (let index = 0; index < opcodesArray.length; index++) {
-    const element: string = opcodesArray[index]
+  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
+    const opcodeByte = bytecodeAsBuffer[index]
+    const opcode = BaseOpcodesHex[opcodeByte]
 
-    const opcodeElement = getOpcode(element)
+    const pushLength = getPushLength(opcodeByte)
 
-    const isPush = isPushType(opcodeElement)
-
-    if (isPush) {
+    if (pushLength) {
       convertedOpcodes.push({
-        pc,
-        opcode: opcodeElement,
+        pc: index,
+        opcode,
       })
-      index++
-      pc += isPush
-    }
-
-    if (!isPush) {
+      index += pushLength
+    } else {
       convertedOpcodes.push({
-        pc,
-        opcode: opcodeElement,
+        pc: index,
+        opcode,
       })
-      pc++
     }
   }
 

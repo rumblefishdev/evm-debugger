@@ -7,7 +7,6 @@ import type {
   TAddressToContractNameDictionary,
   TMappedSourceMap,
   TStepInstrctionsMap,
-  TTransactionData,
 } from '@evm-debuger/types'
 
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
@@ -111,7 +110,7 @@ describe('runAnalyzer', () => {
       },
     }
 
-    const analyzerPayload: TTransactionData = {
+    const analyzerPayload = {
       transactionInfo: mockedTransactionInfo,
       structLogs: mockedStructlogs,
       sourceMaps: mockedSourceMaps.reduce((accumulator: TMappedSourceMap, sourceMap) => {

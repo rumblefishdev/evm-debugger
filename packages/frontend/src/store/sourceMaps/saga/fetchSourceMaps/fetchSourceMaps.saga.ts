@@ -35,7 +35,6 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
 
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractBytecode, [contractAddress, sourceMap.deployedBytecode.object])
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractSourceMap, [contractAddress, sourceMap.deployedBytecode.sourceMap])
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractOpcodes, [contractAddress, sourceMap.deployedBytecode.opcodes])
 
     yield* put(sourceMapsActions.addSourceMap(sourceMapWithAddress))
 

@@ -31,10 +31,10 @@ import { FragmentReader } from './utils/fragmentReader'
 import { getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
 import { SigHashStatuses } from './sigHashes'
 import {
+  bytecodeDisassembler,
   createSourceMapIdentifier,
   createSourceMapToSourceCodeDictionary,
   getUniqueSourceMaps,
-  opcodesConverter,
   sourceMapConverter,
 } from './utils/sourceMapConverter'
 import { createErrorDescription } from './resources/builtinErrors'
@@ -242,11 +242,10 @@ export class TxAnalyzer {
     for (const contract of transactionContractsList) {
       if (!contract.sourceMap || !contract.files) continue
 
-      const { sourceMap, opcodes, name, files, bytecode, address } = contract
+      const { sourceMap, name, files, bytecode, address } = contract
 
       dataToDecode.push({
         sourceMap,
-        opcodes,
         name,
         files,
         bytecode,
@@ -255,21 +254,21 @@ export class TxAnalyzer {
     }
 
     return dataToDecode
-      .map(({ address, bytecode, opcodes, sourceMap, files }) => {
+      .map(({ address, bytecode, sourceMap, files }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(files, uniqueSourceMaps)
 
-        const parsedOpcodes = opcodesConverter(opcodes.trim())
+        const parsedBytecode = bytecodeDisassembler(bytecode)
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
 
           if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
-          if (!parsedOpcodes[index]) return accumulator
+          if (!parsedBytecode[index]) return accumulator
 
-          const { pc, opcode } = parsedOpcodes[index]
+          const { pc, opcode } = parsedBytecode[index]
 
           accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
           return accumulator
