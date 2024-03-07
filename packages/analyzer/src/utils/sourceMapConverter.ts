@@ -186,8 +186,23 @@ export const isPushType = (opcode: Opcodes): number => {
   return 0
 }
 
-export const opcodesConverter = (opcodes: string): TOpcodeFromSourceMap[] => {
-  const opcodesArray: string[] = opcodes.split(' ')
+export const bytecodeDisassembler = (bytecode: string) => {
+  const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
+
+  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
+    const opcode = bytecodeAsBuffer[index]
+    const opcodeElement = getOpcode(opcode.toString(16))
+
+    const isPush = isPushType(opcodeElement)
+
+    if (isPush) {
+      index += isPush
+    }
+  }
+}
+
+export const opcodesConverter = (bytecode: string): TOpcodeFromSourceMap[] => {
+  const opcodesArray: string[] = bytecode.split(' ')
   const convertedOpcodes: TOpcodeFromSourceMap[] = []
 
   let pc = 0

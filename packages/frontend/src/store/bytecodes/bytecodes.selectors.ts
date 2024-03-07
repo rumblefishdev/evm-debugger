@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import type { TByteCodeMap } from '@evm-debuger/types'
+import type { TAddressToBytecodeDictionary } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -18,7 +18,7 @@ const selectByAddress = createSelector([selectBytecodesState, (_: unknown, addre
 )
 
 const selectGroupedByAddress = createSelector([selectAll], (bytecodes) => {
-  return bytecodes.reduce((accumulator: TByteCodeMap, bytecode) => {
+  return bytecodes.reduce((accumulator: TAddressToBytecodeDictionary, bytecode) => {
     accumulator[bytecode.address] = bytecode.bytecode
     return accumulator
   }, {})

@@ -1,24 +1,23 @@
 /* eslint-disable no-return-await */
 
-import { call, put, select, type SagaGenerator } from 'typed-redux-saga'
-import type { TIndexedStructLog } from '@evm-debuger/types'
+import { apply, call, put, select, type SagaGenerator } from 'typed-redux-saga'
+import type { TRawStructLog } from '@evm-debuger/types'
 import { FastJson } from 'fast-json'
 
-import { structLogsActions } from '../../structlogs.slice'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 
 export async function fetchStructlogs(s3Location: string): Promise<ArrayBuffer> {
   const transactionTrace = await fetch(`https://${s3Location}`)
   return await transactionTrace.arrayBuffer()
 }
 
-export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): TIndexedStructLog[] {
+export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): TRawStructLog[] {
   const fastJson = new FastJson()
 
-  const structLogs: TIndexedStructLog[] = []
+  const structLogs: TRawStructLog[] = []
 
   fastJson.on('structLogs[*]', (structLog) => {
     structLogs.push(JSON.parse(structLog.toString()))
@@ -26,8 +25,7 @@ export function parseStructlogs(structlogsArrayBuffer: ArrayBuffer): TIndexedStr
 
   fastJson.write(Buffer.from(structlogsArrayBuffer))
 
-  // TODO: Fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-  return structLogs.map((structLog: TIndexedStructLog, index) => ({ ...structLog, index }))
+  return structLogs
 }
 
 export function* fetchStructlogsSaga(): SagaGenerator<void> {
@@ -50,7 +48,8 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
 
     const structLogs = yield* call(parseStructlogs, structlogsArrayBuffer)
 
-    yield* put(structLogsActions.loadStructLogs(structLogs))
+    const analyzer = yield* call(getAnalyzerInstance)
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadStructlogs, [structLogs])
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Successfully downloaded and parsed structlogs')))
     yield* put(

@@ -1,4 +1,4 @@
-import { call, put, type SagaGenerator } from 'typed-redux-saga'
+import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 import type { TEtherscanContractSourceCodeResult } from '@evm-debuger/types'
 
 import { traceStorageBucket } from '../../../../config'
@@ -6,7 +6,8 @@ import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.s
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { abisActions } from '../../../abis/abis.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
-import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
+import { mapSourceCode } from '../../sourceCodes.utiils'
 
 export async function fetchSourceData(sourceDataPath: string) {
   const rawSourceData = await fetch(`https://${traceStorageBucket}/${sourceDataPath}`)
@@ -22,18 +23,28 @@ export async function fetchSourcesOrder(sourcesPath: string) {
 
 export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions['fetchSourceData']): SagaGenerator<void> {
   const { sourceDataPath, sourcesPath, contractAddress } = payload
+  const analyzer = yield* call(getAnalyzerInstance)
 
   try {
     const sourceData = yield* call(fetchSourceData, sourceDataPath)
     const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
     if (sourceData.ABI) {
       yield* put(abisActions.addAbi({ address: contractAddress, abi: sourceData.ABI }))
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractAbi, [contractAddress, sourceData.ABI])
     }
     if (sourceData.SourceCode) {
       yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: sourceData.SourceCode, address: contractAddress }))
+      const { sources, address } = mapSourceCode({
+        sourcesOrder,
+        sourceCode: sourceData.SourceCode,
+        contractName: sourceData.ContractName,
+        address: contractAddress,
+      })
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractFiles, [address, sources])
     }
     if (sourceData.ContractName) {
       yield* put(contractNamesActions.updateContractName({ id: contractAddress, changes: { contractName: sourceData.ContractName } }))
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractName, [contractAddress, sourceData.ContractName])
     }
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source data for ${contractAddress} fetched successfully`)))

@@ -3,7 +3,7 @@ import type { JsonFragment } from '@ethersproject/abi'
 
 import type { TRawStructLog, TIndexedStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { SourceFileType, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
+import type { SourceFileType, TParseSourceCodeOutput, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
 
 export type TStorage = Record<string, string>
 
@@ -96,13 +96,13 @@ export type TSourceMapCodeRepresentation = {
 export type TSighashFragment = JsonFragment
 export type TAbi = readonly TSighashFragment[]
 export type TAbis = Record<string, TAbi>
-export type TByteCodeMap = Record<string, string>
+export type TAddressToBytecodeDictionary = Record<string, string>
 export type TStepInstruction = TParsedSourceMap & TOpcodeFromSourceMap & TSourceMapCodeRepresentation
 export type TPcIndexedStepInstructions = Record<number, TStepInstruction>
 
 export type TMappedSourceCodes = Record<string, string>
 export type TMappedSourceMap = Record<string, TSourceMap[]>
-export type TMappedContractNames = Record<string, string>
+export type TAddressToContractNameDictionary = Record<string, string>
 export type TStructlogsPerStartLine = Record<number, Record<number, TIndexedStructLog[]>>
 export type TStepInstrctionsMap = Record<
   string,
@@ -110,12 +110,19 @@ export type TStepInstrctionsMap = Record<
 >
 
 export type TContractData = {
-  abi: TAbi
-  sourceCode: string
-  contractName: string
+  name: string
+  address: string
+  applicationBinaryInterface: TAbi
+  bytecode: string
+  opcodes: string
+  etherscanBytecode: string
+  files: TParseSourceCodeOutput
+  sourceMap: string
+  yulTree: string
+  yulFileContent: string
 }
 
-export type TContractDataByAddress = Record<string, TContractData>
+export type TContractsData = Record<string, TContractData>
 
 export type TTransactionData = {
   structLogs: TIndexedStructLog[]
@@ -123,8 +130,8 @@ export type TTransactionData = {
   abis: TAbis
   sourceFiles: TParsedSourceCodesOutput
   sourceMaps: TMappedSourceMap
-  bytecodeMaps: TByteCodeMap
-  contractNames: TMappedContractNames
+  bytecodeMaps: TAddressToBytecodeDictionary
+  contractNames: TAddressToContractNameDictionary
 }
 
 export type TSighashStatus = {

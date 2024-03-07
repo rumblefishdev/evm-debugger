@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import type { TMappedContractNames } from '@evm-debuger/types'
+import type { TAddressToContractNameDictionary } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
@@ -11,7 +11,7 @@ const selectContractNamesState = createSelector([selectReducer(StoreKeys.CONTRAC
 const selectAll = createSelector([selectContractNamesState], (state) => contractNamesAdapter.getSelectors().selectAll(state))
 
 const selectGroupedByAddress = createSelector([selectAll], (contractNames) => {
-  return contractNames.reduce((accumulator: TMappedContractNames, contractName) => {
+  return contractNames.reduce((accumulator: TAddressToContractNameDictionary, contractName) => {
     accumulator[contractName.address] = contractName.contractName
     return accumulator
   }, {})

@@ -2,10 +2,6 @@ import { formatEther, getCreateAddress } from 'ethers'
 import type { TIndexedStructLog, TRawStructLog, TTraceLog, TTransactionInfo } from '@evm-debuger/types'
 import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes, BaseOpcodesHex } from '@evm-debuger/types'
 
-export const indexRawStructLogs = (structLogs: TRawStructLog[]): TIndexedStructLog[] => {
-  return structLogs.map((log, index) => ({ ...log, index }))
-}
-
 export const getFunctionBlockStartStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {
   return structLogs.filter((log) => Boolean(FunctionBlockStartOpcodes.includes(BaseOpcodesHex[log.op])))
 }

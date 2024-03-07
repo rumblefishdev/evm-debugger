@@ -1,7 +1,14 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { combineReducers } from 'redux'
-import type { TAbis, TByteCodeMap, TMappedContractNames, TMappedSourceMap, TStepInstrctionsMap, TTransactionData } from '@evm-debuger/types'
+import type {
+  TAbis,
+  TAddressToBytecodeDictionary,
+  TAddressToContractNameDictionary,
+  TMappedSourceMap,
+  TStepInstrctionsMap,
+  TTransactionData,
+} from '@evm-debuger/types'
 
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { AnalyzerState, analyzerStagesAdapter } from '../../analyzer.state'
@@ -118,11 +125,11 @@ describe('runAnalyzer', () => {
         accumulator[sourceCode.address] = { 0: { sourceName: sourceCode.sourcesOrder[0], content: sourceCode.sourceCode } }
         return accumulator
       }, {}),
-      contractNames: mockedContractNames.reduce((accumulator: TMappedContractNames, contractName) => {
+      contractNames: mockedContractNames.reduce((accumulator: TAddressToContractNameDictionary, contractName) => {
         accumulator[contractName.address] = contractName.contractName
         return accumulator
       }, {}),
-      bytecodeMaps: mockedBytecodes.reduce((accumulator: TByteCodeMap, bytecode) => {
+      bytecodeMaps: mockedBytecodes.reduce((accumulator: TAddressToBytecodeDictionary, bytecode) => {
         accumulator[bytecode.address] = bytecode.bytecode
         return accumulator
       }, {}),

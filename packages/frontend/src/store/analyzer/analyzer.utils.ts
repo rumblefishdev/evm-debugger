@@ -1,9 +1,19 @@
 import { v4 as createUUID } from 'uuid'
+import { TxAnalyzer } from '@evm-debuger/analyzer'
 
 import { infoApiGatewayUrl } from '../../config'
 
 import { LogMessageStatus } from './analyzer.const'
 import type { TLogMessageRecord } from './analyzer.types'
+
+let analyzer = new TxAnalyzer()
+
+export const getAnalyzerInstance = () => {
+  if (!analyzer) {
+    analyzer = new TxAnalyzer()
+  }
+  return analyzer
+}
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
   return fetch(`${infoApiGatewayUrl}/info`, {
