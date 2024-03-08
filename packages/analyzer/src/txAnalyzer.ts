@@ -242,7 +242,11 @@ export class TxAnalyzer {
     for (const contract of transactionContractsList) {
       if (!contract.sourceMap || !contract.files) continue
 
-      const { sourceMap, name, files, bytecode, address } = contract
+      const { sourceMap, name, files, bytecode, address, yulFileContent } = contract
+
+      if (yulFileContent) {
+        files[Object.keys(files).length] = { sourceName: 'Utility.yul', content: yulFileContent }
+      }
 
       dataToDecode.push({
         sourceMap,
