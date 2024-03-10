@@ -31,7 +31,6 @@ import { FragmentReader } from './utils/fragmentReader'
 import { getLogGroupTypeOpcodesArgumentsData } from './helpers/structlogArgumentsExtractors'
 import { SigHashStatuses } from './sigHashes'
 import {
-  bytecodeDisassembler,
   createSourceMapIdentifier,
   createSourceMapToSourceCodeDictionary,
   getUniqueSourceMaps,
@@ -40,9 +39,11 @@ import {
 import { createErrorDescription } from './resources/builtinErrors'
 import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfLogGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
 import { DataLoader } from './utils/dataLoader'
+import { EVMMachine } from './utils/evmMachine'
 
 export class TxAnalyzer {
   private readonly storageHandler = new StorageHandler()
+  private readonly evmMachine = new EVMMachine()
   private stackCounter: StackCounter = new StackCounter()
   private fragmentReader: FragmentReader
   public dataLoader: DataLoader = new DataLoader()
@@ -264,7 +265,7 @@ export class TxAnalyzer {
 
         const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(files, uniqueSourceMaps)
 
-        const parsedBytecode = bytecodeDisassembler(bytecode)
+        const parsedBytecode = this.evmMachine.dissasembleBytecode(bytecode)
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
@@ -337,6 +338,7 @@ export class TxAnalyzer {
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
     return {
+      transactionInfo: this.dataLoader.getTransactionInfo(),
       structLogs: this.dataLoader.getStructLogs(),
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
