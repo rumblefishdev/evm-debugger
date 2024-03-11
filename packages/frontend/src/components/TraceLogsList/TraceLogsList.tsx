@@ -18,6 +18,7 @@ import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { yulNodesSelectors } from '../../store/yulNodes/yulNodes.selectors'
 import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
+import { Button } from '../Button'
 
 import {
   StyledHeading,
@@ -100,6 +101,12 @@ export const TraceLogsList: React.FC = () => {
         <StyledSmallPanel>
           <StyledHeadingWrapper>
             <StyledHeading>Trace</StyledHeading>
+            <Button
+              size="small"
+              onClick={toggleDrawer}
+            >
+              Close
+            </Button>
           </StyledHeadingWrapper>
           <StyledListWrapper ref={ref}>
             <ViewportList
@@ -148,15 +155,11 @@ export const TraceLogsList: React.FC = () => {
                               size="small"
                               label={item.structLog.op}
                             />
-                            <Chip
-                              size="small"
-                              label={item.structLog.pc}
-                            />
-                            <Typography>{item.node.name}</Typography>
-                            <Typography>
-                              {`(${item.node.parameters.map((param) => param.name).join(', ')}) => ${item.node.returnVariables
-                                .map((param) => param.name)
-                                .join(', ')}`}
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                            >
+                              {item.sourceFunctionSingature}
                             </Typography>
                           </Stack>
                         ))}

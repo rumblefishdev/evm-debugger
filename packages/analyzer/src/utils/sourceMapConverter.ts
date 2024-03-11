@@ -3,7 +3,6 @@
 import {
   BaseOpcodesHex,
   SourceFileType,
-  type TOpcodeFromSourceMap,
   type TParseSourceCodeOutput,
   type TParsedSourceMap,
   type TSourceMapCodeRepresentation,
@@ -98,10 +97,22 @@ export const createSourceMapToSourceCodeDictionary = (
         accumulator += codePartLength
       }
 
+      const sourceCodeContent = sourceParts.slice(startLine, endLine + 1).join(' ')
+
+      const isSourceFunction =
+        sourceCodeContent.includes('function') &&
+        sourceCodeContent.includes('{') &&
+        sourceCodeContent.includes('}') &&
+        !sourceCodeContent.includes('contract') &&
+        sourceMap.jumpType !== 'o'
+      const sourceFunctionSingature = isSourceFunction && sourceCodeContent.slice(0, sourceCodeContent.indexOf(')') + 1).trim()
+
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startColumn,
         startCodeLine: startLine,
+        sourceFunctionSingature,
+        isSourceFunction,
         fileType,
         endColumn,
         endCodeLine: endLine,
@@ -177,31 +188,4 @@ export const getPushLength = (opcodeByte: number): number => {
   }
 
   return 0
-}
-
-export const bytecodeDisassembler = (bytecode: string) => {
-  const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
-  const convertedOpcodes: TOpcodeFromSourceMap[] = []
-
-  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
-    const opcodeByte = bytecodeAsBuffer[index]
-    const opcode = BaseOpcodesHex[opcodeByte]
-
-    const pushLength = getPushLength(opcodeByte)
-
-    if (pushLength) {
-      convertedOpcodes.push({
-        pc: index,
-        opcode,
-      })
-      index += pushLength
-    } else {
-      convertedOpcodes.push({
-        pc: index,
-        opcode,
-      })
-    }
-  }
-
-  return convertedOpcodes
 }

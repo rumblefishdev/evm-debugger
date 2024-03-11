@@ -31,17 +31,6 @@ export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => 
 
   const treeFileButtonText = isTreeViewExpanded ? 'Collapse File Tree' : 'Expand File Tree'
 
-  console.log('SourceCodePanel', {
-    willShowSourceCode,
-    treeFileButtonText,
-    isTreeViewExpanded,
-    isSourceMapAvailable,
-    isSourceCodeAvailable,
-    isInstructionsValid,
-    hasMultipleSourceFiles,
-    hasContract,
-  })
-
   return (
     <StyledSourceCodePanel>
       <Stack

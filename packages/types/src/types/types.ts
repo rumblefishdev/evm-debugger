@@ -100,6 +100,9 @@ export type TSourceMapCodeRepresentation = {
   fileType: SourceFileType
   startColumn: number
   endColumn: number
+  isSourceFunction?: boolean
+  isYulFunction?: boolean
+  sourceFunctionSingature?: string
 }
 
 export type TSighashFragment = JsonFragment
