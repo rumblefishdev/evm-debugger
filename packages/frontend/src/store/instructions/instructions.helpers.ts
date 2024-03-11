@@ -9,5 +9,5 @@ export const validateInstruction = (instruction: TStepInstruction, structlog: TI
 }
 
 export const createSourceMapIdentifier = (instruction: TStepInstruction): string => {
-  return `${instruction.offset}:${instruction.length}`
+  return `${instruction.offset}:${instruction.length}:${instruction.fileId}`
 }

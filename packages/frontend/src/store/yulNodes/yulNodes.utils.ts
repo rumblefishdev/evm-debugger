@@ -13,12 +13,12 @@ import type {
   TParsedYulVariableDeclaration,
 } from './yulNodes.types'
 
-const createIdentifier = (src: string): string => src.split(':').slice(0, 2).join(':')
+const createIdentifier = (src: string): string => src.split(':').slice(0, 3).join(':')
 
 const pushAsMainElement = (node: TYulNode, parentNode: TYulNode, yulNodesLinkArray: TYulNodeLinkedElement[]) => {
   yulNodesLinkArray.push({
-    rootSrc: createIdentifier(parentNode.src),
-    rootNodeType: parentNode.nodeType,
+    rootSrc: createIdentifier(node.src),
+    rootNodeType: node.nodeType,
     elementSrc: createIdentifier(node.src),
     elementNodeType: node.nodeType,
   })
@@ -26,8 +26,8 @@ const pushAsMainElement = (node: TYulNode, parentNode: TYulNode, yulNodesLinkArr
 
 const pushAsChildElement = (node: TYulNode, parentNode: TYulNode, yulNodesLinkArray: TYulNodeLinkedElement[]) => {
   yulNodesLinkArray.push({
-    rootSrc: createIdentifier(parentNode.src),
-    rootNodeType: parentNode.nodeType,
+    rootSrc: createIdentifier(node.src),
+    rootNodeType: node.nodeType,
     elementSrc: createIdentifier(parentNode.src),
     elementNodeType: parentNode.nodeType,
   })

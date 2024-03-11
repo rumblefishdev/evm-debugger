@@ -43,8 +43,6 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
 
 export class EVMMachine {
   public dissasembleBytecode(bytecode: string): TDissasembledBytecode {
-    const result = bytecodeDisassembler(bytecode, true)
-    console.log(JSON.stringify(result, null, 2))
-    return result
+    return bytecodeDisassembler(bytecode, true)
   }
 }

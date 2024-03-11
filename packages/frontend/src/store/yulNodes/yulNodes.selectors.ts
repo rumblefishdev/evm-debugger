@@ -1,11 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { NodeType } from '@evm-debuger/types'
+import { BaseOpcodesHex, NodeType, getOpcodeAsHex } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { instructionsSelectors } from '../instructions/instructions.selectors'
 import { createSourceMapIdentifier } from '../instructions/instructions.helpers'
+import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 
 import {
   yulBaseNodeAdapter,
@@ -167,8 +168,34 @@ const selectActiveYulNodeElement = createSelector(
   },
 )
 
+const selectJumpDestStructLogs = createSelector(
+  [structlogsSelectors.selectParsedStructLogs, instructionsSelectors.selectCurrentInstructions, selectCurrentYulFunctionDefinitionNodes],
+  (structLogs, instructions, yulnodes) => {
+    if (!structLogs || !instructions || !yulnodes) return []
+    const reIndexInstructionsToSrcIdentifier = Object.values(instructions)
+      .filter((item) => item.jumpType !== 'o')
+      .reduce((accumulator, instruction) => {
+        accumulator[createSourceMapIdentifier(instruction)] = instruction
+        return accumulator
+      }, {})
+    const instructionsOfYulNodes = Object.values(yulnodes).map((node) => ({
+      node,
+      instruction: reIndexInstructionsToSrcIdentifier[node.src],
+    }))
+
+    console.log('reIndexInstructionsToSrcIdentifier', reIndexInstructionsToSrcIdentifier)
+    console.log('instructionsOfYulNodes', instructionsOfYulNodes)
+
+    return instructionsOfYulNodes
+      .filter((item) => Boolean(item.instruction))
+      .map((item) => ({ ...item, structLog: Object.values(structLogs).find((structLog) => structLog.pc === item.instruction.pc) }))
+      .filter((item) => Boolean(item.structLog))
+  },
+)
+
 export const yulNodesSelectors = {
   selectYulNodesState,
+  selectJumpDestStructLogs,
   selectCurrentHasYulNodes,
   selectCurrentBaseYulNodesWithListIndex,
   selectCurrentBaseYulNodesWithExtendedData,

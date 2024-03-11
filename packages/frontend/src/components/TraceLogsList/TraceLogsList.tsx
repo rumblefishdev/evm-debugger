@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { ViewportList } from 'react-viewport-list'
-import { Drawer, Tooltip } from '@mui/material'
+import { Chip, Drawer, Stack, Tooltip, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import type { TTraceLog } from '@evm-debuger/types'
 import { BaseOpcodesHex } from '@evm-debuger/types'
@@ -16,6 +16,8 @@ import { contractNamesSelectors } from '../../store/contractNames/contractNames.
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
+import { yulNodesSelectors } from '../../store/yulNodes/yulNodes.selectors'
+import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 
 import {
   StyledHeading,
@@ -37,6 +39,8 @@ export const TraceLogsList: React.FC = () => {
   const contractNames = useSelector(contractNamesSelectors.selectAll)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
 
+  const test = useSelector(yulNodesSelectors.selectJumpDestStructLogs)
+
   const [isDrawerVisible, setDrawerVisibility] = React.useState(false)
 
   const ref = React.useRef<HTMLDivElement>(null)
@@ -55,6 +59,13 @@ export const TraceLogsList: React.FC = () => {
     [dispatch, structlogs],
   )
 
+  const activateStructlog = useCallback(
+    (structLog: TStructlogWithListIndex) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
+    },
+    [dispatch],
+  )
+
   const constructSignature = (traceLog: TTraceLog): string => {
     let signature = ''
     if (BaseOpcodesHex[traceLog.op] === BaseOpcodesHex.CALL && traceLog.input === '0x' && traceLog.isContract !== null)
@@ -68,6 +79,8 @@ export const TraceLogsList: React.FC = () => {
     }
     return signature
   }
+
+  console.log('test', test)
 
   return (
     <>
@@ -99,25 +112,57 @@ export const TraceLogsList: React.FC = () => {
                 const isActive = activeBlock?.index === index
                 const signature = constructSignature(traceLog) // sighash
                 return (
-                  <TraceLogElement
-                    key={index}
-                    onClick={() => activate(traceLog)}
-                  >
-                    {Array.from({ length: depth }).map((_, depthIndex) => (
-                      <Indent key={depthIndex} />
-                    ))}
-                    <OpWrapper isActive={isActive}>
-                      {isReverted && (
-                        <Tooltip
-                          title={getTraceLogErrorOutput(traceLog)}
-                          followCursor
-                        >
-                          <StyledFailureIcon>❌</StyledFailureIcon>
-                        </Tooltip>
-                      )}
-                      {`${op} ${signature}`}
-                    </OpWrapper>
-                  </TraceLogElement>
+                  <Stack>
+                    <TraceLogElement
+                      key={index}
+                      onClick={() => activate(traceLog)}
+                    >
+                      {Array.from({ length: depth }).map((_, depthIndex) => (
+                        <Indent key={depthIndex} />
+                      ))}
+                      <OpWrapper isActive={isActive}>
+                        {isReverted && (
+                          <Tooltip
+                            title={getTraceLogErrorOutput(traceLog)}
+                            followCursor
+                          >
+                            <StyledFailureIcon>❌</StyledFailureIcon>
+                          </Tooltip>
+                        )}
+                        {`${op} ${signature}`}
+                      </OpWrapper>
+                    </TraceLogElement>
+                    {isActive && (
+                      <Stack gap={1}>
+                        {test.map((item) => (
+                          <Stack
+                            gap={1}
+                            marginLeft={1}
+                            flexDirection="row"
+                            key={item.structLog.index}
+                            onClick={() => {
+                              activateStructlog(item.structLog)
+                            }}
+                          >
+                            <Chip
+                              size="small"
+                              label={item.structLog.op}
+                            />
+                            <Chip
+                              size="small"
+                              label={item.structLog.pc}
+                            />
+                            <Typography>{item.node.name}</Typography>
+                            <Typography>
+                              {`(${item.node.parameters.map((param) => param.name).join(', ')}) => ${item.node.returnVariables
+                                .map((param) => param.name)
+                                .join(', ')}`}
+                            </Typography>
+                          </Stack>
+                        ))}
+                      </Stack>
+                    )}
+                  </Stack>
                 )
               }}
             </ViewportList>

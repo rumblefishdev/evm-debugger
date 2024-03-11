@@ -22,6 +22,20 @@ export function* createYulNodesStructure({ payload }: TYulNodesActions['createYu
       yulTypedNames,
     } = yield* call(convertYulTreeToArray, content)
 
+    console.log({
+      yulTypedNames,
+      yulNodesLinkArray,
+      yulNodeBlocks,
+      yulNodeAssignments,
+      yulLiterals,
+      yulIfs,
+      yulIdentifiers,
+      yulFunctionDefinitions,
+      yulFunctionCalls,
+      yulForLoops,
+      yulExpressionStatements,
+    })
+
     yield* put(yulNodesActions.initializeYulNodesForContract({ address }))
     yield* put(yulNodesActions.addYulExpressionStatements({ yulExpressionStatements, address }))
     yield* put(yulNodesActions.addYulForLoops({ yulForLoops, address }))
