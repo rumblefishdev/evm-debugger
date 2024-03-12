@@ -125,8 +125,6 @@ export class TxAnalyzer {
   private decodeCallInputOutput(mainTraceLogList: TTraceLog[]): TTraceLog[] {
     return mainTraceLogList.map((item) => {
       if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract && item.input) {
-        const abi = this.dataLoader.getContractData(item.address).applicationBinaryInterface
-        this.fragmentReader.loadFragmentsFromAbi(abi)
         const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
           item.isReverted,
           item.input,
@@ -205,6 +203,13 @@ export class TxAnalyzer {
       ...item,
       blockNumber: toBigInt(this.dataLoader.getTransactionInfo().blockNumber).toString(),
     }))
+  }
+
+  private loadContractsAbis() {
+    const contracts = this.dataLoader.getContractsData()
+    for (const contractAdata of Object.values(contracts)) {
+      if (contractAdata.applicationBinaryInterface) this.fragmentReader.loadFragmentsFromAbi(contractAdata.applicationBinaryInterface)
+    }
   }
 
   private getContractSighashList(mainTraceLogList: TTraceLog[]) {
@@ -300,6 +305,8 @@ export class TxAnalyzer {
   }
 
   public getContractAddressesInTransaction() {
+    if (this.dataLoader.getStructLogs().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
+
     const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.getTransactionInfo())
     this.stackCounter.visitDepth(0, storageAddress)
 
@@ -311,7 +318,11 @@ export class TxAnalyzer {
   }
 
   public analyze() {
+    if (this.dataLoader.getStructLogs().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
+
     this.fragmentReader = new FragmentReader()
+    this.loadContractsAbis()
+
     const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.getTransactionInfo())
     this.stackCounter.visitDepth(0, storageAddress)
 
