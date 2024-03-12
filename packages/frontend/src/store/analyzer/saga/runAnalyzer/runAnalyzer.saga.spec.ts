@@ -1,13 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { combineReducers } from 'redux'
-import type {
-  TAbis,
-  TAddressToBytecodeDictionary,
-  TAddressToContractNameDictionary,
-  TMappedSourceMap,
-  TStepInstrctionsMap,
-} from '@evm-debuger/types'
+import type { TStepInstrctionsMap } from '@evm-debuger/types'
 
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { AnalyzerState, analyzerStagesAdapter } from '../../analyzer.state'
@@ -19,7 +13,7 @@ import { bytecodesAdapter, bytecodesReducer } from '../../../bytecodes/bytecodes
 import { sighashActions, sighashAdapter, sighashReducer } from '../../../sighash/sighash.slice'
 import { contractNamesAdapter, contractNamesReducer } from '../../../contractNames/contractNames.slice'
 import { transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
-import { structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
+import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
 import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
 import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
 import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
@@ -110,34 +104,6 @@ describe('runAnalyzer', () => {
       },
     }
 
-    const analyzerPayload = {
-      transactionInfo: mockedTransactionInfo,
-      structLogs: mockedStructlogs,
-      sourceMaps: mockedSourceMaps.reduce((accumulator: TMappedSourceMap, sourceMap) => {
-        if (!accumulator[sourceMap.address]) {
-          accumulator[sourceMap.address] = []
-        }
-        accumulator[sourceMap.address] = [...accumulator[sourceMap.address], sourceMap]
-        return accumulator
-      }, {}),
-      sourceFiles: mockedSourceCodes.reduce((accumulator, sourceCode) => {
-        accumulator[sourceCode.address] = { 0: { sourceName: sourceCode.sourcesOrder[0], content: sourceCode.sourceCode } }
-        return accumulator
-      }, {}),
-      contractNames: mockedContractNames.reduce((accumulator: TAddressToContractNameDictionary, contractName) => {
-        accumulator[contractName.address] = contractName.contractName
-        return accumulator
-      }, {}),
-      bytecodeMaps: mockedBytecodes.reduce((accumulator: TAddressToBytecodeDictionary, bytecode) => {
-        accumulator[bytecode.address] = bytecode.bytecode
-        return accumulator
-      }, {}),
-      abis: mockedAbis.reduce((accumulator: TAbis, abi) => {
-        accumulator[abi.address] = abi.abi
-        return accumulator
-      }, {}),
-    }
-
     const { storeState } = await expectSaga(runAnalyzerSaga)
       .withReducer(
         combineReducers({
@@ -160,6 +126,7 @@ describe('runAnalyzer', () => {
         [
           matchers.call.fn(runAnalyzer),
           {
+            structLogs: mockedStructlogs,
             mainTraceLogList: mockedTraceLogs,
             instructionsMap: stepInstructionsMap,
             analyzeSummary: {
@@ -172,8 +139,9 @@ describe('runAnalyzer', () => {
       .withState(initialState)
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
-      .call(runAnalyzer, analyzerPayload)
+      .call(runAnalyzer)
       .put(sighashActions.addSighashes(mockedSighashes))
+      .put(structLogsActions.loadStructLogs(mockedStructlogs))
       .put(traceLogsActions.addTraceLogs(mockedTraceLogs))
       .put(activeBlockActions.loadActiveBlock(mockedActiveBlock))
       .put(
