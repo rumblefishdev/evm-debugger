@@ -44,7 +44,6 @@ export const TraceLogsListContainer: React.FC = () => {
 
   const activateTraceLog = React.useCallback(
     (traceLog: TMainTraceLogsWithId) => {
-      console.log('traceLog', traceLog)
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
       dispatch(activeSourceFileActions.setActiveSourceFile(0))
       dispatch(activeLineActions.clearActiveLine())
@@ -55,7 +54,6 @@ export const TraceLogsListContainer: React.FC = () => {
 
   const activateStructlog = React.useCallback(
     (structLog: TStructlogWithListIndex) => {
-      console.log('structLog', structLog)
       dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],

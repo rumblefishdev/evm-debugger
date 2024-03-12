@@ -4,7 +4,6 @@ export class SigHashStatuses {
   sighashStatusList: TSighashStatus[] = []
 
   add(address: string, sighash: string, fragment: TSighashFragment | null) {
-    console.log('add', address, sighash, fragment)
     const sanitizedAddress = address.toLowerCase()
     const sighashIndex = this.sighashStatusList.findIndex((item) => item.sighash === sighash)
     if (sighashIndex === -1) {
