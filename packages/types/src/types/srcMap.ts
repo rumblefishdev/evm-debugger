@@ -142,9 +142,8 @@ export type TParsedSourceCodesOutput = Record<string, TParseSourceCodeOutput>
 
 export type TSourceMapConverstionPayload = {
   sourceMap: string
-  sourceFiles: TParseSourceCodeOutput
-  opcodes: string
-  contractName: string
+  files: TParseSourceCodeOutput
+  name: string
   bytecode: string
   address: string
 }

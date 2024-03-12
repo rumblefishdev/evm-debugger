@@ -1,1 +1,1 @@
-export { TraceLogsList } from './TraceLogsList'
+export { TraceLogsListContainer } from './TraceLogsList.container'

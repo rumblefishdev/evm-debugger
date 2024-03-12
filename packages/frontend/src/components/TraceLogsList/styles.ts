@@ -1,40 +1,5 @@
 import { Stack, Typography, styled } from '@mui/material'
 
-export const StyledBar = styled(Stack)(({ theme }) => ({
-  zIndex: 10,
-  width: '100%',
-  transition: 'all 0.3s ease',
-  position: 'fixed',
-  padding: theme.spacing(2),
-  left: 0,
-  justifyContent: 'center',
-  height: 32,
-  cursor: 'pointer',
-  boxSizing: 'border-box',
-  bottom: 0,
-
-  borderTop: `1px solid #eeeeee`,
-
-  backgroundColor: theme.palette.rfWhite,
-  alignItems: 'center',
-
-  '&:hover': {
-    backgroundColor: '#f5f5f5',
-  },
-}))
-
-export const StyledBarText = styled(Typography)(({ theme }) => ({
-  ...theme.typography.buttonBig,
-  color: theme.palette.rfButton,
-}))
-
-export const TraceLogElement = styled('div')(({ theme }) => ({
-  minHeight: theme.spacing(4),
-  height: theme.spacing(4),
-  display: 'flex',
-  cursor: 'pointer',
-}))
-
 export const Indent = styled('div')(({ theme }) => ({
   width: '1rem',
   minWidth: '1rem',
@@ -88,6 +53,6 @@ export const StyledListWrapper = styled(Stack)(({ theme }) => ({
   overflowY: 'auto',
   overflowX: 'auto',
   height: '100%',
-  fontSize: '0.875rem',
   ...theme.customStyles.scrollbar,
+  gap: theme.spacing(0.5),
 }))

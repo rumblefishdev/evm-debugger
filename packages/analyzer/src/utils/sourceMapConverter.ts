@@ -1,14 +1,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
 import {
+  BaseOpcodesHex,
   SourceFileType,
-  type TOpcodeFromSourceMap,
   type TParseSourceCodeOutput,
   type TParsedSourceMap,
   type TSourceMapCodeRepresentation,
 } from '@evm-debuger/types'
-
-import { AlternativeOpcodes, Opcodes } from '../opcodes/opcodes'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
@@ -99,10 +97,22 @@ export const createSourceMapToSourceCodeDictionary = (
         accumulator += codePartLength
       }
 
+      const sourceCodeContent = sourceParts.slice(startLine, endLine + 1).join(' ')
+
+      const isSourceFunction =
+        sourceCodeContent.includes('function') &&
+        sourceCodeContent.includes('{') &&
+        sourceCodeContent.includes('}') &&
+        !sourceCodeContent.includes('contract') &&
+        sourceMap.jumpType !== 'o'
+      const sourceFunctionSingature = isSourceFunction && sourceCodeContent.slice(0, sourceCodeContent.indexOf(')') + 1).trim()
+
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startColumn,
         startCodeLine: startLine,
+        sourceFunctionSingature,
+        isSourceFunction,
         fileType,
         endColumn,
         endCodeLine: endLine,
@@ -168,53 +178,14 @@ export const sourceMapConverter = (sourceMap: string): TParsedSourceMap[] => {
   return convertedSourceMap
 }
 
-export const getOpcode = (opcode: string): Opcodes => {
-  return Opcodes[opcode] || AlternativeOpcodes[opcode] || opcode
-}
+export const getPushLength = (opcodeByte: number): number => {
+  const decimalPush1Opcode = BaseOpcodesHex.PUSH1
+  const decimalPush0Opcode = BaseOpcodesHex.PUSH0
+  const decimalPush32Opcode = BaseOpcodesHex.PUSH32
 
-export const isPushType = (opcode: Opcodes): number => {
-  const decimalOpcode = parseInt(opcode, 16)
-
-  const decimalPush1Opcode = parseInt(Opcodes.PUSH1, 16)
-  const decimalPush0Opcode = parseInt(Opcodes.PUSH0, 16)
-  const decimalPush32Opcode = parseInt(Opcodes.PUSH32, 16)
-
-  if (decimalOpcode >= decimalPush1Opcode && decimalOpcode <= decimalPush32Opcode) {
-    return decimalOpcode - decimalPush0Opcode + 1
+  if (opcodeByte >= decimalPush1Opcode && opcodeByte <= decimalPush32Opcode) {
+    return opcodeByte - decimalPush0Opcode
   }
 
   return 0
-}
-
-export const opcodesConverter = (opcodes: string): TOpcodeFromSourceMap[] => {
-  const opcodesArray: string[] = opcodes.split(' ')
-  const convertedOpcodes: TOpcodeFromSourceMap[] = []
-
-  let pc = 0
-  for (let index = 0; index < opcodesArray.length; index++) {
-    const element: string = opcodesArray[index]
-
-    const opcodeElement = getOpcode(element)
-
-    const isPush = isPushType(opcodeElement)
-
-    if (isPush) {
-      convertedOpcodes.push({
-        pc,
-        opcode: opcodeElement,
-      })
-      index++
-      pc += isPush
-    }
-
-    if (!isPush) {
-      convertedOpcodes.push({
-        pc,
-        opcode: opcodeElement,
-      })
-      pc++
-    }
-  }
-
-  return convertedOpcodes
 }

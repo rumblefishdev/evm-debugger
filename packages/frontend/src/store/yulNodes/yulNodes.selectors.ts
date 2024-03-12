@@ -1,11 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { NodeType } from '@evm-debuger/types'
+import { BaseOpcodesHex, NodeType } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { instructionsSelectors } from '../instructions/instructions.selectors'
 import { createSourceMapIdentifier } from '../instructions/instructions.helpers'
+import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 
 import {
   yulBaseNodeAdapter,
@@ -167,8 +168,27 @@ const selectActiveYulNodeElement = createSelector(
   },
 )
 
+const selectJumpDestStructLogs = createSelector(
+  [structlogsSelectors.selectParsedStructLogs, instructionsSelectors.selectCurrentInstructions, selectCurrentYulFunctionDefinitionNodes],
+  (structLogs, instructions, yulnodes) => {
+    if (!structLogs || !instructions || !yulnodes) return []
+    const filteredStructlogs = Object.values(structLogs)
+      .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
+      .filter((structLog) => instructions[structLog.pc] && instructions[structLog.pc].isSourceFunction)
+    const sortedByIndexStructlogs = filteredStructlogs.sort((a, b) => a.index - b.index)
+    return sortedByIndexStructlogs.map((structLog) => {
+      const instruction = instructions[structLog.pc]
+      return {
+        structLog,
+        sourceFunctionSingature: instruction.sourceFunctionSingature,
+      }
+    })
+  },
+)
+
 export const yulNodesSelectors = {
   selectYulNodesState,
+  selectJumpDestStructLogs,
   selectCurrentHasYulNodes,
   selectCurrentBaseYulNodesWithListIndex,
   selectCurrentBaseYulNodesWithExtendedData,

@@ -1,22 +1,20 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import {
-  type TEventInfo,
-  type TSourceMapConverstionPayload,
-  type TStepInstrctionsMap,
-  type TPcIndexedStepInstructions,
-  type TTransactionData,
-  type TStructlogsPerStartLine,
-  type TIndexedStructLog,
-  type TTraceLog,
-  type TTraceReturnLog,
-  BaseOpcodesHex,
+import { BaseOpcodesHex } from '@evm-debuger/types'
+import type {
+  TEventInfo,
+  TSourceMapConverstionPayload,
+  TStepInstrctionsMap,
+  TPcIndexedStepInstructions,
+  TStructlogsPerStartLine,
+  TIndexedStructLog,
+  TTraceLog,
+  TTraceReturnLog,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
 
 import {
   convertTxInfoToTraceLog,
-  indexRawStructLogs,
   getStorageAddressFromTransactionInfo,
   getSafeHex,
   readMemory,
@@ -36,37 +34,32 @@ import {
   createSourceMapIdentifier,
   createSourceMapToSourceCodeDictionary,
   getUniqueSourceMaps,
-  opcodesConverter,
   sourceMapConverter,
 } from './utils/sourceMapConverter'
 import { createErrorDescription } from './resources/builtinErrors'
 import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfLogGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
+import { DataLoader } from './utils/dataLoader'
+import { EVMMachine } from './utils/evmMachine'
 
 export class TxAnalyzer {
-  constructor(public readonly transactionData: TTransactionData) {
-    if (transactionData.structLogs.length === 0) throw new Error(`Too primitive transaction without stack calls.`)
-    this.stackCounter = new StackCounter()
-
-    const storageAddress = getStorageAddressFromTransactionInfo(transactionData.transactionInfo)
-    this.stackCounter.visitDepth(0, storageAddress)
-  }
-
   private readonly storageHandler = new StorageHandler()
-  private readonly stackCounter: StackCounter
+  private readonly evmMachine = new EVMMachine()
+  private stackCounter: StackCounter = new StackCounter()
   private fragmentReader: FragmentReader
+  public dataLoader: DataLoader = new DataLoader()
 
   private convertToTraceLog(structLog: TIndexedStructLog[]): TTraceLog[] {
-    const structLogParser = new StructLogParser(this.transactionData.structLogs, this.stackCounter)
+    const structLogParser = new StructLogParser(this.dataLoader.getStructLogs(), this.stackCounter)
     return structLog.map((item) => structLogParser.parseStructLogToTraceLog(item))
   }
 
   private convertToTraceReturnLog(structLog: TIndexedStructLog[]): TTraceReturnLog[] {
-    const structLogParser = new StructLogParser(this.transactionData.structLogs, this.stackCounter)
+    const structLogParser = new StructLogParser(this.dataLoader.getStructLogs(), this.stackCounter)
     return structLog.map((item) => structLogParser.parseStructLogToTraceReturnLog(item))
   }
 
   private parseAndAddRootTraceLog(transactionList: TTraceLog[]) {
-    const rootTraceLog = convertTxInfoToTraceLog(this.transactionData.structLogs[0], this.transactionData.transactionInfo)
+    const rootTraceLog = convertTxInfoToTraceLog(this.dataLoader.getStructLogs()[0], this.dataLoader.getTransactionInfo())
     return [rootTraceLog, ...transactionList]
   }
 
@@ -76,13 +69,13 @@ export class TxAnalyzer {
         const result = {
           ...traceLog,
           returnIndex: traceLog.startIndex,
-          gasCost: traceLog.passedGas - this.transactionData.structLogs[traceLog.index + 1].gas,
+          gasCost: traceLog.passedGas - this.dataLoader.getStructLogs()[traceLog.index + 1].gas,
         }
         if (traceLog.input === '0x') result.isSuccess = true
         return result
       }
 
-      const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.transactionData.structLogs, traceLog)
+      const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.dataLoader.getStructLogs(), traceLog)
 
       const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
 
@@ -130,10 +123,6 @@ export class TxAnalyzer {
   }
 
   private decodeCallInputOutput(mainTraceLogList: TTraceLog[]): TTraceLog[] {
-    const { abis } = this.transactionData
-
-    for (const abi of Object.values(abis)) this.fragmentReader.loadFragmentsFromAbi(abi)
-
     return mainTraceLogList.map((item) => {
       if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract && item.input) {
         const { decodedInput, decodedOutput, errorDescription, functionFragment } = this.fragmentReader.decodeFragment(
@@ -164,7 +153,7 @@ export class TxAnalyzer {
         if (item.isSuccess) {
           const { startIndex, returnIndex, depth } = item
 
-          const callStructLogContext = [...this.transactionData.structLogs]
+          const callStructLogContext = [...this.dataLoader.getStructLogs()]
             .slice(startIndex, returnIndex)
             .filter((element) => element.depth === depth + 1)
 
@@ -191,7 +180,7 @@ export class TxAnalyzer {
       const traceLog = transactionList[index]
 
       if (traceLog.isContract) {
-        const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.transactionData.structLogs)
+        const storageLogs = this.storageHandler.getParsedStorageLogs(traceLog, this.dataLoader.getStructLogs())
         transactionList[index] = { ...traceLog, storageLogs }
       }
     }
@@ -200,7 +189,7 @@ export class TxAnalyzer {
   }
 
   private getTraceLogsContractAddresses(transactionList: TTraceLog[]): string[] {
-    const contractAddressList = []
+    const contractAddressList: string[] = []
     transactionList.forEach((item) => {
       if (checkOpcodeIfOfCallGroupType(item.op) && item.isContract && !contractAddressList.includes(item.address))
         contractAddressList.push(item.address)
@@ -212,8 +201,15 @@ export class TxAnalyzer {
   private extendWithBlockNumber(transactionList: TTraceLog[]) {
     return transactionList.map((item) => ({
       ...item,
-      blockNumber: toBigInt(this.transactionData.transactionInfo.blockNumber).toString(),
+      blockNumber: toBigInt(this.dataLoader.getTransactionInfo().blockNumber).toString(),
     }))
+  }
+
+  private loadContractsAbis() {
+    const contracts = this.dataLoader.getContractsData()
+    for (const contractAdata of Object.values(contracts)) {
+      if (contractAdata.applicationBinaryInterface) this.fragmentReader.loadFragmentsFromAbi(contractAdata.applicationBinaryInterface)
+    }
   }
 
   private getContractSighashList(mainTraceLogList: TTraceLog[]) {
@@ -246,48 +242,49 @@ export class TxAnalyzer {
 
   public getContractsInstructions(traceLogs: TTraceLog[]): TStepInstrctionsMap {
     const dataToDecode: TSourceMapConverstionPayload[] = []
+    const transactionContracts = this.dataLoader.getContractsData()
+    const transactionContractsList = Object.values(transactionContracts)
 
-    if (!this.transactionData.sourceMaps) return {}
+    for (const contract of transactionContractsList) {
+      if (!contract.sourceMap || !contract.files) continue
 
-    Object.keys(this.transactionData.contractNames).forEach((address) => {
-      if (!this.transactionData.sourceMaps[address] || !this.transactionData.sourceFiles[address]) return
+      const { sourceMap, name, files, bytecode, address, yulFileContent } = contract
 
-      const contractName = this.transactionData.contractNames[address]
-      const source = this.transactionData.sourceMaps[address].find((_sourceMap) => _sourceMap.contractName === contractName)
-      const sourceFiles = this.transactionData.sourceFiles[address]
+      if (yulFileContent) {
+        files[Object.keys(files).length] = { sourceName: 'Utility.yul', content: yulFileContent }
+      }
 
       dataToDecode.push({
-        sourceMap: source.deployedBytecode.sourceMap,
-        sourceFiles,
-        opcodes: source.deployedBytecode.opcodes,
-        contractName,
-        bytecode: source.deployedBytecode.object,
+        sourceMap,
+        name,
+        files,
+        bytecode,
         address,
       })
-    })
+    }
 
     return dataToDecode
-      .map(({ address, opcodes, sourceMap, sourceFiles }) => {
+      .map(({ address, bytecode, sourceMap, files }) => {
         const convertedSourceMap = sourceMapConverter(sourceMap)
         const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 
-        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(sourceFiles, uniqueSourceMaps)
+        const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(files, uniqueSourceMaps)
 
-        const parsedOpcodes = opcodesConverter(opcodes.trim())
+        const parsedBytecode = this.evmMachine.dissasembleBytecode(bytecode)
 
         const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
           const instructionId = createSourceMapIdentifier(sourceMapEntry)
 
           if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
-          if (!parsedOpcodes[index]) return accumulator
+          if (!parsedBytecode[index]) return accumulator
 
-          const { pc, opcode } = parsedOpcodes[index]
+          const { pc, opcode } = parsedBytecode[index]
 
           accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
           return accumulator
         }, {} as TPcIndexedStepInstructions)
 
-        const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.transactionData.structLogs, address)
+        const contractStructlogs = getPcIndexedStructlogsForContractAddress(traceLogs, this.dataLoader.getStructLogs(), address)
 
         const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
           if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
@@ -308,8 +305,12 @@ export class TxAnalyzer {
   }
 
   public getContractAddressesInTransaction() {
-    const indexedStructLogs = indexRawStructLogs(this.transactionData.structLogs)
-    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(indexedStructLogs)
+    if (this.dataLoader.getStructLogs().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
+
+    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.getTransactionInfo())
+    this.stackCounter.visitDepth(0, storageAddress)
+
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.getStructLogs())
     const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
     const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
 
@@ -317,11 +318,16 @@ export class TxAnalyzer {
   }
 
   public analyze() {
-    this.fragmentReader = new FragmentReader()
-    this.transactionData.structLogs = indexRawStructLogs(this.transactionData.structLogs)
+    if (this.dataLoader.getStructLogs().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
 
-    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.transactionData.structLogs)
-    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.transactionData.structLogs)
+    this.fragmentReader = new FragmentReader()
+    this.loadContractsAbis()
+
+    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.getTransactionInfo())
+    this.stackCounter.visitDepth(0, storageAddress)
+
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.getStructLogs())
+    const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.dataLoader.getStructLogs())
 
     const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
     const traceReturnLogs = this.convertToTraceReturnLog(functionBlockEndStructLogs)
@@ -343,6 +349,8 @@ export class TxAnalyzer {
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
     return {
+      transactionInfo: this.dataLoader.getTransactionInfo(),
+      structLogs: this.dataLoader.getStructLogs(),
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
       analyzeSummary: { contractSighashesInfo, contractAddresses },

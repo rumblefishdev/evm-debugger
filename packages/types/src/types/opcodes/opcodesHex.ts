@@ -150,3 +150,11 @@ export enum AlternativeOpcodesHex {
 }
 
 export type TOpcodesNames = keyof typeof BaseOpcodesHex | keyof typeof AlternativeOpcodesHex
+
+export const getOpcodeAsHex = (opcode: TOpcodesNames): number => {
+  return BaseOpcodesHex[opcode] || AlternativeOpcodesHex[opcode] || BaseOpcodesHex['INVALID']
+}
+
+export const getOpcodeAsName = (opcode: number): TOpcodesNames => {
+  return (BaseOpcodesHex[opcode] || AlternativeOpcodesHex[opcode] || BaseOpcodesHex[0xfe]) as TOpcodesNames
+}

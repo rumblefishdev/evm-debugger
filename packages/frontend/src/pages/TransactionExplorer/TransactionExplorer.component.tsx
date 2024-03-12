@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Stack } from '@mui/material'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
-import { TraceLogsList } from '../../components/TraceLogsList'
+import { TraceLogsListContainer } from '../../components/TraceLogsList'
 
 import { BytecodePanel, SourceCodePanel, StructlogPanel, InformationPanel } from './Panels'
 import { NavigationPanel } from './Panels/NavigationPanel/NavigationPanel'
@@ -56,7 +56,7 @@ export const TransactionExplorer: React.FC = () => {
           </Stack>
         </Stack>
       </StyledContentWrapper>
-      <TraceLogsList />
+      <TraceLogsListContainer />
     </>
   )
 }

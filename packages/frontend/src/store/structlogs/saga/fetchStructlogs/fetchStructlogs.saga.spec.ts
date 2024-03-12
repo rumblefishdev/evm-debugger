@@ -5,13 +5,12 @@ import { Response } from 'node-fetch'
 
 import { transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
-import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../structlogs.slice'
 import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 import { StoreKeys } from '../../../store.keys'
 import { createMockedStructLogs } from '../../structlogs.mock'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 
 import { fetchStructlogs, fetchStructlogsSaga, parseStructlogs } from './fetchStructlogs.saga'
@@ -20,10 +19,11 @@ const STRUCTLOGS = createMockedStructLogs(10)
 
 describe('fetchStructlogsSaga', () => {
   it('should fetch structlogs', async () => {
+    const analyzerInstance = getAnalyzerInstance()
+
     const initialState = {
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState(), s3Location: 's3Location' },
-      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.getInitialState(),
     }
 
     const inProgresStage = { stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS }
@@ -39,7 +39,6 @@ describe('fetchStructlogsSaga', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.addMany(initialState[StoreKeys.STRUCT_LOGS], STRUCTLOGS),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -55,19 +54,20 @@ describe('fetchStructlogsSaga', () => {
         combineReducers({
           [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
-          [StoreKeys.STRUCT_LOGS]: structLogsReducer,
         }),
       )
       .withState(initialState)
       .provide([
         [matchers.call.fn(fetchStructlogs), STRUCTLOGS_ARRAY_BUFFER],
         [matchers.call.fn(parseStructlogs), STRUCTLOGS],
+        [matchers.call.fn(getAnalyzerInstance), analyzerInstance],
       ])
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(fetchStructlogs, 's3Location')
       .call(parseStructlogs, STRUCTLOGS_ARRAY_BUFFER)
-      .put(structLogsActions.loadStructLogs(STRUCTLOGS))
+      .call(getAnalyzerInstance)
+      .apply(analyzerInstance.dataLoader, analyzerInstance.dataLoader.loadStructlogs, [STRUCTLOGS])
       .put.like({ action: addSecondLogAction })
       .put(analyzerActions.updateStage(successStage))
       .run()

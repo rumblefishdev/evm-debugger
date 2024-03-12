@@ -1,11 +1,11 @@
 /* eslint-disable no-return-await */
-import { call, put, type SagaGenerator } from 'typed-redux-saga'
+import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 import type { TSourceMap } from '@evm-debuger/types'
 
 import { sourceMapsActions, type TSourceMapsActions } from '../../sourceMaps.slice'
 import { traceStorageBucket } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
-import { createErrorLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { yulNodesActions } from '../../../yulNodes/yulNodes.slice'
 
@@ -19,19 +19,23 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
   const { path, contractAddress } = payload
 
   try {
+    const analyzer = yield* call(getAnalyzerInstance)
     const sourceMap = yield* call(fetchSourceMap, path)
 
     if (sourceMap.deployedBytecode.ast) {
       yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.deployedBytecode.ast, address: contractAddress }))
     }
 
-    const hasYulContents = sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0
-
-    if (hasYulContents) {
+    if (sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0) {
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractYulFile, [contractAddress, sourceMap.deployedBytecode.contents])
       yield* put(sourceCodesActions.addYulSource({ yulSource: sourceMap.deployedBytecode.contents, address: contractAddress }))
     }
 
     const sourceMapWithAddress = { ...sourceMap, address: contractAddress }
+
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractBytecode, [contractAddress, sourceMap.deployedBytecode.object])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractSourceMap, [contractAddress, sourceMap.deployedBytecode.sourceMap])
+
     yield* put(sourceMapsActions.addSourceMap(sourceMapWithAddress))
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source maps for ${contractAddress} fetched successfully`)))

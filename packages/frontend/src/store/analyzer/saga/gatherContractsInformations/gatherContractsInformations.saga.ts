@@ -1,30 +1,14 @@
-import { select, type SagaGenerator, put, call } from 'typed-redux-saga'
-import type { TIndexedStructLog, TTransactionData, TTransactionInfo } from '@evm-debuger/types'
-import { TxAnalyzer } from '@evm-debuger/analyzer'
+import { type SagaGenerator, put, call, apply } from 'typed-redux-saga'
+import type { TxAnalyzer } from '@evm-debuger/analyzer'
 
-import { transactionInfoSelectors } from '../../../transactionInfo/transactionInfo.selectors'
-import { structlogsSelectors } from '../../../structlogs/structlogs.selectors'
-import { sighashActions } from '../../../sighash/sighash.slice'
 import { contractNamesActions } from '../../../contractNames/contractNames.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
+import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 
-export function gatherContractsInformations(transactionInfo: TTransactionInfo, structLogs: TIndexedStructLog[]) {
-  const analyzerPayload: TTransactionData = {
-    transactionInfo,
-    structLogs,
-    sourceMaps: {},
-    sourceFiles: {},
-    contractNames: {},
-    bytecodeMaps: {},
-    abis: {},
-  }
-  const analyzer = new TxAnalyzer(analyzerPayload)
-  const { analyzeSummary } = analyzer.analyze()
-
-  return analyzeSummary
+export function gatherContractsInformations(analyzer: TxAnalyzer) {
+  return analyzer.getContractAddressesInTransaction()
 }
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
@@ -37,17 +21,14 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
       }),
     )
 
-    const transactionInfo = yield* select(transactionInfoSelectors.selectTransactionInfo)
-    const structLogs = yield* select(structlogsSelectors.selectAll)
+    const analyzer = yield* call(getAnalyzerInstance)
 
-    const analyzeSummary = yield* call(gatherContractsInformations, transactionInfo, structLogs)
-
-    const { contractAddresses, contractSighashesInfo } = analyzeSummary
+    const contractAddresses = yield* call(gatherContractsInformations, analyzer)
 
     const sanitizedContractAddresses = contractAddresses.map((address) => address.toLowerCase())
     const uniqueContractAddresses = [...new Set(sanitizedContractAddresses)]
 
-    yield* put(sighashActions.addSighashes(contractSighashesInfo))
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.initializeNewContracts, [uniqueContractAddresses])
     yield* put(contractNamesActions.initializeContractNames(uniqueContractAddresses))
     yield* put(bytecodesActions.initializeBytecodes(uniqueContractAddresses))
 
