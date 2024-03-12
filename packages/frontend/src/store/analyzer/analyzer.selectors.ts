@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { TxAnalyzer } from '@evm-debuger/analyzer'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'

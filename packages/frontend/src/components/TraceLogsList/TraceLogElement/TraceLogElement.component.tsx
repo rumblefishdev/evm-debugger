@@ -1,5 +1,5 @@
 import React from 'react'
-import { Chip, Collapse, IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import { Chip, Collapse, IconButton, Stack, Tooltip } from '@mui/material'
 
 import { getTraceLogErrorOutput } from '../../../store/activeBlock/activeBlock.selector'
 
