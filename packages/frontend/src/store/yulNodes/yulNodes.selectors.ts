@@ -172,39 +172,18 @@ const selectActiveYulNodeElement = createSelector(
 const selectJumpDestStructLogs = createSelector(
   [structlogsSelectors.selectParsedStructLogs, instructionsSelectors.selectCurrentInstructions, selectCurrentYulFunctionDefinitionNodes],
   (structLogs, instructions, yulnodes) => {
-    // if (!structLogs || !instructions || !yulnodes) return []
-    // const reIndexInstructionsToSrcIdentifier = Object.values(instructions)
-    //   .filter((item) => item.jumpType !== 'o')
-    //   .reduce((accumulator, instruction) => {
-    //     accumulator[createSourceMapIdentifier(instruction)] = instruction
-    //     return accumulator
-    //   }, {})
-    // const instructionsOfYulNodes = Object.values(yulnodes).map((node) => ({
-    //   node,
-    //   instruction: reIndexInstructionsToSrcIdentifier[node.src],
-    // }))
-
-    // return instructionsOfYulNodes
-    //   .filter((item) => Boolean(item.instruction))
-    //   .map((item) => ({ ...item, structLog: Object.values(structLogs).find((structLog) => structLog.pc === item.instruction.pc) }))
-    //   .filter((item) => Boolean(item.structLog))
-
     if (!structLogs || !instructions || !yulnodes) return []
     const filteredStructlogs = Object.values(structLogs)
       .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
       .filter((structLog) => instructions[structLog.pc] && instructions[structLog.pc].isSourceFunction)
     const sortedByIndexStructlogs = filteredStructlogs.sort((a, b) => a.index - b.index)
-    const extednedWithSourceFunctionSingature = sortedByIndexStructlogs.map((structLog) => {
+    return sortedByIndexStructlogs.map((structLog) => {
       const instruction = instructions[structLog.pc]
       return {
         structLog,
         sourceFunctionSingature: instruction.sourceFunctionSingature,
       }
     })
-
-    console.log('extednedWithSourceFunctionSingature', extednedWithSourceFunctionSingature)
-
-    return extednedWithSourceFunctionSingature
   },
 )
 

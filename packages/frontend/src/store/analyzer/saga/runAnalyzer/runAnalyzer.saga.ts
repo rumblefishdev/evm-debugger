@@ -23,8 +23,6 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
 
     const { mainTraceLogList, instructionsMap, analyzeSummary, structLogs } = yield* call(runAnalyzer)
 
-    console.log('runAnalyzerSaga', { structLogs, mainTraceLogList, instructionsMap, analyzeSummary })
-
     yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
     yield* put(structLogsActions.loadStructLogs(structLogs))
 

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { BaseOpcodesHex, SourceFileType } from '@evm-debuger/types'
+import { SourceFileType } from '@evm-debuger/types'
 
 import { structlogsSelectors } from '../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
@@ -11,7 +11,6 @@ import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
-import { yulNodesSelectors } from '../../../../store/yulNodes/yulNodes.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -24,8 +23,6 @@ export const StructlogPanel: React.FC = () => {
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-  const yulBlock = useSelector(yulNodesSelectors.selectActiveYulNode)
-  console.log(yulBlock)
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
