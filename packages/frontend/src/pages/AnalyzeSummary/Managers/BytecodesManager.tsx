@@ -11,7 +11,7 @@ import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from 
 export const BytecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addBytecode = (id: string, value: string) => {
-    dispatch(bytecodesActions.updateBytecode({ id, changes: { bytecode: value } }))
+    dispatch(bytecodesActions.updateBytecode({ id, changes: { etherscanBytecode: value } }))
   }
 
   const bytecodesWithNames = useSelector(bytecodesSelectors.selectAllWithContractNames)
@@ -26,8 +26,8 @@ export const BytecodesManager = () => {
               key={item.address}
               name={item.contractName}
               address={item.address}
-              value={item.bytecode}
-              isFound={item.bytecode !== null}
+              value={item.etherscanBytecode}
+              isFound={item.etherscanBytecode !== null}
               updateItem={addBytecode}
               contentType="plain_text"
             />

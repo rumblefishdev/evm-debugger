@@ -6,7 +6,7 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import { contractNamesSelectors } from '../../../contractNames/contractNames.selectors'
+import { contractsSelectors } from '../../../contracts/contracts.selectors'
 import { srcMapProviderUrl } from '../../../../config'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
@@ -42,7 +42,7 @@ export async function fetchSourcesStatus(
 export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
   try {
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
-    const contractAddresses = yield* select(contractNamesSelectors.selectAllAddresses)
+    const contractAddresses = yield* select(contractsSelectors.selectAllAddresses)
     const transactionHash = yield* select(transactionConfigSelectors.selectTransactionHash)
 
     for (const address of contractAddresses) {

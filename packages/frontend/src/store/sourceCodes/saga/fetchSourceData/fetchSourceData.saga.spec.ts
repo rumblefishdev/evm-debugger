@@ -9,11 +9,11 @@ import { StoreKeys } from '../../../store.keys'
 import { createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { sourceCodesActions, sourceCodesAdapter, sourceCodesReducer } from '../../sourceCodes.slice'
-import { contractNamesActions, contractNamesAdapter, contractNamesReducer } from '../../../contractNames/contractNames.slice'
+import { contractsActions, contractsAdapter, contractsReducer } from '../../../contracts/contracts.slice'
 import { abisActions, abisAdapter, abisReducer } from '../../../abis/abis.slice'
 import { createMockedAbi } from '../../../abis/abi.mock'
 import { createMockedSourceCode } from '../../sourceCodes.mock'
-import { createMockedContractName } from '../../../contractNames/contractNames.mock'
+import { createMockedContract } from '../../../contracts/contracts.mock'
 
 import { fetchSourceData, fetchSourceDataForContractSaga, fetchSourcesOrder } from './fetchSourceData.saga'
 
@@ -23,7 +23,7 @@ const MOCK_SOURCES_PATH = 'sourcesPath'
 
 const MOCKED_ABI = createMockedAbi(MOCK_CONTRACT_ADDRESS)
 const MOCKED_SOURCECODE = createMockedSourceCode(MOCK_CONTRACT_ADDRESS)
-const MOCKED_CONTRACT_NAME = createMockedContractName(MOCK_CONTRACT_ADDRESS)
+const MOCKED_CONTRACT_NAME = createMockedContract(MOCK_CONTRACT_ADDRESS)
 
 const MOCKED_SOURCEDATA_RESPONSE: Partial<TEtherscanContractSourceCodeResult> = {
   SourceCode: MOCKED_SOURCECODE.sourceCode,
@@ -37,10 +37,6 @@ describe('fetchSourceDataForContractSaga', () => {
   it('should fetch source data for contract', async () => {
     const initialState = {
       [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.getInitialState(),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.addOne(contractNamesAdapter.getInitialState(), {
-        contractName: null,
-        address: MOCK_CONTRACT_ADDRESS,
-      }),
       [StoreKeys.ABIS]: abisAdapter.getInitialState(),
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
     }
@@ -52,10 +48,6 @@ describe('fetchSourceDataForContractSaga', () => {
     const expectedState = {
       ...initialState,
       [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.addOne(initialState[StoreKeys.SOURCE_CODES], MOCKED_SOURCECODE),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.updateOne(initialState[StoreKeys.CONTRACT_NAMES], {
-        id: MOCK_CONTRACT_ADDRESS,
-        changes: { contractName: MOCKED_CONTRACT_NAME.contractName },
-      }),
       [StoreKeys.ABIS]: abisAdapter.addOne(initialState[StoreKeys.ABIS], MOCKED_ABI),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
@@ -74,7 +66,6 @@ describe('fetchSourceDataForContractSaga', () => {
       .withReducer(
         combineReducers({
           [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
-          [StoreKeys.CONTRACT_NAMES]: contractNamesReducer,
           [StoreKeys.ABIS]: abisReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
         }),
@@ -86,13 +77,6 @@ describe('fetchSourceDataForContractSaga', () => {
       ])
       .put(abisActions.addAbi(MOCKED_ABI))
       .put(sourceCodesActions.addSourceCode(MOCKED_SOURCECODE))
-      .put(
-        contractNamesActions.updateContractName({
-          id: MOCK_CONTRACT_ADDRESS,
-          changes: { contractName: MOCKED_CONTRACT_NAME.contractName },
-        }),
-      )
-
       .put.like({ action: addLogAction })
       .run()
 

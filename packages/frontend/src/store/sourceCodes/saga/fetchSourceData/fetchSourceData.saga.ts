@@ -3,7 +3,7 @@ import type { TEtherscanContractSourceCodeResult } from '@evm-debuger/types'
 
 import { traceStorageBucket } from '../../../../config'
 import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.slice'
-import { contractNamesActions } from '../../../contractNames/contractNames.slice'
+import { contractsActions } from '../../../contracts/contracts.slice'
 import { abisActions } from '../../../abis/abis.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
@@ -43,7 +43,6 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractFiles, [address, sources])
     }
     if (sourceData.ContractName) {
-      yield* put(contractNamesActions.updateContractName({ id: contractAddress, changes: { contractName: sourceData.ContractName } }))
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractName, [contractAddress, sourceData.ContractName])
     }
 

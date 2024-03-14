@@ -9,16 +9,16 @@ import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
-import { bytecodesAdapter, bytecodesReducer } from '../../../bytecodes/bytecodes.slice'
+import { bytecodesActions, bytecodesAdapter, bytecodesReducer } from '../../../bytecodes/bytecodes.slice'
 import { sighashActions, sighashAdapter, sighashReducer } from '../../../sighash/sighash.slice'
-import { contractNamesAdapter, contractNamesReducer } from '../../../contractNames/contractNames.slice'
+import { contractsActions, contractsAdapter, contractsReducer } from '../../../contracts/contracts.slice'
 import { transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
 import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
 import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
 import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
 import { createMockedSighashes } from '../../../sighash/sighash.mock'
-import { createMockedContractNames } from '../../../contractNames/contractNames.mock'
+import { createEmptyMockedContract, createMockedContract } from '../../../contracts/contracts.mock'
 import { sourceMapsAdapter, sourceMapsReducer } from '../../../sourceMaps/sourceMaps.slice'
 import { sourceCodesAdapter, sourceCodesReducer } from '../../../sourceCodes/sourceCodes.slice'
 import { abisAdapter, abisReducer } from '../../../abis/abis.slice'
@@ -41,7 +41,8 @@ const mockedStructlogs = createMockedStructLogs(1)
 
 const mockedBytecodes = createMockedBytecodes(1, 'dissasembled')
 const mockedSighashes = createMockedSighashes(1)
-const mockedContractNames = createMockedContractNames(1, 'contractName')
+const mockedEmptyContract = createEmptyMockedContract()
+const mockedContract = createMockedContract(mockedEmptyContract.address)
 
 const mockedSourceMaps = createMockedSourceMaps(1)
 const mockedSourceCodes = createMockedSourceCodes(1)
@@ -66,7 +67,7 @@ describe('runAnalyzer', () => {
     const initialState = {
       [StoreKeys.BYTECODES]: bytecodesAdapter.addMany(bytecodesAdapter.getInitialState(), mockedBytecodes),
       [StoreKeys.SIGHASH]: sighashAdapter.addMany(sighashAdapter.getInitialState(), mockedSighashes),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.addMany(contractNamesAdapter.getInitialState(), mockedContractNames),
+      [StoreKeys.CONTRACTS]: contractsAdapter.addOne(contractsAdapter.getInitialState(), mockedEmptyContract),
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
       [StoreKeys.TRANSACTION_INFO]: { ...mockedTransactionInfo },
       [StoreKeys.STRUCT_LOGS]: structLogsAdapter.addMany(structLogsAdapter.getInitialState(), mockedStructlogs),
@@ -93,6 +94,14 @@ describe('runAnalyzer', () => {
       [StoreKeys.INSTRUCTIONS]: instructionsAdapter.addOne(initialState[StoreKeys.INSTRUCTIONS], mockedInstruction),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.addMany(initialState[StoreKeys.TRACE_LOGS], mockedTraceLogs),
       [StoreKeys.ACTIVE_BLOCK]: mockedActiveBlock,
+      [StoreKeys.CONTRACTS]: contractsAdapter.updateOne(initialState[StoreKeys.CONTRACTS], {
+        id: mockedContract.address,
+        changes: mockedContract,
+      }),
+      [StoreKeys.BYTECODES]: bytecodesAdapter.updateOne(initialState[StoreKeys.BYTECODES], {
+        id: mockedBytecodes[0].address,
+        changes: mockedBytecodes[0],
+      }),
       [StoreKeys.ACTIVE_LINE]: { ...initialState[StoreKeys.ACTIVE_LINE], structlogsPerActiveLine: mockedStructlogsPerLine },
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
@@ -112,7 +121,7 @@ describe('runAnalyzer', () => {
           [StoreKeys.STRUCT_LOGS]: structLogsReducer,
           [StoreKeys.BYTECODES]: bytecodesReducer,
           [StoreKeys.SIGHASH]: sighashReducer,
-          [StoreKeys.CONTRACT_NAMES]: contractNamesReducer,
+          [StoreKeys.CONTRACTS]: contractsReducer,
           [StoreKeys.SOURCE_MAPS]: sourceMapsReducer,
           [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
           [StoreKeys.ABIS]: abisReducer,
@@ -129,6 +138,10 @@ describe('runAnalyzer', () => {
             structLogs: mockedStructlogs,
             mainTraceLogList: mockedTraceLogs,
             instructionsMap: stepInstructionsMap,
+            disassembledBytecodes: mockedBytecodes,
+            contractBaseData: {
+              [mockedContract.address]: mockedContract,
+            },
             analyzeSummary: {
               contractSighashesInfo: mockedSighashes,
               contractAddresses: addressesList,
@@ -142,6 +155,8 @@ describe('runAnalyzer', () => {
       .call(runAnalyzer)
       .put(sighashActions.addSighashes(mockedSighashes))
       .put(structLogsActions.loadStructLogs(mockedStructlogs))
+      .put(contractsActions.updateContracts([{ id: mockedContract.address, changes: mockedContract }]))
+      .put(bytecodesActions.loadBytecodes(mockedBytecodes))
       .put(traceLogsActions.addTraceLogs(mockedTraceLogs))
       .put(activeBlockActions.loadActiveBlock(mockedActiveBlock))
       .put(

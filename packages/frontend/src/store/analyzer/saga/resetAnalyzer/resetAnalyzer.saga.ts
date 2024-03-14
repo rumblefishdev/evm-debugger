@@ -2,7 +2,7 @@ import { put } from 'typed-redux-saga'
 
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { contractNamesActions } from '../../../contractNames/contractNames.slice'
+import { contractsActions } from '../../../contracts/contracts.slice'
 import { traceLogsActions } from '../../../traceLogs/traceLogs.slice'
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { sighashActions } from '../../../sighash/sighash.slice'
@@ -19,7 +19,7 @@ export function* resetAnalyzerSaga() {
   yield* put(transactionInfoActions.clearTransactionInfo())
   yield* put(structLogsActions.clearStructLogs())
 
-  yield* put(contractNamesActions.clearContractNames())
+  yield* put(contractsActions.clearContractNames())
   yield* put(bytecodesActions.clearBytecodes())
 
   yield* put(sourceCodesActions.clearSourceCodes())

@@ -8,7 +8,7 @@ import type { TParsedEventLog } from '../../types'
 import type { TMainTraceLogsWithId } from '../traceLogs/traceLogs.types'
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
-import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
+import { contractsSelectors } from '../contracts/contracts.selectors'
 
 import type { TParsedActiveBlock, TParsedCallTypeData } from './activeBlock.types'
 import { parseParameter, parseParameters } from './activeBlock.utils'
@@ -82,7 +82,7 @@ const parseActiveBlock = (block: TMainTraceLogsWithId, contractName: string | nu
 }
 
 export const selectParsedActiveBlock = createSelector(
-  [selectActiveBlockState, contractNamesSelectors.selectEntities],
+  [selectActiveBlockState, contractsSelectors.selectEntities],
   (activeBlock, contractNames) => {
     const contract = contractNames[activeBlock.address]
     const contractNameString = contract?.contractName ?? null

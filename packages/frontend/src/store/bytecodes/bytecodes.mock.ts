@@ -1,29 +1,24 @@
 /* eslint-disable import/exports-last */
+import { BaseOpcodesHex, type TAnalyzerContractBytecodeOutput } from '@evm-debuger/types'
 import { v4 as createUUID } from 'uuid'
 
-import type { TBytecodes } from './bytecodes.types'
-
-export const createEmptyMockedBytecode = (address?: string): TBytecodes => ({
-  disassembled: null,
-  bytecode: null,
+export const createEmptyMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
+  etherscanDissasembleResult: {},
+  etherscanBytecode: '',
   address: address || createUUID(),
 })
 
-export const createMockedBytecodeWithDisassembled = (address?: string): TBytecodes => ({
-  disassembled: [
-    {
-      pc: '0x0',
-      operand: '1212',
-      opcode: 0,
-    },
-  ],
-  bytecode: createUUID(),
+export const createMockedBytecodeWithDisassembled = (address?: string): TAnalyzerContractBytecodeOutput => ({
+  etherscanDissasembleResult: {
+    0x00: { value: BaseOpcodesHex[0x00], pc: 0x00, opcode: 'PUSH1' },
+  },
+  etherscanBytecode: createUUID(),
   address: address || createUUID(),
 })
 
-export const createMockedBytecode = (address?: string): TBytecodes => ({
-  disassembled: null,
-  bytecode: 'some bytecode string',
+export const createMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
+  etherscanDissasembleResult: {},
+  etherscanBytecode: createUUID(),
   address: address || createUUID(),
 })
 
@@ -38,7 +33,7 @@ const getMappingMethod = (type: 'empty' | 'bytecode' | 'dissasembled') => {
   }
 }
 
-export const createMockedBytecodes = (count: number, type?: 'empty' | 'bytecode' | 'dissasembled'): TBytecodes[] => {
+export const createMockedBytecodes = (count: number, type?: 'empty' | 'bytecode' | 'dissasembled'): TAnalyzerContractBytecodeOutput[] => {
   const method = getMappingMethod(type)
   return Array.from({ length: count }, (_, index) => method(index.toString()))
 }

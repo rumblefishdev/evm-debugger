@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
-import { contractNamesSelectors } from '../contractNames/contractNames.selectors'
+import { contractsSelectors } from '../contracts/contracts.selectors'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { parseSourceCode } from '../../helpers/sourceCodeParser'
 
@@ -27,15 +27,12 @@ const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, add
   sourceCodesAdapter.getSelectors().selectById(state, address),
 )
 
-const selectAllWithContractNames = createSelector(
-  [selectEntities, contractNamesSelectors.selectAll],
-  (sourceCodeEntities, contractNames) => {
-    return contractNames.map((contractName) => {
-      const sourceCode = sourceCodeEntities[contractName.address] || null
-      return sourceCode ? { ...contractName, ...sourceCode } : { ...contractName, sourcesOrder: null, sourceCode: null }
-    })
-  },
-)
+const selectAllWithContractNames = createSelector([selectEntities, contractsSelectors.selectAll], (sourceCodeEntities, contractNames) => {
+  return contractNames.map((contractName) => {
+    const sourceCode = sourceCodeEntities[contractName.address] || null
+    return sourceCode ? { ...contractName, ...sourceCode } : { ...contractName, sourcesOrder: null, sourceCode: null }
+  })
+})
 
 const selectCurrentSourceCode = createSelector([selectAll, activeBlockSelectors.selectActiveBlock], (_sourceCodes, _activeBlock) => {
   return _sourceCodes.find(({ address }) => address === _activeBlock?.address)
@@ -49,24 +46,21 @@ const selectParsedToSourceFiles = createSelector([selectAllWithContractNames], (
     .map(mapSourceCode)
     .reduce(reduceToAddressSources, {})
 })
-const selectCurrentSourceFiles = createSelector(
-  [selectCurrentSourceCode, contractNamesSelectors.selectAll],
-  (_sourceCode, _contractNames) => {
-    const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
-    if (!currentSourceName) return []
-    const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
-    const sourcesOrder = _sourceCode?.sourcesOrder
+const selectCurrentSourceFiles = createSelector([selectCurrentSourceCode, contractsSelectors.selectAll], (_sourceCode, _contractNames) => {
+  const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
+  if (!currentSourceName) return []
+  const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
+  const sourcesOrder = _sourceCode?.sourcesOrder
 
-    const sources = Object.entries(sourcesOrder).map(([_, name]) => {
-      const sourceCode = parseSourceCodeResult[name] || ''
-      return [name, sourceCode]
-    })
+  const sources = Object.entries(sourcesOrder).map(([_, name]) => {
+    const sourceCode = parseSourceCodeResult[name] || ''
+    return [name, sourceCode]
+  })
 
-    const mappedSources = sources.map(([name, sourceCode]) => ({ sourceCode, name }))
-    if (_sourceCode?.yulSource) mappedSources.push({ sourceCode: _sourceCode.yulSource, name: 'Utility.yul' })
-    return mappedSources
-  },
-)
+  const mappedSources = sources.map(([name, sourceCode]) => ({ sourceCode, name }))
+  if (_sourceCode?.yulSource) mappedSources.push({ sourceCode: _sourceCode.yulSource, name: 'Utility.yul' })
+  return mappedSources
+})
 
 const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], (_sourceFiles) => _sourceFiles.length > 1)
 

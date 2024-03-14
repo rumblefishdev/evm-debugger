@@ -10,6 +10,8 @@ import type {
   TIndexedStructLog,
   TTraceLog,
   TTraceReturnLog,
+  TDissasembledBytecodeStructlog,
+  TAnalyzerContractBytecodeOutput,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
 
@@ -304,6 +306,26 @@ export class TxAnalyzer {
       }, {} as TStepInstrctionsMap)
   }
 
+  private disassembleTransactionBytecodes() {
+    const transactionContracts = this.dataLoader.getContractsData()
+    const disassembledBytecodes: Record<string, TAnalyzerContractBytecodeOutput> = {}
+
+    for (const [address, contractData] of Object.entries(transactionContracts)) {
+      const etherscanDissasembleResult = this.evmMachine.dissasembleBytecode(contractData.etherscanBytecode)
+      const solcDissasembleResult = this.evmMachine.dissasembleBytecode(contractData.bytecode)
+
+      disassembledBytecodes[address] = {
+        solcDissasembleResult,
+        solcBytecode: contractData.bytecode,
+        etherscanDissasembleResult,
+        etherscanBytecode: contractData.etherscanBytecode,
+        address,
+      }
+    }
+
+    return disassembledBytecodes
+  }
+
   public getContractAddressesInTransaction() {
     if (this.dataLoader.getStructLogs().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
 
@@ -325,6 +347,8 @@ export class TxAnalyzer {
 
     const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.getTransactionInfo())
     this.stackCounter.visitDepth(0, storageAddress)
+
+    const disassembledBytecodes = this.disassembleTransactionBytecodes()
 
     const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.getStructLogs())
     const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.dataLoader.getStructLogs())
@@ -353,6 +377,8 @@ export class TxAnalyzer {
       structLogs: this.dataLoader.getStructLogs(),
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
+      disassembledBytecodes,
+      contractBaseData: this.dataLoader.getContractsBaseData(),
       analyzeSummary: { contractSighashesInfo, contractAddresses },
     }
   }

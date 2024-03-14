@@ -6,7 +6,7 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { testLogMessageViaInspect } from '../../../../helpers/sagaTests'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import { contractNamesSelectors } from '../../../contractNames/contractNames.selectors'
+import { contractsSelectors } from '../../../contracts/contracts.selectors'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { sourceCodesActions } from '../../sourceCodes.slice'
 import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
@@ -60,7 +60,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .select(transactionConfigSelectors.selectChainId)
       .next(CHAIN_ID)
-      .select(contractNamesSelectors.selectAllAddresses)
+      .select(contractsSelectors.selectAllAddresses)
       .next(CONTRACT_ADDRESSES)
       .select(transactionConfigSelectors.selectTransactionHash)
       .next(TRANSACTION_HASH)

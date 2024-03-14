@@ -1,5 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
+import type { TAnalyzerContractBytecodeOutput } from '@evm-debuger/types'
 import { ChainId } from '@evm-debuger/types'
 import { combineReducers } from 'redux'
 
@@ -9,29 +10,33 @@ import { TransactionConfigState } from '../../../transactionConfig/transactionCo
 import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
-import { bytecodesActions, bytecodesAdapter, bytecodesReducer } from '../../bytecodes.slice'
-import type { TBytecodes } from '../../bytecodes.types'
 import { createEmptyMockedBytecode } from '../../bytecodes.mock'
+import { contractsAdapter, contractsReducer } from '../../../contracts/contracts.slice'
+import { createEmptyMockedContract } from '../../../contracts/contracts.mock'
 
 import { fetchBytecode, fetchBytecodesSaga } from './fetchBytecodes.saga'
 
 const TRANSACTION_HASH = '0x1234567890'
 const CHAIN_ID = ChainId.mainnet
 
+const emptyMockedContract = createEmptyMockedContract()
+
 const BYTECODE_MISSING = createEmptyMockedBytecode()
 
-const BYTECODE: TBytecodes = {
+const BYTECODE: TAnalyzerContractBytecodeOutput = {
   ...BYTECODE_MISSING,
-  bytecode: '0x1234567890',
+  etherscanBytecode: '0x1234567890',
 }
 
 describe('fetchBytecodesSaga', () => {
   it('should fetch bytecodes', async () => {
+    const analyzerInstance = getAnalyzerInstance()
+
     const initialState = {
-      [StoreKeys.BYTECODES]: bytecodesAdapter.addOne(bytecodesAdapter.getInitialState(), BYTECODE_MISSING),
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState(), transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID },
+      [StoreKeys.CONTRACTS]: contractsAdapter.addOne(contractsAdapter.getInitialState(), emptyMockedContract),
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
     }
 
@@ -46,10 +51,6 @@ describe('fetchBytecodesSaga', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.BYTECODES]: bytecodesAdapter.updateOne(initialState[StoreKeys.BYTECODES], {
-        id: BYTECODE.address,
-        changes: BYTECODE,
-      }),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -63,18 +64,20 @@ describe('fetchBytecodesSaga', () => {
     const { storeState } = await expectSaga(fetchBytecodesSaga)
       .withReducer(
         combineReducers({
-          [StoreKeys.BYTECODES]: bytecodesReducer,
           [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
+          [StoreKeys.CONTRACTS]: contractsReducer,
         }),
       )
       .withState(initialState)
-      .provide([[matchers.call.fn(fetchBytecode), BYTECODE.bytecode]])
+      .provide([
+        [matchers.call.fn(fetchBytecode), BYTECODE.etherscanBytecode],
+        [matchers.call.fn(getAnalyzerInstance), analyzerInstance],
+      ])
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
-      .call(fetchBytecode, CHAIN_ID, BYTECODE_MISSING.address)
-      .put(bytecodesActions.updateBytecode({ id: BYTECODE.address, changes: { bytecode: BYTECODE.bytecode } }))
-      .take(bytecodesActions.updateBytecode)
+      .call(getAnalyzerInstance)
+      .call(fetchBytecode, CHAIN_ID, emptyMockedContract.address)
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addSecondLogAction })
       .run()

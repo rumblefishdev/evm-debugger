@@ -10,6 +10,8 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { activeLineActions } from '../../../activeLine/activeLine.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
+import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
+import { contractsActions } from '../../../contracts/contracts.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -21,10 +23,18 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Running analyzer')))
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
-    const { mainTraceLogList, instructionsMap, analyzeSummary, structLogs } = yield* call(runAnalyzer)
+    const { mainTraceLogList, instructionsMap, analyzeSummary, structLogs, disassembledBytecodes, contractBaseData } = yield* call(
+      runAnalyzer,
+    )
 
     yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
     yield* put(structLogsActions.loadStructLogs(structLogs))
+
+    yield* put(
+      contractsActions.updateContracts(Object.values(contractBaseData).map((contract) => ({ id: contract.address, changes: contract }))),
+    )
+
+    yield* put(bytecodesActions.loadBytecodes(disassembledBytecodes))
 
     yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
     yield* put(

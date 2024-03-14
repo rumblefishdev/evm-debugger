@@ -14,7 +14,7 @@ const getPushLength = (opcodeByte: number): number => {
 
 export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean): TDissasembledBytecode => {
   const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
-  const dissasembledBytecode: TDissasembledBytecode = []
+  const dissasembledBytecode: TDissasembledBytecode = {}
 
   for (let index = 0; index < bytecodeAsBuffer.length; index++) {
     const opcodeByte = bytecodeAsBuffer[index]
@@ -24,17 +24,17 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
 
     if (pushLength) {
       const pushValue = bytecodeAsBuffer.subarray(index + 1, index + 1 + pushLength).toString('hex')
-      dissasembledBytecode.push({
+      dissasembledBytecode[index] = {
         value: withPushValue && pushValue,
         pc: index,
         opcode,
-      })
+      }
       index += pushLength
     } else {
-      dissasembledBytecode.push({
+      dissasembledBytecode[index] = {
         pc: index,
         opcode,
-      })
+      }
     }
   }
 

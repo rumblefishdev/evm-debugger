@@ -9,7 +9,7 @@ export enum StoreKeys {
   STRUCT_LOGS = 'structlogs',
   ACTIVE_STRUCT_LOG = 'activeStructLog',
   TRACE_LOGS = 'traceLogs',
-  CONTRACT_NAMES = 'contractNames',
+  CONTRACTS = 'contracts',
   ACTIVE_SOURCE_FILE = 'sourceFiles',
   INSTRUCTIONS = 'instructions',
   UI = 'ui',

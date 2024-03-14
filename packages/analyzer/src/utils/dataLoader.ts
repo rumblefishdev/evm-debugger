@@ -6,6 +6,7 @@ import type {
   TContractData,
   TAbi,
   TParseSourceCodeOutput,
+  TAnalyzerContractBaseOutput,
 } from '@evm-debuger/types'
 
 export class DataLoader {
@@ -72,5 +73,12 @@ export class DataLoader {
 
   public getContractData(address: string) {
     return this.contractsData[address]
+  }
+
+  public getContractsBaseData(): Record<string, TAnalyzerContractBaseOutput> {
+    return Object.entries(this.contractsData).reduce((accumulator, [address, { name }]) => {
+      accumulator[address] = { contractName: name, address }
+      return accumulator
+    }, {} as Record<string, TAnalyzerContractBaseOutput>)
   }
 }

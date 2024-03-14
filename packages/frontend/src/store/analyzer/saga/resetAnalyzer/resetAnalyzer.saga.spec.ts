@@ -7,7 +7,7 @@ import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { StoreKeys } from '../../../store.keys'
 import { transactionInfoActions, transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
-import { contractNamesReducer, contractNamesAdapter, contractNamesActions } from '../../../contractNames/contractNames.slice'
+import { contractsReducer, contractsAdapter, contractsActions } from '../../../contracts/contracts.slice'
 import { bytecodesReducer, bytecodesAdapter, bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { sourceCodesReducer, sourceCodesAdapter, sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { sourceMapsReducer, sourceMapsAdapter, sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
@@ -20,7 +20,7 @@ import { TransactionInfoState } from '../../../transactionInfo/transactionInfo.s
 import { AnalyzerState } from '../../analyzer.state'
 import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
 import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
-import { createMockedContractNames } from '../../../contractNames/contractNames.mock'
+import { createMockedContracts } from '../../../contracts/contracts.mock'
 import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
 import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.mock'
 import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.mock'
@@ -36,7 +36,7 @@ const mockedTransactionConfig = { transactionHash: '0x1234567890', s3Location: '
 const mockedTransactionInfo = mockTransactionInfoState()
 const mockedStructlogs = createMockedStructLogs(4)
 const mockedAnalyzerState = createDirtyAnalyerState()
-const mockedContractNames = createMockedContractNames(4)
+const mockedContractNames = createMockedContracts(4)
 const mockedBytecodes = createMockedBytecodes(4)
 const mockedSourceCodes = createMockedSourceCodes(4)
 const mockedSourceMaps = createMockedSourceMaps(4)
@@ -52,7 +52,7 @@ describe('resetAnalyzerSaga', () => {
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState() },
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
       [StoreKeys.STRUCT_LOGS]: structLogsAdapter.getInitialState(),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.getInitialState(),
+      [StoreKeys.CONTRACTS]: contractsAdapter.getInitialState(),
       [StoreKeys.BYTECODES]: bytecodesAdapter.getInitialState(),
       [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.getInitialState(),
       [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.getInitialState(),
@@ -67,7 +67,7 @@ describe('resetAnalyzerSaga', () => {
       [StoreKeys.TRANSACTION_CONFIG]: { ...mockedTransactionConfig },
       [StoreKeys.ANALYZER]: { ...mockedAnalyzerState },
       [StoreKeys.STRUCT_LOGS]: structLogsAdapter.setAll(initialState[StoreKeys.STRUCT_LOGS], mockedStructlogs),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.setAll(initialState[StoreKeys.CONTRACT_NAMES], mockedContractNames),
+      [StoreKeys.CONTRACTS]: contractsAdapter.setAll(initialState[StoreKeys.CONTRACTS], mockedContractNames),
       [StoreKeys.BYTECODES]: bytecodesAdapter.setAll(initialState[StoreKeys.BYTECODES], mockedBytecodes),
       [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.setAll(initialState[StoreKeys.SOURCE_CODES], mockedSourceCodes),
       [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.setAll(initialState[StoreKeys.SOURCE_MAPS], mockedSourceMaps),
@@ -84,7 +84,7 @@ describe('resetAnalyzerSaga', () => {
           [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
           [StoreKeys.STRUCT_LOGS]: structLogsReducer,
-          [StoreKeys.CONTRACT_NAMES]: contractNamesReducer,
+          [StoreKeys.CONTRACTS]: contractsReducer,
           [StoreKeys.BYTECODES]: bytecodesReducer,
           [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
           [StoreKeys.SOURCE_MAPS]: sourceMapsReducer,
@@ -99,7 +99,7 @@ describe('resetAnalyzerSaga', () => {
       .put(transactionConfigActions.clearTransactionConfig())
       .put(transactionInfoActions.clearTransactionInfo())
       .put(structLogsActions.clearStructLogs())
-      .put(contractNamesActions.clearContractNames())
+      .put(contractsActions.clearContractNames())
       .put(bytecodesActions.clearBytecodes())
       .put(sourceCodesActions.clearSourceCodes())
       .put(sourceMapsActions.clearSourceMaps())

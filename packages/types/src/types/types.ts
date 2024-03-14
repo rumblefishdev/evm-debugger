@@ -92,7 +92,7 @@ export type TDissasembledBytecodeStructlog = {
   value?: string
 }
 
-export type TDissasembledBytecode = TDissasembledBytecodeStructlog[]
+export type TDissasembledBytecode = Record<number, TDissasembledBytecodeStructlog>
 
 export type TSourceMapCodeRepresentation = {
   startCodeLine: number
@@ -134,6 +134,25 @@ export type TContractData = {
 }
 
 export type TContractsData = Record<string, TContractData>
+
+export type TAnalyzerContractBaseOutput = {
+  address: string
+  contractName?: string
+}
+
+export type TAnalyzerContractBytecodeOutput = {
+  address: string
+  solcBytecode?: string
+  etherscanBytecode: string
+  solcDissasembleResult?: TDissasembledBytecode
+  etherscanDissasembleResult: TDissasembledBytecode
+}
+
+export type TAnalyzerContractsDataOutput = {
+  address: string
+  name?: string
+  bytecode: TAnalyzerContractBytecodeOutput
+}
 
 export type TSighashStatus = {
   sighash: string

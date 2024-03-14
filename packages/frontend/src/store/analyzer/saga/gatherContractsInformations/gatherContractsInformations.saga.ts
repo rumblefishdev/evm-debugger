@@ -1,15 +1,9 @@
 import { type SagaGenerator, put, call, apply } from 'typed-redux-saga'
-import type { TxAnalyzer } from '@evm-debuger/analyzer'
 
-import { contractNamesActions } from '../../../contractNames/contractNames.slice'
-import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
+import { contractsActions } from '../../../contracts/contracts.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
-
-export function gatherContractsInformations(analyzer: TxAnalyzer) {
-  return analyzer.getContractAddressesInTransaction()
-}
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   try {
@@ -22,15 +16,14 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
     )
 
     const analyzer = yield* call(getAnalyzerInstance)
+    const contractAddresses = yield* apply(analyzer, analyzer.getContractAddressesInTransaction, [])
 
-    const contractAddresses = yield* call(gatherContractsInformations, analyzer)
-
+    // TODO: move sanitization to analyzer
     const sanitizedContractAddresses = contractAddresses.map((address) => address.toLowerCase())
     const uniqueContractAddresses = [...new Set(sanitizedContractAddresses)]
 
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.initializeNewContracts, [uniqueContractAddresses])
-    yield* put(contractNamesActions.initializeContractNames(uniqueContractAddresses))
-    yield* put(bytecodesActions.initializeBytecodes(uniqueContractAddresses))
+    yield* put(contractsActions.initializeContracts(uniqueContractAddresses))
 
     yield* put(
       analyzerActions.updateStage({
