@@ -19,8 +19,7 @@ export const BytecodePanel: React.FC = () => {
 
   const currentElementIndex = useMemo(() => {
     if (!activeStrucLog || !currentDissasembledBytecode) return null
-    const pcFormatted = `0x${activeStrucLog.pc.toString(16)}`
-    return currentDissasembledBytecode?.[pcFormatted]?.index
+    return currentDissasembledBytecode[activeStrucLog.pc].index
   }, [activeStrucLog, currentDissasembledBytecode])
 
   const dissasembledBytecodeArray = useMemo(() => {

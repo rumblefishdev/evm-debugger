@@ -16,26 +16,31 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
   const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
   const dissasembledBytecode: TDissasembledBytecode = {}
 
-  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
-    const opcodeByte = bytecodeAsBuffer[index]
+  let programCounter = 0
+
+  for (let index = 0; programCounter < bytecodeAsBuffer.length; index++) {
+    const opcodeByte = bytecodeAsBuffer[programCounter]
 
     const opcode = getOpcodeAsName(opcodeByte)
     const pushLength = getPushLength(opcodeByte)
 
     if (pushLength) {
-      const pushValue = bytecodeAsBuffer.subarray(index + 1, index + 1 + pushLength).toString('hex')
+      const pushValue = bytecodeAsBuffer.subarray(programCounter + 1, programCounter + 1 + pushLength).toString('hex')
       dissasembledBytecode[index] = {
         value: withPushValue && pushValue,
-        pc: index,
+        pc: programCounter,
         opcode,
+        index,
       }
-      index += pushLength
+      programCounter += pushLength
     } else {
       dissasembledBytecode[index] = {
-        pc: index,
+        pc: programCounter,
         opcode,
+        index,
       }
     }
+    programCounter++
   }
 
   return dissasembledBytecode

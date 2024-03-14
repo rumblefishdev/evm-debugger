@@ -89,6 +89,7 @@ export type TOpcodeFromSourceMap = {
 export type TDissasembledBytecodeStructlog = {
   pc: number
   opcode: TOpcodesNames
+  index: number
   value?: string
 }
 

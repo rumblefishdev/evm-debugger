@@ -3,7 +3,6 @@ import type { VirtuosoHandle } from 'react-virtuoso'
 
 import { StyledHeading, StyledHeadingWrapper, StyledPanel } from '../styles'
 import { ExplorerListRow } from '../../../../components/ExplorerListRow'
-import { convertOpcodeToName } from '../../../../helpers/opcodesDictionary'
 import { VirtualizedList } from '../../../../components/VirtualizedList/VirtualizedList'
 
 import type { BytecodePanelComponentProps } from './BytecodePanel.types'
@@ -20,13 +19,13 @@ export const BytecodePanelComponent = React.forwardRef<VirtuosoHandle, BytecodeP
           items={dissasembledBytecode}
         >
           {(listIndex, data) => {
-            const { opcode, operand, pc } = data
+            const { opcode, pc, value } = data
             return (
               <ExplorerListRow
                 key={pc}
-                chipValue={operand}
+                chipValue={value}
                 isActive={currentElementIndex === listIndex}
-                opCode={convertOpcodeToName(opcode)}
+                opCode={opcode}
                 pc={pc}
               />
             )
