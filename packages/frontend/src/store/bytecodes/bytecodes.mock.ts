@@ -3,22 +3,22 @@ import { BaseOpcodesHex, type TAnalyzerContractBytecodeOutput } from '@evm-debug
 import { v4 as createUUID } from 'uuid'
 
 export const createEmptyMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanDissasembleResult: {},
   etherscanBytecode: '',
+  dissasembledEtherscanBytecode: {},
   address: address || createUUID(),
 })
 
 export const createMockedBytecodeWithDisassembled = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanDissasembleResult: {
+  etherscanBytecode: createUUID(),
+  dissasembledEtherscanBytecode: {
     0x00: { value: BaseOpcodesHex[0x00], pc: 0x00, opcode: 'PUSH1' },
   },
-  etherscanBytecode: createUUID(),
   address: address || createUUID(),
 })
 
 export const createMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanDissasembleResult: {},
   etherscanBytecode: createUUID(),
+  dissasembledEtherscanBytecode: {},
   address: address || createUUID(),
 })
 

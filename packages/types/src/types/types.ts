@@ -86,14 +86,14 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
-export type TDissasembledBytecodeStructlog = {
+export type TDisassembledBytecodeStructlog = {
   pc: number
   opcode: TOpcodesNames
   index: number
   value?: string
 }
 
-export type TDissasembledBytecode = Record<number, TDissasembledBytecodeStructlog>
+export type TDisassembledBytecode = Record<number, TDisassembledBytecodeStructlog>
 
 export type TSourceMapCodeRepresentation = {
   startCodeLine: number
@@ -122,19 +122,13 @@ export type TStepInstrctionsMap = Record<
   { instructions: TPcIndexedStepInstructions; structlogsPerStartLine: TStructlogsPerStartLine }
 >
 
-export type TContractData = {
+export type TContractRawData = {
   address: string
-  name?: string
-  applicationBinaryInterface?: TAbi
+  applicationBinaryInterface?: string
   bytecode?: string
-  etherscanBytecode?: string
-  files?: TParseSourceCodeOutput
+  sourceFiles?: string[]
   sourceMap?: string
-  yulTree?: string
-  yulFileContent?: string
 }
-
-export type TContractsData = Record<string, TContractData>
 
 export type TAnalyzerContractBaseOutput = {
   address: string
@@ -143,10 +137,10 @@ export type TAnalyzerContractBaseOutput = {
 
 export type TAnalyzerContractBytecodeOutput = {
   address: string
-  solcBytecode?: string
-  etherscanBytecode: string
-  solcDissasembleResult?: TDissasembledBytecode
-  etherscanDissasembleResult: TDissasembledBytecode
+  bytecode?: string
+  etherscanBytecode?: string
+  dissasembledBytecode?: TDisassembledBytecode
+  dissasembledEtherscanBytecode?: TDisassembledBytecode
 }
 
 export type TAnalyzerContractsDataOutput = {

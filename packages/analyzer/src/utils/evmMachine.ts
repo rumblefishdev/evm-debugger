@@ -1,4 +1,4 @@
-import { BaseOpcodesHex, getOpcodeAsName, type TDissasembledBytecode } from '@evm-debuger/types'
+import { BaseOpcodesHex, getOpcodeAsName, type TDisassembledBytecode } from '@evm-debuger/types'
 
 const getPushLength = (opcodeByte: number): number => {
   const decimalPush1Opcode = BaseOpcodesHex.PUSH1
@@ -12,9 +12,9 @@ const getPushLength = (opcodeByte: number): number => {
   return 0
 }
 
-export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean): TDissasembledBytecode => {
+export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean): TDisassembledBytecode => {
   const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
-  const dissasembledBytecode: TDissasembledBytecode = {}
+  const dissasembledBytecode: TDisassembledBytecode = {}
 
   let programCounter = 0
 
@@ -47,7 +47,7 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
 }
 
 export class EVMMachine {
-  public dissasembleBytecode(bytecode: string): TDissasembledBytecode {
+  public dissasembleBytecode(bytecode: string): TDisassembledBytecode {
     return bytecodeDisassembler(bytecode, true)
   }
 }

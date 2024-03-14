@@ -23,7 +23,7 @@ const selectAllWithContractNames = createSelector([selectAll, contractsSelectors
 const selectCurrentDissasembledBytecode = createSelector(
   [selectEntities, activeBlockSelectors.selectActiveBlock],
   (bytecodes, activeBlock) => {
-    return bytecodes[activeBlock?.address].solcDissasembleResult || {}
+    return bytecodes[activeBlock?.address].bytecode || {}
   },
 )
 

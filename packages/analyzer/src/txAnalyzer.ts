@@ -10,7 +10,6 @@ import type {
   TIndexedStructLog,
   TTraceLog,
   TTraceReturnLog,
-  TDissasembledBytecodeStructlog,
   TAnalyzerContractBytecodeOutput,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
@@ -315,10 +314,10 @@ export class TxAnalyzer {
       const solcDissasembleResult = this.evmMachine.dissasembleBytecode(contractData.bytecode)
 
       disassembledBytecodes[address] = {
-        solcDissasembleResult,
-        solcBytecode: contractData.bytecode,
-        etherscanDissasembleResult,
         etherscanBytecode: contractData.etherscanBytecode,
+        dissasembledEtherscanBytecode: etherscanDissasembleResult,
+        bytecode: solcDissasembleResult,
+        bytecode: contractData.bytecode,
         address,
       }
     }
@@ -373,8 +372,8 @@ export class TxAnalyzer {
     const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
 
     return {
-      transactionInfo: this.dataLoader.getTransactionInfo(),
-      structLogs: this.dataLoader.getStructLogs(),
+      transactionInfo: this.dataLoader.outputTransactionInfo.get(),
+      structLogs: this.dataLoader.outputStructLogs.get(),
       mainTraceLogList: traceLogsWithBlockNumber,
       instructionsMap,
       disassembledBytecodes,

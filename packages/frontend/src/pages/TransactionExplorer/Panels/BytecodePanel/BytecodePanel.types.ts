@@ -1,6 +1,6 @@
-import type { TDissasembledBytecodeStructlog } from '@evm-debuger/types'
+import type { TDisassembledBytecodeStructlog } from '@evm-debuger/types'
 
 export interface BytecodePanelComponentProps {
-  dissasembledBytecode: TDissasembledBytecodeStructlog[]
+  dissasembledBytecode: TDisassembledBytecodeStructlog[]
   currentElementIndex: number
 }
