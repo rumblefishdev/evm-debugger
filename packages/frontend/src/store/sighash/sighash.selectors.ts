@@ -19,7 +19,7 @@ const allAddresses = createSelector(
 const selectAllWithContractNames = createSelector([selectAll, contractsSelectors.selectAll], (sighashes, contractNames) =>
   sighashes.map((sighash) => {
     const contract = contractNames.find((_contractName) => sighash.addresses.has(_contractName.address))
-    const result: TSighashStatus & { contractName: string } = { ...sighash, contractName: contract?.contractName || sighash.sighash }
+    const result: TSighashStatus & { contractName: string } = { ...sighash, contractName: contract?.name || sighash.sighash }
     return result
   }),
 )

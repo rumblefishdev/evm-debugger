@@ -1,3 +1,5 @@
+import type { TAnalyzerContractData, TInputContractData } from './analyzerRoot'
+import { TDataLoaderAnalyzerData, TDataLoaderInputData } from './analyzerRoot'
 import type { ChainId } from './chains'
 import type { TContractBytecodeObject, TGeneratedSourcesElement } from './solc'
 import type { TAbi } from './types'
@@ -141,11 +143,11 @@ export type TParseSourceCodeOutput = Record<number, TParsedSourceCode>
 export type TParsedSourceCodesOutput = Record<string, TParseSourceCodeOutput>
 
 export type TSourceMapConverstionPayload = {
-  sourceMap: string
-  files: TParseSourceCodeOutput
-  name: string
-  bytecode: string
-  address: string
+  contractSourceMap: TInputContractData['sourceMap']
+  contractSourceFiles: TAnalyzerContractData['sourceFiles']
+  contractName: TInputContractData['name']
+  contractBytecode: TInputContractData['bytecode']
+  contractAddress: TInputContractData['address']
 }
 
 export type TSourceCodeObject = { sources: TInputSources }

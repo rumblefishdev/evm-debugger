@@ -1,12 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import {
-  BaseOpcodesHex,
-  SourceFileType,
-  type TParseSourceCodeOutput,
-  type TParsedSourceMap,
-  type TSourceMapCodeRepresentation,
-} from '@evm-debuger/types'
+import type { TAnalyzerContractData } from '@evm-debuger/types'
+import { BaseOpcodesHex, SourceFileType, type TParsedSourceMap, type TSourceMapCodeRepresentation } from '@evm-debuger/types'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
@@ -57,7 +52,7 @@ export const convertNewLineExpressionTypeToNumberOfWhitespaces = (sourceCode: st
 }
 
 export const createSourceMapToSourceCodeDictionary = (
-  sourceFiles: TParseSourceCodeOutput,
+  sourceFiles: TAnalyzerContractData['sourceFiles'],
   sourceMaps: TParsedSourceMap[],
 ): SourceCodeDictionary => {
   const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
@@ -70,7 +65,7 @@ export const createSourceMapToSourceCodeDictionary = (
     if (sourceCode) {
       const regexForAllNewLineTypes = /\r\n|\n|\r/g
       const sourceParts = sourceCode.content.split(regexForAllNewLineTypes)
-      const fileType: SourceFileType = fileTypeMap[sourceCode.sourceName.split('.').pop()]
+      const fileType: SourceFileType = fileTypeMap[sourceCode.path.split('.').pop()]
 
       const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
 

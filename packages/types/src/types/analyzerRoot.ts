@@ -1,9 +1,10 @@
-import type { TIndexedStructLog, TRawStructLog } from './structLogs'
-import type { TAbi, TDisassembledBytecode, TTransactionInfo } from './types'
+import type { TIndexedStructLog } from './structLogs'
+import type { TAbi, TContractDissasembledBytecode, TDisassembledBytecode, TTransactionInfo } from './types'
 import type { TYulBlock } from './yulSources'
 
-export type TRawContractData = {
+export type TInputContractData = {
   address: string
+  name?: string
   sourceMap?: string
   bytecode?: string
   etherscanBytecode?: string
@@ -14,12 +15,12 @@ export type TRawContractData = {
   sourceFilesOrder?: Record<number, string>
 }
 
-export type TContractBaseData = {
+export type TAnalyzerContractBaseData = {
   address: string
   name?: string
 }
 
-export type TContractSettings = {
+export type TAnalyzerContractSettings = {
   address: string
   compilerVersion?: string
   optimization?: { isEnabled: boolean; runs: number }
@@ -33,28 +34,30 @@ export type TSourceFile = {
   name: string
 }
 
-export type TContractData = TContractBaseData & {
-  contractSettings?: TContractSettings
+export type TAnalyzerContractData = {
+  address: string
+  contractBaseData?: TAnalyzerContractBaseData
+  contractSettings?: TAnalyzerContractSettings
   disassembledBytecode?: TDisassembledBytecode
   disassembledEtherscanBytecode?: TDisassembledBytecode
   sourceFiles?: Record<number, TSourceFile>
 }
 
-export type TDataLoaderRawInputData = {
+export type TDataLoaderInputData = {
   transactionInfo: TTransactionInfo
-  structLogs: TRawStructLog[]
-  contracts: Record<string, TRawContractData>
+  structLogs: TIndexedStructLog[]
+  contracts: Record<string, TInputContractData>
 }
-export type TDataLoaderOutputData = {
+export type TDataLoaderAnalyzerData = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
-  contracts: Record<string, TContractData>
+  contracts: Record<string, TAnalyzerContractData>
 }
 
 export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
-  contractsSettings: Record<string, TContractSettings>
-  contractsBaseData: Record<string, TContractBaseData>
-  contractsDisassembledBytecodes: Record<string, { address: string; disassembledBytecode: TDisassembledBytecode }>
+  contractsSettings: Record<string, TAnalyzerContractSettings>
+  contractsBaseData: Record<string, TAnalyzerContractBaseData>
+  contractsDisassembledBytecodes: Record<string, TContractDissasembledBytecode>
 }

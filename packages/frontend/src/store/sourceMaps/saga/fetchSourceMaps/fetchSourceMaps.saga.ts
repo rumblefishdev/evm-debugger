@@ -27,14 +27,26 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
     }
 
     if (sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0) {
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractYulFile, [contractAddress, sourceMap.deployedBytecode.contents])
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+        contractAddress,
+        'yulSource',
+        sourceMap.deployedBytecode.contents,
+      ])
       yield* put(sourceCodesActions.addYulSource({ yulSource: sourceMap.deployedBytecode.contents, address: contractAddress }))
     }
 
     const sourceMapWithAddress = { ...sourceMap, address: contractAddress }
 
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractBytecode, [contractAddress, sourceMap.deployedBytecode.object])
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractSourceMap, [contractAddress, sourceMap.deployedBytecode.sourceMap])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+      contractAddress,
+      'bytecode',
+      sourceMap.deployedBytecode.object,
+    ])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+      contractAddress,
+      'sourceMap',
+      sourceMap.deployedBytecode.sourceMap,
+    ])
 
     yield* put(sourceMapsActions.addSourceMap(sourceMapWithAddress))
 

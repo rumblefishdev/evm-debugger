@@ -6,7 +6,6 @@ import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.s
 import { abisActions } from '../../../abis/abis.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
-import { mapSourceCode } from '../../sourceCodes.utiils'
 
 export async function fetchSourceData(sourceDataPath: string) {
   const rawSourceData = await fetch(`https://${traceStorageBucket}/${sourceDataPath}`)
@@ -29,20 +28,19 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
     const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
     if (sourceData.ABI) {
       yield* put(abisActions.addAbi({ address: contractAddress, abi: sourceData.ABI }))
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractAbi, [contractAddress, sourceData.ABI])
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+        contractAddress,
+        'applicationBinaryInterface',
+        sourceData.ABI,
+      ])
     }
     if (sourceData.SourceCode) {
       yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: sourceData.SourceCode, address: contractAddress }))
-      const { sources, address } = mapSourceCode({
-        sourcesOrder,
-        sourceCode: sourceData.SourceCode,
-        contractName: sourceData.ContractName,
-        address: contractAddress,
-      })
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractFiles, [address, sources])
+
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceCode', sourceData.SourceCode])
     }
     if (sourceData.ContractName) {
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadContractName, [contractAddress, sourceData.ContractName])
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'name', sourceData.ContractName])
     }
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source data for ${contractAddress} fetched successfully`)))

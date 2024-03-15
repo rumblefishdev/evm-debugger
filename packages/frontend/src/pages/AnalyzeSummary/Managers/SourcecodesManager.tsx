@@ -25,7 +25,7 @@ export const SourcecodesManager = () => {
             <ManagerItem
               key={item.address}
               address={item.address}
-              name={item.contractName}
+              name={item.name}
               value={item.sourceCode}
               isFound={item.sourceCode !== null}
               updateItem={addSourcecode}

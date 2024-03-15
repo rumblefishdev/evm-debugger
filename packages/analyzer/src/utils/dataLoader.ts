@@ -1,116 +1,113 @@
-import type { TDataLoaderRawInputData, TDataLoaderOutputData, TAnalyzerAnalysisOutput } from '@evm-debuger/types'
+import type {
+  TDataLoaderInputData,
+  TDataLoaderAnalyzerData,
+  TAnalyzerAnalysisOutput,
+  TRawStructLog,
+  TInputContractData,
+  TAnalyzerContractData,
+} from '@evm-debuger/types'
 
 export class DataLoader {
-  private inputRawData: TDataLoaderRawInputData
-  private outputData: TDataLoaderOutputData
+  private inputData: TDataLoaderInputData
+  private analyzerData: TDataLoaderAnalyzerData
 
-  private setInputRawContractData<T extends keyof TDataLoaderRawInputData['contracts'][string]>(
-    contractAddress: string,
-    key: T,
-    value: TDataLoaderRawInputData['contracts'][string][T],
-  ) {
-    this.inputRawData.contracts[contractAddress][key] = value
+  private setInputContractData<T extends keyof TInputContractData>(contractAddress: string, key: T, value: TInputContractData[T]) {
+    this.inputData.contracts[contractAddress][key] = value
   }
 
-  private getInputRawContractData<T extends keyof TDataLoaderRawInputData['contracts'][string]>(
-    contractAddress: string,
-    key: T,
-  ): TDataLoaderRawInputData['contracts'][string][T] {
-    return this.inputRawData.contracts[contractAddress][key]
+  private getInputContractData<T extends keyof TInputContractData>(contractAddress: string, key: T): TInputContractData[T] {
+    return this.inputData.contracts[contractAddress][key]
   }
 
-  private getAllInputRawContractData<T extends keyof TDataLoaderRawInputData['contracts'][string]>(key: T) {
-    return Object.keys(this.inputRawData.contracts).reduce((accumulator, contractAddress) => {
-      accumulator[contractAddress] = this.getInputRawContractData(contractAddress, key)
+  private getAllInputContractData<T extends keyof TInputContractData>(key: T) {
+    return Object.keys(this.inputData.contracts).reduce((accumulator, contractAddress) => {
+      accumulator[contractAddress] = this.getInputContractData(contractAddress, key)
       return accumulator
-    }, {} as Record<string, TDataLoaderRawInputData['contracts'][string][T]>)
+    }, {} as Record<string, TInputContractData[T]>)
   }
 
-  private setOutputContractData<T extends keyof TDataLoaderOutputData['contracts'][string]>(
-    contractAddress: string,
-    key: T,
-    value: TDataLoaderOutputData['contracts'][string][T],
-  ) {
-    this.outputData.contracts[contractAddress][key] = value
+  private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
+    this.analyzerData.contracts[contractAddress][key] = value
   }
 
-  private getOutputContractData<T extends keyof TDataLoaderOutputData['contracts'][string]>(
-    contractAddress: string,
-    key: T,
-  ): TDataLoaderOutputData['contracts'][string][T] {
-    return this.outputData.contracts[contractAddress][key]
+  private getAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T): TAnalyzerContractData[T] {
+    return this.analyzerData.contracts[contractAddress][key]
   }
 
-  private getAllOutputContractData<T extends keyof TDataLoaderOutputData['contracts'][string]>(key: T) {
-    return Object.keys(this.outputData.contracts).reduce((accumulator, contractAddress) => {
-      accumulator[contractAddress] = this.getOutputContractData(contractAddress, key)
+  private getAllAnalayzerContractsData<T extends keyof TAnalyzerContractData>(key: T) {
+    return Object.keys(this.analyzerData.contracts).reduce((accumulator, contractAddress) => {
+      accumulator[contractAddress] = this.getAnalyzerContractData(contractAddress, key)
       return accumulator
-    }, {} as Record<string, TDataLoaderOutputData['contracts'][string][T]>)
+    }, {} as Record<string, TAnalyzerContractData[T]>)
   }
 
-  public inputRawTransactionData = {
-    set: (transactionInfo: TDataLoaderRawInputData['transactionInfo']) => (this.inputRawData.transactionInfo = transactionInfo),
-    get: () => this.inputRawData.transactionInfo,
+  public inputTransactionData = {
+    set: (transactionInfo: TDataLoaderInputData['transactionInfo']) => (this.inputData.transactionInfo = transactionInfo),
+    get: () => this.inputData.transactionInfo,
   }
 
-  public inputRawStructlogs = {
-    set: (structLogs: TDataLoaderRawInputData['structLogs']) => (this.inputRawData.structLogs = structLogs),
-    get: () => this.inputRawData.structLogs,
+  public inputStructlogs = {
+    set: (structLogs: TRawStructLog[]) => (this.inputData.structLogs = structLogs.map((structLog, index) => ({ ...structLog, index }))),
+    get: () => this.inputData.structLogs,
   }
 
-  public outputStructLogs = {
-    set: (structLogs: TDataLoaderOutputData['structLogs']) => (this.outputData.structLogs = structLogs),
-    get: () => this.outputData.structLogs,
+  public analyzerStructLogs = {
+    set: (structLogs: TDataLoaderAnalyzerData['structLogs']) => (this.analyzerData.structLogs = structLogs),
+    get: () => this.analyzerData.structLogs,
   }
 
-  public outputTransactionInfo = {
-    set: (transactionInfo: TDataLoaderOutputData['transactionInfo']) => (this.outputData.transactionInfo = transactionInfo),
-    get: () => this.outputData.transactionInfo,
+  public analyzerTransactionInfo = {
+    set: (transactionInfo: TDataLoaderAnalyzerData['transactionInfo']) => (this.analyzerData.transactionInfo = transactionInfo),
+    get: () => this.analyzerData.transactionInfo,
   }
 
-  public contractData = {
-    set: this.setInputRawContractData,
-    getAll: this.getAllInputRawContractData,
-    get: this.getInputRawContractData,
+  public inputContractData = {
+    set: this.setInputContractData,
+    getAll: this.getAllInputContractData,
+    get: this.getInputContractData,
   }
 
-  public outputContractData = {
-    set: this.setOutputContractData,
-    getAll: this.getAllOutputContractData,
-    get: this.getOutputContractData,
+  public analyzerContractData = {
+    set: this.setAnalyzerContractData,
+    getAll: this.getAllAnalayzerContractsData,
+    get: this.getAnalyzerContractData,
   }
 
   public setEmptyContracts(contractAddresses: string[]) {
-    this.inputRawData.contracts = contractAddresses.reduce<TDataLoaderRawInputData['contracts']>((accumulator, address) => {
+    this.inputData.contracts = contractAddresses.reduce<TDataLoaderInputData['contracts']>((accumulator, address) => {
       accumulator[address] = { address }
       return accumulator
     }, {})
-    this.outputData.contracts = contractAddresses.reduce<TDataLoaderOutputData['contracts']>((accumulator, address) => {
+    this.analyzerData.contracts = contractAddresses.reduce<TDataLoaderAnalyzerData['contracts']>((accumulator, address) => {
       accumulator[address] = { address }
       return accumulator
     }, {})
+  }
+
+  public getAddressesList() {
+    return Object.keys(this.inputData.contracts)
   }
 
   public getAnalyzerAnalysisOutput(): TAnalyzerAnalysisOutput {
     return {
-      transactionInfo: this.outputTransactionInfo.get(),
-      structLogs: this.outputStructLogs.get(),
-      contractsSettings: Object.values(this.outputData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
+      transactionInfo: this.analyzerTransactionInfo.get(),
+      structLogs: this.analyzerStructLogs.get(),
+      contractsSettings: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
         (accumulator, { address, contractSettings }) => {
           accumulator[address] = { address, ...contractSettings }
           return accumulator
         },
         {},
       ),
-      contractsDisassembledBytecodes: Object.values(this.outputData.contracts).reduce<
+      contractsDisassembledBytecodes: Object.values(this.analyzerData.contracts).reduce<
         TAnalyzerAnalysisOutput['contractsDisassembledBytecodes']
       >((accumulator, { address, disassembledBytecode }) => {
         accumulator[address] = { disassembledBytecode, address }
         return accumulator
       }, {}),
-      contractsBaseData: Object.values(this.outputData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(
-        (accumulator, { address, name }) => {
-          accumulator[address] = { name, address }
+      contractsBaseData: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(
+        (accumulator, { address, contractBaseData }) => {
+          accumulator[address] = { ...contractBaseData, address }
           return accumulator
         },
         {},

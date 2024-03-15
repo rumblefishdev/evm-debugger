@@ -95,6 +95,11 @@ export type TDisassembledBytecodeStructlog = {
 
 export type TDisassembledBytecode = Record<number, TDisassembledBytecodeStructlog>
 
+export type TContractDissasembledBytecode = {
+  address: string
+  disassembledBytecode: TDisassembledBytecode
+}
+
 export type TSourceMapCodeRepresentation = {
   startCodeLine: number
   endCodeLine: number

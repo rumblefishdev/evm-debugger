@@ -1,24 +1,22 @@
 /* eslint-disable import/exports-last */
-import { BaseOpcodesHex, type TAnalyzerContractBytecodeOutput } from '@evm-debuger/types'
+import type { TContractDissasembledBytecode } from '@evm-debuger/types'
+import { BaseOpcodesHex } from '@evm-debuger/types'
 import { v4 as createUUID } from 'uuid'
 
-export const createEmptyMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanBytecode: '',
-  dissasembledEtherscanBytecode: {},
+export const createEmptyMockedBytecode = (address?: string): TContractDissasembledBytecode => ({
+  disassembledBytecode: {},
   address: address || createUUID(),
 })
 
-export const createMockedBytecodeWithDisassembled = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanBytecode: createUUID(),
-  dissasembledEtherscanBytecode: {
-    0x00: { value: BaseOpcodesHex[0x00], pc: 0x00, opcode: 'PUSH1' },
+export const createMockedBytecodeWithDisassembled = (address?: string): TContractDissasembledBytecode => ({
+  disassembledBytecode: {
+    0x00: { value: BaseOpcodesHex[0x00], pc: 0x00, opcode: 'PUSH1', index: 0 },
   },
   address: address || createUUID(),
 })
 
-export const createMockedBytecode = (address?: string): TAnalyzerContractBytecodeOutput => ({
-  etherscanBytecode: createUUID(),
-  dissasembledEtherscanBytecode: {},
+export const createMockedBytecode = (address?: string): TContractDissasembledBytecode => ({
+  disassembledBytecode: {},
   address: address || createUUID(),
 })
 
@@ -33,7 +31,7 @@ const getMappingMethod = (type: 'empty' | 'bytecode' | 'dissasembled') => {
   }
 }
 
-export const createMockedBytecodes = (count: number, type?: 'empty' | 'bytecode' | 'dissasembled'): TAnalyzerContractBytecodeOutput[] => {
+export const createMockedBytecodes = (count: number, type?: 'empty' | 'bytecode' | 'dissasembled'): TContractDissasembledBytecode[] => {
   const method = getMappingMethod(type)
   return Array.from({ length: count }, (_, index) => method(index.toString()))
 }

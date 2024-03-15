@@ -23,18 +23,24 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Running analyzer')))
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
-    const { mainTraceLogList, instructionsMap, analyzeSummary, structLogs, disassembledBytecodes, contractBaseData } = yield* call(
-      runAnalyzer,
-    )
+    const {
+      mainTraceLogList,
+      instructionsMap,
+      analyzeSummary,
+      structLogs,
+      contractsDisassembledBytecodes,
+      contractsBaseData,
+      contractsSettings,
+    } = yield* call(runAnalyzer)
 
     yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
     yield* put(
-      contractsActions.updateContracts(Object.values(contractBaseData).map((contract) => ({ id: contract.address, changes: contract }))),
+      contractsActions.updateContracts(Object.values(contractsBaseData).map(({ address, ...changes }) => ({ id: address, changes }))),
     )
 
-    yield* put(bytecodesActions.loadBytecodes(disassembledBytecodes))
+    yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
 
     yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
     yield* put(

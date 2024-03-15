@@ -16,14 +16,14 @@ const selectEntities = createSelector([selectBytecodesState], (state) => bytecod
 const selectAllWithContractNames = createSelector([selectAll, contractsSelectors.selectEntities], (allBytecodes, contractNames) => {
   return allBytecodes.map((bytecode) => {
     const contract = contractNames[bytecode.address]
-    return { ...bytecode, contractName: contract?.contractName || bytecode.address }
+    return { ...bytecode, contractName: contract?.name || bytecode.address }
   })
 })
 
 const selectCurrentDissasembledBytecode = createSelector(
   [selectEntities, activeBlockSelectors.selectActiveBlock],
   (bytecodes, activeBlock) => {
-    return bytecodes[activeBlock?.address].bytecode || {}
+    return bytecodes[activeBlock?.address].disassembledBytecode || {}
   },
 )
 

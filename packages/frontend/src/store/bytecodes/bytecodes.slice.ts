@@ -1,10 +1,10 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TAnalyzerContractBytecodeOutput } from '@evm-debuger/types'
+import type { TContractDissasembledBytecode } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-export const bytecodesAdapter = createEntityAdapter<TAnalyzerContractBytecodeOutput>({
+export const bytecodesAdapter = createEntityAdapter<TContractDissasembledBytecode>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
   selectId: (entity) => entity.address,
 })

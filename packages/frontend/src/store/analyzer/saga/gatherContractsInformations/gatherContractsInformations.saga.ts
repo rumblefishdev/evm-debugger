@@ -22,7 +22,7 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
     const sanitizedContractAddresses = contractAddresses.map((address) => address.toLowerCase())
     const uniqueContractAddresses = [...new Set(sanitizedContractAddresses)]
 
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.initializeNewContracts, [uniqueContractAddresses])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.setEmptyContracts, [uniqueContractAddresses])
     yield* put(contractsActions.initializeContracts(uniqueContractAddresses))
 
     yield* put(

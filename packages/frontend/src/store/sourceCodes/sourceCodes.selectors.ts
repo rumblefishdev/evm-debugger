@@ -42,12 +42,12 @@ const selectIsSourceCodeAvailable = createSelector([selectCurrentSourceCode], (_
 
 const selectParsedToSourceFiles = createSelector([selectAllWithContractNames], (_sourceCode) => {
   return _sourceCode
-    .filter(({ contractName }) => contractName !== null)
+    .filter(({ name }) => name !== null)
     .map(mapSourceCode)
     .reduce(reduceToAddressSources, {})
 })
 const selectCurrentSourceFiles = createSelector([selectCurrentSourceCode, contractsSelectors.selectAll], (_sourceCode, _contractNames) => {
-  const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.contractName
+  const currentSourceName = _contractNames.find(({ address }) => address === _sourceCode?.address)?.name
   if (!currentSourceName) return []
   const parseSourceCodeResult = parseSourceCode(currentSourceName, _sourceCode?.sourceCode || '')
   const sourcesOrder = _sourceCode?.sourcesOrder

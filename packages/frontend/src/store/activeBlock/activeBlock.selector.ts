@@ -85,7 +85,7 @@ export const selectParsedActiveBlock = createSelector(
   [selectActiveBlockState, contractsSelectors.selectEntities],
   (activeBlock, contractNames) => {
     const contract = contractNames[activeBlock.address]
-    const contractNameString = contract?.contractName ?? null
+    const contractNameString = contract?.name ?? null
     return parseActiveBlock(activeBlock, contractNameString)
   },
 )

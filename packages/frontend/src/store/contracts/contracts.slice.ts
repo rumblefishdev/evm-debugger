@@ -1,11 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TAnalyzerContractBaseOutput } from '@evm-debuger/types'
+import type { TAnalyzerContractBaseData } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-export const contractsAdapter = createEntityAdapter<TAnalyzerContractBaseOutput>({
+export const contractsAdapter = createEntityAdapter<TAnalyzerContractBaseData>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
   selectId: (entity) => entity.address,
 })

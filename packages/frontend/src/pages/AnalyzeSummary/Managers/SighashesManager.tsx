@@ -36,7 +36,7 @@ export const SighashesManager = () => {
                 arrow
                 followCursor
               >
-                <StyledAddress>{contract.contractName || contract.address}</StyledAddress>
+                <StyledAddress>{contract.name || contract.address}</StyledAddress>
               </Tooltip>
               <StyledWrapper>
                 {filteredSighashes.map((sighash) => (
