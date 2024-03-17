@@ -15,7 +15,7 @@ import { contractsActions } from '../../../contracts/contracts.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
-  return analyzer.analyze()
+  return analyzer.runFullAnalysis()
 }
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
@@ -26,14 +26,14 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     const {
       mainTraceLogList,
       instructionsMap,
-      analyzeSummary,
+      contractSighashes,
       structLogs,
       contractsDisassembledBytecodes,
       contractsBaseData,
       contractsSettings,
     } = yield* call(runAnalyzer)
 
-    yield* put(sighashActions.addSighashes(analyzeSummary.contractSighashesInfo))
+    yield* put(sighashActions.addSighashes(contractSighashes))
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
     yield* put(

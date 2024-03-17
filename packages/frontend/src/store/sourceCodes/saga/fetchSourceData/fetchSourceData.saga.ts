@@ -38,6 +38,7 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
       yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: sourceData.SourceCode, address: contractAddress }))
 
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceCode', sourceData.SourceCode])
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceFilesOrder', sourcesOrder])
     }
     if (sourceData.ContractName) {
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'name', sourceData.ContractName])

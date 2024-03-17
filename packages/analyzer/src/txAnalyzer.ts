@@ -40,6 +40,7 @@ import { createErrorDescription } from './resources/builtinErrors'
 import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfLogGroupType, checkOpcodeIfOfReturnGroupType } from './helpers/structLogTypeGuards'
 import { DataLoader } from './utils/dataLoader'
 import { EVMMachine } from './utils/evmMachine'
+import { parseSourceCode } from './helpers/parseSourceCodes'
 
 export class TxAnalyzer {
   private readonly storageHandler = new StorageHandler()
@@ -212,9 +213,11 @@ export class TxAnalyzer {
     }
   }
 
-  private getContractSighashList(mainTraceLogList: TTraceLog[]) {
+  private getContractSighashList() {
+    const traceLogs = this.dataLoader.analyzerTraceLogs.get()
+
     const sighashStatues = new SigHashStatuses()
-    for (const traceLog of mainTraceLogList)
+    for (const traceLog of traceLogs)
       if (
         checkOpcodeIfOfCallGroupType(traceLog.op) &&
         traceLog.isContract &&
@@ -240,7 +243,9 @@ export class TxAnalyzer {
     return sighashStatues.sighashStatusList
   }
 
-  public getContractsInstructions(traceLogs: TTraceLog[]): TStepInstrctionsMap {
+  public getContractsInstructions(): TStepInstrctionsMap {
+    const traceLogs = this.dataLoader.analyzerTraceLogs.get()
+
     const dataToDecode: TSourceMapConverstionPayload[] = []
     const listOfContractsAddresses = this.dataLoader.getAddressesList()
 
@@ -314,20 +319,7 @@ export class TxAnalyzer {
     }
   }
 
-  public getContractAddressesInTransaction() {
-    if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
-
-    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.inputTransactionData.get())
-    this.stackCounter.visitDepth(0, storageAddress)
-
-    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.inputStructlogs.get())
-    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
-    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
-
-    return this.getTraceLogsContractAddresses(traceLogsList)
-  }
-
-  public analyze() {
+  private processTransactionStructLogs() {
     if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
 
     this.fragmentReader = new FragmentReader()
@@ -335,8 +327,6 @@ export class TxAnalyzer {
 
     const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.inputTransactionData.get())
     this.stackCounter.visitDepth(0, storageAddress)
-
-    this.disassembleTransactionBytecodes()
 
     const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.inputStructlogs.get())
     const functionBlockEndStructLogs = getFunctionBlockEndStructLogs(this.dataLoader.inputStructlogs.get())
@@ -355,22 +345,72 @@ export class TxAnalyzer {
     const traceLogsWithLogsData = this.extendWithLogsData(traceLogsWithStorageData)
     const traceLogsWithBlockNumber = this.extendWithBlockNumber(traceLogsWithLogsData)
 
-    const contractAddresses = this.getTraceLogsContractAddresses(traceLogsWithBlockNumber)
-    const contractSighashesInfo = this.getContractSighashList(traceLogsWithBlockNumber)
+    this.dataLoader.analyzerTraceLogs.set(traceLogsWithBlockNumber)
+  }
 
-    const instructionsMap = this.getContractsInstructions(traceLogsWithBlockNumber)
+  public getContractAddressesInTransaction() {
+    if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
 
-    const { contractsDisassembledBytecodes, contractsBaseData, contractsSettings } = this.dataLoader.getAnalyzerAnalysisOutput()
+    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.inputTransactionData.get())
+    this.stackCounter.visitDepth(0, storageAddress)
+
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.inputStructlogs.get())
+    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
+    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
+
+    return this.getTraceLogsContractAddresses(traceLogsList)
+  }
+
+  private createSourceFiles() {
+    const contractsAddresses = this.dataLoader.getAddressesList()
+
+    for (const address of contractsAddresses) {
+      const contractName = this.dataLoader.inputContractData.get(address, 'name')
+      const contractSourceCode = this.dataLoader.inputContractData.get(address, 'sourceCode')
+      const contractYulSource = this.dataLoader.inputContractData.get(address, 'yulSource')
+      const contractSourceOrder = this.dataLoader.inputContractData.get(address, 'sourceFilesOrder')
+
+      if (!contractSourceCode || !contractSourceOrder) continue
+
+      const sourceFiles = parseSourceCode(contractName, contractSourceCode, contractYulSource)
+
+      const contractSourceOrderValues = Object.values(contractSourceOrder)
+
+      if (contractYulSource) contractSourceOrderValues.push('utility.yul')
+
+      const sourceFilesInOrder = Object.values(contractSourceOrderValues).map((sourceFileName) => {
+        return sourceFiles[sourceFileName]
+      })
+
+      this.dataLoader.analyzerContractData.set(address, 'sourceFiles', sourceFilesInOrder)
+    }
+  }
+
+  private createContractBaseData() {}
+
+  private createContractSettings() {}
+
+  public runFullAnalysis() {
+    this.createSourceFiles()
+
+    this.processTransactionStructLogs()
+    this.disassembleTransactionBytecodes()
+
+    this.getContractSighashList()
+    this.getContractsInstructions()
+
+    const { contractsDisassembledBytecodes, contractsBaseData, contractsSettings, structLogs, transactionInfo, traceLogs } =
+      this.dataLoader.getAnalyzerAnalysisOutput()
 
     return {
-      transactionInfo: this.dataLoader.analyzerTransactionInfo.get(),
-      structLogs: this.dataLoader.analyzerStructLogs.get(),
-      mainTraceLogList: traceLogsWithBlockNumber,
-      instructionsMap,
+      transactionInfo,
+      traceLogs,
+      structLogs,
+      // instructionsMap,
       contractsSettings,
+      // contractSighashes,
       contractsDisassembledBytecodes,
       contractsBaseData,
-      analyzeSummary: { contractSighashesInfo, contractAddresses },
     }
   }
 }

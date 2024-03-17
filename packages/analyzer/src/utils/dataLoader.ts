@@ -26,6 +26,12 @@ export class DataLoader {
     }, {} as Record<string, TInputContractData[T]>)
   }
 
+  public inputContractData = {
+    set: this.setInputContractData,
+    getAll: this.getAllInputContractData,
+    get: this.getInputContractData,
+  }
+
   private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
     this.analyzerData.contracts[contractAddress][key] = value
   }
@@ -39,6 +45,23 @@ export class DataLoader {
       accumulator[contractAddress] = this.getAnalyzerContractData(contractAddress, key)
       return accumulator
     }, {} as Record<string, TAnalyzerContractData[T]>)
+  }
+
+  public analyzerContractData = {
+    set: this.setAnalyzerContractData.bind(this),
+    getAll: this.getAllAnalayzerContractsData.bind(this),
+    get: this.getAnalyzerContractData.bind(this),
+  }
+
+  constructor() {
+    this.inputData = { contracts: {} } as TDataLoaderInputData
+    this.analyzerData = { contracts: {} } as TDataLoaderAnalyzerData
+
+    this.inputContractData = {
+      set: this.setInputContractData.bind(this),
+      getAll: this.getAllInputContractData.bind(this),
+      get: this.getInputContractData.bind(this),
+    }
   }
 
   public inputTransactionData = {
@@ -61,16 +84,17 @@ export class DataLoader {
     get: () => this.analyzerData.transactionInfo,
   }
 
-  public inputContractData = {
-    set: this.setInputContractData,
-    getAll: this.getAllInputContractData,
-    get: this.getInputContractData,
+  public analyzerTraceLogs = {
+    set: (traceLogs: TDataLoaderAnalyzerData['traceLogs']) => (this.analyzerData.traceLogs = traceLogs),
+    get: () => this.analyzerData.traceLogs,
   }
 
-  public analyzerContractData = {
-    set: this.setAnalyzerContractData,
-    getAll: this.getAllAnalayzerContractsData,
-    get: this.getAnalyzerContractData,
+  public getAllInputContractsData() {
+    return this.inputData.contracts
+  }
+
+  public getAllAnalyzerContractsData() {
+    return this.analyzerData.contracts
   }
 
   public setEmptyContracts(contractAddresses: string[]) {
@@ -91,6 +115,7 @@ export class DataLoader {
   public getAnalyzerAnalysisOutput(): TAnalyzerAnalysisOutput {
     return {
       transactionInfo: this.analyzerTransactionInfo.get(),
+      traceLogs: this.analyzerTraceLogs.get(),
       structLogs: this.analyzerStructLogs.get(),
       contractsSettings: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
         (accumulator, { address, contractSettings }) => {

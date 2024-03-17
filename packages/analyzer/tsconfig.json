@@ -6,7 +6,8 @@
     "rootDir": "./",
     "outDir": "dist",
     "sourceMap": true,
-    "composite": true
+    "composite": true,
+    "strictBindCallApply": true
   },
   "include": ["src/**/*", "scripts/scriptHelper.ts"],
   "exclude": ["./hardhat.config.ts", "./scripts/script.ts"],

@@ -1,4 +1,5 @@
 import type { TIndexedStructLog } from './structLogs'
+import type { TTraceLog } from './traceLogs'
 import type { TAbi, TContractDissasembledBytecode, TDisassembledBytecode, TTransactionInfo } from './types'
 import type { TYulBlock } from './yulSources'
 
@@ -40,7 +41,7 @@ export type TAnalyzerContractData = {
   contractSettings?: TAnalyzerContractSettings
   disassembledBytecode?: TDisassembledBytecode
   disassembledEtherscanBytecode?: TDisassembledBytecode
-  sourceFiles?: Record<number, TSourceFile>
+  sourceFiles?: TSourceFile[]
 }
 
 export type TDataLoaderInputData = {
@@ -51,12 +52,14 @@ export type TDataLoaderInputData = {
 export type TDataLoaderAnalyzerData = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
+  traceLogs: TTraceLog[]
   contracts: Record<string, TAnalyzerContractData>
 }
 
 export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
+  traceLogs: TTraceLog[]
   contractsSettings: Record<string, TAnalyzerContractSettings>
   contractsBaseData: Record<string, TAnalyzerContractBaseData>
   contractsDisassembledBytecodes: Record<string, TContractDissasembledBytecode>

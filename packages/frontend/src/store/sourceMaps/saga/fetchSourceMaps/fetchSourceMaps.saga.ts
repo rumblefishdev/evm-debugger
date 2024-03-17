@@ -24,6 +24,11 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
 
     if (sourceMap.deployedBytecode.ast) {
       yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.deployedBytecode.ast, address: contractAddress }))
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+        contractAddress,
+        'yulTree',
+        sourceMap.deployedBytecode.ast,
+      ])
     }
 
     if (sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0) {
