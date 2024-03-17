@@ -24,16 +24,17 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.RUNNING_ANALYZER }))
 
     const {
-      mainTraceLogList,
-      instructionsMap,
-      contractSighashes,
+      traceLogs,
+      transactionInfo,
+      // instructionsMap,
+      // contractSighashes,
       structLogs,
       contractsDisassembledBytecodes,
       contractsBaseData,
       contractsSettings,
     } = yield* call(runAnalyzer)
 
-    yield* put(sighashActions.addSighashes(contractSighashes))
+    // yield* put(sighashActions.addSighashes(contractSighashes))
     yield* put(structLogsActions.loadStructLogs(structLogs))
 
     yield* put(
@@ -42,28 +43,28 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
 
     yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
 
-    yield* put(traceLogsActions.addTraceLogs(mainTraceLogList))
+    yield* put(traceLogsActions.addTraceLogs(traceLogs))
     yield* put(
       activeBlockActions.loadActiveBlock({
-        ...mainTraceLogList[0],
-        id: createCallIdentifier(mainTraceLogList[0].stackTrace, mainTraceLogList[0].op),
+        ...traceLogs[0],
+        id: createCallIdentifier(traceLogs[0].stackTrace, traceLogs[0].op),
       }),
     )
 
-    yield* put(
-      instructionsActions.addInstructions(
-        Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
-      ),
-    )
+    // yield* put(
+    //   instructionsActions.addInstructions(
+    //     Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
+    //   ),
+    // )
 
-    yield* put(
-      activeLineActions.setStructlogsPerActiveLine(
-        Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
-          accumulator[address] = structlogsPerStartLine
-          return accumulator
-        }, {}),
-      ),
-    )
+    // yield* put(
+    //   activeLineActions.setStructlogsPerActiveLine(
+    //     Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
+    //       accumulator[address] = structlogsPerStartLine
+    //       return accumulator
+    //     }, {}),
+    //   ),
+    // )
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
     yield* put(

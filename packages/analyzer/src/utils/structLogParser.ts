@@ -10,7 +10,7 @@ import {
 
 import type { StackCounter } from './stackCounter'
 
-export class StructLogParser {
+export class OpCodeConverter {
   constructor(private readonly structLogs: TIndexedStructLog[], private readonly stackCounter: StackCounter) {}
 
   private createStackTrace(depth: number, address: string): number[] {

@@ -16,7 +16,7 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
     )
 
     const analyzer = yield* call(getAnalyzerInstance)
-    const contractAddresses = yield* apply(analyzer, analyzer.getContractAddressesInTransaction, [])
+    const contractAddresses = yield* apply(analyzer, analyzer.getTraceLogsContractAddresses, [])
 
     // TODO: move sanitization to analyzer
     const sanitizedContractAddresses = contractAddresses.map((address) => address.toLowerCase())
