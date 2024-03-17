@@ -12,6 +12,7 @@ import { activeLineActions } from '../../../activeLine/activeLine.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { contractsActions } from '../../../contracts/contracts.slice'
+import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -26,8 +27,8 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     const {
       traceLogs,
       transactionInfo,
-      // instructionsMap,
-      // contractSighashes,
+      contractsInstructions,
+      contractsStructLogsPerLine,
       structLogs,
       contractsDisassembledBytecodes,
       contractsBaseData,
@@ -51,20 +52,10 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       }),
     )
 
-    // yield* put(
-    //   instructionsActions.addInstructions(
-    //     Object.entries(instructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
-    //   ),
-    // )
+    yield* put(transactionInfoActions.setTransactionInfo(transactionInfo))
 
-    // yield* put(
-    //   activeLineActions.setStructlogsPerActiveLine(
-    //     Object.entries(instructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
-    //       accumulator[address] = structlogsPerStartLine
-    //       return accumulator
-    //     }, {}),
-    //   ),
-    // )
+    yield* put(instructionsActions.addInstructions(contractsInstructions))
+    yield* put(activeLineActions.setStructlogsPerActiveLine(contractsStructLogsPerLine))
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
     yield* put(

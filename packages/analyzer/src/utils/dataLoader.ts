@@ -117,9 +117,23 @@ export class DataLoader {
       transactionInfo: this.analyzerTransactionInfo.get(),
       traceLogs: this.analyzerTraceLogs.get(),
       structLogs: this.analyzerStructLogs.get(),
+      contractsStructLogsPerLine: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsStructLogsPerLine']>(
+        (accumulator, { address, structlogsPerStartLine }) => {
+          accumulator[address] = { structlogsPerStartLine, address }
+          return accumulator
+        },
+        {},
+      ),
       contractsSettings: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
         (accumulator, { address, contractSettings }) => {
           accumulator[address] = { address, ...contractSettings }
+          return accumulator
+        },
+        {},
+      ),
+      contractsInstructions: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsInstructions']>(
+        (accumulator, { address, instructions }) => {
+          accumulator[address] = { instructions, address }
           return accumulator
         },
         {},

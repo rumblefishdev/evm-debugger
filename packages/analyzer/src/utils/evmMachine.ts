@@ -26,7 +26,7 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
 
     if (pushLength) {
       const pushValue = bytecodeAsBuffer.subarray(programCounter + 1, programCounter + 1 + pushLength).toString('hex')
-      dissasembledBytecode[index] = {
+      dissasembledBytecode[programCounter] = {
         value: withPushValue && pushValue,
         pc: programCounter,
         opcode,
@@ -34,7 +34,7 @@ export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean):
       }
       programCounter += pushLength
     } else {
-      dissasembledBytecode[index] = {
+      dissasembledBytecode[programCounter] = {
         pc: programCounter,
         opcode,
         index,

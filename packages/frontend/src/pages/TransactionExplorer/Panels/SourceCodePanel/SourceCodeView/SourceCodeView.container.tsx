@@ -20,6 +20,8 @@ export const SourceCodeViewContainer: React.FC = () => {
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
 
+  console.log('lineRowsAvailableForSelections', lineRowsAvailableForSelections)
+
   const structlogsPerLine = useSelector(activeLineSelectors.selectStructlogsPerLineForActiveBlock)
   const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
   const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)

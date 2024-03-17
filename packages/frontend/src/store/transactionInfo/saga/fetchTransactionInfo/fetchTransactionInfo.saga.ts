@@ -53,7 +53,6 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     const analyzer = yield* call(getAnalyzerInstance)
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputTransactionData.set, [formattedTransactionInfo])
 
-    yield* put(transactionInfoActions.setTransactionInfo(formattedTransactionInfo))
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )

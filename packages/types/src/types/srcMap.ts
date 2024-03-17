@@ -145,8 +145,7 @@ export type TParsedSourceCodesOutput = Record<string, TParseSourceCodeOutput>
 export type TSourceMapConverstionPayload = {
   contractSourceMap: TInputContractData['sourceMap']
   contractSourceFiles: TAnalyzerContractData['sourceFiles']
-  contractName: TInputContractData['name']
-  contractBytecode: TInputContractData['bytecode']
+  contractName: string
   contractAddress: TInputContractData['address']
 }
 
