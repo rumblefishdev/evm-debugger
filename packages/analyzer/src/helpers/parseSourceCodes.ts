@@ -1,5 +1,3 @@
-import path from 'path'
-
 import type { TInputSources, TSourceCodeObject, TSourceFile } from '@evm-debuger/types'
 
 const isSingleFile = (sourceCode: string) => sourceCode.match(/"content":/g) === null

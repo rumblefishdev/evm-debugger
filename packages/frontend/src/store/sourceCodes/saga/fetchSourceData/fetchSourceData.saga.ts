@@ -1,5 +1,5 @@
 import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
-import type { TEtherscanContractSourceCodeResult } from '@evm-debuger/types'
+import type { TEtherscanContractSourceCodeResult, TSourceData } from '@evm-debuger/types'
 
 import { traceStorageBucket } from '../../../../config'
 import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.slice'
@@ -24,24 +24,40 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
   const analyzer = yield* call(getAnalyzerInstance)
 
   try {
-    const sourceData = yield* call(fetchSourceData, sourceDataPath)
+    const etherscanSourceData = yield* call(fetchSourceData, sourceDataPath)
     const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
-    if (sourceData.ABI) {
-      yield* put(abisActions.addAbi({ address: contractAddress, abi: sourceData.ABI }))
+    if (etherscanSourceData.ABI) {
+      yield* put(abisActions.addAbi({ address: contractAddress, abi: etherscanSourceData.ABI }))
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
         contractAddress,
         'applicationBinaryInterface',
-        sourceData.ABI,
+        etherscanSourceData.ABI,
       ])
     }
-    if (sourceData.SourceCode) {
-      yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: sourceData.SourceCode, address: contractAddress }))
+    if (etherscanSourceData.SourceCode) {
+      yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: etherscanSourceData.SourceCode, address: contractAddress }))
 
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceCode', sourceData.SourceCode])
+      const sourceData: TSourceData = {
+        swarmSource: etherscanSourceData.SwarmSource,
+        runs: etherscanSourceData.Runs,
+        proxy: etherscanSourceData.Proxy,
+        optimizationUsed: etherscanSourceData.OptimizationUsed,
+        licenseType: etherscanSourceData.LicenseType,
+        library: etherscanSourceData.Library,
+        implementation: etherscanSourceData.Implementation,
+        evmVersion: etherscanSourceData.EVMVersion,
+        contractName: etherscanSourceData.ContractName,
+        constructorArguments: etherscanSourceData.ConstructorArguments,
+        compilerVersion: etherscanSourceData.CompilerVersion,
+      }
+
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+        contractAddress,
+        'sourceCode',
+        etherscanSourceData.SourceCode,
+      ])
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceFilesOrder', sourcesOrder])
-    }
-    if (sourceData.ContractName) {
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'name', sourceData.ContractName])
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceData', sourceData])
     }
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source data for ${contractAddress} fetched successfully`)))

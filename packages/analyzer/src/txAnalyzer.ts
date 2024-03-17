@@ -10,6 +10,8 @@ import type {
   TIndexedStructLog,
   TTraceLog,
   TTraceReturnLog,
+  TAnalyzerContractBaseData,
+  TAnalyzerContractSettings,
 } from '@evm-debuger/types'
 import { toBigInt } from 'ethers'
 
@@ -348,29 +350,16 @@ export class TxAnalyzer {
     this.dataLoader.analyzerTraceLogs.set(traceLogsWithBlockNumber)
   }
 
-  public getContractAddressesInTransaction() {
-    if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
-
-    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.inputTransactionData.get())
-    this.stackCounter.visitDepth(0, storageAddress)
-
-    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.inputStructlogs.get())
-    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
-    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
-
-    return this.getTraceLogsContractAddresses(traceLogsList)
-  }
-
   private createSourceFiles() {
     const contractsAddresses = this.dataLoader.getAddressesList()
 
     for (const address of contractsAddresses) {
-      const contractName = this.dataLoader.inputContractData.get(address, 'name')
+      const contractName = this.dataLoader.inputContractData.get(address, 'sourceData')?.contractName
       const contractSourceCode = this.dataLoader.inputContractData.get(address, 'sourceCode')
       const contractYulSource = this.dataLoader.inputContractData.get(address, 'yulSource')
       const contractSourceOrder = this.dataLoader.inputContractData.get(address, 'sourceFilesOrder')
 
-      if (!contractSourceCode || !contractSourceOrder) continue
+      if (!contractSourceCode || !contractSourceOrder || !contractName) continue
 
       const sourceFiles = parseSourceCode(contractName, contractSourceCode, contractYulSource)
 
@@ -386,15 +375,44 @@ export class TxAnalyzer {
     }
   }
 
-  private createContractBaseData() {}
+  private createContractBaseData() {
+    const contractsAddresses = this.dataLoader.getAddressesList()
 
-  private createContractSettings() {}
+    for (const address of contractsAddresses) {
+      const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
+      const contractBaseData: TAnalyzerContractBaseData = {
+        name: sourceData.contractName,
+        address,
+      }
+      this.dataLoader.analyzerContractData.set(address, 'contractBaseData', contractBaseData)
+    }
+  }
+
+  private createContractSettings() {
+    const contractsAddresses = this.dataLoader.getAddressesList()
+
+    for (const address of contractsAddresses) {
+      const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
+      const contractSettings: TAnalyzerContractSettings = {
+        optimization: { runs: Number(sourceData.runs), isEnabled: sourceData.optimizationUsed === '1' },
+        license: sourceData.licenseType,
+        evmVersion: sourceData.evmVersion,
+        compilerVersion: sourceData.compilerVersion,
+        address,
+      }
+
+      this.dataLoader.analyzerContractData.set(address, 'contractSettings', contractSettings)
+    }
+  }
 
   public runFullAnalysis() {
+    this.createContractBaseData()
+    this.createContractSettings()
     this.createSourceFiles()
 
-    this.processTransactionStructLogs()
     this.disassembleTransactionBytecodes()
+
+    this.processTransactionStructLogs()
 
     this.getContractSighashList()
     this.getContractsInstructions()
@@ -412,5 +430,18 @@ export class TxAnalyzer {
       contractsDisassembledBytecodes,
       contractsBaseData,
     }
+  }
+
+  public getContractAddressesInTransaction() {
+    if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
+
+    const storageAddress = getStorageAddressFromTransactionInfo(this.dataLoader.inputTransactionData.get())
+    this.stackCounter.visitDepth(0, storageAddress)
+
+    const functionBlockStartStructLogs = getFunctionBlockStartStructLogs(this.dataLoader.inputStructlogs.get())
+    const traceLogs = this.convertToTraceLog(functionBlockStartStructLogs)
+    const traceLogsList = this.parseAndAddRootTraceLog(traceLogs)
+
+    return this.getTraceLogsContractAddresses(traceLogsList)
   }
 }

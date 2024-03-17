@@ -3,8 +3,8 @@ import type { JsonFragment } from '@ethersproject/abi'
 
 import type { TRawStructLog, TIndexedStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { SourceFileType, TParseSourceCodeOutput, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
-import type { BaseOpcodesHex, TOpcodesNames } from './opcodes/opcodesHex'
+import type { SourceFileType, TSourceMap } from './srcMap'
+import type { TOpcodesNames } from './opcodes/opcodesHex'
 
 export type TStorage = Record<string, string>
 

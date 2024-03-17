@@ -3,9 +3,22 @@ import type { TTraceLog } from './traceLogs'
 import type { TAbi, TContractDissasembledBytecode, TDisassembledBytecode, TTransactionInfo } from './types'
 import type { TYulBlock } from './yulSources'
 
+export type TSourceData = {
+  contractName?: string
+  compilerVersion?: string
+  optimizationUsed?: string
+  runs?: string
+  constructorArguments?: string
+  evmVersion?: string
+  library?: string
+  licenseType?: string
+  proxy?: string
+  implementation?: string
+  swarmSource?: string
+}
+
 export type TInputContractData = {
   address: string
-  name?: string
   sourceMap?: string
   bytecode?: string
   etherscanBytecode?: string
@@ -14,6 +27,7 @@ export type TInputContractData = {
   yulSource?: string
   yulTree?: TYulBlock
   sourceFilesOrder?: Record<number, string>
+  sourceData?: TSourceData
 }
 
 export type TAnalyzerContractBaseData = {
