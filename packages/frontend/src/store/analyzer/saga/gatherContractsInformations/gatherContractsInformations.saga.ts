@@ -4,6 +4,7 @@ import { contractsActions } from '../../../contracts/contracts.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
+import { contractBaseActions } from '../../../contractBase/contractBase.slice'
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   try {
@@ -23,7 +24,8 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
     const uniqueContractAddresses = [...new Set(sanitizedContractAddresses)]
 
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.setEmptyContracts, [uniqueContractAddresses])
-    yield* put(contractsActions.initializeContracts(uniqueContractAddresses))
+    // yield* put(contractsActions.initializeContracts(uniqueContractAddresses))
+    yield* put(contractBaseActions.initializeContractsBase(uniqueContractAddresses))
 
     yield* put(
       analyzerActions.updateStage({

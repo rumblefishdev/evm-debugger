@@ -14,6 +14,7 @@ import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { contractsActions } from '../../../contracts/contracts.slice'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
+import { contractBaseActions } from '../../../contractBase/contractBase.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -38,10 +39,11 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
 
     // yield* put(sighashActions.addSighashes(contractSighashes))
     yield* put(structLogsActions.loadStructLogs(structLogs))
+    yield* put(contractBaseActions.loadContractsBaseData(contractsBaseData))
 
-    yield* put(
-      contractsActions.updateContracts(Object.values(contractsBaseData).map(({ address, ...changes }) => ({ id: address, changes }))),
-    )
+    // yield* put(
+    //   contractsActions.updateContracts(Object.values(contractsBaseData).map(({ address, ...changes }) => ({ id: address, changes }))),
+    // )
 
     yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
 
