@@ -89,6 +89,11 @@ export type TContractStructlogsPerStartLine = {
   structlogsPerStartLine: TStructlogsPerStartLine
 }
 
+export type TContractSourceFiles = {
+  address: string
+  sourceFiles: TSourceFile[]
+}
+
 export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
@@ -98,4 +103,5 @@ export type TAnalyzerAnalysisOutput = {
   contractsDisassembledBytecodes: Record<string, TContractDissasembledBytecode>
   contractsInstructions: Record<string, TContractInstructions>
   contractsStructLogsPerLine: Record<string, TContractStructlogsPerStartLine>
+  contractsSourceFiles: Record<string, TContractSourceFiles>
 }

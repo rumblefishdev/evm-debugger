@@ -19,6 +19,7 @@ import { analyzerReducer } from './analyzer/analyzer.slice'
 import { abisReducer } from './abis/abis.slice'
 import { activeLineReducer } from './activeLine/activeLine.slice'
 import { yulNodesReducer } from './yulNodes/yulNodes.slice'
+import { sourceFilesReducer } from './sourceFiles/sourceFiles.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
@@ -39,4 +40,5 @@ export const rootReducer = combineReducers({
   [StoreKeys.ABIS]: abisReducer,
   [StoreKeys.ACTIVE_LINE]: activeLineReducer,
   [StoreKeys.YUL_NODES]: yulNodesReducer,
+  [StoreKeys.SOURCE_FILES]: sourceFilesReducer,
 })

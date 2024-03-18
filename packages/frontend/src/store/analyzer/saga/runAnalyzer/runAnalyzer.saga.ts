@@ -13,6 +13,7 @@ import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
 import { contractsActions } from '../../../contracts/contracts.slice'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
+import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -32,7 +33,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       structLogs,
       contractsDisassembledBytecodes,
       contractsBaseData,
-      contractsSettings,
+      contractsSourceFiles,
     } = yield* call(runAnalyzer)
 
     // yield* put(sighashActions.addSighashes(contractSighashes))
@@ -53,6 +54,8 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     )
 
     yield* put(transactionInfoActions.setTransactionInfo(transactionInfo))
+
+    yield* put(sourceFilesActions.loadContractsSourceFiles(contractsSourceFiles))
 
     yield* put(instructionsActions.addInstructions(contractsInstructions))
     yield* put(activeLineActions.setStructlogsPerActiveLine(contractsStructLogsPerLine))

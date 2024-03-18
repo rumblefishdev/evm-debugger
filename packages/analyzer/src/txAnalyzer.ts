@@ -92,11 +92,7 @@ export class TxAnalyzer {
 
     this.sourceLineParser.createContractsInstructions()
 
-    const payload = this.dataLoader.getAnalyzerAnalysisOutput()
-
-    console.log('Analyzer finished', payload)
-
-    return payload
+    return this.dataLoader.getAnalyzerAnalysisOutput()
   }
 
   public getTraceLogsContractAddresses(): string[] {

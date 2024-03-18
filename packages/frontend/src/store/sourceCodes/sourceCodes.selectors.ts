@@ -7,7 +7,6 @@ import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { parseSourceCode } from '../../helpers/sourceCodeParser'
 
 import { sourceCodesAdapter } from './sourceCodes.slice'
-import type { TSourceCodes } from './sourceCodes.types'
 import { mapSourceCode, reduceToAddressSources } from './sourceCodes.utiils'
 
 const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CODES)], (state) => state)
@@ -15,17 +14,6 @@ const selectSourceCodesState = createSelector([selectReducer(StoreKeys.SOURCE_CO
 const selectEntities = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectEntities(state))
 
 const selectAll = createSelector([selectSourceCodesState], (state) => sourceCodesAdapter.getSelectors().selectAll(state))
-
-const selectGroupedByAddress = createSelector([selectAll], (sourceCodes) => {
-  return sourceCodes.reduce((accumulator: Record<string, TSourceCodes>, sourceCode) => {
-    accumulator[sourceCode.address] = sourceCode
-    return accumulator
-  }, {})
-})
-
-const selectByAddress = createSelector([selectSourceCodesState, (_: unknown, address: string) => address], (state, address) =>
-  sourceCodesAdapter.getSelectors().selectById(state, address),
-)
 
 const selectAllWithContractNames = createSelector([selectEntities, contractsSelectors.selectAll], (sourceCodeEntities, contractNames) => {
   return contractNames.map((contractName) => {
@@ -68,10 +56,8 @@ export const sourceCodesSelectors = {
   selectParsedToSourceFiles,
   selectIsSourceCodeAvailable,
   selectHasMultipleSourceFiles,
-  selectGroupedByAddress,
   selectCurrentSourceFiles,
   selectCurrentSourceCode,
-  selectByAddress,
   selectAllWithContractNames,
   selectAll,
 }

@@ -124,6 +124,13 @@ export class DataLoader {
         },
         {},
       ),
+      contractsSourceFiles: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSourceFiles']>(
+        (accumulator, { address, sourceFiles }) => {
+          accumulator[address] = { sourceFiles, address }
+          return accumulator
+        },
+        {},
+      ),
       contractsSettings: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
         (accumulator, { address, contractSettings }) => {
           accumulator[address] = { address, ...contractSettings }

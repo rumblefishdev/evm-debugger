@@ -72,9 +72,6 @@ const selectCurrentSelectedSourceLineContent = createSelector(
 const selectAvailableLinesForCurrentFile = createSelector(
   [sourceCodesSelectors.selectCurrentSourceFiles, activeSourceFileSelectors.selectActiveSourceFile, selectStructlogsPerLineForActiveBlock],
   (sourceFiles, fileId, structLogsPerLine) => {
-    console.log('sourceFiles', sourceFiles)
-    console.log('fileId', fileId)
-    console.log('structLogsPerLine', structLogsPerLine)
     const currentSourceFile = sourceFiles[fileId]
     if (!currentSourceFile) return []
 
