@@ -5,6 +5,8 @@ import type {
   TRawStructLog,
   TInputContractData,
   TAnalyzerContractData,
+  TAnalyzerContractRawData,
+  TAnalyzerContractsRawData,
 } from '@evm-debuger/types'
 
 export class DataLoader {
@@ -131,13 +133,6 @@ export class DataLoader {
         },
         {},
       ),
-      contractsSettings: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsSettings']>(
-        (accumulator, { address, contractSettings }) => {
-          accumulator[address] = { address, ...contractSettings }
-          return accumulator
-        },
-        {},
-      ),
       contractsInstructions: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsInstructions']>(
         (accumulator, { address, instructions }) => {
           accumulator[address] = { instructions, address }
@@ -153,7 +148,7 @@ export class DataLoader {
       }, {}),
       contractsBaseData: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(
         (accumulator, { address, contractBaseData }) => {
-          accumulator[address] = { ...contractBaseData, address }
+          accumulator[address] = contractBaseData
           return accumulator
         },
         {},

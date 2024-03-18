@@ -1,4 +1,4 @@
-import type { TAnalyzerContractBaseData, TAnalyzerContractSettings } from '@evm-debuger/types'
+import type { TAnalyzerContractBaseData, TAnalyzerContractsRawData } from '@evm-debuger/types'
 
 import { DataLoader } from './utils/dataLoader'
 import { EVMMachine } from './utils/evmMachine'
@@ -57,33 +57,19 @@ export class TxAnalyzer {
     for (const address of contractsAddresses) {
       const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
       const contractBaseData: TAnalyzerContractBaseData = {
+        optimization: { runs: Number(sourceData.runs), isEnabled: sourceData.optimizationUsed === '1' },
         name: sourceData.contractName,
+        license: sourceData.licenseType,
+        evmVersion: sourceData.evmVersion,
+        compilerVersion: sourceData.compilerVersion,
         address,
       }
       this.dataLoader.analyzerContractData.set(address, 'contractBaseData', contractBaseData)
     }
   }
 
-  private createContractSettings() {
-    const contractsAddresses = this.dataLoader.getAddressesList()
-
-    for (const address of contractsAddresses) {
-      const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
-      const contractSettings: TAnalyzerContractSettings = {
-        optimization: { runs: Number(sourceData.runs), isEnabled: sourceData.optimizationUsed === '1' },
-        license: sourceData.licenseType,
-        evmVersion: sourceData.evmVersion,
-        compilerVersion: sourceData.compilerVersion,
-        address,
-      }
-
-      this.dataLoader.analyzerContractData.set(address, 'contractSettings', contractSettings)
-    }
-  }
-
   public runFullAnalysis() {
     this.createContractBaseData()
-    this.createContractSettings()
     this.createSourceFiles()
 
     this.disassembleTransactionBytecodes()
@@ -93,6 +79,28 @@ export class TxAnalyzer {
     this.sourceLineParser.createContractsInstructions()
 
     return this.dataLoader.getAnalyzerAnalysisOutput()
+  }
+
+  public getContractsRawData(): TAnalyzerContractsRawData {
+    const contractAddresses = this.dataLoader.getAddressesList()
+    const contractsRawData: TAnalyzerContractsRawData = {}
+
+    for (const address of contractAddresses) {
+      const applicationBinaryInterface = this.dataLoader.inputContractData.get(address, 'applicationBinaryInterface')
+      const sourceMap = this.dataLoader.inputContractData.get(address, 'sourceMap')
+      const bytecode = this.dataLoader.inputContractData.get(address, 'bytecode')
+      const etherscanBytecode = this.dataLoader.inputContractData.get(address, 'etherscanBytecode')
+
+      contractsRawData[address] = {
+        sourceMap,
+        etherscanBytecode,
+        bytecode,
+        applicationBinaryInterface,
+        address,
+      }
+    }
+
+    return contractsRawData
   }
 
   public getTraceLogsContractAddresses(): string[] {

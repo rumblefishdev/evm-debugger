@@ -40,10 +40,6 @@ export type TInputContractData = {
 export type TAnalyzerContractBaseData = {
   address: string
   name?: string
-}
-
-export type TAnalyzerContractSettings = {
-  address: string
   compilerVersion?: string
   optimization?: { isEnabled: boolean; runs: number }
   evmVersion?: string
@@ -59,7 +55,6 @@ export type TSourceFile = {
 export type TAnalyzerContractData = {
   address: string
   contractBaseData?: TAnalyzerContractBaseData
-  contractSettings?: TAnalyzerContractSettings
   disassembledBytecode?: TDisassembledBytecode
   disassembledEtherscanBytecode?: TDisassembledBytecode
   sourceFiles?: TSourceFile[]
@@ -98,10 +93,18 @@ export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
   traceLogs: TTraceLog[]
-  contractsSettings: Record<string, TAnalyzerContractSettings>
   contractsBaseData: Record<string, TAnalyzerContractBaseData>
   contractsDisassembledBytecodes: Record<string, TContractDissasembledBytecode>
   contractsInstructions: Record<string, TContractInstructions>
   contractsStructLogsPerLine: Record<string, TContractStructlogsPerStartLine>
   contractsSourceFiles: Record<string, TContractSourceFiles>
 }
+
+export type TAnalyzerContractRawData = {
+  address: string
+  sourceMap?: string
+  bytecode?: string
+  etherscanBytecode?: string
+  applicationBinaryInterface?: TAbi
+}
+export type TAnalyzerContractsRawData = Record<string, TAnalyzerContractRawData>
