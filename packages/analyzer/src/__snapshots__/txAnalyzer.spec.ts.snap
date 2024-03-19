@@ -2,59 +2,117 @@
 
 exports[`TxAnalyzer analyze transaction analyze transaction with contract deployment: createContract 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0x51e9027eabe500466caa0f4be882afc4446c4efe",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0x51e9027eabe500466caa0f4be882afc4446c4efe",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "implementation",
-              "type": "address",
-            },
-            {
-              "name": "chainId",
-              "type": "uint16",
-            },
-            {
-              "name": "wormhole",
-              "type": "address",
-            },
-            {
-              "name": "governanceChainId",
-              "type": "uint16",
-            },
-            {
-              "name": "governanceContract",
-              "type": "bytes32",
-            },
-            {
-              "name": "tokenImplementation",
-              "type": "address",
-            },
-            {
-              "name": "WETH",
-              "type": "address",
-            },
-          ],
-          "name": "setup",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x3bfa0638",
+  "contractsBaseData": {
+    "0x51e9027eabe500466caa0f4be882afc4446c4efe": {
+      "address": "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "BridgeSetup",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-    ],
+    },
+    "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7": {
+      "address": "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "BridgeImplementation",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
+      },
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x51e9027eabe500466caa0f4be882afc4446c4efe": {
+      "address": "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      "disassembledBytecode": undefined,
+    },
+    "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7": {
+      "address": "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x51e9027eabe500466caa0f4be882afc4446c4efe": {
+      "address": "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      "instructions": undefined,
+    },
+    "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7": {
+      "address": "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x51e9027eabe500466caa0f4be882afc4446c4efe": {
+      "address": "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      "sourceFiles": undefined,
+    },
+    "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7": {
+      "address": "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x51e9027eabe500466caa0f4be882afc4446c4efe": {
+      "address": "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7": {
+      "address": "0x6c4c12987303b2c94b2c76c612fc5f4d2f0360f7",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x3bfa0638": {
+      "addresses": Set {
+        "0x51e9027eabe500466caa0f4be882afc4446c4efe",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "implementation",
+            "type": "address",
+          },
+          {
+            "name": "chainId",
+            "type": "uint16",
+          },
+          {
+            "name": "wormhole",
+            "type": "address",
+          },
+          {
+            "name": "governanceChainId",
+            "type": "uint16",
+          },
+          {
+            "name": "governanceContract",
+            "type": "bytes32",
+          },
+          {
+            "name": "tokenImplementation",
+            "type": "address",
+          },
+          {
+            "name": "WETH",
+            "type": "address",
+          },
+        ],
+        "name": "setup",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x3bfa0638",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
       "blockNumber": "13217349",
@@ -391,220 +449,329 @@ exports[`TxAnalyzer analyze transaction analyze transaction with contract deploy
 
 exports[`TxAnalyzer analyze transaction analyze transaction with revert: revertedTransactionLogs 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
-      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
-      "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "deadline",
-              "type": "uint256",
-            },
-            {
-              "name": "data",
-              "type": "bytes[]",
-            },
-          ],
-          "name": "multicall",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bytes[]",
-            },
-          ],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0x5ae401dc",
+  "contractsBaseData": {
+    "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100": {
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "BlackDragonSociety",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "amountIn",
-              "type": "uint256",
-            },
-            {
-              "name": "amountOutMin",
-              "type": "uint256",
-            },
-            {
-              "name": "path",
-              "type": "address[]",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-          ],
-          "name": "swapExactTokensForTokens",
-          "outputs": [
-            {
-              "name": "amountOut",
-              "type": "uint256",
-            },
-          ],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0x472b43f3",
+    },
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "SwapRouter02",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [],
-          "name": "deposit",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0xd0e30db0",
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "WETH9",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-          "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "value",
-              "type": "uint256",
-            },
-          ],
-          "name": "transfer",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0xa9059cbb",
+    },
+    "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0": {
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "UniswapV2Pair",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "",
-              "type": "address",
-            },
-          ],
-          "name": "balanceOf",
-          "outputs": [
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x70a08231",
-      },
-      {
-        "addresses": Set {
-          "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [],
-          "name": "getReserves",
-          "outputs": [
-            {
-              "name": "_reserve0",
-              "type": "uint112",
-            },
-            {
-              "name": "_reserve1",
-              "type": "uint112",
-            },
-            {
-              "name": "_blockTimestampLast",
-              "type": "uint32",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x0902f1ac",
-      },
-      {
-        "addresses": Set {
-          "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "amount0Out",
-              "type": "uint256",
-            },
-            {
-              "name": "amount1Out",
-              "type": "uint256",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "data",
-              "type": "bytes",
-            },
-          ],
-          "name": "swap",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x022c0d9f",
-      },
-    ],
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100": {
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "disassembledBytecode": undefined,
+    },
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "disassembledBytecode": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "disassembledBytecode": undefined,
+    },
+    "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0": {
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100": {
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "instructions": undefined,
+    },
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "instructions": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "instructions": undefined,
+    },
+    "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0": {
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100": {
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "sourceFiles": undefined,
+    },
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "sourceFiles": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "sourceFiles": undefined,
+    },
+    "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0": {
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100": {
+      "address": "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45": {
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0": {
+      "address": "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x022c0d9f": {
+      "addresses": Set {
+        "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "amount0Out",
+            "type": "uint256",
+          },
+          {
+            "name": "amount1Out",
+            "type": "uint256",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "data",
+            "type": "bytes",
+          },
+        ],
+        "name": "swap",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x022c0d9f",
+    },
+    "0x0902f1ac": {
+      "addresses": Set {
+        "0xff72e5ca70a1ec9a9a3758a5638b3f299895add0",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [],
+        "name": "getReserves",
+        "outputs": [
+          {
+            "name": "_reserve0",
+            "type": "uint112",
+          },
+          {
+            "name": "_reserve1",
+            "type": "uint112",
+          },
+          {
+            "name": "_blockTimestampLast",
+            "type": "uint32",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x0902f1ac",
+    },
+    "0x472b43f3": {
+      "addresses": Set {
+        "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "amountIn",
+            "type": "uint256",
+          },
+          {
+            "name": "amountOutMin",
+            "type": "uint256",
+          },
+          {
+            "name": "path",
+            "type": "address[]",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+        ],
+        "name": "swapExactTokensForTokens",
+        "outputs": [
+          {
+            "name": "amountOut",
+            "type": "uint256",
+          },
+        ],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0x472b43f3",
+    },
+    "0x5ae401dc": {
+      "addresses": Set {
+        "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "deadline",
+            "type": "uint256",
+          },
+          {
+            "name": "data",
+            "type": "bytes[]",
+          },
+        ],
+        "name": "multicall",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bytes[]",
+          },
+        ],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0x5ae401dc",
+    },
+    "0x70a08231": {
+      "addresses": Set {
+        "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "",
+            "type": "address",
+          },
+        ],
+        "name": "balanceOf",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x70a08231",
+    },
+    "0xa9059cbb": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "0x1856bc58f5511269afe2ca1e89bf08cbdcd01100",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "value",
+            "type": "uint256",
+          },
+        ],
+        "name": "transfer",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0xa9059cbb",
+    },
+    "0xd0e30db0": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [],
+        "name": "deposit",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0xd0e30db0",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
       "blockNumber": "16147464",
@@ -2080,577 +2247,842 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert: reverte
 
 exports[`TxAnalyzer analyze transaction analyzes failed transaction with extended errors: failedTransactionLogs2 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
-      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
-      "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
-      "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-      "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
-      "0x55010472a93921a117aad9b055c141060c8d8022",
-      "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-      "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
-      "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "taker",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-              ],
-              "name": "takerBid",
-              "type": "tuple",
-            },
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "signer",
-                  "type": "address",
-                },
-                {
-                  "name": "collection",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256",
-                },
-                {
-                  "name": "strategy",
-                  "type": "address",
-                },
-                {
-                  "name": "currency",
-                  "type": "address",
-                },
-                {
-                  "name": "nonce",
-                  "type": "uint256",
-                },
-                {
-                  "name": "startTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "endTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-                {
-                  "name": "v",
-                  "type": "uint8",
-                },
-                {
-                  "name": "r",
-                  "type": "bytes32",
-                },
-                {
-                  "name": "s",
-                  "type": "bytes32",
-                },
-              ],
-              "name": "makerAsk",
-              "type": "tuple",
-            },
-          ],
-          "name": "matchAskWithTakerBidUsingETHAndWETH",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0xb4e4b296",
+  "contractsBaseData": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "RoyaltyFeeRegistry",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [],
-          "name": "deposit",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0xd0e30db0",
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "StrategyStandardSaleForFixedPriceV1B",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "currency",
-              "type": "address",
-            },
-          ],
-          "name": "isCurrencyWhitelisted",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x43b938c5",
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "LooksRareExchange",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "strategy",
-              "type": "address",
-            },
-          ],
-          "name": "isStrategyWhitelisted",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x999ba27c",
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TransferSelectorNFT",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "taker",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-              ],
-              "name": "takerBid",
-              "type": "tuple",
-            },
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "signer",
-                  "type": "address",
-                },
-                {
-                  "name": "collection",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256",
-                },
-                {
-                  "name": "strategy",
-                  "type": "address",
-                },
-                {
-                  "name": "currency",
-                  "type": "address",
-                },
-                {
-                  "name": "nonce",
-                  "type": "uint256",
-                },
-                {
-                  "name": "startTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "endTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-                {
-                  "name": "v",
-                  "type": "uint8",
-                },
-                {
-                  "name": "r",
-                  "type": "bytes32",
-                },
-                {
-                  "name": "s",
-                  "type": "bytes32",
-                },
-              ],
-              "name": "makerAsk",
-              "type": "tuple",
-            },
-          ],
-          "name": "canExecuteTakerBid",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x865781ca",
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ExecutionManager",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [],
-          "name": "viewProtocolFee",
-          "outputs": [
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x9dd1cda6",
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "SecretOfAlchemy",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "dst",
-              "type": "address",
-            },
-            {
-              "name": "wad",
-              "type": "uint256",
-            },
-          ],
-          "name": "transfer",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0xa9059cbb",
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "WETH9",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-            },
-          ],
-          "name": "calculateRoyaltyFeeAndGetRecipient",
-          "outputs": [
-            {
-              "name": "receiver",
-              "type": "address",
-            },
-            {
-              "name": "royaltyAmount",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0xf4f635fa",
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "CurrencyManager",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x55010472a93921a117aad9b055c141060c8d8022",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-            },
-          ],
-          "name": "royaltyInfo",
-          "outputs": [
-            {
-              "name": "",
-              "type": "address",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x2782d6c7",
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "RoyaltyFeeManagerV1B",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "interfaceId",
-              "type": "bytes4",
-            },
-          ],
-          "name": "supportsInterface",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x01ffc9a7",
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TransferManagerERC721",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-          ],
-          "name": "checkTransferManagerForToken",
-          "outputs": [
-            {
-              "name": "transferManager",
-              "type": "address",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0xcc159493",
-      },
-      {
-        "addresses": Set {
-          "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "from",
-              "type": "address",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "name": "transferNonFungibleToken",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x33f2fa9f",
-      },
-      {
-        "addresses": Set {
-          "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "from",
-              "type": "address",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-          ],
-          "name": "safeTransferFrom",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x42842e0e",
-      },
-    ],
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "disassembledBytecode": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "disassembledBytecode": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "disassembledBytecode": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "disassembledBytecode": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "disassembledBytecode": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "disassembledBytecode": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "disassembledBytecode": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "disassembledBytecode": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "disassembledBytecode": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "instructions": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "instructions": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "instructions": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "instructions": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "instructions": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "instructions": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "instructions": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "instructions": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "instructions": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "sourceFiles": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "sourceFiles": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "sourceFiles": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "sourceFiles": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "sourceFiles": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "sourceFiles": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "sourceFiles": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "sourceFiles": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "sourceFiles": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x01ffc9a7": {
+      "addresses": Set {
+        "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "interfaceId",
+            "type": "bytes4",
+          },
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x01ffc9a7",
+    },
+    "0x2782d6c7": {
+      "addresses": Set {
+        "0x55010472a93921a117aad9b055c141060c8d8022",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+          },
+        ],
+        "name": "royaltyInfo",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x2782d6c7",
+    },
+    "0x33f2fa9f": {
+      "addresses": Set {
+        "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "from",
+            "type": "address",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "name": "transferNonFungibleToken",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x33f2fa9f",
+    },
+    "0x42842e0e": {
+      "addresses": Set {
+        "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+        ],
+        "name": "safeTransferFrom",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x42842e0e",
+    },
+    "0x43b938c5": {
+      "addresses": Set {
+        "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "currency",
+            "type": "address",
+          },
+        ],
+        "name": "isCurrencyWhitelisted",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x43b938c5",
+    },
+    "0x865781ca": {
+      "addresses": Set {
+        "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "taker",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+            ],
+            "name": "takerBid",
+            "type": "tuple",
+          },
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "signer",
+                "type": "address",
+              },
+              {
+                "name": "collection",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+              },
+              {
+                "name": "strategy",
+                "type": "address",
+              },
+              {
+                "name": "currency",
+                "type": "address",
+              },
+              {
+                "name": "nonce",
+                "type": "uint256",
+              },
+              {
+                "name": "startTime",
+                "type": "uint256",
+              },
+              {
+                "name": "endTime",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+              {
+                "name": "v",
+                "type": "uint8",
+              },
+              {
+                "name": "r",
+                "type": "bytes32",
+              },
+              {
+                "name": "s",
+                "type": "bytes32",
+              },
+            ],
+            "name": "makerAsk",
+            "type": "tuple",
+          },
+        ],
+        "name": "canExecuteTakerBid",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x865781ca",
+    },
+    "0x999ba27c": {
+      "addresses": Set {
+        "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "strategy",
+            "type": "address",
+          },
+        ],
+        "name": "isStrategyWhitelisted",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x999ba27c",
+    },
+    "0x9dd1cda6": {
+      "addresses": Set {
+        "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [],
+        "name": "viewProtocolFee",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x9dd1cda6",
+    },
+    "0xa9059cbb": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "dst",
+            "type": "address",
+          },
+          {
+            "name": "wad",
+            "type": "uint256",
+          },
+        ],
+        "name": "transfer",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0xa9059cbb",
+    },
+    "0xb4e4b296": {
+      "addresses": Set {
+        "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "taker",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+            ],
+            "name": "takerBid",
+            "type": "tuple",
+          },
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "signer",
+                "type": "address",
+              },
+              {
+                "name": "collection",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+              },
+              {
+                "name": "strategy",
+                "type": "address",
+              },
+              {
+                "name": "currency",
+                "type": "address",
+              },
+              {
+                "name": "nonce",
+                "type": "uint256",
+              },
+              {
+                "name": "startTime",
+                "type": "uint256",
+              },
+              {
+                "name": "endTime",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+              {
+                "name": "v",
+                "type": "uint8",
+              },
+              {
+                "name": "r",
+                "type": "bytes32",
+              },
+              {
+                "name": "s",
+                "type": "bytes32",
+              },
+            ],
+            "name": "makerAsk",
+            "type": "tuple",
+          },
+        ],
+        "name": "matchAskWithTakerBidUsingETHAndWETH",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0xb4e4b296",
+    },
+    "0xcc159493": {
+      "addresses": Set {
+        "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+        ],
+        "name": "checkTransferManagerForToken",
+        "outputs": [
+          {
+            "name": "transferManager",
+            "type": "address",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0xcc159493",
+    },
+    "0xd0e30db0": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [],
+        "name": "deposit",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0xd0e30db0",
+    },
+    "0xf4f635fa": {
+      "addresses": Set {
+        "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+          },
+        ],
+        "name": "calculateRoyaltyFeeAndGetRecipient",
+        "outputs": [
+          {
+            "name": "receiver",
+            "type": "address",
+          },
+          {
+            "name": "royaltyAmount",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0xf4f635fa",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "blockNumber": "16868672",
@@ -4606,577 +5038,842 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction with extende
 
 exports[`TxAnalyzer analyze transaction analyzes failed transaction: failedTransactionLogs 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
-      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
-      "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
-      "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-      "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
-      "0x55010472a93921a117aad9b055c141060c8d8022",
-      "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-      "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
-      "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "taker",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-              ],
-              "name": "takerBid",
-              "type": "tuple",
-            },
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "signer",
-                  "type": "address",
-                },
-                {
-                  "name": "collection",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256",
-                },
-                {
-                  "name": "strategy",
-                  "type": "address",
-                },
-                {
-                  "name": "currency",
-                  "type": "address",
-                },
-                {
-                  "name": "nonce",
-                  "type": "uint256",
-                },
-                {
-                  "name": "startTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "endTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-                {
-                  "name": "v",
-                  "type": "uint8",
-                },
-                {
-                  "name": "r",
-                  "type": "bytes32",
-                },
-                {
-                  "name": "s",
-                  "type": "bytes32",
-                },
-              ],
-              "name": "makerAsk",
-              "type": "tuple",
-            },
-          ],
-          "name": "matchAskWithTakerBidUsingETHAndWETH",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0xb4e4b296",
+  "contractsBaseData": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "RoyaltyFeeRegistry",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [],
-          "name": "deposit",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0xd0e30db0",
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "StrategyStandardSaleForFixedPriceV1B",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "currency",
-              "type": "address",
-            },
-          ],
-          "name": "isCurrencyWhitelisted",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x43b938c5",
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "LooksRareExchange",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "strategy",
-              "type": "address",
-            },
-          ],
-          "name": "isStrategyWhitelisted",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x999ba27c",
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TransferSelectorNFT",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "taker",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-              ],
-              "name": "takerBid",
-              "type": "tuple",
-            },
-            {
-              "components": [
-                {
-                  "name": "isOrderAsk",
-                  "type": "bool",
-                },
-                {
-                  "name": "signer",
-                  "type": "address",
-                },
-                {
-                  "name": "collection",
-                  "type": "address",
-                },
-                {
-                  "name": "price",
-                  "type": "uint256",
-                },
-                {
-                  "name": "tokenId",
-                  "type": "uint256",
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256",
-                },
-                {
-                  "name": "strategy",
-                  "type": "address",
-                },
-                {
-                  "name": "currency",
-                  "type": "address",
-                },
-                {
-                  "name": "nonce",
-                  "type": "uint256",
-                },
-                {
-                  "name": "startTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "endTime",
-                  "type": "uint256",
-                },
-                {
-                  "name": "minPercentageToAsk",
-                  "type": "uint256",
-                },
-                {
-                  "name": "params",
-                  "type": "bytes",
-                },
-                {
-                  "name": "v",
-                  "type": "uint8",
-                },
-                {
-                  "name": "r",
-                  "type": "bytes32",
-                },
-                {
-                  "name": "s",
-                  "type": "bytes32",
-                },
-              ],
-              "name": "makerAsk",
-              "type": "tuple",
-            },
-          ],
-          "name": "canExecuteTakerBid",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x865781ca",
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ExecutionManager",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [],
-          "name": "viewProtocolFee",
-          "outputs": [
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x9dd1cda6",
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "SecretOfAlchemy",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "dst",
-              "type": "address",
-            },
-            {
-              "name": "wad",
-              "type": "uint256",
-            },
-          ],
-          "name": "transfer",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0xa9059cbb",
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "WETH9",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-            },
-          ],
-          "name": "calculateRoyaltyFeeAndGetRecipient",
-          "outputs": [
-            {
-              "name": "receiver",
-              "type": "address",
-            },
-            {
-              "name": "royaltyAmount",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0xf4f635fa",
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "CurrencyManager",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x55010472a93921a117aad9b055c141060c8d8022",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-            },
-          ],
-          "name": "royaltyInfo",
-          "outputs": [
-            {
-              "name": "",
-              "type": "address",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x2782d6c7",
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "RoyaltyFeeManagerV1B",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "interfaceId",
-              "type": "bytes4",
-            },
-          ],
-          "name": "supportsInterface",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0x01ffc9a7",
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TransferManagerERC721",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
-        },
-        "found": true,
-        "fragment": {
-          "constant": true,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-          ],
-          "name": "checkTransferManagerForToken",
-          "outputs": [
-            {
-              "name": "transferManager",
-              "type": "address",
-            },
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function",
-        },
-        "sighash": "0xcc159493",
-      },
-      {
-        "addresses": Set {
-          "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "collection",
-              "type": "address",
-            },
-            {
-              "name": "from",
-              "type": "address",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-            {
-              "name": "",
-              "type": "uint256",
-            },
-          ],
-          "name": "transferNonFungibleToken",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x33f2fa9f",
-      },
-      {
-        "addresses": Set {
-          "0x9da9c23a116807beb86e180915376c8d984fcfbf",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "from",
-              "type": "address",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "tokenId",
-              "type": "uint256",
-            },
-          ],
-          "name": "safeTransferFrom",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x42842e0e",
-      },
-    ],
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "disassembledBytecode": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "disassembledBytecode": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "disassembledBytecode": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "disassembledBytecode": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "disassembledBytecode": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "disassembledBytecode": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "disassembledBytecode": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "disassembledBytecode": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "disassembledBytecode": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "instructions": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "instructions": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "instructions": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "instructions": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "instructions": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "instructions": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "instructions": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "instructions": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "instructions": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "sourceFiles": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "sourceFiles": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "sourceFiles": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "sourceFiles": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "sourceFiles": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "sourceFiles": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "sourceFiles": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "sourceFiles": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "sourceFiles": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x55010472a93921a117aad9b055c141060c8d8022": {
+      "address": "0x55010472a93921a117aad9b055c141060c8d8022",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c": {
+      "address": "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x59728544b08ab483533076417fbbb2fd0b17ce3a": {
+      "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c": {
+      "address": "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9cc58bf22a173c0fa8791c13df396d18185d62b2": {
+      "address": "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x9da9c23a116807beb86e180915376c8d984fcfbf": {
+      "address": "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25": {
+      "address": "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620": {
+      "address": "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e": {
+      "address": "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x01ffc9a7": {
+      "addresses": Set {
+        "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "interfaceId",
+            "type": "bytes4",
+          },
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x01ffc9a7",
+    },
+    "0x2782d6c7": {
+      "addresses": Set {
+        "0x55010472a93921a117aad9b055c141060c8d8022",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+          },
+        ],
+        "name": "royaltyInfo",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x2782d6c7",
+    },
+    "0x33f2fa9f": {
+      "addresses": Set {
+        "0xf42aa99f011a1fa7cda90e5e98b277e306bca83e",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "from",
+            "type": "address",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "name": "transferNonFungibleToken",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x33f2fa9f",
+    },
+    "0x42842e0e": {
+      "addresses": Set {
+        "0x9da9c23a116807beb86e180915376c8d984fcfbf",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+        ],
+        "name": "safeTransferFrom",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x42842e0e",
+    },
+    "0x43b938c5": {
+      "addresses": Set {
+        "0xc881addf409ee2c4b6bbc8b607c2c5cafab93d25",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "currency",
+            "type": "address",
+          },
+        ],
+        "name": "isCurrencyWhitelisted",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x43b938c5",
+    },
+    "0x865781ca": {
+      "addresses": Set {
+        "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "taker",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+            ],
+            "name": "takerBid",
+            "type": "tuple",
+          },
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "signer",
+                "type": "address",
+              },
+              {
+                "name": "collection",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+              },
+              {
+                "name": "strategy",
+                "type": "address",
+              },
+              {
+                "name": "currency",
+                "type": "address",
+              },
+              {
+                "name": "nonce",
+                "type": "uint256",
+              },
+              {
+                "name": "startTime",
+                "type": "uint256",
+              },
+              {
+                "name": "endTime",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+              {
+                "name": "v",
+                "type": "uint8",
+              },
+              {
+                "name": "r",
+                "type": "bytes32",
+              },
+              {
+                "name": "s",
+                "type": "bytes32",
+              },
+            ],
+            "name": "makerAsk",
+            "type": "tuple",
+          },
+        ],
+        "name": "canExecuteTakerBid",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x865781ca",
+    },
+    "0x999ba27c": {
+      "addresses": Set {
+        "0x9cc58bf22a173c0fa8791c13df396d18185d62b2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "strategy",
+            "type": "address",
+          },
+        ],
+        "name": "isStrategyWhitelisted",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x999ba27c",
+    },
+    "0x9dd1cda6": {
+      "addresses": Set {
+        "0x579af6fd30bf83a5ac0d636bc619f98dbdeb930c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [],
+        "name": "viewProtocolFee",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0x9dd1cda6",
+    },
+    "0xa9059cbb": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "dst",
+            "type": "address",
+          },
+          {
+            "name": "wad",
+            "type": "uint256",
+          },
+        ],
+        "name": "transfer",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0xa9059cbb",
+    },
+    "0xb4e4b296": {
+      "addresses": Set {
+        "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "taker",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+            ],
+            "name": "takerBid",
+            "type": "tuple",
+          },
+          {
+            "components": [
+              {
+                "name": "isOrderAsk",
+                "type": "bool",
+              },
+              {
+                "name": "signer",
+                "type": "address",
+              },
+              {
+                "name": "collection",
+                "type": "address",
+              },
+              {
+                "name": "price",
+                "type": "uint256",
+              },
+              {
+                "name": "tokenId",
+                "type": "uint256",
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+              },
+              {
+                "name": "strategy",
+                "type": "address",
+              },
+              {
+                "name": "currency",
+                "type": "address",
+              },
+              {
+                "name": "nonce",
+                "type": "uint256",
+              },
+              {
+                "name": "startTime",
+                "type": "uint256",
+              },
+              {
+                "name": "endTime",
+                "type": "uint256",
+              },
+              {
+                "name": "minPercentageToAsk",
+                "type": "uint256",
+              },
+              {
+                "name": "params",
+                "type": "bytes",
+              },
+              {
+                "name": "v",
+                "type": "uint8",
+              },
+              {
+                "name": "r",
+                "type": "bytes32",
+              },
+              {
+                "name": "s",
+                "type": "bytes32",
+              },
+            ],
+            "name": "makerAsk",
+            "type": "tuple",
+          },
+        ],
+        "name": "matchAskWithTakerBidUsingETHAndWETH",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0xb4e4b296",
+    },
+    "0xcc159493": {
+      "addresses": Set {
+        "0x9ba628f27aac9b2d78a9f2bf40a8a6df4ccd9e2c",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+        ],
+        "name": "checkTransferManagerForToken",
+        "outputs": [
+          {
+            "name": "transferManager",
+            "type": "address",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0xcc159493",
+    },
+    "0xd0e30db0": {
+      "addresses": Set {
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [],
+        "name": "deposit",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0xd0e30db0",
+    },
+    "0xf4f635fa": {
+      "addresses": Set {
+        "0xcbfeba41c3e69d24b5c8b04ed60c42cc5d883620",
+      },
+      "found": true,
+      "fragment": {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "collection",
+            "type": "address",
+          },
+          {
+            "name": "tokenId",
+            "type": "uint256",
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+          },
+        ],
+        "name": "calculateRoyaltyFeeAndGetRecipient",
+        "outputs": [
+          {
+            "name": "receiver",
+            "type": "address",
+          },
+          {
+            "name": "royaltyAmount",
+            "type": "uint256",
+          },
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function",
+      },
+      "sighash": "0xf4f635fa",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
       "blockNumber": "16868672",
@@ -7121,87 +7818,170 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction: failedTrans
 
 exports[`TxAnalyzer analyze transaction analyzes simple mint transaction: simpleMintTransactionLogs 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
-      "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
-      "0x6bf5ed59de0e19999d264746843ff931c0133090",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "creatorContractAddress",
-              "type": "address",
-            },
-            {
-              "name": "claimIndex",
-              "type": "uint256",
-            },
-            {
-              "name": "mintCount",
-              "type": "uint16",
-            },
-            {
-              "name": "mintIndices",
-              "type": "uint32[]",
-            },
-            {
-              "name": "merkleProofs",
-              "type": "bytes32[][]",
-            },
-            {
-              "name": "mintFor",
-              "type": "address",
-            },
-          ],
-          "name": "mintBatch",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function",
-        },
-        "sighash": "0x26c858a4",
+  "contractsBaseData": {
+    "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b": {
+      "address": "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "SCHMR",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
-          "0x6bf5ed59de0e19999d264746843ff931c0133090",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "to",
-              "type": "address[]",
-            },
-            {
-              "name": "tokenIds",
-              "type": "uint256[]",
-            },
-            {
-              "name": "amounts",
-              "type": "uint256[]",
-            },
-          ],
-          "name": "mintExtensionExisting",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0xe6c884dc",
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ERC1155CreatorImplementation",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-    ],
+    },
+    "0xe7d3982e214f9dfd53d23a7f72851a7044072250": {
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ERC1155LazyPayableClaim",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
+      },
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b": {
+      "address": "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+      "disassembledBytecode": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "disassembledBytecode": undefined,
+    },
+    "0xe7d3982e214f9dfd53d23a7f72851a7044072250": {
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b": {
+      "address": "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+      "instructions": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "instructions": undefined,
+    },
+    "0xe7d3982e214f9dfd53d23a7f72851a7044072250": {
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b": {
+      "address": "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+      "sourceFiles": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "sourceFiles": undefined,
+    },
+    "0xe7d3982e214f9dfd53d23a7f72851a7044072250": {
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b": {
+      "address": "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xe7d3982e214f9dfd53d23a7f72851a7044072250": {
+      "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x26c858a4": {
+      "addresses": Set {
+        "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "creatorContractAddress",
+            "type": "address",
+          },
+          {
+            "name": "claimIndex",
+            "type": "uint256",
+          },
+          {
+            "name": "mintCount",
+            "type": "uint16",
+          },
+          {
+            "name": "mintIndices",
+            "type": "uint32[]",
+          },
+          {
+            "name": "merkleProofs",
+            "type": "bytes32[][]",
+          },
+          {
+            "name": "mintFor",
+            "type": "address",
+          },
+        ],
+        "name": "mintBatch",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function",
+      },
+      "sighash": "0x26c858a4",
+    },
+    "0xe6c884dc": {
+      "addresses": Set {
+        "0x2aca032684ec714210b91abf7bb9df0a3f2ee84b",
+        "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "to",
+            "type": "address[]",
+          },
+          {
+            "name": "tokenIds",
+            "type": "uint256[]",
+          },
+          {
+            "name": "amounts",
+            "type": "uint256[]",
+          },
+        ],
+        "name": "mintExtensionExisting",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0xe6c884dc",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0xe7d3982e214f9dfd53d23a7f72851a7044072250",
       "blockNumber": "16869282",
@@ -7961,118 +8741,331 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction: simple
 
 exports[`TxAnalyzer analyze transaction analyzes transaction with invalid function with the same sighash as cached abis: txWithInvalidOutputToDecode 1`] = `
 {
-  "analyzeSummary": {
-    "contractAddresses": [
-      "0x0000000000c2d145a2526bd8c716263bfebe1a72",
-      "0x1e0049783f008a0085193e00003d00cd54003c71",
-      "0xbe072760153ec7432c36713daba89a4c45de63a0",
-      "0x6bf5ed59de0e19999d264746843ff931c0133090",
-      "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
-      "0x000000000000aaeb6d7670e522a718067333cd4e",
-      "0x3aebb320a0c06465c66bb0a027f6522912e14287",
-      "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
-    ],
-    "contractSighashesInfo": [
-      {
-        "addresses": Set {
-          "0x0000000000c2d145a2526bd8c716263bfebe1a72",
-        },
-        "found": false,
-        "fragment": null,
-        "sighash": "0x32389b71",
+  "contractsBaseData": {
+    "0x000000000000aaeb6d7670e522a718067333cd4e": {
+      "address": "0x000000000000aaeb6d7670e522a718067333cd4e",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "OperatorFilterRegistry",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x1e0049783f008a0085193e00003d00cd54003c71",
-        },
-        "found": false,
-        "fragment": null,
-        "sighash": "0x4ce34aa2",
+    },
+    "0x0000000000c2d145a2526bd8c716263bfebe1a72": {
+      "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TransferHelper",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0xbe072760153ec7432c36713daba89a4c45de63a0",
-          "0x6bf5ed59de0e19999d264746843ff931c0133090",
-          "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "from",
-              "type": "address",
-            },
-            {
-              "name": "to",
-              "type": "address",
-            },
-            {
-              "name": "id",
-              "type": "uint256",
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-            },
-            {
-              "name": "data",
-              "type": "bytes",
-            },
-          ],
-          "name": "safeTransferFrom",
-          "outputs": [],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0xf242432a",
+    },
+    "0x1e0049783f008a0085193e00003d00cd54003c71": {
+      "address": "0x1e0049783f008a0085193e00003d00cd54003c71",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "Conduit",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x000000000000aaeb6d7670e522a718067333cd4e",
-        },
-        "found": false,
-        "fragment": null,
-        "sighash": "0xc6171134",
+    },
+    "0x3aebb320a0c06465c66bb0a027f6522912e14287": {
+      "address": "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "SHOWDEER",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-      {
-        "addresses": Set {
-          "0x3aebb320a0c06465c66bb0a027f6522912e14287",
-          "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
-        },
-        "found": true,
-        "fragment": {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_from",
-              "type": "address",
-            },
-            {
-              "name": "_to",
-              "type": "address",
-            },
-            {
-              "name": "_value",
-              "type": "uint256",
-            },
-          ],
-          "name": "transferFrom",
-          "outputs": [
-            {
-              "name": "",
-              "type": "bool",
-            },
-          ],
-          "payable": false,
-          "type": "function",
-        },
-        "sighash": "0x23b872dd",
+    },
+    "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e": {
+      "address": "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ArtDubaiAlexisChristodoulou",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
       },
-    ],
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ERC1155CreatorImplementation",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
+      },
+    },
+    "0xbe072760153ec7432c36713daba89a4c45de63a0": {
+      "address": "0xbe072760153ec7432c36713daba89a4c45de63a0",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "TIJSIB",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
+      },
+    },
+    "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a": {
+      "address": "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      "compilerVersion": undefined,
+      "evmVersion": undefined,
+      "license": undefined,
+      "name": "ERC721CreatorImplementation",
+      "optimization": {
+        "isEnabled": false,
+        "runs": NaN,
+      },
+    },
   },
-  "instructionsMap": {},
-  "mainTraceLogList": [
+  "contractsDisassembledBytecodes": {
+    "0x000000000000aaeb6d7670e522a718067333cd4e": {
+      "address": "0x000000000000aaeb6d7670e522a718067333cd4e",
+      "disassembledBytecode": undefined,
+    },
+    "0x0000000000c2d145a2526bd8c716263bfebe1a72": {
+      "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      "disassembledBytecode": undefined,
+    },
+    "0x1e0049783f008a0085193e00003d00cd54003c71": {
+      "address": "0x1e0049783f008a0085193e00003d00cd54003c71",
+      "disassembledBytecode": undefined,
+    },
+    "0x3aebb320a0c06465c66bb0a027f6522912e14287": {
+      "address": "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+      "disassembledBytecode": undefined,
+    },
+    "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e": {
+      "address": "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      "disassembledBytecode": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "disassembledBytecode": undefined,
+    },
+    "0xbe072760153ec7432c36713daba89a4c45de63a0": {
+      "address": "0xbe072760153ec7432c36713daba89a4c45de63a0",
+      "disassembledBytecode": undefined,
+    },
+    "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a": {
+      "address": "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      "disassembledBytecode": undefined,
+    },
+  },
+  "contractsInstructions": {
+    "0x000000000000aaeb6d7670e522a718067333cd4e": {
+      "address": "0x000000000000aaeb6d7670e522a718067333cd4e",
+      "instructions": undefined,
+    },
+    "0x0000000000c2d145a2526bd8c716263bfebe1a72": {
+      "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      "instructions": undefined,
+    },
+    "0x1e0049783f008a0085193e00003d00cd54003c71": {
+      "address": "0x1e0049783f008a0085193e00003d00cd54003c71",
+      "instructions": undefined,
+    },
+    "0x3aebb320a0c06465c66bb0a027f6522912e14287": {
+      "address": "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+      "instructions": undefined,
+    },
+    "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e": {
+      "address": "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      "instructions": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "instructions": undefined,
+    },
+    "0xbe072760153ec7432c36713daba89a4c45de63a0": {
+      "address": "0xbe072760153ec7432c36713daba89a4c45de63a0",
+      "instructions": undefined,
+    },
+    "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a": {
+      "address": "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      "instructions": undefined,
+    },
+  },
+  "contractsSourceFiles": {
+    "0x000000000000aaeb6d7670e522a718067333cd4e": {
+      "address": "0x000000000000aaeb6d7670e522a718067333cd4e",
+      "sourceFiles": undefined,
+    },
+    "0x0000000000c2d145a2526bd8c716263bfebe1a72": {
+      "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      "sourceFiles": undefined,
+    },
+    "0x1e0049783f008a0085193e00003d00cd54003c71": {
+      "address": "0x1e0049783f008a0085193e00003d00cd54003c71",
+      "sourceFiles": undefined,
+    },
+    "0x3aebb320a0c06465c66bb0a027f6522912e14287": {
+      "address": "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+      "sourceFiles": undefined,
+    },
+    "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e": {
+      "address": "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      "sourceFiles": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "sourceFiles": undefined,
+    },
+    "0xbe072760153ec7432c36713daba89a4c45de63a0": {
+      "address": "0xbe072760153ec7432c36713daba89a4c45de63a0",
+      "sourceFiles": undefined,
+    },
+    "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a": {
+      "address": "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      "sourceFiles": undefined,
+    },
+  },
+  "contractsStructLogsPerLine": {
+    "0x000000000000aaeb6d7670e522a718067333cd4e": {
+      "address": "0x000000000000aaeb6d7670e522a718067333cd4e",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x0000000000c2d145a2526bd8c716263bfebe1a72": {
+      "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x1e0049783f008a0085193e00003d00cd54003c71": {
+      "address": "0x1e0049783f008a0085193e00003d00cd54003c71",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x3aebb320a0c06465c66bb0a027f6522912e14287": {
+      "address": "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e": {
+      "address": "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      "structlogsPerStartLine": undefined,
+    },
+    "0x6bf5ed59de0e19999d264746843ff931c0133090": {
+      "address": "0x6bf5ed59de0e19999d264746843ff931c0133090",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xbe072760153ec7432c36713daba89a4c45de63a0": {
+      "address": "0xbe072760153ec7432c36713daba89a4c45de63a0",
+      "structlogsPerStartLine": undefined,
+    },
+    "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a": {
+      "address": "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      "structlogsPerStartLine": undefined,
+    },
+  },
+  "sighashes": {
+    "0x23b872dd": {
+      "addresses": Set {
+        "0x3aebb320a0c06465c66bb0a027f6522912e14287",
+        "0xe4e4003afe3765aca8149a82fc064c0b125b9e5a",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_from",
+            "type": "address",
+          },
+          {
+            "name": "_to",
+            "type": "address",
+          },
+          {
+            "name": "_value",
+            "type": "uint256",
+          },
+        ],
+        "name": "transferFrom",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool",
+          },
+        ],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0x23b872dd",
+    },
+    "0x32389b71": {
+      "addresses": Set {
+        "0x0000000000c2d145a2526bd8c716263bfebe1a72",
+      },
+      "found": false,
+      "fragment": null,
+      "sighash": "0x32389b71",
+    },
+    "0x4ce34aa2": {
+      "addresses": Set {
+        "0x1e0049783f008a0085193e00003d00cd54003c71",
+      },
+      "found": false,
+      "fragment": null,
+      "sighash": "0x4ce34aa2",
+    },
+    "0xc6171134": {
+      "addresses": Set {
+        "0x000000000000aaeb6d7670e522a718067333cd4e",
+      },
+      "found": false,
+      "fragment": null,
+      "sighash": "0xc6171134",
+    },
+    "0xf242432a": {
+      "addresses": Set {
+        "0xbe072760153ec7432c36713daba89a4c45de63a0",
+        "0x6bf5ed59de0e19999d264746843ff931c0133090",
+        "0x4721dfe67fe46381e2e56eb1e0406e0989bd7b8e",
+      },
+      "found": true,
+      "fragment": {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address",
+          },
+          {
+            "name": "to",
+            "type": "address",
+          },
+          {
+            "name": "id",
+            "type": "uint256",
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+          },
+          {
+            "name": "data",
+            "type": "bytes",
+          },
+        ],
+        "name": "safeTransferFrom",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+      },
+      "sighash": "0xf242432a",
+    },
+  },
+  "traceLogs": [
     {
       "address": "0x0000000000c2d145a2526bd8c716263bfebe1a72",
       "blockNumber": "16868672",

@@ -4,9 +4,8 @@ import { analyzerActions, type TAnalyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages } from '../../analyzer.const'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
-import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { createErrorLogMessage, createInfoLogMessage, sendStatusMessageToDiscord } from '../../analyzer.utils'
+import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
 
 import { processTransactionTakesMatchers } from './processTransaction.takes'
 
@@ -33,10 +32,10 @@ export function* processTransactionSaga({ payload }: TAnalyzerActions['processTr
     yield* put(analyzerActions.gatherContractsInformations())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.GATHERING_CONTRACTS_INFORMATION])
 
-    yield* put(bytecodesActions.fetchBytecodes())
+    yield* put(contractRawActions.fetchBytecodes())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_BYTECODES])
 
-    yield* put(sourceCodesActions.startPoolingSources())
+    yield* put(contractRawActions.startPoolingSources())
     yield* take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_SOURCE_CODES])
 
     yield* put(analyzerActions.runAnalyzer())

@@ -67,7 +67,7 @@ describe('fetchStructlogsSaga', () => {
       .call(fetchStructlogs, 's3Location')
       .call(parseStructlogs, STRUCTLOGS_ARRAY_BUFFER)
       .call(getAnalyzerInstance)
-      .apply(analyzerInstance.dataLoader, analyzerInstance.dataLoader.loadStructlogs, [STRUCTLOGS])
+      .apply(analyzerInstance.dataLoader, analyzerInstance.dataLoader.inputStructlogs.set, [STRUCTLOGS])
       .put.like({ action: addSecondLogAction })
       .put(analyzerActions.updateStage(successStage))
       .run()

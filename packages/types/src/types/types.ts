@@ -3,8 +3,8 @@ import type { JsonFragment } from '@ethersproject/abi'
 
 import type { TRawStructLog, TIndexedStructLog } from './structLogs'
 import type { ChainId } from './chains'
-import type { SourceFileType, TParseSourceCodeOutput, TParsedSourceCodesOutput, TSourceMap } from './srcMap'
-import type { BaseOpcodesHex, TOpcodesNames } from './opcodes/opcodesHex'
+import type { SourceFileType, TSourceMap } from './srcMap'
+import type { TOpcodesNames } from './opcodes/opcodesHex'
 
 export type TStorage = Record<string, string>
 
@@ -86,13 +86,19 @@ export type TOpcodeFromSourceMap = {
   opcode: string
 }
 
-export type TDissasembledBytecodeStructlog = {
+export type TDisassembledBytecodeStructlog = {
   pc: number
   opcode: TOpcodesNames
+  index: number
   value?: string
 }
 
-export type TDissasembledBytecode = TDissasembledBytecodeStructlog[]
+export type TDisassembledBytecode = Record<number, TDisassembledBytecodeStructlog>
+
+export type TContractDissasembledBytecode = {
+  address: string
+  disassembledBytecode: TDisassembledBytecode
+}
 
 export type TSourceMapCodeRepresentation = {
   startCodeLine: number
@@ -121,19 +127,32 @@ export type TStepInstrctionsMap = Record<
   { instructions: TPcIndexedStepInstructions; structlogsPerStartLine: TStructlogsPerStartLine }
 >
 
-export type TContractData = {
+export type TContractRawData = {
   address: string
-  name?: string
-  applicationBinaryInterface?: TAbi
+  applicationBinaryInterface?: string
   bytecode?: string
-  etherscanBytecode?: string
-  files?: TParseSourceCodeOutput
+  sourceFiles?: string[]
   sourceMap?: string
-  yulTree?: string
-  yulFileContent?: string
 }
 
-export type TContractsData = Record<string, TContractData>
+export type TAnalyzerContractBaseOutput = {
+  address: string
+  contractName?: string
+}
+
+export type TAnalyzerContractBytecodeOutput = {
+  address: string
+  bytecode?: string
+  etherscanBytecode?: string
+  dissasembledBytecode?: TDisassembledBytecode
+  dissasembledEtherscanBytecode?: TDisassembledBytecode
+}
+
+export type TAnalyzerContractsDataOutput = {
+  address: string
+  name?: string
+  bytecode: TAnalyzerContractBytecodeOutput
+}
 
 export type TSighashStatus = {
   sighash: string

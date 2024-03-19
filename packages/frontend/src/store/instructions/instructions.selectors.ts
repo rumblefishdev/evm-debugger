@@ -7,7 +7,6 @@ import { selectReducer } from '../store.utils'
 import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.selectors'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { structlogsSelectors } from '../structlogs/structlogs.selectors'
-import { sourceMapsSelectors } from '../sourceMaps/sourceMaps.selectors'
 import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
 
 import { instructionsAdapter } from './instructions.slice'
@@ -26,9 +25,9 @@ const selectCurrentInstructions = createSelector([selectEntities, activeBlockSel
 })
 
 const selectIsCurrentInstructionsValid = createSelector(
-  [sourceMapsSelectors.selectIsCurrentSourceMapAvailable, selectCurrentInstructions, structlogsSelectors.selectAllOffCurrentBlock],
-  (_isSourceMapAvailable, _currentInstructions, _currentStructlogs) => {
-    if (!_currentInstructions || !_currentStructlogs || !_isSourceMapAvailable) {
+  [selectCurrentInstructions, structlogsSelectors.selectAllOffCurrentBlock],
+  (_currentInstructions, _currentStructlogs) => {
+    if (!_currentInstructions || !_currentStructlogs) {
       return false
     }
 

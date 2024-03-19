@@ -6,9 +6,8 @@ import { selectReducer } from '../store.utils'
 import { instructionsSelectors } from '../instructions/instructions.selectors'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { structlogsSelectors } from '../structlogs/structlogs.selectors'
-import { sourceCodesSelectors } from '../sourceCodes/sourceCodes.selectors'
-import { activeSourceFileSelectors } from '../activeSourceFile/activeSourceFile.selectors'
 import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
+import { sourceFilesSelectors } from '../sourceFiles/sourceFiles.selectors'
 
 const selectActiveLineState = createSelector([selectReducer(StoreKeys.ACTIVE_LINE)], (state) => state)
 
@@ -20,11 +19,11 @@ const selectStructlogsPerLine = createSelector([selectActiveLineState], (state) 
 
 const selectStructlogsPerLineForActiveBlock = createSelector(
   [selectStructlogsPerLine, activeBlockSelectors.selectActiveBlock],
-  (structlogsPerLine, { address }) => structlogsPerLine[address] || {},
+  (structlogsPerLine, { address }) => structlogsPerLine[address].structlogsPerStartLine,
 )
 
 const selectActiveLineInstruction = createSelector(
-  [selectActiveLine, activeSourceFileSelectors.selectActiveSourceFile, instructionsSelectors.selectCurrentInstructions],
+  [selectActiveLine, sourceFilesSelectors.selectSourceFileId, instructionsSelectors.selectCurrentInstructions],
   (line, fileId, instructions) => {
     return Object.values(instructions).filter(
       (instruction) => line === instruction.startCodeLine && line <= instruction.endCodeLine && fileId === instruction.fileId,
@@ -35,13 +34,13 @@ const selectActiveLineInstruction = createSelector(
 const selectStructLogsForActiveLine = createSelector(
   [
     selectActiveLine,
-    activeSourceFileSelectors.selectActiveSourceFile,
+    sourceFilesSelectors.selectSourceFileId,
     selectStructlogsPerLine,
     activeBlockSelectors.selectActiveBlock,
     structlogsSelectors.selectParsedStructLogs,
   ],
   (line, fileId, structLogsPerLine, { address }, structLogs) => {
-    const currentStructLogsLineSet = structLogsPerLine[address]?.[fileId]?.[line]
+    const currentStructLogsLineSet = structLogsPerLine[address]?.structlogsPerStartLine[fileId]?.[line]
     if (!currentStructLogsLineSet) return null
 
     return currentStructLogsLineSet.map((structLog) => structLogs[structLog.index]).filter((item) => Boolean(item))
@@ -57,20 +56,20 @@ const selectStructLogsForActiveLineMappedToIndex = createSelector([selectStructL
 })
 
 const selectCurrentSelectedSourceLineContent = createSelector(
-  [sourceCodesSelectors.selectCurrentSourceFiles, selectActiveLine, activeSourceFileSelectors.selectActiveSourceFile],
+  [sourceFilesSelectors.selectCurrentSourceFiles, selectActiveLine, sourceFilesSelectors.selectSourceFileId],
   (sourceFiles, activeLine, fileId) => {
     const currentSourceFile = sourceFiles[fileId]
     if (!currentSourceFile) return ''
 
     const regexForAllNewLineTypes = /\r\n|\n|\r/g
-    const sourceParts = currentSourceFile.sourceCode.split(regexForAllNewLineTypes)
+    const sourceParts = currentSourceFile.content.split(regexForAllNewLineTypes)
 
     return sourceParts[activeLine]
   },
 )
 
 const selectAvailableLinesForCurrentFile = createSelector(
-  [sourceCodesSelectors.selectCurrentSourceFiles, activeSourceFileSelectors.selectActiveSourceFile, selectStructlogsPerLineForActiveBlock],
+  [sourceFilesSelectors.selectCurrentSourceFiles, sourceFilesSelectors.selectSourceFileId, selectStructlogsPerLineForActiveBlock],
   (sourceFiles, fileId, structLogsPerLine) => {
     const currentSourceFile = sourceFiles[fileId]
     if (!currentSourceFile) return []

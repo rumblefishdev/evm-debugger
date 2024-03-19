@@ -1,6 +1,6 @@
-import type { TStructlogsPerStartLine } from '@evm-debuger/types'
+import type { TContractStructlogsPerStartLine } from '@evm-debuger/types'
 
 export type TActiveLineState = {
   line: number | null
-  structlogsPerActiveLine: Record<string, TStructlogsPerStartLine>
+  structlogsPerActiveLine: Record<string, TContractStructlogsPerStartLine>
 }

@@ -1,7 +1,6 @@
 import type { ChainId, TTransactionInfo } from '@evm-debuger/types'
 import { put, select, type SagaGenerator, call, apply } from 'typed-redux-saga'
 
-import { transactionInfoActions } from '../../transactionInfo.slice'
 import { jsonRpcProvider } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
@@ -49,9 +48,8 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     const formattedTransactionInfo = yield* call(getTransactionInfo, transactionHash, chainId)
 
     const analyzer = yield* call(getAnalyzerInstance)
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadTransactionInfo, [formattedTransactionInfo])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputTransactionData.set, [formattedTransactionInfo])
 
-    yield* put(transactionInfoActions.setTransactionInfo(formattedTransactionInfo))
     yield* put(
       analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
     )

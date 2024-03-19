@@ -1,4 +1,4 @@
-import { BaseOpcodesHex, getOpcodeAsName, type TDissasembledBytecode } from '@evm-debuger/types'
+import { BaseOpcodesHex, getOpcodeAsName, type TDisassembledBytecode } from '@evm-debuger/types'
 
 const getPushLength = (opcodeByte: number): number => {
   const decimalPush1Opcode = BaseOpcodesHex.PUSH1
@@ -12,37 +12,42 @@ const getPushLength = (opcodeByte: number): number => {
   return 0
 }
 
-export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean): TDissasembledBytecode => {
+export const bytecodeDisassembler = (bytecode: string, withPushValue?: boolean): TDisassembledBytecode => {
   const bytecodeAsBuffer = Buffer.from(bytecode.replace('0x', ''), 'hex')
-  const dissasembledBytecode: TDissasembledBytecode = []
+  const dissasembledBytecode: TDisassembledBytecode = {}
 
-  for (let index = 0; index < bytecodeAsBuffer.length; index++) {
-    const opcodeByte = bytecodeAsBuffer[index]
+  let programCounter = 0
+
+  for (let index = 0; programCounter < bytecodeAsBuffer.length; index++) {
+    const opcodeByte = bytecodeAsBuffer[programCounter]
 
     const opcode = getOpcodeAsName(opcodeByte)
     const pushLength = getPushLength(opcodeByte)
 
     if (pushLength) {
-      const pushValue = bytecodeAsBuffer.subarray(index + 1, index + 1 + pushLength).toString('hex')
-      dissasembledBytecode.push({
+      const pushValue = bytecodeAsBuffer.subarray(programCounter + 1, programCounter + 1 + pushLength).toString('hex')
+      dissasembledBytecode[programCounter] = {
         value: withPushValue && pushValue,
-        pc: index,
+        pc: programCounter,
         opcode,
-      })
-      index += pushLength
+        index,
+      }
+      programCounter += pushLength
     } else {
-      dissasembledBytecode.push({
-        pc: index,
+      dissasembledBytecode[programCounter] = {
+        pc: programCounter,
         opcode,
-      })
+        index,
+      }
     }
+    programCounter++
   }
 
   return dissasembledBytecode
 }
 
 export class EVMMachine {
-  public dissasembleBytecode(bytecode: string): TDissasembledBytecode {
+  public dissasembleBytecode(bytecode: string): TDisassembledBytecode {
     return bytecodeDisassembler(bytecode, true)
   }
 }

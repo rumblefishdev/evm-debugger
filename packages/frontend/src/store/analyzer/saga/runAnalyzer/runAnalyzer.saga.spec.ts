@@ -1,7 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { combineReducers } from 'redux'
-import type { TStepInstrctionsMap } from '@evm-debuger/types'
 
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { AnalyzerState, analyzerStagesAdapter } from '../../analyzer.state'
@@ -9,70 +8,63 @@ import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
-import { bytecodesAdapter, bytecodesReducer } from '../../../bytecodes/bytecodes.slice'
 import { sighashActions, sighashAdapter, sighashReducer } from '../../../sighash/sighash.slice'
-import { contractNamesAdapter, contractNamesReducer } from '../../../contractNames/contractNames.slice'
-import { transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
+import { transactionInfoActions, transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
 import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
 import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
-import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
 import { createMockedSighashes } from '../../../sighash/sighash.mock'
-import { createMockedContractNames } from '../../../contractNames/contractNames.mock'
-import { sourceMapsAdapter, sourceMapsReducer } from '../../../sourceMaps/sourceMaps.slice'
-import { sourceCodesAdapter, sourceCodesReducer } from '../../../sourceCodes/sourceCodes.slice'
-import { abisAdapter, abisReducer } from '../../../abis/abis.slice'
 import { instructionsActions, instructionsAdapter, instructionsReducer } from '../../../instructions/instructions.slice'
 import { traceLogsActions, traceLogsAdapter, traceLogsReducer } from '../../../traceLogs/traceLogs.slice'
 import { activeBlockActions, activeBlockReducer } from '../../../activeBlock/activeBlock.slice'
-import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.mock'
-import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.mock'
-import { createMockedAbis } from '../../../abis/abi.mock'
 import { createMockedTracelogs } from '../../../traceLogs/traceLogs.mock'
 import { createMockedInstruction } from '../../../instructions/instructions.mock'
 import { activeLineActions, activeLineReducer } from '../../../activeLine/activeLine.slice'
 import { ActiveLineState } from '../../../activeLine/activeLine.state'
 import { createMockedStructlogsPerActiveLine } from '../../../activeLine/activeLine.mock'
+import { sourceFilesActions, sourceFilesAdapter, sourceFilesReducer } from '../../../sourceFiles/sourceFiles.slice'
+import { contractRawActions, contractRawReducer } from '../../../contractRaw/contractRaw.slice'
+import { contractBaseActions, contractBaseAdapter, contractBaseReducer } from '../../../contractBase/contractBase.slice'
+import { createMockedSourceFiles } from '../../../sourceFiles/sourceFiles.mock'
+import {
+  disassembledBytecodesActions,
+  disassembledBytecodesAdapter,
+  disassembledBytecodesReducer,
+} from '../../../disassembledBytecodes/disassembledBytecodes.slice'
+import { createMockedContractBaseWithName } from '../../../contractBase/contractBase.mock'
+import { createMockedContractRawData } from '../../../contractRaw/contractRaw.mock'
+import { createMockedBytecode } from '../../../disassembledBytecodes/disassembledBytecodes.mock'
 
-import { runAnalyzer, runAnalyzerSaga } from './runAnalyzer.saga'
+import { getContractsRawData, runAnalyzer, runAnalyzerSaga } from './runAnalyzer.saga'
 
 const mockedTransactionInfo = mockTransactionInfoState()
 const mockedStructlogs = createMockedStructLogs(1)
 
-const mockedBytecodes = createMockedBytecodes(1, 'dissasembled')
+const mockedBytecodes = [createMockedBytecode(), createMockedBytecode()]
 const mockedSighashes = createMockedSighashes(1)
-const mockedContractNames = createMockedContractNames(1, 'contractName')
 
-const mockedSourceMaps = createMockedSourceMaps(1)
-const mockedSourceCodes = createMockedSourceCodes(1)
-const mockedAbis = createMockedAbis(1)
+const mockedContractBase = createMockedContractBaseWithName()
+const mockedContractRaw = createMockedContractRawData(mockedContractBase.address)
+const mockedSourceFiles = [createMockedSourceFiles(), createMockedSourceFiles()]
 
-const mockedInstruction = createMockedInstruction('0x0')
-
+const mockedInstructions = [createMockedInstruction(), createMockedInstruction()]
 const mockedStructlogsPerLine = createMockedStructlogsPerActiveLine('0x0')
-
-const stepInstructionsMap: TStepInstrctionsMap = {
-  '0x0': { structlogsPerStartLine: mockedStructlogsPerLine['0x0'], instructions: mockedInstruction.instructions },
-}
 
 const mockedTraceLogs = createMockedTracelogs(1)
 
 const mockedActiveBlock = { ...mockedTraceLogs[0] }
 
-const addressesList = mockedBytecodes.map((bytecode) => bytecode.address)
-
 describe('runAnalyzer', () => {
   it('should run analyzer', async () => {
     const initialState = {
-      [StoreKeys.BYTECODES]: bytecodesAdapter.addMany(bytecodesAdapter.getInitialState(), mockedBytecodes),
-      [StoreKeys.SIGHASH]: sighashAdapter.addMany(sighashAdapter.getInitialState(), mockedSighashes),
-      [StoreKeys.CONTRACT_NAMES]: contractNamesAdapter.addMany(contractNamesAdapter.getInitialState(), mockedContractNames),
+      [StoreKeys.SIGHASH]: sighashAdapter.getInitialState(),
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
-      [StoreKeys.TRANSACTION_INFO]: { ...mockedTransactionInfo },
-      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.addMany(structLogsAdapter.getInitialState(), mockedStructlogs),
-      [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.addMany(sourceMapsAdapter.getInitialState(), mockedSourceMaps),
-      [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.addMany(sourceCodesAdapter.getInitialState(), mockedSourceCodes),
-      [StoreKeys.ABIS]: abisAdapter.addMany(abisAdapter.getInitialState(), mockedAbis),
+      [StoreKeys.TRANSACTION_INFO]: {},
+      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.getInitialState(),
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.getInitialState(),
+      [StoreKeys.CONTRACT_RAW]: contractBaseAdapter.getInitialState(),
+      [StoreKeys.DISASSEMBLED_BYTECODES]: disassembledBytecodesAdapter.getInitialState(),
+      [StoreKeys.SOURCE_FILES]: sourceFilesAdapter.getInitialState(),
       [StoreKeys.INSTRUCTIONS]: instructionsAdapter.getInitialState(),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.getInitialState(),
       [StoreKeys.ACTIVE_BLOCK]: null,
@@ -90,10 +82,20 @@ describe('runAnalyzer', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.INSTRUCTIONS]: instructionsAdapter.addOne(initialState[StoreKeys.INSTRUCTIONS], mockedInstruction),
+      [StoreKeys.TRANSACTION_INFO]: mockedTransactionInfo,
+      [StoreKeys.STRUCT_LOGS]: structLogsAdapter.addMany(initialState[StoreKeys.STRUCT_LOGS], mockedStructlogs),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.addMany(initialState[StoreKeys.TRACE_LOGS], mockedTraceLogs),
       [StoreKeys.ACTIVE_BLOCK]: mockedActiveBlock,
+      [StoreKeys.SIGHASH]: sighashAdapter.addMany(initialState[StoreKeys.SIGHASH], mockedSighashes),
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.addOne(initialState[StoreKeys.CONTRACT_BASE], mockedContractBase),
+      [StoreKeys.CONTRACT_RAW]: contractBaseAdapter.addOne(initialState[StoreKeys.CONTRACT_RAW], mockedContractRaw),
+      [StoreKeys.SOURCE_FILES]: sourceFilesAdapter.addMany(initialState[StoreKeys.SOURCE_FILES], mockedSourceFiles),
+      [StoreKeys.INSTRUCTIONS]: instructionsAdapter.addMany(initialState[StoreKeys.INSTRUCTIONS], mockedInstructions),
       [StoreKeys.ACTIVE_LINE]: { ...initialState[StoreKeys.ACTIVE_LINE], structlogsPerActiveLine: mockedStructlogsPerLine },
+      [StoreKeys.DISASSEMBLED_BYTECODES]: disassembledBytecodesAdapter.addMany(
+        initialState[StoreKeys.DISASSEMBLED_BYTECODES],
+        mockedBytecodes,
+      ),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -110,53 +112,51 @@ describe('runAnalyzer', () => {
           [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
           [StoreKeys.STRUCT_LOGS]: structLogsReducer,
-          [StoreKeys.BYTECODES]: bytecodesReducer,
+          [StoreKeys.CONTRACT_BASE]: contractBaseReducer,
+          [StoreKeys.CONTRACT_RAW]: contractRawReducer,
+          [StoreKeys.SOURCE_FILES]: sourceFilesReducer,
           [StoreKeys.SIGHASH]: sighashReducer,
-          [StoreKeys.CONTRACT_NAMES]: contractNamesReducer,
-          [StoreKeys.SOURCE_MAPS]: sourceMapsReducer,
-          [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
-          [StoreKeys.ABIS]: abisReducer,
           [StoreKeys.INSTRUCTIONS]: instructionsReducer,
           [StoreKeys.TRACE_LOGS]: traceLogsReducer,
           [StoreKeys.ACTIVE_BLOCK]: activeBlockReducer,
           [StoreKeys.ACTIVE_LINE]: activeLineReducer,
+          [StoreKeys.DISASSEMBLED_BYTECODES]: disassembledBytecodesReducer,
         }),
       )
       .provide([
         [
           matchers.call.fn(runAnalyzer),
           {
+            transactionInfo: mockedTransactionInfo,
+            traceLogs: mockedTraceLogs,
             structLogs: mockedStructlogs,
-            mainTraceLogList: mockedTraceLogs,
-            instructionsMap: stepInstructionsMap,
-            analyzeSummary: {
-              contractSighashesInfo: mockedSighashes,
-              contractAddresses: addressesList,
-            },
+            sighashes: mockedSighashes,
+            disassembledBytecodes: mockedBytecodes,
+            contractsStructLogsPerLine: mockedStructlogsPerLine,
+            contractsSourceFiles: mockedSourceFiles,
+            contractsInstructions: mockedInstructions,
+            contractsDisassembledBytecodes: mockedBytecodes,
+            contractsBaseData: [mockedContractBase],
           },
         ],
+        [matchers.call.fn(getContractsRawData), { [mockedContractRaw.address]: mockedContractRaw }],
       ])
       .withState(initialState)
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(runAnalyzer)
-      .put(sighashActions.addSighashes(mockedSighashes))
+      .call(getContractsRawData)
+      .put(transactionInfoActions.setTransactionInfo(mockedTransactionInfo))
       .put(structLogsActions.loadStructLogs(mockedStructlogs))
       .put(traceLogsActions.addTraceLogs(mockedTraceLogs))
       .put(activeBlockActions.loadActiveBlock(mockedActiveBlock))
-      .put(
-        instructionsActions.addInstructions(
-          Object.entries(stepInstructionsMap).map(([address, { instructions }]) => ({ instructions, address })),
-        ),
-      )
-      .put(
-        activeLineActions.setStructlogsPerActiveLine(
-          Object.entries(stepInstructionsMap).reduce((accumulator, [address, { structlogsPerStartLine }]) => {
-            accumulator[address] = structlogsPerStartLine
-            return accumulator
-          }, {}),
-        ),
-      )
+      .put(sighashActions.addSighashes(mockedSighashes))
+      .put(contractBaseActions.loadContractsBaseData([mockedContractBase]))
+      .put(contractRawActions.loadContractsRawData({ [mockedContractRaw.address]: mockedContractRaw }))
+      .put(disassembledBytecodesActions.loadBytecodes(mockedBytecodes))
+      .put(sourceFilesActions.loadContractsSourceFiles(mockedSourceFiles))
+      .put(instructionsActions.addInstructions(mockedInstructions))
+      .put(activeLineActions.setStructlogsPerActiveLine(mockedStructlogsPerLine))
       .put.like({ action: addSecondLogAction })
       .put(analyzerActions.updateStage(successStage))
       .run()

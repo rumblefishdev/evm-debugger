@@ -1,18 +1,11 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { sourceCodesSelectors } from '../../../store/sourceCodes/sourceCodes.selectors'
-import { sourceCodesActions } from '../../../store/sourceCodes/sourceCodes.slice'
 
 import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const SourcecodesManager = () => {
-  const dispatch = useTypedDispatch()
-  const addSourcecode = (id: string, value: string) => {
-    dispatch(sourceCodesActions.updateSourceCode({ id, changes: { sourceCode: value } }))
-  }
+  const addSourcecode = (_: string, __: string) => {}
 
   const sourceCodesWithNames = useSelector(sourceCodesSelectors.selectAllWithContractNames)
 
@@ -25,7 +18,7 @@ export const SourcecodesManager = () => {
             <ManagerItem
               key={item.address}
               address={item.address}
-              name={item.contractName}
+              name={item.name}
               value={item.sourceCode}
               isFound={item.sourceCode !== null}
               updateItem={addSourcecode}

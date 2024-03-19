@@ -1,10 +1,9 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import type { TContractInstructions } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 
-import type { TInstructionState } from './instructions.types'
-
-export const instructionsAdapter = createEntityAdapter<TInstructionState>({
+export const instructionsAdapter = createEntityAdapter<TContractInstructions>({
   sortComparer: (a, b) => a.address.localeCompare(b.address),
   selectId: (entity) => entity.address,
 })

@@ -49,7 +49,7 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
     const structLogs = yield* call(parseStructlogs, structlogsArrayBuffer)
 
     const analyzer = yield* call(getAnalyzerInstance)
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.loadStructlogs, [structLogs])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputStructlogs.set, [structLogs])
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Successfully downloaded and parsed structlogs')))
     yield* put(

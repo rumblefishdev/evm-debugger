@@ -2,13 +2,12 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
-import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
-import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
 import type { AceEditorClickEvent } from '../../../../../components/AceEditor/AceEditor.types'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
+import { sourceFilesSelectors } from '../../../../../store/sourceFiles/sourceFiles.selectors'
 
 import { SourceCodeView } from './SourceCodeView.component'
 
@@ -21,8 +20,8 @@ export const SourceCodeViewContainer: React.FC = () => {
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)
 
   const structlogsPerLine = useSelector(activeLineSelectors.selectStructlogsPerLineForActiveBlock)
-  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
-  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
+  const activeSourceFileId = useSelector(sourceFilesSelectors.selectSourceFileId)
+  const sourceFiles = useSelector(sourceFilesSelectors.selectCurrentSourceFiles)
 
   const currentInstruction = useSelector(instructionsSelectors.selectCurrentSourceCodeInstruction)
 
@@ -49,7 +48,7 @@ export const SourceCodeViewContainer: React.FC = () => {
       endCodeLine={isOnSameFile ? endCodeLine : -1}
       startCodeLine={isOnSameFile ? startCodeLine : -1}
       contractName={sourceFiles[activeSourceFileId]?.name}
-      activeSourceCode={sourceFiles[activeSourceFileId]?.sourceCode}
+      activeSourceCode={sourceFiles[activeSourceFileId]?.content}
       currentSelectedLine={currentSelectedLineNumber}
       onClick={handleLineSelection}
       lineRowsAvailableForSelections={lineRowsAvailableForSelections}

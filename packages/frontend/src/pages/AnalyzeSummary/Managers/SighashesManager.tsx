@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { contractNamesSelectors } from '../../../store/contractNames/contractNames.selectors'
 import { sighashSelectors } from '../../../store/sighash/sighash.selectors'
 import { sighashActions } from '../../../store/sighash/sighash.slice'
+import { contractBaseSelectors } from '../../../store/contractBase/contractBase.selectors'
 
 import { StyledStack, StyledHeading, StyledAddress, StyledWrapper, StyledSighashesWrapper, StyledContentWrapper } from './styles'
 
@@ -21,7 +21,7 @@ function formatFragment(fragment: JsonFragment) {
 
 export const SighashesManager = () => {
   const sighashesWithNames = useSelector(sighashSelectors.selectAllWithContractNames)
-  const contractNames = useSelector(contractNamesSelectors.selectAll)
+  const contractNames = useSelector(contractBaseSelectors.selectAll)
 
   return (
     <StyledStack>
@@ -36,7 +36,7 @@ export const SighashesManager = () => {
                 arrow
                 followCursor
               >
-                <StyledAddress>{contract.contractName || contract.address}</StyledAddress>
+                <StyledAddress>{contract.name || contract.address}</StyledAddress>
               </Tooltip>
               <StyledWrapper>
                 {filteredSighashes.map((sighash) => (

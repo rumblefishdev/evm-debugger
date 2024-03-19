@@ -9,10 +9,9 @@ import {
   type MuiTreeViewNode,
   getPathByNodeId,
 } from '../../../../../helpers/muiTreeViewUtils'
-import { activeSourceFileSelectors } from '../../../../../store/activeSourceFile/activeSourceFile.selectors'
-import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
-import { sourceCodesSelectors } from '../../../../../store/sourceCodes/sourceCodes.selectors'
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
+import { sourceFilesSelectors } from '../../../../../store/sourceFiles/sourceFiles.selectors'
+import { sourceFilesActions } from '../../../../../store/sourceFiles/sourceFiles.slice'
 
 import { TreeFileView } from './TreeFileView.component'
 
@@ -22,35 +21,36 @@ export const TreeFileViewContainer: React.FC = () => {
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<string[]>(['/'])
   const [selectedTreeNode, setSelectedTreeNode] = useState<string>('/')
 
-  const activeSourceFileId = useSelector(activeSourceFileSelectors.selectActiveSourceFile)
-  const sourceFiles = useSelector(sourceCodesSelectors.selectCurrentSourceFiles)
+  const activeSourceFileId = useSelector(sourceFilesSelectors.selectSourceFileId)
+  const sourceFiles = useSelector(sourceFilesSelectors.selectCurrentSourceFiles)
 
   const sourceFilesNameToIdMap = useMemo<Record<string, number>>(
-    () => sourceFiles.reduce((files, file, index) => ({ ...files, [file.name]: index }), {}),
+    () => sourceFiles.reduce((files, file, index) => ({ ...files, [file.path]: index }), {}),
     [sourceFiles],
   )
+
   const sourceFilesTreeItems = useMemo<MuiTreeViewNode[]>(
-    () => parsePathsToMuiTreeView(sourceFiles.map((item) => item.name)),
+    () => parsePathsToMuiTreeView(sourceFiles.map((item) => item.path)),
     [sourceFiles],
   )
 
   useEffect(() => {
-    setExpandedTreeNodes(getExpandedNodes([sourceFiles[0]?.name]))
-    setSelectedTreeNode(getNodeIdByPath(sourceFiles[0]?.name))
+    setExpandedTreeNodes(getExpandedNodes([sourceFiles[0]?.path]))
+    setSelectedTreeNode(getNodeIdByPath(sourceFiles[0]?.path))
   }, [sourceFiles])
 
   useEffect(() => {
     if (sourceFiles[activeSourceFileId]) {
-      setExpandedTreeNodes(getExpandedNodes([sourceFiles[activeSourceFileId]?.name]))
-      setSelectedTreeNode(getNodeIdByPath(sourceFiles[activeSourceFileId]?.name))
+      setExpandedTreeNodes(getExpandedNodes([sourceFiles[activeSourceFileId]?.path]))
+      setSelectedTreeNode(getNodeIdByPath(sourceFiles[activeSourceFileId]?.path))
     }
   }, [sourceFiles, activeSourceFileId])
 
   const handleSelect = (_: React.SyntheticEvent, nodeId: string) => {
     setSelectedTreeNode(nodeId)
     const fileName = getPathByNodeId(nodeId)
-    if (sourceFiles.some((file) => file.name === fileName)) {
-      dispatch(activeSourceFileActions.setActiveSourceFile(sourceFilesNameToIdMap[fileName]))
+    if (sourceFiles.some((file) => file.path === fileName)) {
+      dispatch(sourceFilesActions.setActiveSourceFileId(sourceFilesNameToIdMap[fileName]))
       dispatch(activeLineActions.clearActiveLine())
     }
   }
