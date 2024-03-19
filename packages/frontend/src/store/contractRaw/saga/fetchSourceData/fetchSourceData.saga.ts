@@ -2,7 +2,6 @@ import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 import type { TEtherscanContractSourceCodeResult, TSourceData } from '@evm-debuger/types'
 
 import { traceStorageBucket } from '../../../../config'
-import { abisActions } from '../../../abis/abis.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import type { ContractRawActions } from '../../contractRaw.slice'
@@ -27,7 +26,6 @@ export function* fetchSourceDataForContractSaga({ payload }: ContractRawActions[
     const etherscanSourceData = yield* call(fetchSourceData, sourceDataPath)
     const sourcesOrder = yield* call(fetchSourcesOrder, sourcesPath)
     if (etherscanSourceData.ABI) {
-      yield* put(abisActions.addAbi({ address: contractAddress, abi: etherscanSourceData.ABI }))
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
         contractAddress,
         'applicationBinaryInterface',

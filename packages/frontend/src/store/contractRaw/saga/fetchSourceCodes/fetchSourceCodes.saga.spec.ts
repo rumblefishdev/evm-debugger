@@ -6,10 +6,9 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer/analyzer.utils'
 import { testLogMessageViaInspect } from '../../../../helpers/sagaTests'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import { contractsSelectors } from '../../../contracts/contracts.selectors'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { sourceCodesActions } from '../../sourceCodes.slice'
-import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
+import { contractBaseSelectors } from '../../../contractBase/contractBase.selectors'
+import { contractRawActions } from '../../contractRaw.slice'
 
 import { fetchSourcesStatus, startPoolingSourcesStatusSaga } from './fetchSourceCodes.saga'
 
@@ -60,7 +59,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .next()
       .select(transactionConfigSelectors.selectChainId)
       .next(CHAIN_ID)
-      .select(contractsSelectors.selectAllAddresses)
+      .select(contractBaseSelectors.selectAllAddresses)
       .next(CONTRACT_ADDRESSES)
       .select(transactionConfigSelectors.selectTransactionHash)
       .next(TRANSACTION_HASH)
@@ -75,7 +74,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, thirdLogMessage))
       .next()
       .put(
-        sourceCodesActions.fetchSourceData({
+        contractRawActions.fetchSourceData({
           sourcesPath: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSources,
           sourceDataPath: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceData,
           contractAddress: CONTRACT_ADDRESSES[0],
@@ -85,7 +84,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .take(analyzerActions.addLogMessage)
       .next()
       .put(
-        sourceMapsActions.fetchSourceMaps({
+        contractRawActions.fetchSourceMaps({
           path: firstMockedResponse[CONTRACT_ADDRESSES[0]].pathSourceMap,
           contractAddress: CONTRACT_ADDRESSES[0],
         }),
@@ -102,7 +101,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .inspect((inspect: unknown) => testLogMessageViaInspect(inspect, fifthLogMessage))
       .next()
       .put(
-        sourceCodesActions.fetchSourceData({
+        contractRawActions.fetchSourceData({
           sourcesPath: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSources,
           sourceDataPath: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceData,
           contractAddress: CONTRACT_ADDRESSES[1],
@@ -112,7 +111,7 @@ describe('startPoolingSourcesStatusSaga', () => {
       .take(analyzerActions.addLogMessage)
       .next()
       .put(
-        sourceMapsActions.fetchSourceMaps({
+        contractRawActions.fetchSourceMaps({
           path: secondMockedResponse[CONTRACT_ADDRESSES[1]].pathSourceMap,
           contractAddress: CONTRACT_ADDRESSES[1],
         }),

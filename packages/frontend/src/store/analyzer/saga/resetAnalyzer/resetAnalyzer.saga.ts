@@ -6,7 +6,6 @@ import { traceLogsActions } from '../../../traceLogs/traceLogs.slice'
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { sighashActions } from '../../../sighash/sighash.slice'
 import { disassembledBytecodesActions } from '../../../disassembledBytecodes/disassembledBytecodes.slice'
-import { abisActions } from '../../../abis/abis.slice'
 import { instructionsActions } from '../../../instructions/instructions.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
@@ -24,7 +23,6 @@ export function* resetAnalyzerSaga() {
   yield* put(contractRawActions.clearContractsRaw())
   yield* put(contractBaseActions.clearContractsBase())
   yield* put(sourceFilesActions.clearContractsSourceFiles())
-  yield* put(abisActions.clearAbis())
 
   yield* put(instructionsActions.clearInstructions())
   yield* put(traceLogsActions.clearTraceLogs())

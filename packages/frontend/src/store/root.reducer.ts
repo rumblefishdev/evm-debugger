@@ -11,7 +11,6 @@ import { uiReducer } from './ui/ui.slice'
 import { transactionInfoReducer } from './transactionInfo/transactionInfo.slice'
 import { transactionConfigReducer } from './transactionConfig/transactionConfig.slice'
 import { analyzerReducer } from './analyzer/analyzer.slice'
-import { abisReducer } from './abis/abis.slice'
 import { activeLineReducer } from './activeLine/activeLine.slice'
 import { yulNodesReducer } from './yulNodes/yulNodes.slice'
 import { sourceFilesReducer } from './sourceFiles/sourceFiles.slice'
@@ -31,7 +30,6 @@ export const rootReducer = combineReducers({
   [StoreKeys.UI]: uiReducer,
   [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
   [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
-  [StoreKeys.ABIS]: abisReducer,
   [StoreKeys.ACTIVE_LINE]: activeLineReducer,
   [StoreKeys.YUL_NODES]: yulNodesReducer,
   [StoreKeys.SOURCE_FILES]: sourceFilesReducer,

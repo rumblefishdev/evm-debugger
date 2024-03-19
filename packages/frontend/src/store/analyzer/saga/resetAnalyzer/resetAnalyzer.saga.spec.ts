@@ -7,11 +7,6 @@ import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
 import { StoreKeys } from '../../../store.keys'
 import { transactionInfoActions, transactionInfoReducer } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions, structLogsAdapter, structLogsReducer } from '../../../structlogs/structlogs.slice'
-import { contractsReducer, contractsAdapter, contractsActions } from '../../../contracts/contracts.slice'
-import { bytecodesReducer, bytecodesAdapter, bytecodesActions } from '../../../disassembledBytecodes/bytecodes.slice'
-import { sourceCodesReducer, sourceCodesAdapter, sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
-import { sourceMapsReducer, sourceMapsAdapter, sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
-import { abisReducer, abisAdapter, abisActions } from '../../../abis/abis.slice'
 import { instructionsReducer, instructionsAdapter, instructionsActions } from '../../../instructions/instructions.slice'
 import { traceLogsReducer, traceLogsAdapter, traceLogsActions } from '../../../traceLogs/traceLogs.slice'
 import { sighashReducer, sighashAdapter, sighashActions } from '../../../sighash/sighash.slice'
@@ -20,15 +15,16 @@ import { TransactionInfoState } from '../../../transactionInfo/transactionInfo.s
 import { AnalyzerState } from '../../analyzer.state'
 import { mockTransactionInfoState } from '../../../transactionInfo/transactionInfo.mock'
 import { createMockedStructLogs } from '../../../structlogs/structlogs.mock'
-import { createMockedContracts } from '../../../contracts/contracts.mock'
-import { createMockedBytecodes } from '../../../disassembledBytecodes/bytecodes.mock'
-import { createMockedSourceCodes } from '../../../sourceCodes/sourceCodes.mock'
-import { createMockedSourceMaps } from '../../../sourceMaps/sourceMaps.mock'
-import { createMockedAbis } from '../../../abis/abi.mock'
-import { createMockedInstructions } from '../../../instructions/instructions.mock'
 import { createMockedTracelogs } from '../../../traceLogs/traceLogs.mock'
 import { createMockedSighashes } from '../../../sighash/sighash.mock'
 import { createDirtyAnalyerState } from '../../analyzer.mock'
+import { createMockedContractBaseWithName } from '../../../contractBase/contractBase.mock'
+import { createMockedContractRawData } from '../../../contractRaw/contractRaw.mock'
+import { contractBaseActions, contractBaseAdapter, contractBaseReducer } from '../../../contractBase/contractBase.slice'
+import { contractRawActions, contractRawAdapter, contractRawReducer } from '../../../contractRaw/contractRaw.slice'
+import { createMockedSourceFiles } from '../../../sourceFiles/sourceFiles.mock'
+import { sourceFilesActions, sourceFilesAdapter, sourceFilesReducer } from '../../../sourceFiles/sourceFiles.slice'
+import { createMockedInstruction } from '../../../instructions/instructions.mock'
 
 import { resetAnalyzerSaga } from './resetAnalyzer.saga'
 
@@ -36,12 +32,19 @@ const mockedTransactionConfig = { transactionHash: '0x1234567890', s3Location: '
 const mockedTransactionInfo = mockTransactionInfoState()
 const mockedStructlogs = createMockedStructLogs(4)
 const mockedAnalyzerState = createDirtyAnalyerState()
-const mockedContractNames = createMockedContracts(4)
-const mockedBytecodes = createMockedBytecodes(4)
-const mockedSourceCodes = createMockedSourceCodes(4)
-const mockedSourceMaps = createMockedSourceMaps(4)
-const mockedAbis = createMockedAbis(4)
-const mockedInstructions = createMockedInstructions(4)
+
+const mockedContractBase = [
+  createMockedContractBaseWithName(),
+  createMockedContractBaseWithName(),
+  createMockedContractBaseWithName(),
+  createMockedContractBaseWithName(),
+]
+
+const mockedSourceFiles = createMockedSourceFiles()
+
+const mockedContractRaw = mockedContractBase.map((contract) => createMockedContractRawData(contract.address))
+
+const mockedInstructions = [createMockedInstruction(), createMockedInstruction(), createMockedInstruction(), createMockedInstruction()]
 const mockedTracelogs = createMockedTracelogs(4)
 const mockedSighashes = createMockedSighashes(4)
 
@@ -52,29 +55,25 @@ describe('resetAnalyzerSaga', () => {
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState() },
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
       [StoreKeys.STRUCT_LOGS]: structLogsAdapter.getInitialState(),
-      [StoreKeys.CONTRACTS]: contractsAdapter.getInitialState(),
-      [StoreKeys.BYTECODES]: bytecodesAdapter.getInitialState(),
-      [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.getInitialState(),
-      [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.getInitialState(),
-      [StoreKeys.ABIS]: abisAdapter.getInitialState(),
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.getInitialState(),
+      [StoreKeys.CONTRACT_RAW]: contractRawAdapter.getInitialState(),
       [StoreKeys.INSTRUCTIONS]: instructionsAdapter.getInitialState(),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.getInitialState(),
       [StoreKeys.SIGHASH]: sighashAdapter.getInitialState(),
+      [StoreKeys.SOURCE_FILES]: sourceFilesAdapter.getInitialState(),
     }
 
     const dirtyState = {
       [StoreKeys.TRANSACTION_INFO]: { ...mockedTransactionInfo },
       [StoreKeys.TRANSACTION_CONFIG]: { ...mockedTransactionConfig },
       [StoreKeys.ANALYZER]: { ...mockedAnalyzerState },
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.setAll(contractBaseAdapter.getInitialState(), mockedContractBase),
+      [StoreKeys.CONTRACT_RAW]: contractRawAdapter.setAll(contractRawAdapter.getInitialState(), mockedContractRaw),
       [StoreKeys.STRUCT_LOGS]: structLogsAdapter.setAll(initialState[StoreKeys.STRUCT_LOGS], mockedStructlogs),
-      [StoreKeys.CONTRACTS]: contractsAdapter.setAll(initialState[StoreKeys.CONTRACTS], mockedContractNames),
-      [StoreKeys.BYTECODES]: bytecodesAdapter.setAll(initialState[StoreKeys.BYTECODES], mockedBytecodes),
-      [StoreKeys.SOURCE_CODES]: sourceCodesAdapter.setAll(initialState[StoreKeys.SOURCE_CODES], mockedSourceCodes),
-      [StoreKeys.SOURCE_MAPS]: sourceMapsAdapter.setAll(initialState[StoreKeys.SOURCE_MAPS], mockedSourceMaps),
-      [StoreKeys.ABIS]: abisAdapter.setAll(initialState[StoreKeys.ABIS], mockedAbis),
       [StoreKeys.INSTRUCTIONS]: instructionsAdapter.setAll(initialState[StoreKeys.INSTRUCTIONS], mockedInstructions),
       [StoreKeys.TRACE_LOGS]: traceLogsAdapter.setAll(initialState[StoreKeys.TRACE_LOGS], mockedTracelogs),
       [StoreKeys.SIGHASH]: sighashAdapter.setAll(initialState[StoreKeys.SIGHASH], mockedSighashes),
+      [StoreKeys.SOURCE_FILES]: sourceFilesAdapter.setOne(initialState[StoreKeys.SOURCE_FILES], mockedSourceFiles),
     }
 
     await expectSaga(resetAnalyzerSaga)
@@ -84,14 +83,12 @@ describe('resetAnalyzerSaga', () => {
           [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
           [StoreKeys.STRUCT_LOGS]: structLogsReducer,
-          [StoreKeys.CONTRACTS]: contractsReducer,
-          [StoreKeys.BYTECODES]: bytecodesReducer,
-          [StoreKeys.SOURCE_CODES]: sourceCodesReducer,
-          [StoreKeys.SOURCE_MAPS]: sourceMapsReducer,
-          [StoreKeys.ABIS]: abisReducer,
+          [StoreKeys.CONTRACT_BASE]: contractBaseReducer,
+          [StoreKeys.CONTRACT_RAW]: contractRawReducer,
           [StoreKeys.INSTRUCTIONS]: instructionsReducer,
           [StoreKeys.TRACE_LOGS]: traceLogsReducer,
           [StoreKeys.SIGHASH]: sighashReducer,
+          [StoreKeys.SOURCE_FILES]: sourceFilesReducer,
         }),
       )
       .withState(dirtyState)
@@ -99,11 +96,9 @@ describe('resetAnalyzerSaga', () => {
       .put(transactionConfigActions.clearTransactionConfig())
       .put(transactionInfoActions.clearTransactionInfo())
       .put(structLogsActions.clearStructLogs())
-      .put(contractsActions.clearContractNames())
-      .put(bytecodesActions.clearBytecodes())
-      .put(sourceCodesActions.clearSourceCodes())
-      .put(sourceMapsActions.clearSourceMaps())
-      .put(abisActions.clearAbis())
+      .put(contractBaseActions.clearContractsBase())
+      .put(contractRawActions.clearContractsRaw())
+      .put(sourceFilesActions.clearContractsSourceFiles())
       .put(instructionsActions.clearInstructions())
       .put(traceLogsActions.clearTraceLogs())
       .put(sighashActions.clearSighashes())

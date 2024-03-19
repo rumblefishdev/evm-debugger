@@ -7,8 +7,7 @@ import { createInfoLogMessage } from '../../analyzer.utils'
 import { testLogMessageViaInspect } from '../../../../helpers/sagaTests'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { bytecodesActions } from '../../../disassembledBytecodes/bytecodes.slice'
-import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
+import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
 
 import { processTransactionSaga } from './processTransaction.saga'
 import { processTransactionTakesMatchers } from './processTransaction.takes'
@@ -49,11 +48,11 @@ describe('processTransactionSaga', () => {
       .next()
       .take(processTransactionTakesMatchers[AnalyzerStages.GATHERING_CONTRACTS_INFORMATION])
       .next()
-      .put(bytecodesActions.fetchBytecodes())
+      .put(contractRawActions.fetchBytecodes())
       .next()
       .take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_BYTECODES])
       .next()
-      .put(sourceCodesActions.startPoolingSources())
+      .put(contractRawActions.startPoolingSources())
       .next()
       .take(processTransactionTakesMatchers[AnalyzerStages.FETCHING_SOURCE_CODES])
       .next()

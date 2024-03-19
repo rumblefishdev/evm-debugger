@@ -10,7 +10,6 @@ export enum StoreKeys {
   INSTRUCTIONS = 'instructions',
   UI = 'ui',
   TRANSACTION_CONFIG = 'transactionConfig',
-  ABIS = 'abis',
   ACTIVE_LINE = 'activeLine',
   YUL_NODES = 'yulNodes',
   SOURCE_FILES = 'sourceFiles',

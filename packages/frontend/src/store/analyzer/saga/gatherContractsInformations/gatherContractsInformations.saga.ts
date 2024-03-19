@@ -1,6 +1,5 @@
 import { type SagaGenerator, put, call, apply } from 'typed-redux-saga'
 
-import { contractsActions } from '../../../contracts/contracts.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'

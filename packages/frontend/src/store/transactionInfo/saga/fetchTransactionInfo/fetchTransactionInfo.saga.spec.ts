@@ -3,11 +3,8 @@ import * as matchers from 'redux-saga-test-plan/matchers'
 import { ChainId } from '@evm-debuger/types'
 import { combineReducers } from 'redux'
 
-import { transactionInfoActions, transactionInfoReducer } from '../../transactionInfo.slice'
 import { transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
 import { analyzerActions, analyzerReducer } from '../../../analyzer/analyzer.slice'
-import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
-import { TransactionInfoState } from '../../transactionInfo.state'
 import { AnalyzerState, analyzerStagesAdapter } from '../../../analyzer/analyzer.state'
 import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
@@ -15,6 +12,7 @@ import { createInfoLogMessage, createSuccessLogMessage } from '../../../analyzer
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import type { TEthersTransactionReposnse } from '../../transactionInfo.types'
+import { TransactionConfigState } from '../../../transactionConfig/transactionConfig.state'
 
 import { fetchTransactionInfoSaga, getTransactionInfo } from './fetchTransactionInfo.saga'
 
@@ -37,7 +35,6 @@ const transactionInfo: TEthersTransactionReposnse = {
 describe('fetchTransactionInfoSaga', () => {
   it('should fetch transaction info', async () => {
     const initialState = {
-      [StoreKeys.TRANSACTION_INFO]: { ...new TransactionInfoState() },
       [StoreKeys.TRANSACTION_CONFIG]: { ...new TransactionConfigState(), transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID },
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
     }
@@ -52,7 +49,6 @@ describe('fetchTransactionInfoSaga', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.TRANSACTION_INFO]: formatTransactionReposne(transactionInfo),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -66,7 +62,6 @@ describe('fetchTransactionInfoSaga', () => {
     const { storeState } = await expectSaga(fetchTransactionInfoSaga)
       .withReducer(
         combineReducers({
-          [StoreKeys.TRANSACTION_INFO]: transactionInfoReducer,
           [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer,
           [StoreKeys.ANALYZER]: analyzerReducer,
         }),
@@ -76,14 +71,10 @@ describe('fetchTransactionInfoSaga', () => {
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(getTransactionInfo, TRANSACTION_HASH, CHAIN_ID)
-      .put(transactionInfoActions.setTransactionInfo(formatTransactionReposne(transactionInfo)))
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addSecondLogAction })
       .run()
 
-    expect(storeState.transactionInfo.hash).toEqual(expectedState.transactionInfo.hash)
-    expect(storeState.transactionInfo.chainId).toEqual(expectedState.transactionInfo.chainId)
-    expect(storeState.transactionInfo.gasLimit).toEqual(expectedState.transactionInfo.gasLimit)
     testLogMessages(storeState[StoreKeys.ANALYZER], [firstLogMessage, secondLogMessage])
   })
 })

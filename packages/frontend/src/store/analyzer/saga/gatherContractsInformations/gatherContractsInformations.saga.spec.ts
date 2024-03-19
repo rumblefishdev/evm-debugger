@@ -8,24 +8,21 @@ import { StoreKeys } from '../../../store.keys'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
-import { contractsActions, contractsAdapter, contractsReducer } from '../../../contracts/contracts.slice'
-import { createMockedBytecodes } from '../../../disassembledBytecodes/bytecodes.mock'
-import { createMockedContracts } from '../../../contracts/contracts.mock'
+import { contractBaseActions, contractBaseAdapter, contractBaseReducer } from '../../../contractBase/contractBase.slice'
+import { createMockedContractBase } from '../../../contractBase/contractBase.mock'
 
 import { gatherContractsInformationsSaga } from './gatherContractsInformations.saga'
 
-const mockedEmptyBytecodes = createMockedBytecodes(4)
-const mockedEmptyContractNames = createMockedContracts(4)
-
-const contractAddresses = mockedEmptyBytecodes.map((bytecode) => bytecode.address)
+const mockedEmptyContractBases = [createMockedContractBase(), createMockedContractBase()]
+const mockedContractBasesAddresses = mockedEmptyContractBases.map((contractBase) => contractBase.address)
 
 describe('gatherContractsInformations', () => {
   it('should gather contracts informations', async () => {
     const analyzerInstance = getAnalyzerInstance()
 
     const initialState = {
-      [StoreKeys.CONTRACTS]: { ...contractsAdapter.getInitialState() },
       [StoreKeys.ANALYZER]: { ...new AnalyzerState() },
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.getInitialState(),
     }
 
     const inProgresStage = { stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION }
@@ -39,7 +36,7 @@ describe('gatherContractsInformations', () => {
 
     const expectedState = {
       ...initialState,
-      [StoreKeys.CONTRACTS]: contractsAdapter.addMany(initialState[StoreKeys.CONTRACTS], mockedEmptyContractNames),
+      [StoreKeys.CONTRACT_BASE]: contractBaseAdapter.addMany(initialState[StoreKeys.CONTRACT_BASE], mockedEmptyContractBases),
       [StoreKeys.ANALYZER]: {
         ...initialState[StoreKeys.ANALYZER],
         stages: analyzerStagesAdapter.updateOne(initialState[StoreKeys.ANALYZER].stages, {
@@ -54,19 +51,19 @@ describe('gatherContractsInformations', () => {
       .withReducer(
         combineReducers({
           [StoreKeys.ANALYZER]: analyzerReducer,
-          [StoreKeys.CONTRACTS]: contractsReducer,
+          [StoreKeys.CONTRACT_BASE]: contractBaseReducer,
         }),
       )
       .provide([
         [matchers.call.fn(getAnalyzerInstance), analyzerInstance],
-        [matchers.apply.fn(analyzerInstance.getContractAddressesInTransaction), contractAddresses],
+        [matchers.apply.fn(analyzerInstance.getTraceLogsContractAddresses), mockedContractBasesAddresses],
       ])
       .withState(initialState)
       .put.like({ action: addFirstLogAction })
       .put(analyzerActions.updateStage(inProgresStage))
       .call(getAnalyzerInstance)
-      .apply(analyzerInstance, analyzerInstance.getContractAddressesInTransaction, [])
-      .put(contractsActions.initializeContracts(contractAddresses))
+      .apply(analyzerInstance, analyzerInstance.getTraceLogsContractAddresses, [])
+      .put(contractBaseActions.initializeContractsBase(mockedContractBasesAddresses))
       .put.like({ action: addSecondLogAction })
       .put(analyzerActions.updateStage(successStage))
       .run()
