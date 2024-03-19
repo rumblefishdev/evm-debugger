@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-undefined */
-import type { TAnalyzerContractData } from '@evm-debuger/types'
-import { BaseOpcodesHex, SourceFileType, type TParsedSourceMap, type TSourceMapCodeRepresentation } from '@evm-debuger/types'
+import type { TAnalyzerContractData, TParsedSourceMap, TSourceMapCodeRepresentation } from '@evm-debuger/types'
+import { BaseOpcodesHex, SourceFileType } from '@evm-debuger/types'
 
 type SourceCodeDictionary = Record<string, TParsedSourceMap & TSourceMapCodeRepresentation>
 
