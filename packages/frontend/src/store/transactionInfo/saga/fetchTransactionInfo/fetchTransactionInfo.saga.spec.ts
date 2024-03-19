@@ -75,6 +75,8 @@ describe('fetchTransactionInfoSaga', () => {
       .put.like({ action: addSecondLogAction })
       .run()
 
+    expect(storeState).toEqual(expectedState)
+
     testLogMessages(storeState[StoreKeys.ANALYZER], [firstLogMessage, secondLogMessage])
   })
 })

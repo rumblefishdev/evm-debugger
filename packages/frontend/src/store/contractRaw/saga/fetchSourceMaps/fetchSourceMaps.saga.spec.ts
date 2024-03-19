@@ -8,7 +8,7 @@ import { StoreKeys } from '../../../store.keys'
 import { createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { createMockedContractBase } from '../../../contractBase/contractBase.mock'
-import { createMockedContractRawData, createMockedSourceMap } from '../../contractRaw.mock'
+import { createMockedSourceMap } from '../../contractRaw.mock'
 import { contractBaseAdapter, contractBaseReducer } from '../../../contractBase/contractBase.slice'
 import { contractRawActions } from '../../contractRaw.slice'
 
@@ -17,7 +17,6 @@ import { fetchSourceMap, fetchSourceMapsForContractSaga } from './fetchSourceMap
 const MOCK_SOURCE_MAP_PATH = 'mockPath'
 const mockedContractBase = createMockedContractBase()
 const mockedSourceMapInfraContent = createMockedSourceMap(mockedContractBase.address)
-const mockedContractRaw = createMockedContractRawData(mockedContractBase.address)
 
 describe('fetchSourceMapsForContractSaga', () => {
   it('should fetch source maps for contract', async () => {

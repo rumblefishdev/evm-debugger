@@ -1,7 +1,6 @@
 import type { ChainId, TTransactionInfo } from '@evm-debuger/types'
 import { put, select, type SagaGenerator, call, apply } from 'typed-redux-saga'
 
-import { transactionInfoActions } from '../../transactionInfo.slice'
 import { jsonRpcProvider } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'

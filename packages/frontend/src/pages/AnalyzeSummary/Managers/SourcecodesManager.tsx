@@ -1,14 +1,11 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
 
 import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const SourcecodesManager = () => {
-  const dispatch = useTypedDispatch()
-  const addSourcecode = (id: string, value: string) => {}
+  const addSourcecode = (_: string, __: string) => {}
 
   const sourceCodesWithNames = useSelector(sourceCodesSelectors.selectAllWithContractNames)
 
