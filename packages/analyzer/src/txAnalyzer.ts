@@ -18,11 +18,15 @@ export class TxAnalyzer {
       const contractBytecode = this.dataLoader.inputContractData.get(address, 'bytecode')
       const etherscanBytecode = this.dataLoader.inputContractData.get(address, 'etherscanBytecode')
 
-      const etherscanDisassembledBytecode = this.evmMachine.dissasembleBytecode(etherscanBytecode)
-      const disassembledBytecode = this.evmMachine.dissasembleBytecode(contractBytecode)
+      if (etherscanBytecode) {
+        const etherscanDisassembledBytecode = this.evmMachine.dissasembleBytecode(etherscanBytecode)
+        this.dataLoader.analyzerContractData.set(address, 'disassembledEtherscanBytecode', etherscanDisassembledBytecode)
+      }
 
-      this.dataLoader.analyzerContractData.set(address, 'disassembledBytecode', disassembledBytecode)
-      this.dataLoader.analyzerContractData.set(address, 'disassembledEtherscanBytecode', etherscanDisassembledBytecode)
+      if (contractBytecode) {
+        const disassembledBytecode = this.evmMachine.dissasembleBytecode(contractBytecode)
+        this.dataLoader.analyzerContractData.set(address, 'disassembledBytecode', disassembledBytecode)
+      }
     }
   }
 

@@ -26,7 +26,7 @@ import { OpCodeConverter } from './structLogParser'
 export class TraceCreator {
   private readonly storageHandler: StorageHandler = new StorageHandler()
   private readonly stackCounter: StackCounter = new StackCounter()
-  private readonly fragmentReader: FragmentReader = new FragmentReader()
+  private fragmentReader: FragmentReader
   private readonly dataLoader: DataLoader
 
   constructor(dataLoader: DataLoader) {
@@ -233,6 +233,8 @@ export class TraceCreator {
   }
 
   public processTransactionStructLogs() {
+    this.fragmentReader = new FragmentReader()
+
     if (this.dataLoader.inputStructlogs.get().length === 0) throw new Error(`Too primitive transaction without stack calls.`)
 
     this.loadContractsAbis()

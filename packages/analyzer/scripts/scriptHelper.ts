@@ -15,19 +15,22 @@ export const prepareAnalyzer = async (transactionInfo: TTransactionInfo, structL
   )
 
   const analyzerInstance = new TxAnalyzer()
-  analyzerInstance.dataLoader.loadTransactionInfo(transactionInfo)
-  analyzerInstance.dataLoader.loadStructlogs(structLogs)
+  analyzerInstance.dataLoader.inputTransactionData.set(transactionInfo)
+  analyzerInstance.dataLoader.inputStructlogs.set(structLogs)
 
   const abis = Object.entries(abisAndSources.abis)
 
+  analyzerInstance.dataLoader.setEmptyContracts(abis.map(([address]) => address.toLowerCase()))
+  analyzerInstance.dataLoader.setEmptyContracts(Object.keys(abisAndSources.contractNames).map((address) => address.toLowerCase()))
+
   for (const [address, abi] of abis) {
-    analyzerInstance.dataLoader.loadContractAbi(address.toLowerCase(), abi)
+    analyzerInstance.dataLoader.inputContractData.set(address.toLowerCase(), 'applicationBinaryInterface', abi)
   }
 
   const contractNames = Object.entries(abisAndSources.contractNames)
 
   for (const [address, name] of contractNames) {
-    analyzerInstance.dataLoader.loadContractName(address, name)
+    analyzerInstance.dataLoader.inputContractData.set(address.toLowerCase(), 'sourceData', { contractName: name })
   }
 
   return analyzerInstance
