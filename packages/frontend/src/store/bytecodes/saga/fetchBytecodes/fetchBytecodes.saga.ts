@@ -7,7 +7,7 @@ import { transactionConfigSelectors } from '../../../transactionConfig/transacti
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
-import { contractsSelectors } from '../../../contracts/contracts.selectors'
+import { contractBaseSelectors } from '../../../contractBase/contractBase.selectors'
 
 export async function fetchBytecode(chainId: ChainId, address: string): Promise<string> {
   const provider = jsonRpcProvider[chainId]
@@ -20,7 +20,7 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.IN_PROGRESS, stageName: AnalyzerStages.FETCHING_BYTECODES }))
 
     const chainId = yield* select(transactionConfigSelectors.selectChainId)
-    const contractAddresses = yield* select(contractsSelectors.selectAllAddresses)
+    const contractAddresses = yield* select(contractBaseSelectors.selectAllAddresses)
 
     const analyzer = yield* call(getAnalyzerInstance)
 

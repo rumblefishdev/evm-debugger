@@ -11,14 +11,19 @@ import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, g
 import { activeLineActions } from '../../../activeLine/activeLine.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
-import { contractsActions } from '../../../contracts/contracts.slice'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
 import { contractBaseActions } from '../../../contractBase/contractBase.slice'
+import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
   return analyzer.runFullAnalysis()
+}
+
+export function getContractsRawData() {
+  const analyzer = getAnalyzerInstance()
+  return analyzer.getContractsRawData()
 }
 
 export function* runAnalyzerSaga(): SagaGenerator<void> {
@@ -35,19 +40,15 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       contractsDisassembledBytecodes,
       contractsBaseData,
       contractsSourceFiles,
+      sighashes,
     } = yield* call(runAnalyzer)
 
-    // yield* put(sighashActions.addSighashes(contractSighashes))
+    const contractsRawData = yield* call(getContractsRawData)
+
+    yield* put(transactionInfoActions.setTransactionInfo(transactionInfo))
     yield* put(structLogsActions.loadStructLogs(structLogs))
-    yield* put(contractBaseActions.loadContractsBaseData(contractsBaseData))
-
-    // yield* put(
-    //   contractsActions.updateContracts(Object.values(contractsBaseData).map(({ address, ...changes }) => ({ id: address, changes }))),
-    // )
-
-    yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
-
     yield* put(traceLogsActions.addTraceLogs(traceLogs))
+
     yield* put(
       activeBlockActions.loadActiveBlock({
         ...traceLogs[0],
@@ -55,7 +56,12 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       }),
     )
 
-    yield* put(transactionInfoActions.setTransactionInfo(transactionInfo))
+    yield* put(sighashActions.addSighashes(sighashes))
+
+    yield* put(contractBaseActions.loadContractsBaseData(contractsBaseData))
+    yield* put(contractRawActions.loadContractsRawData(contractsRawData))
+
+    yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
 
     yield* put(sourceFilesActions.loadContractsSourceFiles(contractsSourceFiles))
 

@@ -14,9 +14,7 @@ export const sighashSlice = createSlice({
   reducers: {
     updateSighash: sighashAdapter.updateOne,
     clearSighashes: sighashAdapter.removeAll,
-    addSighashes: (sighashState, action: PayloadAction<TSighashStatus[]>) => {
-      return sighashAdapter.setMany(sighashState, action.payload)
-    },
+    addSighashes: sighashAdapter.addMany,
   },
   name: StoreKeys.SIGHASH,
   initialState: sighashAdapter.getInitialState(),

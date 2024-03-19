@@ -11,6 +11,7 @@ export const contractRawAdapter = createEntityAdapter<TAnalyzerContractRawData>(
 
 export const contractRawSlice = createSlice({
   reducers: {
+    updateOne: contractRawAdapter.updateOne,
     loadContractsRawData: contractRawAdapter.upsertMany,
     clearContractsRaw: contractRawAdapter.removeAll,
   },

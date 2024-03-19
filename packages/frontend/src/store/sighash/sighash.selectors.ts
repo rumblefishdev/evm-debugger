@@ -3,7 +3,7 @@ import type { TSighashStatus } from '@evm-debuger/types'
 
 import { selectReducer } from '../store.utils'
 import { StoreKeys } from '../store.keys'
-import { contractsSelectors } from '../contracts/contracts.selectors'
+import { contractBaseSelectors } from '../contractBase/contractBase.selectors'
 
 import { sighashAdapter } from './sighash.slice'
 
@@ -16,7 +16,7 @@ const allAddresses = createSelector(
   (sighashes) => new Set<string>(sighashes.flatMap((sighash) => [...sighash.addresses.values()])),
 )
 
-const selectAllWithContractNames = createSelector([selectAll, contractsSelectors.selectAll], (sighashes, contractNames) =>
+const selectAllWithContractNames = createSelector([selectAll, contractBaseSelectors.selectAll], (sighashes, contractNames) =>
   sighashes.map((sighash) => {
     const contract = contractNames.find((_contractName) => sighash.addresses.has(_contractName.address))
     const result: TSighashStatus & { contractName: string } = { ...sighash, contractName: contract?.name || sighash.sighash }

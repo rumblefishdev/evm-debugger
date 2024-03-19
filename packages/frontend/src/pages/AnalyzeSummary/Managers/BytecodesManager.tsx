@@ -1,20 +1,19 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { bytecodesActions } from '../../../store/bytecodes/bytecodes.slice'
 import { useTypedDispatch } from '../../../store/storeHooks'
 import { ManagerItem } from '../../../components/ManagerItem'
-import { bytecodesSelectors } from '../../../store/bytecodes/bytecodes.selectors'
+import { contractRawActions } from '../../../store/contractRaw/contractRaw.slice'
+import { contractRawSelectors } from '../../../store/contractRaw/contractRaw.selectors'
 
 import { StyledContentWrapper, StyledHeading, StyledStack, StyledWrapper } from './styles'
 
 export const BytecodesManager = () => {
   const dispatch = useTypedDispatch()
   const addBytecode = (id: string, value: string) => {
-    dispatch(bytecodesActions.updateBytecode({ id, changes: { etherscanBytecode: value } }))
+    dispatch(contractRawActions.updateOne({ id, changes: { etherscanBytecode: value } }))
   }
 
-  const bytecodesWithNames = useSelector(bytecodesSelectors.selectAllWithContractNames)
+  const bytecodesWithNames = useSelector(contractRawSelectors.selectBytecodesWithContractNames)
 
   return (
     <StyledStack>

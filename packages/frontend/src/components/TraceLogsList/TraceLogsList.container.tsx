@@ -5,7 +5,6 @@ import { BaseOpcodesHex } from '@evm-debuger/types'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
-import { contractsSelectors } from '../../store/contracts/contracts.selectors'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
 import { yulNodesSelectors } from '../../store/yulNodes/yulNodes.selectors'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
@@ -15,6 +14,7 @@ import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 import { getSignature } from '../../helpers/helpers'
+import { contractBaseSelectors } from '../../store/contractBase/contractBase.selectors'
 
 import { TraceLogsListComponent } from './TraceLogsList.component'
 import type { TTraceLogWithSignature } from './TraceLogsList.types'
@@ -37,7 +37,7 @@ export const TraceLogsListContainer: React.FC = () => {
   const dispatch = useDispatch()
   const activeBlock = useSelector(activeBlockSelectors.selectActiveBlock)
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
-  const contractNames = useSelector(contractsSelectors.selectAll)
+  const contractNames = useSelector(contractBaseSelectors.selectAll)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const structlogsOfInnerFunctions = useSelector(yulNodesSelectors.selectJumpDestStructLogs)
 

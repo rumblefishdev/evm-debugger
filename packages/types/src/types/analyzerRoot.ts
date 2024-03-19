@@ -5,6 +5,7 @@ import type {
   TContractDissasembledBytecode,
   TDisassembledBytecode,
   TPcIndexedStepInstructions,
+  TSighashStatus,
   TStructlogsPerStartLine,
   TTransactionInfo,
 } from './types'
@@ -71,6 +72,7 @@ export type TDataLoaderAnalyzerData = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
   traceLogs: TTraceLog[]
+  sighashes: Record<string, TSighashStatus>
   contracts: Record<string, TAnalyzerContractData>
 }
 
@@ -93,6 +95,7 @@ export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
   traceLogs: TTraceLog[]
+  sighashes: Record<string, TSighashStatus>
   contractsBaseData: Record<string, TAnalyzerContractBaseData>
   contractsDisassembledBytecodes: Record<string, TContractDissasembledBytecode>
   contractsInstructions: Record<string, TContractInstructions>

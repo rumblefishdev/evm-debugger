@@ -187,7 +187,7 @@ export class TraceCreator {
     }
   }
 
-  private getContractSighashList() {
+  private createContractSighashList() {
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
     const sighashStatues = new SigHashStatuses()
@@ -214,7 +214,12 @@ export class TraceCreator {
         else sighashStatues.add(address, sighash, null)
       }
 
-    return sighashStatues.sighashStatusList
+    this.dataLoader.analyzerSighashes.set(
+      sighashStatues.sighashStatusList.reduce((accumulator, item) => {
+        accumulator[item.sighash] = item
+        return accumulator
+      }, {}),
+    )
   }
 
   private getTraceLogsContractAddresses(transactionList: TTraceLog[]): string[] {
@@ -255,6 +260,8 @@ export class TraceCreator {
     this.dataLoader.analyzerTraceLogs.set(traceLogsWithBlockNumber)
     this.dataLoader.analyzerStructLogs.set(this.dataLoader.inputStructlogs.get())
     this.dataLoader.analyzerTransactionInfo.set(this.dataLoader.inputTransactionData.get())
+
+    this.createContractSighashList()
   }
 
   public getContractAddressesInTransaction() {

@@ -5,8 +5,6 @@ import type {
   TRawStructLog,
   TInputContractData,
   TAnalyzerContractData,
-  TAnalyzerContractRawData,
-  TAnalyzerContractsRawData,
 } from '@evm-debuger/types'
 
 export class DataLoader {
@@ -91,6 +89,11 @@ export class DataLoader {
     get: () => this.analyzerData.traceLogs,
   }
 
+  public analyzerSighashes = {
+    set: (sighashes: TDataLoaderAnalyzerData['sighashes']) => (this.analyzerData.sighashes = sighashes),
+    get: () => this.analyzerData.sighashes,
+  }
+
   public getAllInputContractsData() {
     return this.inputData.contracts
   }
@@ -119,6 +122,7 @@ export class DataLoader {
       transactionInfo: this.analyzerTransactionInfo.get(),
       traceLogs: this.analyzerTraceLogs.get(),
       structLogs: this.analyzerStructLogs.get(),
+      sighashes: this.analyzerSighashes.get(),
       contractsStructLogsPerLine: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsStructLogsPerLine']>(
         (accumulator, { address, structlogsPerStartLine }) => {
           accumulator[address] = { structlogsPerStartLine, address }
