@@ -11,8 +11,23 @@ const selectSourceFilesState = createSelector([selectReducer(StoreKeys.SOURCE_FI
 const selectAll = createSelector([selectSourceFilesState], (state) => sourceFilesAdapter.getSelectors().selectAll(state))
 const selectEntities = createSelector([selectSourceFilesState], (state) => sourceFilesAdapter.getSelectors().selectEntities(state))
 
+const selectSourceFileId = createSelector([selectSourceFilesState], (sourceFilesState) => sourceFilesState.activeSourceFileId)
+
 const selectCurrentSourceFiles = createSelector([selectEntities, activeBlockSelectors.selectActiveBlock], (_sourceFiles, _activeBlock) => {
-  return _sourceFiles[_activeBlock?.address || ''] || null
+  return _sourceFiles[_activeBlock?.address || ''].sourceFiles
 })
 
-export const sourceFilesSelectors = { selectEntities, selectCurrentSourceFiles, selectAll }
+const selectActiveSourceFiles = createSelector([selectEntities, selectSourceFilesState], (_sourceFiles, _state) => {
+  return _sourceFiles[_state.activeSourceFileId] || null
+})
+
+const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], (sourceFiles) => sourceFiles.length > 1)
+
+export const sourceFilesSelectors = {
+  selectSourceFileId,
+  selectHasMultipleSourceFiles,
+  selectEntities,
+  selectCurrentSourceFiles,
+  selectAll,
+  selectActiveSourceFiles,
+}

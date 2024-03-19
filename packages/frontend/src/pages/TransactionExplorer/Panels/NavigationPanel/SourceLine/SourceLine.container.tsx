@@ -8,7 +8,7 @@ import { activeStructLogActions } from '../../../../../store/activeStructLog/act
 import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
-import { activeSourceFileActions } from '../../../../../store/activeSourceFile/activeSourceFile.slice'
+import { sourceFilesActions } from '../../../../../store/sourceFiles/sourceFiles.slice'
 
 import { SourceLineComponent } from './SourceLine.component'
 
@@ -63,14 +63,14 @@ export const SourceLineContainer: React.FC = () => {
   const moveToPreviousAvailableLine = React.useCallback(() => {
     if (!previousLineCoordinates.startCodeLine) return
     dispatch(activeLineActions.setActiveLine({ line: previousLineCoordinates.startCodeLine }))
-    dispatch(activeSourceFileActions.setActiveSourceFile(previousLineCoordinates.fileId))
+    dispatch(sourceFilesActions.setActiveSourceFileId(previousLineCoordinates.fileId))
     dispatch(activeStructLogActions.setActiveStrucLog(previousLineCoordinates.nextStructlog))
   }, [previousLineCoordinates, dispatch])
 
   const moveToNextAvailableLine = React.useCallback(() => {
     if (!nextLineCoordinates.startCodeLine) return
     dispatch(activeLineActions.setActiveLine({ line: nextLineCoordinates.startCodeLine }))
-    dispatch(activeSourceFileActions.setActiveSourceFile(nextLineCoordinates.fileId))
+    dispatch(sourceFilesActions.setActiveSourceFileId(nextLineCoordinates.fileId))
     dispatch(activeStructLogActions.setActiveStrucLog(nextLineCoordinates.nextStructlog))
   }, [nextLineCoordinates, dispatch])
 

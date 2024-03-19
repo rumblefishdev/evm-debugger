@@ -6,11 +6,11 @@ import { structlogsSelectors } from '../../../../store/structlogs/structlogs.sel
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
-import { activeSourceFileActions } from '../../../../store/activeSourceFile/activeSourceFile.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
+import { sourceFilesActions } from '../../../../store/sourceFiles/sourceFiles.slice'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -44,7 +44,7 @@ export const StructlogPanel: React.FC = () => {
   useEffect(() => {
     const currentInstruction = currentInstructions?.[activeStructlog?.pc]
     if (currentInstruction && currentInstruction.fileType !== SourceFileType.UNKNOWN) {
-      dispatch(activeSourceFileActions.setActiveSourceFile(currentInstruction.fileId))
+      dispatch(sourceFilesActions.setActiveSourceFileId(currentInstruction.fileId))
       dispatch(activeLineActions.setActiveLine({ line: currentInstruction.startCodeLine }))
     }
   }, [currentInstructions, activeStructlog, dispatch])

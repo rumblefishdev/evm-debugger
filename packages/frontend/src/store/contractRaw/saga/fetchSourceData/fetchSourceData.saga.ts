@@ -2,10 +2,10 @@ import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 import type { TEtherscanContractSourceCodeResult, TSourceData } from '@evm-debuger/types'
 
 import { traceStorageBucket } from '../../../../config'
-import { sourceCodesActions, type SourceCodesActions } from '../../sourceCodes.slice'
 import { abisActions } from '../../../abis/abis.slice'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
+import type { ContractRawActions } from '../../contractRaw.slice'
 
 export async function fetchSourceData(sourceDataPath: string) {
   const rawSourceData = await fetch(`https://${traceStorageBucket}/${sourceDataPath}`)
@@ -19,7 +19,7 @@ export async function fetchSourcesOrder(sourcesPath: string) {
   return sources
 }
 
-export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions['fetchSourceData']): SagaGenerator<void> {
+export function* fetchSourceDataForContractSaga({ payload }: ContractRawActions['fetchSourceData']): SagaGenerator<void> {
   const { sourceDataPath, sourcesPath, contractAddress } = payload
   const analyzer = yield* call(getAnalyzerInstance)
 
@@ -35,8 +35,6 @@ export function* fetchSourceDataForContractSaga({ payload }: SourceCodesActions[
       ])
     }
     if (etherscanSourceData.SourceCode) {
-      yield* put(sourceCodesActions.addSourceCode({ sourcesOrder, sourceCode: etherscanSourceData.SourceCode, address: contractAddress }))
-
       const sourceData: TSourceData = {
         swarmSource: etherscanSourceData.SwarmSource,
         runs: etherscanSourceData.Runs,

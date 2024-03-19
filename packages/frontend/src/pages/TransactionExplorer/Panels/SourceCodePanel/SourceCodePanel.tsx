@@ -4,9 +4,8 @@ import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 import { Collapse, Stack } from '@mui/material'
 
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
-import { sourceCodesSelectors } from '../../../../store/sourceCodes/sourceCodes.selectors'
-import { sourceMapsSelectors } from '../../../../store/sourceMaps/sourceMaps.selectors'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
+import { sourceFilesSelectors } from '../../../../store/sourceFiles/sourceFiles.selectors'
 
 import { StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
@@ -16,12 +15,10 @@ interface ISourceCodePanel {
   hasContract?: boolean
 }
 export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => {
-  const isSourceCodeAvailable = useSelector(sourceCodesSelectors.selectIsSourceCodeAvailable)
-  const isSourceMapAvailable = useSelector(sourceMapsSelectors.selectIsCurrentSourceMapAvailable)
-  const hasMultipleSourceFiles = useSelector(sourceCodesSelectors.selectHasMultipleSourceFiles)
+  const hasMultipleSourceFiles = useSelector(sourceFilesSelectors.selectHasMultipleSourceFiles)
   const isInstructionsValid = useSelector(instructionsSelectors.selectIsCurrentInstructionsValid)
 
-  const willShowSourceCode = isSourceCodeAvailable && isSourceMapAvailable && isInstructionsValid
+  const willShowSourceCode = isInstructionsValid
 
   const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(hasMultipleSourceFiles)
 

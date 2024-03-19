@@ -1,3 +1,4 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import type { TContractSourceFiles } from '@evm-debuger/types'
 
@@ -12,13 +13,17 @@ export const sourceFilesAdapter = createEntityAdapter<TContractSourceFiles>({
 })
 
 export const sourceFilesInitialState: TSourceFilesState = sourceFilesAdapter.getInitialState({
-  activeSourceFile: '',
+  activeSourceFileId: 0,
 })
 
 export const sourceFilesSlice = createSlice({
   reducers: {
+    setActiveSourceFileId: (state, { payload }: PayloadAction<number>) => {
+      state.activeSourceFileId = payload
+    },
     loadContractsSourceFiles: sourceFilesAdapter.addMany,
     loadContractSourceFiles: sourceFilesAdapter.addOne,
+    clearContractsSourceFiles: sourceFilesAdapter.removeAll,
   },
   name: StoreKeys.SOURCE_FILES,
   initialState: sourceFilesInitialState,

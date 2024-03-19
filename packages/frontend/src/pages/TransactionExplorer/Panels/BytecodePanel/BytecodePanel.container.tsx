@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import type { VirtuosoHandle } from 'react-virtuoso'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { bytecodesSelectors } from '../../../../store/bytecodes/bytecodes.selectors'
+import { disassembledBytecodesSelectors } from '../../../../store/disassembledBytecodes/disassembledBytecodes.selectors'
 import { activeStructLogSelectors } from '../../../../store/activeStructLog/activeStructLog.selectors'
 import { uiSelectors } from '../../../../store/ui/ui.selectors'
 
@@ -12,7 +12,7 @@ import { StyledMissingBytecodeContainer, StyledMissingBytecodeText } from './Byt
 
 export const BytecodePanel: React.FC = () => {
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
-  const currentDissasembledBytecode = useSelector(bytecodesSelectors.selectCurrentDissasembledBytecode)
+  const currentDissasembledBytecode = useSelector(disassembledBytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentStructlogListOffset = useSelector(uiSelectors.selectStructlogListOffset)
   const listRef = React.useRef<VirtuosoHandle>(null)
   const isBytecodeAvailable = Boolean(currentDissasembledBytecode)

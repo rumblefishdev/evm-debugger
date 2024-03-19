@@ -51,6 +51,8 @@ export const convertNewLineExpressionTypeToNumberOfWhitespaces = (sourceCode: st
   }
 }
 
+export const regexForAllNewLineTypes = /\r\n|\n|\r/g
+
 export const createSourceMapToSourceCodeDictionary = (
   sourceFiles: TAnalyzerContractData['sourceFiles'],
   sourceMaps: TParsedSourceMap[],
@@ -62,8 +64,8 @@ export const createSourceMapToSourceCodeDictionary = (
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
 
     const sourceCode = sourceFiles[sourceMap.fileId]
+
     if (sourceCode) {
-      const regexForAllNewLineTypes = /\r\n|\n|\r/g
       const sourceParts = sourceCode.content.split(regexForAllNewLineTypes)
       const fileType: SourceFileType = fileTypeMap[sourceCode.path.split('.').pop()]
 

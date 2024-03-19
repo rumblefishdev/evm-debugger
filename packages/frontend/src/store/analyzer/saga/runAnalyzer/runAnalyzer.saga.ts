@@ -10,7 +10,7 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { activeLineActions } from '../../../activeLine/activeLine.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
+import { disassembledBytecodesActions } from '../../../disassembledBytecodes/disassembledBytecodes.slice'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
 import { contractBaseActions } from '../../../contractBase/contractBase.slice'
@@ -61,7 +61,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
     yield* put(contractBaseActions.loadContractsBaseData(contractsBaseData))
     yield* put(contractRawActions.loadContractsRawData(contractsRawData))
 
-    yield* put(bytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
+    yield* put(disassembledBytecodesActions.loadBytecodes(contractsDisassembledBytecodes))
 
     yield* put(sourceFilesActions.loadContractsSourceFiles(contractsSourceFiles))
 

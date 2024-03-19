@@ -7,9 +7,8 @@ import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } 
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { srcMapProviderUrl } from '../../../../config'
-import { sourceCodesActions } from '../../sourceCodes.slice'
-import { sourceMapsActions } from '../../../sourceMaps/sourceMaps.slice'
 import { contractBaseSelectors } from '../../../contractBase/contractBase.selectors'
+import { contractRawActions } from '../../contractRaw.slice'
 
 export async function fetchSourcesStatus(
   transactionHash: string,
@@ -88,7 +87,7 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
             case SrcMapStatus.COMPILATION_SUCCESS:
               yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Compilation success for ${address}`)))
               yield* put(
-                sourceCodesActions.fetchSourceData({
+                contractRawActions.fetchSourceData({
                   sourcesPath: payload.pathSources,
                   sourceDataPath: payload.pathSourceData,
                   contractAddress: address,
@@ -96,7 +95,7 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
               )
               yield* take(analyzerActions.addLogMessage)
 
-              yield* put(sourceMapsActions.fetchSourceMaps({ path: payload.pathSourceMap, contractAddress: address }))
+              yield* put(contractRawActions.fetchSourceMaps({ path: payload.pathSourceMap, contractAddress: address }))
               yield* take(analyzerActions.addLogMessage)
               break
             default:

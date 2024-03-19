@@ -7,7 +7,7 @@ import { createInfoLogMessage } from '../../analyzer.utils'
 import { testLogMessageViaInspect } from '../../../../helpers/sagaTests'
 import { transactionInfoActions } from '../../../transactionInfo/transactionInfo.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
-import { bytecodesActions } from '../../../bytecodes/bytecodes.slice'
+import { bytecodesActions } from '../../../disassembledBytecodes/bytecodes.slice'
 import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 
 import { processTransactionSaga } from './processTransaction.saga'

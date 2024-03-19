@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import type { TStructlogsPerStartLine } from '@evm-debuger/types'
+import type { TContractStructlogsPerStartLine } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 
@@ -11,7 +11,7 @@ const initialState = new ActiveLineState(null, {})
 
 const activeLineSlice = createSlice({
   reducers: {
-    setStructlogsPerActiveLine: (state, action: PayloadAction<Record<string, TStructlogsPerStartLine>>) => {
+    setStructlogsPerActiveLine: (state, action: PayloadAction<Record<string, TContractStructlogsPerStartLine>>) => {
       const newState = { ...state }
       newState.structlogsPerActiveLine = action.payload
       return newState

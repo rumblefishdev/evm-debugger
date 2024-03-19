@@ -9,12 +9,12 @@ import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors
 import { yulNodesSelectors } from '../../store/yulNodes/yulNodes.selectors'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
-import { activeSourceFileActions } from '../../store/activeSourceFile/activeSourceFile.slice'
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
 import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 import { getSignature } from '../../helpers/helpers'
 import { contractBaseSelectors } from '../../store/contractBase/contractBase.selectors'
+import { sourceFilesActions } from '../../store/sourceFiles/sourceFiles.slice'
 
 import { TraceLogsListComponent } from './TraceLogsList.component'
 import type { TTraceLogWithSignature } from './TraceLogsList.types'
@@ -44,7 +44,7 @@ export const TraceLogsListContainer: React.FC = () => {
   const activateTraceLog = React.useCallback(
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))
-      dispatch(activeSourceFileActions.setActiveSourceFile(0))
+      dispatch(sourceFilesActions.setActiveSourceFileId(0))
       dispatch(activeLineActions.clearActiveLine())
       dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLog.startIndex], listIndex: 0 }))
     },

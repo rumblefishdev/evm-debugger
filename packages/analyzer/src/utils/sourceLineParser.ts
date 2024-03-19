@@ -43,13 +43,18 @@ export class SourceLineParser {
 
       const disassembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledBytecode')
 
+      const mapDisasemlbedBytecodeToIndex = Object.values(disassembledBytecode).reduce((accumulator, disassembledBytecodeEntry, index) => {
+        accumulator[index] = disassembledBytecodeEntry
+        return accumulator
+      }, {})
+
       const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
         const instructionId = createSourceMapIdentifier(sourceMapEntry)
 
         if (!uniqueSoruceMapsCodeLinesDictionary[instructionId]) return accumulator
-        if (!disassembledBytecode[index]) return accumulator
+        if (!mapDisasemlbedBytecodeToIndex[index]) return accumulator
 
-        const { pc, opcode } = disassembledBytecode[index]
+        const { pc, opcode } = mapDisasemlbedBytecodeToIndex[index]
 
         accumulator[pc] = { ...uniqueSoruceMapsCodeLinesDictionary[instructionId], pc, opcode }
         return accumulator

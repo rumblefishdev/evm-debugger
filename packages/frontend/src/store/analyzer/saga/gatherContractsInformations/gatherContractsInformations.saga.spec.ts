@@ -9,7 +9,7 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 import { contractsActions, contractsAdapter, contractsReducer } from '../../../contracts/contracts.slice'
-import { createMockedBytecodes } from '../../../bytecodes/bytecodes.mock'
+import { createMockedBytecodes } from '../../../disassembledBytecodes/bytecodes.mock'
 import { createMockedContracts } from '../../../contracts/contracts.mock'
 
 import { gatherContractsInformationsSaga } from './gatherContractsInformations.saga'

@@ -48,8 +48,6 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
 
     const formattedTransactionInfo = yield* call(getTransactionInfo, transactionHash, chainId)
 
-    console.log('formattedTransactionInfo', formattedTransactionInfo)
-
     const analyzer = yield* call(getAnalyzerInstance)
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputTransactionData.set, [formattedTransactionInfo])
 

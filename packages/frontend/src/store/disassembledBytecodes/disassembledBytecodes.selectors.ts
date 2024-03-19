@@ -5,13 +5,13 @@ import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { contractBaseSelectors } from '../contractBase/contractBase.selectors'
 
-import { bytecodesAdapter } from './bytecodes.slice'
+import { disassembledBytecodesAdapter } from './disassembledBytecodes.slice'
 
-const selectBytecodesState = createSelector([selectReducer(StoreKeys.BYTECODES)], (state) => state)
+const selectBytecodesState = createSelector([selectReducer(StoreKeys.DISASSEMBLED_BYTECODES)], (state) => state)
 
-const selectAll = createSelector([selectBytecodesState], (state) => bytecodesAdapter.getSelectors().selectAll(state))
+const selectAll = createSelector([selectBytecodesState], (state) => disassembledBytecodesAdapter.getSelectors().selectAll(state))
 
-const selectEntities = createSelector([selectBytecodesState], (state) => bytecodesAdapter.getSelectors().selectEntities(state))
+const selectEntities = createSelector([selectBytecodesState], (state) => disassembledBytecodesAdapter.getSelectors().selectEntities(state))
 
 const selectAllWithContractNames = createSelector([selectAll, contractBaseSelectors.selectEntities], (allBytecodes, contractNames) => {
   return allBytecodes.map((bytecode) => {
@@ -27,7 +27,7 @@ const selectCurrentDissasembledBytecode = createSelector(
   },
 )
 
-export const bytecodesSelectors = {
+export const disassembledBytecodesSelectors = {
   selectCurrentDissasembledBytecode,
   selectAllWithContractNames,
   selectAll,

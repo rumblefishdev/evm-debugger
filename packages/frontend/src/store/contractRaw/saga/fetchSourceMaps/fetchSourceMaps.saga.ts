@@ -2,12 +2,11 @@
 import { apply, call, put, type SagaGenerator } from 'typed-redux-saga'
 import type { TSourceMap } from '@evm-debuger/types'
 
-import { sourceMapsActions, type TSourceMapsActions } from '../../sourceMaps.slice'
 import { traceStorageBucket } from '../../../../config'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { createErrorLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
-import { sourceCodesActions } from '../../../sourceCodes/sourceCodes.slice'
 import { yulNodesActions } from '../../../yulNodes/yulNodes.slice'
+import type { ContractRawActions } from '../../contractRaw.slice'
 
 export async function fetchSourceMap(path: string): Promise<TSourceMap> {
   const rawSourceMap = await fetch(`https://${traceStorageBucket}/${path}`)
@@ -15,7 +14,7 @@ export async function fetchSourceMap(path: string): Promise<TSourceMap> {
   return sourceMap
 }
 
-export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions['fetchSourceMaps']): SagaGenerator<void> {
+export function* fetchSourceMapsForContractSaga({ payload }: ContractRawActions['fetchSourceMaps']): SagaGenerator<void> {
   const { path, contractAddress } = payload
 
   try {
@@ -37,10 +36,7 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
         'yulSource',
         sourceMap.deployedBytecode.contents,
       ])
-      yield* put(sourceCodesActions.addYulSource({ yulSource: sourceMap.deployedBytecode.contents, address: contractAddress }))
     }
-
-    const sourceMapWithAddress = { ...sourceMap, address: contractAddress }
 
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
       contractAddress,
@@ -52,8 +48,6 @@ export function* fetchSourceMapsForContractSaga({ payload }: TSourceMapsActions[
       'sourceMap',
       sourceMap.deployedBytecode.sourceMap,
     ])
-
-    yield* put(sourceMapsActions.addSourceMap(sourceMapWithAddress))
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source maps for ${contractAddress} fetched successfully`)))
   } catch (error) {
