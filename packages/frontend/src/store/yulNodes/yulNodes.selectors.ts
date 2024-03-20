@@ -178,9 +178,28 @@ const selectJumpDestStructLogs = createSelector(
     const sortedByIndexStructlogs = filteredStructlogs.sort((a, b) => a.index - b.index)
     return sortedByIndexStructlogs.map((structLog) => {
       const instruction = instructions[structLog.pc]
+
       return {
         structLog,
         sourceFunctionSingature: instruction.sourceFunctionSingature,
+        sourceFunctionParameters: instruction.sourceFunctionParameters.map((parameter, index) => {
+          const stack = [...structLog.stack].reverse()
+          if (instruction.sourceFunctionName === 'verify') {
+            console.log('structLog', stack)
+            console.log('instruction parameters', instruction.sourceFunctionParameters)
+            console.log('sourceFunctionParameters.length', instruction.sourceFunctionParameters.length)
+            console.log('index', index)
+            console.log(
+              'parameter',
+              ` ${JSON.stringify(parameter, null, 2)} => ${stack[instruction.sourceFunctionParameters.length - 1 - index]?.value}`,
+            )
+          }
+          return {
+            ...parameter,
+            value: stack[instruction.sourceFunctionParameters.length - 1 - index]?.value,
+          }
+        }),
+        sourceFunctionName: instruction.sourceFunctionName,
       }
     })
   },

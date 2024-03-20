@@ -1,3 +1,4 @@
+import type { TContractBytecodeObject } from './solc'
 import type { TIndexedStructLog } from './structLogs'
 import type { TTraceLog } from './traceLogs'
 import type {
@@ -36,6 +37,9 @@ export type TInputContractData = {
   yulTree?: TYulBlock
   sourceFilesOrder?: Record<number, string>
   sourceData?: TSourceData
+  immutableReferences?: TContractBytecodeObject['immutableReferences']
+  functionDebugData?: TContractBytecodeObject['functionDebugData']
+  linkReferences?: TContractBytecodeObject['linkReferences']
 }
 
 export type TAnalyzerContractBaseData = {

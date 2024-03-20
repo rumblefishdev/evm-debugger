@@ -31,6 +31,8 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
     setIsInnerFunctionsVisibble(!isInnerFunctionsVisibble)
   }
 
+  console.log('innerFunctions', innerFunctions)
+
   const { isReverted, op, signature, depth } = traceLog
   return (
     <Stack marginLeft={depth}>
@@ -71,13 +73,20 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
             {innerFunctions.map((item) => (
               <StyledInnerFunctionContainer
                 key={item.structLog.index}
-                onClick={() => activateStructLog(item.structLog)}
+                onClick={() => {
+                  activateStructLog(item.structLog)
+                  console.log(`${item.sourceFunctionName}(${JSON.stringify(item.sourceFunctionParameters, null, 2)})`)
+                }}
               >
                 <Chip
                   size="small"
                   label={item.structLog.op}
                 />
-                <StyledInnerFunctionSignature>{item.sourceFunctionSingature}</StyledInnerFunctionSignature>
+                <StyledInnerFunctionSignature>
+                  {`${item.sourceFunctionName}(${item.sourceFunctionParameters
+                    .map((param) => `${param.type ? param.type : ''} ${param.name} ${param.value}`)
+                    .join(', ')})`}
+                </StyledInnerFunctionSignature>
               </StyledInnerFunctionContainer>
             ))}
           </StyledInnerFunctionWrapper>

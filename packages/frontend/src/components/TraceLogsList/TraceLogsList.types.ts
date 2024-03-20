@@ -6,6 +6,8 @@ export type TTraceLogWithSignature = TMainTraceLogsWithId & { signature: string 
 export type TInnerFunction = {
   structLog: TStructlogWithListIndex
   sourceFunctionSingature: string
+  sourceFunctionName: string
+  sourceFunctionParameters: { type: string | null; name: string; modifiers: string[]; value: string }[]
 }
 
 export type TTraceLogsListComponentProps = {

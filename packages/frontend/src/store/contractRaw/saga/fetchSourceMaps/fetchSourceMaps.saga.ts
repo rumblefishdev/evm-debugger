@@ -21,33 +21,41 @@ export function* fetchSourceMapsForContractSaga({ payload }: ContractRawActions[
     const analyzer = yield* call(getAnalyzerInstance)
     const sourceMap = yield* call(fetchSourceMap, path)
 
-    if (sourceMap.deployedBytecode.ast) {
-      yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.deployedBytecode.ast, address: contractAddress }))
+    if (sourceMap.ast) {
+      yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.ast, address: contractAddress }))
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'yulTree', sourceMap.ast])
+    }
+
+    if (sourceMap.yulContents && sourceMap.yulContents.length > 0) {
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'yulSource', sourceMap.yulContents])
+    }
+
+    if (sourceMap.immutableReferences) {
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
         contractAddress,
-        'yulTree',
-        sourceMap.deployedBytecode.ast,
+        'immutableReferences',
+        sourceMap.immutableReferences,
       ])
     }
 
-    if (sourceMap.deployedBytecode.contents && sourceMap.deployedBytecode.contents.length > 0) {
+    if (sourceMap.functionDebugData) {
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
         contractAddress,
-        'yulSource',
-        sourceMap.deployedBytecode.contents,
+        'functionDebugData',
+        sourceMap.functionDebugData,
       ])
     }
 
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
-      contractAddress,
-      'bytecode',
-      sourceMap.deployedBytecode.object,
-    ])
-    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
-      contractAddress,
-      'sourceMap',
-      sourceMap.deployedBytecode.sourceMap,
-    ])
+    if (sourceMap.linkReferences) {
+      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
+        contractAddress,
+        'linkReferences',
+        sourceMap.linkReferences,
+      ])
+    }
+
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'bytecode', sourceMap.bytecode])
+    yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceMap', sourceMap.sourceMap])
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source maps for ${contractAddress} fetched successfully`)))
   } catch (error) {
