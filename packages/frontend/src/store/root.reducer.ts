@@ -17,6 +17,7 @@ import { sourceFilesReducer } from './sourceFiles/sourceFiles.slice'
 import { contractBaseReducer } from './contractBase/contractBase.slice'
 import { contractRawReducer } from './contractRaw/contractRaw.slice'
 import { disassembledBytecodesReducer } from './disassembledBytecodes/disassembledBytecodes.slice'
+import { functionStackReducer } from './functionStacks/functionStack.slice'
 
 export const rootReducer = combineReducers({
   [StoreKeys.TRACE_LOGS]: traceLogsReducer,
@@ -35,4 +36,5 @@ export const rootReducer = combineReducers({
   [StoreKeys.SOURCE_FILES]: sourceFilesReducer,
   [StoreKeys.CONTRACT_BASE]: contractBaseReducer,
   [StoreKeys.CONTRACT_RAW]: contractRawReducer,
+  [StoreKeys.FUNCTION_STACK]: functionStackReducer,
 })

@@ -14,6 +14,10 @@ import {
 } from './TraceLogElement.styles'
 import type { TTraceLogElementProps } from './TraceLogElement.types'
 
+const stripZerosLeft = (data: string) => {
+  return data.replace(/^0+/, '')
+}
+
 export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
   isActive,
   traceLog,
@@ -84,7 +88,7 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
                 />
                 <StyledInnerFunctionSignature>
                   {`${item.sourceFunctionName}(${item.sourceFunctionParameters
-                    .map((param) => `${param.type ? param.type : ''} ${param.name} ${param.value}`)
+                    .map((param) => `${param.type ? param.type : ''} ${param.name}: ${param.value ? stripZerosLeft(param.value) : ''} `)
                     .join(', ')})`}
                 </StyledInnerFunctionSignature>
               </StyledInnerFunctionContainer>

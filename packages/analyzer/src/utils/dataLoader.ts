@@ -120,6 +120,15 @@ export class DataLoader {
   public getAnalyzerAnalysisOutput(): TAnalyzerAnalysisOutput {
     return {
       transactionInfo: this.analyzerTransactionInfo.get(),
+      traceLogsFunctionsStack: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['traceLogsFunctionsStack']>(
+        (accumulator, contracts) => {
+          Object.entries(contracts.runtimeFunctionsList).forEach(([traceLogIndex, functions]) => {
+            accumulator[Number(traceLogIndex)] = { index: Number(traceLogIndex), functions }
+          })
+          return accumulator
+        },
+        {},
+      ),
       traceLogs: this.analyzerTraceLogs.get(),
       structLogs: this.analyzerStructLogs.get(),
       sighashes: this.analyzerSighashes.get(),

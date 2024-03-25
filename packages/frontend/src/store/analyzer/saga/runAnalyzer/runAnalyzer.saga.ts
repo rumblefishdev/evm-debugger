@@ -15,6 +15,7 @@ import { transactionInfoActions } from '../../../transactionInfo/transactionInfo
 import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
 import { contractBaseActions } from '../../../contractBase/contractBase.slice'
 import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
+import { functionStackActions } from '../../../functionStacks/functionStack.slice'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -41,6 +42,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       contractsBaseData,
       contractsSourceFiles,
       sighashes,
+      traceLogsFunctionsStack,
     } = yield* call(runAnalyzer)
 
     const contractsRawData = yield* call(getContractsRawData)
@@ -67,6 +69,7 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
 
     yield* put(instructionsActions.addInstructions(contractsInstructions))
     yield* put(activeLineActions.setStructlogsPerActiveLine(contractsStructLogsPerLine))
+    yield* put(functionStackActions.loadFunctionsStacks(traceLogsFunctionsStack))
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer finished')))
     yield* put(

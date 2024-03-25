@@ -1,18 +1,18 @@
-import { type TAnalyzerContractBaseData, type TAnalyzerContractsRawData } from '@evm-debuger/types'
-import { Interface } from 'ethers'
+import type { TAnalyzerContractBaseData, TAnalyzerContractsRawData } from '@evm-debuger/types'
 
 import { DataLoader } from './utils/dataLoader'
 import { EVMMachine } from './utils/evmMachine'
 import { parseSourceCode } from './helpers/parseSourceCodes'
 import { TraceCreator } from './utils/traceCreator'
 import { SourceLineParser } from './utils/sourceLineParser'
-import { selectFunctionBlockContextForLog } from './helpers/helpers'
+import { FunctionManager } from './utils/functionManager'
 
 export class TxAnalyzer {
-  public readonly dataLoader: DataLoader = new DataLoader()
   private readonly evmMachine = new EVMMachine()
+  public readonly dataLoader: DataLoader = new DataLoader()
   private readonly traceCreator = new TraceCreator(this.dataLoader)
   private readonly sourceLineParser = new SourceLineParser(this.dataLoader)
+  private readonly functionManager = new FunctionManager(this.dataLoader)
 
   private disassembleTransactionBytecodes() {
     const transactionContractsAddresses = this.dataLoader.getAddressesList()
@@ -74,74 +74,6 @@ export class TxAnalyzer {
     }
   }
 
-  private createFunctionsList() {
-    const structlogs = this.dataLoader.analyzerStructLogs.get()
-    const traceLogs = this.dataLoader.analyzerTraceLogs.get()
-    const contractsInstructions = this.dataLoader.analyzerContractData.getAll('instructions')
-    const contractSourceFiles = this.dataLoader.analyzerContractData.getAll('sourceFiles')
-    const contractAbis = this.dataLoader.inputContractData.getAll('applicationBinaryInterface')
-    const functionsDebugData = this.dataLoader.inputContractData.getAll('functionDebugData')
-
-    for (const traceLog of traceLogs) {
-      console.log('createFunctionsList => traceLog: ', traceLog.callTypeData.functionFragment.name)
-
-      const contractInstruction = contractsInstructions[traceLog.address]
-      const contractSourceFile = contractSourceFiles[traceLog.address]
-      const contractAbi = new Interface(contractAbis[traceLog.address])
-      const functionDebugData = functionsDebugData[traceLog.address]
-
-      console.log('createFunctionsList => functionDebugData: ', functionDebugData)
-
-      console.log('createFunctionsList => contractAbis: ', contractAbis)
-      console.log('createFunctionsList => contractAbi: ', contractAbi)
-
-      console.log(
-        'createFunctionsList => contractAbi: ',
-        contractAbi.fragments.reduce((accumulator, abi) => {
-          if (abi.type !== 'constructor') {
-            accumulator[abi.format('sighash')] = abi
-          }
-          return accumulator
-        }, {}),
-      )
-
-      // console.log(
-      //   'createFunctionsList => contractInstruction: ',
-      //   Object.values(contractInstruction).map((instruction) => instruction.jumpType),
-      // )
-
-      const structLogsRange = selectFunctionBlockContextForLog(structlogs, traceLog)
-      const jumpDestStructLogs = structLogsRange.filter((log) => contractInstruction[log.pc]?.isSourceFunction)
-
-      console.log('createFunctionsList => jumpDestStructLogs: ', jumpDestStructLogs)
-      jumpDestStructLogs.forEach((log) => {
-        const instruction = contractInstruction[log.pc]
-
-        if (!instruction) return
-
-        const sourceFile = contractSourceFile[instruction.fileId].content
-        const sourceLine = sourceFile.split('\n')[instruction.startCodeLine]
-
-        console.log('createFunctionsList => sourceLine: ', `${log.pc.toString(16)}|${log.op}|${instruction.jumpType}\n${sourceLine}`)
-      })
-    }
-  }
-
-  public runFullAnalysis() {
-    this.createContractBaseData()
-    this.createSourceFiles()
-
-    this.disassembleTransactionBytecodes()
-
-    this.traceCreator.processTransactionStructLogs()
-
-    this.sourceLineParser.createContractsInstructions()
-
-    this.createFunctionsList()
-
-    return this.dataLoader.getAnalyzerAnalysisOutput()
-  }
-
   public getContractsRawData(): TAnalyzerContractsRawData {
     const contractAddresses = this.dataLoader.getAddressesList()
     const contractsRawData: TAnalyzerContractsRawData = {}
@@ -162,6 +94,25 @@ export class TxAnalyzer {
     }
 
     return contractsRawData
+  }
+
+  public runFullAnalysis() {
+    this.createContractBaseData()
+    this.createSourceFiles()
+
+    this.disassembleTransactionBytecodes()
+
+    this.traceCreator.processTransactionStructLogs()
+
+    this.sourceLineParser.createContractsInstructions()
+
+    this.functionManager.createFunctionsDictionary()
+
+    this.functionManager.createFunctionsStackTrace()
+
+    this.functionManager.decodeFunctionsParameters()
+
+    return this.dataLoader.getAnalyzerAnalysisOutput()
   }
 
   public getTraceLogsContractAddresses(): string[] {
