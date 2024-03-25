@@ -76,21 +76,22 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
           <StyledInnerFunctionWrapper depth={depth}>
             {innerFunctions.map((item) => (
               <StyledInnerFunctionContainer
-                key={item.structLog.index}
+                ml={item.depth * 2}
+                key={item.index}
                 onClick={() => {
-                  activateStructLog(item.structLog)
-                  console.log(`${item.sourceFunctionName}(${JSON.stringify(item.sourceFunctionParameters, null, 2)})`)
+                  activateStructLog(item.index)
                 }}
               >
                 <Chip
                   size="small"
-                  label={item.structLog.op}
+                  label={item.op}
                 />
-                <StyledInnerFunctionSignature>
-                  {`${item.sourceFunctionName}(${item.sourceFunctionParameters
-                    .map((param) => `${param.type ? param.type : ''} ${param.name}: ${param.value ? stripZerosLeft(param.value) : ''} `)
-                    .join(', ')})`}
-                </StyledInnerFunctionSignature>
+                {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
+                {item.isMain && (
+                  <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
+                    .map((input) => `${input.name} = ${input.value}`)
+                    .join(', ')})`}</StyledInnerFunctionSignature>
+                )}
               </StyledInnerFunctionContainer>
             ))}
           </StyledInnerFunctionWrapper>

@@ -54,7 +54,7 @@ export class FunctionManager {
     if (inputParametersPart !== '') {
       if (inputParametersPart.includes(',')) {
         inputParameters.push(
-          ...inputParametersPart.split(',').map((parameter, index, inputParametersPartList) => {
+          ...inputParametersPart.split(',').map((parameter, index) => {
             const elements = parameter.trim().split(' ')
             return {
               type: isYul ? 'string' : elements[0],
@@ -75,12 +75,12 @@ export class FunctionManager {
       }
     }
 
-    inputParameters.forEach((_, index) => {
-      const initialParameterIndex = index
-      const parameterIndex = inputParameters
-        .slice(0, initialParameterIndex)
+    inputParameters.forEach((inputParameter, index) => {
+      const initialParameterIndex = inputParameters.length - 1 - inputParameter.stackInitialIndex
+      const increaseByModifiers = inputParameters
+        .slice(index)
         .reduce((accumulator, parameter) => accumulator + parameter.modifiers.length, 0)
-      inputParameters[index].stackInitialIndex = parameterIndex
+      inputParameters[index].stackInitialIndex = initialParameterIndex + increaseByModifiers
     })
 
     const outputsParameters: TContractFunctionOutputParameter[] = []
@@ -174,10 +174,12 @@ export class FunctionManager {
               selector: functionData.functionSelector,
               pc: structLog.pc,
               outputs: functionData.outputsParameters,
+              op: structLog.opcode,
               name: functionData.functionName,
               isYul: sourceFile.name === 'utility',
               isMain: Boolean(functionDebugDataMappedToPc[structLog.pc]),
               inputs: functionData.inputParameters,
+              index: structLog.index,
               hasAbi: false,
               functionModifiers: functionData.functionModifiers,
               depth: 0,
@@ -250,7 +252,7 @@ export class FunctionManager {
       const result = structLogsWithFunction
         .sort((a, b) => a.index - b.index)
         .map((structLog) => {
-          return traceLogFunctions[structLog.pc]
+          return { ...traceLogFunctions[structLog.pc], index: structLog.index }
         })
 
       traceLogFunctionsList[traceLog.index] = result
@@ -339,8 +341,8 @@ export class FunctionManager {
         const traceLogStructLogs = selectFunctionBlockContextForLog(structLogs, traceLog).filter(
           (structLog) => structLog.depth === traceLog.depth + 1,
         )
-        const pcIndexedStructLogs = traceLogStructLogs.reduce<Record<number, TIndexedStructLog>>((accumulator, log) => {
-          accumulator[log.pc] = log
+        const indexIndexedStructLogs = traceLogStructLogs.reduce<Record<number, TIndexedStructLog>>((accumulator, log) => {
+          accumulator[log.index] = log
           return accumulator
         }, {})
 
@@ -348,10 +350,10 @@ export class FunctionManager {
           if (!traceLogFunction) return traceLogFunction
           if (!traceLogFunction.isMain) return traceLogFunction
 
-          const functionStructlog = pcIndexedStructLogs[traceLogFunction.pc]
-          const inputs = traceLogFunction.inputs.map((input, index) => {
+          const functionStructlog = indexIndexedStructLogs[traceLogFunction.index]
+          const inputs = traceLogFunction.inputs.map((input) => {
             const inputSource = new InputSourceManager(
-              functionStructlog.stack,
+              [...functionStructlog.stack].reverse(),
               functionStructlog.memory,
               traceLog.input,
               functionStructlog.storage,

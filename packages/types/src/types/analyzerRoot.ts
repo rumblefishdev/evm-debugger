@@ -1,3 +1,4 @@
+import type { TOpcodesNames } from './opcodes/opcodesHex'
 import type { TContractBytecodeObject } from './solc'
 import type { TIndexedStructLog } from './structLogs'
 import type { TTraceLog } from './traceLogs'
@@ -87,6 +88,8 @@ export type TContractFunction = {
   outputs: TContractFunctionOutputParameter[]
 
   pc: number
+  index: number
+  op: TOpcodesNames
 
   hasAbi: boolean
   isMain: boolean
