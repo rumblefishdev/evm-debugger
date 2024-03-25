@@ -122,6 +122,7 @@ export class DataLoader {
       transactionInfo: this.analyzerTransactionInfo.get(),
       traceLogsFunctionsStack: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['traceLogsFunctionsStack']>(
         (accumulator, contracts) => {
+          if (!contracts.runtimeFunctionsList) return accumulator
           Object.entries(contracts.runtimeFunctionsList).forEach(([traceLogIndex, functions]) => {
             accumulator[Number(traceLogIndex)] = { index: Number(traceLogIndex), functions }
           })

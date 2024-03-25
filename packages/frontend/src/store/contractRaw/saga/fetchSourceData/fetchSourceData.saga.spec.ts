@@ -24,10 +24,10 @@ const MOCKED_SOURCEORDER = { O: 'sourceOrder' }
 const MOCKED_CONTRACT_BASE_WITH_NAME = createMockedContractBase()
 const MOCKED_CONTRACT_RAW = createMockedContractRawData(MOCKED_CONTRACT_BASE_WITH_NAME.address)
 
-const MOCKED_SOURCEDATA_RESPONSE: Partial<TEtherscanContractSourceCodeResult> = {
+const MOCKED_SOURCEDATA_RESPONSE: Omit<Partial<TEtherscanContractSourceCodeResult>, 'ABI'> & { ABI: string } = {
   SourceCode: MOCKED_SOURCECODE,
   ContractName: MOCKED_CONTRACT_BASE_WITH_NAME.name,
-  ABI: MOCKED_CONTRACT_RAW.applicationBinaryInterface,
+  ABI: JSON.stringify(MOCKED_CONTRACT_RAW.applicationBinaryInterface),
 }
 
 const MOCKED_SOURCES_RESPONSE = MOCKED_SOURCEORDER

@@ -115,6 +115,19 @@ export class TxAnalyzer {
     return this.dataLoader.getAnalyzerAnalysisOutput()
   }
 
+  public runTestAnalysis() {
+    this.createContractBaseData()
+    this.createSourceFiles()
+
+    this.disassembleTransactionBytecodes()
+
+    this.traceCreator.processTransactionStructLogs()
+
+    this.sourceLineParser.createContractsInstructions()
+
+    return this.dataLoader.getAnalyzerAnalysisOutput()
+  }
+
   public getTraceLogsContractAddresses(): string[] {
     return this.traceCreator.getContractAddressesInTransaction()
   }

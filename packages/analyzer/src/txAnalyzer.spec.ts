@@ -10,7 +10,7 @@ async function runAnalyzerForTestDataFile(tracesPath: string) {
 
   const analyzer = await prepareAnalyzer(transactionInfo, structLogs)
 
-  analyzer.runFullAnalysis()
+  analyzer.runTestAnalysis()
 
   return analyzer.dataLoader.getAnalyzerAnalysisOutput()
 }
