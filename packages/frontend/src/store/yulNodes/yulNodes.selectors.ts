@@ -168,36 +168,8 @@ const selectActiveYulNodeElement = createSelector(
   },
 )
 
-const selectJumpDestStructLogs = createSelector(
-  [structlogsSelectors.selectParsedStructLogs, instructionsSelectors.selectCurrentInstructions, selectCurrentYulFunctionDefinitionNodes],
-  (structLogs, instructions, yulnodes) => {
-    if (!structLogs || !instructions || !yulnodes) return []
-    const filteredStructlogs = Object.values(structLogs)
-      .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
-      .filter((structLog) => instructions[structLog.pc] && instructions[structLog.pc].isSourceFunction)
-    const sortedByIndexStructlogs = filteredStructlogs.sort((a, b) => a.index - b.index)
-    return sortedByIndexStructlogs.map((structLog) => {
-      const instruction = instructions[structLog.pc]
-
-      return {
-        structLog,
-        sourceFunctionSingature: instruction.sourceFunctionSingature,
-        sourceFunctionParameters: instruction.sourceFunctionParameters.map((parameter, index) => {
-          const stack = [...structLog.stack].reverse()
-          return {
-            ...parameter,
-            value: stack[instruction.sourceFunctionParameters.length - 1 - index]?.value,
-          }
-        }),
-        sourceFunctionName: instruction.sourceFunctionName,
-      }
-    })
-  },
-)
-
 export const yulNodesSelectors = {
   selectYulNodesState,
-  selectJumpDestStructLogs,
   selectCurrentHasYulNodes,
   selectCurrentBaseYulNodesWithListIndex,
   selectCurrentBaseYulNodesWithExtendedData,

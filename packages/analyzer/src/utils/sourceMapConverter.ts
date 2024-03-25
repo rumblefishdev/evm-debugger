@@ -94,39 +94,10 @@ export const createSourceMapToSourceCodeDictionary = (
         accumulator += codePartLength
       }
 
-      const sourceCodeContent = sourceParts.slice(startLine, endLine + 1).join(' ')
-
-      const isSourceFunction =
-        sourceCodeContent.includes('function') &&
-        sourceCodeContent.includes('{') &&
-        sourceCodeContent.includes('}') &&
-        !sourceCodeContent.includes('contract') &&
-        sourceMap.jumpType !== 'o'
-      const sourceFunctionSingature = isSourceFunction && sourceCodeContent.slice(0, sourceCodeContent.indexOf(')') + 1).trim()
-      const sourceFunctionName = isSourceFunction && sourceFunctionSingature.split(' ')[1].split('(')[0]
-      const sourceFunctionParametersRaw =
-        isSourceFunction &&
-        sourceCodeContent
-          .slice(sourceCodeContent.indexOf('(') + 1, sourceCodeContent.indexOf(')'))
-          .trim()
-          .split(',')
-
-      const sourceFunctionParameters =
-        isSourceFunction &&
-        sourceFunctionParametersRaw.length > 0 &&
-        sourceFunctionParametersRaw.map((parameter) => {
-          const elements = parameter.split(' ').filter((element) => element !== '')
-          return { type: elements.length === 1 ? null : elements[0], name: elements.at(-1), modifiers: elements.slice(1, -1) }
-        })
-
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startColumn,
         startCodeLine: startLine,
-        sourceFunctionSingature,
-        sourceFunctionParameters,
-        sourceFunctionName,
-        isSourceFunction,
         fileType,
         endColumn,
         endCodeLine: endLine,
