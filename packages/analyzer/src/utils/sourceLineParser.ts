@@ -41,7 +41,7 @@ export class SourceLineParser {
 
       const uniqueSoruceMapsCodeLinesDictionary = createSourceMapToSourceCodeDictionary(contractSourceFiles, uniqueSourceMaps)
 
-      const disassembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledEtherscanBytecode')
+      const disassembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledBytecode')
 
       const mapDisasemlbedBytecodeToIndex = Object.values(disassembledBytecode).reduce((accumulator, disassembledBytecodeEntry, index) => {
         accumulator[index] = disassembledBytecodeEntry
