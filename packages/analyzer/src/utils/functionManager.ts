@@ -10,7 +10,7 @@ import type {
 } from '@evm-debuger/types'
 
 import { selectFunctionBlockContextForLog } from '../helpers/helpers'
-import { InputSourceManager } from '../strategies/inputSource'
+import { InputSourceManager } from '../strategies/inputSourceManager/inputSource.manager'
 
 import type { DataLoader } from './dataLoader'
 
