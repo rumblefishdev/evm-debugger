@@ -15,10 +15,10 @@ import { InputSourceManager } from '../strategies/inputSource'
 import type { DataLoader } from './dataLoader'
 
 const regexForAllNewLineTypes = /\r\n|\n|\r/g
-const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)+)\{/gim
-const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)+)\([^)]*\) \{/gim
-const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?)+)\{/gim
-const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?)+)\([^)]*\)+ \{/gim
+const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
+const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)*?)\([^)]*\) \{/gim
+const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
+const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?)*)\([^)]*?\)+ \{/gim
 
 const regexpForYULFunction = /function ([a-zA-Z0-9_@_$]+)\([^)]+\)\s->\s(([a-zA-Z0-9_@,]+)(\s?))+/gim
 
@@ -112,6 +112,7 @@ export class FunctionManager {
 
   public createFunctionsDictionary() {
     const contractAddreeses = this.dataLoader.getAddressesList()
+
     for (const contractAddress of contractAddreeses) {
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
@@ -147,7 +148,7 @@ export class FunctionManager {
         const functionsWithoutParametersAndReturns = sourceFileContentLines.match(regexpForFunctionWithoutParametersAndReturns)
         const functionsWithParametersAndWithoutReturns = sourceFileContentLines.match(regexpForFunctionWithParametersAndWithoutReturns)
         const functionsWithoutParametersAndWithReturns = sourceFileContentLines.match(regexpForFunctionWithoutParametersAndWithReturns)
-        const yulFunctions = sourceFileContentLines.match(regexpForYULFunction)
+        const yulFunctions = sourceFile.name === 'utility' && sourceFileContentLines.match(regexpForYULFunction)
 
         const functions = [
           ...(functionsWithParametersAndReturns || []),

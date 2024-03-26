@@ -41,8 +41,6 @@ export const TraceLogsListContainer: React.FC = () => {
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const functionsStack = useSelector(functionStackSelectors.selectEntities)
 
-  console.log('functionsStack', functionsStack)
-
   const activateTraceLog = React.useCallback(
     (traceLog: TMainTraceLogsWithId) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLog))

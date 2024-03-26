@@ -35,8 +35,6 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
     setIsInnerFunctionsVisibble(!isInnerFunctionsVisibble)
   }
 
-  console.log('innerFunctions', innerFunctions)
-
   const { isReverted, op, signature, depth } = traceLog
   return (
     <Stack marginLeft={depth}>
@@ -89,7 +87,7 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
                 {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
                 {item.isMain && (
                   <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
-                    .map((input) => `${input.name} = ${input.value}`)
+                    .map((input) => `${input.name} = ${stripZerosLeft(input.value)}`)
                     .join(', ')})`}</StyledInnerFunctionSignature>
                 )}
               </StyledInnerFunctionContainer>
