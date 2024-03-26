@@ -1,12 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { BaseOpcodesHex, NodeType } from '@evm-debuger/types'
+import { NodeType } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { instructionsSelectors } from '../instructions/instructions.selectors'
 import { createSourceMapIdentifier } from '../instructions/instructions.helpers'
-import { structlogsSelectors } from '../structlogs/structlogs.selectors'
 
 import {
   yulBaseNodeAdapter,

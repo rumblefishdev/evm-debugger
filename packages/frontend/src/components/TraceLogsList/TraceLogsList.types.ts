@@ -1,6 +1,5 @@
 import type { TContractFunction } from '@evm-debuger/types'
 
-import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 
 export type TTraceLogWithSignature = TMainTraceLogsWithId & { signature: string }

@@ -10,7 +10,6 @@ import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
-import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 import { getSignature } from '../../helpers/helpers'
 import { contractBaseSelectors } from '../../store/contractBase/contractBase.selectors'
 import { sourceFilesActions } from '../../store/sourceFiles/sourceFiles.slice'
