@@ -6,15 +6,14 @@ import { BaseOpcodesHex } from '@evm-debuger/types'
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
 import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
-import { yulNodesSelectors } from '../../store/yulNodes/yulNodes.selectors'
 import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
 import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
-import type { TStructlogWithListIndex } from '../../store/structlogs/structlogs.types'
 import { getSignature } from '../../helpers/helpers'
 import { contractBaseSelectors } from '../../store/contractBase/contractBase.selectors'
 import { sourceFilesActions } from '../../store/sourceFiles/sourceFiles.slice'
+import { functionStackSelectors } from '../../store/functionStacks/functionStack.selectors'
 
 import { TraceLogsListComponent } from './TraceLogsList.component'
 import type { TTraceLogWithSignature } from './TraceLogsList.types'
@@ -39,7 +38,7 @@ export const TraceLogsListContainer: React.FC = () => {
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractBaseSelectors.selectAll)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
-  const structlogsOfInnerFunctions = useSelector(yulNodesSelectors.selectJumpDestStructLogs)
+  const functionsStack = useSelector(functionStackSelectors.selectEntities)
 
   const activateTraceLog = React.useCallback(
     (traceLog: TMainTraceLogsWithId) => {
@@ -52,10 +51,10 @@ export const TraceLogsListContainer: React.FC = () => {
   )
 
   const activateStructlog = React.useCallback(
-    (structLog: TStructlogWithListIndex) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
+    (structLogIndex: number) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
     },
-    [dispatch],
+    [dispatch, structlogs],
   )
 
   const traceLogsWithSignature: TTraceLogWithSignature[] = React.useMemo(() => {
@@ -65,7 +64,7 @@ export const TraceLogsListContainer: React.FC = () => {
   return (
     <TraceLogsListComponent
       activeTraceLogIndex={activeBlock?.index || 0}
-      currentInnerFunctions={structlogsOfInnerFunctions}
+      currentInnerFunctions={functionsStack[activeBlock?.index].functions}
       traceLogs={traceLogsWithSignature}
       activateStructLog={activateStructlog}
       activateTraceLog={activateTraceLog}

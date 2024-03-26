@@ -5,12 +5,14 @@ import { EVMMachine } from './utils/evmMachine'
 import { parseSourceCode } from './helpers/parseSourceCodes'
 import { TraceCreator } from './utils/traceCreator'
 import { SourceLineParser } from './utils/sourceLineParser'
+import { FunctionManager } from './utils/functionManager'
 
 export class TxAnalyzer {
-  public readonly dataLoader: DataLoader = new DataLoader()
   private readonly evmMachine = new EVMMachine()
+  public readonly dataLoader: DataLoader = new DataLoader()
   private readonly traceCreator = new TraceCreator(this.dataLoader)
   private readonly sourceLineParser = new SourceLineParser(this.dataLoader)
+  private readonly functionManager = new FunctionManager(this.dataLoader)
 
   private disassembleTransactionBytecodes() {
     const transactionContractsAddresses = this.dataLoader.getAddressesList()
@@ -72,19 +74,6 @@ export class TxAnalyzer {
     }
   }
 
-  public runFullAnalysis() {
-    this.createContractBaseData()
-    this.createSourceFiles()
-
-    this.disassembleTransactionBytecodes()
-
-    this.traceCreator.processTransactionStructLogs()
-
-    this.sourceLineParser.createContractsInstructions()
-
-    return this.dataLoader.getAnalyzerAnalysisOutput()
-  }
-
   public getContractsRawData(): TAnalyzerContractsRawData {
     const contractAddresses = this.dataLoader.getAddressesList()
     const contractsRawData: TAnalyzerContractsRawData = {}
@@ -105,6 +94,38 @@ export class TxAnalyzer {
     }
 
     return contractsRawData
+  }
+
+  public runFullAnalysis() {
+    this.createContractBaseData()
+    this.createSourceFiles()
+
+    this.disassembleTransactionBytecodes()
+
+    this.traceCreator.processTransactionStructLogs()
+
+    this.sourceLineParser.createContractsInstructions()
+
+    this.functionManager.createFunctionsDictionary()
+
+    this.functionManager.createFunctionsStackTrace()
+
+    this.functionManager.decodeFunctionsParameters()
+
+    return this.dataLoader.getAnalyzerAnalysisOutput()
+  }
+
+  public runTestAnalysis() {
+    this.createContractBaseData()
+    this.createSourceFiles()
+
+    this.disassembleTransactionBytecodes()
+
+    this.traceCreator.processTransactionStructLogs()
+
+    this.sourceLineParser.createContractsInstructions()
+
+    return this.dataLoader.getAnalyzerAnalysisOutput()
   }
 
   public getTraceLogsContractAddresses(): string[] {

@@ -15,4 +15,5 @@ export enum StoreKeys {
   SOURCE_FILES = 'sourceFiles',
   CONTRACT_BASE = 'contractBase',
   CONTRACT_RAW = 'contractRaw',
+  FUNCTION_STACK = 'functionStack',
 }

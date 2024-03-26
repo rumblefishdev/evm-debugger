@@ -1,11 +1,12 @@
-import type { TStructlogWithListIndex } from '../../../store/structlogs/structlogs.types'
+import type { TContractFunction } from '@evm-debuger/types'
+
 import type { TMainTraceLogsWithId } from '../../../store/traceLogs/traceLogs.types'
-import type { TInnerFunction, TTraceLogWithSignature } from '../TraceLogsList.types'
+import type { TTraceLogWithSignature } from '../TraceLogsList.types'
 
 export type TTraceLogElementProps = {
   traceLog: TTraceLogWithSignature
   isActive: boolean
-  innerFunctions?: TInnerFunction[]
+  innerFunctions?: TContractFunction[]
   activateTraceLog: (traceLog: TMainTraceLogsWithId) => void
-  activateStructLog: (structLog: TStructlogWithListIndex) => void
+  activateStructLog: (structLogPc: number) => void
 }

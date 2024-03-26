@@ -14,6 +14,10 @@ import {
 } from './TraceLogElement.styles'
 import type { TTraceLogElementProps } from './TraceLogElement.types'
 
+const stripZerosLeft = (data: string) => {
+  return data.replace(/^0+/, '')
+}
+
 export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
   isActive,
   traceLog,
@@ -70,14 +74,22 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
           <StyledInnerFunctionWrapper depth={depth}>
             {innerFunctions.map((item) => (
               <StyledInnerFunctionContainer
-                key={item.structLog.index}
-                onClick={() => activateStructLog(item.structLog)}
+                ml={item.depth * 2}
+                key={item.index}
+                onClick={() => {
+                  activateStructLog(item.index)
+                }}
               >
                 <Chip
                   size="small"
-                  label={item.structLog.op}
+                  label={item.op}
                 />
-                <StyledInnerFunctionSignature>{item.sourceFunctionSingature}</StyledInnerFunctionSignature>
+                {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
+                {item.isMain && (
+                  <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
+                    .map((input) => `${input.name} = ${stripZerosLeft(input.value)}`)
+                    .join(', ')})`}</StyledInnerFunctionSignature>
+                )}
               </StyledInnerFunctionContainer>
             ))}
           </StyledInnerFunctionWrapper>

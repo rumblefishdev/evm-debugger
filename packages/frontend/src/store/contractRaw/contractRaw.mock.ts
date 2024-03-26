@@ -11,15 +11,15 @@ export const createMockedContractRawData = (address: string): TAnalyzerContractR
 
 export const createMockedSourceMap = (address?: string): TSourceMap & { address: string } => {
   return {
+    yulContents: null,
+    sourceMap: 'some source map',
+    linkReferences: null,
+    immutableReferences: null,
+    functionDebugData: null,
     fileName: 'some file name',
-    deployedBytecode: {
-      sourceMap: 'some source map',
-      opcodes: 'some opcodes',
-      object: 'some object',
-      contents: null,
-      ast: null,
-    },
     contractName: 'some contract name',
+    bytecode: 'some object',
+    ast: null,
     address: address || createUUID(),
   }
 }

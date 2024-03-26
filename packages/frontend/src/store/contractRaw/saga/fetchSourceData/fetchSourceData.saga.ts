@@ -29,7 +29,7 @@ export function* fetchSourceDataForContractSaga({ payload }: ContractRawActions[
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [
         contractAddress,
         'applicationBinaryInterface',
-        etherscanSourceData.ABI,
+        JSON.parse(etherscanSourceData.ABI as unknown as string),
       ])
     }
     if (etherscanSourceData.SourceCode) {
@@ -58,7 +58,7 @@ export function* fetchSourceDataForContractSaga({ payload }: ContractRawActions[
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage(`Source data for ${contractAddress} fetched successfully`)))
   } catch (error) {
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Source data for ${contractAddress} fetching failed`)))
     console.log(error)
+    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Source data for ${contractAddress} fetching failed`)))
   }
 }

@@ -153,14 +153,11 @@ export const createSourceMapEntry = (
     const contractInternals = fileInternals[rootContractName]
     const contractDeployedBytecode = contractInternals.evm.deployedBytecode
 
-    const baseSourceMapContent: TSourceMap = {
+    const sourceMapContent: TSourceMap = {
+      sourceMap: contractDeployedBytecode.sourceMap,
       fileName,
-      deployedBytecode: {
-        sourceMap: contractDeployedBytecode.sourceMap,
-        opcodes: contractDeployedBytecode.opcodes,
-        object: contractDeployedBytecode.object,
-      },
       contractName: rootContractName,
+      bytecode: contractDeployedBytecode.object,
     }
 
     // If the contract has generated sources with Utility.yul it will have array with one element
@@ -169,19 +166,27 @@ export const createSourceMapEntry = (
       contractDeployedBytecode.generatedSources &&
       contractDeployedBytecode.generatedSources.length > 0
     ) {
-      const extendedSourceMapContent: TSourceMap = {
-        ...baseSourceMapContent,
-        deployedBytecode: {
-          ...baseSourceMapContent.deployedBytecode,
-          contents: contractDeployedBytecode.generatedSources[0].contents,
-          ast: contractDeployedBytecode.generatedSources[0].ast,
-        },
-      }
-
-      return extendedSourceMapContent
+      sourceMapContent['yulContents'] =
+        contractDeployedBytecode.generatedSources[0].contents
+      sourceMapContent['ast'] = contractDeployedBytecode.generatedSources[0].ast
     }
 
-    return baseSourceMapContent
+    if (contractDeployedBytecode.immutableReferences) {
+      sourceMapContent['immutableReferences'] =
+        contractDeployedBytecode.immutableReferences
+    }
+
+    if (contractDeployedBytecode.functionDebugData) {
+      sourceMapContent['functionDebugData'] =
+        contractDeployedBytecode.functionDebugData
+    }
+
+    if (contractDeployedBytecode.linkReferences) {
+      sourceMapContent['linkReferences'] =
+        contractDeployedBytecode.linkReferences
+    }
+
+    return sourceMapContent
   }
   const message = `/Compilation/No root contract found: ${rootContractName}`
   captureMessage(message, 'error')

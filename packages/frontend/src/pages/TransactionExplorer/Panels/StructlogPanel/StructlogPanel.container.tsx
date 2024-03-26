@@ -27,7 +27,6 @@ export const StructlogPanel: React.FC = () => {
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
-
   const setActiveStructlog = useCallback(
     (structLog: TStructlogWithListIndex) => {
       dispatch(activeStructLogActions.setActiveStrucLog(structLog))

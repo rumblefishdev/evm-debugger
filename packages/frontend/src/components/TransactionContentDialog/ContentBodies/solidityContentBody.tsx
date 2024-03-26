@@ -1,14 +1,14 @@
 import React from 'react'
 import { Stack } from '@mui/material'
+import type { TSourceFile } from '@evm-debuger/types'
 
-import { useSources } from '../../../hooks/useSources'
 import type { SolidityContentBodyProps } from '../TransactionContentDialog.types'
 import { SelectMenu } from '../../SelectMenu'
 import { AceEditor } from '../../AceEditor'
 import { StyledDataWrapper } from '../TransactionContentDialog.styles'
 
 export const SolidityContentBody: React.FC<SolidityContentBodyProps> = ({ content, contractName }) => {
-  const sources = useSources(contractName, content)
+  const sources: TSourceFile[] = JSON.parse(content)
   const defaultSourceKey =
     contractName && sources
       ? Object.keys(sources).find((key) => new RegExp(`(^|/)${contractName}.sol`, 'u').test(key))

@@ -1,9 +1,7 @@
 import type { TAnalyzerContractData, TInputContractData } from './analyzerRoot'
-import { TDataLoaderAnalyzerData, TDataLoaderInputData } from './analyzerRoot'
 import type { ChainId } from './chains'
 import type { TContractBytecodeObject, TGeneratedSourcesElement } from './solc'
 import type { TAbi } from './types'
-import type { TYulBlock } from './yulSources'
 
 export enum SrcMapStatus {
   SOURCE_DATA_FETCHING_QUEUED_PENDING = 'SOURCE_DATA_FETCHING_QUEUED_PENDING',
@@ -47,7 +45,13 @@ export type TSrcMapAddres = {
 export type TSourceMap = {
   fileName: string
   contractName: string
-  deployedBytecode: Pick<TContractBytecodeObject, 'object' | 'opcodes' | 'sourceMap'> & Partial<TGeneratedSourcesElement>
+  bytecode: TContractBytecodeObject['object']
+  sourceMap: TContractBytecodeObject['sourceMap']
+  immutableReferences?: TContractBytecodeObject['immutableReferences']
+  ast?: TGeneratedSourcesElement['ast']
+  yulContents?: TGeneratedSourcesElement['contents']
+  functionDebugData?: TContractBytecodeObject['functionDebugData']
+  linkReferences?: TContractBytecodeObject['linkReferences']
 }
 
 export type TEtherscanContractSourceCodeResult = {

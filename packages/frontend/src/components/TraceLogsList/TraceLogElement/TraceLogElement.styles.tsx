@@ -49,7 +49,6 @@ export const StyledInnerFunctionWrapper = styled(
 }))
 
 export const StyledInnerFunctionContainer = styled(Stack)(({ theme }) => ({
-  marginLeft: theme.spacing(1),
   gap: theme.spacing(1),
   flexDirection: 'row',
 }))
