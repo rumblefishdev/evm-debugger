@@ -15,10 +15,10 @@ import { InputSourceManager } from '../strategies/inputSourceManager/inputSource
 import type { DataLoader } from './dataLoader'
 
 const regexForAllNewLineTypes = /\r\n|\n|\r/g
-const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
+const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
 const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)*?)\([^)]*\) \{/gim
-const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
-const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?)*)\([^)]*?\)+ \{/gim
+const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
+const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\([^)]*?\)+ \{/gim
 
 const regexpForYULFunction = /function ([a-zA-Z0-9_@_$]+)\([^)]+\)\s->\s(([a-zA-Z0-9_@,]+)(\s?))+/gim
 
@@ -114,6 +114,9 @@ export class FunctionManager {
     const contractAddreeses = this.dataLoader.getAddressesList()
 
     for (const contractAddress of contractAddreeses) {
+      const isVerified = this.dataLoader.isContractVerified(contractAddress)
+      if (!isVerified) continue
+
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
 
@@ -123,7 +126,7 @@ export class FunctionManager {
       const contractInstructions = this.dataLoader.analyzerContractData.get(contractAddress, 'instructions')
 
       const functionsDebugData = this.dataLoader.inputContractData.get(contractAddress, 'functionDebugData')
-      const functionDebugDataMappedToPc = Object.values(functionsDebugData).reduce<Record<number, TFunctionDebugData>>(
+      const functionDebugDataMappedToPc = Object.values(functionsDebugData || {}).reduce<Record<number, TFunctionDebugData>>(
         (accumulator, entry) => {
           if (entry.entryPoint) accumulator[entry.entryPoint] = entry
           return accumulator
@@ -135,7 +138,12 @@ export class FunctionManager {
         .filter((structLog: TDisassembledBytecodeStructlog) => BaseOpcodesHex[structLog.opcode] === BaseOpcodesHex.JUMPDEST)
         .filter((structLog: TDisassembledBytecodeStructlog) => contractInstructions[structLog.pc].jumpType !== 'o')
 
-      for (const sourceFile of contractSourceFiles) {
+      const fileIdsPresentInInstructrions = new Set(Object.values(contractInstructions).map((instruction) => instruction.fileId))
+      const filteredSourceFiles = contractSourceFiles.filter((sourceFile) =>
+        fileIdsPresentInInstructrions.has(contractSourceFiles.indexOf(sourceFile)),
+      )
+
+      for (const sourceFile of filteredSourceFiles) {
         const structLogsForSourceFile = jumpDestStructLogs.filter(
           (structLog) => contractInstructions[structLog.pc].fileId === contractSourceFiles.indexOf(sourceFile),
         )
@@ -286,6 +294,9 @@ export class FunctionManager {
     const runtimeFunctionsList: Record<string, Record<number, TContractFunction[]>> = {}
 
     for (const traceLog of traceLogs) {
+      const isVerified = this.dataLoader.isContractVerified(traceLog.address)
+      if (!isVerified) continue
+
       const traceLogFunctions = traceLogsFunctionsList[traceLog.index]
       const traceLogFunctionsCopy = [...traceLogFunctions]
 
@@ -334,6 +345,9 @@ export class FunctionManager {
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
     for (const address in runtimeFunctionsList) {
+      const isVerified = this.dataLoader.isContractVerified(address)
+      if (!isVerified) continue
+
       const contractRuntimeFunctionsList = runtimeFunctionsList[address]
 
       for (const traceLogIndex in contractRuntimeFunctionsList) {

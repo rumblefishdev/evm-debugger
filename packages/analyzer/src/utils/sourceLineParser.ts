@@ -26,16 +26,17 @@ export class SourceLineParser {
     const listOfContractsAddresses = this.dataLoader.getAddressesList()
 
     for (const contractAddress of listOfContractsAddresses) {
+      const isVerified = this.dataLoader.isContractVerified(contractAddress)
+      if (!isVerified) continue
+
       const contractSourceMap = this.dataLoader.inputContractData.get(contractAddress, 'sourceMap')
       const contractSourceFiles = this.dataLoader.analyzerContractData.get(contractAddress, 'sourceFiles')
-      const contractName = this.dataLoader.analyzerContractData.get(contractAddress, 'contractBaseData').name
-
-      if (!contractSourceMap || !contractSourceFiles) continue
+      const contractName = this.dataLoader.analyzerContractData.get(contractAddress, 'contractBaseData')?.name
 
       dataToDecode.push({ contractSourceMap, contractSourceFiles, contractName, contractAddress })
     }
 
-    return dataToDecode.map(({ contractAddress, contractSourceMap, contractSourceFiles }) => {
+    return dataToDecode.forEach(({ contractAddress, contractSourceMap, contractSourceFiles }) => {
       const convertedSourceMap = sourceMapConverter(contractSourceMap)
       const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
 

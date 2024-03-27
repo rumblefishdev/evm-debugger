@@ -5,6 +5,7 @@ import { getTraceLogErrorOutput } from '../../../store/activeBlock/activeBlock.s
 
 import {
   StyledArrowDown,
+  StyledChip,
   StyledFailureIcon,
   StyledFunctionSignature,
   StyledInnerFunctionContainer,
@@ -45,17 +46,10 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
           gap={1}
           onClick={() => activateTraceLog(traceLog)}
         >
-          {isReverted && (
-            <Tooltip
-              title={getTraceLogErrorOutput(traceLog)}
-              followCursor
-            >
-              <StyledFailureIcon>❌</StyledFailureIcon>
-            </Tooltip>
-          )}
-          <Chip
+          <StyledChip
+            isRevertd={isReverted}
             size="small"
-            label={op}
+            label={isReverted ? `Reverted! ${op}` : op}
           />
           <StyledFunctionSignature isActive={isActive}>{signature}</StyledFunctionSignature>
           <IconButton
@@ -87,7 +81,7 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
                 {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
                 {item.isMain && (
                   <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
-                    .map((input) => `${input.name} = ${stripZerosLeft(input.value)}`)
+                    .map((input) => `${input.name} = ${typeof input.value !== 'object' ? stripZerosLeft(input.value) : input.value}`)
                     .join(', ')})`}</StyledInnerFunctionSignature>
                 )}
               </StyledInnerFunctionContainer>

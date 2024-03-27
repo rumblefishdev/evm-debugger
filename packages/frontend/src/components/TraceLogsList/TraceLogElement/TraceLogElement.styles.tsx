@@ -1,10 +1,23 @@
 import { KeyboardArrowDown } from '@mui/icons-material'
-import { Stack, Typography, styled } from '@mui/material'
+import { Chip, Stack, Typography, styled } from '@mui/material'
 
 export const TraceLogElementContainer = styled(Stack)(({ theme }) => ({
   minHeight: theme.spacing(4),
   height: '100%',
   cursor: 'pointer',
+}))
+
+export const StyledChipOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'isReverted',
+}
+export const StyledChip = styled(
+  Chip,
+  StyledChipOptions,
+)<{ isRevertd: boolean }>(({ theme, isRevertd }) => ({
+  // fontWeight: 'bold',
+  fontSize: theme.typography.body2.fontSize,
+  color: isRevertd ? theme.palette.rfWhite : theme.palette.rfBlack,
+  backgroundColor: isRevertd ? theme.palette.rfBrandSecondary : theme.palette.rfLines,
 }))
 
 export const StyledFailureIcon = styled(Typography)(({ theme }) => ({

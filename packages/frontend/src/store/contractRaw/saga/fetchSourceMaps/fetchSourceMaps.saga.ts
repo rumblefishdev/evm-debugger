@@ -21,6 +21,8 @@ export function* fetchSourceMapsForContractSaga({ payload }: ContractRawActions[
     const analyzer = yield* call(getAnalyzerInstance)
     const sourceMap = yield* call(fetchSourceMap, path)
 
+    console.log('sourceMap', sourceMap)
+
     if (sourceMap.ast) {
       yield* put(yulNodesActions.createYulNodesStructure({ content: sourceMap.ast, address: contractAddress }))
       yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'yulTree', sourceMap.ast])

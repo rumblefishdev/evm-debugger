@@ -32,6 +32,10 @@ export class DataLoader {
     get: this.getInputContractData,
   }
 
+  public isContractVerified(contractAddress: string) {
+    return Boolean(this.inputContractData.get(contractAddress, 'sourceData'))
+  }
+
   private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
     this.analyzerData.contracts[contractAddress][key] = value
   }
