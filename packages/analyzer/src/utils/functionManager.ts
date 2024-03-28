@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { BaseOpcodesHex } from '@evm-debuger/types'
+import { BaseOpcodesHex, SourceFileType } from '@evm-debuger/types'
 import type {
   TContractFunction,
   TContractFunctionInputParameter,
@@ -61,6 +61,7 @@ export class FunctionManager {
               stackInitialIndex: index,
               name: elements.at(-1),
               modifiers: elements.slice(1, -1),
+              isArray: elements[0].includes('[]'),
             }
           }),
         )
@@ -71,6 +72,7 @@ export class FunctionManager {
           stackInitialIndex: 0,
           name: elements.at(-1),
           modifiers: elements.slice(1, -1),
+          isArray: elements[0].includes('[]'),
         })
       }
     }
@@ -79,7 +81,7 @@ export class FunctionManager {
       const initialParameterIndex = inputParameters.length - 1 - inputParameter.stackInitialIndex
       const increaseByModifiers = inputParameters
         .slice(index)
-        .reduce((accumulator, parameter) => accumulator + parameter.modifiers.length, 0)
+        .reduce((accumulator, parameter) => accumulator + (parameter.isArray ? 1 : 0), 0)
       inputParameters[index].stackInitialIndex = initialParameterIndex + increaseByModifiers
     })
 
@@ -136,7 +138,7 @@ export class FunctionManager {
 
       const jumpDestStructLogs = Object.values(dissasembledBytecode)
         .filter((structLog: TDisassembledBytecodeStructlog) => BaseOpcodesHex[structLog.opcode] === BaseOpcodesHex.JUMPDEST)
-        .filter((structLog: TDisassembledBytecodeStructlog) => contractInstructions[structLog.pc].jumpType !== 'o')
+        .filter((structLog: TDisassembledBytecodeStructlog) => contractInstructions[structLog.pc]?.jumpType !== 'o')
 
       const fileIdsPresentInInstructrions = new Set(Object.values(contractInstructions).map((instruction) => instruction.fileId))
       const filteredSourceFiles = contractSourceFiles.filter((sourceFile) =>
@@ -145,7 +147,7 @@ export class FunctionManager {
 
       for (const sourceFile of filteredSourceFiles) {
         const structLogsForSourceFile = jumpDestStructLogs.filter(
-          (structLog) => contractInstructions[structLog.pc].fileId === contractSourceFiles.indexOf(sourceFile),
+          (structLog) => contractInstructions[structLog.pc]?.fileId === contractSourceFiles.indexOf(sourceFile),
         )
 
         const sourceFileContent = sourceFile.content
@@ -175,7 +177,7 @@ export class FunctionManager {
 
           const structLogsForFunction = structLogsForSourceFile.filter((structLog) => {
             const instruction = contractInstructions[structLog.pc]
-            return instruction.startCodeLine === functionLineIndex
+            return instruction?.startCodeLine === functionLineIndex
           })
 
           for (const structLog of structLogsForFunction) {
@@ -234,6 +236,9 @@ export class FunctionManager {
     const contractsFunctions = this.dataLoader.analyzerContractData.getAll('functions')
     const traceLogFunctionsList: Record<number, TContractFunction[]> = {}
     for (const traceLog of traceLogs) {
+      const isVerified = this.dataLoader.isContractVerified(traceLog.address)
+      if (!isVerified) continue
+
       const structLogsWithFunction: TIndexedStructLog[] = []
       const traceLogFunctions = contractsFunctions[traceLog.address]
       const traceLogInstructions = this.dataLoader.analyzerContractData.get(traceLog.address, 'instructions')
@@ -241,15 +246,19 @@ export class FunctionManager {
       const traceLogStructLogs = selectFunctionBlockContextForLog(structLogs, traceLog).filter(
         (structLog) => structLog.depth === traceLog.depth + 1,
       )
+
       const jumpDestStructLogs = traceLogStructLogs
         .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
-        .filter((structLog) => traceLogInstructions[structLog.pc].jumpType !== 'o')
+        .filter((structLog) => traceLogInstructions[structLog.pc]?.jumpType !== 'o')
 
       const slicedTraceLogSourceFiles = traceLogSourceFiles.map((sourceFile) => {
         return sourceFile.content.split(regexForAllNewLineTypes)
       })
       for (const jumpDestStructLog of jumpDestStructLogs) {
         const jumpDestInstruction = traceLogInstructions[jumpDestStructLog.pc]
+        // TODO: handle this case
+        if (jumpDestInstruction.fileType === SourceFileType.UNKNOWN) continue
+
         const jumpDestSourceFile = slicedTraceLogSourceFiles[jumpDestInstruction.fileId]
         const jumpDestSourceLine = jumpDestSourceFile[jumpDestInstruction.startCodeLine]
 

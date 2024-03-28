@@ -65,7 +65,10 @@ export class TxAnalyzer {
 
     for (const address of contractsAddresses) {
       const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
-      if (!sourceData) continue
+      if (!sourceData) {
+        this.dataLoader.analyzerContractData.set(address, 'contractBaseData', { address })
+        continue
+      }
       const contractBaseData: TAnalyzerContractBaseData = {
         optimization: { runs: Number(sourceData.runs), isEnabled: sourceData.optimizationUsed === '1' },
         name: sourceData.contractName,

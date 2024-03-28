@@ -2,7 +2,6 @@ import type { TContractFunctionInputParameter, TStorage } from '@evm-debuger/typ
 
 import { CallDataSourceStrategy } from './strategyVariants/callDataSource'
 import { MemorySourceStrategy } from './strategyVariants/memorySource'
-import { StorageSourceStrategy } from './strategyVariants/storageSource'
 import { StackSourceStrategy } from './strategyVariants/stackSource'
 import type { TInputSoucrceManager, TInputSourceStrategy } from './inputSource.types'
 
@@ -25,9 +24,6 @@ export class InputSourceManager implements TInputSoucrceManager {
         break
       case contractFunction.modifiers.includes('memory'):
         this.selectedStrategy = new MemorySourceStrategy(memory, stack, contractFunction)
-        break
-      case contractFunction.modifiers.includes('storage'):
-        this.selectedStrategy = new StorageSourceStrategy(storage, stack, contractFunction)
         break
       default:
         this.selectedStrategy = new StackSourceStrategy(stack, contractFunction)

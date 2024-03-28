@@ -60,49 +60,13 @@ export const createSourceMapToSourceCodeDictionary = (
   const sourceMapToSourceCodeDictionary: SourceCodeDictionary = {}
   const textEncoder = new TextEncoder()
 
-  for (const sourceMap of sourceMaps) {
+  for (let sourceMapIndex = 0; sourceMapIndex < sourceMaps.length; sourceMapIndex++) {
+    const sourceMap = sourceMaps[sourceMapIndex]
     const sourceMapIdentifier = createSourceMapIdentifier(sourceMap)
 
     const sourceCode = sourceFiles[sourceMap.fileId]
 
-    if (sourceCode) {
-      const sourceParts = sourceCode.content.split(regexForAllNewLineTypes)
-      const fileType: SourceFileType = fileTypeMap[sourceCode.path.split('.').pop()]
-
-      const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
-
-      let startLine = 0
-      let startColumn = 0
-      let endLine = 0
-      let endColumn = 0
-      let accumulator = 0
-
-      for (let index = 0; index < sourceParts.length; index++) {
-        const codePartLength = textEncoder.encode(sourceParts[index]).length + numberOfCharsPerNewLine
-
-        if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
-          startLine = index
-          startColumn = sourceMap.offset - accumulator
-        }
-
-        if (accumulator + codePartLength > sourceMap.offset + sourceMap.length && endLine === 0) {
-          endLine = index
-          endColumn = sourceMap.offset + sourceMap.length - accumulator
-          break
-        }
-
-        accumulator += codePartLength
-      }
-
-      sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
-        ...sourceMap,
-        startColumn,
-        startCodeLine: startLine,
-        fileType,
-        endColumn,
-        endCodeLine: endLine,
-      }
-    } else {
+    if (!sourceCode) {
       sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
         ...sourceMap,
         startColumn: 0,
@@ -111,6 +75,43 @@ export const createSourceMapToSourceCodeDictionary = (
         endColumn: 0,
         endCodeLine: 0,
       }
+      continue
+    }
+    const sourceParts = sourceCode.content.split(regexForAllNewLineTypes)
+    const fileType: SourceFileType = fileTypeMap[sourceCode.path.split('.').pop()]
+
+    const numberOfCharsPerNewLine = convertNewLineExpressionTypeToNumberOfWhitespaces(sourceCode.content)
+
+    let startLine = 0
+    let startColumn = 0
+    let endLine = 0
+    let endColumn = 0
+    let accumulator = 0
+
+    for (let index = 0; index < sourceParts.length; index++) {
+      const codePartLength = textEncoder.encode(sourceParts[index]).length + numberOfCharsPerNewLine
+
+      if (accumulator + codePartLength > sourceMap.offset && startLine === 0) {
+        startLine = index
+        startColumn = sourceMap.offset - accumulator
+      }
+
+      if (accumulator + codePartLength > sourceMap.offset + sourceMap.length && endLine === 0) {
+        endLine = index
+        endColumn = sourceMap.offset + sourceMap.length - accumulator
+        break
+      }
+
+      accumulator += codePartLength
+    }
+
+    sourceMapToSourceCodeDictionary[sourceMapIdentifier] = {
+      ...sourceMap,
+      startColumn,
+      startCodeLine: startLine,
+      fileType,
+      endColumn,
+      endCodeLine: endLine,
     }
   }
 

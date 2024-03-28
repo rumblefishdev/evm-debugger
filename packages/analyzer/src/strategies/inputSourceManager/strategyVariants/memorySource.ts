@@ -16,21 +16,24 @@ export class MemorySourceStrategy implements TInputSourceStrategy {
   readValue() {
     console.log(`memorySource: ${this.contractFunction.type}`)
 
-    switch (this.contractFunction.type) {
-      case 'bytes32[]': {
-        const readLength = this.stack[this.contractFunction.stackInitialIndex]
-        const readStart = this.stack[this.contractFunction.stackInitialIndex - 1]
+    if (this.contractFunction.isArray) {
+      const readLength = this.stack[this.contractFunction.stackInitialIndex]
+      const readStart = this.stack[this.contractFunction.stackInitialIndex - 1]
 
-        const memoryReadValue = readMemory(this.memory, readStart, readLength)
-        const memoryWordArray = memoryReadValue.match(/.{1,64}/g)
-        const bytesArrayLength = parseInt(memoryWordArray[0], 16)
+      const memoryReadValue = readMemory(this.memory, readStart, readLength)
+      const memoryWordArray = memoryReadValue.match(/.{1,64}/g)
+      const bytesArrayLength = parseInt(memoryWordArray[0], 16)
 
-        const result = memoryWordArray.slice(1, bytesArrayLength + 1)
+      const result = memoryWordArray.slice(1, bytesArrayLength + 1)
 
-        return result.map((r) => `0x${r}`)
-      }
-      default:
-        return 'memory'
+      return result.map((r) => `0x${r}`)
     }
+
+    const readOffset = this.stack[this.contractFunction.stackInitialIndex]
+    const readLength = '0x20'
+
+    const memoryReadValue = readMemory(this.memory, readOffset, readLength)
+
+    return `0x${memoryReadValue}`
   }
 }

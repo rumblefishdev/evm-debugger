@@ -16,27 +16,26 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
   readValue() {
     console.log(`callDataSource: ${this.contractFunction.type}`)
 
-    switch (this.contractFunction.type) {
-      case 'bytes32[]': {
-        const sanitizedCallData = this.callData.replace('0x', '')
+    const sanitizedCallData = this.callData.replace('0x', '')
 
-        const arrayStartPosition = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16)
-        const arrayLength = parseInt(this.stack[this.contractFunction.stackInitialIndex - 1], 16)
+    if (this.contractFunction.isArray) {
+      const arrayStartPosition = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16)
+      const arrayLength = parseInt(this.stack[this.contractFunction.stackInitialIndex - 1], 16)
 
-        const arrayEndPosition = arrayStartPosition + arrayLength * 32
+      const arrayEndPosition = arrayStartPosition + arrayLength * 32
 
-        const arrayData = sanitizedCallData.slice(arrayStartPosition * 2, arrayEndPosition * 2)
+      const result = []
 
-        const result = []
-
-        for (let index = 0; index < arrayData.length; index += 64) {
-          result.push(`0x${arrayData.slice(index, index + 64)}`)
-        }
-
-        return result
+      for (let index = arrayStartPosition; index < arrayEndPosition; index += 32) {
+        result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2)}`)
       }
-      default:
-        return 'callData'
+
+      return result
     }
+
+    const readOffset = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16) * 2
+    const readLength = 64
+
+    return `0x${sanitizedCallData.slice(readOffset, readOffset + readLength)}`
   }
 }

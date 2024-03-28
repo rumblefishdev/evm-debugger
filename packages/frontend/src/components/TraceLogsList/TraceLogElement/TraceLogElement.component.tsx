@@ -81,7 +81,7 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
                 {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
                 {item.isMain && (
                   <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
-                    .map((input) => `${input.name} = ${typeof input.value !== 'object' ? stripZerosLeft(input.value) : input.value}`)
+                    .map((input) => `${input.name} = ${input.value}`)
                     .join(', ')})`}</StyledInnerFunctionSignature>
                 )}
               </StyledInnerFunctionContainer>
