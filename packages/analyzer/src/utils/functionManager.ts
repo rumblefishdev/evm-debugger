@@ -14,6 +14,10 @@ import { InputSourceManager } from '../strategies/inputSourceManager/inputSource
 
 import type { DataLoader } from './dataLoader'
 
+// [_]?[A-Za-z0-9_]+ -> function name
+// (\s+([A-Za-z_]+\s?){0,7}?) -> modifiers ["view, pure, public, private, internal returns ..."]
+// set only to 7 because of regex optimalization (max 7 modifiers) its good enough to cover preety much all cases
+
 const regexForAllNewLineTypes = /\r\n|\n|\r/g
 const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
 const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)*?)\([^)]*\) \{/gim
