@@ -14,8 +14,6 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
   }
 
   readValue() {
-    console.log(`callDataSource: ${this.contractFunction.type}`)
-
     const sanitizedCallData = this.callData.replace('0x', '')
 
     if (this.contractFunction.isArray) {

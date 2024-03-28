@@ -1,5 +1,3 @@
-import type { TStorage } from '@evm-debuger/types'
-
 export type TInputSourceStrategy = {
   readValue: () => any
 }
@@ -8,7 +6,8 @@ export type TInputSoucrceManager = {
   stack: string[]
   memory: string[]
   callData: string
-  storage: TStorage
 
   readValue: () => any
+
+  readStrategyName: () => string
 }

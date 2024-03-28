@@ -14,8 +14,6 @@ export class MemorySourceStrategy implements TInputSourceStrategy {
   }
 
   readValue() {
-    console.log(`memorySource: ${this.contractFunction.type}`)
-
     if (this.contractFunction.isArray) {
       const readLength = this.stack[this.contractFunction.stackInitialIndex]
       const readStart = this.stack[this.contractFunction.stackInitialIndex - 1]

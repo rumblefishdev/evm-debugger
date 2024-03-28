@@ -380,7 +380,6 @@ export class FunctionManager {
               [...functionStructlog.stack].reverse(),
               functionStructlog.memory,
               traceLog.input,
-              functionStructlog.storage,
               input,
             )
             const inputSourceValue = inputSource.readValue()

@@ -10,14 +10,11 @@ export class InputSourceManager implements TInputSoucrceManager {
   stack: string[]
   memory: string[]
   callData: string
-  storage: TStorage
 
-  constructor(stack: string[], memory: string[], callData: string, storage: TStorage, contractFunction: TContractFunctionInputParameter) {
+  constructor(stack: string[], memory: string[], callData: string, contractFunction: TContractFunctionInputParameter) {
     this.stack = stack
     this.memory = memory
     this.callData = callData
-    this.storage = storage
-
     switch (true) {
       case contractFunction.modifiers.includes('calldata'):
         this.selectedStrategy = new CallDataSourceStrategy(callData, stack, contractFunction)
@@ -28,6 +25,10 @@ export class InputSourceManager implements TInputSoucrceManager {
       default:
         this.selectedStrategy = new StackSourceStrategy(stack, contractFunction)
     }
+  }
+
+  readStrategyName() {
+    return this.selectedStrategy.constructor.name
   }
 
   readValue() {

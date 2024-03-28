@@ -16,6 +16,7 @@ export const getAnalyzerInstance = () => {
 }
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
+<<<<<<< Updated upstream
   return fetch(`${infoApiGatewayUrl}/info`, {
     method: 'POST',
     headers: {
@@ -25,6 +26,18 @@ export const sendStatusMessageToDiscord = (message: string): Promise<Response> =
       content: message,
     }),
   })
+=======
+  // return fetch(`${infoApiGatewayUrl}/info`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({
+  //     content: message,
+  //   }),
+  // })
+  return Promise.resolve(new Response())
+>>>>>>> Stashed changes
 }
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
