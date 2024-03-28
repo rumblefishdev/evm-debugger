@@ -26,7 +26,7 @@ export class MemorySourceStrategy implements TInputSourceStrategy {
 
       const result = memoryWordArray.slice(1, bytesArrayLength + 1)
 
-      return result.map((r) => `0x${r}`)
+      return result.map((r) => `0x${r.replace(/^0+/, '')}`)
     }
 
     const readOffset = this.stack[this.contractFunction.stackInitialIndex]
@@ -34,6 +34,6 @@ export class MemorySourceStrategy implements TInputSourceStrategy {
 
     const memoryReadValue = readMemory(this.memory, readOffset, readLength)
 
-    return `0x${memoryReadValue}`
+    return `0x${memoryReadValue.replace(/^0+/, '')}`
   }
 }

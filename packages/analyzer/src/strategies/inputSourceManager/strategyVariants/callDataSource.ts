@@ -27,7 +27,7 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
       const result = []
 
       for (let index = arrayStartPosition; index < arrayEndPosition; index += 32) {
-        result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2)}`)
+        result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2).replace(/^0+/, '')}`)
       }
 
       return result
@@ -36,6 +36,6 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
     const readOffset = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16) * 2
     const readLength = 64
 
-    return `0x${sanitizedCallData.slice(readOffset, readOffset + readLength)}`
+    return `0x${sanitizedCallData.slice(readOffset, readOffset + readLength).replace(/^0+/, '')}`
   }
 }

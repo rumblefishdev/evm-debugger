@@ -1,12 +1,9 @@
 import React from 'react'
-import { Chip, Collapse, IconButton, Stack, Tooltip } from '@mui/material'
-
-import { getTraceLogErrorOutput } from '../../../store/activeBlock/activeBlock.selector'
+import { Chip, Collapse, IconButton, Stack } from '@mui/material'
 
 import {
   StyledArrowDown,
   StyledChip,
-  StyledFailureIcon,
   StyledFunctionSignature,
   StyledInnerFunctionContainer,
   StyledInnerFunctionSignature,
@@ -14,10 +11,6 @@ import {
   TraceLogElementContainer,
 } from './TraceLogElement.styles'
 import type { TTraceLogElementProps } from './TraceLogElement.types'
-
-const stripZerosLeft = (data: string) => {
-  return data.replace(/^0+/, '')
-}
 
 export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
   isActive,
