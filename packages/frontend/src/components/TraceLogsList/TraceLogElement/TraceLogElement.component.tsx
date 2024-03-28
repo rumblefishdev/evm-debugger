@@ -1,11 +1,9 @@
 import React from 'react'
-import { Chip, Collapse, IconButton, Stack, Tooltip } from '@mui/material'
-
-import { getTraceLogErrorOutput } from '../../../store/activeBlock/activeBlock.selector'
+import { Chip, Collapse, IconButton, Stack } from '@mui/material'
 
 import {
   StyledArrowDown,
-  StyledFailureIcon,
+  StyledChip,
   StyledFunctionSignature,
   StyledInnerFunctionContainer,
   StyledInnerFunctionSignature,
@@ -13,10 +11,6 @@ import {
   TraceLogElementContainer,
 } from './TraceLogElement.styles'
 import type { TTraceLogElementProps } from './TraceLogElement.types'
-
-const stripZerosLeft = (data: string) => {
-  return data.replace(/^0+/, '')
-}
 
 export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
   isActive,
@@ -45,17 +39,10 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
           gap={1}
           onClick={() => activateTraceLog(traceLog)}
         >
-          {isReverted && (
-            <Tooltip
-              title={getTraceLogErrorOutput(traceLog)}
-              followCursor
-            >
-              <StyledFailureIcon>❌</StyledFailureIcon>
-            </Tooltip>
-          )}
-          <Chip
+          <StyledChip
+            isRevertd={isReverted}
             size="small"
-            label={op}
+            label={isReverted ? `Reverted! ${op}` : op}
           />
           <StyledFunctionSignature isActive={isActive}>{signature}</StyledFunctionSignature>
           <IconButton
@@ -87,7 +74,7 @@ export const TraceLogElement: React.FC<TTraceLogElementProps> = ({
                 {!item.isMain && <StyledInnerFunctionSignature>{`${item.contraceName}.${item.selector}`}</StyledInnerFunctionSignature>}
                 {item.isMain && (
                   <StyledInnerFunctionSignature>{`${item.contraceName}.${item.name}(${item.inputs
-                    .map((input) => `${input.name} = ${stripZerosLeft(input.value)}`)
+                    .map((input) => `${input.name} = ${input.value}`)
                     .join(', ')})`}</StyledInnerFunctionSignature>
                 )}
               </StyledInnerFunctionContainer>

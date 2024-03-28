@@ -36,6 +36,9 @@ export class TxAnalyzer {
     const contractsAddresses = this.dataLoader.getAddressesList()
 
     for (const address of contractsAddresses) {
+      const isVerified = this.dataLoader.isContractVerified(address)
+      if (!isVerified) continue
+
       const contractName = this.dataLoader.inputContractData.get(address, 'sourceData')?.contractName
       const contractSourceCode = this.dataLoader.inputContractData.get(address, 'sourceCode')
       const contractYulSource = this.dataLoader.inputContractData.get(address, 'yulSource')
@@ -62,6 +65,10 @@ export class TxAnalyzer {
 
     for (const address of contractsAddresses) {
       const sourceData = this.dataLoader.inputContractData.get(address, 'sourceData')
+      if (!sourceData) {
+        this.dataLoader.analyzerContractData.set(address, 'contractBaseData', { address })
+        continue
+      }
       const contractBaseData: TAnalyzerContractBaseData = {
         optimization: { runs: Number(sourceData.runs), isEnabled: sourceData.optimizationUsed === '1' },
         name: sourceData.contractName,
@@ -98,11 +105,11 @@ export class TxAnalyzer {
 
   public runFullAnalysis() {
     this.createContractBaseData()
-    this.createSourceFiles()
-
     this.disassembleTransactionBytecodes()
 
     this.traceCreator.processTransactionStructLogs()
+
+    this.createSourceFiles()
 
     this.sourceLineParser.createContractsInstructions()
 

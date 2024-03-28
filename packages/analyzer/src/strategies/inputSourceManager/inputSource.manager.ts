@@ -2,7 +2,6 @@ import type { TContractFunctionInputParameter, TStorage } from '@evm-debuger/typ
 
 import { CallDataSourceStrategy } from './strategyVariants/callDataSource'
 import { MemorySourceStrategy } from './strategyVariants/memorySource'
-import { StorageSourceStrategy } from './strategyVariants/storageSource'
 import { StackSourceStrategy } from './strategyVariants/stackSource'
 import type { TInputSoucrceManager, TInputSourceStrategy } from './inputSource.types'
 
@@ -11,14 +10,11 @@ export class InputSourceManager implements TInputSoucrceManager {
   stack: string[]
   memory: string[]
   callData: string
-  storage: TStorage
 
-  constructor(stack: string[], memory: string[], callData: string, storage: TStorage, contractFunction: TContractFunctionInputParameter) {
+  constructor(stack: string[], memory: string[], callData: string, contractFunction: TContractFunctionInputParameter) {
     this.stack = stack
     this.memory = memory
     this.callData = callData
-    this.storage = storage
-
     switch (true) {
       case contractFunction.modifiers.includes('calldata'):
         this.selectedStrategy = new CallDataSourceStrategy(callData, stack, contractFunction)
@@ -26,12 +22,13 @@ export class InputSourceManager implements TInputSoucrceManager {
       case contractFunction.modifiers.includes('memory'):
         this.selectedStrategy = new MemorySourceStrategy(memory, stack, contractFunction)
         break
-      case contractFunction.modifiers.includes('storage'):
-        this.selectedStrategy = new StorageSourceStrategy(storage, stack, contractFunction)
-        break
       default:
         this.selectedStrategy = new StackSourceStrategy(stack, contractFunction)
     }
+  }
+
+  readStrategyName() {
+    return this.selectedStrategy.constructor.name
   }
 
   readValue() {

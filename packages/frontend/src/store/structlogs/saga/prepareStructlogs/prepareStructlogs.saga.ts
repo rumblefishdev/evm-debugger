@@ -63,6 +63,7 @@ export function* startPreparingStructlogsSaga(): SagaGenerator<void> {
       }
     }
   } catch (error) {
+    console.log(error)
     if (error instanceof Error && error.message === StructlogsErrors.BLOCK_NOT_FOUND) {
       yield* put(
         analyzerActions.addLogMessage(

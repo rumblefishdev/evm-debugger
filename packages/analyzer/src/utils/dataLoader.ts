@@ -32,6 +32,24 @@ export class DataLoader {
     get: this.getInputContractData,
   }
 
+  public isContractVerified(contractAddress: string) {
+    // TODO: remove this when support for precompiled contracts is added
+    if (
+      contractAddress === '0x0000000000000000000000000000000000000001' ||
+      contractAddress === '0x0000000000000000000000000000000000000002' ||
+      contractAddress === '0x0000000000000000000000000000000000000003' ||
+      contractAddress === '0x0000000000000000000000000000000000000004' ||
+      contractAddress === '0x0000000000000000000000000000000000000005' ||
+      contractAddress === '0x0000000000000000000000000000000000000006' ||
+      contractAddress === '0x0000000000000000000000000000000000000007' ||
+      contractAddress === '0x0000000000000000000000000000000000000008' ||
+      contractAddress === '0x0000000000000000000000000000000000000009' ||
+      contractAddress === '0x000000000000000000000000000000000000000a'
+    )
+      return false
+    return Boolean(this.inputContractData.get(contractAddress, 'sourceData'))
+  }
+
   private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
     this.analyzerData.contracts[contractAddress][key] = value
   }

@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { BaseOpcodesHex } from '@evm-debuger/types'
+import { BaseOpcodesHex, SourceFileType } from '@evm-debuger/types'
 import type {
   TContractFunction,
   TContractFunctionInputParameter,
@@ -14,11 +14,15 @@ import { InputSourceManager } from '../strategies/inputSourceManager/inputSource
 
 import type { DataLoader } from './dataLoader'
 
+// [_]?[A-Za-z0-9_]+ -> function name
+// (\s+([A-Za-z_]+\s?){0,7}?) -> modifiers ["view, pure, public, private, internal returns ..."]
+// set only to 7 because of regex optimalization (max 7 modifiers) its good enough to cover preety much all cases
+
 const regexForAllNewLineTypes = /\r\n|\n|\r/g
-const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
+const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
 const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)*?)\([^)]*\) \{/gim
-const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,10}?)\{/gim
-const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?)*)\([^)]*?\)+ \{/gim
+const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
+const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\([^)]*?\)+ \{/gim
 
 const regexpForYULFunction = /function ([a-zA-Z0-9_@_$]+)\([^)]+\)\s->\s(([a-zA-Z0-9_@,]+)(\s?))+/gim
 
@@ -61,6 +65,7 @@ export class FunctionManager {
               stackInitialIndex: index,
               name: elements.at(-1),
               modifiers: elements.slice(1, -1),
+              isArray: elements[0].includes('[]'),
             }
           }),
         )
@@ -71,6 +76,7 @@ export class FunctionManager {
           stackInitialIndex: 0,
           name: elements.at(-1),
           modifiers: elements.slice(1, -1),
+          isArray: elements[0].includes('[]'),
         })
       }
     }
@@ -79,7 +85,7 @@ export class FunctionManager {
       const initialParameterIndex = inputParameters.length - 1 - inputParameter.stackInitialIndex
       const increaseByModifiers = inputParameters
         .slice(index)
-        .reduce((accumulator, parameter) => accumulator + parameter.modifiers.length, 0)
+        .reduce((accumulator, parameter) => accumulator + (parameter.isArray ? 1 : 0), 0)
       inputParameters[index].stackInitialIndex = initialParameterIndex + increaseByModifiers
     })
 
@@ -114,6 +120,9 @@ export class FunctionManager {
     const contractAddreeses = this.dataLoader.getAddressesList()
 
     for (const contractAddress of contractAddreeses) {
+      const isVerified = this.dataLoader.isContractVerified(contractAddress)
+      if (!isVerified) continue
+
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
 
@@ -123,7 +132,7 @@ export class FunctionManager {
       const contractInstructions = this.dataLoader.analyzerContractData.get(contractAddress, 'instructions')
 
       const functionsDebugData = this.dataLoader.inputContractData.get(contractAddress, 'functionDebugData')
-      const functionDebugDataMappedToPc = Object.values(functionsDebugData).reduce<Record<number, TFunctionDebugData>>(
+      const functionDebugDataMappedToPc = Object.values(functionsDebugData || {}).reduce<Record<number, TFunctionDebugData>>(
         (accumulator, entry) => {
           if (entry.entryPoint) accumulator[entry.entryPoint] = entry
           return accumulator
@@ -133,11 +142,16 @@ export class FunctionManager {
 
       const jumpDestStructLogs = Object.values(dissasembledBytecode)
         .filter((structLog: TDisassembledBytecodeStructlog) => BaseOpcodesHex[structLog.opcode] === BaseOpcodesHex.JUMPDEST)
-        .filter((structLog: TDisassembledBytecodeStructlog) => contractInstructions[structLog.pc].jumpType !== 'o')
+        .filter((structLog: TDisassembledBytecodeStructlog) => contractInstructions[structLog.pc]?.jumpType !== 'o')
 
-      for (const sourceFile of contractSourceFiles) {
+      const fileIdsPresentInInstructrions = new Set(Object.values(contractInstructions).map((instruction) => instruction.fileId))
+      const filteredSourceFiles = contractSourceFiles.filter((sourceFile) =>
+        fileIdsPresentInInstructrions.has(contractSourceFiles.indexOf(sourceFile)),
+      )
+
+      for (const sourceFile of filteredSourceFiles) {
         const structLogsForSourceFile = jumpDestStructLogs.filter(
-          (structLog) => contractInstructions[structLog.pc].fileId === contractSourceFiles.indexOf(sourceFile),
+          (structLog) => contractInstructions[structLog.pc]?.fileId === contractSourceFiles.indexOf(sourceFile),
         )
 
         const sourceFileContent = sourceFile.content
@@ -167,7 +181,7 @@ export class FunctionManager {
 
           const structLogsForFunction = structLogsForSourceFile.filter((structLog) => {
             const instruction = contractInstructions[structLog.pc]
-            return instruction.startCodeLine === functionLineIndex
+            return instruction?.startCodeLine === functionLineIndex
           })
 
           for (const structLog of structLogsForFunction) {
@@ -226,6 +240,9 @@ export class FunctionManager {
     const contractsFunctions = this.dataLoader.analyzerContractData.getAll('functions')
     const traceLogFunctionsList: Record<number, TContractFunction[]> = {}
     for (const traceLog of traceLogs) {
+      const isVerified = this.dataLoader.isContractVerified(traceLog.address)
+      if (!isVerified) continue
+
       const structLogsWithFunction: TIndexedStructLog[] = []
       const traceLogFunctions = contractsFunctions[traceLog.address]
       const traceLogInstructions = this.dataLoader.analyzerContractData.get(traceLog.address, 'instructions')
@@ -233,15 +250,19 @@ export class FunctionManager {
       const traceLogStructLogs = selectFunctionBlockContextForLog(structLogs, traceLog).filter(
         (structLog) => structLog.depth === traceLog.depth + 1,
       )
+
       const jumpDestStructLogs = traceLogStructLogs
         .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
-        .filter((structLog) => traceLogInstructions[structLog.pc].jumpType !== 'o')
+        .filter((structLog) => traceLogInstructions[structLog.pc]?.jumpType !== 'o')
 
       const slicedTraceLogSourceFiles = traceLogSourceFiles.map((sourceFile) => {
         return sourceFile.content.split(regexForAllNewLineTypes)
       })
       for (const jumpDestStructLog of jumpDestStructLogs) {
         const jumpDestInstruction = traceLogInstructions[jumpDestStructLog.pc]
+        // TODO: handle this case
+        if (jumpDestInstruction.fileType === SourceFileType.UNKNOWN) continue
+
         const jumpDestSourceFile = slicedTraceLogSourceFiles[jumpDestInstruction.fileId]
         const jumpDestSourceLine = jumpDestSourceFile[jumpDestInstruction.startCodeLine]
 
@@ -286,6 +307,9 @@ export class FunctionManager {
     const runtimeFunctionsList: Record<string, Record<number, TContractFunction[]>> = {}
 
     for (const traceLog of traceLogs) {
+      const isVerified = this.dataLoader.isContractVerified(traceLog.address)
+      if (!isVerified) continue
+
       const traceLogFunctions = traceLogsFunctionsList[traceLog.index]
       const traceLogFunctionsCopy = [...traceLogFunctions]
 
@@ -334,6 +358,9 @@ export class FunctionManager {
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
     for (const address in runtimeFunctionsList) {
+      const isVerified = this.dataLoader.isContractVerified(address)
+      if (!isVerified) continue
+
       const contractRuntimeFunctionsList = runtimeFunctionsList[address]
 
       for (const traceLogIndex in contractRuntimeFunctionsList) {
@@ -357,7 +384,6 @@ export class FunctionManager {
               [...functionStructlog.stack].reverse(),
               functionStructlog.memory,
               traceLog.input,
-              functionStructlog.storage,
               input,
             )
             const inputSourceValue = inputSource.readValue()

@@ -67,6 +67,7 @@ export type TContractFunctionInputParameter = {
   modifiers: string[]
   // 0
   value?: string
+  isArray: boolean
   stackInitialIndex: number
 }
 
