@@ -12,6 +12,6 @@ export class StackSourceStrategy implements TInputSourceStrategy {
   }
 
   readValue() {
-    return `0${this.stack[this.contractFunction.stackInitialIndex].replace(/^0+/, '')}`
+    return `0x${this.stack[this.contractFunction.stackInitialIndex].replace(/^0+/, '')}`
   }
 }
