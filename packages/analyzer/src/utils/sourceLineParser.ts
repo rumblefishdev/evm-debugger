@@ -33,6 +33,8 @@ export class SourceLineParser {
       const contractSourceFiles = this.dataLoader.analyzerContractData.get(contractAddress, 'sourceFiles')
       const contractName = this.dataLoader.analyzerContractData.get(contractAddress, 'contractBaseData')?.name
 
+      if (!contractSourceMap || !contractSourceFiles || !contractName) continue
+
       dataToDecode.push({ contractSourceMap, contractSourceFiles, contractName, contractAddress })
     }
 

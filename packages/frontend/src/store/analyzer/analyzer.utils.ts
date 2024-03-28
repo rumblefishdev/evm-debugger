@@ -25,7 +25,6 @@ export const sendStatusMessageToDiscord = (message: string): Promise<Response> =
       content: message,
     }),
   })
-  // return Promise.resolve(new Response())
 }
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {
