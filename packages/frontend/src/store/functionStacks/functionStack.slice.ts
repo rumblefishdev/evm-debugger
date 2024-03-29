@@ -1,10 +1,10 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import type { TFunctionStack } from '@evm-debuger/types'
+import type { TContractFunction } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import type { ActionsType } from '../store.types'
 
-export const functionStackAdapter = createEntityAdapter<TFunctionStack>({
+export const functionStackAdapter = createEntityAdapter<TContractFunction>({
   sortComparer: (a, b) => a.index - b.index,
   selectId: (item) => item.index,
 })

@@ -38,7 +38,7 @@ export const TraceLogsListContainer: React.FC = () => {
   const traceLogs = useSelector(traceLogsSelectors.selectAll)
   const contractNames = useSelector(contractBaseSelectors.selectAll)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
-  const functionsStack = useSelector(functionStackSelectors.selectEntities)
+  const functionsStack = useSelector(functionStackSelectors.selectAll)
 
   const activateTraceLog = React.useCallback(
     (traceLog: TMainTraceLogsWithId) => {
@@ -64,7 +64,7 @@ export const TraceLogsListContainer: React.FC = () => {
   return (
     <TraceLogsListComponent
       activeTraceLogIndex={activeBlock?.index || 0}
-      currentInnerFunctions={functionsStack[activeBlock?.index].functions}
+      currentInnerFunctions={functionsStack}
       traceLogs={traceLogsWithSignature}
       activateStructLog={activateStructlog}
       activateTraceLog={activateTraceLog}

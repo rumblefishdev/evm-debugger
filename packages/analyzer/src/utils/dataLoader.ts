@@ -112,6 +112,12 @@ export class DataLoader {
     get: () => this.analyzerData.sighashes,
   }
 
+  public analyzerRuntimeFunctionsList = {
+    set: (runtimeFunctionsList: TDataLoaderAnalyzerData['runtimeFunctionsList']) =>
+      (this.analyzerData.runtimeFunctionsList = runtimeFunctionsList),
+    get: () => this.analyzerData.runtimeFunctionsList,
+  }
+
   public getAllInputContractsData() {
     return this.inputData.contracts
   }
@@ -138,16 +144,7 @@ export class DataLoader {
   public getAnalyzerAnalysisOutput(): TAnalyzerAnalysisOutput {
     return {
       transactionInfo: this.analyzerTransactionInfo.get(),
-      traceLogsFunctionsStack: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['traceLogsFunctionsStack']>(
-        (accumulator, contracts) => {
-          if (!contracts.runtimeFunctionsList) return accumulator
-          Object.entries(contracts.runtimeFunctionsList).forEach(([traceLogIndex, functions]) => {
-            accumulator[Number(traceLogIndex)] = { index: Number(traceLogIndex), functions }
-          })
-          return accumulator
-        },
-        {},
-      ),
+      traceLogsFunctionsStack: this.analyzerRuntimeFunctionsList.get(),
       traceLogs: this.analyzerTraceLogs.get(),
       structLogs: this.analyzerStructLogs.get(),
       sighashes: this.analyzerSighashes.get(),
