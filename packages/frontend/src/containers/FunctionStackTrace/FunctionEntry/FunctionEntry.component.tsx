@@ -38,7 +38,7 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               }}
             />
           )}
-          {functionElement.function?.contraceName}.{functionElement.function?.name} {functionElement.function.traceLogIndex}
+          {functionElement.function?.contraceName}.{functionElement.function?.name} {functionElement.function.index}
         </StyledFunctionEntryContent>
       </StyledFunctionEntryBody>
       <Collapse

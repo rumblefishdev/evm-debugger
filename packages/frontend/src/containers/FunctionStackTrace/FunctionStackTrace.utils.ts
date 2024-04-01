@@ -9,8 +9,9 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
   return {
     innerFunctions: innerFunctions.map((rootFunction) => {
       const rootFunctionIndex = functionStack.indexOf(rootFunction)
-      const functionStackFromRoot = functionStack.slice(rootFunctionIndex)
-      // .filter((func) => func.traceLogIndex === rootFunction.traceLogIndex)
+      const functionStackFromRoot = functionStack
+        .slice(rootFunctionIndex)
+        .filter((func) => func.traceLogIndex === rootFunction.traceLogIndex)
       const functionStackFromRootCopy = [...functionStackFromRoot].slice(1)
 
       const functionStackEndIndex = functionStackFromRootCopy.reverse().findIndex((func) => func.depth === rootFunction.depth)
