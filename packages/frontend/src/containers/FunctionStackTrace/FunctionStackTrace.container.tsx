@@ -23,7 +23,7 @@ export const FunctionStackTrace: React.FC = () => {
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const functionsStack = useSelector(functionStackSelectors.selectAll)
-  const isMainFunctionsVisible = useSelector(uiSelectors.selectDisplayMainFunctions)
+  const isNonMainFunctionsVisible = useSelector(uiSelectors.selectDisplayNonMainFunctions)
   const isYulFunctionsVisible = useSelector(uiSelectors.selectDisplayYulFunctions)
 
   const activateTraceLog = React.useCallback(
@@ -43,9 +43,9 @@ export const FunctionStackTrace: React.FC = () => {
     [dispatch, structlogs],
   )
 
-  const toggleMainFunctions = React.useCallback(() => {
-    dispatch(uiActions.setDisplayMainFunctions(!isMainFunctionsVisible))
-  }, [dispatch, isMainFunctionsVisible])
+  const toggleNonMainFunctions = React.useCallback(() => {
+    dispatch(uiActions.setDisplayNonMainFunctions(!isNonMainFunctionsVisible))
+  }, [dispatch, isNonMainFunctionsVisible])
   const toggleYulFunctions = React.useCallback(() => {
     dispatch(uiActions.setDisplayYulFunctions(!isYulFunctionsVisible))
   }, [dispatch, isYulFunctionsVisible])
@@ -63,9 +63,9 @@ export const FunctionStackTrace: React.FC = () => {
       functionStack={functionStackAsTree}
       activateStructLog={activateStructlog}
       activateTraceLog={activateTraceLog}
-      toggleMainFunctions={toggleMainFunctions}
+      toggleMainFunctions={toggleNonMainFunctions}
       toggleYulFunctions={toggleYulFunctions}
-      isMainFunctionsVisible={isMainFunctionsVisible}
+      isNonMainFunctionsVisible={isNonMainFunctionsVisible}
       isYulFunctionsVisible={isYulFunctionsVisible}
     />
   )

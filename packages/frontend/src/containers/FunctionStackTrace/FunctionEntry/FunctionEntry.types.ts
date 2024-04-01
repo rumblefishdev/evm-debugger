@@ -6,4 +6,5 @@ export type TFunctionEntryContainerProps = {
 
 export type TFunctionEntryComponentProps = {
   functionElement: TNestedFunction
+  canBeExpanded: boolean
 }

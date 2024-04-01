@@ -12,7 +12,7 @@ export type TFunctionStackTraceComponentProps = {
   activateStructLog: (structLogPc: number) => void
   toggleMainFunctions: () => void
   toggleYulFunctions: () => void
-  isMainFunctionsVisible: boolean
+  isNonMainFunctionsVisible: boolean
   isYulFunctionsVisible: boolean
   functionStack: TNestedFunction
 }

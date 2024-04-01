@@ -11,7 +11,7 @@ const uiInitialState: IUIState = {
   shouldShowProgressScreen: false,
   shouldShowFunctionStackTrace: false,
   displayYulFunctions: true,
-  displayMainFunctions: true,
+  displayNonMainFunctions: true,
 }
 
 export const uiSlice = createSlice({
@@ -28,8 +28,8 @@ export const uiSlice = createSlice({
     setDisplayYulFunctions: (state, action: PayloadAction<boolean>) => {
       state.displayYulFunctions = action.payload
     },
-    setDisplayMainFunctions: (state, action: PayloadAction<boolean>) => {
-      state.displayMainFunctions = action.payload
+    setDisplayNonMainFunctions: (state, action: PayloadAction<boolean>) => {
+      state.displayNonMainFunctions = action.payload
     },
   },
   name: StoreKeys.UI,

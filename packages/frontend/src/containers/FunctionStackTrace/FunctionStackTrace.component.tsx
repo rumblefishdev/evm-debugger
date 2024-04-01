@@ -11,7 +11,7 @@ import type { TFunctionStackTraceComponentProps } from './FunctionStackTrace.typ
 import { FunctionEntry } from './FunctionEntry/FunctionEntry.container'
 
 export const FunctionStackTraceComponent: React.FC<TFunctionStackTraceComponentProps> = ({
-  isMainFunctionsVisible,
+  isNonMainFunctionsVisible,
   isYulFunctionsVisible,
   toggleMainFunctions,
   toggleYulFunctions,
@@ -37,8 +37,8 @@ export const FunctionStackTraceComponent: React.FC<TFunctionStackTraceComponentP
             control={
               <Switch
                 disableTouchRipple
-                value={isMainFunctionsVisible}
-                checked={isMainFunctionsVisible}
+                value={isNonMainFunctionsVisible}
+                checked={isNonMainFunctionsVisible}
                 onChange={toggleMainFunctions}
               />
             }

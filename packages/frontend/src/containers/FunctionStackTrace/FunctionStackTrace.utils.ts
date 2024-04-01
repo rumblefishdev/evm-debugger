@@ -10,15 +10,18 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
     innerFunctions: innerFunctions.map((rootFunction) => {
       const rootFunctionIndex = functionStack.indexOf(rootFunction)
       const functionStackFromRoot = functionStack.slice(rootFunctionIndex)
+      // .filter((func) => func.traceLogIndex === rootFunction.traceLogIndex)
       const functionStackFromRootCopy = [...functionStackFromRoot].slice(1)
+
       const functionStackEndIndex = functionStackFromRootCopy.reverse().findIndex((func) => func.depth === rootFunction.depth)
 
       console.log('rootFunction', rootFunction)
       console.log('rootFunctionIndex', rootFunctionIndex)
       console.log('functionStackFromRoot', functionStackFromRoot)
+      console.log('functionStackFromRootCopy', functionStackFromRootCopy)
       console.log('functionStackEndIndex', functionStackEndIndex)
-      console.log('functionStackFromRoot.slice(0, functionStackEndIndex)', functionStackFromRoot.slice(0, functionStackEndIndex))
       console.log('===================================================')
+
       if (rootFunction.isYul || !rootFunction.isMain) {
         return {
           innerFunctions: [],
@@ -26,7 +29,14 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
         }
       }
 
-      return convertFunctionStackToTree(functionStackFromRoot.slice(0, functionStackEndIndex), rootFunction.depth)
+      if (functionStackEndIndex === -1) {
+        return convertFunctionStackToTree(functionStackFromRoot, rootFunction.depth)
+      }
+
+      return convertFunctionStackToTree(
+        functionStackFromRoot.slice(0, functionStackFromRoot.length - functionStackEndIndex),
+        rootFunction.depth,
+      )
     }),
     function: _rootFunction,
   }

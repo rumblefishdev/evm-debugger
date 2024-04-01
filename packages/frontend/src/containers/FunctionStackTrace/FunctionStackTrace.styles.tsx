@@ -9,7 +9,6 @@ export const StyledFunctionStackTraceContainer = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
-  //   marginBottom: theme.spacing(3),
   justifyContent: 'space-between',
   gap: theme.spacing(2),
   flexDirection: 'row',
@@ -31,6 +30,7 @@ export const StyledListWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
   overflowY: 'auto',
   overflowX: 'auto',
+  marginTop: theme.spacing(3),
   height: '100%',
   ...theme.customStyles.scrollbar,
   gap: theme.spacing(0.5),

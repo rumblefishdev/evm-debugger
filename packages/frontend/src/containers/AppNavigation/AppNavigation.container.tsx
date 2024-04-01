@@ -56,6 +56,7 @@ export const AppNavigation: React.FC = () => {
       />
       <Drawer
         anchor="top"
+        keepMounted
         disablePortal
         open={isFunctionStackTraceVisible}
         onClose={toggleFunctionStackTrace}

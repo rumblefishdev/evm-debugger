@@ -11,7 +11,7 @@ const selectShouldShowProgressScreen = createSelector([selectUIState], (state) =
 
 const selectShouldShowFunctionStackTrace = createSelector([selectUIState], (state) => state.shouldShowFunctionStackTrace)
 
-const selectDisplayMainFunctions = createSelector([selectUIState], (state) => state.displayMainFunctions)
+const selectDisplayNonMainFunctions = createSelector([selectUIState], (state) => state.displayNonMainFunctions)
 
 const selectDisplayYulFunctions = createSelector([selectUIState], (state) => state.displayYulFunctions)
 
@@ -20,5 +20,5 @@ export const uiSelectors = {
   selectShouldShowProgressScreen,
   selectShouldShowFunctionStackTrace,
   selectDisplayYulFunctions,
-  selectDisplayMainFunctions,
+  selectDisplayNonMainFunctions,
 }
