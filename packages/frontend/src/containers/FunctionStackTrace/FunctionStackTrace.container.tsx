@@ -10,16 +10,21 @@ import { sourceFilesActions } from '../../store/sourceFiles/sourceFiles.slice'
 import { functionStackSelectors } from '../../store/functionStacks/functionStack.selectors'
 import { activeStructLogSelectors } from '../../store/activeStructLog/activeStructLog.selectors'
 import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
+import { uiSelectors } from '../../store/ui/ui.selectors'
+import { uiActions } from '../../store/ui/ui.slice'
 
-import { TraceLogsListComponent } from './TraceLogsList.component'
+import { FunctionStackTraceComponent } from './FunctionStackTrace.component'
+import { convertFunctionStackToTree } from './FunctionStackTrace.utils'
 
-export const TraceLogsListContainer: React.FC = () => {
+export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()
   const activeTraceLogIndex = useSelector(activeBlockSelectors.selectActiveBlock).index || 0
   const activeStructlogIndex = useSelector(activeStructLogSelectors.selectIndex)
   const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const functionsStack = useSelector(functionStackSelectors.selectAll)
+  const isMainFunctionsVisible = useSelector(uiSelectors.selectDisplayMainFunctions)
+  const isYulFunctionsVisible = useSelector(uiSelectors.selectDisplayYulFunctions)
 
   const activateTraceLog = React.useCallback(
     (traceLogIndex: number) => {
@@ -38,13 +43,30 @@ export const TraceLogsListContainer: React.FC = () => {
     [dispatch, structlogs],
   )
 
+  const toggleMainFunctions = React.useCallback(() => {
+    dispatch(uiActions.setDisplayMainFunctions(!isMainFunctionsVisible))
+  }, [dispatch, isMainFunctionsVisible])
+  const toggleYulFunctions = React.useCallback(() => {
+    dispatch(uiActions.setDisplayYulFunctions(!isYulFunctionsVisible))
+  }, [dispatch, isYulFunctionsVisible])
+
+  const functionStackAsTree = React.useMemo(() => {
+    return convertFunctionStackToTree(functionsStack, 0)
+  }, [functionsStack])
+
+  console.log('functionStackAsTree', functionStackAsTree)
+
   return (
-    <TraceLogsListComponent
+    <FunctionStackTraceComponent
       activeStructLogIndex={activeStructlogIndex}
       activeTraceLogIndex={activeTraceLogIndex}
-      functionStack={functionsStack}
+      functionStack={functionStackAsTree}
       activateStructLog={activateStructlog}
       activateTraceLog={activateTraceLog}
+      toggleMainFunctions={toggleMainFunctions}
+      toggleYulFunctions={toggleYulFunctions}
+      isMainFunctionsVisible={isMainFunctionsVisible}
+      isYulFunctionsVisible={isYulFunctionsVisible}
     />
   )
 }

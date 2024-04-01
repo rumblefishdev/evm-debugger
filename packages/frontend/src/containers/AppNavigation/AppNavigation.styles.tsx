@@ -22,11 +22,15 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
 }))
 
 export const StyledButtonWrapper = styled(Stack)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 10000,
+  position: 'relative',
   minWidth: '900px',
 
   justifyContent: 'space-between',
   flexDirection: 'row',
   borderBottom: `1px solid ${theme.palette.divider}`,
+  backgroundColor: 'white',
+
   alignItems: 'center',
 }))
 

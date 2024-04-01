@@ -93,6 +93,8 @@ export type TContractFunction = {
   traceLogIndex: number
   op: TOpcodesNames
 
+  isReverted: boolean
+
   hasAbi: boolean
   isMain: boolean
   isCallType: boolean

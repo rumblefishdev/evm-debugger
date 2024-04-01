@@ -1,9 +1,10 @@
 import React from 'react'
 import { Drawer } from '@mui/material'
+import type { TContractFunction } from '@evm-debuger/types'
 
 import { Button } from '../Button'
 
-import type { TTraceLogsListComponentProps } from './TraceLogsList.types'
+import type { TNestedFunction, TTraceLogsListComponentProps } from './TraceLogsList.types'
 import {
   StyledBar,
   StyledBarText,
@@ -12,20 +13,47 @@ import {
   StyledHeadingWrapper,
   StyledListWrapper,
 } from './TraceLogsList.styles'
-import { TraceLogElement } from './TraceLogElement/TraceLogElement.component'
+import { FunctionElementComponent } from './FunctionElement/FunctionElement.component'
+
+const placeholderFunction = (functionStack: TContractFunction[], rootDepth: number): TNestedFunction => {
+  const _rootFunction = functionStack[0]
+  const innerFunctions = functionStack.slice(1).filter((func) => func.depth === rootDepth + 1)
+
+  return {
+    innerFunctions: innerFunctions.map((rootFunction) => {
+      const rootFunctionIndex = functionStack.indexOf(rootFunction)
+      const functionStackFromRoot = functionStack.slice(rootFunctionIndex)
+      const functionStackEndIndex = [...functionStackFromRoot.slice(1)].reverse().findIndex((func) => func.depth === rootFunction.depth)
+
+      if (rootFunction.isYul || !rootFunction.isMain) {
+        return {
+          innerFunctions: [],
+          function: rootFunction,
+        }
+      }
+
+      return placeholderFunction(functionStackFromRoot.slice(0, functionStackEndIndex), rootFunction.depth)
+    }),
+    function: _rootFunction,
+  }
+}
 
 export const TraceLogsListComponent: React.FC<TTraceLogsListComponentProps> = ({
   activeTraceLogIndex,
-  currentInnerFunctions,
+  activeStructLogIndex,
+  functionStack,
   activateStructLog,
   activateTraceLog,
-  traceLogs,
 }) => {
   const [isDrawerVisible, setDrawerVisibility] = React.useState(false)
 
   const toggleDrawer = () => {
     setDrawerVisibility(!isDrawerVisible)
   }
+
+  const test = React.useMemo(() => {
+    return placeholderFunction(functionStack, 0)
+  }, [functionStack])
 
   return (
     <>
@@ -53,16 +81,15 @@ export const TraceLogsListComponent: React.FC<TTraceLogsListComponentProps> = ({
             </Button>
           </StyledHeadingWrapper>
           <StyledListWrapper>
-            {traceLogs.map((traceLog) => {
-              const isActive = activeTraceLogIndex === traceLog.index
+            {functionStack.map((functionData) => {
               return (
-                <TraceLogElement
-                  traceLog={traceLog}
-                  isActive={isActive}
+                <FunctionElementComponent
                   activateStructLog={activateStructLog}
                   activateTraceLog={activateTraceLog}
-                  innerFunctions={isActive ? currentInnerFunctions : []}
-                  key={traceLog.index}
+                  isActiveElement={activeStructLogIndex === functionData.index}
+                  isActiveGroup={activeTraceLogIndex === functionData.traceLogIndex}
+                  functionBody={functionData}
+                  key={functionData.index}
                 />
               )
             })}

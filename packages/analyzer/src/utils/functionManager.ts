@@ -194,6 +194,7 @@ export class FunctionManager {
               op: structLog.opcode,
               name: functionData.functionName,
               isYul: sourceFile.name === 'utility',
+              isReverted: false,
               isMain: Boolean(functionDebugDataMappedToPc[structLog.pc]),
               isCallType: false,
               inputs: functionData.inputParameters,
@@ -277,7 +278,12 @@ export class FunctionManager {
       const result = structLogsWithFunction
         .sort((a, b) => a.index - b.index)
         .map((structLog) => {
-          return { ...traceLogFunctions[structLog.pc], traceLogIndex: traceLog.index, index: structLog.index }
+          return {
+            ...traceLogFunctions[structLog.pc],
+            traceLogIndex: traceLog.index,
+            isReverted: traceLog.isReverted,
+            index: structLog.index,
+          }
         })
 
       traceLogFunctionsList[traceLog.index] = result
@@ -305,32 +311,35 @@ export class FunctionManager {
   private convertTraceLogToFunction(traceLog: TTraceLog): TContractFunction {
     const baseContractInfo = this.dataLoader.analyzerContractData.get(traceLog.address, 'contractBaseData')
 
-    const inputs: TContractFunctionInputParameter[] = traceLog.callTypeData.functionFragment.inputs.map((input, index) => {
-      return {
-        value: traceLog.callTypeData.decodedInput.getValue(input.name),
-        type: input.type,
-        stackInitialIndex: index,
-        name: input.name,
-        modifiers: [],
-        isArray: input.isArray(),
-      }
-    })
+    const inputs: TContractFunctionInputParameter[] =
+      traceLog.callTypeData?.functionFragment?.inputs?.map((input, index) => {
+        return {
+          value: traceLog.callTypeData.decodedInput.getValue(input.name),
+          type: input.type,
+          stackInitialIndex: index,
+          name: input.name,
+          modifiers: [],
+          isArray: input.isArray(),
+        }
+      }) || []
 
-    const outputs: TContractFunctionOutputParameter[] = traceLog.callTypeData.functionFragment.outputs.map((output, index) => {
-      return {
-        value: traceLog.callTypeData.decodedOutput.getValue(output.name),
-        type: output.type,
-      }
-    })
+    const outputs: TContractFunctionOutputParameter[] =
+      traceLog.callTypeData?.functionFragment?.outputs?.map((output, index) => {
+        return {
+          value: traceLog.callTypeData.decodedOutput.getValue(output.name),
+          type: output.type,
+        }
+      }) || []
 
     return {
       traceLogIndex: traceLog.index,
-      selector: traceLog.callTypeData.functionFragment.format('minimal').split(' ')[1],
+      selector: traceLog.callTypeData?.functionFragment?.format('minimal').split(' ')[1] || 'placeholder',
       pc: traceLog.pc,
       outputs,
       op: traceLog.op,
-      name: traceLog.callTypeData.functionFragment.name,
+      name: traceLog.callTypeData?.functionFragment?.name || traceLog.address,
       isYul: false,
+      isReverted: traceLog.isReverted,
       isMain: true,
       isCallType: true,
       inputs,
@@ -359,7 +368,7 @@ export class FunctionManager {
       traceLogFunctionsCopy.forEach((traceLogFunction, index) => {
         if (!traceLogFunction) return
         if (index === 0) {
-          traceLogFunctionsCopy[index].depth = 0
+          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
           return
         }
 
@@ -373,7 +382,7 @@ export class FunctionManager {
         }
 
         if (!previousMainFunction) {
-          traceLogFunctionsCopy[index].depth = 0
+          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
           return
         }
 
@@ -393,8 +402,8 @@ export class FunctionManager {
     const list: TContractFunction[] = [...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog))]
 
     Object.values(runtimeFunctionsList).forEach((functions) => {
-      Object.values(functions).forEach((functionsList) => {
-        list.push(...functionsList)
+      Object.values(functions).forEach((functionList) => {
+        list.push(...functionList)
       })
     })
 
@@ -418,7 +427,10 @@ export class FunctionManager {
     for (const functionIndex in runtimeFunctionsList) {
       const functionData = runtimeFunctionsList[functionIndex]
 
-      if (!functionData || !functionData.isMain || functionData.isCallType) continue
+      if (!functionData || !functionData.isMain || functionData.isCallType) {
+        runtimeFunctionsWithDecodedParameters[functionIndex] = functionData
+        continue
+      }
 
       const functionStructlog = indexIndexedStructLogs[functionData.index]
       const functionTraceLog = traceLogs.find((log) => log.index === functionData.traceLogIndex)

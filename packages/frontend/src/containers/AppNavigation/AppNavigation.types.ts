@@ -1,3 +1,10 @@
-import type { StackProps } from '@mui/material'
+import type { ROUTES } from '../../routes'
 
-export interface AppNavigationProps extends StackProps {}
+export type TAppNavigationComponentProps = {
+  convertNavigationTabName: (tabName: ROUTES) => string
+  handleTabChange: (tabName: ROUTES) => void
+  activeTabName: string
+  showAnalyzerLogs: () => void
+  toggleFunctionStackTrace: () => void
+  isFunctionStackTraceVisible: boolean
+}

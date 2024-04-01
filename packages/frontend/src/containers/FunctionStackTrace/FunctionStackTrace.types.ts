@@ -1,18 +1,18 @@
 import type { TContractFunction } from '@evm-debuger/types'
 
-import type { TMainTraceLogsWithId } from '../../store/traceLogs/traceLogs.types'
-
-export type TTraceLogWithSignature = TMainTraceLogsWithId & { signature: string }
-
 export type TNestedFunction = {
   function: TContractFunction
   innerFunctions: TNestedFunction[]
 }
 
-export type TTraceLogsListComponentProps = {
+export type TFunctionStackTraceComponentProps = {
   activeTraceLogIndex: number
   activeStructLogIndex: number
   activateTraceLog: (traceLogIndex: number) => void
   activateStructLog: (structLogPc: number) => void
-  functionStack: TContractFunction[]
+  toggleMainFunctions: () => void
+  toggleYulFunctions: () => void
+  isMainFunctionsVisible: boolean
+  isYulFunctionsVisible: boolean
+  functionStack: TNestedFunction
 }

@@ -6,7 +6,7 @@ import { selectReducer } from '../store.utils'
 
 const selectActiveStructLogState = createSelector([selectReducer(StoreKeys.ACTIVE_STRUCT_LOG)], (state) => state)
 
-const selectIndex = createSelector([selectActiveStructLogState], (state) => state.index)
+const selectIndex = createSelector([selectActiveStructLogState], (state) => state?.index || 0)
 
 export const DEFAULT_STRING = '0000'
 

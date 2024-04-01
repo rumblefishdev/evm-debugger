@@ -9,4 +9,16 @@ const selectStructlogListOffset = createSelector([selectUIState], (state) => sta
 
 const selectShouldShowProgressScreen = createSelector([selectUIState], (state) => state.shouldShowProgressScreen)
 
-export const uiSelectors = { selectStructlogListOffset, selectShouldShowProgressScreen }
+const selectShouldShowFunctionStackTrace = createSelector([selectUIState], (state) => state.shouldShowFunctionStackTrace)
+
+const selectDisplayMainFunctions = createSelector([selectUIState], (state) => state.displayMainFunctions)
+
+const selectDisplayYulFunctions = createSelector([selectUIState], (state) => state.displayYulFunctions)
+
+export const uiSelectors = {
+  selectStructlogListOffset,
+  selectShouldShowProgressScreen,
+  selectShouldShowFunctionStackTrace,
+  selectDisplayYulFunctions,
+  selectDisplayMainFunctions,
+}
