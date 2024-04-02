@@ -16,13 +16,6 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
 
       const functionStackEndIndex = functionStackFromRootCopy.reverse().findIndex((func) => func.depth === rootFunction.depth)
 
-      console.log('rootFunction', rootFunction)
-      console.log('rootFunctionIndex', rootFunctionIndex)
-      console.log('functionStackFromRoot', functionStackFromRoot)
-      console.log('functionStackFromRootCopy', functionStackFromRootCopy)
-      console.log('functionStackEndIndex', functionStackEndIndex)
-      console.log('===================================================')
-
       if (rootFunction.isYul || !rootFunction.isMain) {
         return {
           innerFunctions: [],
@@ -40,5 +33,60 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
       )
     }),
     function: _rootFunction,
+  }
+}
+
+export const increaseFunctionDepth = (functionStack: TNestedFunction, depth: number): TNestedFunction => {
+  return {
+    ...functionStack,
+    innerFunctions: functionStack.innerFunctions.map((innerFunction) => {
+      return increaseFunctionDepth(innerFunction, depth)
+    }),
+    function: { ...functionStack.function, depth: functionStack.function.depth + depth },
+  }
+}
+
+export const placeholderFunction = (nestedFunction: TNestedFunction, functionToPush: TNestedFunction): TNestedFunction => {
+  if (nestedFunction.innerFunctions.some((innerFunction) => innerFunction.function.index > functionToPush.function.index)) {
+    console.log('nestedFunction', nestedFunction)
+    console.log('functionToPush', functionToPush)
+    nestedFunction.innerFunctions.push(increaseFunctionDepth(functionToPush, nestedFunction.function.depth))
+    nestedFunction.innerFunctions.sort((a, b) => a.function.index - b.function.index)
+    return nestedFunction
+  }
+
+  return {
+    ...nestedFunction,
+    innerFunctions: nestedFunction.innerFunctions.map((innerFunction) => {
+      return placeholderFunction(innerFunction, functionToPush)
+    }),
+  }
+}
+
+export const adjustFunctionStackTree = (functionStack: TNestedFunction): TNestedFunction => {
+  console.log('functionStack', functionStack)
+  if (functionStack.innerFunctions.length === 0) {
+    return functionStack
+  }
+
+  const innerFunctions = functionStack.innerFunctions.reduce<TNestedFunction[]>((accumulator, innerFunction) => {
+    if (accumulator.length === 0) {
+      accumulator.push(innerFunction)
+      return [...accumulator]
+    }
+
+    if (accumulator.at(-1).function.isMain && accumulator.at(-1).innerFunctions.length > 0) {
+      accumulator[accumulator.length - 1] = placeholderFunction(accumulator.at(-1), innerFunction)
+      return [...accumulator]
+    }
+
+    accumulator.push(innerFunction)
+
+    return [...accumulator]
+  }, [])
+
+  return {
+    innerFunctions,
+    function: functionStack.function,
   }
 }

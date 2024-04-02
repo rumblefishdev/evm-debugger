@@ -1,13 +1,14 @@
 import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Drawer } from '@mui/material'
+import { Drawer, ThemeProvider } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
 
 import type { ROUTES } from '../../routes'
 import { uiActions } from '../../store/ui/ui.slice'
 import { uiSelectors } from '../../store/ui/ui.selectors'
 import { FunctionStackTrace } from '../FunctionStackTrace/FunctionStackTrace.container'
+import { defaultTheme } from '../../theme/default'
 
 import { AppNavigationComponent } from './AppNavigation.component'
 
@@ -54,15 +55,17 @@ export const AppNavigation: React.FC = () => {
         toggleFunctionStackTrace={toggleFunctionStackTrace}
         isFunctionStackTraceVisible={isFunctionStackTraceVisible}
       />
-      <Drawer
-        anchor="top"
-        keepMounted
-        disablePortal
-        open={isFunctionStackTraceVisible}
-        onClose={toggleFunctionStackTrace}
-      >
-        <FunctionStackTrace />
-      </Drawer>
+      <ThemeProvider theme={defaultTheme}>
+        <Drawer
+          anchor="top"
+          keepMounted
+          disablePortal
+          open={isFunctionStackTraceVisible}
+          onClose={toggleFunctionStackTrace}
+        >
+          <FunctionStackTrace />
+        </Drawer>
+      </ThemeProvider>
     </React.Fragment>
   )
 }

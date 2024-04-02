@@ -8,8 +8,7 @@ export type TNestedFunction = {
 export type TFunctionStackTraceComponentProps = {
   activeTraceLogIndex: number
   activeStructLogIndex: number
-  activateTraceLog: (traceLogIndex: number) => void
-  activateStructLog: (structLogPc: number) => void
+  activateFunction: (traceLogIndex: number, structLogIndex: number) => void
   toggleMainFunctions: () => void
   toggleYulFunctions: () => void
   isNonMainFunctionsVisible: boolean

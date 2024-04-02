@@ -5,7 +5,7 @@ import { uiSelectors } from '../../../store/ui/ui.selectors'
 import { FunctionEntryComponent } from './FunctionEntry.component'
 import type { TFunctionEntryContainerProps } from './FunctionEntry.types'
 
-export const FunctionEntry: React.FC<TFunctionEntryContainerProps> = ({ functionElement }) => {
+export const FunctionEntry: React.FC<TFunctionEntryContainerProps> = ({ functionElement, activateFunction }) => {
   const shouldDisplayYulFunction = useSelector(uiSelectors.selectDisplayYulFunctions)
   const shouldDisplayNonMainFunction = useSelector(uiSelectors.selectDisplayNonMainFunctions)
 
@@ -29,6 +29,7 @@ export const FunctionEntry: React.FC<TFunctionEntryContainerProps> = ({ function
     <FunctionEntryComponent
       canBeExpanded={canBeExpanded}
       functionElement={functionElement}
+      activateFunction={activateFunction}
     />
   )
 }

@@ -9,6 +9,7 @@ const initialState: TStructlogWithListIndex | null = null
 const activeStructLogSlice = createSlice({
   reducers: {
     setActiveStrucLog: (_, action: PayloadAction<TStructlogWithListIndex | null>) => {
+      console.log('setActiveStrucLog', action.payload)
       return action.payload
     },
   },

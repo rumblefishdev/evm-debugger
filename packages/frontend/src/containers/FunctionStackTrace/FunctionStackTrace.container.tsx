@@ -14,7 +14,7 @@ import { uiSelectors } from '../../store/ui/ui.selectors'
 import { uiActions } from '../../store/ui/ui.slice'
 
 import { FunctionStackTraceComponent } from './FunctionStackTrace.component'
-import { convertFunctionStackToTree } from './FunctionStackTrace.utils'
+import { adjustFunctionStackTree, convertFunctionStackToTree } from './FunctionStackTrace.utils'
 
 export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()
@@ -26,14 +26,25 @@ export const FunctionStackTrace: React.FC = () => {
   const isNonMainFunctionsVisible = useSelector(uiSelectors.selectDisplayNonMainFunctions)
   const isYulFunctionsVisible = useSelector(uiSelectors.selectDisplayYulFunctions)
 
+  const activateFunction = React.useCallback(
+    (traceLogIndex: number, structLogIndex: number) => {
+      if (traceLogIndex !== structLogIndex) {
+        dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
+      }
+
+      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
+    },
+    [dispatch, traceLogs, structlogs],
+  )
+
   const activateTraceLog = React.useCallback(
     (traceLogIndex: number) => {
       dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       dispatch(sourceFilesActions.setActiveSourceFileId(0))
       dispatch(activeLineActions.clearActiveLine())
-      dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLogs[traceLogIndex].startIndex], listIndex: 0 }))
+      // dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLogs[traceLogIndex].startIndex], listIndex: 0 }))
     },
-    [dispatch, structlogs, traceLogs],
+    [dispatch, traceLogs],
   )
 
   const activateStructlog = React.useCallback(
@@ -54,15 +65,16 @@ export const FunctionStackTrace: React.FC = () => {
     return convertFunctionStackToTree(functionsStack, 0)
   }, [functionsStack])
 
-  console.log('functionStackAsTree', functionStackAsTree)
+  const test = React.useMemo(() => {
+    return adjustFunctionStackTree(functionStackAsTree)
+  }, [functionStackAsTree])
 
   return (
     <FunctionStackTraceComponent
       activeStructLogIndex={activeStructlogIndex}
       activeTraceLogIndex={activeTraceLogIndex}
-      functionStack={functionStackAsTree}
-      activateStructLog={activateStructlog}
-      activateTraceLog={activateTraceLog}
+      functionStack={test}
+      activateFunction={activateFunction}
       toggleMainFunctions={toggleNonMainFunctions}
       toggleYulFunctions={toggleYulFunctions}
       isNonMainFunctionsVisible={isNonMainFunctionsVisible}

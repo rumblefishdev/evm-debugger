@@ -15,6 +15,7 @@ export const FunctionStackTraceComponent: React.FC<TFunctionStackTraceComponentP
   isYulFunctionsVisible,
   toggleMainFunctions,
   toggleYulFunctions,
+  activateFunction,
   functionStack,
 }) => {
   return (
@@ -47,7 +48,10 @@ export const FunctionStackTraceComponent: React.FC<TFunctionStackTraceComponentP
         </StyledButtonsWrapper>
       </StyledHeadingWrapper>
       <StyledListWrapper>
-        <FunctionEntry functionElement={functionStack} />
+        <FunctionEntry
+          functionElement={functionStack}
+          activateFunction={activateFunction}
+        />
       </StyledListWrapper>
     </StyledFunctionStackTraceContainer>
   )

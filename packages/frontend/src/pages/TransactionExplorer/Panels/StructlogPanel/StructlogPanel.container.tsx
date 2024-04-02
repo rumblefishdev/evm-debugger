@@ -26,11 +26,12 @@ export const StructlogPanel: React.FC = () => {
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
-  console.log('activeStructlog', activeStructlog)
+  console.log('StructlogPanel activeStructlog', activeStructlog)
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
   const setActiveStructlog = useCallback(
     (structLog: TStructlogWithListIndex) => {
+      console.log('dupa', structLog)
       dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],
@@ -38,6 +39,7 @@ export const StructlogPanel: React.FC = () => {
 
   useEffect(() => {
     if (!activeStructlog && structlogsArray.length > 0) {
+      console.log('pies', structlogsArray[0])
       dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0]))
     }
   }, [activeStructlog, structlogsArray, dispatch])
