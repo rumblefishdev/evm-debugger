@@ -1,8 +1,6 @@
 import React from 'react'
 import { Stack } from '@mui/material'
 
-import { TraceLogsListContainer } from '../../components/TraceLogsList'
-
 import { BlockSummary } from './BlockSummary'
 import { ContentMap } from './ContentMap'
 import { StyledContentWrapper, StyledPanelsWrapper } from './styles'
@@ -17,6 +15,5 @@ export const TransactionScreen: React.FC = () => (
         <BlockSummary />
       </Stack>
     </StyledPanelsWrapper>
-    <TraceLogsListContainer />
   </StyledContentWrapper>
 )

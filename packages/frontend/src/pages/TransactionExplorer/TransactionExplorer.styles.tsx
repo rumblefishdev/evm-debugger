@@ -2,7 +2,6 @@ import { Stack, Typography, styled } from '@mui/material'
 
 export const StyledContentWrapper = styled(Stack)(({ theme }) => ({
   width: '100%',
-  paddingBottom: theme.spacing(3),
   minHeight: '100%',
   justifyContent: 'flex-start',
   gap: theme.spacing(1),
