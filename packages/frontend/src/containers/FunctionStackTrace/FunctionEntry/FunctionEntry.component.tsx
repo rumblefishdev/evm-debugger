@@ -3,16 +3,22 @@ import React from 'react'
 import { KeyboardArrowDown } from '@mui/icons-material'
 import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfCreateGroupType } from '@evm-debuger/analyzer'
 
-import type { TFunctionEntryComponentProps, TOpcodeVariants } from './FunctionEntry.types'
+import type { TEntryType, TFunctionEntryComponentProps, TOpcodeVariants } from './FunctionEntry.types'
 import { FunctionEntry } from './FunctionEntry.container'
 import {
+  StyledContractName,
+  StyledEntryVariantBox,
   StyledFunctionEntryBody,
   StyledFunctionEntryContent,
   StyledFunctionEntryLeftWrapper,
   StyledFunctionEntryWrapper,
+  StyledFunctionSignature,
+  StyledFunctionSingatureParameter,
   StyledOpcodeBox,
+  StyledRevertedBox,
   StyledVerticalLine,
 } from './FunctionEntry.styles'
+import { getRandomParametersColor } from './FunctionEntry.utils'
 
 export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({ functionElement, canBeExpanded, activateFunction }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
@@ -41,11 +47,37 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
     }
   }, [functionElement.function])
 
+  const entryVariant: TEntryType[] = React.useMemo(() => {
+    const entryType: TEntryType[] = []
+    if (functionElement.function?.isMain) {
+      entryType.push('Main')
+    } else {
+      entryType.push('NonMain')
+    }
+    if (functionElement.function?.isYul) {
+      entryType.push('Yul')
+    }
+    return entryType
+  }, [functionElement.function])
+
+  const parametersColors = React.useMemo(() => {
+    return getRandomParametersColor(functionElement.function?.inputs?.length || 0)
+  }, [functionElement.function?.inputs])
+
   return (
     <StyledFunctionEntryWrapper>
       <StyledFunctionEntryBody>
         <StyledFunctionEntryLeftWrapper>
+          {functionElement.function.isReverted && <StyledRevertedBox>!REVERTED</StyledRevertedBox>}
           <StyledOpcodeBox variant={opCodeVariant}>{functionElement.function?.op || 'NOT FOUND'}</StyledOpcodeBox>
+          {entryVariant.map((variant, index) => (
+            <StyledEntryVariantBox
+              key={index}
+              variant={variant}
+            >
+              {variant}
+            </StyledEntryVariantBox>
+          ))}
         </StyledFunctionEntryLeftWrapper>
         {Array.from({ length: functionElement.function?.depth || 0 }).map((_, index) => (
           <StyledVerticalLine key={index} />
@@ -60,7 +92,19 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               }}
             />
           )}
-          {functionElement.function?.contraceName}.{functionElement.function?.name} {functionElement.function.index}
+          <StyledContractName>{functionElement.function?.contraceName}</StyledContractName>.
+          <StyledFunctionSignature>
+            {!functionElement.function.isMain && functionElement.function?.selector}
+            {functionElement.function.isMain && `${functionElement.function.name}(`}
+            {functionElement.function.isMain &&
+              functionElement.function.inputs.map((input, index) => (
+                <StyledFunctionSingatureParameter
+                  sx={{ backgroundColor: parametersColors[index] }}
+                  key={index}
+                >{`${input.name} = ${input.value}`}</StyledFunctionSingatureParameter>
+              ))}
+            {functionElement.function.isMain && ')'}
+          </StyledFunctionSignature>
         </StyledFunctionEntryContent>
       </StyledFunctionEntryBody>
       <Collapse

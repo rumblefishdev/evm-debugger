@@ -1,6 +1,6 @@
-import { Box, Stack, styled } from '@mui/material'
+import { Box, Stack, styled, Typography } from '@mui/material'
 
-import type { TOpcodeVariants } from './FunctionEntry.types'
+import type { TEntryType, TOpcodeVariants } from './FunctionEntry.types'
 
 export const StyledFunctionEntryWrapper = styled(Stack)(({ theme }) => ({}))
 export const StyledFunctionEntryBody = styled(Stack)(({ theme }) => ({
@@ -17,7 +17,9 @@ export const StyledVerticalLine = styled(Box)(({ theme }) => ({
 }))
 
 export const StyledFunctionEntryLeftWrapper = styled(Stack)(({ theme }) => ({
-  minWidth: '84px',
+  textTransform: 'uppercase',
+  minWidth: '192px',
+  gap: theme.spacing(1),
   flexDirection: 'row',
   alignItems: 'center',
 }))
@@ -34,6 +36,14 @@ export const StyledFunctionEntryContent = styled(Stack)(({ theme }) => ({
   },
 }))
 
+export const StyledRevertedBox = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  borderRadius: '4px',
+  backgroundColor: '#D37676',
+  ...theme.typography.body2,
+  fontSize: '12px',
+}))
+
 export const StyledOpcodeBoxOptions = {
   shouldForwardProp: (prop: string) => prop !== 'variant',
 }
@@ -48,15 +58,63 @@ export const StyledOpcodeBox = styled(
   fontSize: '12px',
 
   ...(variant === 'Call' && {
-    backgroundColor: 'blue',
+    color: 'white',
+    backgroundColor: '#545B77',
   }),
   ...(variant === 'Create' && {
-    backgroundColor: 'purple',
+    color: 'white',
+    backgroundColor: '#8E7AB5',
   }),
   ...(variant === 'Jumpdest' && {
-    backgroundColor: 'green',
+    color: 'white',
+    backgroundColor: '#B0A695',
   }),
   ...(variant === 'Missing' && {
-    backgroundColor: 'grey',
+    backgroundColor: '#B4B4B8',
   }),
+}))
+
+export const StyledEntryVariantBoxOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'variant',
+}
+export const StyledEntryVariantBox = styled(
+  Box,
+  StyledEntryVariantBoxOptions,
+)<{ variant: TEntryType }>(({ theme, variant }) => ({
+  padding: theme.spacing(0.5, 1),
+
+  borderRadius: '4px',
+  ...theme.typography.body2,
+  fontSize: '12px',
+  border: '1px solid',
+
+  ...(variant === 'Main' && {
+    color: '#8294C4',
+    borderColor: '#8294C4',
+  }),
+  ...(variant === 'Yul' && {
+    color: '#9DBC98',
+    borderColor: '#9DBC98',
+  }),
+  ...(variant === 'NonMain' && {
+    color: '#8294C4',
+    borderColor: '#8294C4',
+  }),
+}))
+
+export const StyledContractName = styled(Typography)(({ theme }) => ({
+  textTransform: 'capitalize',
+  fontWeight: '700',
+}))
+export const StyledFunctionSignature = styled(Typography)(({ theme }) => ({
+  whiteSpace: 'nowrap',
+  flexDirection: 'row',
+  display: 'inline-flex',
+}))
+
+export const StyledFunctionSingatureParameter = styled(Typography)(({ theme }) => ({
+  whiteSpace: 'nowrap',
+  padding: theme.spacing(0, 0.5),
+  margin: theme.spacing(0, 0.5),
+  borderRadius: '4px',
 }))

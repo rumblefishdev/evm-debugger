@@ -2,11 +2,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import React from 'react'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
-import { structlogsSelectors } from '../../store/structlogs/structlogs.selectors'
 import { activeBlockActions } from '../../store/activeBlock/activeBlock.slice'
-import { activeLineActions } from '../../store/activeLine/activeLine.slice'
 import { activeStructLogActions } from '../../store/activeStructLog/activeStructLog.slice'
-import { sourceFilesActions } from '../../store/sourceFiles/sourceFiles.slice'
 import { functionStackSelectors } from '../../store/functionStacks/functionStack.selectors'
 import { activeStructLogSelectors } from '../../store/activeStructLog/activeStructLog.selectors'
 import { traceLogsSelectors } from '../../store/traceLogs/traceLogs.selectors'
@@ -28,6 +25,7 @@ export const FunctionStackTrace: React.FC = () => {
 
   const activateFunction = React.useCallback(
     (traceLogIndex: number, structLogIndex: number) => {
+      console.log(traceLogIndex, structLogIndex)
       if (traceLogIndex !== structLogIndex) {
         dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       }
@@ -35,23 +33,6 @@ export const FunctionStackTrace: React.FC = () => {
       dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
     [dispatch, traceLogs],
-  )
-
-  const activateTraceLog = React.useCallback(
-    (traceLogIndex: number) => {
-      dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
-      dispatch(sourceFilesActions.setActiveSourceFileId(0))
-      dispatch(activeLineActions.clearActiveLine())
-      // dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLogs[traceLogIndex].startIndex], listIndex: 0 }))
-    },
-    [dispatch, traceLogs],
-  )
-
-  const activateStructlog = React.useCallback(
-    (structLogIndex: number) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
-    },
-    [dispatch],
   )
 
   const toggleNonMainFunctions = React.useCallback(() => {

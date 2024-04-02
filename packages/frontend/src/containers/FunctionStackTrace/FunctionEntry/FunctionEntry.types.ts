@@ -12,3 +12,5 @@ export type TFunctionEntryComponentProps = {
 }
 
 export type TOpcodeVariants = 'Call' | 'Create' | 'Jumpdest' | 'Missing'
+
+export type TEntryType = 'Main' | 'Yul' | 'NonMain'
