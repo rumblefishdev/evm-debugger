@@ -326,7 +326,7 @@ export class FunctionManager {
     const outputs: TContractFunctionOutputParameter[] =
       traceLog.callTypeData?.functionFragment?.outputs?.map((output, index) => {
         return {
-          value: traceLog.callTypeData.decodedOutput.getValue(output.name),
+          value: traceLog.callTypeData?.decodedOutput?.getValue(output.name),
           type: output.type,
         }
       }) || []

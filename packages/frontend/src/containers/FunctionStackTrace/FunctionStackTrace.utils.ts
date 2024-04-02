@@ -35,7 +35,7 @@ export const convertFunctionStackToTree = (functionStack: TContractFunction[], r
     function: _rootFunction,
   }
 }
-
+// TODO: For future use
 export const increaseFunctionDepth = (functionStack: TNestedFunction, depth: number): TNestedFunction => {
   return {
     ...functionStack,
@@ -45,11 +45,9 @@ export const increaseFunctionDepth = (functionStack: TNestedFunction, depth: num
     function: { ...functionStack.function, depth: functionStack.function.depth + depth },
   }
 }
-
+// TODO: For future use
 export const placeholderFunction = (nestedFunction: TNestedFunction, functionToPush: TNestedFunction): TNestedFunction => {
   if (nestedFunction.innerFunctions.some((innerFunction) => innerFunction.function.index > functionToPush.function.index)) {
-    console.log('nestedFunction', nestedFunction)
-    console.log('functionToPush', functionToPush)
     nestedFunction.innerFunctions.push(increaseFunctionDepth(functionToPush, nestedFunction.function.depth))
     nestedFunction.innerFunctions.sort((a, b) => a.function.index - b.function.index)
     return nestedFunction
@@ -62,9 +60,8 @@ export const placeholderFunction = (nestedFunction: TNestedFunction, functionToP
     }),
   }
 }
-
+// TODO: For future use
 export const adjustFunctionStackTree = (functionStack: TNestedFunction): TNestedFunction => {
-  console.log('functionStack', functionStack)
   if (functionStack.innerFunctions.length === 0) {
     return functionStack
   }

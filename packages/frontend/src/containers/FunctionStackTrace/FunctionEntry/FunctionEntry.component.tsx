@@ -92,10 +92,10 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               }}
             />
           )}
-          <StyledContractName>{functionElement.function?.contraceName}</StyledContractName>.
+          {functionElement.function?.contraceName && <StyledContractName>{functionElement.function?.contraceName}.</StyledContractName>}
           <StyledFunctionSignature>
             {!functionElement.function.isMain && functionElement.function?.selector}
-            {functionElement.function.isMain && `${functionElement.function.name}(`}
+            {functionElement.function.isMain && `${functionElement.function?.name}(`}
             {functionElement.function.isMain &&
               functionElement.function.inputs.map((input, index) => (
                 <StyledFunctionSingatureParameter

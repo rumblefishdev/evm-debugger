@@ -46,15 +46,16 @@ export const FunctionStackTrace: React.FC = () => {
     return convertFunctionStackToTree(functionsStack, 0)
   }, [functionsStack])
 
-  const test = React.useMemo(() => {
-    return adjustFunctionStackTree(functionStackAsTree)
-  }, [functionStackAsTree])
+  // TODO: For future use
+  // const test = React.useMemo(() => {
+  //   return adjustFunctionStackTree(functionStackAsTree)
+  // }, [functionStackAsTree])
 
   return (
     <FunctionStackTraceComponent
       activeStructLogIndex={activeStructlogIndex}
       activeTraceLogIndex={activeTraceLogIndex}
-      functionStack={test}
+      functionStack={functionStackAsTree}
       activateFunction={activateFunction}
       toggleMainFunctions={toggleNonMainFunctions}
       toggleYulFunctions={toggleYulFunctions}

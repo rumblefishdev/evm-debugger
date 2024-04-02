@@ -18,7 +18,7 @@ export const StyledVerticalLine = styled(Box)(({ theme }) => ({
 
 export const StyledFunctionEntryLeftWrapper = styled(Stack)(({ theme }) => ({
   textTransform: 'uppercase',
-  minWidth: '192px',
+  minWidth: '212px',
   gap: theme.spacing(1),
   flexDirection: 'row',
   alignItems: 'center',
@@ -89,8 +89,8 @@ export const StyledEntryVariantBox = styled(
   border: '1px solid',
 
   ...(variant === 'Main' && {
-    color: '#8294C4',
-    borderColor: '#8294C4',
+    color: '#6a73a8',
+    borderColor: '#6a73a8',
   }),
   ...(variant === 'Yul' && {
     color: '#9DBC98',
