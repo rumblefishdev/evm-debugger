@@ -1,9 +1,8 @@
 import { Collapse } from '@mui/material'
 import React from 'react'
 import { KeyboardArrowDown } from '@mui/icons-material'
-import { checkOpcodeIfOfCallGroupType, checkOpcodeIfOfCreateGroupType } from '@evm-debuger/analyzer'
 
-import type { TEntryType, TFunctionEntryComponentProps, TOpcodeVariants } from './FunctionEntry.types'
+import type { TFunctionEntryComponentProps } from './FunctionEntry.types'
 import { FunctionEntry } from './FunctionEntry.container'
 import {
   StyledContractName,
@@ -18,7 +17,7 @@ import {
   StyledRevertedBox,
   StyledVerticalLine,
 } from './FunctionEntry.styles'
-import { getRandomParametersColor } from './FunctionEntry.utils'
+import { useFunctionVariants } from './FunctionEntry.hook'
 
 export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({ functionElement, canBeExpanded, activateFunction }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
@@ -31,38 +30,7 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
     activateFunction(functionElement.function?.traceLogIndex || 0, functionElement.function?.index || 0)
   }, [activateFunction, functionElement.function])
 
-  const opCodeVariant = React.useMemo((): TOpcodeVariants => {
-    if (!functionElement.function?.name) {
-      return 'Missing'
-    }
-
-    if (checkOpcodeIfOfCallGroupType(functionElement.function?.op)) {
-      return 'Call'
-    }
-    if (checkOpcodeIfOfCreateGroupType(functionElement.function?.op)) {
-      return 'Create'
-    }
-    if (functionElement.function?.op === 'JUMPDEST') {
-      return 'Jumpdest'
-    }
-  }, [functionElement.function])
-
-  const entryVariant: TEntryType[] = React.useMemo(() => {
-    const entryType: TEntryType[] = []
-    if (functionElement.function?.isMain) {
-      entryType.push('Main')
-    } else {
-      entryType.push('NonMain')
-    }
-    if (functionElement.function?.isYul) {
-      entryType.push('Yul')
-    }
-    return entryType
-  }, [functionElement.function])
-
-  const parametersColors = React.useMemo(() => {
-    return getRandomParametersColor(functionElement.function?.inputs?.length || 0)
-  }, [functionElement.function?.inputs])
+  const { entryVariant, opCodeVariant, parametersColors } = useFunctionVariants(functionElement)
 
   return (
     <StyledFunctionEntryWrapper>

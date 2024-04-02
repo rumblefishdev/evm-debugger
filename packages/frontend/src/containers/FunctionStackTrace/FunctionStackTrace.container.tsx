@@ -11,7 +11,7 @@ import { uiSelectors } from '../../store/ui/ui.selectors'
 import { uiActions } from '../../store/ui/ui.slice'
 
 import { FunctionStackTraceComponent } from './FunctionStackTrace.component'
-import { adjustFunctionStackTree, convertFunctionStackToTree } from './FunctionStackTrace.utils'
+import { convertFunctionStackToTree } from './FunctionStackTrace.utils'
 
 export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()
@@ -25,7 +25,8 @@ export const FunctionStackTrace: React.FC = () => {
 
   const activateFunction = React.useCallback(
     (traceLogIndex: number, structLogIndex: number) => {
-      console.log(traceLogIndex, structLogIndex)
+      dispatch(uiActions.setShouldShowFunctionStackTrace(false))
+
       if (traceLogIndex !== structLogIndex) {
         dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       }
