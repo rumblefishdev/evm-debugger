@@ -5,7 +5,7 @@ import type { TStructlogWithListIndex } from '../../../../store/structlogs/struc
 export interface StructlogPanelComponentProps {
   structlogs: TStructlogWithListIndex[]
   activeStructlogIndex: number
-  handleSelect: (structlog: TStructlogWithListIndex) => void
+  handleSelect: (structlog: number) => void
 }
 
 export type StructlogPanelComponentRef = {

@@ -30,17 +30,15 @@ export const StructlogPanel: React.FC = () => {
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
   const setActiveStructlog = useCallback(
-    (structLog: TStructlogWithListIndex) => {
-      console.log('dupa', structLog)
-      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
+    (structLogIndex: number) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
     [dispatch],
   )
 
   useEffect(() => {
     if (!activeStructlog && structlogsArray.length > 0) {
-      console.log('pies', structlogsArray[0])
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0]))
+      dispatch(activeStructLogActions.setActiveStrucLog(0))
     }
   }, [activeStructlog, structlogsArray, dispatch])
 
@@ -91,11 +89,11 @@ export const StructlogPanel: React.FC = () => {
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        setActiveStructlog(nextStructlog)
+        setActiveStructlog(nextStructlog.index)
         event.preventDefault()
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        setActiveStructlog(previousStructlog)
+        setActiveStructlog(previousStructlog.index)
         event.preventDefault()
       }
     }

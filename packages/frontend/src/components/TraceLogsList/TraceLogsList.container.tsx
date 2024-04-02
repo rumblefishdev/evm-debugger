@@ -26,17 +26,14 @@ export const TraceLogsListContainer: React.FC = () => {
       dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       dispatch(sourceFilesActions.setActiveSourceFileId(0))
       dispatch(activeLineActions.clearActiveLine())
-      dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLogs[traceLogIndex].startIndex], listIndex: 0 }))
+      // dispatch(activeStructLogActions.setActiveStrucLog({ ...structlogs[traceLogs[traceLogIndex].startIndex], listIndex: 0 }))
     },
-    [dispatch, structlogs, traceLogs],
+    [dispatch, traceLogs],
   )
 
-  const activateStructlog = React.useCallback(
-    (structLogIndex: number) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
-    },
-    [dispatch, structlogs],
-  )
+  const activateStructlog = React.useCallback((structLogIndex: number) => {
+    // dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
+  }, [])
 
   return (
     <TraceLogsListComponent

@@ -64,19 +64,19 @@ export const SourceLineContainer: React.FC = () => {
     if (!previousLineCoordinates.startCodeLine) return
     dispatch(activeLineActions.setActiveLine({ line: previousLineCoordinates.startCodeLine }))
     dispatch(sourceFilesActions.setActiveSourceFileId(previousLineCoordinates.fileId))
-    dispatch(activeStructLogActions.setActiveStrucLog(previousLineCoordinates.nextStructlog))
+    dispatch(activeStructLogActions.setActiveStrucLog(previousLineCoordinates.nextStructlog.index))
   }, [previousLineCoordinates, dispatch])
 
   const moveToNextAvailableLine = React.useCallback(() => {
     if (!nextLineCoordinates.startCodeLine) return
     dispatch(activeLineActions.setActiveLine({ line: nextLineCoordinates.startCodeLine }))
     dispatch(sourceFilesActions.setActiveSourceFileId(nextLineCoordinates.fileId))
-    dispatch(activeStructLogActions.setActiveStrucLog(nextLineCoordinates.nextStructlog))
+    dispatch(activeStructLogActions.setActiveStrucLog(nextLineCoordinates.nextStructlog.index))
   }, [nextLineCoordinates, dispatch])
 
   const setActiveStructlog = React.useCallback(
     (structlog: TStructlogWithListIndex) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structlog))
+      dispatch(activeStructLogActions.setActiveStrucLog(structlog.index))
     },
     [dispatch],
   )

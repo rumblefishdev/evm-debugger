@@ -36,7 +36,7 @@ export const SourceCodeViewContainer: React.FC = () => {
       dispatch(activeLineActions.setActiveLine({ line: event.$pos.row }))
       if (!structlogsPerLine[fileId][event.$pos.row] || structlogsPerLine[fileId][event.$pos.row].length === 0) return
       const firstStructlogForLine = structlogs[structlogsPerLine[fileId][event.$pos.row][0].index]
-      dispatch(activeStructLogActions.setActiveStrucLog(firstStructlogForLine))
+      dispatch(activeStructLogActions.setActiveStrucLog(firstStructlogForLine.index))
     },
     [dispatch, fileId, structlogs, structlogsPerLine],
   )

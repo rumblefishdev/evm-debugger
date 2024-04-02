@@ -18,7 +18,7 @@ export const QuickLinksContainer: React.FC = () => {
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   const setActiveStructlog = React.useCallback(
-    (structLog: TStructlogWithListIndex) => {
+    (structLog: number) => {
       dispatch(activeStructLogActions.setActiveStrucLog(structLog))
     },
     [dispatch],

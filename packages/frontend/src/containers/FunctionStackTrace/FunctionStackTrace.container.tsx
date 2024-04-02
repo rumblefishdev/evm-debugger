@@ -20,7 +20,7 @@ export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()
   const activeTraceLogIndex = useSelector(activeBlockSelectors.selectActiveBlock).index || 0
   const activeStructlogIndex = useSelector(activeStructLogSelectors.selectIndex)
-  const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
+
   const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const functionsStack = useSelector(functionStackSelectors.selectAll)
   const isNonMainFunctionsVisible = useSelector(uiSelectors.selectDisplayNonMainFunctions)
@@ -32,9 +32,9 @@ export const FunctionStackTrace: React.FC = () => {
         dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       }
 
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
+      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
-    [dispatch, traceLogs, structlogs],
+    [dispatch, traceLogs],
   )
 
   const activateTraceLog = React.useCallback(
@@ -49,9 +49,9 @@ export const FunctionStackTrace: React.FC = () => {
 
   const activateStructlog = React.useCallback(
     (structLogIndex: number) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogs[structLogIndex]))
+      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
-    [dispatch, structlogs],
+    [dispatch],
   )
 
   const toggleNonMainFunctions = React.useCallback(() => {
