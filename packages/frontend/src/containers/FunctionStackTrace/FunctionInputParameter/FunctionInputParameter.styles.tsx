@@ -63,6 +63,8 @@ export const StyledText = styled(Typography)({
 })
 
 export const StyledContentCopyIcon = styled(ContentCopy)({
+  width: '18px',
+  height: '18px',
   cursor: 'pointer',
   color: '#000000B3',
   '&:hover': {
@@ -71,5 +73,7 @@ export const StyledContentCopyIcon = styled(ContentCopy)({
 })
 
 export const StyledContentCopiedIcon = styled(Done)(({ theme }) => ({
+  width: '18px',
+  height: '18px',
   color: theme.palette.rfButton,
 }))

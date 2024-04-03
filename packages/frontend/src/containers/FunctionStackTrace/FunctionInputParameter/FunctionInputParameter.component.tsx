@@ -29,7 +29,7 @@ export const FunctionInputParameterComponent: React.FC<TFunctionInputParameterCo
     if (copiedValue) {
       const timeout = setTimeout(() => {
         setCopiedValue('')
-      }, 2000)
+      }, 1500)
       return () => clearTimeout(timeout)
     }
   }, [copiedValue])
