@@ -9,6 +9,10 @@ import type { IUIState } from './ui.types'
 const uiInitialState: IUIState = {
   structLogsListOffset: 0,
   shouldShowProgressScreen: false,
+  shouldShowFunctionStackTrace: false,
+  displayYulFunctions: true,
+  displaySolcMiddlewares: true,
+  currentFunctionParameterId: null,
 }
 
 export const uiSlice = createSlice({
@@ -18,6 +22,18 @@ export const uiSlice = createSlice({
     },
     setShouldShowProgressScreen: (state, action: PayloadAction<boolean>) => {
       state.shouldShowProgressScreen = action.payload
+    },
+    setShouldShowFunctionStackTrace: (state, action: PayloadAction<boolean>) => {
+      state.shouldShowFunctionStackTrace = action.payload
+    },
+    setDisplayYulFunctions: (state, action: PayloadAction<boolean>) => {
+      state.displayYulFunctions = action.payload
+    },
+    setDisplaySolcMiddlewares: (state, action: PayloadAction<boolean>) => {
+      state.displaySolcMiddlewares = action.payload
+    },
+    setCurrentFunctionParameterId: (state, action: PayloadAction<string | null>) => {
+      state.currentFunctionParameterId = action.payload
     },
   },
   name: StoreKeys.UI,

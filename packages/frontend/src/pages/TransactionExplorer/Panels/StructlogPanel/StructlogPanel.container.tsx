@@ -8,7 +8,6 @@ import { instructionsSelectors } from '../../../../store/instructions/instructio
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
-import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 import { sourceFilesActions } from '../../../../store/sourceFiles/sourceFiles.slice'
 
@@ -28,15 +27,15 @@ export const StructlogPanel: React.FC = () => {
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
   const setActiveStructlog = useCallback(
-    (structLog: TStructlogWithListIndex) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLog))
+    (structLogIndex: number) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
     [dispatch],
   )
 
   useEffect(() => {
     if (!activeStructlog && structlogsArray.length > 0) {
-      dispatch(activeStructLogActions.setActiveStrucLog(structlogsArray[0]))
+      dispatch(activeStructLogActions.setActiveStrucLog(0))
     }
   }, [activeStructlog, structlogsArray, dispatch])
 
@@ -87,11 +86,11 @@ export const StructlogPanel: React.FC = () => {
       const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
       const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        setActiveStructlog(nextStructlog)
+        setActiveStructlog(nextStructlog.index)
         event.preventDefault()
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        setActiveStructlog(previousStructlog)
+        setActiveStructlog(previousStructlog.index)
         event.preventDefault()
       }
     }

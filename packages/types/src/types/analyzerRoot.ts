@@ -66,7 +66,8 @@ export type TContractFunctionInputParameter = {
   // [ calldata, memory ]
   modifiers: string[]
   // 0
-  value?: string
+  value?: string | string[]
+  id: string
   isArray: boolean
   stackInitialIndex: number
 }
@@ -90,10 +91,14 @@ export type TContractFunction = {
 
   pc: number
   index: number
+  traceLogIndex: number
   op: TOpcodesNames
+
+  isReverted: boolean
 
   hasAbi: boolean
   isMain: boolean
+  isCallType: boolean
   isYul: boolean
   contraceName: string
   depth: number
@@ -109,7 +114,6 @@ export type TAnalyzerContractData = {
   instructions?: TPcIndexedStepInstructions
   structlogsPerStartLine?: TStructlogsPerStartLine
   functions?: Record<number, TContractFunction>
-  runtimeFunctionsList?: Record<number, TContractFunction[]>
 }
 
 export type TDataLoaderInputData = {
@@ -121,6 +125,7 @@ export type TDataLoaderAnalyzerData = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
   traceLogs: TTraceLog[]
+  runtimeFunctionsList?: Record<number, TContractFunction>
   sighashes: Record<string, TSighashStatus>
   contracts: Record<string, TAnalyzerContractData>
 }
@@ -140,11 +145,6 @@ export type TContractSourceFiles = {
   sourceFiles: TSourceFile[]
 }
 
-export type TFunctionStack = {
-  index: number
-  functions: TContractFunction[]
-}
-
 export type TAnalyzerAnalysisOutput = {
   structLogs: TIndexedStructLog[]
   transactionInfo: TTransactionInfo
@@ -155,7 +155,7 @@ export type TAnalyzerAnalysisOutput = {
   contractsInstructions: Record<string, TContractInstructions>
   contractsStructLogsPerLine: Record<string, TContractStructlogsPerStartLine>
   contractsSourceFiles: Record<string, TContractSourceFiles>
-  traceLogsFunctionsStack: Record<number, TFunctionStack>
+  traceLogsFunctionsStack: Record<number, TContractFunction>
 }
 
 export type TAnalyzerContractRawData = {

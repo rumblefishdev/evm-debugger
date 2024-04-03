@@ -7,7 +7,9 @@ import type {
   TDisassembledBytecodeStructlog,
   TFunctionDebugData,
   TIndexedStructLog,
+  TTraceLog,
 } from '@evm-debuger/types'
+import { v4 as uuid } from 'uuid'
 
 import { selectFunctionBlockContextForLog } from '../helpers/helpers'
 import { InputSourceManager } from '../strategies/inputSourceManager/inputSource.manager'
@@ -66,6 +68,7 @@ export class FunctionManager {
               name: elements.at(-1),
               modifiers: elements.slice(1, -1),
               isArray: elements[0].includes('[]'),
+              id: uuid(),
             }
           }),
         )
@@ -77,6 +80,7 @@ export class FunctionManager {
           name: elements.at(-1),
           modifiers: elements.slice(1, -1),
           isArray: elements[0].includes('[]'),
+          id: uuid(),
         })
       }
     }
@@ -186,13 +190,16 @@ export class FunctionManager {
 
           for (const structLog of structLogsForFunction) {
             contractFunctions[structLog.pc] = {
+              traceLogIndex: -1,
               selector: functionData.functionSelector,
               pc: structLog.pc,
               outputs: functionData.outputsParameters,
               op: structLog.opcode,
               name: functionData.functionName,
               isYul: sourceFile.name === 'utility',
+              isReverted: false,
               isMain: Boolean(functionDebugDataMappedToPc[structLog.pc]),
+              isCallType: false,
               inputs: functionData.inputParameters,
               index: structLog.index,
               hasAbi: false,
@@ -274,7 +281,12 @@ export class FunctionManager {
       const result = structLogsWithFunction
         .sort((a, b) => a.index - b.index)
         .map((structLog) => {
-          return { ...traceLogFunctions[structLog.pc], index: structLog.index }
+          return {
+            ...traceLogFunctions[structLog.pc],
+            traceLogIndex: traceLog.index,
+            isReverted: traceLog.isReverted,
+            index: structLog.index,
+          }
         })
 
       traceLogFunctionsList[traceLog.index] = result
@@ -299,6 +311,50 @@ export class FunctionManager {
     }
   }
 
+  private convertTraceLogToFunction(traceLog: TTraceLog): TContractFunction {
+    const baseContractInfo = this.dataLoader.analyzerContractData.get(traceLog.address, 'contractBaseData')
+
+    const inputs: TContractFunctionInputParameter[] =
+      traceLog.callTypeData?.functionFragment?.inputs?.map((input, index) => {
+        return {
+          value: traceLog.callTypeData.decodedInput.getValue(input.name),
+          type: input.type,
+          stackInitialIndex: index,
+          name: input.name,
+          modifiers: [],
+          isArray: input.isArray(),
+          id: uuid(),
+        }
+      }) || []
+
+    const outputs: TContractFunctionOutputParameter[] =
+      traceLog.callTypeData?.functionFragment?.outputs?.map((output, index) => {
+        return {
+          value: traceLog.callTypeData?.decodedOutput?.getValue(output.name),
+          type: output.type,
+        }
+      }) || []
+
+    return {
+      traceLogIndex: traceLog.index,
+      selector: traceLog.callTypeData?.functionFragment?.format('minimal').split(' ')[1] || 'placeholder',
+      pc: traceLog.pc,
+      outputs,
+      op: traceLog.op,
+      name: traceLog.callTypeData?.functionFragment?.name || traceLog.address,
+      isYul: false,
+      isReverted: traceLog.isReverted,
+      isMain: true,
+      isCallType: true,
+      inputs,
+      index: traceLog.index,
+      hasAbi: true,
+      functionModifiers: [],
+      depth: traceLog.depth,
+      contraceName: baseContractInfo.name,
+    }
+  }
+
   public createFunctionsStackTrace() {
     const traceLogsFunctionsList = this.createFunctonsList()
 
@@ -313,10 +369,10 @@ export class FunctionManager {
       const traceLogFunctions = traceLogsFunctionsList[traceLog.index]
       const traceLogFunctionsCopy = [...traceLogFunctions]
 
-      traceLogFunctions.forEach((traceLogFunction, index) => {
+      traceLogFunctionsCopy.forEach((traceLogFunction, index) => {
         if (!traceLogFunction) return
         if (index === 0) {
-          traceLogFunctionsCopy[index].depth = 0
+          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
           return
         }
 
@@ -330,7 +386,7 @@ export class FunctionManager {
         }
 
         if (!previousMainFunction) {
-          traceLogFunctionsCopy[index].depth = 0
+          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
           return
         }
 
@@ -347,56 +403,56 @@ export class FunctionManager {
       runtimeFunctionsList[traceLog.address][traceLog.index] = traceLogFunctionsCopy
     }
 
-    for (const address in runtimeFunctionsList) {
-      this.dataLoader.analyzerContractData.set(address, 'runtimeFunctionsList', runtimeFunctionsList[address])
-    }
+    const traceLogList = [...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog))]
+
+    const runTimeFunctionsList: TContractFunction[] = Object.values(runtimeFunctionsList).flatMap((functions) =>
+      Object.values(functions).flatMap((functionList) => functionList),
+    )
+
+    const list = [...traceLogList, ...runTimeFunctionsList]
+
+    const sortedList = list.sort((a, b) => a.index - b.index)
+
+    this.dataLoader.analyzerRuntimeFunctionsList.set(sortedList)
   }
 
   public decodeFunctionsParameters() {
-    const runtimeFunctionsList = this.dataLoader.analyzerContractData.getAll('runtimeFunctionsList')
+    const runtimeFunctionsList = this.dataLoader.analyzerRuntimeFunctionsList.get()
+    const runtimeFunctionsWithDecodedParameters: Record<number, TContractFunction> = {}
     const structLogs = this.dataLoader.analyzerStructLogs.get()
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
-    for (const address in runtimeFunctionsList) {
-      const isVerified = this.dataLoader.isContractVerified(address)
-      if (!isVerified) continue
+    const indexIndexedStructLogs = structLogs.reduce<Record<number, TIndexedStructLog>>((accumulator, log) => {
+      accumulator[log.index] = log
+      return accumulator
+    }, {})
 
-      const contractRuntimeFunctionsList = runtimeFunctionsList[address]
+    for (const functionIndex in runtimeFunctionsList) {
+      const functionData = runtimeFunctionsList[functionIndex]
 
-      for (const traceLogIndex in contractRuntimeFunctionsList) {
-        const traceLog = traceLogs.find((log) => log.index === Number(traceLogIndex))
-        const traceLogFunctions = contractRuntimeFunctionsList[traceLogIndex]
-        const traceLogStructLogs = selectFunctionBlockContextForLog(structLogs, traceLog).filter(
-          (structLog) => structLog.depth === traceLog.depth + 1,
-        )
-        const indexIndexedStructLogs = traceLogStructLogs.reduce<Record<number, TIndexedStructLog>>((accumulator, log) => {
-          accumulator[log.index] = log
-          return accumulator
-        }, {})
-
-        const traceLogFunctionsWithDecodedParameters = traceLogFunctions.map((traceLogFunction) => {
-          if (!traceLogFunction) return traceLogFunction
-          if (!traceLogFunction.isMain) return traceLogFunction
-
-          const functionStructlog = indexIndexedStructLogs[traceLogFunction.index]
-          const inputs = traceLogFunction.inputs.map((input) => {
-            const inputSource = new InputSourceManager(
-              [...functionStructlog.stack].reverse(),
-              functionStructlog.memory,
-              traceLog.input,
-              input,
-            )
-            const inputSourceValue = inputSource.readValue()
-
-            return { ...input, value: inputSourceValue }
-          })
-
-          return { ...traceLogFunction, inputs }
-        })
-
-        runtimeFunctionsList[address][Number(traceLogIndex)] = traceLogFunctionsWithDecodedParameters
+      if (!functionData || !functionData.isMain || functionData.isCallType) {
+        runtimeFunctionsWithDecodedParameters[functionIndex] = functionData
+        continue
       }
-      this.dataLoader.analyzerContractData.set(address, 'runtimeFunctionsList', runtimeFunctionsList[address])
+
+      const functionStructlog = indexIndexedStructLogs[functionData.index]
+      const functionTraceLog = traceLogs.find((log) => log.index === functionData.traceLogIndex)
+
+      const inputsWithDecodedParameters = functionData.inputs.map((input) => {
+        const inputSource = new InputSourceManager(
+          [...functionStructlog.stack].reverse(),
+          functionStructlog.memory,
+          functionTraceLog.input,
+          input,
+        )
+        const inputSourceValue = inputSource.readValue()
+
+        return { ...input, value: inputSourceValue, id: uuid() }
+      })
+
+      runtimeFunctionsWithDecodedParameters[functionIndex] = { ...functionData, inputs: inputsWithDecodedParameters }
     }
+
+    this.dataLoader.analyzerRuntimeFunctionsList.set(runtimeFunctionsWithDecodedParameters)
   }
 }

@@ -43,7 +43,7 @@ export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStructlog?.index}
-                onClick={() => setActiveStructlog(item)}
+                onClick={() => setActiveStructlog(item.index)}
               />
             )
           }}
@@ -79,7 +79,7 @@ export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStructlog?.index}
-                onClick={() => setActiveStructlog(item)}
+                onClick={() => setActiveStructlog(item.index)}
               />
             )
           }}

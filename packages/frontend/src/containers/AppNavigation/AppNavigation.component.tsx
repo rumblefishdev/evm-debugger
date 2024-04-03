@@ -1,51 +1,28 @@
-import React, { useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import { Box } from '@mui/material'
 import DescriptionIcon from '@mui/icons-material/Description'
 
 import { ROUTES } from '../../routes'
-import { uiActions } from '../../store/ui/ui.slice'
 import { Button } from '../../components/Button'
 
-import type { AppNavigationProps } from './AppNavigation.types'
+import type { TAppNavigationComponentProps } from './AppNavigation.types'
 import { StyledButtonWrapper, StyledNewTransactionButton, StyledTab, StyledTabs } from './AppNavigation.styles'
 
-export const AppNavigation: React.FC<AppNavigationProps> = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const location = useLocation()
-
-  const { chainId, txHash } = useParams()
-  const [value, setValue] = useState<ROUTES | string>(location.pathname)
-
-  const convertNav = React.useCallback(
-    (tabName: ROUTES): string => tabName.replace(':txHash', txHash).replace(':chainId', chainId),
-    [chainId, txHash],
-  )
-  const handleTabClick = React.useCallback(
-    (tabName: ROUTES) => {
-      navigate(convertNav(tabName))
-    },
-    [convertNav, navigate],
-  )
-
-  // This way we handle changes in the URL by browser navigation
-  React.useEffect(() => {
-    setValue(location.pathname)
-  }, [location.pathname])
-
-  const showLogs = React.useCallback(() => {
-    dispatch(uiActions.setShouldShowProgressScreen(true))
-  }, [dispatch])
-
+export const AppNavigationComponent: React.FC<TAppNavigationComponentProps> = ({
+  activeTabName,
+  convertNavigationTabName,
+  handleTabChange,
+  showAnalyzerLogs,
+  toggleFunctionStackTrace,
+  isFunctionStackTraceVisible,
+}) => {
   return (
     <StyledButtonWrapper>
       <StyledNewTransactionButton />
 
       <Box>
         <StyledTabs
-          value={value}
+          value={activeTabName}
           centered
           sx={{
             '& .MuiTabs-flexContainer .MuiButtonBase-root ': {
@@ -55,18 +32,18 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
         >
           <StyledTab
             label="Data Manager"
-            value={convertNav(ROUTES.DATA_MANAGER)}
-            onClick={() => handleTabClick(ROUTES.DATA_MANAGER)}
+            value={convertNavigationTabName(ROUTES.DATA_MANAGER)}
+            onClick={() => handleTabChange(ROUTES.DATA_MANAGER)}
           />
           <StyledTab
             label="Transaction screen"
-            value={convertNav(ROUTES.TRANSACTION_SCREEN)}
-            onClick={() => handleTabClick(ROUTES.TRANSACTION_SCREEN)}
+            value={convertNavigationTabName(ROUTES.TRANSACTION_SCREEN)}
+            onClick={() => handleTabChange(ROUTES.TRANSACTION_SCREEN)}
           />
           <StyledTab
             label="Transaction Explorer"
-            value={convertNav(ROUTES.TRANSACTION_EXPLORER)}
-            onClick={() => handleTabClick(ROUTES.TRANSACTION_EXPLORER)}
+            value={convertNavigationTabName(ROUTES.TRANSACTION_EXPLORER)}
+            onClick={() => handleTabChange(ROUTES.TRANSACTION_EXPLORER)}
           />
         </StyledTabs>
       </Box>
@@ -75,7 +52,17 @@ export const AppNavigation: React.FC<AppNavigationProps> = () => {
         <Button
           variant="text"
           size="small"
-          onClick={showLogs}
+          onClick={toggleFunctionStackTrace}
+          sx={{
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {`${isFunctionStackTraceVisible ? 'Hide' : 'Show'} Function Stack Trace`}
+        </Button>
+        <Button
+          variant="text"
+          size="small"
+          onClick={showAnalyzerLogs}
           sx={{
             whiteSpace: 'nowrap',
           }}

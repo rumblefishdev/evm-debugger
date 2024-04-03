@@ -428,7 +428,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with contract deploy
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "blockHash": "0x8a85ecd6160908b9485d284350099de71fa0a5bec3c5496507dd725660463b31",
     "blockNumber": "0xc9ae45",
@@ -2222,7 +2222,7 @@ exports[`TxAnalyzer analyze transaction analyze transaction with revert: reverte
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "accessList": [],
     "blockHash": "0x3159fd67523ce4c58ac0b5efc1f7b5d7bae4f3c981c76cc97acd18360c9db5b4",
@@ -5014,7 +5014,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction with extende
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "accessList": [],
     "blockHash": "0xe2d7486ae30998014b4e2aa655230f6067b588f7108461154bb361a1a0f68be8",
@@ -7806,7 +7806,7 @@ exports[`TxAnalyzer analyze transaction analyzes failed transaction: failedTrans
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "blockHash": "0xe2d7486ae30998014b4e2aa655230f6067b588f7108461154bb361a1a0f68be8",
     "blockNumber": "16868672",
@@ -8730,7 +8730,7 @@ exports[`TxAnalyzer analyze transaction analyzes simple mint transaction: simple
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "blockHash": "0x6e57363e871725222de9a9c386ea5273fbf2631d0c97c1f5c3368d214ff32c37",
     "blockNumber": "16869282",
@@ -10780,7 +10780,7 @@ exports[`TxAnalyzer analyze transaction analyzes transaction with invalid functi
       "value": "0.0",
     },
   ],
-  "traceLogsFunctionsStack": {},
+  "traceLogsFunctionsStack": undefined,
   "transactionInfo": {
     "accessList": [],
     "blockHash": "0xe2d7486ae30998014b4e2aa655230f6067b588f7108461154bb361a1a0f68be8",

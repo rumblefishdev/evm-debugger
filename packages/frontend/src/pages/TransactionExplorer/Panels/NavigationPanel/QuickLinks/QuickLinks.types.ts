@@ -6,5 +6,5 @@ export type TQuickLinksComponentProps = {
   activeStructlog: TStructlogWithListIndex
   gasThreshold: number
   handleSetGasThreshold: (gasThreshold: number) => void
-  setActiveStructlog: (structLog: TStructlogWithListIndex) => void
+  setActiveStructlog: (structLog: number) => void
 }

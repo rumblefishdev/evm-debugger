@@ -23,7 +23,7 @@ import {
 } from './SourceLine.styles'
 
 const checkIfStepIsSelected = (activeStructlog: TStructlogWithListIndex, list: TStructlogWithListIndex[]) => {
-  return list.some((structlog) => structlog.index === activeStructlog.index)
+  return list.some((structlog) => structlog?.index === activeStructlog?.index)
 }
 
 export const SourceLineComponent: React.FC<TSourceLineComponentProps> = ({

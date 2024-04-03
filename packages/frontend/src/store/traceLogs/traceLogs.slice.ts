@@ -13,7 +13,7 @@ import type { ActionsType } from '../store.types'
 import type { TMainTraceLogsWithId } from './traceLogs.types'
 
 export const traceLogsAdapter = createEntityAdapter<TMainTraceLogsWithId>({
-  selectId: (entity: TMainTraceLogsWithId) => entity.id,
+  selectId: (entity: TMainTraceLogsWithId) => entity.index,
 })
 
 export const traceLogsSlice = createSlice({
