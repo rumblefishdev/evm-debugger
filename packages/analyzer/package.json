@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.6.2",
+    "@types/uuid": "^9.0.8",
     "chai": "^4.3.6",
     "hardhat-gas-reporter": "^1.0.9",
     "nodemon": "^2.0.20",
@@ -26,10 +27,11 @@
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@evm-debuger/types": "^0.1.2",
+    "ethers": "^6.10.0",
     "evm": "^0.2.0",
     "hardhat": "^2.19.4",
-    "ethers": "^6.10.0",
-    "node-fetch": "2.6.6"
+    "node-fetch": "2.6.6",
+    "uuid": "^9.0.1"
   },
   "jest": {
     "moduleFileExtensions": [

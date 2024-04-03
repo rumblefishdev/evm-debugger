@@ -12,6 +12,7 @@ const uiInitialState: IUIState = {
   shouldShowFunctionStackTrace: false,
   displayYulFunctions: true,
   displayNonMainFunctions: true,
+  currentFunctionParameterId: null,
 }
 
 export const uiSlice = createSlice({
@@ -30,6 +31,9 @@ export const uiSlice = createSlice({
     },
     setDisplayNonMainFunctions: (state, action: PayloadAction<boolean>) => {
       state.displayNonMainFunctions = action.payload
+    },
+    setCurrentFunctionParameterId: (state, action: PayloadAction<string | null>) => {
+      state.currentFunctionParameterId = action.payload
     },
   },
   name: StoreKeys.UI,

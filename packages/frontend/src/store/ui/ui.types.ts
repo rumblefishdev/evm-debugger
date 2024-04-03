@@ -4,4 +4,5 @@ export interface IUIState {
   shouldShowFunctionStackTrace: boolean
   displayNonMainFunctions: boolean
   displayYulFunctions: boolean
+  currentFunctionParameterId: string | null
 }

@@ -9,6 +9,7 @@ import type {
   TIndexedStructLog,
   TTraceLog,
 } from '@evm-debuger/types'
+import { v4 as uuid } from 'uuid'
 
 import { selectFunctionBlockContextForLog } from '../helpers/helpers'
 import { InputSourceManager } from '../strategies/inputSourceManager/inputSource.manager'
@@ -67,6 +68,7 @@ export class FunctionManager {
               name: elements.at(-1),
               modifiers: elements.slice(1, -1),
               isArray: elements[0].includes('[]'),
+              id: uuid(),
             }
           }),
         )
@@ -78,6 +80,7 @@ export class FunctionManager {
           name: elements.at(-1),
           modifiers: elements.slice(1, -1),
           isArray: elements[0].includes('[]'),
+          id: uuid(),
         })
       }
     }
@@ -320,6 +323,7 @@ export class FunctionManager {
           name: input.name,
           modifiers: [],
           isArray: input.isArray(),
+          id: uuid(),
         }
       }) || []
 
@@ -444,7 +448,7 @@ export class FunctionManager {
         )
         const inputSourceValue = inputSource.readValue()
 
-        return { ...input, value: inputSourceValue }
+        return { ...input, value: inputSourceValue, id: uuid() }
       })
 
       runtimeFunctionsWithDecodedParameters[functionIndex] = { ...functionData, inputs: inputsWithDecodedParameters }

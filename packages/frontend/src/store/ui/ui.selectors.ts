@@ -15,10 +15,13 @@ const selectDisplayNonMainFunctions = createSelector([selectUIState], (state) =>
 
 const selectDisplayYulFunctions = createSelector([selectUIState], (state) => state.displayYulFunctions)
 
+const selectCurrentFunctionParameterId = createSelector([selectUIState], (state) => state.currentFunctionParameterId)
+
 export const uiSelectors = {
   selectStructlogListOffset,
   selectShouldShowProgressScreen,
   selectShouldShowFunctionStackTrace,
   selectDisplayYulFunctions,
   selectDisplayNonMainFunctions,
+  selectCurrentFunctionParameterId,
 }

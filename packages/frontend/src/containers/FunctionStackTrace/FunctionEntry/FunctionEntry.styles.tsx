@@ -30,10 +30,6 @@ export const StyledFunctionEntryContent = styled(Stack)(({ theme }) => ({
   ...theme.typography.body2,
   fontSize: '16px',
   cursor: 'pointer',
-
-  '&:hover': {
-    color: theme.palette.rfButton,
-  },
 }))
 
 export const StyledRevertedBox = styled(Box)(({ theme }) => ({
@@ -105,16 +101,17 @@ export const StyledEntryVariantBox = styled(
 export const StyledContractName = styled(Typography)(({ theme }) => ({
   textTransform: 'capitalize',
   fontWeight: '700',
+
+  '&:hover': {
+    color: theme.palette.rfButton,
+  },
 }))
 export const StyledFunctionSignature = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
   flexDirection: 'row',
   display: 'inline-flex',
-}))
 
-export const StyledFunctionSingatureParameter = styled(Typography)(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  padding: theme.spacing(0, 0.5),
-  margin: theme.spacing(0, 0.5),
-  borderRadius: '4px',
+  '&:hover': {
+    color: theme.palette.rfButton,
+  },
 }))

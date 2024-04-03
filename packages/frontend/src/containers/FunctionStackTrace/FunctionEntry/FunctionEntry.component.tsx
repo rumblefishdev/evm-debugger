@@ -1,6 +1,8 @@
-import { Collapse } from '@mui/material'
+import { Collapse, Tooltip } from '@mui/material'
 import React from 'react'
 import { KeyboardArrowDown } from '@mui/icons-material'
+
+import { FunctionInputParameter } from '../FunctionInputParameter/FunctionInputParameter.container'
 
 import type { TFunctionEntryComponentProps } from './FunctionEntry.types'
 import { FunctionEntry } from './FunctionEntry.container'
@@ -12,7 +14,6 @@ import {
   StyledFunctionEntryLeftWrapper,
   StyledFunctionEntryWrapper,
   StyledFunctionSignature,
-  StyledFunctionSingatureParameter,
   StyledOpcodeBox,
   StyledRevertedBox,
   StyledVerticalLine,
@@ -60,19 +61,21 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               }}
             />
           )}
-          {functionElement.function?.contraceName && <StyledContractName>{functionElement.function?.contraceName}.</StyledContractName>}
           <StyledFunctionSignature>
+            {functionElement.function?.contraceName && <StyledContractName>{functionElement.function?.contraceName}.</StyledContractName>}
+
             {!functionElement.function.isMain && functionElement.function?.selector}
             {functionElement.function.isMain && `${functionElement.function?.name}(`}
-            {functionElement.function.isMain &&
-              functionElement.function.inputs.map((input, index) => (
-                <StyledFunctionSingatureParameter
-                  sx={{ backgroundColor: parametersColors[index] }}
-                  key={index}
-                >{`${input.name} = ${input.value}`}</StyledFunctionSingatureParameter>
-              ))}
-            {functionElement.function.isMain && ')'}
           </StyledFunctionSignature>
+          {functionElement.function.isMain &&
+            functionElement.function.inputs.map((input, index) => (
+              <FunctionInputParameter
+                key={index}
+                parameter={input}
+                color={parametersColors[index]}
+              />
+            ))}
+          <StyledFunctionSignature>{functionElement.function.isMain && ')'}</StyledFunctionSignature>
         </StyledFunctionEntryContent>
       </StyledFunctionEntryBody>
       <Collapse
