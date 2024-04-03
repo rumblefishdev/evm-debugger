@@ -5,7 +5,6 @@ import { checkOpcodeIfOfCallOrCreateGroupType } from '@evm-debuger/analyzer'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import { useTypedDispatch } from '../../../../../store/storeHooks'
-import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
 
 import { QuickLinksComponent } from './QuickLinks.component'

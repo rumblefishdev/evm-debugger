@@ -54,21 +54,21 @@ export const StyledTextWrapper = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
 }))
 
-export const StyledText = styled(Typography)(({ theme }) => ({
+export const StyledText = styled(Typography)({
   width: '100%',
   whiteSpace: 'nowrap',
   fontSize: '14px',
   display: 'inline-block',
   color: 'black',
-}))
+})
 
-export const StyledContentCopyIcon = styled(ContentCopy)(({ theme }) => ({
+export const StyledContentCopyIcon = styled(ContentCopy)({
   cursor: 'pointer',
   color: '#000000B3',
   '&:hover': {
     color: '#000000',
   },
-}))
+})
 
 export const StyledContentCopiedIcon = styled(Done)(({ theme }) => ({
   color: theme.palette.rfButton,

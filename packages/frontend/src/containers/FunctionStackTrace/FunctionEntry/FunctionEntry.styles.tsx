@@ -2,7 +2,7 @@ import { Box, Stack, styled, Typography } from '@mui/material'
 
 import type { TEntryType, TOpcodeVariants } from './FunctionEntry.types'
 
-export const StyledFunctionEntryWrapper = styled(Stack)(({ theme }) => ({}))
+export const StyledFunctionEntryWrapper = styled(Stack)()
 export const StyledFunctionEntryBody = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 0),
   height: '100%',

@@ -70,6 +70,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['memory'],
       isArray: true,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -89,6 +90,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['calldata'],
       isArray: true,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -108,6 +110,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: [],
       isArray: true,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -130,6 +133,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: [],
       isArray: false,
+      id: '1',
     }
 
     const mockedFunctionInputParameter1: TContractFunctionInputParameter = {
@@ -138,6 +142,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: [],
       isArray: false,
+      id: '1',
     }
 
     const inputSourceManager0 = new InputSourceManager(
@@ -180,6 +185,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['calldata'],
       isArray: true,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -214,6 +220,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['memory'],
       isArray: true,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -234,6 +241,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['memory'],
       isArray: false,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(
@@ -254,6 +262,7 @@ describe('InputSourceManager', () => {
       name: 'name',
       modifiers: ['calldata'],
       isArray: false,
+      id: '1',
     }
 
     const inputSourceManager = new InputSourceManager(

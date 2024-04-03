@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react'
-import zIndex from '@mui/material/styles/zIndex'
 
 import { palette } from './palette'
 
