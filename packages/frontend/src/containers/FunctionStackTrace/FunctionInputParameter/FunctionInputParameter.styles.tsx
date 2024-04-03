@@ -57,6 +57,7 @@ export const StyledTextWrapper = styled(Stack)(({ theme }) => ({
 export const StyledText = styled(Typography)(({ theme }) => ({
   width: '100%',
   whiteSpace: 'nowrap',
+  fontSize: '14px',
   display: 'inline-block',
   color: 'black',
 }))
