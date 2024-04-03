@@ -403,17 +403,16 @@ export class FunctionManager {
       runtimeFunctionsList[traceLog.address][traceLog.index] = traceLogFunctionsCopy
     }
 
-    const list: TContractFunction[] = [...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog))]
+    const traceLogList = [...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog))]
 
-    Object.values(runtimeFunctionsList).forEach((functions) => {
-      Object.values(functions).forEach((functionList) => {
-        list.push(...functionList)
-      })
-    })
+    const runTimeFunctionsList: TContractFunction[] = Object.values(runtimeFunctionsList).flatMap((functions) =>
+      Object.values(functions).flatMap((functionList) => functionList),
+    )
+
+    const list = [...traceLogList, ...runTimeFunctionsList]
 
     const sortedList = list.sort((a, b) => a.index - b.index)
 
-    console.log(sortedList)
     this.dataLoader.analyzerRuntimeFunctionsList.set(sortedList)
   }
 

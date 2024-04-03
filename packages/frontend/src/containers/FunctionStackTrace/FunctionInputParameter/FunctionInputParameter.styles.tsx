@@ -70,5 +70,5 @@ export const StyledContentCopyIcon = styled(ContentCopy)(({ theme }) => ({
 }))
 
 export const StyledContentCopiedIcon = styled(Done)(({ theme }) => ({
-  color: '#000000B3',
+  color: theme.palette.rfButton,
 }))

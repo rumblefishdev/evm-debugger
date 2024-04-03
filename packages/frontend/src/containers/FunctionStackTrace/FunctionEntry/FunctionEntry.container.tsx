@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import React from 'react'
 
 import { uiSelectors } from '../../../store/ui/ui.selectors'
 
@@ -9,6 +10,17 @@ export const FunctionEntry: React.FC<TFunctionEntryContainerProps> = ({ function
   const shouldDisplayYulFunction = useSelector(uiSelectors.selectDisplayYulFunctions)
   const shouldDisplayNonMainFunction = useSelector(uiSelectors.selectDisplayNonMainFunctions)
 
+  const canBeExpanded = React.useMemo(
+    () =>
+      functionElement.innerFunctions.filter(
+        (innerFunction) =>
+          (!innerFunction.function?.isMain && shouldDisplayNonMainFunction) ||
+          (innerFunction.function?.isYul && shouldDisplayYulFunction) ||
+          (innerFunction.function?.isMain && !innerFunction.function?.isYul),
+      ).length > 0,
+    [functionElement.innerFunctions, shouldDisplayNonMainFunction, shouldDisplayYulFunction],
+  )
+
   if (functionElement.function?.isYul && !shouldDisplayYulFunction) {
     return null
   }
@@ -16,14 +28,6 @@ export const FunctionEntry: React.FC<TFunctionEntryContainerProps> = ({ function
   if (!functionElement.function?.isMain && !shouldDisplayNonMainFunction) {
     return null
   }
-
-  const canBeExpanded =
-    functionElement.innerFunctions.filter(
-      (innerFunction) =>
-        (!innerFunction.function?.isMain && shouldDisplayNonMainFunction) ||
-        (innerFunction.function?.isYul && shouldDisplayYulFunction) ||
-        (innerFunction.function?.isMain && !innerFunction.function?.isYul),
-    ).length > 0
 
   return (
     <FunctionEntryComponent

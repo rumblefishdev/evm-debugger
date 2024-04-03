@@ -23,8 +23,9 @@ import { useFunctionVariants } from './FunctionEntry.hook'
 export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({ functionElement, canBeExpanded, activateFunction }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
 
-  const toggleExpand = React.useCallback(() => {
+  const toggleExpand = React.useCallback((event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     setIsExpanded((prev) => !prev)
+    event.stopPropagation()
   }, [])
 
   const activate = React.useCallback(() => {

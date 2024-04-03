@@ -2,7 +2,6 @@ import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Drawer, ThemeProvider } from '@mui/material'
-import zIndex from '@mui/material/styles/zIndex'
 
 import type { ROUTES } from '../../routes'
 import { uiActions } from '../../store/ui/ui.slice'
