@@ -9,9 +9,9 @@ export type TFunctionStackTraceComponentProps = {
   activeTraceLogIndex: number
   activeStructLogIndex: number
   activateFunction: (traceLogIndex: number, structLogIndex: number) => void
-  toggleMainFunctions: () => void
+  toggleSolcMiddlewares: () => void
   toggleYulFunctions: () => void
-  isNonMainFunctionsVisible: boolean
+  isSolcMiddlewaresVisible: boolean
   isYulFunctionsVisible: boolean
   functionStack: TNestedFunction
 }

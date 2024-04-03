@@ -15,4 +15,6 @@ export type TFunctionInputParameterComponentProps = Partial<TooltipProps> & {
   color: string
   handleTooltipOpen: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   handleTooltipClose: () => void
+  handleCopy: (elementValue: string) => void
+  copiedValue: string
 }

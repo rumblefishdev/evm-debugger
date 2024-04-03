@@ -28,7 +28,7 @@ export const useFunctionVariants = (functionElement: TNestedFunction) => {
     if (functionElement.function?.isMain) {
       entryType.push('Main')
     } else {
-      entryType.push('NonMain')
+      entryType.push('Solc')
     }
     if (functionElement.function?.isYul) {
       entryType.push('Yul')

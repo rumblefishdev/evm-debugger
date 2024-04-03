@@ -92,7 +92,7 @@ export const StyledEntryVariantBox = styled(
     color: '#9DBC98',
     borderColor: '#9DBC98',
   }),
-  ...(variant === 'NonMain' && {
+  ...(variant === 'Solc' && {
     color: '#8294C4',
     borderColor: '#8294C4',
   }),

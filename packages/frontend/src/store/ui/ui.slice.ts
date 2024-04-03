@@ -11,7 +11,7 @@ const uiInitialState: IUIState = {
   shouldShowProgressScreen: false,
   shouldShowFunctionStackTrace: false,
   displayYulFunctions: true,
-  displayNonMainFunctions: true,
+  displaySolcMiddlewares: true,
   currentFunctionParameterId: null,
 }
 
@@ -29,8 +29,8 @@ export const uiSlice = createSlice({
     setDisplayYulFunctions: (state, action: PayloadAction<boolean>) => {
       state.displayYulFunctions = action.payload
     },
-    setDisplayNonMainFunctions: (state, action: PayloadAction<boolean>) => {
-      state.displayNonMainFunctions = action.payload
+    setDisplaySolcMiddlewares: (state, action: PayloadAction<boolean>) => {
+      state.displaySolcMiddlewares = action.payload
     },
     setCurrentFunctionParameterId: (state, action: PayloadAction<string | null>) => {
       state.currentFunctionParameterId = action.payload

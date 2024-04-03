@@ -20,7 +20,7 @@ export const FunctionStackTrace: React.FC = () => {
 
   const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const functionsStack = useSelector(functionStackSelectors.selectAll)
-  const isNonMainFunctionsVisible = useSelector(uiSelectors.selectDisplayNonMainFunctions)
+  const isSolcMiddlewaresVisible = useSelector(uiSelectors.selectDisplaySolcMiddlewares)
   const isYulFunctionsVisible = useSelector(uiSelectors.selectDisplayYulFunctions)
 
   const activateFunction = React.useCallback(
@@ -36,9 +36,9 @@ export const FunctionStackTrace: React.FC = () => {
     [dispatch, traceLogs],
   )
 
-  const toggleNonMainFunctions = React.useCallback(() => {
-    dispatch(uiActions.setDisplayNonMainFunctions(!isNonMainFunctionsVisible))
-  }, [dispatch, isNonMainFunctionsVisible])
+  const toggleSolcMiddlewares = React.useCallback(() => {
+    dispatch(uiActions.setDisplaySolcMiddlewares(!isSolcMiddlewaresVisible))
+  }, [dispatch, isSolcMiddlewaresVisible])
   const toggleYulFunctions = React.useCallback(() => {
     dispatch(uiActions.setDisplayYulFunctions(!isYulFunctionsVisible))
   }, [dispatch, isYulFunctionsVisible])
@@ -58,9 +58,9 @@ export const FunctionStackTrace: React.FC = () => {
       activeTraceLogIndex={activeTraceLogIndex}
       functionStack={functionStackAsTree}
       activateFunction={activateFunction}
-      toggleMainFunctions={toggleNonMainFunctions}
+      toggleSolcMiddlewares={toggleSolcMiddlewares}
       toggleYulFunctions={toggleYulFunctions}
-      isNonMainFunctionsVisible={isNonMainFunctionsVisible}
+      isSolcMiddlewaresVisible={isSolcMiddlewaresVisible}
       isYulFunctionsVisible={isYulFunctionsVisible}
     />
   )

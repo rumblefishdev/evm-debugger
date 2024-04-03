@@ -20,25 +20,11 @@ export const FunctionInputParameterComponent: React.FC<TFunctionInputParameterCo
   color,
   handleTooltipClose,
   handleTooltipOpen,
+  handleCopy,
   shortValue,
+  copiedValue,
   ...props
 }) => {
-  const [copiedValue, setCopiedValue] = React.useState('')
-
-  React.useEffect(() => {
-    if (copiedValue) {
-      const timeout = setTimeout(() => {
-        setCopiedValue('')
-      }, 1500)
-      return () => clearTimeout(timeout)
-    }
-  }, [copiedValue])
-
-  const handleCopy = (elementValue: string) => {
-    navigator.clipboard.writeText(elementValue)
-    setCopiedValue(elementValue)
-  }
-
   const clickPreventPropagation = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => event.stopPropagation()
 
   return (

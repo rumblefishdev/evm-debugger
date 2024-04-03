@@ -2,7 +2,7 @@ export interface IUIState {
   structLogsListOffset: number
   shouldShowProgressScreen: boolean
   shouldShowFunctionStackTrace: boolean
-  displayNonMainFunctions: boolean
+  displaySolcMiddlewares: boolean
   displayYulFunctions: boolean
   currentFunctionParameterId: string | null
 }
