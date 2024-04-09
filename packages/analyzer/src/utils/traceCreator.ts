@@ -79,7 +79,9 @@ export class TraceCreator {
 
       if (checkOpcodeIfOfReturnGroupType(lastItemInCallContext.op)) {
         const { output } = lastItemInTraceReturnLogs
-        const isSuccess = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN
+        const isSuccess =
+          BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN ||
+          BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.STOP
         const isReverted = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.REVERT
         return {
           ...traceLog,

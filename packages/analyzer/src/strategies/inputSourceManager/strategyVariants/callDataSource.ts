@@ -25,6 +25,10 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
 
         const result = []
 
+        if (arrayLength > 256) {
+          return 'Invalid'
+        }
+
         for (let index = arrayStartPosition; index < arrayEndPosition; index += 32) {
           result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2).replace(/^0+/, '')}`)
         }

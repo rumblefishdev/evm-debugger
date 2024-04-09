@@ -39,7 +39,6 @@ export const StyledFunctionSingatureParameter = styled(Typography)(({ theme }) =
   whiteSpace: 'nowrap',
   padding: theme.spacing(0, 0.5),
   opacity: 0.9,
-  margin: theme.spacing(0, 0.5),
   borderRadius: '4px',
 
   '&:hover': {

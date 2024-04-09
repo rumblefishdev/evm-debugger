@@ -182,11 +182,6 @@ export class FunctionManager {
             return instruction?.startCodeLine === functionData.lineIndex
           })
 
-          if (functionData.functionName === 'pairForPreSorted') {
-            console.log('functionData', functionData)
-            console.log('structLogsForFunction', structLogsForFunction)
-          }
-
           const nestedFunctions = []
           const functionBody = functionData.functionRaw.slice(
             functionData.functionRaw.indexOf('{') + 1,
@@ -210,13 +205,15 @@ export class FunctionManager {
               name: functionData.functionName,
               lineIndex: functionData.lineIndex,
               isYul: sourceFile.name === 'utility',
-              isReverted: false,
+              isSuccess: true,
               isMain: Boolean(functionDebugDataMappedToPc[structLog.pc]),
               isCallType: false,
               inputs: functionData.inputParameters,
               index: structLog.index,
+              hasThrown: false,
               hasAbi: false,
               functionModifiers: functionData.functionModifiers,
+              failedReason: '',
               depth: 0,
               contraceName: sourceFile.name,
             }
@@ -232,8 +229,6 @@ export class FunctionManager {
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
     const structLogs = this.dataLoader.analyzerStructLogs.get()
     const contractsFunctions = this.dataLoader.analyzerContractData.getAll('functions')
-
-    console.log('contractsFunctions', contractsFunctions)
 
     const traceLogFunctionsList: Record<number, TContractFunction[]> = {}
     for (const traceLog of traceLogs) {
@@ -255,22 +250,15 @@ export class FunctionManager {
       )
       const functionStructlogs = removedUnnecessaryStructLogs.filter((structLog) => Boolean(traceLogFunctions[structLog.pc]))
 
-      if (traceLog.address === '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad') {
-        console.log('traceLogStructLogs', traceLogStructLogs)
-        console.log('jumpdestStructlogs', jumpdestStructlogs)
-        console.log('outJumpStructlogs', outJumpStructlogs)
-        console.log('removedUnnecessaryStructLogs', removedUnnecessaryStructLogs)
-        console.log('functionStructlogs', functionStructlogs)
-      }
-
       const result = functionStructlogs
         .sort((a, b) => a.index - b.index)
         .map((structLog) => {
           return {
             ...traceLogFunctions[structLog.pc],
             traceLogIndex: traceLog.index,
-            isReverted: traceLog.isReverted,
+            isSuccess: traceLog.isSuccess,
             index: structLog.index,
+            hasThrown: false,
           }
         })
 
@@ -344,15 +332,17 @@ export class FunctionManager {
       name: traceLog.callTypeData?.functionFragment?.name || traceLog.address,
       lineIndex: contractFunctions.find((func) => func.selector === selector)?.lineIndex || 0,
       isYul: false,
-      isReverted: traceLog.isReverted,
+      isSuccess: traceLog.isSuccess,
       isMain: true,
       isCallType: true,
       inputs,
       index: traceLog.index,
+      hasThrown: traceLog.isReverted,
       hasAbi: true,
       functionModifiers: [],
+      failedReason: traceLog.isReverted ? traceLog.callTypeData?.errorDescription?.name : undefined,
       depth: traceLog.depth,
-      contraceName: baseContractInfo.name,
+      contraceName: baseContractInfo?.name,
     }
   }
 
@@ -361,6 +351,8 @@ export class FunctionManager {
     const flattedFunctions = Object.values(traceLogsFunctionsList).flatMap((functions) => functions)
 
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
+
+    console.log('traceLogs', traceLogs)
 
     const newRuntimeFunctionsList: Record<number, TContractFunction> = {}
 
@@ -431,8 +423,6 @@ export class FunctionManager {
       newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: previousMainFunction.depth }
     }
 
-    console.log('newRuntimeFunctionsList', newRuntimeFunctionsList)
-
     this.dataLoader.analyzerRuntimeFunctionsList.set(newRuntimeFunctionsList)
   }
 
@@ -464,27 +454,6 @@ export class FunctionManager {
 
         return { ...input, value: inputSourceValue, id: uuid() }
       })
-
-      const hasInitialInvalidInputs = inputsWithDecodedParameters.some((input) => input.value === 'Invalid')
-
-      const reversedInputsWithDecodedParameters = functionData.inputs.map((input) => {
-        const inputSource = new InputSourceManager(
-          [...functionStructlog.stack].reverse(),
-          functionStructlog.memory,
-          functionTraceLog.input,
-          input,
-        )
-        const inputSourceValue = inputSource.readValue()
-
-        return { ...input, value: inputSourceValue, id: uuid() }
-      })
-
-      const hasReversedInvalidInputs = reversedInputsWithDecodedParameters.some((input) => input.value === 'Invalid')
-
-      if (hasInitialInvalidInputs && !hasReversedInvalidInputs) {
-        runtimeFunctionsWithDecodedParameters[functionIndex] = { ...functionData, inputs: reversedInputsWithDecodedParameters }
-        continue
-      }
 
       runtimeFunctionsWithDecodedParameters[functionIndex] = { ...functionData, inputs: inputsWithDecodedParameters }
     }

@@ -47,9 +47,6 @@ export const FunctionStackTrace: React.FC = () => {
     return newConversion(functionsStack, 0)
   }, [functionsStack])
 
-  // console.log('functionsStack', functionsStack)
-  // console.log('functionStackAsTree', functionStackAsTree)
-
   return (
     <FunctionStackTraceComponent
       activeStructLogIndex={activeStructlogIndex}

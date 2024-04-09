@@ -15,6 +15,7 @@ import {
   StyledFunctionEntryWrapper,
   StyledFunctionSignature,
   StyledOpcodeBox,
+  StyledRevertedBox,
   StyledVerticalLine,
 } from './FunctionEntry.styles'
 import { useFunctionVariants } from './FunctionEntry.hook'
@@ -34,13 +35,8 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
   const { entryVariant, opCodeVariant, parametersColors } = useFunctionVariants(functionElement)
 
   return (
-    <StyledFunctionEntryWrapper>
-      <StyledFunctionEntryBody
-        reverted={functionElement.function.isReverted}
-        // sx={{
-        //   backgroundColor: functionElement.function.functionModifiers.includes('private') ? 'pink !important' : 'inherit',
-        // }}
-      >
+    <StyledFunctionEntryWrapper hasThrown={functionElement.function.hasThrown}>
+      <StyledFunctionEntryBody isSuccess={functionElement.function.isSuccess}>
         <StyledFunctionEntryLeftWrapper>
           <StyledOpcodeBox variant={opCodeVariant}>{functionElement.function?.op || 'NOT FOUND'}</StyledOpcodeBox>
           {entryVariant.map((variant, index) => (
@@ -51,6 +47,7 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               {variant}
             </StyledEntryVariantBox>
           ))}
+          {functionElement.function.hasThrown && <StyledRevertedBox>Revert</StyledRevertedBox>}
         </StyledFunctionEntryLeftWrapper>
 
         {Array.from({ length: functionElement.function?.depth || 0 }).map((_, index) => (
