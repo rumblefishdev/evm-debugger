@@ -19,12 +19,9 @@ import { DebuggerFormSection } from './DebuggerFormSection'
 import { AnalyzeTransactionSection } from './AnalyzeTransactionSection'
 import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 
-const isPrerender = process.env.REACT_APP_IS_PRERENDER === 'true'
-
 export const StartingScreen: () => JSX.Element = () => {
   const [fetchedBlogPosts, setFetchedBlogPosts] = useState<CustomBlogPostEntity[]>(null)
   useEffect(() => {
-    if (isPrerender) return
     const fetchData = async () => {
       const blogPosts = await fetchBlogPosts()
       setFetchedBlogPosts(blogPosts)
