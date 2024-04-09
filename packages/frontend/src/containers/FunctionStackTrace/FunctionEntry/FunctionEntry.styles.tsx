@@ -9,8 +9,7 @@ export const StyledFunctionEntryWrapperOptions = {
 export const StyledFunctionEntryWrapper = styled(
   Stack,
   StyledFunctionEntryWrapperOptions,
-)<{ hasThrown?: boolean }>(({ theme, hasThrown }) => ({
-  width: '100%',
+)<{ hasThrown?: boolean }>(({ hasThrown }) => ({
   ...(hasThrown && {
     border: '1px solid #e6aca8',
   }),

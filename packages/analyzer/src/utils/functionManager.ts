@@ -340,7 +340,7 @@ export class FunctionManager {
       hasThrown: traceLog.isReverted,
       hasAbi: true,
       functionModifiers: [],
-      failedReason: traceLog.isReverted ? traceLog.callTypeData?.errorDescription?.name : undefined,
+      failedReason: traceLog.isReverted ? traceLog.callTypeData?.errorDescription?.args[0] : undefined,
       depth: traceLog.depth,
       contraceName: baseContractInfo?.name,
     }

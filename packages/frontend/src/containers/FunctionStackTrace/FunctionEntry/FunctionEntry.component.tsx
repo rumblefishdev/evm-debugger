@@ -80,6 +80,9 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               />
             ))}
           <StyledFunctionSignature>{functionElement.function.isMain && ')'}</StyledFunctionSignature>
+          {functionElement.function.hasThrown && (
+            <StyledRevertedBox>Error: {functionElement.function.failedReason || 'No reason provided'}</StyledRevertedBox>
+          )}
         </StyledFunctionEntryContent>
       </StyledFunctionEntryBody>
       <Collapse
