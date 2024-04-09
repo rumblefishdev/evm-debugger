@@ -1,10 +1,5 @@
 import type { CustomBlogPostEntity, CustomComponentGroupEmbedded } from '@rumblefishdev/ui/lib/src/customStrapiTypes'
 
-import { fetchBlogPostsQuery } from './queries/graphqlQueries'
-import { assignStrapiClient } from './strapiApolloClient'
-
-const client = assignStrapiClient()
-
 const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogPostEntity[]): CustomBlogPostEntity => {
   if (!element.attributes) return element
 
@@ -33,11 +28,9 @@ const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogP
 }
 
 export const fetchBlogPosts = async () => {
-  const { data } = await client.query({
-    query: fetchBlogPostsQuery,
-  })
+  const file = await import('../../data/blogPosts.json')
 
-  const fetchedData: CustomBlogPostEntity[] = data.blogPosts.data
+  const fetchedData = file.data.blogPosts.data as CustomBlogPostEntity[]
   return fetchedData.map((element) => {
     return checkEmbeddedBlogPosts(element, fetchedData)
   })

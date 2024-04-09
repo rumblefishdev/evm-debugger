@@ -21,6 +21,16 @@ function fix_scripts() {
 }
 
 function build() {
+  if [[ "$ENV" != "prod" ]]; then
+    curl -H "Content-Type: application/json" https://strapi-staging-aldnr.rumblefish.dev/graphql \
+    -d '{"query":"query{ blogPosts(sort: \"createdAt:desc\", pagination: { limit: 100 }){ data{ id attributes{ title slug pubDate content timeToRead shortContent imageFitContain facebookImage{ data{ attributes{ name caption url}}} homePageTag{ data{ attributes{ tag}}} image{ data{ attributes{ name caption url}}} thumbnail{ data{ attributes{ caption url name}}} category{ name} authors{ data{ attributes{ Name Position Avatar{ data{ id attributes{ name caption url}}}}}}}}}}"}' \
+    -o src/data/blogPosts.json
+  else
+    curl -H "Content-Type: application/json" https://strapi.rumblefish.dev/graphql \
+    -d '{"query":"query{ blogPosts(sort: \"createdAt:desc\", pagination: { limit: 100 }){ data{ id attributes{ title slug pubDate content timeToRead shortContent imageFitContain facebookImage{ data{ attributes{ name caption url}}} homePageTag{ data{ attributes{ tag}}} image{ data{ attributes{ name caption url}}} thumbnail{ data{ attributes{ caption url name}}} category{ name} authors{ data{ attributes{ Name Position Avatar{ data{ id attributes{ name caption url}}}}}}}}}}"}' \
+    -o src/data/blogPosts.json
+  fi
+
   local prerender=${1:-"false"}
 
   if [[ "$prerender" != "true" ]]; then
