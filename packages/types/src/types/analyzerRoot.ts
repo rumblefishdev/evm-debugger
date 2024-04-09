@@ -101,6 +101,7 @@ export type TContractFunction = {
   isCallType: boolean
   isYul: boolean
   contraceName: string
+  lineIndex: number
   depth: number
   nestedFunctions?: string[]
 }

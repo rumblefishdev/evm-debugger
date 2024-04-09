@@ -16,6 +16,7 @@ export class DataLoader {
   }
 
   private getInputContractData<T extends keyof TInputContractData>(contractAddress: string, key: T): TInputContractData[T] {
+    if (!this.inputData.contracts[contractAddress]) return undefined
     return this.inputData.contracts[contractAddress][key]
   }
 
@@ -47,7 +48,7 @@ export class DataLoader {
       contractAddress === '0x000000000000000000000000000000000000000a'
     )
       return false
-    return Boolean(this.inputContractData.get(contractAddress, 'sourceData'))
+    return Boolean(this.inputContractData.get(contractAddress, 'sourceData') || undefined)
   }
 
   private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
@@ -55,6 +56,7 @@ export class DataLoader {
   }
 
   private getAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T): TAnalyzerContractData[T] {
+    if (!this.inputData.contracts[contractAddress]) return undefined
     return this.analyzerData.contracts[contractAddress][key]
   }
 

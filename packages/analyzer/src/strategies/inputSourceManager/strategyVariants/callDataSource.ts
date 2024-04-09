@@ -14,26 +14,30 @@ export class CallDataSourceStrategy implements TInputSourceStrategy {
   }
 
   readValue() {
-    const sanitizedCallData = this.callData.replace('0x', '')
+    try {
+      const sanitizedCallData = this.callData.replace('0x', '')
 
-    if (this.contractFunction.isArray) {
-      const arrayStartPosition = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16)
-      const arrayLength = parseInt(this.stack[this.contractFunction.stackInitialIndex - 1], 16)
+      if (this.contractFunction.isArray) {
+        const arrayStartPosition = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16)
+        const arrayLength = parseInt(this.stack[this.contractFunction.stackInitialIndex - 1], 16)
 
-      const arrayEndPosition = arrayStartPosition + arrayLength * 32
+        const arrayEndPosition = arrayStartPosition + arrayLength * 32
 
-      const result = []
+        const result = []
 
-      for (let index = arrayStartPosition; index < arrayEndPosition; index += 32) {
-        result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2).replace(/^0+/, '')}`)
+        for (let index = arrayStartPosition; index < arrayEndPosition; index += 32) {
+          result.push(`0x${sanitizedCallData.slice(index * 2, (index + 32) * 2).replace(/^0+/, '')}`)
+        }
+
+        return result
       }
 
-      return result
+      const readOffset = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16) * 2
+      const readLength = 64
+
+      return `0x${sanitizedCallData.slice(readOffset, readOffset + readLength).replace(/^0+/, '')}`
+    } catch {
+      return 'Invalid'
     }
-
-    const readOffset = parseInt(this.stack[this.contractFunction.stackInitialIndex], 16) * 2
-    const readLength = 64
-
-    return `0x${sanitizedCallData.slice(readOffset, readOffset + readLength).replace(/^0+/, '')}`
   }
 }

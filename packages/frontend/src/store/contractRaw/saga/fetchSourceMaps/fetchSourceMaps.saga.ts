@@ -54,6 +54,10 @@ export function* fetchSourceMapsForContractSaga({ payload }: ContractRawActions[
       ])
     }
 
+    if (contractAddress === '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad') {
+      console.log('sourceMap', sourceMap)
+    }
+
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'bytecode', sourceMap.bytecode])
     yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [contractAddress, 'sourceMap', sourceMap.sourceMap])
 

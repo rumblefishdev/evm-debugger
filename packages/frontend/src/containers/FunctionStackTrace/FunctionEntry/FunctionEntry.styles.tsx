@@ -3,11 +3,25 @@ import { Box, Stack, styled, Typography } from '@mui/material'
 import type { TEntryType, TOpcodeVariants } from './FunctionEntry.types'
 
 export const StyledFunctionEntryWrapper = styled(Stack)()
-export const StyledFunctionEntryBody = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
+
+export const StyledFunctionEntryBodyOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'reverted',
+}
+export const StyledFunctionEntryBody = styled(
+  Stack,
+  StyledFunctionEntryBodyOptions,
+)<{ reverted?: boolean }>(({ theme, reverted }) => ({
+  padding: theme.spacing(1),
   height: '100%',
   gap: theme.spacing(1),
   flexDirection: 'row',
+
+  ...(reverted && {
+    borderRight: '1px solid #e6aca8',
+    borderLeft: '1px solid #e6aca8',
+
+    backgroundColor: '#fae2e1',
+  }),
 }))
 
 export const StyledVerticalLine = styled(Box)(({ theme }) => ({

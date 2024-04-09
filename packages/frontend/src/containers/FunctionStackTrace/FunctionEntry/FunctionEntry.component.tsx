@@ -1,4 +1,4 @@
-import { Collapse } from '@mui/material'
+import { Box, Collapse } from '@mui/material'
 import React from 'react'
 import { KeyboardArrowDown } from '@mui/icons-material'
 
@@ -15,7 +15,6 @@ import {
   StyledFunctionEntryWrapper,
   StyledFunctionSignature,
   StyledOpcodeBox,
-  StyledRevertedBox,
   StyledVerticalLine,
 } from './FunctionEntry.styles'
 import { useFunctionVariants } from './FunctionEntry.hook'
@@ -36,9 +35,13 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
 
   return (
     <StyledFunctionEntryWrapper>
-      <StyledFunctionEntryBody>
+      <StyledFunctionEntryBody
+        reverted={functionElement.function.isReverted}
+        // sx={{
+        //   backgroundColor: functionElement.function.functionModifiers.includes('private') ? 'pink !important' : 'inherit',
+        // }}
+      >
         <StyledFunctionEntryLeftWrapper>
-          {functionElement.function.isReverted && <StyledRevertedBox>!REVERTED</StyledRevertedBox>}
           <StyledOpcodeBox variant={opCodeVariant}>{functionElement.function?.op || 'NOT FOUND'}</StyledOpcodeBox>
           {entryVariant.map((variant, index) => (
             <StyledEntryVariantBox
@@ -49,19 +52,22 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
             </StyledEntryVariantBox>
           ))}
         </StyledFunctionEntryLeftWrapper>
+
         {Array.from({ length: functionElement.function?.depth || 0 }).map((_, index) => (
           <StyledVerticalLine key={index} />
         ))}
+        {canBeExpanded ? (
+          <KeyboardArrowDown
+            onClick={toggleExpand}
+            style={{
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              cursor: 'pointer',
+            }}
+          />
+        ) : (
+          <Box width={24} />
+        )}
         <StyledFunctionEntryContent onClick={activate}>
-          {canBeExpanded && (
-            <KeyboardArrowDown
-              onClick={toggleExpand}
-              style={{
-                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                cursor: 'pointer',
-              }}
-            />
-          )}
           <StyledFunctionSignature>
             {functionElement.function?.contraceName && <StyledContractName>{functionElement.function?.contraceName}.</StyledContractName>}
 
