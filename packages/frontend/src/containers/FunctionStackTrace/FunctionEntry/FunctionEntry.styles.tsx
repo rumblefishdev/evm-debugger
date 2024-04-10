@@ -46,7 +46,7 @@ export const StyledVerticalLine = styled(Box)(({ theme }) => ({
 
 export const StyledFunctionEntryLeftWrapper = styled(Stack)(({ theme }) => ({
   textTransform: 'uppercase',
-  minWidth: '204px',
+  minWidth: '224px',
   gap: theme.spacing(1),
   flexDirection: 'row',
   alignItems: 'flex-start',
