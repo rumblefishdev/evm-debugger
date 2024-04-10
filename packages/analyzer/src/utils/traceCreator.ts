@@ -235,6 +235,20 @@ export class TraceCreator {
     return contractAddressList
   }
 
+  private extendStructlogsWithTraceLogIndex(structLogs: TIndexedStructLog[], traceLogs: TTraceLog[]) {
+    const extendedStructLogs: Record<number, TIndexedStructLog> = {}
+    traceLogs.forEach((traceLog) => {
+      const traceLogStructlogs = structLogs
+        .slice(traceLog.startIndex, traceLog.returnIndex + 1)
+        .filter((structlog) => structlog.depth === traceLog.depth + 1)
+      traceLogStructlogs.forEach((structLog) => {
+        extendedStructLogs[structLog.index] = { ...structLog, traceLogIndex: traceLog.index }
+      })
+    })
+
+    return Object.values(extendedStructLogs)
+  }
+
   public processTransactionStructLogs() {
     this.fragmentReader = new FragmentReader()
 
@@ -262,8 +276,10 @@ export class TraceCreator {
     const traceLogsWithLogsData = this.extendWithLogsData(traceLogsWithStorageData)
     const traceLogsWithBlockNumber = this.extendWithBlockNumber(traceLogsWithLogsData)
 
+    const extendedStructLogs = this.extendStructlogsWithTraceLogIndex(this.dataLoader.inputStructlogs.get(), traceLogsWithBlockNumber)
+
     this.dataLoader.analyzerTraceLogs.set(traceLogsWithBlockNumber)
-    this.dataLoader.analyzerStructLogs.set(this.dataLoader.inputStructlogs.get())
+    this.dataLoader.analyzerStructLogs.set(extendedStructLogs)
     this.dataLoader.analyzerTransactionInfo.set(this.dataLoader.inputTransactionData.get())
 
     this.createContractSighashList()

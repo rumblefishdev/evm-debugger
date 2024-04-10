@@ -51,7 +51,7 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
                   opCode={op}
                   pc={pc}
                   isActive={index === activeStructlog?.index}
-                  onClick={() => handleSelect(index)}
+                  onClick={() => handleSelect(data)}
                 />
               )
             }}

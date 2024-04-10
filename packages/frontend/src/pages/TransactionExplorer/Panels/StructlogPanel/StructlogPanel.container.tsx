@@ -10,6 +10,9 @@ import { uiActions } from '../../../../store/ui/ui.slice'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 import { sourceFilesActions } from '../../../../store/sourceFiles/sourceFiles.slice'
 import { disassembledBytecodesSelectors } from '../../../../store/disassembledBytecodes/disassembledBytecodes.selectors'
+import { activeBlockActions } from '../../../../store/activeBlock/activeBlock.slice'
+import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
+import type { IExtendedStructLog } from '../../../../types'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -19,6 +22,7 @@ const DEFAULT_ELEMENT_HEIGHT = 74
 export const StructlogPanel: React.FC = () => {
   const dispatch = useDispatch()
   const structLogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
+  const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const currentDissasembledBytecode = useSelector(disassembledBytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
@@ -27,10 +31,11 @@ export const StructlogPanel: React.FC = () => {
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])
   const setActiveStructlog = useCallback(
-    (structLogIndex: number) => {
-      dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
+    (structLog: IExtendedStructLog) => {
+      dispatch(activeStructLogActions.setActiveStrucLog(structLog.index))
+      dispatch(activeBlockActions.loadActiveBlock(traceLogs[structLog.traceLogIndex]))
     },
-    [dispatch],
+    [dispatch, traceLogs],
   )
 
   useEffect(() => {
@@ -51,10 +56,10 @@ export const StructlogPanel: React.FC = () => {
     if (!componentRefs.current || !activeStructlog) return
 
     const { listRef, wrapperRef } = componentRefs.current
-    const element = document.getElementById(`explorer-list-row-${activeStructlog.listIndex}`)
+    const element = document.getElementById(`explorer-list-row-${activeStructlog.index}`)
 
     if (!element) {
-      listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.listIndex, behavior: 'smooth', align: 'start' })
+      listRef.scrollToIndex({ offset: -DEFAULT_ELEMENT_HEIGHT, index: activeStructlog.index, behavior: 'smooth', align: 'start' })
       dispatch(uiActions.setStructLogsListOffset(DEFAULT_ELEMENT_HEIGHT))
       return
     }
@@ -66,31 +71,31 @@ export const StructlogPanel: React.FC = () => {
 
     if (currentRowOffsetFromTopOfList + elementHeight > listHeight - elementHeight / 2) {
       const offset = currentRowOffsetFromTopOfList - elementHeight
-      listRef.scrollToIndex({ offset: -offset, index: activeStructlog.listIndex })
+      listRef.scrollToIndex({ offset: -offset, index: activeStructlog.index })
       dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList - elementHeight))
       return
     }
 
     if (currentRowOffsetFromTopOfList < elementHeight) {
-      listRef.scrollToIndex({ offset: -elementHeight, index: activeStructlog.listIndex })
+      listRef.scrollToIndex({ offset: -elementHeight, index: activeStructlog.index })
       dispatch(uiActions.setStructLogsListOffset(elementHeight))
       return
     }
 
-    listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.listIndex })
+    listRef.scrollToIndex({ offset: -currentRowOffsetFromTopOfList, index: activeStructlog.index })
     dispatch(uiActions.setStructLogsListOffset(currentRowOffsetFromTopOfList))
   }, [activeStructlog, dispatch, structLogs, structlogsArray])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const nextStructlog = structlogsArray[activeStructlog?.listIndex + 1]
-      const previousStructlog = structlogsArray[activeStructlog?.listIndex - 1]
+      const nextStructlog = structlogsArray[activeStructlog?.index + 1]
+      const previousStructlog = structlogsArray[activeStructlog?.index - 1]
       if (event.key === 'ArrowDown' && !event.repeat && nextStructlog) {
-        setActiveStructlog(nextStructlog.index)
+        setActiveStructlog(nextStructlog)
         event.preventDefault()
       }
       if (event.key === 'ArrowUp' && !event.repeat && previousStructlog) {
-        setActiveStructlog(previousStructlog.index)
+        setActiveStructlog(previousStructlog)
         event.preventDefault()
       }
     }

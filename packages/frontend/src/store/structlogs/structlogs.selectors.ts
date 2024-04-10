@@ -4,9 +4,9 @@ import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { traceLogsSelectors } from '../traceLogs/traceLogs.selectors'
+import type { IExtendedStructLog } from '../../types'
 
 import { structLogsAdapter } from './structlogs.slice'
-import type { TStructlogWithListIndex } from './structlogs.types'
 import { parseStructlogs } from './structlogs.utils'
 
 const selectStructlogsState = createSelector([selectReducer(StoreKeys.STRUCT_LOGS)], (state) => state)
@@ -21,21 +21,13 @@ const selectAllOffCurrentBlock = createSelector(
 )
 
 const selectAllParsedStructLogs = createSelector([selectAll, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
-  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item, index) => {
-    accumulator[item.index] = { ...item, listIndex: index }
+  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item) => {
+    accumulator[item.index] = item
     return accumulator
-  }, {} as Record<number, TStructlogWithListIndex>),
-)
-
-const selectParsedStructLogs = createSelector([selectAllOffCurrentBlock, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
-  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item, index) => {
-    accumulator[item.index] = { ...item, listIndex: index }
-    return accumulator
-  }, {} as Record<number, TStructlogWithListIndex>),
+  }, {} as Record<number, IExtendedStructLog>),
 )
 
 export const structlogsSelectors = {
-  selectParsedStructLogs,
   selectAllParsedStructLogs,
   selectAllOffCurrentBlock,
   selectAll,

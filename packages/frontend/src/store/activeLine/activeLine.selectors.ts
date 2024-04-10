@@ -6,8 +6,8 @@ import { selectReducer } from '../store.utils'
 import { instructionsSelectors } from '../instructions/instructions.selectors'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { structlogsSelectors } from '../structlogs/structlogs.selectors'
-import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
 import { sourceFilesSelectors } from '../sourceFiles/sourceFiles.selectors'
+import type { IExtendedStructLog } from '../../types'
 
 const selectActiveLineState = createSelector([selectReducer(StoreKeys.ACTIVE_LINE)], (state) => state)
 
@@ -49,7 +49,7 @@ const selectStructLogsForActiveLine = createSelector(
 
 const selectStructLogsForActiveLineMappedToIndex = createSelector([selectStructLogsForActiveLine], (structLogs) => {
   if (!structLogs?.length) return {}
-  return structLogs.reduce<Record<number, TStructlogWithListIndex>>((accumulator, structLog) => {
+  return structLogs.reduce<Record<number, IExtendedStructLog>>((accumulator, structLog) => {
     accumulator[structLog.index] = structLog
     return accumulator
   }, {})
@@ -83,7 +83,7 @@ const selectAvailableLinesForCurrentFile = createSelector(
 const selectStructlogsGroupedByIndexRange = createSelector([selectStructLogsForActiveLineMappedToIndex], (structLogs) => {
   if (!Object.keys(structLogs)) return []
 
-  return Object.entries(structLogs).reduce<TStructlogWithListIndex[][]>((accumulator, [_, structLog]) => {
+  return Object.entries(structLogs).reduce<IExtendedStructLog[][]>((accumulator, [_, structLog]) => {
     if (accumulator.length === 0) {
       accumulator.push([structLog])
       return accumulator

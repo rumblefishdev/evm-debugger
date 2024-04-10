@@ -7,7 +7,7 @@ import { selectReducer } from '../store.utils'
 import { activeStructLogSelectors } from '../activeStructLog/activeStructLog.selectors'
 import { activeBlockSelectors } from '../activeBlock/activeBlock.selector'
 import { structlogsSelectors } from '../structlogs/structlogs.selectors'
-import type { TStructlogWithListIndex } from '../structlogs/structlogs.types'
+import type { IExtendedStructLog } from '../../types'
 
 import { instructionsAdapter } from './instructions.slice'
 import { validateInstruction } from './instructions.helpers'
@@ -48,7 +48,7 @@ const selectCurrentInstruction = createSelector(
 const checkPreviousInstruction = (
   instructions: TPcIndexedStepInstructions,
   structlogs: TIndexedStructLog[],
-  activeStructlog: TIndexedStructLog | TStructlogWithListIndex,
+  activeStructlog: TIndexedStructLog | IExtendedStructLog,
 ): TStepInstruction => {
   const currentInstruction = instructions[activeStructlog.pc]
   if (currentInstruction?.fileType === SourceFileType.UNKNOWN) {
