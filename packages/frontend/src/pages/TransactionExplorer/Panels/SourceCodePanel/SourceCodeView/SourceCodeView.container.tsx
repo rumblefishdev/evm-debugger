@@ -14,7 +14,7 @@ import { SourceCodeView } from './SourceCodeView.component'
 export const SourceCodeViewContainer: React.FC = () => {
   const dispatch = useDispatch()
 
-  const structlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const structlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
 
   const currentSelectedLineNumber = useSelector(activeLineSelectors.selectActiveLine)
   const lineRowsAvailableForSelections = useSelector(activeLineSelectors.selectAvailableLinesForCurrentFile)

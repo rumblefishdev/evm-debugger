@@ -4,7 +4,7 @@ import { Stack } from '@mui/material'
 
 import { activeBlockSelectors } from '../../store/activeBlock/activeBlock.selector'
 
-import { BytecodePanel, SourceCodePanel, StructlogPanel, InformationPanel } from './Panels'
+import { SourceCodePanel, StructlogPanel, InformationPanel } from './Panels'
 import { NavigationPanel } from './Panels/NavigationPanel/NavigationPanel'
 import { StyledContentWrapper } from './TransactionExplorer.styles'
 
@@ -47,7 +47,6 @@ export const TransactionExplorer: React.FC = () => {
               flex={3}
             >
               <StructlogPanel />
-              <BytecodePanel />
             </Stack>
           </Stack>
           <Stack width="100%">

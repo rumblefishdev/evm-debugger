@@ -22,7 +22,7 @@ export const SourceLineContainer: React.FC = () => {
   const currentSourceLineContet = useSelector(activeLineSelectors.selectCurrentSelectedSourceLineContent)
 
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
-  const allStructlogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const allStructlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const allStructlogsArray = Object.values(allStructlogs)
 
   const clearSelectedLine = React.useCallback(() => {

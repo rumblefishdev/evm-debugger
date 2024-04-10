@@ -1,4 +1,5 @@
-import { Box, Stack, styled, Typography } from '@mui/material'
+import type { TooltipProps } from '@mui/material'
+import { Stack, styled, Tooltip, tooltipClasses, Typography } from '@mui/material'
 
 type TActive = { active?: boolean }
 
@@ -42,7 +43,7 @@ export const StyledCounter = styled(Typography, {
   }),
 }))
 
-export const StyledTypeWrapper = styled(Stack)(() => ({
+export const StyledWrapper = styled(Stack)(() => ({
   width: '100%',
   justifyContent: 'space-between',
 
@@ -50,6 +51,14 @@ export const StyledTypeWrapper = styled(Stack)(() => ({
 
   alignItems: 'center',
 }))
+
+export const StyledLeftSideWrapper = styled(Stack)({
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+  flex: '2',
+  display: 'flex',
+  alignItems: 'center',
+})
 
 export const StyledType = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'active',
@@ -65,11 +74,13 @@ export const StyledType = styled(Typography, {
   }),
 }))
 
-export const StyledChip = styled(Box, {
+export const StyledChip = styled(Stack, {
   shouldForwardProp: (prop) => prop !== 'active',
 })<TActive>(({ theme, active }) => ({
   padding: theme.spacing(1, 2),
-  maxWidth: '72px',
+  maxWidth: '192px',
+  flexWrap: 'nowrap',
+  flexDirection: 'row',
   borderRadius: '21px',
   backgroundColor: theme.palette.rfBackground,
   ...(active && {
@@ -83,10 +94,28 @@ export const StyledChipText = styled(Typography, {
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   ...theme.typography.caption,
-  maxWidth: '72px',
-  color: theme.palette.rfDisabledDark,
+  whiteSpace: 'nowrap',
+  maxWidth: '192px',
 
   ...(active && {
     color: theme.palette.rfWhite,
   }),
+}))
+
+export const StyledGasTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip
+    {...props}
+    classes={{ popper: className }}
+  />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    width: 'auto',
+    padding: theme.spacing(2),
+    height: 'auto',
+    display: 'inline-table',
+    color: 'black',
+    borderRadius: '6px',
+    border: `1px solid ${theme.palette.grey[300]}`,
+    backgroundColor: 'white',
+  },
 }))

@@ -37,7 +37,7 @@ const selectStructLogsForActiveLine = createSelector(
     sourceFilesSelectors.selectSourceFileId,
     selectStructlogsPerLine,
     activeBlockSelectors.selectActiveBlock,
-    structlogsSelectors.selectParsedStructLogs,
+    structlogsSelectors.selectAllParsedStructLogs,
   ],
   (line, fileId, structLogsPerLine, { address }, structLogs) => {
     const currentStructLogsLineSet = structLogsPerLine[address]?.structlogsPerStartLine[fileId]?.[line]

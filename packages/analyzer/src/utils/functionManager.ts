@@ -16,17 +16,7 @@ import { InputSourceManager } from '../strategies/inputSourceManager/inputSource
 
 import type { DataLoader } from './dataLoader'
 
-// [_]?[A-Za-z0-9_]+ -> function name
-// (\s+([A-Za-z_]+\s?){0,7}?) -> modifiers ["view, pure, public, private, internal returns ..."]
-// set only to 7 because of regex optimalization (max 7 modifiers) its good enough to cover preety much all cases
-
 const regexForAllNewLineTypes = /\r\n|\n|\r/g
-const regexpForFunctionWithoutParametersAndReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
-const regexpForFunctionWithoutParametersAndWithReturns = /function [_]?[A-Za-z0-9_]+\(\)(\s+([A-Za-z_]+\s?)*?)\([^)]*\) \{/gim
-const regexpForFunctionWithParametersAndWithoutReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\{/gim
-const regexpForFunctionWithParametersAndReturns = /function [_]?[A-Za-z0-9_]+\([^)]+\)(\s+([A-Za-z_]+\s?){0,7}?)\([^)]*?\)+ \{/gim
-
-const regexpForYULFunction = /function ([a-zA-Z0-9_@_$]+)\([^)]+\)\s->\s(([a-zA-Z0-9_@,]+)(\s?))+/gim
 
 const regexForOwnContractFunctionCalls = /[a-zA-Z0-9_@_$]+\([^;]*;/gim
 const regexForExternalContractFunctionCalls = /([a-zA-Z0-9_@_$]+)\.[a-zA-Z0-9_@_$]+\([^;]*;/gim
@@ -44,19 +34,20 @@ export class FunctionManager {
 
   private extractDataFromFunctiomLine(text: string, isYul?: boolean) {
     const sanitizedText = this.sanitizeFunctionExtraTabs(text)
-    const parametersParenthesesStart = sanitizedText.indexOf('(')
-    const parametersParenthesesEnd = sanitizedText.indexOf(')')
+    const functionDefinition = sanitizedText.slice(0, sanitizedText.indexOf('{'))
+    const parametersParenthesesStart = functionDefinition.indexOf('(')
+    const parametersParenthesesEnd = functionDefinition.indexOf(')')
 
     const outputsParenthesesStart = isYul
-      ? sanitizedText.indexOf('>', parametersParenthesesEnd + 1)
-      : sanitizedText.indexOf(' (', parametersParenthesesEnd + 1)
-    const outputsParenthesesEnd = isYul ? sanitizedText.length : sanitizedText.indexOf(')', parametersParenthesesEnd + 1)
+      ? functionDefinition.indexOf('>', parametersParenthesesEnd + 1)
+      : functionDefinition.indexOf(' (', parametersParenthesesEnd + 1)
+    const outputsParenthesesEnd = isYul ? functionDefinition.length : functionDefinition.indexOf(')', parametersParenthesesEnd + 1)
 
-    const functionNamePart = sanitizedText.slice(0, parametersParenthesesStart)
+    const functionNamePart = functionDefinition.slice(0, parametersParenthesesStart)
     const functionName = functionNamePart.split(' ').pop()
 
     const inputParameters: TContractFunctionInputParameter[] = []
-    const inputParametersPart = sanitizedText.slice(parametersParenthesesStart + 1, parametersParenthesesEnd)
+    const inputParametersPart = functionDefinition.slice(parametersParenthesesStart + 1, parametersParenthesesEnd)
     if (inputParametersPart !== '') {
       if (inputParametersPart.includes(',')) {
         inputParameters.push(
@@ -95,7 +86,7 @@ export class FunctionManager {
 
     const outputsParameters: TContractFunctionOutputParameter[] = []
     if (outputsParenthesesStart !== -1) {
-      const outputsPart = sanitizedText.slice(outputsParenthesesStart + 1, outputsParenthesesEnd)
+      const outputsPart = functionDefinition.slice(outputsParenthesesStart + 2, outputsParenthesesEnd)
       if (outputsPart.includes(',')) {
         outputsParameters.push(
           ...outputsPart.split(',').map((parameter) => {
@@ -110,7 +101,7 @@ export class FunctionManager {
 
     const functionModifiers = isYul
       ? []
-      : sanitizedText
+      : functionDefinition
           .slice(parametersParenthesesEnd + 1, outputsParenthesesStart)
           .trim()
           .split(' ')
@@ -130,7 +121,7 @@ export class FunctionManager {
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
 
-      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledBytecode')
+      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledEtherscanBytecode')
 
       const contractSourceFiles = this.dataLoader.analyzerContractData.get(contractAddress, 'sourceFiles')
       const contractInstructions = this.dataLoader.analyzerContractData.get(contractAddress, 'instructions')
@@ -159,34 +150,49 @@ export class FunctionManager {
         )
 
         const sourceFileContent = sourceFile.content
-        const sourceFileContentSplitted = sourceFileContent.split(regexForAllNewLineTypes)
-        const sourceFileContentLines = this.sanitizeFunctionExtraTabs(sourceFileContentSplitted.join(' '))
 
-        const functionsWithParametersAndReturns = sourceFileContentLines.match(regexpForFunctionWithParametersAndReturns)
-        const functionsWithoutParametersAndReturns = sourceFileContentLines.match(regexpForFunctionWithoutParametersAndReturns)
-        const functionsWithParametersAndWithoutReturns = sourceFileContentLines.match(regexpForFunctionWithParametersAndWithoutReturns)
-        const functionsWithoutParametersAndWithReturns = sourceFileContentLines.match(regexpForFunctionWithoutParametersAndWithReturns)
-        const yulFunctions = sourceFile.name === 'utility' && sourceFileContentLines.match(regexpForYULFunction)
+        const functionDefinitions: string[] = this.sanitizeFunctionExtraTabs(sourceFileContent).match(/function ([a-zA-Z0-9_@_$]+)/gim)
 
-        const functions = [
-          ...(functionsWithParametersAndReturns || []),
-          ...(functionsWithParametersAndWithoutReturns || []),
-          ...(functionsWithoutParametersAndReturns || []),
-          ...(functionsWithoutParametersAndWithReturns || []),
-          ...(yulFunctions || []),
-        ]
+        const functionsWithSourceLocation: { functionRaw: string; lineIndex: number; sourceFileIndex: number }[] = []
 
-        const functionsWithParametersAndReturnsData = functions?.map((text) =>
-          this.extractDataFromFunctiomLine(text, sourceFile.name === 'utility'),
-        )
+        functionDefinitions?.forEach((text, index) => {
+          if (index === 0) {
+            const startIndex = sourceFile.content.indexOf(text)
+            const lineIndex = sourceFile.content.slice(0, startIndex).split(regexForAllNewLineTypes).length - 1
+            const nextFunction = sourceFile.content.slice(startIndex, sourceFile.content.indexOf('}', startIndex) + 1)
+            functionsWithSourceLocation.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
+            return
+          }
+
+          const startIndex = sourceFile.content.indexOf(text, functionsWithSourceLocation.at(-1).sourceFileIndex + 1)
+          const lineIndex = sourceFile.content.slice(0, startIndex).split(regexForAllNewLineTypes).length - 1
+          const nextFunction = sourceFile.content.slice(startIndex, sourceFile.content.indexOf('}', startIndex) + 1)
+          functionsWithSourceLocation.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
+        })
+
+        const functionsWithParametersAndReturnsData = functionsWithSourceLocation.map((functionEntry) => ({
+          ...this.extractDataFromFunctiomLine(functionEntry.functionRaw, sourceFile.name === 'utility'),
+          lineIndex: functionEntry.lineIndex,
+          functionRaw: functionEntry.functionRaw,
+        }))
 
         functionsWithParametersAndReturnsData.forEach((functionData) => {
-          const functionLineIndex = sourceFileContentSplitted.findIndex((line) => line.includes(`function ${functionData.functionName}(`))
-
           const structLogsForFunction = structLogsForSourceFile.filter((structLog) => {
             const instruction = contractInstructions[structLog.pc]
-            return instruction?.startCodeLine === functionLineIndex
+            return instruction?.startCodeLine === functionData.lineIndex
           })
+
+          const nestedFunctions = []
+          const functionBody = functionData.functionRaw.slice(
+            functionData.functionRaw.indexOf('{') + 1,
+            functionData.functionRaw.lastIndexOf('}'),
+          )
+
+          const ownFunctions = functionBody.match(regexForOwnContractFunctionCalls) || []
+          const externalFunctions = functionBody.match(regexForExternalContractFunctionCalls) || []
+
+          nestedFunctions.push(...ownFunctions)
+          nestedFunctions.push(...externalFunctions)
 
           for (const structLog of structLogsForFunction) {
             contractFunctions[structLog.pc] = {
@@ -195,46 +201,24 @@ export class FunctionManager {
               pc: structLog.pc,
               outputs: functionData.outputsParameters,
               op: structLog.opcode,
+              nestedFunctions,
               name: functionData.functionName,
+              lineIndex: functionData.lineIndex,
               isYul: sourceFile.name === 'utility',
-              isReverted: false,
+              isSuccess: true,
               isMain: Boolean(functionDebugDataMappedToPc[structLog.pc]),
               isCallType: false,
               inputs: functionData.inputParameters,
               index: structLog.index,
+              hasThrown: false,
               hasAbi: false,
               functionModifiers: functionData.functionModifiers,
+              failedReason: '',
               depth: 0,
               contraceName: sourceFile.name,
             }
           }
         })
-      }
-
-      for (const [pc, functionData] of Object.entries(contractFunctions)) {
-        if (!functionData.isMain) continue
-        const instruction = contractInstructions[Number(pc)]
-
-        if (instruction) {
-          const sourceFile = contractSourceFiles[instruction.fileId]
-          const splittedSourceFileContent = sourceFile.content.split(regexForAllNewLineTypes)
-          const functionBlock = splittedSourceFileContent.slice(instruction.startCodeLine + 1, instruction.endCodeLine + 1)
-
-          const ownFunctions = functionBlock.join(' ').match(regexForOwnContractFunctionCalls)
-          const externalFunctions = functionBlock.join(' ').match(regexForExternalContractFunctionCalls)
-
-          const nestedFunctions: string[] = []
-
-          if (ownFunctions) {
-            nestedFunctions.push(...ownFunctions)
-          }
-
-          if (externalFunctions) {
-            nestedFunctions.push(...externalFunctions)
-          }
-
-          contractFunctions[Number(pc)].nestedFunctions = nestedFunctions
-        }
       }
 
       this.dataLoader.analyzerContractData.set(contractAddress, 'functions', contractFunctions)
@@ -245,47 +229,36 @@ export class FunctionManager {
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
     const structLogs = this.dataLoader.analyzerStructLogs.get()
     const contractsFunctions = this.dataLoader.analyzerContractData.getAll('functions')
+
     const traceLogFunctionsList: Record<number, TContractFunction[]> = {}
     for (const traceLog of traceLogs) {
       const isVerified = this.dataLoader.isContractVerified(traceLog.address)
       if (!isVerified) continue
 
-      const structLogsWithFunction: TIndexedStructLog[] = []
       const traceLogFunctions = contractsFunctions[traceLog.address]
       const traceLogInstructions = this.dataLoader.analyzerContractData.get(traceLog.address, 'instructions')
-      const traceLogSourceFiles = this.dataLoader.analyzerContractData.get(traceLog.address, 'sourceFiles')
       const traceLogStructLogs = selectFunctionBlockContextForLog(structLogs, traceLog).filter(
         (structLog) => structLog.depth === traceLog.depth + 1,
       )
 
-      const jumpDestStructLogs = traceLogStructLogs
-        .filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
-        .filter((structLog) => traceLogInstructions[structLog.pc]?.jumpType !== 'o')
+      const jumpdestStructlogs = traceLogStructLogs.filter((structLog) => BaseOpcodesHex[structLog.op] === BaseOpcodesHex.JUMPDEST)
 
-      const slicedTraceLogSourceFiles = traceLogSourceFiles.map((sourceFile) => {
-        return sourceFile.content.split(regexForAllNewLineTypes)
-      })
-      for (const jumpDestStructLog of jumpDestStructLogs) {
-        const jumpDestInstruction = traceLogInstructions[jumpDestStructLog.pc]
-        // TODO: handle this case
-        if (jumpDestInstruction.fileType === SourceFileType.UNKNOWN) continue
+      const outJumpStructlogs = jumpdestStructlogs.filter((structLog) => traceLogInstructions[structLog.pc]?.jumpType !== 'o')
 
-        const jumpDestSourceFile = slicedTraceLogSourceFiles[jumpDestInstruction.fileId]
-        const jumpDestSourceLine = jumpDestSourceFile[jumpDestInstruction.startCodeLine]
+      const removedUnnecessaryStructLogs = outJumpStructlogs.filter(
+        (structLog) => traceLogInstructions[structLog.pc]?.fileType !== SourceFileType.UNKNOWN,
+      )
+      const functionStructlogs = removedUnnecessaryStructLogs.filter((structLog) => Boolean(traceLogFunctions[structLog.pc]))
 
-        if (jumpDestSourceLine.includes('function')) {
-          structLogsWithFunction.push(jumpDestStructLog)
-        }
-      }
-
-      const result = structLogsWithFunction
+      const result = functionStructlogs
         .sort((a, b) => a.index - b.index)
         .map((structLog) => {
           return {
             ...traceLogFunctions[structLog.pc],
             traceLogIndex: traceLog.index,
-            isReverted: traceLog.isReverted,
+            isSuccess: traceLog.isSuccess,
             index: structLog.index,
+            hasThrown: false,
           }
         })
 
@@ -295,23 +268,35 @@ export class FunctionManager {
     return traceLogFunctionsList
   }
 
-  private findPreviousFunction(traceLogFunctions: TContractFunction[], index: number) {
+  private findPreviousFunction(traceLogFunctions: TContractFunction[], index: number, traceLogIndex: number) {
     let functionIndex = index
     while (functionIndex >= 0) {
-      if (traceLogFunctions[functionIndex]) return traceLogFunctions[functionIndex]
+      if (traceLogFunctions[functionIndex] && traceLogFunctions[functionIndex].traceLogIndex === traceLogIndex)
+        return traceLogFunctions[functionIndex]
       functionIndex--
     }
   }
 
-  private findPreviousMainFunction(traceLogFunctions: TContractFunction[], index: number) {
+  private findPreviousMainFunction(traceLogFunctions: TContractFunction[], index: number, traceLogIndex: number) {
     let functionIndex = index
+    while (functionIndex >= 0) {
+      if (
+        traceLogFunctions[functionIndex]?.isMain &&
+        !traceLogFunctions[functionIndex]?.isYul &&
+        traceLogFunctions[functionIndex].traceLogIndex === traceLogIndex
+      )
+        return traceLogFunctions[functionIndex]
+      functionIndex--
+    }
+
+    functionIndex = index
     while (functionIndex >= 0) {
       if (traceLogFunctions[functionIndex]?.isMain && !traceLogFunctions[functionIndex]?.isYul) return traceLogFunctions[functionIndex]
       functionIndex--
     }
   }
 
-  private convertTraceLogToFunction(traceLog: TTraceLog): TContractFunction {
+  private convertTraceLogToFunction(traceLog: TTraceLog, contractFunctions: TContractFunction[]): TContractFunction {
     const baseContractInfo = this.dataLoader.analyzerContractData.get(traceLog.address, 'contractBaseData')
 
     const inputs: TContractFunctionInputParameter[] =
@@ -335,85 +320,119 @@ export class FunctionManager {
         }
       }) || []
 
+    const selector = traceLog.callTypeData?.functionFragment?.format('minimal').split(' ')[1] || 'placeholder'
+    let failedReason = ''
+
+    if (traceLog.isReverted) {
+      if (traceLog.callTypeData?.errorDescription?.args.length > 0) {
+        failedReason = traceLog.callTypeData.errorDescription.args[0]
+      } else if (traceLog.callTypeData?.errorDescription?.name) {
+        failedReason = traceLog.callTypeData?.errorDescription?.name
+      } else {
+        failedReason = 'Unknown error'
+      }
+    }
+
     return {
       traceLogIndex: traceLog.index,
-      selector: traceLog.callTypeData?.functionFragment?.format('minimal').split(' ')[1] || 'placeholder',
+      selector,
       pc: traceLog.pc,
       outputs,
       op: traceLog.op,
+      nestedFunctions: contractFunctions.find((func) => func.selector === selector)?.nestedFunctions || [],
       name: traceLog.callTypeData?.functionFragment?.name || traceLog.address,
+      lineIndex: contractFunctions.find((func) => func.selector === selector)?.lineIndex || 0,
       isYul: false,
-      isReverted: traceLog.isReverted,
+      isSuccess: traceLog.isSuccess,
       isMain: true,
       isCallType: true,
       inputs,
       index: traceLog.index,
+      hasThrown: traceLog.isReverted,
       hasAbi: true,
       functionModifiers: [],
+      failedReason,
       depth: traceLog.depth,
-      contraceName: baseContractInfo.name,
+      contraceName: baseContractInfo?.name,
     }
   }
 
   public createFunctionsStackTrace() {
     const traceLogsFunctionsList = this.createFunctonsList()
+    const flattedFunctions = Object.values(traceLogsFunctionsList).flatMap((functions) => functions)
 
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
-    const runtimeFunctionsList: Record<string, Record<number, TContractFunction[]>> = {}
+    const newRuntimeFunctionsList: Record<number, TContractFunction> = {}
 
-    for (const traceLog of traceLogs) {
-      const isVerified = this.dataLoader.isContractVerified(traceLog.address)
-      if (!isVerified) continue
+    const joinedList = [
+      ...flattedFunctions,
+      ...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog, flattedFunctions)),
+    ].sort((a, b) => a.index - b.index)
 
-      const traceLogFunctions = traceLogsFunctionsList[traceLog.index]
-      const traceLogFunctionsCopy = [...traceLogFunctions]
+    for (const functionEntry of joinedList) {
+      const previousFunction = this.findPreviousFunction(
+        Object.values(newRuntimeFunctionsList),
+        functionEntry.index - 1,
+        functionEntry.traceLogIndex,
+      )
+      const previousMainFunction = this.findPreviousMainFunction(
+        Object.values(newRuntimeFunctionsList),
+        functionEntry.index - 1,
+        functionEntry.traceLogIndex,
+      )
 
-      traceLogFunctionsCopy.forEach((traceLogFunction, index) => {
-        if (!traceLogFunction) return
-        if (index === 0) {
-          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
-          return
-        }
-
-        const previousFunction = this.findPreviousFunction(traceLogFunctionsCopy, index - 1)
-        const previousMainFunction = this.findPreviousMainFunction(traceLogFunctionsCopy, index - 1)
-
-        if (!traceLogFunction.isMain || traceLogFunction.isYul) {
-          traceLogFunctionsCopy[index].depth =
-            previousFunction.isMain && !previousFunction.isYul ? previousFunction.depth + 1 : previousFunction.depth
-          return
-        }
-
-        if (!previousMainFunction) {
-          traceLogFunctionsCopy[index].depth = traceLog.depth + 1
-          return
-        }
-
-        if (previousMainFunction?.nestedFunctions?.some((nestedFunction) => nestedFunction.includes(traceLogFunction.name))) {
-          traceLogFunctionsCopy[index].depth = previousMainFunction.depth + 1
-          return
-        }
-        traceLogFunctionsCopy[index].depth = previousMainFunction.depth
-      })
-
-      if (!runtimeFunctionsList[traceLog.address]) {
-        runtimeFunctionsList[traceLog.address] = {}
+      if (functionEntry.isYul && !previousFunction.isYul) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: previousFunction.depth + 1 }
+        continue
       }
-      runtimeFunctionsList[traceLog.address][traceLog.index] = traceLogFunctionsCopy
+
+      if (functionEntry.isYul && previousFunction.isYul) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: previousFunction.depth }
+        continue
+      }
+
+      if (!functionEntry.isMain) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: (previousMainFunction?.depth || 0) + 1 }
+        continue
+      }
+
+      const allPreviousMainFunctions = Object.values(newRuntimeFunctionsList)
+        .filter((func) => func.isMain && !func.isYul)
+        .reverse()
+
+      if (allPreviousMainFunctions.length === 0) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: 0 }
+        continue
+      }
+
+      if (allPreviousMainFunctions.length === 1) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: 1 }
+        continue
+      }
+
+      const callTypeSameFunction = allPreviousMainFunctions.find(
+        (mainFunction) => mainFunction.name === functionEntry.name && mainFunction.isCallType,
+      )
+
+      if (callTypeSameFunction) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: callTypeSameFunction.depth + 1 }
+        continue
+      }
+
+      const parentFunction = allPreviousMainFunctions.find((mainFunction) =>
+        mainFunction.nestedFunctions?.some((nestedFunction) => nestedFunction.includes(functionEntry.name)),
+      )
+
+      if (parentFunction) {
+        newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: parentFunction.depth + 1 }
+        continue
+      }
+
+      newRuntimeFunctionsList[functionEntry.index] = { ...functionEntry, depth: previousMainFunction.depth }
     }
 
-    const traceLogList = [...traceLogs.map((traceLog) => this.convertTraceLogToFunction(traceLog))]
-
-    const runTimeFunctionsList: TContractFunction[] = Object.values(runtimeFunctionsList).flatMap((functions) =>
-      Object.values(functions).flatMap((functionList) => functionList),
-    )
-
-    const list = [...traceLogList, ...runTimeFunctionsList]
-
-    const sortedList = list.sort((a, b) => a.index - b.index)
-
-    this.dataLoader.analyzerRuntimeFunctionsList.set(sortedList)
+    this.dataLoader.analyzerRuntimeFunctionsList.set(newRuntimeFunctionsList)
   }
 
   public decodeFunctionsParameters() {
@@ -439,12 +458,7 @@ export class FunctionManager {
       const functionTraceLog = traceLogs.find((log) => log.index === functionData.traceLogIndex)
 
       const inputsWithDecodedParameters = functionData.inputs.map((input) => {
-        const inputSource = new InputSourceManager(
-          [...functionStructlog.stack].reverse(),
-          functionStructlog.memory,
-          functionTraceLog.input,
-          input,
-        )
+        const inputSource = new InputSourceManager(functionStructlog.stack, functionStructlog.memory, functionTraceLog.input, input)
         const inputSourceValue = inputSource.readValue()
 
         return { ...input, value: inputSourceValue, id: uuid() }

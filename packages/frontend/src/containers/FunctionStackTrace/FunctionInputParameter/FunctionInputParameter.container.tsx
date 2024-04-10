@@ -26,11 +26,20 @@ export const FunctionInputParameter: React.FC<TFunctionInputParameterProps> = ({
   }, [copiedValue])
 
   const displayedShortValue = React.useMemo(() => {
-    if (parameter.isArray) {
+    if (!parameter.value) {
+      return 'not found'
+    }
+
+    if (parameter.isArray && typeof parameter.value === 'object') {
       const value = parameter.value as string[]
       const joinedArrayValue = `[${value.join(', ')}]`
       return shortenValue(joinedArrayValue, true)
     }
+
+    if (typeof parameter.value === 'object' && !parameter.isArray) {
+      return 'Tuple ( Not  supported )'
+    }
+
     const value = parameter.value as string
     return shortenValue(value)
   }, [parameter.value, parameter.isArray])

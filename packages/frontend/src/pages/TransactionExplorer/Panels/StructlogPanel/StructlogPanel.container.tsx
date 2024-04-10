@@ -7,9 +7,9 @@ import { activeStructLogSelectors } from '../../../../store/activeStructLog/acti
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { activeStructLogActions } from '../../../../store/activeStructLog/activeStructLog.slice'
 import { uiActions } from '../../../../store/ui/ui.slice'
-import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 import { sourceFilesActions } from '../../../../store/sourceFiles/sourceFiles.slice'
+import { disassembledBytecodesSelectors } from '../../../../store/disassembledBytecodes/disassembledBytecodes.selectors'
 
 import { StructlogPanelComponent } from './StructlogPanel.component'
 import type { StructlogPanelComponentRef } from './StructlogPanel.types'
@@ -18,9 +18,9 @@ const DEFAULT_ELEMENT_HEIGHT = 74
 
 export const StructlogPanel: React.FC = () => {
   const dispatch = useDispatch()
-  const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
-  const traceLogs = useSelector(traceLogsSelectors.selectAll)
+  const structLogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
+  const currentDissasembledBytecode = useSelector(disassembledBytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
@@ -100,12 +100,13 @@ export const StructlogPanel: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [setActiveStructlog, dispatch, traceLogs, structlogsArray, activeStructlog])
+  }, [setActiveStructlog, dispatch, structlogsArray, activeStructlog])
 
   return (
     <StructlogPanelComponent
       structlogs={structlogsArray}
-      activeStructlogIndex={activeStructlog?.index}
+      activeStructlog={activeStructlog}
+      disassembledBytecode={currentDissasembledBytecode}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
     />

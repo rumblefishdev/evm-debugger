@@ -2,7 +2,7 @@ import React from 'react'
 import { ViewportList } from 'react-viewport-list'
 import type { ViewportListRef } from 'react-viewport-list'
 
-import { ExplorerListRow } from '../../../../../components/ExplorerListRow'
+import { EvmStepListElement } from '../../../../../components/EvmStepListElement'
 import { StyledListWrapper } from '../../styles'
 
 import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from './QuickLinks.styles'
@@ -33,13 +33,13 @@ export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
           items={externalCalls}
         >
           {(item) => {
-            const { gasCost, op, pc, index } = item
+            const { gasCost, op, pc, index, dynamicGasCost } = item
 
             return (
-              <ExplorerListRow
+              <EvmStepListElement
                 key={index}
-                displayGasIcon
-                chipValue={gasCost}
+                baseGasCost={gasCost}
+                dynamicGasCost={dynamicGasCost}
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStructlog?.index}
@@ -69,13 +69,13 @@ export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
           items={expensiveOps}
         >
           {(item) => {
-            const { gasCost, op, pc, index } = item
+            const { gasCost, op, pc, index, dynamicGasCost } = item
 
             return (
-              <ExplorerListRow
+              <EvmStepListElement
                 key={index}
-                displayGasIcon
-                chipValue={gasCost}
+                dynamicGasCost={dynamicGasCost}
+                baseGasCost={gasCost}
                 opCode={op}
                 pc={pc}
                 isActive={index === activeStructlog?.index}

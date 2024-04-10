@@ -12,24 +12,23 @@ const selectIndex = createSelector([selectActiveStructLogState], (state) => stat
 export const DEFAULT_STRING = '0000'
 
 const selectActiveStructLog = createSelector(
-  [structlogsSelectors.selectParsedStructLogs, selectIndex],
+  [structlogsSelectors.selectAllParsedStructLogs, selectIndex],
   (currentStructlogs, currentStructlog) => {
     return currentStructlogs[currentStructlog]
   },
 )
 
-export const selectParsedStack = createSelector(
-  [selectActiveStructLog],
-  (activeStructlog) =>
-    activeStructlog?.stack
-      .map((stackItem, index) => {
-        const hexValue = (activeStructlog.stack.length - 1 - index).toString()
-        const paddedHexValue = DEFAULT_STRING.slice(0, Math.max(0, DEFAULT_STRING.length - hexValue.length)) + hexValue
+export const selectParsedStack = createSelector([selectActiveStructLog], (activeStructlog) => {
+  if (!activeStructlog) return []
+  return activeStructlog.stack
+    .map((stackItem, index) => {
+      const hexValue = (activeStructlog.stack.length - 1 - index).toString()
+      const paddedHexValue = DEFAULT_STRING.slice(0, Math.max(0, DEFAULT_STRING.length - hexValue.length)) + hexValue
 
-        return { value: stackItem, index: paddedHexValue }
-      })
-      .reverse() ?? [],
-)
+      return { value: stackItem, index: paddedHexValue }
+    })
+    .reverse()
+})
 
 export const selectParsedMemory = createSelector(
   [selectActiveStructLog],

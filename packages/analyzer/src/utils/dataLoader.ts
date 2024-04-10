@@ -15,7 +15,8 @@ export class DataLoader {
     this.inputData.contracts[contractAddress][key] = value
   }
 
-  private getInputContractData<T extends keyof TInputContractData>(contractAddress: string, key: T): TInputContractData[T] {
+  private getInputContractData<T extends keyof TInputContractData>(contractAddress: string, key: T): TInputContractData[T] | undefined {
+    if (!this.inputData.contracts[contractAddress]) return undefined
     return this.inputData.contracts[contractAddress][key]
   }
 
@@ -47,14 +48,18 @@ export class DataLoader {
       contractAddress === '0x000000000000000000000000000000000000000a'
     )
       return false
-    return Boolean(this.inputContractData.get(contractAddress, 'sourceData'))
+    return Boolean(this.inputContractData.get(contractAddress, 'sourceData') || undefined)
   }
 
   private setAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T, value: TAnalyzerContractData[T]) {
     this.analyzerData.contracts[contractAddress][key] = value
   }
 
-  private getAnalyzerContractData<T extends keyof TAnalyzerContractData>(contractAddress: string, key: T): TAnalyzerContractData[T] {
+  private getAnalyzerContractData<T extends keyof TAnalyzerContractData>(
+    contractAddress: string,
+    key: T,
+  ): TAnalyzerContractData[T] | undefined {
+    if (!this.inputData.contracts[contractAddress]) return undefined
     return this.analyzerData.contracts[contractAddress][key]
   }
 
@@ -88,7 +93,12 @@ export class DataLoader {
   }
 
   public inputStructlogs = {
-    set: (structLogs: TRawStructLog[]) => (this.inputData.structLogs = structLogs.map((structLog, index) => ({ ...structLog, index }))),
+    set: (structLogs: TRawStructLog[]) =>
+      (this.inputData.structLogs = structLogs.map((structLog, index) => ({
+        ...structLog,
+        index,
+        dynamicGasCost: structLog.gas - (structLogs[index + 1]?.gas || 0) - structLog.gasCost,
+      }))),
     get: () => this.inputData.structLogs,
   }
 
@@ -171,8 +181,8 @@ export class DataLoader {
       ),
       contractsDisassembledBytecodes: Object.values(this.analyzerData.contracts).reduce<
         TAnalyzerAnalysisOutput['contractsDisassembledBytecodes']
-      >((accumulator, { address, disassembledBytecode }) => {
-        accumulator[address] = { disassembledBytecode, address }
+      >((accumulator, { address, disassembledEtherscanBytecode }) => {
+        accumulator[address] = { disassembledBytecode: disassembledEtherscanBytecode, address }
         return accumulator
       }, {}),
       contractsBaseData: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(

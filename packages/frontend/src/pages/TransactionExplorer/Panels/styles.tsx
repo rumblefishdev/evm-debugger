@@ -11,7 +11,9 @@ export const StyledPanel = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledHeadingWrapper = styled(Stack)(({ theme }) => ({
+  width: '100%',
   marginBottom: theme.spacing(1.5),
+  justifyContent: 'space-between',
   gap: theme.spacing(2),
   flexDirection: 'row',
   alignItems: 'center',

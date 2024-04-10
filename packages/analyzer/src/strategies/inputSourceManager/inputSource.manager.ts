@@ -12,18 +12,18 @@ export class InputSourceManager implements TInputSoucrceManager {
   callData: string
 
   constructor(stack: string[], memory: string[], callData: string, contractFunction: TContractFunctionInputParameter) {
-    this.stack = stack
+    this.stack = [...stack].reverse()
     this.memory = memory
     this.callData = callData
     switch (true) {
       case contractFunction.modifiers.includes('calldata'):
-        this.selectedStrategy = new CallDataSourceStrategy(callData, stack, contractFunction)
+        this.selectedStrategy = new CallDataSourceStrategy(this.callData, this.stack, contractFunction)
         break
       case contractFunction.modifiers.includes('memory'):
-        this.selectedStrategy = new MemorySourceStrategy(memory, stack, contractFunction)
+        this.selectedStrategy = new MemorySourceStrategy(this.memory, this.stack, contractFunction)
         break
       default:
-        this.selectedStrategy = new StackSourceStrategy(stack, contractFunction)
+        this.selectedStrategy = new StackSourceStrategy(this.stack, contractFunction)
     }
   }
 
@@ -33,5 +33,13 @@ export class InputSourceManager implements TInputSoucrceManager {
 
   readValue() {
     return this.selectedStrategy.readValue()
+  }
+
+  returnSourceData() {
+    return {
+      stack: this.stack,
+      memory: this.memory,
+      callData: this.callData,
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Collapse } from '@mui/material'
+import { Box, Collapse } from '@mui/material'
 import React from 'react'
 import { KeyboardArrowDown } from '@mui/icons-material'
 
@@ -35,10 +35,9 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
   const { entryVariant, opCodeVariant, parametersColors } = useFunctionVariants(functionElement)
 
   return (
-    <StyledFunctionEntryWrapper>
-      <StyledFunctionEntryBody>
+    <StyledFunctionEntryWrapper hasThrown={functionElement.function.hasThrown}>
+      <StyledFunctionEntryBody isSuccess={functionElement.function.isSuccess}>
         <StyledFunctionEntryLeftWrapper>
-          {functionElement.function.isReverted && <StyledRevertedBox>!REVERTED</StyledRevertedBox>}
           <StyledOpcodeBox variant={opCodeVariant}>{functionElement.function?.op || 'NOT FOUND'}</StyledOpcodeBox>
           {entryVariant.map((variant, index) => (
             <StyledEntryVariantBox
@@ -48,20 +47,24 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               {variant}
             </StyledEntryVariantBox>
           ))}
+          {functionElement.function.hasThrown && <StyledRevertedBox>Revert</StyledRevertedBox>}
         </StyledFunctionEntryLeftWrapper>
+
         {Array.from({ length: functionElement.function?.depth || 0 }).map((_, index) => (
           <StyledVerticalLine key={index} />
         ))}
+        {canBeExpanded ? (
+          <KeyboardArrowDown
+            onClick={toggleExpand}
+            style={{
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              cursor: 'pointer',
+            }}
+          />
+        ) : (
+          <Box width={24} />
+        )}
         <StyledFunctionEntryContent onClick={activate}>
-          {canBeExpanded && (
-            <KeyboardArrowDown
-              onClick={toggleExpand}
-              style={{
-                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                cursor: 'pointer',
-              }}
-            />
-          )}
           <StyledFunctionSignature>
             {functionElement.function?.contraceName && <StyledContractName>{functionElement.function?.contraceName}.</StyledContractName>}
 
@@ -77,6 +80,9 @@ export const FunctionEntryComponent: React.FC<TFunctionEntryComponentProps> = ({
               />
             ))}
           <StyledFunctionSignature>{functionElement.function.isMain && ')'}</StyledFunctionSignature>
+          {functionElement.function.hasThrown && (
+            <StyledRevertedBox>Error: {functionElement.function.failedReason || 'No reason provided'}</StyledRevertedBox>
+          )}
         </StyledFunctionEntryContent>
       </StyledFunctionEntryBody>
       <Collapse

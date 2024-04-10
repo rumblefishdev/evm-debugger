@@ -2,12 +2,40 @@ import { Box, Stack, styled, Typography } from '@mui/material'
 
 import type { TEntryType, TOpcodeVariants } from './FunctionEntry.types'
 
-export const StyledFunctionEntryWrapper = styled(Stack)()
-export const StyledFunctionEntryBody = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
+export const StyledFunctionEntryWrapperOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'hasThrown',
+}
+
+export const StyledFunctionEntryWrapper = styled(
+  Stack,
+  StyledFunctionEntryWrapperOptions,
+)<{ hasThrown?: boolean }>(({ hasThrown }) => ({
+  ...(hasThrown && {
+    border: '1px solid #e6aca8',
+  }),
+  borderRadius: '2px',
+
+  '&:fist-child': {
+    borderTopRightRadius: '8px',
+    borderTopLeftRadius: '8px',
+  },
+}))
+
+export const StyledFunctionEntryBodyOptions = {
+  shouldForwardProp: (prop: string) => prop !== 'isSuccess',
+}
+export const StyledFunctionEntryBody = styled(
+  Stack,
+  StyledFunctionEntryBodyOptions,
+)<{ isSuccess?: boolean }>(({ theme, isSuccess }) => ({
+  padding: theme.spacing(1),
   height: '100%',
   gap: theme.spacing(1),
   flexDirection: 'row',
+
+  ...(!isSuccess && {
+    backgroundColor: '#fae2e1',
+  }),
 }))
 
 export const StyledVerticalLine = styled(Box)(({ theme }) => ({
@@ -18,26 +46,30 @@ export const StyledVerticalLine = styled(Box)(({ theme }) => ({
 
 export const StyledFunctionEntryLeftWrapper = styled(Stack)(({ theme }) => ({
   textTransform: 'uppercase',
-  minWidth: '204px',
+  minWidth: '224px',
   gap: theme.spacing(1),
   flexDirection: 'row',
-  alignItems: 'center',
+  alignItems: 'flex-start',
 }))
 
 export const StyledFunctionEntryContent = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   ...theme.typography.body2,
+  gap: theme.spacing(0.5),
   fontSize: '16px',
+  flexWrap: 'wrap',
   cursor: 'pointer',
 }))
 
 export const StyledRevertedBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: '4px',
-  backgroundColor: '#D37676',
+  border: '1px solid #D37676',
   ...theme.typography.body2,
+  fontWeight: '700',
   fontSize: '12px',
+  color: '#D37676',
 }))
 
 export const StyledOpcodeBoxOptions = {

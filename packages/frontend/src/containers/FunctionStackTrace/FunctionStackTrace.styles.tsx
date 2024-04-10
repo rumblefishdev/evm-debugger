@@ -45,4 +45,8 @@ export const StyledListWrapper = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(0.5),
 
   boxSizing: 'border-box',
+
+  '&:first-child': {
+    borderTop: '1px solid #e6aca8',
+  },
 }))

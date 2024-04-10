@@ -64,9 +64,10 @@ export class TraceCreator {
 
       const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
 
-      if (!lastItemInTraceReturnLogs && traceLog.gasCost > traceLog.passedGas) {
+      if (!lastItemInTraceReturnLogs && (traceLog.gasCost > traceLog.passedGas || traceLog.gasCost === 0)) {
         return {
           ...traceLog,
+          returnIndex: lastItemInCallContext.index,
           isSuccess: false,
           isReverted: true,
           callTypeData: { ...traceLog.callTypeData, errorDescription: createErrorDescription('OUT_OF_GAS') },
@@ -79,7 +80,9 @@ export class TraceCreator {
 
       if (checkOpcodeIfOfReturnGroupType(lastItemInCallContext.op)) {
         const { output } = lastItemInTraceReturnLogs
-        const isSuccess = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN
+        const isSuccess =
+          BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.RETURN ||
+          BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.STOP
         const isReverted = BaseOpcodesHex[lastItemInCallContext.op] === BaseOpcodesHex.REVERT
         return {
           ...traceLog,
