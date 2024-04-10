@@ -26,7 +26,7 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
             variant="label"
             fontSize={18}
           >
-            Current gas: <b>{activeStructlog.gas}</b>
+            Gas left: <b>{activeStructlog.gas}</b>
           </Typography>
         </StyledHeadingWrapper>
         <Stack

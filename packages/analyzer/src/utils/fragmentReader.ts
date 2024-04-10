@@ -164,6 +164,8 @@ export class FragmentReader {
           errorDescription = createErrorDescription(error.message)
         }
       }
+    } else {
+      errorDescription = createErrorDescription(`Raw error data: ${output}`)
     }
 
     return {

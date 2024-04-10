@@ -73,7 +73,7 @@ export const EvmStepListElement: React.FC<EvmStepListElementProps> = ({
               <Tooltip title={`0x${pushValue}`}>
                 <StyledChip active={isActive}>
                   <Stack alignItems="center">
-                    <StyledChipText active={isActive}>Pushed: 0x{pushValue}</StyledChipText>
+                    <StyledChipText active={isActive}>Operand: 0x{pushValue}</StyledChipText>
                   </Stack>
                 </StyledChip>
               </Tooltip>
