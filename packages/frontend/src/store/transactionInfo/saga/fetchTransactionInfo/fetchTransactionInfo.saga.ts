@@ -6,7 +6,6 @@ import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import {
-  createErrorLogMessage,
   createInfoLogMessage,
   createSuccessLogMessage,
   createWarningLogMessage,
@@ -14,6 +13,7 @@ import {
 } from '../../../analyzer/analyzer.utils'
 import { formatTransactionReposne } from '../../transactionInfo.utils'
 import { TransactionInfoErrors } from '../../transactionInfo.errors'
+import { handleStageFailSaga } from '../../../analyzer/saga/handleStageFail/handleStageFail.saga'
 
 export async function getTransactionInfo(transactionHash: string, chainId: ChainId): Promise<TTransactionInfo> {
   const provider = jsonRpcProvider[chainId]
@@ -55,16 +55,11 @@ export function* fetchTransactionInfoSaga(): SagaGenerator<void> {
     )
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Transaction data fetched')))
   } catch (error) {
-    console.log(error)
     if (error instanceof Error && error.message === TransactionInfoErrors.TRANSACTION_NOT_FOUND) {
       yield* put(
         analyzerActions.addLogMessage(createWarningLogMessage('Most likely you are trying to analyze transaction on the wrong network')),
       )
     }
-
-    yield* put(
-      analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_TRANSACTION_INFO }),
-    )
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetch transaction info: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.FETCHING_TRANSACTION_INFO, error)
   }
 }

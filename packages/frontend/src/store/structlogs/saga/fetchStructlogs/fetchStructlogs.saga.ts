@@ -7,7 +7,8 @@ import { FastJson } from 'fast-json'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
+import { handleStageFailSaga } from '../../../analyzer/saga/handleStageFail/handleStageFail.saga'
 
 export async function fetchStructlogs(s3Location: string): Promise<ArrayBuffer> {
   const transactionTrace = await fetch(`https://${s3Location}`)
@@ -59,12 +60,6 @@ export function* fetchStructlogsSaga(): SagaGenerator<void> {
       }),
     )
   } catch (error) {
-    yield* put(
-      analyzerActions.updateStage({
-        stageStatus: AnalyzerStagesStatus.FAILED,
-        stageName: AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS,
-      }),
-    )
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while downloading and parsing structlogs: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.DOWNLOADING_AND_PARSING_STRUCTLOGS, error)
   }
 }

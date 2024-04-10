@@ -8,13 +8,9 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { transactionTraceProviderUrl } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
-import {
-  createErrorLogMessage,
-  createInfoLogMessage,
-  createSuccessLogMessage,
-  createWarningLogMessage,
-} from '../../../analyzer/analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, createWarningLogMessage } from '../../../analyzer/analyzer.utils'
 import { StructlogsErrors } from '../../structlogs.errors'
+import { handleStageFailSaga } from '../../../analyzer/saga/handleStageFail/handleStageFail.saga'
 
 export async function prepareStructlogs(chainId: ChainId, transactionHash: string, gasUsed: string): Promise<TStructlogResponse> {
   const response = await fetch(`${transactionTraceProviderUrl}/analyzerData/${transactionHash}/${chainId}/${gasUsed}`)
@@ -63,7 +59,6 @@ export function* startPreparingStructlogsSaga(): SagaGenerator<void> {
       }
     }
   } catch (error) {
-    console.log(error)
     if (error instanceof Error && error.message === StructlogsErrors.BLOCK_NOT_FOUND) {
       yield* put(
         analyzerActions.addLogMessage(
@@ -73,8 +68,6 @@ export function* startPreparingStructlogsSaga(): SagaGenerator<void> {
         ),
       )
     }
-
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.PREPARING_STRUCTLOGS }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while preparing structlogs: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.PREPARING_STRUCTLOGS, error)
   }
 }

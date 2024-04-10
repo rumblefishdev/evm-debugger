@@ -5,8 +5,9 @@ import type { TAnalyzerActions } from '../../analyzer.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { transactionConfigActions } from '../../../transactionConfig/transactionConfig.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 import { jsonRpcProvider } from '../../../../config'
+import { handleStageFailSaga } from '../handleStageFail/handleStageFail.saga'
 
 export async function estimateGasUsage(chainId: ChainId, transactionHash: string): Promise<bigint> {
   const provider = jsonRpcProvider[chainId]
@@ -47,7 +48,6 @@ export function* initializeTransactionProcessingSaga({
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer initialized')))
   } catch (error) {
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while initializing analyzer: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.INITIALIZING_ANALYZER, error)
   }
 }
