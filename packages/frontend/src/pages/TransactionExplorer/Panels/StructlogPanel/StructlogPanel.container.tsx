@@ -23,8 +23,6 @@ export const StructlogPanel: React.FC = () => {
   const currentDissasembledBytecode = useSelector(disassembledBytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
 
-  console.log('activeStructlog', activeStructlog)
-
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
 
   const structlogsArray = useMemo(() => Object.values(structLogs), [structLogs])

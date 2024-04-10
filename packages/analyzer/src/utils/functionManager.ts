@@ -363,8 +363,6 @@ export class FunctionManager {
 
     const traceLogs = this.dataLoader.analyzerTraceLogs.get()
 
-    console.log('traceLogs', traceLogs)
-
     const newRuntimeFunctionsList: Record<number, TContractFunction> = {}
 
     const joinedList = [
@@ -468,8 +466,6 @@ export class FunctionManager {
 
       runtimeFunctionsWithDecodedParameters[functionIndex] = { ...functionData, inputs: inputsWithDecodedParameters }
     }
-
-    console.log(runtimeFunctionsWithDecodedParameters)
 
     this.dataLoader.analyzerRuntimeFunctionsList.set(runtimeFunctionsWithDecodedParameters)
   }
