@@ -16,15 +16,15 @@ export const getAnalyzerInstance = () => {
 }
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
-  // return fetch(`${infoApiGatewayUrl}/info`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     content: message,
-  //   }),
-  // })
+  return fetch(`${infoApiGatewayUrl}/info`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: message,
+    }),
+  })
   return Promise.resolve(new Response())
 }
 
