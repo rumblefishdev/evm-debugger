@@ -20,14 +20,14 @@ const selectActiveStructLog = createSelector(
 
 export const selectParsedStack = createSelector([selectActiveStructLog], (activeStructlog) => {
   if (!activeStructlog) return []
-  return [
-    ...activeStructlog.stack.map((stackItem, index) => {
+  return activeStructlog.stack
+    .map((stackItem, index) => {
       const hexValue = (activeStructlog.stack.length - 1 - index).toString()
       const paddedHexValue = DEFAULT_STRING.slice(0, Math.max(0, DEFAULT_STRING.length - hexValue.length)) + hexValue
 
       return { value: stackItem, index: paddedHexValue }
-    }),
-  ].reverse()
+    })
+    .reverse()
 })
 
 export const selectParsedMemory = createSelector(
