@@ -27,13 +27,13 @@ export const FunctionStackTrace: React.FC = () => {
     (traceLogIndex: number, structLogIndex: number) => {
       dispatch(uiActions.setShouldShowFunctionStackTrace(false))
 
-      if (traceLogIndex !== structLogIndex) {
+      if (traceLogIndex !== activeTraceLogIndex && traceLogIndex !== structLogIndex) {
         dispatch(activeBlockActions.loadActiveBlock(traceLogs[traceLogIndex]))
       }
 
       dispatch(activeStructLogActions.setActiveStrucLog(structLogIndex))
     },
-    [dispatch, traceLogs],
+    [dispatch, traceLogs, activeTraceLogIndex],
   )
 
   const toggleSolcMiddlewares = React.useCallback(() => {

@@ -1,9 +1,9 @@
-import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
+import type { IExtendedStructLog } from '../../../../../types'
 
 export type TQuickLinksComponentProps = {
-  externalCalls: TStructlogWithListIndex[]
-  expensiveOps: TStructlogWithListIndex[]
-  activeStructlog: TStructlogWithListIndex
+  externalCalls: IExtendedStructLog[]
+  expensiveOps: IExtendedStructLog[]
+  activeStructlog: IExtendedStructLog
   gasThreshold: number
   handleSetGasThreshold: (gasThreshold: number) => void
   setActiveStructlog: (structLog: number) => void

@@ -5,7 +5,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 
 import { Button } from '../../../../../components/Button'
 import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
-import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
+import type { IExtendedStructLog } from '../../../../../types'
 
 import type { TSourceLineComponentProps } from './SourceLine.types'
 import {
@@ -22,7 +22,7 @@ import {
   StyledPassElementText,
 } from './SourceLine.styles'
 
-const checkIfStepIsSelected = (activeStructlog: TStructlogWithListIndex, list: TStructlogWithListIndex[]) => {
+const checkIfStepIsSelected = (activeStructlog: IExtendedStructLog, list: IExtendedStructLog[]) => {
   return list.some((structlog) => structlog?.index === activeStructlog?.index)
 }
 

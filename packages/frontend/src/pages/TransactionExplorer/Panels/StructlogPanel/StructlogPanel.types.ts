@@ -1,13 +1,13 @@
 import type { VirtuosoHandle } from 'react-virtuoso'
 import type { TDisassembledBytecode } from '@evm-debuger/types'
 
-import type { TStructlogWithListIndex } from '../../../../store/structlogs/structlogs.types'
+import type { IExtendedStructLog } from '../../../../types'
 
 export interface StructlogPanelComponentProps {
-  structlogs: TStructlogWithListIndex[]
+  structlogs: IExtendedStructLog[]
   disassembledBytecode?: TDisassembledBytecode
-  activeStructlog?: TStructlogWithListIndex
-  handleSelect: (structlog: number) => void
+  activeStructlog?: IExtendedStructLog
+  handleSelect: (structlog: IExtendedStructLog) => void
 }
 
 export type StructlogPanelComponentRef = {

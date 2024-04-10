@@ -5,10 +5,10 @@ import { activeLineSelectors } from '../../../../../store/activeLine/activeLine.
 import { activeLineActions } from '../../../../../store/activeLine/activeLine.slice'
 import { activeStructLogSelectors } from '../../../../../store/activeStructLog/activeStructLog.selectors'
 import { activeStructLogActions } from '../../../../../store/activeStructLog/activeStructLog.slice'
-import type { TStructlogWithListIndex } from '../../../../../store/structlogs/structlogs.types'
 import { instructionsSelectors } from '../../../../../store/instructions/instructions.selectors'
 import { structlogsSelectors } from '../../../../../store/structlogs/structlogs.selectors'
 import { sourceFilesActions } from '../../../../../store/sourceFiles/sourceFiles.slice'
+import type { IExtendedStructLog } from '../../../../../types'
 
 import { SourceLineComponent } from './SourceLine.component'
 
@@ -34,7 +34,7 @@ export const SourceLineContainer: React.FC = () => {
     const blockIndex = currentStructLogsByBlocks.findIndex((block) => block.some((structlog) => structlog.index === activeStructlog?.index))
     if (blockIndex === -1) return {}
 
-    const lastElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(-1)?.listIndex
+    const lastElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(-1)?.index
     const nextElementInstruction = currentInstructions[allStructlogsArray[lastElementListIndex + 1]?.pc]
 
     return {
@@ -50,7 +50,7 @@ export const SourceLineContainer: React.FC = () => {
 
     if (blockIndex === -1) return {}
 
-    const firstElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(0)?.listIndex
+    const firstElementListIndex = currentStructLogsByBlocks[blockIndex]?.at(0)?.index
     const previousElementInstruction = currentInstructions[allStructlogsArray[firstElementListIndex - 1]?.pc]
 
     return {
@@ -75,7 +75,7 @@ export const SourceLineContainer: React.FC = () => {
   }, [nextLineCoordinates, dispatch])
 
   const setActiveStructlog = React.useCallback(
-    (structlog: TStructlogWithListIndex) => {
+    (structlog: IExtendedStructLog) => {
       dispatch(activeStructLogActions.setActiveStrucLog(structlog.index))
     },
     [dispatch],
