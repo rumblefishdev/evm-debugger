@@ -19,7 +19,7 @@ import {
 
 const TooltipContent: React.FC<{ baseGasCost: number; dynamicGasCost: number }> = ({ baseGasCost, dynamicGasCost }) => (
   <Stack>
-    <Box>Base gas cost: {baseGasCost}</Box>
+    <Box>Static gas cost: {baseGasCost}</Box>
     <Box>Dynamic gas cost: {dynamicGasCost}</Box>
   </Stack>
 )
@@ -70,7 +70,7 @@ export const EvmStepListElement: React.FC<EvmStepListElementProps> = ({
         >
           {pushValue && (
             <Box ml={1}>
-              <Tooltip title={pushValue}>
+              <Tooltip title={`0x${pushValue}`}>
                 <StyledChip active={isActive}>
                   <Stack alignItems="center">
                     <StyledChipText active={isActive}>Pushed: 0x{pushValue}</StyledChipText>
