@@ -51,7 +51,7 @@ const checkPreviousInstruction = (
   activeStructlog: TIndexedStructLog | TStructlogWithListIndex,
 ): TStepInstruction => {
   const currentInstruction = instructions[activeStructlog.pc]
-  if (currentInstruction.fileType === SourceFileType.UNKNOWN) {
+  if (currentInstruction?.fileType === SourceFileType.UNKNOWN) {
     const previousStructlog = structlogs[activeStructlog.index - 1]
     return checkPreviousInstruction(instructions, structlogs, previousStructlog)
   }

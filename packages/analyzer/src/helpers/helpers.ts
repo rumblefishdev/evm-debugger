@@ -1,5 +1,5 @@
 import { formatEther, getCreateAddress } from 'ethers'
-import type { TIndexedStructLog, TRawStructLog, TTraceLog, TTransactionInfo } from '@evm-debuger/types'
+import type { TDisassembledBytecode, TIndexedStructLog, TTraceLog, TTransactionInfo } from '@evm-debuger/types'
 import { FunctionBlockStartOpcodes, FunctionBlockEndOpcodes, BaseOpcodesHex } from '@evm-debuger/types'
 
 export const getFunctionBlockStartStructLogs = (structLogs: TIndexedStructLog[]): TIndexedStructLog[] => {

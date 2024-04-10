@@ -121,7 +121,7 @@ export class FunctionManager {
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
 
-      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledBytecode')
+      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledEtherscanBytecode')
 
       const contractSourceFiles = this.dataLoader.analyzerContractData.get(contractAddress, 'sourceFiles')
       const contractInstructions = this.dataLoader.analyzerContractData.get(contractAddress, 'instructions')
@@ -321,6 +321,17 @@ export class FunctionManager {
       }) || []
 
     const selector = traceLog.callTypeData?.functionFragment?.format('minimal').split(' ')[1] || 'placeholder'
+    let failedReason = ''
+
+    if (traceLog.isReverted) {
+      if (traceLog.callTypeData?.errorDescription?.args.length > 0) {
+        failedReason = traceLog.callTypeData.errorDescription.args[0]
+      } else if (traceLog.callTypeData?.errorDescription?.name) {
+        failedReason = traceLog.callTypeData?.errorDescription?.name
+      } else {
+        failedReason = 'Unknown error'
+      }
+    }
 
     return {
       traceLogIndex: traceLog.index,
@@ -340,7 +351,7 @@ export class FunctionManager {
       hasThrown: traceLog.isReverted,
       hasAbi: true,
       functionModifiers: [],
-      failedReason: traceLog.isReverted ? traceLog.callTypeData?.errorDescription?.args[0] : undefined,
+      failedReason,
       depth: traceLog.depth,
       contraceName: baseContractInfo?.name,
     }

@@ -12,7 +12,7 @@ const selectIndex = createSelector([selectActiveStructLogState], (state) => stat
 export const DEFAULT_STRING = '0000'
 
 const selectActiveStructLog = createSelector(
-  [structlogsSelectors.selectParsedStructLogs, selectIndex],
+  [structlogsSelectors.selectAllParsedStructLogs, selectIndex],
   (currentStructlogs, currentStructlog) => {
     return currentStructlogs[currentStructlog]
   },

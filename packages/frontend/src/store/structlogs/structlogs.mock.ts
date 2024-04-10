@@ -9,6 +9,7 @@ export const createMockedStructlog = (index: number): TIndexedStructLog => ({
   index,
   gasCost: 0,
   gas: 0,
+  dynamicGasCost: 3,
   depth: 0,
 })
 

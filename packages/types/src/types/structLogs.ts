@@ -13,4 +13,4 @@ export type TRawStructLog = {
   storage: TRawStructLogStorage
 }
 
-export type TIndexedStructLog = TRawStructLog & { index: number }
+export type TIndexedStructLog = TRawStructLog & { index: number; pushValue?: string; dynamicGasCost: number }

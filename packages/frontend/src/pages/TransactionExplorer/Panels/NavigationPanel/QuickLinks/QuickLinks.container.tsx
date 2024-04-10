@@ -13,7 +13,7 @@ export const QuickLinksContainer: React.FC = () => {
   const dispatch = useTypedDispatch()
   const [gasThreshold, setGasThreshold] = React.useState(1000)
 
-  const structLogs = useSelector(structlogsSelectors.selectParsedStructLogs)
+  const structLogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const activeStrucLog = useSelector(activeStructLogSelectors.selectActiveStructLog)
 
   const setActiveStructlog = React.useCallback(

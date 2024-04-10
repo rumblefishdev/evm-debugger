@@ -90,7 +90,12 @@ export class DataLoader {
   }
 
   public inputStructlogs = {
-    set: (structLogs: TRawStructLog[]) => (this.inputData.structLogs = structLogs.map((structLog, index) => ({ ...structLog, index }))),
+    set: (structLogs: TRawStructLog[]) =>
+      (this.inputData.structLogs = structLogs.map((structLog, index) => ({
+        ...structLog,
+        index,
+        dynamicGasCost: structLog.gas - (structLogs[index + 1]?.gas || 0) - structLog.gasCost,
+      }))),
     get: () => this.inputData.structLogs,
   }
 
@@ -173,8 +178,8 @@ export class DataLoader {
       ),
       contractsDisassembledBytecodes: Object.values(this.analyzerData.contracts).reduce<
         TAnalyzerAnalysisOutput['contractsDisassembledBytecodes']
-      >((accumulator, { address, disassembledBytecode }) => {
-        accumulator[address] = { disassembledBytecode, address }
+      >((accumulator, { address, disassembledEtherscanBytecode }) => {
+        accumulator[address] = { disassembledBytecode: disassembledEtherscanBytecode, address }
         return accumulator
       }, {}),
       contractsBaseData: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(

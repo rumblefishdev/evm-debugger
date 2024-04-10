@@ -18,6 +18,7 @@ export const createMockedStructlogsPerActiveLine = (address?: string): Record<st
               index: 0,
               gasCost: 0,
               gas: 0,
+              dynamicGasCost: 3,
               depth: 0,
             },
           ],
