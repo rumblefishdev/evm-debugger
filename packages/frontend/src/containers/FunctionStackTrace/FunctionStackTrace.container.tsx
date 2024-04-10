@@ -11,7 +11,7 @@ import { uiSelectors } from '../../store/ui/ui.selectors'
 import { uiActions } from '../../store/ui/ui.slice'
 
 import { FunctionStackTraceComponent } from './FunctionStackTrace.component'
-import { adjustFunctionStackTree, convertFunctionStackToTree, newConversion } from './FunctionStackTrace.utils'
+import { newConversion } from './FunctionStackTrace.utils'
 
 export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()

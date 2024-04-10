@@ -1,5 +1,5 @@
 import type { TooltipProps } from '@mui/material'
-import { Box, Stack, styled, Tooltip, tooltipClasses, Typography } from '@mui/material'
+import { Stack, styled, Tooltip, tooltipClasses, Typography } from '@mui/material'
 
 type TActive = { active?: boolean }
 
@@ -52,13 +52,13 @@ export const StyledWrapper = styled(Stack)(() => ({
   alignItems: 'center',
 }))
 
-export const StyledLeftSideWrapper = styled(Stack)(({ theme }) => ({
+export const StyledLeftSideWrapper = styled(Stack)({
   flexWrap: 'wrap',
   flexDirection: 'row',
   flex: '2',
   display: 'flex',
   alignItems: 'center',
-}))
+})
 
 export const StyledType = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'active',
