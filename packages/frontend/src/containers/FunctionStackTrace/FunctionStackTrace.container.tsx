@@ -11,7 +11,7 @@ import { uiSelectors } from '../../store/ui/ui.selectors'
 import { uiActions } from '../../store/ui/ui.slice'
 
 import { FunctionStackTraceComponent } from './FunctionStackTrace.component'
-import { newConversion } from './FunctionStackTrace.utils'
+import { convertFunctionStackToTree } from './FunctionStackTrace.utils'
 
 export const FunctionStackTrace: React.FC = () => {
   const dispatch = useDispatch()
@@ -44,7 +44,7 @@ export const FunctionStackTrace: React.FC = () => {
   }, [dispatch, isYulFunctionsVisible])
 
   const functionStackAsTree = React.useMemo(() => {
-    return newConversion(functionsStack, 0)
+    return convertFunctionStackToTree(functionsStack, 0)
   }, [functionsStack])
 
   return (
