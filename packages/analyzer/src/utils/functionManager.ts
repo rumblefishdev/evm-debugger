@@ -151,26 +151,26 @@ export class FunctionManager {
 
         const sourceFileContent = sourceFile.content
 
-        const newFunctions: string[] = this.sanitizeFunctionExtraTabs(sourceFileContent).match(/function ([a-zA-Z0-9_@_$]+)/gim)
+        const functionDefinitions: string[] = this.sanitizeFunctionExtraTabs(sourceFileContent).match(/function ([a-zA-Z0-9_@_$]+)/gim)
 
-        const nextFunctions: { functionRaw: string; lineIndex: number; sourceFileIndex: number }[] = []
+        const functionsWithSourceLocation: { functionRaw: string; lineIndex: number; sourceFileIndex: number }[] = []
 
-        newFunctions?.forEach((text, index) => {
+        functionDefinitions?.forEach((text, index) => {
           if (index === 0) {
             const startIndex = sourceFile.content.indexOf(text)
             const lineIndex = sourceFile.content.slice(0, startIndex).split(regexForAllNewLineTypes).length - 1
             const nextFunction = sourceFile.content.slice(startIndex, sourceFile.content.indexOf('}', startIndex) + 1)
-            nextFunctions.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
+            functionsWithSourceLocation.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
             return
           }
 
-          const startIndex = sourceFile.content.indexOf(text, nextFunctions.at(-1).sourceFileIndex + 1)
+          const startIndex = sourceFile.content.indexOf(text, functionsWithSourceLocation.at(-1).sourceFileIndex + 1)
           const lineIndex = sourceFile.content.slice(0, startIndex).split(regexForAllNewLineTypes).length - 1
           const nextFunction = sourceFile.content.slice(startIndex, sourceFile.content.indexOf('}', startIndex) + 1)
-          nextFunctions.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
+          functionsWithSourceLocation.push({ sourceFileIndex: startIndex, lineIndex, functionRaw: nextFunction })
         })
 
-        const functionsWithParametersAndReturnsData = nextFunctions.map((functionEntry) => ({
+        const functionsWithParametersAndReturnsData = functionsWithSourceLocation.map((functionEntry) => ({
           ...this.extractDataFromFunctiomLine(functionEntry.functionRaw, sourceFile.name === 'utility'),
           lineIndex: functionEntry.lineIndex,
           functionRaw: functionEntry.functionRaw,
