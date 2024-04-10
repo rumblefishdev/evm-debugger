@@ -65,7 +65,6 @@ export class TraceCreator {
       const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
 
       if (!lastItemInTraceReturnLogs && (traceLog.gasCost > traceLog.passedGas || traceLog.gasCost === 0)) {
-        console.log('OUT_OF_GAS')
         return {
           ...traceLog,
           returnIndex: lastItemInCallContext.index,

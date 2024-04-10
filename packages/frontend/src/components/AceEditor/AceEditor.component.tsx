@@ -31,10 +31,10 @@ export const AceEditor: React.FC<AceEditorProps> = ({
   })
 
   React.useEffect(() => {
-    if (editorRef.current && highlightStartLine) {
+    if (editorRef.current && highlightStartLine && highlightStartColumn) {
       editorRef.current.editor.scrollToLine(highlightStartLine, true, true, () => {})
     }
-  }, [highlightStartLine])
+  }, [highlightStartLine, highlightStartColumn])
 
   React.useEffect(() => {
     const editor = editorRef.current?.editor
