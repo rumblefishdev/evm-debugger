@@ -35,6 +35,11 @@ export const FunctionInputParameter: React.FC<TFunctionInputParameterProps> = ({
       const joinedArrayValue = `[${value.join(', ')}]`
       return shortenValue(joinedArrayValue, true)
     }
+
+    if (typeof parameter.value === 'object' && !parameter.isArray) {
+      return 'Tuple ( Not  supported )'
+    }
+
     const value = parameter.value as string
     return shortenValue(value)
   }, [parameter.value, parameter.isArray])
