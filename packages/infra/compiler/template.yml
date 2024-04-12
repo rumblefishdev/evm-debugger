@@ -19,7 +19,7 @@ Resources:
       Handler: srcMapCompiler.srcmapCompilerEntrypoint
       Runtime: nodejs18.x
       Timeout: 600
-      MemorySize: 512
+      MemorySize: 4096
       Architectures:
       - x86_64
       Environment:

@@ -23,6 +23,11 @@ export const getFileName = (txHash: string, chainId: string) => {
   return `trace/${chainId}/${txHash}.json`
 }
 
+export const s3upload = function (params: PutObjectCommandInput) {
+  const command = new PutObjectCommand(params)
+  return s3Client.send(command)
+}
+
 export const getFilePath = (txHash: string, chainId: string) => {
   const fileName = getFileName(txHash, chainId)
   return `${process.env.ANALYZER_DATA_BUCKET_NAME}/${fileName}`
