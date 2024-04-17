@@ -215,6 +215,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
+  fontFamily: 'ClashDisplay',
   fontWeight: '700',
   lineHeight: '48px',
   fontSize: '48px',
@@ -238,6 +239,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.75)',
   fontWeight: '350',
+  fontFamily: 'Satoshi',
   lineHeight: '30px',
   fontSize: '20px',
   Slant: 0,

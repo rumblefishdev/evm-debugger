@@ -107,8 +107,7 @@ export const StyledBlocksText = styled(Typography)(() => ({
   fontWeight: '350',
   lineHeight: '24px',
   fontSize: '16px',
-  fontFamily: 'Inter',
-  letterSpacing: '-0.1em',
+  fontFamily: 'Satoshi',
   textAlign: 'center',
   opacity: 0.7,
   fontVariationSettings: 'slnt 0',
@@ -119,6 +118,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
+  fontFamily: 'ClashDisplay',
   fontWeight: '700',
   lineHeight: '64.4px',
   fontSize: '56px',
@@ -139,6 +139,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   color: '#FFFFFF',
+  fontFamily: 'Satoshi',
   fontWeight: '700',
   lineHeight: '27.6px',
   fontSize: '22px',
@@ -180,6 +181,7 @@ export const CurrentsNetworksStyledStack = styled(Stack)(({ theme }) => ({
 export const NetworksHeading = styled(Typography)(() => ({
   color: '#FFFFFF',
   fontWeight: '350',
+  fontFamily: 'Satoshi',
   lineHeight: '36px',
   fontSize: '24px',
   letterSpacing: '-1%',
@@ -193,7 +195,7 @@ export const NetworkName = styled(Typography)(() => ({
   lineHeight: '27.6px',
   fontSize: '24px',
   letterSpacing: '-2%',
-  fontFamily: 'Rajdhani',
+  fontFamily: 'Satoshi',
   fontVariationSettings: 'slnt 0',
   textAlign: 'center',
 }))

@@ -31,6 +31,7 @@ export const StyledInput = styled(TextField)(({ theme }) => ({
     },
     '& input': {
       padding: theme.spacing(2, 3, 2, 3),
+      fontFamily: 'Satoshi',
     },
     '& fieldset': {
       borderRadius: '16px',
@@ -46,7 +47,7 @@ export const StyledInputLabel = styled(Typography)(({ theme }) => ({
   lineHeight: '100%',
   fontWeight: 600,
   fontSize: '12px',
-  fontFamily: 'Rajdhani',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
 }))
 export const StyledErrorLabel = styled(StyledInputLabel)(({ theme }) => ({
@@ -63,7 +64,7 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
   // change border color
   fontVariationSettings: 'slnt 0',
   fontSize: '14px',
-  fontFamily: 'Inter',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
   '.MuiSvgIcon-root ': {
     fill: 'white !important',
@@ -103,9 +104,9 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   letterSpacing: '-0.01em',
-  fontWeight: 300,
+  fontWeight: 400,
   fontVariationSettings: 'slnt 0',
   fontSize: '14px',
-  fontFamily: 'Inter',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
 }))

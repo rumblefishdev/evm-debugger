@@ -20,7 +20,7 @@
     "@mui/material": "^5.15.3",
     "@mui/x-tree-view": "^6.17.0",
     "@reduxjs/toolkit": "1.9.0",
-    "@rumblefishdev/ui": "0.1.22",
+    "@rumblefishdev/ui": "0.1.23",
     "@sentry/react": "^7.50.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",

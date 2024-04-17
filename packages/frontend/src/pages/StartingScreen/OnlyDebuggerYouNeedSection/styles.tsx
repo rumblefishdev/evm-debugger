@@ -1,5 +1,5 @@
 import { Stack, styled, Typography } from '@mui/material'
-import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
+import { Button } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Button'
 
 import centerEllipse from '../../../assets/png/centerEllipse.png'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
@@ -81,6 +81,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 export const StyledBlocksText = styled(Typography)(({ theme }) => ({
   fontWeight: '650',
   lineHeight: '30px',
+  fontFamily: 'Satoshi',
   fontSize: '24px',
   letterSpacing: '-1%',
   textAlign: 'left',
@@ -101,19 +102,29 @@ export const ButtonWrapper = styled(Stack)(({ theme }) => ({
   marginTop: theme.spacing(4),
 }))
 export const StyledButton = styled(Button)(({ theme }) => ({
-  borderColor: 'rgba(255,255,255,0.15) !important',
-  '&:hover': {
-    borderColor: 'rgba(255,255,255,0.25) !important',
+  '.MuiStack-root': {
+    padding: '16px',
+    backgroundColor: 'transparent !important',
+    border: '1px solid white',
+    boxShadow: `0px 0px 6px 4px #6792F4, 0px 0px 6px 4px #6792F4 inset !important`,
   },
+  // borderColor: 'rgba(255,255,255,0.15) !important',
+  // '&:hover': {
+  //   borderColor: 'rgba(255,255,255,0.25) !important',
+  // },
   [theme.breakpoints.down('sm')]: {
     padding: `${theme.spacing(1, 2)} !important`,
   },
 }))
+export const StyledTypography = styled(Typography)({
+  fontFamily: 'Satoshi',
+})
 export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   fontWeight: '700',
+  fontFamily: 'ClashDisplay',
   lineHeight: '64px',
   fontSize: '64px',
   letterSpacing: '-2%',
@@ -135,6 +146,7 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
   zIndex: 1,
   color: '#FFFFFF',
   fontWeight: '700',
+  fontFamily: 'Satoshi',
   lineHeight: '27.6px',
   fontSize: '22px',
   textAlign: 'center',
