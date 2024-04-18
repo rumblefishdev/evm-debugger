@@ -38,7 +38,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
     height: `113%`,
     width: `100%`,
     left: '0%',
-    top: `10%`,
+    top: `5%`,
     position: 'absolute',
     backgroundImage: `url(${leftEllipse})`,
     backgroundSize: `100% 100%, 100%, 100%`,
@@ -55,6 +55,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
       backgroundPositionY: `40%`,
     },
     [theme.breakpoints.down('md')]: {
+      top: '-5%',
       backgroundPositionY: `50%`,
     },
     [theme.breakpoints.down('sm')]: {
@@ -218,7 +219,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   fontFamily: 'ClashDisplay',
   fontWeight: '700',
   lineHeight: '48px',
-  fontSize: '48px',
+  fontSize: '42px',
   letterSpacing: '-0.02em',
   display: 'flex',
   justifyContent: 'flex-start',
