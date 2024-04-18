@@ -5,7 +5,7 @@ import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
-import { sqsConsumer } from './sqsConsumer'
+import { localDebugTransaction } from './sqsConsumer'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -16,6 +16,8 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
+  console.log('consumeSqsAnalyzeTx', JSON.stringify(event, null, 2))
+  console.trace('consumeSqsAnalyzeTx')
   const records = event.Records
   if (records.length === 0) {
     console.log('No records to process')
@@ -31,8 +33,8 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   console.log(`gasLimit: ${gasLimit}`)
   console.log(`chainId: ${chainId}`)
   console.log(`hardhatForkingUrl: ${hardhatForkingUrl}`)
-
-  await sqsConsumer({ txHash, hardhatForkingUrl, chainId, captureException })
+  await localDebugTransaction({ txHash, hardhatForkingUrl, chainId, captureException })
+  // await sqsConsumer({ txHash, hardhatForkingUrl, chainId, captureException })
 }
 
 export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)

@@ -1,35 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable unicorn/prefer-at */
-import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
-import hardhat from 'hardhat'
-import { reset } from '@nomicfoundation/hardhat-network-helpers'
 import type { TRawTransactionTraceResult } from '@evm-debuger/types'
+import hardhat from 'hardhat'
+import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
+import { extendConfig } from 'hardhat/config'
 import { TransactionTraceResponseStatus } from '@evm-debuger/types'
 
 import { putTxEventToDdb } from './ddb'
 import { getFileName, getFilePath, s3upload } from './s3'
 import { DEFAULT_ERROR, KNOWN_CHAIN_ERRORS } from './errors'
 import { invalidateCloudFrontCache } from './cloudFront'
-
-export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
-  Object.assign(global, { txHash, chainId })
-  // get version of hardhat package
-  console.log(`Hardhat version: ${hardhat.version}`)
-
-  await reset(`${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`)
-  const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
-    chainId,
-  })
-
-  hardhatProvider.console.log(`Provider for ${chainId} is ready`)
-  console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
-
-  const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
-  // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-  // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
-  console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
-  return traceResult
-}
 
 export interface ConsumeSqsAnalyzeTx {
   txHash: string
@@ -39,8 +19,85 @@ export interface ConsumeSqsAnalyzeTx {
   captureException: any
 }
 
+export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl, captureException }: ConsumeSqsAnalyzeTx) => {
+  try {
+    console.log('Current hardhat version: ', hardhat.version)
+    console.log('Current hardhatConfig', JSON.stringify(hardhat.config.networks.hardhat.forking, null, 2))
+
+    console.log('Extending hardhat config....')
+
+    extendConfig((config, userConfig) => {
+      config.networks = {
+        ...config.networks,
+        hardhat: {
+          ...config.networks.hardhat,
+          forking: {
+            url: `${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`,
+            enabled: true,
+          },
+          chainId: Number(chainId),
+        },
+      }
+    })
+
+    console.log('Hardhat config extended', JSON.stringify(hardhat.config.networks.hardhat.forking, null, 2))
+
+    const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
+      chainId,
+    })
+
+    console.log(`Provider for ${chainId} is ready`)
+
+    console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
+
+    const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+
+    console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
+  } catch (error) {
+    const errorMessage = { errorDetails: DEFAULT_ERROR }
+    if (error instanceof Error) {
+      console.log(error.message)
+      errorMessage['errorDetails'] = error.message
+      if (!KNOWN_CHAIN_ERRORS.includes(error.message)) captureException(error)
+    }
+    throw error
+  }
+}
+
+export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
+  Object.assign(global, { txHash, chainId })
+  // get version of hardhat package
+  console.log(`Hardhat version: ${hardhat.version}`)
+
+  extendConfig((config, userConfig) => {
+    config.networks = {
+      ...config.networks,
+      hardhat: {
+        ...config.networks.hardhat,
+        forking: {
+          url: `${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`,
+          enabled: true,
+        },
+      },
+    }
+  })
+
+  const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
+    chainId,
+  })
+
+  console.log(`Provider for ${chainId} is ready`)
+  console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
+
+  const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+  // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
+  // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
+  console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
+  return traceResult
+}
+
 export const sqsConsumer = async ({ txHash, chainId, hardhatForkingUrl, captureException }: ConsumeSqsAnalyzeTx) => {
-  await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
+  // await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
   try {
     const result = await debugTransaction(txHash, chainId, hardhatForkingUrl)
     const s3Location = getFilePath(txHash, chainId)

@@ -1,0 +1,47 @@
+{
+    "Records": [
+        {
+            "messageId": "8322f097-f27f-4b2c-a109-384cc32ff5a1",
+            "receiptHandle": "AQEBSuZrDIa0wHd/A0g0rFVp/vyo6Tqk0OvAThH5BzhmRfT1ZBfjt8lu2regeT27bNl2jug+iwBYypk0iQEjvd8Xc56fwLoyGwvyShYBeKQBWOlwmsHtuJBX/tVCbG59D8+GX6CM3GiIlOqs2jhLlzeqScwBz5j1QP23sO+ma40t+sX1DR5ehU44GEgc3xKMaxMKnrEHc4p+7FuSzNxbL7f/kSOwHDrtgzzVStlP9s8ZEbzNEDAnbDK7qx1n54OeInPU3CVbxZLXgxpGSs21blBYQ5qtKFHEyByXioESgRYlVVFi4i08bHrcCIg9ZVLZOvzLfdk0v8tARL6SHT9RDGZrKhdyILeOGL7NS2sWhWi8wsvnj3HtfTeszUshmMYYu/BWC8zx7f49bYLaQqS6gfjYeA==",
+            "body": "Transaction 0x77aeaefa1fcf273ae1a20fcf5f86627986e677cf9bb13abbf17b6844e45dee64",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "AWSTraceHeader": "Root=1-661f87a0-1561211978c4191a622fdec0;Parent=6f64bd0f7f8cb264;Sampled=0;Lineage=93deec64:0",
+                "SentTimestamp": "1713342368855",
+                "SenderId": "AROAWHMT2CQBOCUZSUYRW:evm-debugger-stage-transaction-trace-api",
+                "ApproximateFirstReceiveTimestamp": "1713342368866"
+            },
+            "messageAttributes": {
+                "gasLimit": {
+                    "stringValue": "55558",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "chainId": {
+                    "stringValue": "1",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "hardhatForkingUrl": {
+                    "stringValue": "https://eth-mainnet.alchemyapi.io/v2/",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "txHash": {
+                    "stringValue": "0x77aeaefa1fcf273ae1a20fcf5f86627986e677cf9bb13abbf17b6844e45dee64",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                }
+            },
+            "md5OfMessageAttributes": "4cc644a40a08947cac91f34d8c526026",
+            "md5OfBody": "576731becf871aa35bc161a46f5adc5c",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-east-1:428196107266:evm-debugger-stage-trace-sqs",
+            "awsRegion": "us-east-1"
+        }
+    ]
+}
