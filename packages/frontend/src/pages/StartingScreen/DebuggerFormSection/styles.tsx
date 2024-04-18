@@ -217,7 +217,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   fontFamily: 'ClashDisplay',
-  fontWeight: '700',
+  fontWeight: 700,
   lineHeight: '48px',
   fontSize: '42px',
   letterSpacing: '-0.02em',
@@ -226,6 +226,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   backgroundClip: 'text',
   textAlign: 'left',
   zIndex: 100,
+  marginBottom: '20px',
 
   [theme.breakpoints.down('md')]: {
     textAlign: 'center',
@@ -233,19 +234,19 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     lineHeight: '36.8px',
-    fontSize: '30px',
+    fontSize: '28px',
   },
 }))
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.75)',
-  fontWeight: '350',
+  fontWeight: 300,
   fontFamily: 'Satoshi',
   lineHeight: '30px',
   fontSize: '20px',
   Slant: 0,
   span: {
-    fontWeight: '650',
+    fontWeight: 600,
   },
   letterSpacing: '-0.01em',
   textAlign: 'left',

@@ -104,7 +104,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledBlocksText = styled(Typography)(() => ({
-  fontWeight: '350',
+  fontWeight: 400,
   lineHeight: '24px',
   fontSize: '16px',
   fontFamily: 'Satoshi',
@@ -119,7 +119,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   fontFamily: 'ClashDisplay',
-  fontWeight: '700',
+  fontWeight: 700,
   lineHeight: '64.4px',
   fontSize: '56px',
   letterSpacing: '-2%',
@@ -140,9 +140,9 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   color: '#FFFFFF',
   fontFamily: 'Satoshi',
-  fontWeight: '700',
+  fontWeight: 700,
   lineHeight: '27.6px',
-  fontSize: '22px',
+  fontSize: '20px',
   textAlign: 'center',
   letterSpacing: '-2%',
 
@@ -180,7 +180,7 @@ export const CurrentsNetworksStyledStack = styled(Stack)(({ theme }) => ({
 
 export const NetworksHeading = styled(Typography)(() => ({
   color: '#FFFFFF',
-  fontWeight: '350',
+  fontWeight: 300,
   fontFamily: 'Satoshi',
   lineHeight: '36px',
   fontSize: '24px',
@@ -191,7 +191,7 @@ export const NetworksHeading = styled(Typography)(() => ({
 }))
 
 export const NetworkName = styled(Typography)(() => ({
-  fontWeight: '700',
+  fontWeight: 700,
   lineHeight: '27.6px',
   fontSize: '24px',
   letterSpacing: '-2%',

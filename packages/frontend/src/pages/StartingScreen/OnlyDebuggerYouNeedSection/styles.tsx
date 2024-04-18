@@ -79,7 +79,7 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
 }))
 
 export const StyledBlocksText = styled(Typography)(({ theme }) => ({
-  fontWeight: '650',
+  fontWeight: 600,
   lineHeight: '30px',
   fontFamily: 'Satoshi',
   fontSize: '24px',
@@ -123,7 +123,7 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
-  fontWeight: '700',
+  fontWeight: 700,
   fontFamily: 'ClashDisplay',
   lineHeight: '64px',
   fontSize: '64px',
@@ -145,10 +145,10 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   zIndex: 1,
   color: '#FFFFFF',
-  fontWeight: '700',
+  fontWeight: 700,
   fontFamily: 'Satoshi',
   lineHeight: '27.6px',
-  fontSize: '22px',
+  fontSize: '20px',
   textAlign: 'center',
   letterSpacing: '-2%',
 

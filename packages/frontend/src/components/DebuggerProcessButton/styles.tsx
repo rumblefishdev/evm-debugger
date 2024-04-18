@@ -5,7 +5,7 @@ import { Button } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/B
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 
 export const StyledButton = styled(Button)({
-  marginTop: '20px !important',
+  margin: '24px 0 6px !important',
 
   '.MuiStack-root': {
     padding: '16px',
@@ -20,7 +20,7 @@ export const IssueTextContainer = styled(Typography)(({ theme }) => ({
   width: '100%',
   textAlign: 'center',
   lineHeight: '150%',
-  fontWeight: 350,
+  fontWeight: 400,
   fontStyle: 'normal',
   fontFamily: 'Satoshi',
   color: '#ABB1B4',
