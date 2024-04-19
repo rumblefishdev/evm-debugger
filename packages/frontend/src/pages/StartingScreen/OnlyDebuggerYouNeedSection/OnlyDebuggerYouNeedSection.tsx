@@ -1,4 +1,4 @@
-import { Typography, type StackProps } from '@mui/material'
+import { type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
 import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
@@ -18,6 +18,7 @@ import {
   StyledButton,
   DiscordIcon,
   ButtonWrapper,
+  StyledTypography,
 } from './styles'
 
 export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...props }: StackProps, ref: LegacyRef<HTMLDivElement>) {
@@ -59,20 +60,20 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             target="_blank"
             rel="noopener noreferrer"
           >
-            <StyledButton variant="outlined">
+            <StyledButton>
               <DiscordIcon src={discordIcon} />
-              <Typography
+              <StyledTypography
                 fontWeight={700}
                 display={{ sm: 'none' }}
               >
                 Join community on Discord
-              </Typography>
-              <Typography
+              </StyledTypography>
+              <StyledTypography
                 fontWeight={700}
                 display={{ xs: 'none', sm: 'block' }}
               >
                 Join EVM Debugger community on Discord
-              </Typography>
+              </StyledTypography>
             </StyledButton>
           </Link>
         </ButtonWrapper>
