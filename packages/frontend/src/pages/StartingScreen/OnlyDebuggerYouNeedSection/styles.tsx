@@ -108,10 +108,6 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     border: '1px solid white',
     boxShadow: `0px 0px 6px 4px #6792F4, 0px 0px 6px 4px #6792F4 inset !important`,
   },
-  // borderColor: 'rgba(255,255,255,0.15) !important',
-  // '&:hover': {
-  //   borderColor: 'rgba(255,255,255,0.25) !important',
-  // },
   [theme.breakpoints.down('sm')]: {
     padding: `${theme.spacing(1, 2)} !important`,
   },
