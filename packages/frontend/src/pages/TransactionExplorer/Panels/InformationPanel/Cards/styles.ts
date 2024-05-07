@@ -34,6 +34,7 @@ export const StyledWrapper = styled(Stack)(({ theme }) => ({
 
 export const StyledRecord = styled(Stack)(() => ({
   textAlign: 'left',
+  flexWrap: 'wrap',
   flexDirection: 'row',
   alignItems: 'center',
 }))
