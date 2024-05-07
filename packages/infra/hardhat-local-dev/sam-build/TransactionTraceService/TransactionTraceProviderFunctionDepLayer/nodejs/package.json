@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "hardhat": "file:../../../../../hardhat/packages/hardhat-core"
-  },
-  "scripts": {
-  }
-}
