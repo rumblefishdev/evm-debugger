@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "hardhat": "file:../../../../../hardhat/packages/hardhat-core"
+    "hardhat": "npm:@rumblefishdev/hardhat@0.22.6"
   },
   "scripts": {
   }

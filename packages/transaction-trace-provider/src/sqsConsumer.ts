@@ -66,8 +66,6 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
 
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   Object.assign(global, { txHash, chainId })
-  // get version of hardhat package
-  console.log(`Hardhat version: ${hardhat.version}`)
 
   extendConfig((config, userConfig) => {
     config.networks = {
@@ -78,9 +76,14 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
           url: `${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`,
           enabled: true,
         },
+        chainId: Number(chainId),
       },
     }
   })
+
+  console.log('Current hardhat version: ', hardhat.version)
+  console.log('Current hardhat chain Id', hardhat.config.networks.hardhat.chainId)
+  console.log('Current hardhat forking', hardhat.config.networks.hardhat.forking)
 
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,

@@ -5,7 +5,7 @@ import { AWSLambda, captureException } from '@sentry/serverless'
 
 import { version } from '../package.json'
 
-import { localDebugTransaction } from './sqsConsumer'
+import { sqsConsumer } from './sqsConsumer'
 
 AWSLambda.init({
   tracesSampleRate: 1,
@@ -33,8 +33,8 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   console.log(`gasLimit: ${gasLimit}`)
   console.log(`chainId: ${chainId}`)
   console.log(`hardhatForkingUrl: ${hardhatForkingUrl}`)
-  await localDebugTransaction({ txHash, hardhatForkingUrl, chainId, captureException })
-  // await sqsConsumer({ txHash, hardhatForkingUrl, chainId, captureException })
+
+  await sqsConsumer({ txHash, hardhatForkingUrl, chainId, captureException })
 }
 
 export const consumeSqsAnalyzeTxEntrypoint = AWSLambda.wrapHandler(consumeSqsAnalyzeTx)
