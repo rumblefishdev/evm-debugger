@@ -23,7 +23,6 @@ jest.mock('../../src/s3', () => ({
 }))
 
 jest.mock('hardhat')
-jest.mock('@nomicfoundation/hardhat-network-helpers')
 
 describe('Unit test for sqs consumer', function () {
   beforeEach(() => {
