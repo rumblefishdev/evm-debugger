@@ -67,24 +67,6 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
 export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
   Object.assign(global, { txHash, chainId })
 
-  extendConfig((config, userConfig) => {
-    config.networks = {
-      ...config.networks,
-      hardhat: {
-        ...config.networks.hardhat,
-        forking: {
-          url: `${hardhatForkingUrl}${process.env.ALCHEMY_KEY}`,
-          enabled: true,
-        },
-        chainId: Number(chainId),
-      },
-    }
-  })
-
-  console.log('Current hardhat version: ', hardhat.version)
-  console.log('Current hardhat chain Id', hardhat.config.networks.hardhat.chainId)
-  console.log('Current hardhat forking', hardhat.config.networks.hardhat.forking)
-
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
   })
@@ -93,14 +75,13 @@ export const debugTransaction = async (txHash: string, chainId: string, hardhatF
   console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
 
   const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
-  // TODO: fix in https://github.com/rumblefishdev/evm-debugger/issues/285
-  // traceResult.structLogs = traceResult.structLogs.map((structLog, index) => ({ ...structLog, index }))
+
   console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
   return traceResult
 }
 
 export const sqsConsumer = async ({ txHash, chainId, hardhatForkingUrl, captureException }: ConsumeSqsAnalyzeTx) => {
-  // await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
+  await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
   try {
     const result = await debugTransaction(txHash, chainId, hardhatForkingUrl)
     const s3Location = getFilePath(txHash, chainId)

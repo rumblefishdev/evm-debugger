@@ -42,3 +42,6 @@ temporary/
 scripts/.tmp
 
 packages/transaction-manager/results/
+packages/infra/hardhat-local-dev/sam-build/
+packages/infra/hardhat-local-dev/log.txt
+packages/infra/hardhat-local-dev/out.txt

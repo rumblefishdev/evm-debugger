@@ -220,8 +220,6 @@ export const compileFiles = async (
   try {
     const solcOutput = compile(sourceFiles, settings)
 
-    console.log('solcOutput', solcOutput)
-
     sourceMap = await createSourceMapEntry(
       solcOutput,
       settings.rootContractName,
@@ -232,11 +230,6 @@ export const compileFiles = async (
     captureMessage(message, 'error')
     return setCompilationFailed(_payload, message)
   }
-
-  console.log('sourceMap', sourceMap)
-  console.log('sourcesOrder', sourcesOrder)
-  console.log('_payload.address', _payload.address)
-  console.log('_payload.chainId', _payload.chainId)
 
   const pathSourceMap = `contracts/${_payload.chainId}/${_payload.address}/sourceMap.json`
   await s3upload({

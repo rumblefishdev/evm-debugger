@@ -16,7 +16,6 @@ AWSLambda.init({
 AWSLambda.setTag('lambda_name', 'transaction-trace-provider')
 
 export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
-  console.log('consumeSqsAnalyzeTx', JSON.stringify(event, null, 2))
   console.trace('consumeSqsAnalyzeTx')
   const records = event.Records
   if (records.length === 0) {
@@ -32,7 +31,6 @@ export const consumeSqsAnalyzeTx: Handler = async (event: SQSEvent) => {
   console.log(`txHash: ${txHash}`)
   console.log(`gasLimit: ${gasLimit}`)
   console.log(`chainId: ${chainId}`)
-  console.log(`hardhatForkingUrl: ${hardhatForkingUrl}`)
 
   await sqsConsumer({ txHash, hardhatForkingUrl, chainId, captureException })
 }
