@@ -2,13 +2,13 @@ import { mockClient } from 'aws-sdk-client-mock'
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import hardhat from 'hardhat'
 import { S3Client } from '@aws-sdk/client-s3'
-import { TransactionTraceResponseStatus } from '@evm-debuger/types'
+import { ChainId, TransactionTraceResponseStatus } from '@evm-debuger/types'
 import type { Callback, Context } from 'aws-lambda'
 
 import { createSQSRecordEvent } from '../utils/lambdaMocks'
 import { consumeSqsAnalyzeTx } from '../../src/lambdaWrapper'
 import { sampleTraceResult } from '../utils/testStructs'
-import { getMockCalledInputItem } from '../utils/awsMocksHelper'
+import { getMockCalledInput, getMockCalledInputItem } from '../utils/awsMocksHelper'
 
 const ddbMock = mockClient(DynamoDBDocumentClient)
 const s3ClientMock = mockClient(S3Client)
@@ -22,7 +22,51 @@ jest.mock('../../src/s3', () => ({
   createMultiPartUpload: jest.fn().mockResolvedValue(uploadIdMock),
 }))
 
-// jest.mock('hardhat')
+jest.mock('hardhat')
+jest.mock('../../hardhat.config.ts', () => ({
+  config: {
+    solidity: '0.8.9',
+    paths: {
+      cache: '/tmp/cache',
+    },
+    networks: {
+      hardhat: {
+        forking: {
+          url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
+        },
+        chains: {
+          11155111: {
+            hardforkHistory: {
+              shanghai: 3_100_000,
+            },
+          },
+          421613: {
+            hardforkHistory: {
+              shanghai: 11_500_000,
+            },
+          },
+          80001: {
+            hardforkHistory: {
+              shanghai: 33_130_000,
+            },
+          },
+          42161: {
+            hardforkHistory: {
+              shanghai: 70_000_000,
+            },
+          },
+          137: {
+            hardforkHistory: {
+              shanghai: 0,
+            },
+          },
+        },
+        chainId: 1,
+      },
+    },
+  },
+}))
+// jest.mock('@nomicfoundation/hardhat-network-helpers')
 
 describe('Unit test for sqs consumer', function () {
   beforeEach(() => {
