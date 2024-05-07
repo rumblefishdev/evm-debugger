@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import type { TIndexedStructLog } from '@evm-debuger/types'
 
 import { StoreKeys } from '../store.keys'
 import { selectReducer } from '../store.utils'
