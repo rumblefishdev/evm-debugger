@@ -16,6 +16,10 @@ export const getAnalyzerInstance = () => {
 }
 
 export const sendStatusMessageToDiscord = (message: string): Promise<Response> => {
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
+
   return fetch(`${infoApiGatewayUrl}/info`, {
     method: 'POST',
     headers: {
@@ -25,7 +29,6 @@ export const sendStatusMessageToDiscord = (message: string): Promise<Response> =
       content: message,
     }),
   })
-  // return Promise.resolve(new Response())
 }
 
 export const createSuccessLogMessage = (message: string, _identifier?: string, _timestamp?: number): TLogMessageRecord => {

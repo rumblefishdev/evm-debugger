@@ -21,7 +21,7 @@ const selectActiveSourceFiles = createSelector([selectEntities, selectSourceFile
   return _sourceFiles[_state.activeSourceFileId] || null
 })
 
-const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], (sourceFiles) => sourceFiles.length > 1)
+const selectHasMultipleSourceFiles = createSelector([selectCurrentSourceFiles], (sourceFiles) => sourceFiles?.length > 1)
 
 export const sourceFilesSelectors = {
   selectSourceFileId,

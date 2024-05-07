@@ -40,7 +40,7 @@ const selectStructLogsForActiveLine = createSelector(
     structlogsSelectors.selectAllParsedStructLogs,
   ],
   (line, fileId, structLogsPerLine, { address }, structLogs) => {
-    const currentStructLogsLineSet = structLogsPerLine[address]?.structlogsPerStartLine[fileId]?.[line]
+    const currentStructLogsLineSet = structLogsPerLine[address]?.structlogsPerStartLine?.[fileId]?.[line]
     if (!currentStructLogsLineSet) return null
 
     return currentStructLogsLineSet.map((structLog) => structLogs[structLog.index]).filter((item) => Boolean(item))

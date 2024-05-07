@@ -108,6 +108,11 @@ export const opcodesDictionary: Record<string, { opcode: number; args: string[];
     description: 'Compute Keccak-256 hash.',
     args: ['offset', 'length'],
   },
+  KECCAK256: {
+    opcode: 0x20,
+    description: 'Compute KECCAK256 hash.',
+    args: ['offset', 'length'],
+  },
   ADDRESS: {
     opcode: 0x30,
     description: 'Get address of currently executing account.',
@@ -134,6 +139,7 @@ export const opcodesDictionary: Record<string, { opcode: number; args: string[];
     description: 'Get input data of current environment.',
     args: ['index'],
   },
+
   CALLDATASIZE: {
     opcode: 0x36,
     description: 'Get size of input data in current environment.',
