@@ -20,12 +20,12 @@ const selectAllOffCurrentBlock = createSelector(
   },
 )
 
-const selectAllParsedStructLogs = createSelector([selectAll, traceLogsSelectors.selectAll], (structLogs, traceLogs) =>
-  parseStructlogs(structLogs, traceLogs).reduce((accumulator, item) => {
+const selectAllParsedStructLogs = createSelector([selectAll, traceLogsSelectors.selectAll], (_structLogs, traceLogs) => {
+  return parseStructlogs(_structLogs, traceLogs).reduce((accumulator, item) => {
     accumulator[item.index] = item
     return accumulator
-  }, {} as Record<number, IExtendedStructLog>),
-)
+  }, {} as Record<number, IExtendedStructLog>)
+})
 
 export const structlogsSelectors = {
   selectAllParsedStructLogs,

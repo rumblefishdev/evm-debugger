@@ -6,6 +6,7 @@ import { Collapse, Stack } from '@mui/material'
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { sourceFilesSelectors } from '../../../../store/sourceFiles/sourceFiles.selectors'
+import { activeBlockSelectors } from '../../../../store/activeBlock/activeBlock.selector'
 
 import { StyledSourceCodePanel, StyledSourceWrapper } from './SourceCodePanel.styles'
 import { SourceCodeViewContainer } from './SourceCodeView/SourceCodeView.container'
@@ -15,10 +16,11 @@ interface ISourceCodePanel {
   hasContract?: boolean
 }
 export const SourceCodePanel: React.FC<ISourceCodePanel> = ({ hasContract }) => {
+  const isContractVerified = useSelector(activeBlockSelectors.selectIsCurrentContractVerified)
   const hasMultipleSourceFiles = useSelector(sourceFilesSelectors.selectHasMultipleSourceFiles)
   const isInstructionsValid = useSelector(instructionsSelectors.selectIsCurrentInstructionsValid)
 
-  const willShowSourceCode = isInstructionsValid
+  const willShowSourceCode = isInstructionsValid && isContractVerified
 
   const [isTreeViewExpanded, setIsTreeViewExpanded] = React.useState<boolean>(hasMultipleSourceFiles)
 

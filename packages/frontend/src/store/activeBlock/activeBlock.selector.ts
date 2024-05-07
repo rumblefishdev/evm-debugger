@@ -100,6 +100,13 @@ export const extractErrorInfoFromErrorDescription = (errorDescription: ErrorDesc
   return args[0]
 }
 
+export const selectIsCurrentContractVerified = createSelector(
+  [contractBaseSelectors.selectEntities, selectActiveBlock],
+  (contracts, activeBlock) => {
+    return contracts[activeBlock?.address || '']?.compilerVersion !== undefined
+  },
+)
+
 export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
   const errorSignature =
     checkOpcodeIfOfCallGroupType(block.op) && block.callTypeData?.errorDescription
@@ -109,4 +116,4 @@ export const getTraceLogErrorOutput = (block: TMainTraceLogsWithId) => {
   return errorSignature ? errorSignature : 'Revert (no revert message was provided)'
 }
 
-export const activeBlockSelectors = { selectParsedActiveBlock, selectActiveBlock }
+export const activeBlockSelectors = { selectParsedActiveBlock, selectIsCurrentContractVerified, selectActiveBlock }

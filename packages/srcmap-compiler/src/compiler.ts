@@ -231,8 +231,6 @@ export const compileFiles = async (
     return setCompilationFailed(_payload, message)
   }
 
-  console.log(_payload.address, '/Compilation/Done')
-
   const pathSourceMap = `contracts/${_payload.chainId}/${_payload.address}/sourceMap.json`
   await s3upload({
     Key: pathSourceMap,
@@ -246,6 +244,8 @@ export const compileFiles = async (
     Bucket: BUCKET_NAME,
     Body: JSON.stringify(sourcesOrder),
   })
+
+  console.log(_payload.address, '/Compilation/Done')
 
   return setDdbContractInfo({
     ..._payload,

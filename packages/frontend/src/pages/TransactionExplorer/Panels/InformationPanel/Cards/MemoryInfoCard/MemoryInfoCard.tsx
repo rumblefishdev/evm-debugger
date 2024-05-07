@@ -103,6 +103,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
               return (
                 <StyledRecord
                   direction="row"
+                  sx={{ flexWrap: 'nowrap' }}
                   key={memoryItem.index}
                 >
                   <StyledRecordType>{memoryItem.index}</StyledRecordType>
