@@ -1,23 +1,21 @@
 /* eslint sort-keys-fix/sort-keys-fix:0*/ // eslint reorders css styles, causing it to not work properly. So this rule is off.
 import React from 'react'
-import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 
 import { reportIssuePageUrl } from '../../config'
 
 import type { ButtonProps } from './DebuggerProcessButton.types'
-import { IssueTextContainer, StyledLink, StyledBtnText } from './styles'
+import { IssueTextContainer, StyledLink, StyledBtnText, StyledButton } from './styles'
 
 export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
   return (
     <>
-      <Button
+      <StyledButton
         sx={{ width: '100%', marginTop: '20px', borderRadius: '16px' }}
         size="large"
-        variant="contained"
         onClick={onClick}
       >
         <StyledBtnText>Process logs</StyledBtnText>
-      </Button>
+      </StyledButton>
       <IssueTextContainer>
         Found a bug? &nbsp;
         <StyledLink

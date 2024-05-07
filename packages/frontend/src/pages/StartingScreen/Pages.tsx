@@ -57,7 +57,6 @@ export const StartingScreen: () => JSX.Element = () => {
             <ThemeProvider theme={themeDark}>
               <Header
                 blogPosts={fetchedBlogPosts}
-                withoutThemeSwitch
                 useSolidColorLogo
                 backgroundColor="rgba(7,29,90)"
               />

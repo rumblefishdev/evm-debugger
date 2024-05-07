@@ -38,7 +38,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
     height: `113%`,
     width: `100%`,
     left: '0%',
-    top: `10%`,
+    top: `5%`,
     position: 'absolute',
     backgroundImage: `url(${leftEllipse})`,
     backgroundSize: `100% 100%, 100%, 100%`,
@@ -55,6 +55,7 @@ export const LeftEllipse = styled('div')(({ theme }) => ({
       backgroundPositionY: `40%`,
     },
     [theme.breakpoints.down('md')]: {
+      top: '-5%',
       backgroundPositionY: `50%`,
     },
     [theme.breakpoints.down('sm')]: {
@@ -215,15 +216,17 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   background: '-webkit-linear-gradient(45deg, #FFFFFF 100%, #D9D9D9 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
-  fontWeight: '700',
+  fontFamily: 'ClashDisplay',
+  fontWeight: 700,
   lineHeight: '48px',
-  fontSize: '48px',
+  fontSize: '42px',
   letterSpacing: '-0.02em',
   display: 'flex',
   justifyContent: 'flex-start',
   backgroundClip: 'text',
   textAlign: 'left',
   zIndex: 100,
+  marginBottom: '20px',
 
   [theme.breakpoints.down('md')]: {
     textAlign: 'center',
@@ -231,18 +234,19 @@ export const StyledHeading = styled(Typography)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     lineHeight: '36.8px',
-    fontSize: '30px',
+    fontSize: '28px',
   },
 }))
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.75)',
-  fontWeight: '350',
+  fontWeight: 300,
+  fontFamily: 'Satoshi',
   lineHeight: '30px',
   fontSize: '20px',
   Slant: 0,
   span: {
-    fontWeight: '650',
+    fontWeight: 600,
   },
   letterSpacing: '-0.01em',
   textAlign: 'left',

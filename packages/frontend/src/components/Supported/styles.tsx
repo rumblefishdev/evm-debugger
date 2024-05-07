@@ -31,6 +31,7 @@ export const StyledInput = styled(TextField)(({ theme }) => ({
     },
     '& input': {
       padding: theme.spacing(2, 3, 2, 3),
+      fontFamily: 'Satoshi',
     },
     '& fieldset': {
       borderRadius: '16px',
@@ -44,9 +45,9 @@ export const StyledInputLabel = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   opacity: 0.5,
   lineHeight: '100%',
-  fontWeight: 600,
-  fontSize: '12px',
-  fontFamily: 'Rajdhani',
+  fontWeight: 500,
+  fontSize: '11px',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
 }))
 export const StyledErrorLabel = styled(StyledInputLabel)(({ theme }) => ({
@@ -56,14 +57,12 @@ export const StyledErrorLabel = styled(StyledInputLabel)(({ theme }) => ({
 // Todo: style select to fit the theme
 
 export const StyledSelect = styled(Select)(({ theme }) => ({
-  letterSpacing: '-0.01em',
-
   height: '48px',
   fontWeight: 650,
   // change border color
   fontVariationSettings: 'slnt 0',
   fontSize: '14px',
-  fontFamily: 'Inter',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
   '.MuiSvgIcon-root ': {
     fill: 'white !important',
@@ -102,10 +101,9 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
 }))
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-  letterSpacing: '-0.01em',
-  fontWeight: 300,
+  fontWeight: 500,
   fontVariationSettings: 'slnt 0',
   fontSize: '14px',
-  fontFamily: 'Inter',
+  fontFamily: 'Satoshi',
   color: theme.palette.colorWhite,
 }))
