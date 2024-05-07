@@ -6,8 +6,9 @@ import { jsonRpcProvider } from '../../../../config'
 import { transactionConfigSelectors } from '../../../transactionConfig/transactionConfig.selectors'
 import { analyzerActions } from '../../../analyzer/analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../../analyzer/analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../../analyzer/analyzer.utils'
 import { contractBaseSelectors } from '../../../contractBase/contractBase.selectors'
+import { handleStageFailSaga } from '../../../analyzer/saga/handleStageFail/handleStageFail.saga'
 
 export async function fetchBytecode(chainId: ChainId, address: string): Promise<string> {
   const provider = jsonRpcProvider[chainId]
@@ -37,7 +38,6 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
     )
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Fetching bytecodes success')))
   } catch (error) {
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_BYTECODES }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while fetching bytecodes: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.FETCHING_BYTECODES, error)
   }
 }

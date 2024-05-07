@@ -2,8 +2,9 @@ import { type SagaGenerator, put, call, apply } from 'typed-redux-saga'
 
 import { analyzerActions } from '../../analyzer.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { contractBaseActions } from '../../../contractBase/contractBase.slice'
+import { handleStageFailSaga } from '../handleStageFail/handleStageFail.saga'
 
 export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
   try {
@@ -34,10 +35,6 @@ export function* gatherContractsInformationsSaga(): SagaGenerator<void> {
 
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Gathering contracts information success')))
   } catch (error) {
-    console.log(error)
-    yield* put(
-      analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.GATHERING_CONTRACTS_INFORMATION }),
-    )
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while gathering contracts informations: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.GATHERING_CONTRACTS_INFORMATION, error)
   }
 }

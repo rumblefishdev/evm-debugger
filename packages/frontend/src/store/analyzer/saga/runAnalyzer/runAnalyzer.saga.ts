@@ -7,7 +7,7 @@ import { instructionsActions } from '../../../instructions/instructions.slice'
 import { analyzerActions } from '../../analyzer.slice'
 import { sighashActions } from '../../../sighash/sighash.slice'
 import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
-import { createErrorLogMessage, createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
+import { createInfoLogMessage, createSuccessLogMessage, getAnalyzerInstance } from '../../analyzer.utils'
 import { activeLineActions } from '../../../activeLine/activeLine.slice'
 import { structLogsActions } from '../../../structlogs/structlogs.slice'
 import { disassembledBytecodesActions } from '../../../disassembledBytecodes/disassembledBytecodes.slice'
@@ -16,6 +16,7 @@ import { sourceFilesActions } from '../../../sourceFiles/sourceFiles.slice'
 import { contractBaseActions } from '../../../contractBase/contractBase.slice'
 import { contractRawActions } from '../../../contractRaw/contractRaw.slice'
 import { functionStackActions } from '../../../functionStacks/functionStack.slice'
+import { handleStageFailSaga } from '../handleStageFail/handleStageFail.saga'
 
 export function runAnalyzer() {
   const analyzer = getAnalyzerInstance()
@@ -79,8 +80,6 @@ export function* runAnalyzerSaga(): SagaGenerator<void> {
       }),
     )
   } catch (error) {
-    console.error(error)
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.RUNNING_ANALYZER }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while running analyzer: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.RUNNING_ANALYZER, error)
   }
 }

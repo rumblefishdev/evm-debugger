@@ -9,6 +9,7 @@ import { transactionConfigSelectors } from '../../../transactionConfig/transacti
 import { srcMapProviderUrl } from '../../../../config'
 import { contractBaseSelectors } from '../../../contractBase/contractBase.selectors'
 import { contractRawActions } from '../../contractRaw.slice'
+import { handleStageFailSaga } from '../../../analyzer/saga/handleStageFail/handleStageFail.saga'
 
 export async function fetchSourcesStatus(
   transactionHash: string,
@@ -123,7 +124,6 @@ export function* startPoolingSourcesStatusSaga(): SagaGenerator<void> {
       yield* delay(15000)
     }
   } catch (error) {
-    yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.FAILED, stageName: AnalyzerStages.FETCHING_SOURCE_CODES }))
-    yield* put(analyzerActions.addLogMessage(createErrorLogMessage(`Error while compiling source codes: ${error.message}`)))
+    yield* call(handleStageFailSaga, AnalyzerStages.FETCHING_SOURCE_CODES, error)
   }
 }
