@@ -8,7 +8,7 @@ import type { Callback, Context } from 'aws-lambda'
 import { createSQSRecordEvent } from '../utils/lambdaMocks'
 import { consumeSqsAnalyzeTx } from '../../src/lambdaWrapper'
 import { sampleTraceResult } from '../utils/testStructs'
-import { getMockCalledInput, getMockCalledInputItem } from '../utils/awsMocksHelper'
+import { getMockCalledInputItem } from '../utils/awsMocksHelper'
 
 const ddbMock = mockClient(DynamoDBDocumentClient)
 const s3ClientMock = mockClient(S3Client)
@@ -22,7 +22,7 @@ jest.mock('../../src/s3', () => ({
   createMultiPartUpload: jest.fn().mockResolvedValue(uploadIdMock),
 }))
 
-jest.mock('hardhat')
+// jest.mock('hardhat')
 
 describe('Unit test for sqs consumer', function () {
   beforeEach(() => {
