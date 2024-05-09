@@ -61,6 +61,14 @@ export class TraceCreator {
       }
 
       const lastItemInCallContext = selectLastStructLogInFunctionBlockContext(this.dataLoader.inputStructlogs.get(), traceLog)
+      if (!lastItemInCallContext)
+        return {
+          ...traceLog,
+          returnIndex: traceLog.startIndex,
+          isSuccess: false,
+          isReverted: true,
+          callTypeData: { ...traceLog.callTypeData, errorDescription: createErrorDescription('OUT_OF_GAS') },
+        }
 
       const lastItemInTraceReturnLogs = traceReturnLogs.find((item) => item.index === lastItemInCallContext.index)
 

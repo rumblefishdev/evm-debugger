@@ -9,7 +9,7 @@ import { VirtualizedList } from '../../../../components/VirtualizedList/Virtuali
 import type { StructlogPanelComponentProps, StructlogPanelComponentRef } from './StructlogPanel.types'
 
 export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentRef, StructlogPanelComponentProps>(
-  ({ structlogs, activeStructlog, handleSelect, disassembledBytecode }, ref) => {
+  ({ structlogs, activeStructlog, handleSelect }, ref) => {
     const listRef = React.useRef<VirtuosoHandle>(null)
     const wrapperRef = React.useRef<HTMLDivElement>(null)
 
@@ -42,7 +42,7 @@ export const StructlogPanelComponent = React.forwardRef<StructlogPanelComponentR
               const { op, pc, index, dynamicGasCost, gasCost } = data
               return (
                 <EvmStepListElement
-                  pushValue={disassembledBytecode[pc]?.value}
+                  pushValue={data.operand}
                   className="explorer-list-row"
                   id={`explorer-list-row-${listIndex}`}
                   key={listIndex}

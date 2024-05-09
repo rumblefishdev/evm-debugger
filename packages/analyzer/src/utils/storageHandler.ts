@@ -15,7 +15,7 @@ export class StorageHandler {
 
     const { loadedStorage, changedStorage } = this.getLoadedAndChangedStorage(storageLogs)
 
-    const storageData = typeof returnIndex === 'number' ? structLogs[returnIndex].storage : {}
+    const storageData = typeof returnIndex === 'number' ? structLogs[returnIndex]?.storage || {} : {}
     let returnedStorage = this.mapStorageData(storageData)
 
     if (!isSuccess) returnedStorage = loadedStorage

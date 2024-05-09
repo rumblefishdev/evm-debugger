@@ -1,4 +1,4 @@
-import type { TAnalyzerContractBaseData, TAnalyzerContractsRawData } from '@evm-debuger/types'
+import type { TAnalyzerContractBaseData, TAnalyzerContractsRawData, TIndexedStructLog } from '@evm-debuger/types'
 
 import { DataLoader } from './utils/dataLoader'
 import { EVMMachine } from './utils/evmMachine'
@@ -6,6 +6,7 @@ import { parseSourceCode } from './helpers/parseSourceCodes'
 import { TraceCreator } from './utils/traceCreator'
 import { SourceLineParser } from './utils/sourceLineParser'
 import { FunctionManager } from './utils/functionManager'
+import { getStructLogsForContractAddress } from './helpers/helpers'
 
 export class TxAnalyzer {
   private readonly evmMachine = new EVMMachine()
@@ -30,6 +31,26 @@ export class TxAnalyzer {
         this.dataLoader.analyzerContractData.set(address, 'disassembledBytecode', disassembledBytecode)
       }
     }
+  }
+
+  private extandStructLogsWithOperandValues() {
+    const structlogs = this.dataLoader.analyzerStructLogs.get()
+    const traceLogs = this.dataLoader.analyzerTraceLogs.get()
+    const contractsAddresses = this.dataLoader.getAddressesList()
+
+    for (const address of contractsAddresses) {
+      const structLogsForAddress = getStructLogsForContractAddress(traceLogs, structlogs, address)
+      const dissasembleBytecode = this.dataLoader.analyzerContractData.get(address, 'disassembledEtherscanBytecode')
+
+      structLogsForAddress.forEach((structLog: TIndexedStructLog) => {
+        const operand = dissasembleBytecode[structLog.pc]?.value || undefined
+        if (operand) {
+          structlogs[structLog.index].operand = operand
+        }
+      })
+    }
+
+    this.dataLoader.analyzerStructLogs.set(structlogs)
   }
 
   private createSourceFiles() {
@@ -108,6 +129,8 @@ export class TxAnalyzer {
     this.disassembleTransactionBytecodes()
 
     this.traceCreator.processTransactionStructLogs()
+
+    this.extandStructLogsWithOperandValues()
 
     this.createSourceFiles()
 

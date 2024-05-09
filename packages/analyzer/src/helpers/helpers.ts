@@ -47,12 +47,15 @@ export const selectLastStructLogInFunctionBlockContext = (structLogs: TIndexedSt
   return currentBlockContenxt.at(-1)
 }
 
-export const getPcIndexedStructlogsForContractAddress = (traceLogs: TTraceLog[], structLogs: TIndexedStructLog[], address: string) => {
+export const getStructLogsForContractAddress = (traceLogs: TTraceLog[], structLogs: TIndexedStructLog[], address: string) => {
   const traceLogsForAddress = traceLogs.filter((log) => log.address === address)
-
-  const structLogsForAddress = traceLogsForAddress
+  return traceLogsForAddress
     .map((log) => structLogs.slice(log.startIndex, log.returnIndex + 1).filter((structlog) => structlog.depth === log.depth + 1))
     .flat()
+}
+
+export const getPcIndexedStructlogsForContractAddress = (traceLogs: TTraceLog[], structLogs: TIndexedStructLog[], address: string) => {
+  const structLogsForAddress = getStructLogsForContractAddress(traceLogs, structLogs, address)
 
   return structLogsForAddress.reduce((accumulator, log) => {
     if (!accumulator[log.pc]) accumulator[log.pc] = []

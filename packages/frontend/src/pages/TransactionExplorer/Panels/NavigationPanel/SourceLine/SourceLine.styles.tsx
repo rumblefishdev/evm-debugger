@@ -28,6 +28,7 @@ export const StyledCode = styled(Typography)(({ theme }) => ({
   ...theme.typography.label,
   padding: theme.spacing(0, 1, 1, 1),
   lineHeight: '1.2rem',
+  lineBreak: 'anywhere',
   fontSize: '1rem',
   color: '#436850',
 }))

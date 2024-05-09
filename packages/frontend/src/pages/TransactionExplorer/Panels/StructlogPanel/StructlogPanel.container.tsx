@@ -9,7 +9,6 @@ import { activeStructLogActions } from '../../../../store/activeStructLog/active
 import { uiActions } from '../../../../store/ui/ui.slice'
 import { activeLineActions } from '../../../../store/activeLine/activeLine.slice'
 import { sourceFilesActions } from '../../../../store/sourceFiles/sourceFiles.slice'
-import { disassembledBytecodesSelectors } from '../../../../store/disassembledBytecodes/disassembledBytecodes.selectors'
 import { activeBlockActions } from '../../../../store/activeBlock/activeBlock.slice'
 import { traceLogsSelectors } from '../../../../store/traceLogs/traceLogs.selectors'
 import type { IExtendedStructLog } from '../../../../types'
@@ -24,7 +23,6 @@ export const StructlogPanel: React.FC = () => {
   const structLogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const traceLogs = useSelector(traceLogsSelectors.selectEntities)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
-  const currentDissasembledBytecode = useSelector(disassembledBytecodesSelectors.selectCurrentDissasembledBytecode)
   const currentInstructions = useSelector(instructionsSelectors.selectCurrentInstructions)
 
   const componentRefs = useRef<StructlogPanelComponentRef>(null)
@@ -68,7 +66,8 @@ export const StructlogPanel: React.FC = () => {
     const listOffsetTop = wrapperRef.getBoundingClientRect().top
     const listHeight = wrapperRef.offsetHeight
     const elementHeight = element.offsetHeight
-    const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop)
+    // value of 1 is temp adjustment so list scrolls by exactly full element height
+    const currentRowOffsetFromTopOfList = Math.ceil(element.getBoundingClientRect().top - listOffsetTop - 1)
 
     if (currentRowOffsetFromTopOfList + elementHeight > listHeight - elementHeight / 2) {
       const offset = currentRowOffsetFromTopOfList - elementHeight
@@ -112,7 +111,6 @@ export const StructlogPanel: React.FC = () => {
     <StructlogPanelComponent
       structlogs={structlogsArray}
       activeStructlog={activeStructlog}
-      disassembledBytecode={currentDissasembledBytecode}
       handleSelect={setActiveStructlog}
       ref={componentRefs}
     />
