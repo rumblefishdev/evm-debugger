@@ -1,92 +1,168 @@
 import React from 'react'
-import { ViewportList } from 'react-viewport-list'
-import type { ViewportListRef } from 'react-viewport-list'
+import { Tab, Tabs } from '@mui/material'
 
 import { EvmStepListElement } from '../../../../../components/EvmStepListElement'
 import { StyledListWrapper } from '../../styles'
+import { VirtualizedList } from '../../../../../components/VirtualizedList/VirtualizedList'
 
 import { StyledTextField, StyledInfo, StyledHeadingWrapper, StyledQuickLinksHeading } from './QuickLinks.styles'
 import type { TQuickLinksComponentProps } from './QuickLinks.types'
 
+export const RenderQuickLinksTab: React.FC<TQuickLinksComponentProps & { activeTabValue: number }> = ({
+  activeStructLogIndex,
+  externalCalls,
+  expensiveOps,
+  gasThreshold,
+  handleSetGasThreshold,
+  reverts,
+  activeTabValue,
+  setActiveStructlog,
+}) => {
+  switch (activeTabValue) {
+    case 0:
+      return (
+        <>
+          <StyledHeadingWrapper>
+            <StyledQuickLinksHeading>From gas cost</StyledQuickLinksHeading>
+            <StyledTextField
+              variant="standard"
+              value={gasThreshold || ''}
+              onChange={(event) => handleSetGasThreshold(Number(event.target.value))}
+            />
+          </StyledHeadingWrapper>
+          {expensiveOps.length > 0 ? (
+            <VirtualizedList items={expensiveOps}>
+              {(listIndex, item) => {
+                const { gasCost, op, pc, index, dynamicGasCost } = item
+
+                return (
+                  <EvmStepListElement
+                    key={listIndex}
+                    id={`expensive-ops-${listIndex}`}
+                    dynamicGasCost={dynamicGasCost}
+                    baseGasCost={gasCost}
+                    opCode={op}
+                    pc={pc}
+                    isActive={index === activeStructLogIndex}
+                    onClick={() => setActiveStructlog(item.index, item.traceLogIndex)}
+                  />
+                )
+              }}
+            </VirtualizedList>
+          ) : (
+            <StyledInfo>None were found</StyledInfo>
+          )}
+        </>
+      )
+    case 1:
+      return (
+        <>
+          <StyledHeadingWrapper>
+            <StyledQuickLinksHeading>Reverts</StyledQuickLinksHeading>
+          </StyledHeadingWrapper>
+          {reverts.length > 0 && (
+            <VirtualizedList items={reverts}>
+              {(listIndex, item) => {
+                const { gasCost, op, pc, index, dynamicGasCost } = item
+
+                return (
+                  <EvmStepListElement
+                    key={listIndex}
+                    id={`revert-${listIndex}`}
+                    baseGasCost={gasCost}
+                    dynamicGasCost={dynamicGasCost}
+                    opCode={op}
+                    pc={pc}
+                    isActive={index === activeStructLogIndex}
+                    onClick={() => setActiveStructlog(item.index, item.traceLogIndex)}
+                  />
+                )
+              }}
+            </VirtualizedList>
+          )}
+        </>
+      )
+    case 2:
+      return (
+        <>
+          <StyledHeadingWrapper>
+            <StyledQuickLinksHeading>External calls</StyledQuickLinksHeading>
+          </StyledHeadingWrapper>
+          {externalCalls.length > 0 && (
+            <VirtualizedList items={externalCalls}>
+              {(listIndex, item) => {
+                const { gasCost, op, pc, index, dynamicGasCost } = item
+
+                return (
+                  <EvmStepListElement
+                    key={listIndex}
+                    id={`external-calls-${listIndex}`}
+                    baseGasCost={gasCost}
+                    dynamicGasCost={dynamicGasCost}
+                    opCode={op}
+                    pc={pc}
+                    isActive={index === activeStructLogIndex}
+                    onClick={() => setActiveStructlog(item.index, item.traceLogIndex)}
+                  />
+                )
+              }}
+            </VirtualizedList>
+          )}
+        </>
+      )
+    default:
+      return null
+  }
+}
+
 export const QuickLinksComponent: React.FC<TQuickLinksComponentProps> = ({
   externalCalls,
-  activeStructlog,
+  reverts,
+  activeStructLogIndex,
   expensiveOps,
   gasThreshold,
   handleSetGasThreshold,
   setActiveStructlog,
 }) => {
-  const ref = React.useRef<HTMLDivElement>(null)
-  const externalCallsListRef = React.useRef<ViewportListRef>(null)
-  const expensiveOpsListRef = React.useRef<ViewportListRef>(null)
+  const [activeTab, setActiveTab] = React.useState(0)
 
   return (
-    <StyledListWrapper ref={ref}>
-      <StyledHeadingWrapper>
-        <StyledQuickLinksHeading>External calls</StyledQuickLinksHeading>
-      </StyledHeadingWrapper>
-
-      {externalCalls.length > 0 ? (
-        <ViewportList
-          ref={externalCallsListRef}
-          viewportRef={ref}
-          items={externalCalls}
-        >
-          {(item) => {
-            const { gasCost, op, pc, index, dynamicGasCost } = item
-
-            return (
-              <EvmStepListElement
-                key={index}
-                baseGasCost={gasCost}
-                dynamicGasCost={dynamicGasCost}
-                opCode={op}
-                pc={pc}
-                isActive={index === activeStructlog?.index}
-                onClick={() => setActiveStructlog(item.index)}
-              />
-            )
-          }}
-        </ViewportList>
-      ) : (
-        <StyledInfo>None were found</StyledInfo>
-      )}
-
-      <div style={{ width: '100%', minHeight: '20px' }} />
-      <StyledHeadingWrapper>
-        <StyledQuickLinksHeading>From gas cost</StyledQuickLinksHeading>
-        <StyledTextField
-          variant="standard"
-          value={gasThreshold || ''}
-          onChange={(event) => handleSetGasThreshold(Number(event.target.value))}
+    <StyledListWrapper gap={2}>
+      <Tabs
+        value={activeTab}
+        onChange={(_, value) => setActiveTab(value)}
+      >
+        <Tab
+          label="From gas cost"
+          disableFocusRipple
+          disableRipple
+          disableTouchRipple
         />
-      </StyledHeadingWrapper>
-
-      {expensiveOps.length > 0 ? (
-        <ViewportList
-          ref={expensiveOpsListRef}
-          viewportRef={ref}
-          items={expensiveOps}
-        >
-          {(item) => {
-            const { gasCost, op, pc, index, dynamicGasCost } = item
-
-            return (
-              <EvmStepListElement
-                key={index}
-                dynamicGasCost={dynamicGasCost}
-                baseGasCost={gasCost}
-                opCode={op}
-                pc={pc}
-                isActive={index === activeStructlog?.index}
-                onClick={() => setActiveStructlog(item.index)}
-              />
-            )
-          }}
-        </ViewportList>
-      ) : (
-        <StyledInfo>None were found</StyledInfo>
-      )}
+        <Tab
+          label="Reverts"
+          disabled={reverts?.length === 0}
+          disableFocusRipple
+          disableRipple
+          disableTouchRipple
+        />
+        <Tab
+          label="External calls"
+          disabled={externalCalls?.length === 0}
+          disableFocusRipple
+          disableRipple
+          disableTouchRipple
+        />
+      </Tabs>
+      <RenderQuickLinksTab
+        activeStructLogIndex={activeStructLogIndex}
+        externalCalls={externalCalls}
+        expensiveOps={expensiveOps}
+        gasThreshold={gasThreshold}
+        handleSetGasThreshold={handleSetGasThreshold}
+        reverts={reverts}
+        activeTabValue={activeTab}
+        setActiveStructlog={setActiveStructlog}
+      />
     </StyledListWrapper>
   )
 }

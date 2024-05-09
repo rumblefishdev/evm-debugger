@@ -1,4 +1,5 @@
 import React from 'react'
+import { Stack } from '@mui/material'
 
 import { StyledPanel, StyledHeading, StyledHeadingWrapper } from '../styles'
 import { Button } from '../../../../components/Button'
@@ -25,9 +26,25 @@ export const InformationPanel: React.FC = () => {
         </Button>
       </StyledHeadingWrapper>
       <StyledCardsWrapper expanded={isExpanded}>
-        <StackInfoCard />
-        <MemoryInfoCard />
-        <StorageInfoCard />
+        <Stack
+          direction="row"
+          width="100%"
+          height="100%"
+          overflow="auto"
+          flex={1}
+          gap={2}
+        >
+          <StackInfoCard />
+          <MemoryInfoCard />
+        </Stack>
+        <Stack
+          flex={1}
+          overflow="auto"
+          width="100%"
+          height="100%"
+        >
+          <StorageInfoCard />
+        </Stack>
       </StyledCardsWrapper>
     </StyledPanel>
   )

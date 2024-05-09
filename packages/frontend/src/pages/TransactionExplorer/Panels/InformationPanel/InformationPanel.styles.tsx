@@ -9,9 +9,8 @@ export const StyledCardsWrapper = styled(
   StyledCardsWrapperOptions,
 )<{ expanded: boolean }>(({ theme, expanded }) => ({
   transition: 'height 0.3s ease',
-  justifyContent: 'space-between',
-  height: expanded ? 256 : 112,
+  height: expanded ? 364 : 224,
   gap: theme.spacing(1),
-  flexDirection: 'row',
+  flexDirection: 'column',
   alignItems: 'center',
 }))

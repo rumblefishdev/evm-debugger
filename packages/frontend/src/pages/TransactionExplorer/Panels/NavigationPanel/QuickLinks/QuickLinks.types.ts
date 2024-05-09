@@ -2,9 +2,10 @@ import type { IExtendedStructLog } from '../../../../../types'
 
 export type TQuickLinksComponentProps = {
   externalCalls: IExtendedStructLog[]
+  reverts: IExtendedStructLog[]
   expensiveOps: IExtendedStructLog[]
-  activeStructlog: IExtendedStructLog
+  activeStructLogIndex: number
   gasThreshold: number
   handleSetGasThreshold: (gasThreshold: number) => void
-  setActiveStructlog: (structLog: number) => void
+  setActiveStructlog: (structLogIndex: number, traceLogIndex: number) => void
 }

@@ -10,7 +10,6 @@
     "@evm-debuger/types": "^0.1.2",
     "@sentry/serverless": "^7.51.0",
     "node-fetch": "^3.3.1",
-    "solcv0.4.0": "npm:solc@0.4.0",
     "solcv0.4.1": "npm:solc@0.4.1",
     "solcv0.4.2": "npm:solc@0.4.2",
     "solcv0.4.3": "npm:solc@0.4.3",
@@ -98,7 +97,8 @@
     "solcv0.8.21": "npm:solc@0.8.21",
     "solcv0.8.22": "npm:solc@0.8.22",
     "solcv0.8.23": "npm:solc@0.8.23-fixed",
-    "solcv0.8.24": "npm:solc@0.8.24"
+    "solcv0.8.24": "npm:solc@0.8.24",
+    "solcv0.8.25": "npm:solc@0.8.25"
   },
   "scripts": {
     "build": "esbuild src/* --bundle --minify --target=node18.5 --target=es2020 --platform=node --format=cjs --outdir=dist",

@@ -28,16 +28,10 @@ export const StorageInfoCard = () => {
         <StyledWrapper>
           {keys.map((key, index) => {
             return (
-              <Stack key={index}>
-                <StyledRecord>
-                  <StyledRecordType>Key: </StyledRecordType>
-                  <StyledRecordValue>{key}</StyledRecordValue>
-                </StyledRecord>
-                <StyledRecord>
-                  <StyledRecordType>Value: </StyledRecordType>
-                  <StyledRecordValue>{storage[key]}</StyledRecordValue>
-                </StyledRecord>
-              </Stack>
+              <StyledRecord key={index}>
+                <StyledRecordType>{key}</StyledRecordType>
+                <StyledRecordValue>{storage[key]}</StyledRecordValue>
+              </StyledRecord>
             )
           })}
         </StyledWrapper>

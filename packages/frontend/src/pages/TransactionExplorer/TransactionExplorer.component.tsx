@@ -33,6 +33,7 @@ export const TransactionExplorer: React.FC = () => {
             width="60%"
             justifyContent="flex-start"
             spacing={1}
+            flex={3}
           >
             <Stack
               flex={2}
@@ -49,7 +50,10 @@ export const TransactionExplorer: React.FC = () => {
               <StructlogPanel />
             </Stack>
           </Stack>
-          <Stack width="100%">
+          <Stack
+            width="100%"
+            flex={5}
+          >
             <SourceCodePanel hasContract={activeBlock.isContract} />
           </Stack>
         </Stack>

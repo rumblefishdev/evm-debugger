@@ -1,6 +1,13 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import type { TPcIndexedStepInstructions, TSourceMapConverstionPayload, TStructlogsPerStartLine } from '@evm-debuger/types'
+import { SourceFileType } from '@evm-debuger/types'
+import type {
+  TDisassembledBytecodeStructlog,
+  TOpcodesNames,
+  TPcIndexedStepInstructions,
+  TSourceMapConverstionPayload,
+  TStructlogsPerStartLine,
+} from '@evm-debuger/types'
 
 import { getPcIndexedStructlogsForContractAddress } from '../helpers/helpers'
 
@@ -38,6 +45,23 @@ export class SourceLineParser {
       dataToDecode.push({ contractSourceMap, contractSourceFiles, contractName, contractAddress })
     }
 
+    const getPreivousValidInstruction = (
+      instructions: TPcIndexedStepInstructions,
+      currentPc: number,
+      orignalPc: number,
+      orignalOpcode: TOpcodesNames | string,
+    ) => {
+      if (
+        !instructions[currentPc] ||
+        instructions[currentPc]?.fileType === SourceFileType.UNKNOWN ||
+        instructions[currentPc]?.fileId === -1
+      ) {
+        return getPreivousValidInstruction(instructions, currentPc - 1, orignalPc, orignalOpcode)
+      }
+
+      return { ...instructions[currentPc], pc: orignalPc, opcode: orignalOpcode }
+    }
+
     return dataToDecode.forEach(({ contractAddress, contractSourceMap, contractSourceFiles }) => {
       const convertedSourceMap = sourceMapConverter(contractSourceMap)
       const uniqueSourceMaps = getUniqueSourceMaps(convertedSourceMap)
@@ -46,10 +70,13 @@ export class SourceLineParser {
 
       const disassembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledEtherscanBytecode')
 
-      const mapDisasemlbedBytecodeToIndex = Object.values(disassembledBytecode).reduce((accumulator, disassembledBytecodeEntry, index) => {
-        accumulator[index] = disassembledBytecodeEntry
-        return accumulator
-      }, {})
+      const mapDisasemlbedBytecodeToIndex = Object.values(disassembledBytecode).reduce<Record<number, TDisassembledBytecodeStructlog>>(
+        (accumulator, disassembledBytecodeEntry, index) => {
+          accumulator[index] = disassembledBytecodeEntry
+          return accumulator
+        },
+        {},
+      )
 
       const instructions: TPcIndexedStepInstructions = convertedSourceMap.reduce((accumulator, sourceMapEntry, index) => {
         const instructionId = createSourceMapIdentifier(sourceMapEntry)
@@ -69,7 +96,18 @@ export class SourceLineParser {
         contractAddress,
       )
 
-      const structlogsPerStartLine = Object.values(instructions).reduce((accumulator, instruction) => {
+      const valdiatedInstructions = Object.values(instructions).reduce((accumulator, instruction) => {
+        if (instruction.fileType === SourceFileType.UNKNOWN || instruction.fileId === -1) {
+          const previousInstruction = getPreivousValidInstruction(instructions, instruction.pc - 1, instruction.pc, instruction.opcode)
+          accumulator[instruction.pc] = previousInstruction
+          return accumulator
+        }
+
+        accumulator[instruction.pc] = instruction
+        return accumulator
+      }, {} as TPcIndexedStepInstructions)
+
+      const structlogsPerStartLine = Object.values(valdiatedInstructions).reduce((accumulator, instruction) => {
         if (!accumulator[instruction.fileId]) accumulator[instruction.fileId] = {}
         if (!accumulator[instruction.fileId][instruction.startCodeLine] && contractStructlogs[instruction.pc]?.length > 0)
           accumulator[instruction.fileId][instruction.startCodeLine] = []
@@ -79,7 +117,7 @@ export class SourceLineParser {
         return accumulator
       }, {} as TStructlogsPerStartLine)
 
-      this.dataLoader.analyzerContractData.set(contractAddress, 'instructions', instructions)
+      this.dataLoader.analyzerContractData.set(contractAddress, 'instructions', valdiatedInstructions)
       this.dataLoader.analyzerContractData.set(contractAddress, 'structlogsPerStartLine', structlogsPerStartLine)
     })
   }
