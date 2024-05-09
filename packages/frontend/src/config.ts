@@ -51,12 +51,13 @@ export const chainNames = {
   [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
 }
 
+// TODO: Revert when support is added
 export const showChainOnStartScreen = {
   [ChainId.mainnet]: true,
-  [ChainId.goerli]: true,
-  [ChainId.polygon]: true,
-  [ChainId.mumbai]: true,
-  [ChainId.sepolia]: true,
+  [ChainId.goerli]: false,
+  [ChainId.polygon]: false,
+  [ChainId.mumbai]: false,
+  [ChainId.sepolia]: false,
   [ChainId.arbitrum]: false,
   [ChainId.arbitrumGoerli]: false,
 }

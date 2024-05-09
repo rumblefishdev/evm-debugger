@@ -25,8 +25,6 @@ export const SourceLineContainer: React.FC = () => {
   const allStructlogs = useSelector(structlogsSelectors.selectAllParsedStructLogs)
   const allStructlogsArray = Object.values(allStructlogs)
 
-  console.log('currentStructLogsByBlocks', currentStructLogsByBlocks)
-
   const clearSelectedLine = React.useCallback(() => {
     dispatch(activeLineActions.clearActiveLine())
   }, [dispatch])

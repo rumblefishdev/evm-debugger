@@ -107,8 +107,6 @@ export const StructlogPanel: React.FC = () => {
     }
   }, [setActiveStructlog, dispatch, structlogsArray, activeStructlog])
 
-  console.log('structlogsArray', structlogsArray)
-
   return (
     <StructlogPanelComponent
       structlogs={structlogsArray}
