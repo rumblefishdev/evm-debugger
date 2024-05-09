@@ -1,3 +1,3 @@
 export enum StructlogsErrors {
-  BLOCK_NOT_FOUND = 'Block not found',
+  BLOCK_NOT_FOUND = 'Unknown block number',
 }
