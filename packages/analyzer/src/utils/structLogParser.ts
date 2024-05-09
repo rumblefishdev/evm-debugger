@@ -39,7 +39,7 @@ export class OpCodeConverter {
       stackTrace,
       passedGas: nextStructLog?.depth === depth ? gas : nextStructLog?.gas || 0,
       output,
-      isContract: nextStructLog?.depth === depth + 1 || true,
+      isContract: nextStructLog?.depth === depth + 1 || false,
       input,
       callTypeData: { events: [] },
       address,
