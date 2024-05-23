@@ -21,7 +21,7 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
   [ChainId.mainnet]: new JsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet', {
     staticNetwork: new Network('mainnet', ChainId.mainnet),
   }),
-  [ChainId.amoy]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'amoy', {
+  [ChainId.amoy]: new JsonRpcProvider(process.env.REACT_APP_AMOY_JSONRPC, 'amoy', {
     staticNetwork: new Network('amoy', ChainId.amoy),
   }),
   [ChainId.polygon]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic', {

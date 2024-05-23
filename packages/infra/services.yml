@@ -199,7 +199,6 @@ Resources:
             - Effect: Allow
               Action:
                 - sqs:SendMessage
-                - sqs:ReceiveMessage
               Resource:
                 - !GetAtt TransactionTraceSqs.Arn
                 - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
@@ -322,6 +321,7 @@ Resources:
   TransactionTraceRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub ${AWS::StackName}-TransactionTraceRole-${Environment}
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -369,6 +369,16 @@ Resources:
               - ecs:StopTask
               - ecs:DescribeTasks
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+            Resource:
+              - !GetAtt TransactionTraceSqs.Arn
+              - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
+              - !GetAtt TransactionTraceSqsChainIdPolygon.Arn
+              - !GetAtt TransactionTraceSqsChainIdAmoy.Arn
+              - !GetAtt TransactionTraceSqsChainIdSepolia.Arn
 
   TransactionTraceSqsHandlerFunctionMainnet:
     Type: AWS::Serverless::Function
