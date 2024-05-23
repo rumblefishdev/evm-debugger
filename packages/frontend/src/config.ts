@@ -21,8 +21,8 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
   [ChainId.mainnet]: new JsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet', {
     staticNetwork: new Network('mainnet', ChainId.mainnet),
   }),
-  [ChainId.goerli]: new JsonRpcProvider(process.env.REACT_APP_GOERLI_JSONRPC, 'goerli', {
-    staticNetwork: new Network('goerli', ChainId.goerli),
+  [ChainId.amoy]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'amoy', {
+    staticNetwork: new Network('amoy', ChainId.amoy),
   }),
   [ChainId.polygon]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic', {
     staticNetwork: new Network('matic', ChainId.polygon),
@@ -43,7 +43,7 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
 
 export const chainNames = {
   [ChainId.mainnet]: 'Ethereum',
-  [ChainId.goerli]: 'Goerli',
+  [ChainId.amoy]: 'Amoy',
   [ChainId.polygon]: 'Polygon',
   [ChainId.mumbai]: 'Mumbai',
   [ChainId.sepolia]: 'Sepolia',
@@ -54,10 +54,10 @@ export const chainNames = {
 // TODO: Revert when support is added
 export const showChainOnStartScreen = {
   [ChainId.mainnet]: true,
-  [ChainId.goerli]: false,
-  [ChainId.polygon]: false,
+  [ChainId.amoy]: true,
+  [ChainId.polygon]: true,
   [ChainId.mumbai]: false,
-  [ChainId.sepolia]: false,
+  [ChainId.sepolia]: true,
   [ChainId.arbitrum]: false,
   [ChainId.arbitrumGoerli]: false,
 }

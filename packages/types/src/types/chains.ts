@@ -1,9 +1,9 @@
 /* eslint-disable unicorn/numeric-separators-style */
 export enum ChainId {
   mainnet = 1,
-  goerli = 5,
   polygon = 137,
   mumbai = 80001,
+  amoy = 80002,
   sepolia = 11155111,
   arbitrum = 42161,
   arbitrumGoerli = 421613,
@@ -11,8 +11,8 @@ export enum ChainId {
 
 export const forkingUrlMap = {
   [ChainId.mainnet]: `https://eth-mainnet.alchemyapi.io/v2/`,
-  [ChainId.goerli]: `https://eth-goerli.alchemyapi.io/v2/`,
   [ChainId.polygon]: `https://polygon-mainnet.g.alchemy.com/v2/`,
+  [ChainId.amoy]: 'https://polygon-amoy.g.alchemy.com/v2/',
   [ChainId.mumbai]: `https://polygon-mumbai.g.alchemy.com/v2/`,
   [ChainId.sepolia]: `https://eth-sepolia.g.alchemy.com/v2/`,
   [ChainId.arbitrum]: `https://arb-mainnet.g.alchemy.com/v2`,
@@ -24,15 +24,14 @@ export const etherscanUrls = {
     url: 'https://api.etherscan.io',
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
-  [ChainId.goerli]: {
-    url: 'https://api-goerli.etherscan.io',
-    key: process.env.REACT_APP_ETHERSCAN_KEY,
+  [ChainId.amoy]: {
+    url: 'https://api-amoy.polygonscan.com',
+    key: process.env.REACT_APP_POLYGONSCAN_KEY,
   },
   [ChainId.sepolia]: {
     url: 'https://api-sepolia.etherscan.io',
     key: process.env.REACT_APP_ETHERSCAN_KEY,
   },
-
   [ChainId.polygon]: {
     url: 'https://api.polygonscan.com',
     key: process.env.REACT_APP_POLYGONSCAN_KEY,
