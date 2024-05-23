@@ -1,5 +1,5 @@
-Transform: AWS::Serverless-2016-10-31
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   Environment:
@@ -29,7 +29,6 @@ Parameters:
   TransactionTraceCpu:
     Type: String
     Default: 1 vCPU
-
   # Adding new SSM parameters via AWS console, remember to add tag 'Owner: evm-debugger' to them
   EtherscanKey:
     Type: AWS::SSM::Parameter::Value<String>
@@ -40,7 +39,6 @@ Parameters:
   ArbitrumscanKey:
     Type: AWS::SSM::Parameter::Value<String>
     Default: "/evm-debugger/secrets/ARBITRUMSCAN_KEY"
-
 Resources:
   Api:
     Type: AWS::Serverless::Api
@@ -106,37 +104,50 @@ Resources:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId1':
+  # SOOOON !!!
+  # Fn::ForEach::TransactionTraceSqsQueues:
+  #   - chainId
+  #   - [1,137,80002,11155111]
+  #   - 
+  #     Type: AWS::SQS::Queue
+  #     Properties:
+  #       QueueName: !Sub ${AWS::StackName}-sqs-chainId-${chainId}
+  #       VisibilityTimeout: 910
+  #       RedrivePolicy:
+  #         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
+  #         maxReceiveCount: 1
+
+  TransactionTraceSqsChainIdMainnet:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-chainId-1
+      QueueName: !Sub transaction-trace-${Environment}-sqs-chainId-1
       VisibilityTimeout: 910
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId137':
+  TransactionTraceSqsChainIdPolygon:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-chainId-137
+      QueueName: !Sub transaction-trace-${Environment}-sqs-chainId-137
       VisibilityTimeout: 910
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId80002':
+  TransactionTraceSqsChainIdAmoy:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-chainId-80002
+      QueueName: !Sub transaction-trace-${Environment}-sqs-chainId-80002
       VisibilityTimeout: 910
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId11155111':
+  TransactionTraceSqsChainIdSepolia:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${AWS::StackName}-sqs-chainId-11155111
+      QueueName: !Sub transaction-trace-${Environment}-sqs-chainId-11155111
       VisibilityTimeout: 910
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
