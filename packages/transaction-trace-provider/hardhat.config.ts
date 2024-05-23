@@ -8,7 +8,7 @@ export const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      chainId: 1,
+      chainId: parseInt(process.env.CHAIN_ID as string),
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
       },

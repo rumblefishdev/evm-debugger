@@ -6,3 +6,8 @@ build-TransactionTraceSqsHandlerFunction:
 build-TransactionTraceSqsDeadLetterHandlerFunction:
 	npm run build
 	cp -r dist/* $(ARTIFACTS_DIR)
+
+build-TransactionTraceSqsHandlerFunctionMainnet:
+	npm run build
+	cp package.json $(ARTIFACTS_DIR) # required by hardhat
+	cp -r dist/* $(ARTIFACTS_DIR)

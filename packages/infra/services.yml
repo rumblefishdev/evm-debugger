@@ -167,7 +167,10 @@ Resources:
       Environment:
         Variables:
           TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
-          SQS_ANALYZER_URL: !Ref TransactionTraceSqs
+          SQS_ANALYZER_URL_1: !Ref TransactionTraceSqsChainIdMainnet
+          SQS_ANALYZER_URL_137: !Ref TransactionTraceSqsChainIdPolygon
+          SQS_ANALYZER_URL_80002: !Ref TransactionTraceSqsChainIdAmoy
+          SQS_ANALYZER_URL_11155111: !Ref TransactionTraceSqsChainIdSepolia
           ENVIRONMENT: !Ref Environment
           SENTRY_DSN: !Ref SentryDsn
           DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
@@ -198,6 +201,10 @@ Resources:
                 - sqs:SendMessage
               Resource:
                 - !GetAtt TransactionTraceSqs.Arn
+                - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
+                - !GetAtt TransactionTraceSqsChainIdPolygon.Arn
+                - !GetAtt TransactionTraceSqsChainIdAmoy.Arn
+                - !GetAtt TransactionTraceSqsChainIdSepolia.Arn
     Metadata:
       BuildMethod: makefile
 
@@ -378,7 +385,77 @@ Resources:
                 - ecs:StopTask
                 - ecs:DescribeTasks
               Resource: "*"
+    Metadata:
+      BuildMethod: makefile
 
+  TransactionTraceSqsHandlerFunctionMainnet:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-mainnet-handler
+      CodeUri: ../transaction-trace-provider
+      Handler: src/lambdaWrapper.consumeSqsAnalyzeTxEntrypoint
+      Runtime: nodejs18.x
+      Layers:
+        - !Ref TransactionTraceProviderFunctionDepLayer
+      Timeout: 900
+      MemorySize: 6144
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ECS_TASK_ARN: !Ref TransactionTraceTaskDefinition
+          ECS_CLUSTER_ARN: !Ref ECSCluster
+          ALCHEMY_KEY: !Ref AlchemyKey
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
+          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+          CHAIN_ID: 1
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TransactionTraceSqsChainIdMainnet.Arn
+            BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 5
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - iam:PassRole
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource:
+                - !GetAtt TransactionTraceDataTable.Arn
+                - !Sub ${TransactionTraceDataTable.Arn}/**
+            - Action:
+                - s3:*
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:s3:::${TraceBucketName}
+                - !Sub arn:aws:s3:::${TraceBucketName}/**
+            - Action:
+                - cloudfront:CreateInvalidation
+              Effect: Allow
+              Resource:
+                - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
+            - Effect: Allow
+              Action:
+                - ecs:RunTask
+                - ecs:StopTask
+                - ecs:DescribeTasks
+              Resource: "*"
     Metadata:
       BuildMethod: makefile
 
