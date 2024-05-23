@@ -454,6 +454,90 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  TransactionTraceSqsHandlerFunctionAmoy:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-amoy-handler
+      CodeUri: ../transaction-trace-provider
+      Handler: src/lambdaWrapper.consumeSqsAnalyzeTxEntrypoint
+      Runtime: nodejs18.x
+      Role: !GetAtt TransactionTraceRole.Arn
+      Layers:
+        - !Ref TransactionTraceProviderFunctionDepLayer
+      Timeout: 900
+      MemorySize: 6144
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ECS_TASK_ARN: !Ref TransactionTraceTaskDefinition
+          ECS_CLUSTER_ARN: !Ref ECSCluster
+          ALCHEMY_KEY: !Ref AlchemyKey
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
+          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+          CHAIN_ID: 80002
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TransactionTraceSqsChainIdAmoy.Arn
+            BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 5
+    Metadata:
+      BuildMethod: makefile
+
+  TransactionTraceSqsHandlerFunctionSepolia:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub evm-debugger-${Environment}-transaction-trace-sepolia-handler
+      CodeUri: ../transaction-trace-provider
+      Handler: src/lambdaWrapper.consumeSqsAnalyzeTxEntrypoint
+      Runtime: nodejs18.x
+      Role: !GetAtt TransactionTraceRole.Arn
+      Layers:
+        - !Ref TransactionTraceProviderFunctionDepLayer
+      Timeout: 900
+      MemorySize: 6144
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ECS_TASK_ARN: !Ref TransactionTraceTaskDefinition
+          ECS_CLUSTER_ARN: !Ref ECSCluster
+          ALCHEMY_KEY: !Ref AlchemyKey
+          TRANSACTION_TRACE_DATA_TABLE_NAME: !Ref TransactionTraceDataTable
+          ANALYZER_DATA_BUCKET_NAME: !Ref TraceBucketName
+          CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistributionId
+          ENVIRONMENT: !Ref Environment
+          SENTRY_DSN: !Ref SentryDsn
+          # HardHat uses env-path for config files, so we need to set it to /tmp/home
+          XDG_DATA_HOME: /tmp/home/.local/share
+          XDG_CONFIG_HOME: /tmp/home/.config
+          XDG_CACHE_HOME: /tmp/home/.cache
+          XDG_STATE_HOME: /tmp/home/.local/state
+          DISCORD_WEBHOOK: !Sub "{{resolve:ssm:/evm-debugger/${Environment}/discord}}"
+          CHAIN_ID: 11155111
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TransactionTraceSqsChainIdSepolia.Arn
+            BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 5
+    Metadata:
+      BuildMethod: makefile
+
   TransactionTraceProviderFunctionDepLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
