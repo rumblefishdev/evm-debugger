@@ -199,6 +199,7 @@ Resources:
             - Effect: Allow
               Action:
                 - sqs:SendMessage
+                - sqs:ReceiveMessage
               Resource:
                 - !GetAtt TransactionTraceSqs.Arn
                 - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
