@@ -321,7 +321,7 @@ Resources:
   TransactionTraceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${AWS::StackName}-TransactionTraceRole-${Environment}
+      RoleName: !Sub transaction-trace-sqs-handler-role-${Environment}
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -331,54 +331,50 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - sts:AssumeRole
-
-  TransactionTracePolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: transaction-trace-policy
-      Roles:
-      - !Ref TransactionTraceRole
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Action:
-              - iam:PassRole
-            Resource:
-              - '*'
-          - Effect: Allow
-            Action:
-              - dynamodb:PutItem
-            Resource:
-              - !GetAtt TransactionTraceDataTable.Arn
-              - !Sub ${TransactionTraceDataTable.Arn}/**
-          - Action:
-              - s3:*
-            Effect: Allow
-            Resource:
-              - !Sub arn:aws:s3:::${TraceBucketName}
-              - !Sub arn:aws:s3:::${TraceBucketName}/**
-          - Action:
-              - cloudfront:CreateInvalidation
-            Effect: Allow
-            Resource:
-              - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
-          - Effect: Allow
-            Action:
-              - ecs:RunTask
-              - ecs:StopTask
-              - ecs:DescribeTasks
-            Resource: "*"
-          - Effect: Allow
-            Action:
-              - sqs:SendMessage
-              - sqs:ReceiveMessage
-            Resource:
-              - !GetAtt TransactionTraceSqs.Arn
-              - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
-              - !GetAtt TransactionTraceSqsChainIdPolygon.Arn
-              - !GetAtt TransactionTraceSqsChainIdAmoy.Arn
-              - !GetAtt TransactionTraceSqsChainIdSepolia.Arn
+      Policies:
+        - PolicyName: transaction-trace
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource:
+                  - !GetAtt TransactionTraceDataTable.Arn
+                  - !Sub ${TransactionTraceDataTable.Arn}/**
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:s3:::${TraceBucketName}
+                  - !Sub arn:aws:s3:::${TraceBucketName}/**
+              - Action:
+                  - cloudfront:CreateInvalidation
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
+              - Effect: Allow
+                Action:
+                  - ecs:RunTask
+                  - ecs:StopTask
+                  - ecs:DescribeTasks
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:GetQueueAttributes
+                  - sqs:DeleteMessage
+                Resource:
+                  - !GetAtt TransactionTraceSqs.Arn
+                  - !GetAtt TransactionTraceSqsChainIdMainnet.Arn
+                  - !GetAtt TransactionTraceSqsChainIdPolygon.Arn
+                  - !GetAtt TransactionTraceSqsChainIdAmoy.Arn
+                  - !GetAtt TransactionTraceSqsChainIdSepolia.Arn
 
   TransactionTraceSqsHandlerFunctionMainnet:
     Type: AWS::Serverless::Function
