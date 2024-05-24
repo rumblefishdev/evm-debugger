@@ -10,7 +10,7 @@ export const config: HardhatUserConfig = {
     hardhat: {
       chainId: parseInt(process.env.CHAIN_ID as string),
       forking: {
-        url: `${forkingUrlMap[parseInt(process.env.CHAIN_ID as string)]}/${process.env.ALCHEMY_KEY}`,
+        url: `${forkingUrlMap[parseInt(process.env.CHAIN_ID as string)]}${process.env.ALCHEMY_KEY}`,
       },
       // chains: {
       //   // chains are configured to fork from blocks around the time of
