@@ -9,7 +9,7 @@ export const putTxDetailsToSqs = async (
   gasLimit: string,
 ) => {
   const params = {
-    QueueUrl: process.env.SQS_ANALYZER_URL,
+    QueueUrl: process.env[`SQS_ANALYZER_URL_${chainId}`],
     MessageBody: `Transaction ${txHash}`,
     MessageAttributes: {
       txHash: {
@@ -32,6 +32,7 @@ export const putTxDetailsToSqs = async (
     },
     DelaySeconds: 0,
   }
+  console.log(JSON.stringify(params))
   const command = new SendMessageCommand(params)
   await sqsClient.send(command)
 }
