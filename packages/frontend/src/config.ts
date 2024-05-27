@@ -21,9 +21,7 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
   [ChainId.mainnet]: new JsonRpcProvider(process.env.REACT_APP_MAINNET_JSONRPC, 'mainnet', {
     staticNetwork: new Network('mainnet', ChainId.mainnet),
   }),
-  // [ChainId.amoy]: new JsonRpcProvider(process.env.REACT_APP_AMOY_JSONRPC, 'amoy', {
-  //   staticNetwork: new Network('amoy', ChainId.amoy),
-  // }),
+  [ChainId.amoy]: new JsonRpcProvider(process.env.REACT_APP_AMOY_JSONRPC),
   [ChainId.polygon]: new JsonRpcProvider(process.env.REACT_APP_POLYGON_JSONRPC, 'matic', {
     staticNetwork: new Network('matic', ChainId.polygon),
   }),
@@ -40,7 +38,7 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
 
 export const chainNames = {
   [ChainId.mainnet]: 'Ethereum',
-  // [ChainId.amoy]: 'Amoy',
+  [ChainId.amoy]: 'Amoy',
   [ChainId.polygon]: 'Polygon',
   [ChainId.sepolia]: 'Sepolia',
   [ChainId.arbitrum]: 'Arbitrum One',
@@ -50,7 +48,7 @@ export const chainNames = {
 // TODO: Revert when support is added
 export const showChainOnStartScreen = {
   [ChainId.mainnet]: true,
-  // [ChainId.amoy]: false,
+  [ChainId.amoy]: true,
   [ChainId.polygon]: false,
   [ChainId.sepolia]: true,
   [ChainId.arbitrum]: false,
