@@ -2,6 +2,9 @@
   "dependencies": {
     "hardhat": "npm:@rumblefishdev/hardhat@0.22.6"
   },
+  "overrides": {
+    "hardhat@^2.9.5": "hardhat"
+  },
   "scripts": {
   }
 }

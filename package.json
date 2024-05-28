@@ -30,6 +30,7 @@
     "transaction-trace-api:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-api",
     "transaction-trace-provider:lint-check": "lerna run lint:check --scope @evm-debuger/transaction-trace-provider",
     "transaction-trace-provider:lint-fix": "lerna run lint:fix --scope @evm-debuger/transaction-trace-provider",
+    "transaction-trace-provider:build": "lerna run build --scope @evm-debuger/transaction-trace-provider",
     "types:build": "lerna run build --scope @evm-debuger/types"
   },
   "devDependencies": {
