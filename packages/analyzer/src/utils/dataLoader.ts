@@ -181,8 +181,8 @@ export class DataLoader {
       ),
       contractsDisassembledBytecodes: Object.values(this.analyzerData.contracts).reduce<
         TAnalyzerAnalysisOutput['contractsDisassembledBytecodes']
-      >((accumulator, { address, disassembledBytecode }) => {
-        accumulator[address] = { disassembledBytecode, address }
+      >((accumulator, { address, disassembledEtherscanBytecode }) => {
+        accumulator[address] = { disassembledBytecode: disassembledEtherscanBytecode, address }
         return accumulator
       }, {}),
       contractsBaseData: Object.values(this.analyzerData.contracts).reduce<TAnalyzerAnalysisOutput['contractsBaseData']>(

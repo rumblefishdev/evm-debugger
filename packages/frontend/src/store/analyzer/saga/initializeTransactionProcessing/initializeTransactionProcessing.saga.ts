@@ -37,13 +37,13 @@ export function* initializeTransactionProcessingSaga({
 
     yield* put(analyzerActions.addLogMessage(createInfoLogMessage('Calculating gas usage of transaction')))
 
-    // const gasUsed = yield* call(estimateGasUsage, chainId, transactionHash)
+    const gasUsed = yield* call(estimateGasUsage, chainId, transactionHash)
 
-    // if (gasUsed > BigInt(2000000)) {
-    //   throw new Error(`Currently, we do not support transactions with over 2 milion gas usage. Your transaction used ${gasUsed} gas`)
-    // }
+    if (gasUsed > BigInt(2000000)) {
+      throw new Error(`Currently, we do not support transactions with over 2 milion gas usage. Your transaction used ${gasUsed} gas`)
+    }
 
-    yield* put(transactionConfigActions.setGasUsed({ gasUsed: '100000' }))
+    yield* put(transactionConfigActions.setGasUsed({ gasUsed: gasUsed.toString() }))
 
     yield* put(analyzerActions.updateStage({ stageStatus: AnalyzerStagesStatus.SUCCESS, stageName: AnalyzerStages.INITIALIZING_ANALYZER }))
     yield* put(analyzerActions.addLogMessage(createSuccessLogMessage('Analyzer initialized')))
