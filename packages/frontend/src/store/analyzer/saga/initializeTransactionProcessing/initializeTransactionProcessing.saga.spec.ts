@@ -1,6 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { ChainId } from '@evm-debuger/types'
 import { combineReducers } from 'redux'
+import * as matchers from 'redux-saga-test-plan/matchers'
 
 import { transactionConfigActions, transactionConfigReducer } from '../../../transactionConfig/transactionConfig.slice'
 import { analyzerActions, analyzerReducer } from '../../analyzer.slice'
@@ -11,10 +12,11 @@ import { AnalyzerStages, AnalyzerStagesStatus } from '../../analyzer.const'
 import { createInfoLogMessage, createSuccessLogMessage } from '../../analyzer.utils'
 import { createLogMessageActionForTests, mockLogsInAnalyer, testLogMessages } from '../../../../helpers/sagaTests'
 
-import { initializeTransactionProcessingSaga } from './initializeTransactionProcessing.saga'
+import { estimateGasUsage, initializeTransactionProcessingSaga } from './initializeTransactionProcessing.saga'
 
 const TRANSACTION_HASH = '0x1234567890'
 const CHAIN_ID = ChainId.mainnet
+const GAS_USED = BigInt(1000)
 
 describe('initializeTransactionProcessingSaga', () => {
   it('should initialize transaction processing', async () => {
@@ -46,7 +48,7 @@ describe('initializeTransactionProcessingSaga', () => {
       [StoreKeys.TRANSACTION_CONFIG]: {
         ...initialState[StoreKeys.TRANSACTION_CONFIG],
         transactionHash: TRANSACTION_HASH,
-        gasUsed: '100000',
+        gasUsed: GAS_USED.toString(),
         chainId: CHAIN_ID,
       },
     }
@@ -56,13 +58,15 @@ describe('initializeTransactionProcessingSaga', () => {
       analyzerActions.initializeTransactionProcessing({ transactionHash: TRANSACTION_HASH, chainId: CHAIN_ID }),
     )
       .withReducer(combineReducers({ [StoreKeys.TRANSACTION_CONFIG]: transactionConfigReducer, [StoreKeys.ANALYZER]: analyzerReducer }))
+      .provide([[matchers.call.fn(estimateGasUsage), BigInt(1000)]])
       .withState(initialState)
       .put(analyzerActions.updateStage(inProgresStage))
       .put.like({ action: addFirstLogAction })
       .put(transactionConfigActions.setChainId({ chainId: CHAIN_ID }))
       .put(transactionConfigActions.setTransactionHash({ transactionHash: TRANSACTION_HASH }))
       .put.like({ action: addSecondLogAction })
-      .put(transactionConfigActions.setGasUsed({ gasUsed: '100000' }))
+      .call(estimateGasUsage, CHAIN_ID, TRANSACTION_HASH)
+      .put(transactionConfigActions.setGasUsed({ gasUsed: GAS_USED.toString() }))
       .put(analyzerActions.updateStage(successStage))
       .put.like({ action: addThirdLogAction })
       .run()
