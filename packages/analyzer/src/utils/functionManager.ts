@@ -121,7 +121,7 @@ export class FunctionManager {
       const initialContractFunctions = this.dataLoader.analyzerContractData.get(contractAddress, 'functions')
       const contractFunctions: Record<number, TContractFunction> = { ...initialContractFunctions }
 
-      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledEtherscanBytecode')
+      const dissasembledBytecode = this.dataLoader.analyzerContractData.get(contractAddress, 'disassembledBytecode')
 
       const contractSourceFiles = this.dataLoader.analyzerContractData.get(contractAddress, 'sourceFiles')
       const contractInstructions = this.dataLoader.analyzerContractData.get(contractAddress, 'instructions')

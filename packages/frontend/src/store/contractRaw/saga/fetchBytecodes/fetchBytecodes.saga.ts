@@ -25,10 +25,10 @@ export function* fetchBytecodesSaga(): SagaGenerator<void> {
 
     const analyzer = yield* call(getAnalyzerInstance)
 
-    for (const address of contractAddresses) {
-      const bytecode = yield* call(fetchBytecode, chainId, address)
-      yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [address, 'etherscanBytecode', bytecode])
-    }
+    // for (const address of contractAddresses) {
+    //   const bytecode = yield* call(fetchBytecode, chainId, address)
+    //   yield* apply(analyzer.dataLoader, analyzer.dataLoader.inputContractData.set, [address, 'etherscanBytecode', bytecode])
+    // }
 
     yield* put(
       analyzerActions.updateStage({

@@ -40,12 +40,25 @@ export class TxAnalyzer {
 
     for (const address of contractsAddresses) {
       const structLogsForAddress = getStructLogsForContractAddress(traceLogs, structlogs, address)
-      const dissasembleBytecode = this.dataLoader.analyzerContractData.get(address, 'disassembledEtherscanBytecode')
+      const dissasembleBytecode = this.dataLoader.analyzerContractData.get(address, 'disassembledBytecode')
+
+      // eslint-disable-next-line
+      const SOLC_BYTECODE_FLAG = true
+
+      if (SOLC_BYTECODE_FLAG) {
+        const isContractVerified = this.dataLoader.isContractVerified(address)
+        if (!isContractVerified) continue
+      }
 
       structLogsForAddress.forEach((structLog: TIndexedStructLog) => {
-        const operand = dissasembleBytecode[structLog.pc]?.value || undefined
-        if (operand) {
-          structlogs[structLog.index].operand = operand
+        try {
+          const operand = dissasembleBytecode[structLog?.pc]?.value || undefined
+          if (operand) {
+            structlogs[structLog.index].operand = operand
+          }
+        } catch (error) {
+          console.log(address)
+          // console.error('Error while extending struct logs with operand values', error)
         }
       })
     }
