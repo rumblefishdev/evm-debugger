@@ -3,29 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.48-alpha.3](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.48-alpha.2...@evm-debuger/frontend@0.2.48-alpha.3) (2024-07-13)
+
+### Reverts
+
+- Revert "Fix/staging demo remove alchemy (#480)" (#481) ([aa5dc43](https://github.com/rumblefishdev/evm-debugger/commit/aa5dc43aea69a1045cc6bf5e0fff0eff330ec036)), closes [#480](https://github.com/rumblefishdev/evm-debugger/issues/480) [#481](https://github.com/rumblefishdev/evm-debugger/issues/481)
+
 ## [0.2.48-alpha.2](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.48-alpha.1...@evm-debuger/frontend@0.2.48-alpha.2) (2024-05-28)
 
 **Note:** Version bump only for package @evm-debuger/frontend
-
-
-
-
 
 ## [0.2.48-alpha.1](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.48-alpha.1...@evm-debuger/frontend@0.2.48-alpha.1) (2024-05-28)
 
 **Note:** Version bump only for package @evm-debuger/frontend
 
-
-
-
-
 ## [0.2.48-alpha.0](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.48-alpha.1...@evm-debuger/frontend@0.2.48-alpha.0) (2024-05-28)
 
 **Note:** Version bump only for package @evm-debuger/frontend
-
-
-
-
 
 ## [0.2.47](https://github.com/rumblefishdev/evm-debugger/compare/@evm-debuger/frontend@0.2.47-alpha.3...@evm-debuger/frontend@0.2.47) (2024-05-09)
 
