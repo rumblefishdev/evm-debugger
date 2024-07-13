@@ -44,7 +44,7 @@ jobs:
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('packages/*/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
-          
+
       - name: Install dependencies
         run: |
           npm i
@@ -118,6 +118,8 @@ jobs:
           npm i
           npm install jq.node -g
           node_modules/.bin/lerna bootstrap
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build
         run: |
