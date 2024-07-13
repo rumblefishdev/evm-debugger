@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable unicorn/prefer-at */
-import type { TRawTransactionTraceResult } from '@evm-debuger/types'
 import hardhat from 'hardhat'
 import { TASK_NODE_GET_PROVIDER } from 'hardhat/builtin-tasks/task-names'
 import { extendConfig } from 'hardhat/config'
@@ -26,7 +25,7 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
 
     console.log('Extending hardhat config....')
 
-    extendConfig((config, userConfig) => {
+    extendConfig((config, _userConfig) => {
       config.networks = {
         ...config.networks,
         hardhat: {
@@ -50,7 +49,18 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
 
     console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
 
-    const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+    await hardhatProvider.request({
+      params: [
+        {
+          forking: {
+            jsonRpcUrl: hardhat.config.networks.hardhat.forking!.url,
+          },
+        },
+      ],
+      method: 'hardhat_reset',
+    })
+
+    const traceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
 
     console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
   } catch (error) {
@@ -64,26 +74,38 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
   }
 }
 
-export const debugTransaction = async (txHash: string, chainId: string, hardhatForkingUrl: string): Promise<TRawTransactionTraceResult> => {
+export const debugTransaction = async (txHash: string, chainId: string) => {
   Object.assign(global, { txHash, chainId })
 
   const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
     chainId,
   })
 
+  console.log(`Calling hardhat_reset`)
+  await hardhatProvider.request({
+    params: [
+      {
+        forking: {
+          jsonRpcUrl: hardhat.config.networks.hardhat.forking!.url,
+        },
+      },
+    ],
+    method: 'hardhat_reset',
+  })
+
   console.log(`Provider for ${chainId} is ready`)
   console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
 
-  const traceResult: TRawTransactionTraceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
+  const traceResult = await hardhatProvider.send('debug_traceTransaction', [txHash])
 
   console.log(`Finished debug_traceTransaction for ${chainId}/${txHash} with ${traceResult.structLogs.length} structLogs`)
   return traceResult
 }
 
-export const sqsConsumer = async ({ txHash, chainId, hardhatForkingUrl, captureException }: ConsumeSqsAnalyzeTx) => {
+export const sqsConsumer = async ({ txHash, chainId, captureException }: ConsumeSqsAnalyzeTx) => {
   await putTxEventToDdb(TransactionTraceResponseStatus.RUNNING, txHash)
   try {
-    const result = await debugTransaction(txHash, chainId, hardhatForkingUrl)
+    const result = await debugTransaction(txHash, chainId)
     const s3Location = getFilePath(txHash, chainId)
     await s3upload({
       Key: getFileName(txHash, chainId),
