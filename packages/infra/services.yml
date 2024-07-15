@@ -205,6 +205,13 @@ Resources:
                 - !GetAtt TransactionTraceSqsChainIdPolygon.Arn
                 - !GetAtt TransactionTraceSqsChainIdAmoy.Arn
                 - !GetAtt TransactionTraceSqsChainIdSepolia.Arn
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: 
+                - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/evm-debugger-${Environment}-transaction-trace-api:*
     Metadata:
       BuildMethod: makefile
 

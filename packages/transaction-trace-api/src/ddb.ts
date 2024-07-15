@@ -27,10 +27,11 @@ export const getTransactionDetails = async (txHash: string) => {
   if (Items && Items.length > 0) {
     const transactionDetails = Items[0]
     const transactionLastEvent = Items[1] || Items[0]
-    return {
+    const returnObj = {
       ...transactionDetails,
       ...transactionLastEvent,
     }
+    return returnObj.errorDetails !== 'Unknown block number' ? returnObj : null
   }
   return null
 }
