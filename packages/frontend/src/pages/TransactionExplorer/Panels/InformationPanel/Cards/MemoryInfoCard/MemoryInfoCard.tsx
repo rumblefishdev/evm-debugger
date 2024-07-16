@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { palette } from '@rumblefishdev/ui/lib/src/theme/algaeTheme/palette'
 
 import {
   StyledRecordType,
@@ -15,11 +14,13 @@ import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { DEFAULT_STRING, activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
+import { useTheme } from '@mui/material/styles'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useSelector(activeStructLogSelectors.selectParsedMemory)
   const activeStructlog = useSelector(activeStructLogSelectors.selectActiveStructLog)
   const hasMemory = React.useMemo(() => memory.length > 0, [memory])
+  const theme = useTheme()
 
   const structLogParams = React.useMemo(() => {
     if (!activeStructlog) return null
@@ -37,11 +38,11 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const decorateBytes = (offset: string, index: number): React.CSSProperties => {
     let cssProperties: React.CSSProperties = {}
     const underlineCss: React.CSSProperties = {
-      borderBottom: `2px solid ${palette.colorLink}`,
+      borderBottom: `2px solid ${theme.palette.colorLink}`,
     }
     const highLightCss: React.CSSProperties = {
-      color: palette.colorWhite,
-      background: palette.colorBrand.secondary,
+      color: theme.palette.colorWhite,
+      background: theme.palette.colorBrand.secondary,
     }
 
     switch (activeStructlog.op) {

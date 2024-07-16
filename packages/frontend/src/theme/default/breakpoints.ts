@@ -2,7 +2,6 @@ import type { BreakpointsOptions } from '@mui/material'
 
 export const breakpoints: BreakpointsOptions = {
   values: {
-    xxl: 1920,
     xs: 0,
     xl: 1920,
     sm: 600,

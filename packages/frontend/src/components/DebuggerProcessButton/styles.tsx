@@ -1,6 +1,6 @@
 import { styled, Typography, Link } from '@mui/material'
 import type { LinkProps } from '@mui/material'
-import { Button } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Button'
+import { Button } from '../UiButton'
 
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 
@@ -35,7 +35,6 @@ export const StyledBtnText = styled(Typography)(() => ({
   fontWeight: 500,
   fontStyle: 'normal',
   fontFamily: 'Satoshi',
-  color: '#1C1F22',
   letterSpacing: '-0,01em',
   fontSize: '20px',
 }))

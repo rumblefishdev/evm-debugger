@@ -1,9 +1,9 @@
 import type { RefObject } from 'react'
 import React, { useCallback, useState } from 'react'
 import type { StackProps } from '@mui/material'
-import downArrow from '@rumblefishdev/ui/lib/src/assets/svg/AlgeaTheme/arrow-down-white.svg'
-import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
-import { generateArrowAnimation } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/utils/arrowAnimationStyles'
+import downArrow from '../../../assets/svg/arrow-down-white.svg'
+import { Section } from '../../../components/AlgaeSection'
+import { generateArrowAnimation } from '../../../utils/arrowAnimationStyles'
 
 import { Debugger } from '../../../components/Debugger'
 import evmLogo from '../../../assets/svg/evm.svg'
@@ -39,6 +39,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
   return (
     <Section
       width="small"
+      noPadding='top'
       backgroundColor="transparent"
     >
       <StyledStack {...props}>
@@ -54,7 +55,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
               smart contracts made easy!
             </StyledHeading>
             <StyledDescription>
-              <span>EVM Debugger</span> is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis
+              <span>EVM Debugge</span> is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis
               of Ethereum smart contracts. With EVM Debugger blockchain developers can smoothly access all details regarding a single
               Ethereum transaction.
             </StyledDescription>

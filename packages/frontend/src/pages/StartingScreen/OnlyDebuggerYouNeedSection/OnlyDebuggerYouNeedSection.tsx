@@ -1,8 +1,8 @@
 import { type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
-import { Section } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Section'
-import { Link } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Link'
+import { Section } from '../../../components/AlgaeSection'
+import { Link } from '../../../components/AlgaeLink'
 
 import discordIcon from '../../../assets/svg/discord.svg'
 

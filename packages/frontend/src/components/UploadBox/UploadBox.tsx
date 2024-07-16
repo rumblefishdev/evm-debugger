@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tooltip, Stack } from '@mui/material'
-import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
+import { Button } from '../UiButton'
 
 import { TickFilledBlue, Error } from '../../icons'
 import { safeJsonParse } from '../../helpers/helpers'

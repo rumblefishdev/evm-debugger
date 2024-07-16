@@ -1,0 +1,135 @@
+@font-face {
+  font-family: Rajdhani;
+  font-style: light;
+  font-display: swap;
+  font-weight: 300;
+  src: local('Rajdhani-Light'), url('../fonts/Rajdhani-Light.ttf');
+}
+@font-face {
+  font-family: Rajdhani;
+  font-style: regular;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Rajdhani-Regular'), url('../fonts/Rajdhani-Regular.ttf');
+}
+@font-face {
+  font-family: Rajdhani;
+  font-style: medium;
+  font-display: swap;
+  font-weight: 500;
+  src: local('Rajdhani-Medium'), url('../fonts/Rajdhani-Medium.ttf');
+}
+@font-face {
+  font-family: Rajdhani;
+  font-style: semi-bold;
+  font-display: swap;
+  font-weight: 600;
+  src: local('Rajdhani-SemiBold'), url('../fonts/Rajdhani-SemiBold.ttf');
+}
+@font-face {
+  font-family: Rajdhani;
+  font-style: bold;
+  font-display: swap;
+  font-weight: 700;
+  src: local('Rajdhani-Bold'), url('../fonts/Rajdhani-Bold.ttf');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Inter-Regular'), url('../fonts/Inter-Regular.otf');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: local('Inter-Bold'), url('../fonts/Inter-Bold.otf');
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: local('Inter-SemiBold'), url('../fonts/Inter-SemiBold.otf');
+}
+
+@font-face {
+  font-family: Satoshi;
+  font-style: light;
+  font-display: swap;
+  font-weight: 300;
+  src: local('Satoshi-Light'), url('../fonts/satoshi/Satoshi-Light.ttf');
+}
+@font-face {
+  font-family: Satoshi;
+  font-style: regular;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Satoshi-Regular'),
+    url('../fonts/satoshi/Satoshi-Regular.ttf');
+}
+@font-face {
+  font-family: Satoshi;
+  font-style: medium;
+  font-display: swap;
+  font-weight: 500;
+  src: local('Satoshi-Medium'),
+    url('../fonts/satoshi/Satoshi-Medium.ttf');
+}
+@font-face {
+  font-family: Satoshi;
+  font-style: semi-bold;
+  font-display: swap;
+  font-weight: 600;
+  src: local('Satoshi-SemiBold'),
+    url('../fonts/satoshi/Satoshi-Semibold.ttf');
+}
+@font-face {
+  font-family: Satoshi;
+  font-style: bold;
+  font-display: swap;
+  font-weight: 650;
+  src: local('Satoshi-Bold'), url('../fonts/satoshi/Satoshi-Bold.ttf');
+}
+@font-face {
+  font-family: ClashDisplay;
+  font-style: light;
+  font-display: swap;
+  font-weight: 300;
+  src: local('ClashDisplay-Light'),
+    url('../fonts/clashDisplay/ClashDisplay-Light.ttf');
+}
+@font-face {
+  font-family: ClashDisplay;
+  font-style: regular;
+  font-display: swap;
+  font-weight: 400;
+  src: local('ClashDisplay-Regular'),
+    url('../fonts/clashDisplay/ClashDisplay-Regular.ttf');
+}
+@font-face {
+  font-family: ClashDisplay;
+  font-style: medium;
+  font-display: swap;
+  font-weight: 500;
+  src: local('ClashDisplay-Medium'),
+    url('../fonts/clashDisplay/ClashDisplay-Medium.ttf');
+}
+@font-face {
+  font-family: ClashDisplay;
+  font-style: semi-bold;
+  font-display: swap;
+  font-weight: 600;
+  src: local('ClashDisplay-SemiBold'),
+    url('../fonts/clashDisplay/ClashDisplay-Semibold.ttf');
+}
+@font-face {
+  font-family: ClashDisplay;
+  font-style: bold;
+  font-display: swap;
+  font-weight: 650;
+  src: local('ClashDisplay-Bold'),
+    url('../fonts/clashDisplay/ClashDisplay-Bold.ttf');
+}
