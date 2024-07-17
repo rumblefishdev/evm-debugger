@@ -1,14 +1,14 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 
-import type { ThemeContextType, ThemeType, TypesValues, scrollTargetType } from './theme.Context.types'
+import type { ThemeContextType, ThemeType, TypesValues, ScrollTargetType } from './theme.Context.types'
 
 export const ThemeContext = createContext<ThemeContextType | null>(null)
 
 export const ThemeContextProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeType>({ type: 'light' })
-  const [scrollTarget, setScrollTarget] = useState<scrollTargetType>(null)
-  const changeScrollTarget = (element: scrollTargetType) => {
+  const [scrollTarget, setScrollTarget] = useState<ScrollTargetType>(null)
+  const changeScrollTarget = (element: ScrollTargetType) => {
     setScrollTarget(element)
   }
 
