@@ -47,6 +47,13 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
 
     console.log(`Provider for ${chainId} is ready`)
 
+    const response = await fetch(hardhat.config.networks.hardhat.forking!.url, {
+      method: 'POST',
+      body: JSON.stringify({ params: ['latest', false], method: 'eth_getBlockByNumber', jsonrpc: '2.0', id: 1 }),
+    })
+    const parsed = await response.json()
+    const { result } = parsed
+    const latestBlock = result && parseInt(result.number, 16)
     console.log(`Starting debug_traceTransaction for ${chainId}/${txHash}`)
 
     await hardhatProvider.request({
@@ -54,6 +61,7 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
         {
           forking: {
             jsonRpcUrl: hardhat.config.networks.hardhat.forking!.url,
+            blockNumber: latestBlock,
           },
         },
       ],
@@ -82,11 +90,19 @@ export const debugTransaction = async (txHash: string, chainId: string) => {
   })
 
   console.log(`Calling hardhat_reset`)
+  const response = await fetch(hardhat.config.networks.hardhat.forking!.url, {
+    method: 'POST',
+    body: JSON.stringify({ params: ['latest', false], method: 'eth_getBlockByNumber', jsonrpc: '2.0', id: 1 }),
+  })
+  const parsed = await response.json()
+  const { result } = parsed
+  const latestBlock = result && parseInt(result.number, 16)
   await hardhatProvider.request({
     params: [
       {
         forking: {
           jsonRpcUrl: hardhat.config.networks.hardhat.forking!.url,
+          blockNumber: latestBlock,
         },
       },
     ],
