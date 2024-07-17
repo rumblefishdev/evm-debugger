@@ -11,6 +11,7 @@ export const Button: React.FC<ButtonProps> = ({
   iconDirection = 'right',
   typographyProps,
   link,
+  fontColor,
   ...props
 }) => {
   const shouldHaveText = variant !== 'flat';
@@ -35,7 +36,7 @@ export const Button: React.FC<ButtonProps> = ({
           <>
             {shouldHaveText && (
               <Typography
-                sx={{ display: 'flex', justifyContent: 'center', color: 'white !important' }} {...typographyProps}>
+                sx={{ display: 'flex', justifyContent: 'center', color: fontColor ? `${fontColor} !important` : undefined }} {...typographyProps}>
                 {children}
               </Typography>
             )}

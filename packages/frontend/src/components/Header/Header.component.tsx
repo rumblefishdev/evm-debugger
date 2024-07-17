@@ -7,7 +7,7 @@ import { Wrapper } from "./Header.styles"
 import { Section } from "../AlgaeSection"
 
 export const Header: React.FC<HeaderProps> = () => {
-    return <Section noPadding="vertical">
+    return <Section width="small">
         <Wrapper>
             <StyledLogo src={evmLogo} />
             <Typography variant='h4'>

@@ -60,7 +60,7 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             target="_blank"
             rel="noopener noreferrer"
           >
-            <StyledButton>
+            <StyledButton fontColor='white'>
               <DiscordIcon src={discordIcon} />
               <StyledTypography
                 fontWeight={700}

@@ -39,7 +39,6 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
   return (
     <Section
       width="small"
-      noPadding='top'
       backgroundColor="transparent"
     >
       <StyledStack {...props}>

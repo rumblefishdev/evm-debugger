@@ -8,4 +8,5 @@ export interface ButtonProps extends Omit<MuiButtonProps, 'variant'> {
   iconDirection?: 'left' | 'right';
   link?: string;
   typographyProps?: TypographyOwnProps;
+  fontColor?: string;
 }
