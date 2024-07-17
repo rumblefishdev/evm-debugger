@@ -1,8 +1,12 @@
-import React from "react";
+import type React from 'react'
 
-export let Footer: React.FC<{}>;
+let ImportedFooter: React.FC<Record<string, never>>
 try {
-  Footer = require('@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Footer').Footer;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedFooter = require('@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Footer').Footer
 } catch {
-    Footer = require('./Footer.component').Footer;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedFooter = require('./Footer.component').Footer
 }
+
+export const Footer = ImportedFooter

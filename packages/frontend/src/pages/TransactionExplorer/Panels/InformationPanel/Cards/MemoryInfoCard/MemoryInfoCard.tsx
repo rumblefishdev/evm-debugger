@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useTheme } from '@mui/material/styles'
 
 import {
   StyledRecordType,
@@ -14,7 +15,6 @@ import { skipLeadingZeroes } from '../StackInfoCard/StackInfoCard'
 import { DEFAULT_STRING, activeStructLogSelectors } from '../../../../../../store/activeStructLog/activeStructLog.selectors'
 
 import type { MemoryInfoCardProps } from './MemoryInfoCard.types'
-import { useTheme } from '@mui/material/styles'
 
 export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
   const memory = useSelector(activeStructLogSelectors.selectParsedMemory)

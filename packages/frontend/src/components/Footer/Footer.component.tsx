@@ -1,3 +1,3 @@
-export const Footer: React.FC<{}> = () => {
-    return <div />
+export const Footer: React.FC<Record<string, never>> = () => {
+  return <div />
 }

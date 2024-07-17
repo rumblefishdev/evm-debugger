@@ -1,8 +1,12 @@
-import { HeaderProps } from "./Header.types";
+import type { HeaderProps } from './Header.types'
 
-export let Header: React.FC<HeaderProps>;
+let ImportedHeader: React.FC<HeaderProps>
 try {
-  Header = require('@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Header').Header;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedHeader = require('@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Header').Header
 } catch {
-  Header = require('./Header.component').Header;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedHeader = require('./Header.component').Header
 }
+
+export const Header = ImportedHeader

@@ -1,5 +1,6 @@
 import React from 'react'
 import type { StackProps } from '@mui/material'
+
 import { Section } from '../../../components/AlgaeSection'
 
 import { data } from './data'

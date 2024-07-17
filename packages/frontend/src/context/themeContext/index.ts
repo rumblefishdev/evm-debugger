@@ -1,8 +1,12 @@
-import { ThemeContextProvider as OwnThemeContextProvider } from "./themeContext";
+import { ThemeContextProvider as OwnThemeContextProvider } from './themeContext'
 
-export let ThemeContextProvider: typeof OwnThemeContextProvider
+let ImportedThemeContextProvider: typeof OwnThemeContextProvider
 try {
-    ThemeContextProvider = require('@rumblefishdev/ui/lib/context/themeContext/themeContext').ThemeContextProvider
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedThemeContextProvider = require('@rumblefishdev/ui/lib/context/themeContext/themeContext').ThemeContextProvider
 } catch {
-    ThemeContextProvider = OwnThemeContextProvider
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  ImportedThemeContextProvider = OwnThemeContextProvider
 }
+
+export const ThemeContextProvider = ImportedThemeContextProvider

@@ -1,10 +1,11 @@
-import { Container, styled } from '@mui/material';
-import { sectionClasses } from './Section.types';
+import { Container, styled } from '@mui/material'
+
+import { sectionClasses } from './Section.types'
 
 export const StyledRoot = styled(Container)(({ theme }) => ({
   [`&.${sectionClasses.full}`]: {
-    maxWidth: '100%',
     width: '100%',
+    maxWidth: '100%',
   },
   [`&.${sectionClasses.normal}`]: {
     maxWidth: '1280px',
@@ -22,4 +23,4 @@ export const StyledRoot = styled(Container)(({ theme }) => ({
   [`&.${sectionClasses.mobilePadding}`]: {
     ...theme.mixins.mobilePadding(),
   },
-}));
+}))

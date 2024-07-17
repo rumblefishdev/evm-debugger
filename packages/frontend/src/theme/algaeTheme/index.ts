@@ -13,7 +13,8 @@ import type { ExtendedTypographyPropsVariantOverrides1 } from './typography'
 import { typography } from './typography'
 import type { ExtendedTypographyPropsVariantOverrides2 } from './typography2'
 import { typography2 } from './typography2'
-import { fluidFont, IFluidSize, isMobile, fluidSize} from './utilis'
+import type { IFluidSize } from './utilis'
+import { fluidFont, isMobile, fluidSize } from './utilis'
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides extends ExtendedTypographyPropsVariantOverrides1, ExtendedTypographyPropsVariantOverrides2 {}
@@ -23,14 +24,8 @@ declare module '@mui/material/styles' {
   interface Theme {
     utils: {
       isMobile: () => boolean
-      fluidFont: (min: number, max: number) => string;
-      fluidSize: ({
-        minSize,
-        maxSize,
-        increase,
-        maxBp,
-        minBp,
-      }: IFluidSize) => string;
+      fluidFont: (min: number, max: number) => string
+      fluidSize: ({ minSize, maxSize, increase, maxBp, minBp }: IFluidSize) => string
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -38,13 +33,7 @@ declare module '@mui/material/styles' {
     utils?: {
       isMobile: () => boolean
       fluidFont: (min: number, max: number) => string
-      fluidSize: ({
-        minSize,
-        maxSize,
-        increase,
-        maxBp,
-        minBp,
-      }: IFluidSize) => string;
+      fluidSize: ({ minSize, maxSize, increase, maxBp, minBp }: IFluidSize) => string
     }
   }
 }
@@ -54,8 +43,8 @@ const spacing = 8
 export const algaeTheme = createTheme({
   utils: {
     isMobile,
+    fluidSize,
     fluidFont,
-    fluidSize
   },
   typography: { ...typography, ...typography2 },
   spacing,
@@ -71,8 +60,8 @@ export const algaeTheme = createTheme({
 export const themeDark = createTheme({
   utils: {
     isMobile,
+    fluidSize,
     fluidFont,
-    fluidSize
   },
   typography: { ...typography, ...typography2 },
   spacing,
@@ -106,8 +95,8 @@ export const themeDark = createTheme({
 export const themeNavy = createTheme({
   utils: {
     isMobile,
+    fluidSize,
     fluidFont,
-    fluidSize
   },
   typography: { ...typography, ...typography2 },
   spacing,

@@ -1,9 +1,9 @@
 import { type StackProps } from '@mui/material'
 import React from 'react'
 import type { LegacyRef } from 'react'
+
 import { Section } from '../../../components/AlgaeSection'
 import { Link } from '../../../components/AlgaeLink'
-
 import discordIcon from '../../../assets/svg/discord.svg'
 
 import {
@@ -60,7 +60,7 @@ export const OnlyDebuggerYouNeedSection = React.forwardRef(function Ref({ ...pro
             target="_blank"
             rel="noopener noreferrer"
           >
-            <StyledButton fontColor='white'>
+            <StyledButton fontColor="white">
               <DiscordIcon src={discordIcon} />
               <StyledTypography
                 fontWeight={700}

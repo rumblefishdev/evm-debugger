@@ -1,5 +1,6 @@
 import { styled, Typography, Link } from '@mui/material'
 import type { LinkProps } from '@mui/material'
+
 import { Button } from '../UiButton'
 
 /* eslint sort-keys-fix/sort-keys-fix:0*/

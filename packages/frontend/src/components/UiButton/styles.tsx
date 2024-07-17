@@ -1,35 +1,83 @@
-import { Button, styled } from '@mui/material';
-import EastRoundedIcon from '@mui/icons-material/EastRounded';
-import WestRoundedIcon from '@mui/icons-material/WestRounded';
+import { Button, styled } from '@mui/material'
+import EastRoundedIcon from '@mui/icons-material/EastRounded'
+import WestRoundedIcon from '@mui/icons-material/WestRounded'
 
-export const ArrowRight = styled(EastRoundedIcon)(({ theme }) => ({
+export const ArrowRight = styled(EastRoundedIcon)(() => ({
   path: {
     color: 'rgb(255,255,255,1)',
   },
-}));
-export const ArrowLeft = styled(WestRoundedIcon)(({ theme }) => ({
+}))
+export const ArrowLeft = styled(WestRoundedIcon)(() => ({
   path: {
     color: 'rgb(255,255,255,1)',
   },
-}));
+}))
 export const StyledButton = styled(Button)(({ theme, fullWidth }) => ({
-  '&.MuiButton-root': {
-    transition: 'all 0s !important',
-  },
-  fontFamily: 'Satoshi',
-  fontWeight: '600',
+  width: 'min-content',
+  whiteSpace: 'nowrap',
+  textTransform: 'none',
+  padding: '0px',
   lineHeight: '175%',
   letterSpacing: '-0.1px',
-  textTransform: 'none',
+  fontWeight: '600',
+  fontFamily: 'Satoshi',
   borderRadius: '69px',
-  whiteSpace: 'nowrap',
-  width: 'min-content',
   '&.MuiButton-wide': {
     width: 'auto',
   },
 
-  padding: '0px',
+  '&.MuiButton-root': {
+    transition: 'all 0s !important',
+  },
   ...theme.mixins.defaultTransition,
+  '&.MuiButton-primary': {
+    boxShadow: '0px 8px 24px 0px rgba(48, 98, 212, 0.25)',
+
+    '*': {
+      color: '#FBFCFD',
+    },
+    '& .MuiStack-root': {
+      width: '100%',
+      transition: 'background 0.3s',
+      borderRadius: '69px',
+      background: '#3062D4',
+      '&:hover': { background: '#6792F4' },
+    },
+  },
+
+  '&.MuiButton-link': {
+    background: 'transparent',
+    '& .MuiStack-root': {
+      padding: theme.spacing(0),
+      gap: theme.spacing(1),
+      flexDirection: 'row',
+      display: 'flex',
+      alignItems: 'center',
+      '& .MuiTypography-root': {
+        color: 'rgb(255,255,255,1)',
+      },
+    },
+  },
+  '&.MuiButton-icon': {
+    minWidth: 'auto',
+    background: 'transparent',
+    '& .MuiStack-root': {
+      padding: theme.spacing(0),
+      gap: theme.spacing(1),
+      flexDirection: 'row',
+      display: 'flex',
+      alignItems: 'center',
+      '& .MuiTypography-root': {
+        padding: theme.spacing(0),
+        color: 'currentColor',
+      },
+    },
+  },
+
+  '&.MuiButton-flat': {
+    boxShadow: `0px 8px 24px 0px rgb(255,255,255,0.1)`,
+    background: 'rgb(255,255,255,0.15)',
+  },
   '& .MuiStack-root': {
     padding: `${theme.utils.fluidSize({
       minSize: 8,
@@ -44,52 +92,4 @@ export const StyledButton = styled(Button)(({ theme, fullWidth }) => ({
     },
     ...(fullWidth && { width: '100%' }),
   },
-
-  '&.MuiButton-primary': {
-    '*': {
-      color: '#FBFCFD',
-    },
-
-    boxShadow: '0px 8px 24px 0px rgba(48, 98, 212, 0.25)',
-    '& .MuiStack-root': {
-      width: '100%',
-      background: '#3062D4',
-      borderRadius: '69px',
-      transition: 'background 0.3s',
-      '&:hover': { background: '#6792F4' },
-    },
-  },
-  '&.MuiButton-flat': {
-    background: 'rgb(255,255,255,0.15)',
-    boxShadow: `0px 8px 24px 0px rgb(255,255,255,0.1)`,
-  },
-
-  '&.MuiButton-icon': {
-    minWidth: 'auto',
-    background: 'transparent',
-    '& .MuiStack-root': {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: theme.spacing(1),
-      alignItems: 'center',
-      padding: theme.spacing(0),
-      '& .MuiTypography-root': {
-        padding: theme.spacing(0),
-        color: 'currentColor',
-      },
-    },
-  },
-  '&.MuiButton-link': {
-    background: 'transparent',
-    '& .MuiStack-root': {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: theme.spacing(1),
-      alignItems: 'center',
-      padding: theme.spacing(0),
-      '& .MuiTypography-root': {
-        color: 'rgb(255,255,255,1)',
-      },
-    },
-  },
-}));
+}))

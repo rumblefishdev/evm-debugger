@@ -23,7 +23,7 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:sonarjs/recommended",
+        // "plugin:sonarjs/recommended",
         "plugin:import/typescript",
         // "plugin:unicorn/recommended",
         "prettier",

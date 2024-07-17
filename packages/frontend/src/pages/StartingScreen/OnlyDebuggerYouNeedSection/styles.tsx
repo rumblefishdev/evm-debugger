@@ -1,6 +1,6 @@
 import { Stack, styled, Typography } from '@mui/material'
-import { Button } from '../../../components/UiButton'
 
+import { Button } from '../../../components/UiButton'
 import centerEllipse from '../../../assets/png/centerEllipse.png'
 /* eslint sort-keys-fix/sort-keys-fix:0*/
 

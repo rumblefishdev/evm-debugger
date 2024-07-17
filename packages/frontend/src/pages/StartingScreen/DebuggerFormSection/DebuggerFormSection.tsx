@@ -1,10 +1,10 @@
 import type { RefObject } from 'react'
 import React, { useCallback, useState } from 'react'
 import type { StackProps } from '@mui/material'
+
 import downArrow from '../../../assets/svg/arrow-down-white.svg'
 import { Section } from '../../../components/AlgaeSection'
 import { generateArrowAnimation } from '../../../utils/arrowAnimationStyles'
-
 import { Debugger } from '../../../components/Debugger'
 import evmLogo from '../../../assets/svg/evm.svg'
 

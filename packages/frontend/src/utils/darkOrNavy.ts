@@ -1,4 +1,5 @@
-import type { Theme } from '@mui/material';
+import type { Theme } from '@mui/material'
+
 export const isDarkOrNavy = (theme: Theme) => {
-  return ['dark', 'navy'].includes(theme.palette.type);
-};
+  return ['dark', 'navy'].includes(theme.palette.type)
+}

@@ -1,5 +1,5 @@
 export type HeaderProps = {
-    blogPosts: unknown[];
-    useSolidColorLogo: boolean;
-    backgroundColor: string;
+  blogPosts: unknown[]
+  useSolidColorLogo: boolean
+  backgroundColor: string
 }

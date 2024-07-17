@@ -1,11 +1,9 @@
-import { breakpoints } from "./breakpoints";
-
 export interface IFluidSize {
-  minSize: number;
-  maxSize: number;
-  increase?: boolean;
-  maxBp?: number;
-  minBp?: number;
+  minSize: number
+  maxSize: number
+  increase?: boolean
+  maxBp?: number
+  minBp?: number
 }
 
 export const fluidFont = (min: number, max: number) => {
@@ -20,19 +18,12 @@ export const handleFetchErrors = (response: { ok: boolean; statusText: string })
   return response
 }
 
-export const fluidSize = ({
-  minSize,
-  maxSize,
-  increase,
-  maxBp,
-  minBp,
-}: IFluidSize) => {
-  const minBreakpoint = minBp;
-  const maxBreakpoint = maxBp;
+export const fluidSize = ({ minSize, maxSize, increase, maxBp, minBp }: IFluidSize) => {
+  const minBreakpoint = minBp
+  const maxBreakpoint = maxBp
 
   if (increase)
-    return `calc(${maxSize}px - (${maxSize} - ${minSize}) * ((100vw - ${minBreakpoint}px) / (${maxBreakpoint} - ${minBreakpoint} )))`;
-  else {
-    return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - ${minBreakpoint}px) / (${maxBreakpoint} - ${minBreakpoint} )))`;
-  }
-};
+    return `calc(${maxSize}px - (${maxSize} - ${minSize}) * ((100vw - ${minBreakpoint}px) / (${maxBreakpoint} - ${minBreakpoint} )))`
+
+  return `calc(${minSize}px + (${maxSize} - ${minSize}) * ((100vw - ${minBreakpoint}px) / (${maxBreakpoint} - ${minBreakpoint} )))`
+}
