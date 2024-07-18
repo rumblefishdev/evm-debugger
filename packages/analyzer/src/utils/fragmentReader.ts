@@ -18,6 +18,11 @@ export class FragmentReader {
   }
 
   public storeFragment(sighash: string, fragment: Fragment, type: 'function' | 'event' | 'error') {
+    console.log('DEBUG:', {
+      type,
+      sighash,
+      fragment,
+    })
     switch (type) {
       case 'function':
         this.fragmentStore['function'][sighash] = fragment as FunctionFragment
