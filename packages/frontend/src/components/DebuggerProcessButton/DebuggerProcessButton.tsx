@@ -13,6 +13,8 @@ export const DebuggerProcessButton: React.FC<ButtonProps> = ({ onClick }) => {
         sx={{ width: '100%', marginTop: '20px', borderRadius: '16px' }}
         size="large"
         onClick={onClick}
+        fullWidth
+        fontColor="white"
       >
         <StyledBtnText>Process logs</StyledBtnText>
       </StyledButton>

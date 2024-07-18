@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
-import { Button } from '@rumblefishdev/ui/lib/src/components/AlgaeTheme/Button'
 import { Collapse, Stack } from '@mui/material'
 
+import { Button } from '../../../../components/UiButton'
 import { StyledHeading, StyledHeadingWrapper } from '../styles'
 import { instructionsSelectors } from '../../../../store/instructions/instructions.selectors'
 import { sourceFilesSelectors } from '../../../../store/sourceFiles/sourceFiles.selectors'

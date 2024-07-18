@@ -2,25 +2,24 @@ import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { useRef, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Header } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Header'
-import { Footer } from '@rumblefishdev/ui/lib/src/components/Rumblefish23Theme/Footer'
-import { themeDark } from '@rumblefishdev/ui/lib/src/theme/rumblefish23Theme'
-import { themeNavy } from '@rumblefishdev/ui/lib/src/theme/algaeTheme'
-import { ThemeContextProvider } from '@rumblefishdev/ui/lib/context/themeContext/themeContext'
-import type { CustomBlogPostEntity } from '@rumblefishdev/ui/lib/src/customStrapiTypes'
 
-import '@rumblefishdev/ui/lib/src/assets/fonts.css'
-
+import { themes } from '../../theme/ui'
+import '../../assets/css/fonts.css'
+import { ThemeContextProvider } from '../../context/themeContext'
 import FacebookLogo from '../../assets/png/socialDebuggerLogo.png'
 import { GAnalytics } from '../../components/GAnalytics'
 import { fetchBlogPosts } from '../../helpers/api/fetchStrapiData'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
 
 import { DebuggerFormSection } from './DebuggerFormSection'
 import { AnalyzeTransactionSection } from './AnalyzeTransactionSection'
 import { OnlyDebuggerYouNeedSection } from './OnlyDebuggerYouNeedSection'
 
+const { dark: themeDark, navy: themeNavy } = themes
+
 export const StartingScreen: () => JSX.Element = () => {
-  const [fetchedBlogPosts, setFetchedBlogPosts] = useState<CustomBlogPostEntity[]>(null)
+  const [fetchedBlogPosts, setFetchedBlogPosts] = useState<unknown[]>(null)
   useEffect(() => {
     const fetchData = async () => {
       const blogPosts = await fetchBlogPosts()
