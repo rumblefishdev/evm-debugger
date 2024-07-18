@@ -1,6 +1,8 @@
 export enum AnalyzerStages {
   INITIALIZING_ANALYZER = 'Initializing analyzer',
   FETCHING_TRANSACTION_INFO = 'Fetching transaction info',
+  BLOCK_NOT_FINALIZED_YET = 'Block is not finalized yet',
+  BLOCK_FINALIZED = 'Block is finalized',
   PREPARING_STRUCTLOGS = 'Preparing structlogs',
   DOWNLOADING_AND_PARSING_STRUCTLOGS = 'Downloading and parsing structlogs',
   GATHERING_CONTRACTS_INFORMATION = 'Gathering contracts information',

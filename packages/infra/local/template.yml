@@ -136,7 +136,7 @@ Resources:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId1':
+  TransactionTraceSqsChainId1:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub ${AWS::StackName}-sqs-chainId-1
@@ -145,7 +145,7 @@ Resources:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId137':
+  TransactionTraceSqsChainId137:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub ${AWS::StackName}-sqs-chainId-137
@@ -154,7 +154,7 @@ Resources:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId80002':
+  TransactionTraceSqsChainId80002:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub ${AWS::StackName}-sqs-chainId-80002
@@ -163,7 +163,7 @@ Resources:
         deadLetterTargetArn: !GetAtt TransactionTraceSqsDeadLetter.Arn
         maxReceiveCount: 1
 
-  TransactionTraceSqsChainId11155111':
+  TransactionTraceSqsChainId11155111:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub ${AWS::StackName}-sqs-chainId-11155111
