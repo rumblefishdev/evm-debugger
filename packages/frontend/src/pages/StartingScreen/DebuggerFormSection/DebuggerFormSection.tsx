@@ -54,7 +54,7 @@ export const DebuggerFormSection = React.forwardRef(function Ref({ ...props }: S
               smart contracts made easy!
             </StyledHeading>
             <StyledDescription>
-              <span>EVM Debugge</span> is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis
+              <span>EVM Debugger</span> is a unique, free tool for EVM & Defi developers. It enables really easy and user-friendly analysis
               of Ethereum smart contracts. With EVM Debugger blockchain developers can smoothly access all details regarding a single
               Ethereum transaction.
             </StyledDescription>
