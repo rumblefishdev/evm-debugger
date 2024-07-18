@@ -1,6 +1,4 @@
-import type { CustomBlogPostEntity, CustomComponentGroupEmbedded } from '@rumblefishdev/ui/lib/src/customStrapiTypes'
-
-const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogPostEntity[]): CustomBlogPostEntity => {
+const checkEmbeddedBlogPosts = (element, data) => {
   if (!element.attributes) return element
 
   const embedded = element.attributes.embeddedInRichText
@@ -8,9 +6,9 @@ const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogP
   if (!embedded || embedded.blog_posts?.data.length === 0) return element
 
   const newData = embedded.blog_posts?.data.map((blogPost) => {
-    const relatedBlogPost: CustomBlogPostEntity | undefined = data.find((x) => x.id === blogPost.id)
+    const relatedBlogPost = data.find((x) => x.id === blogPost.id)
     if (relatedBlogPost) return checkEmbeddedBlogPosts(relatedBlogPost, data)
-  }) as CustomBlogPostEntity[]
+  })
 
   return {
     ...element,
@@ -22,7 +20,7 @@ const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogP
           ...element.attributes.embeddedInRichText?.blog_posts,
           data: newData,
         },
-      } as CustomComponentGroupEmbedded,
+      },
     },
   }
 }
@@ -30,7 +28,7 @@ const checkEmbeddedBlogPosts = (element: CustomBlogPostEntity, data: CustomBlogP
 export const fetchBlogPosts = async () => {
   const file = await import('../../data/blogPosts.json')
 
-  const fetchedData = file.data.blogPosts.data as CustomBlogPostEntity[]
+  const fetchedData = file.data.blogPosts.data
   return fetchedData.map((element) => {
     return checkEmbeddedBlogPosts(element, fetchedData)
   })

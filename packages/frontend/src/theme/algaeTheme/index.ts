@@ -13,7 +13,8 @@ import type { ExtendedTypographyPropsVariantOverrides1 } from './typography'
 import { typography } from './typography'
 import type { ExtendedTypographyPropsVariantOverrides2 } from './typography2'
 import { typography2 } from './typography2'
-import { fluidFont, isMobile } from './utilis'
+import type { IFluidSize } from './utilis'
+import { fluidFont, isMobile, fluidSize } from './utilis'
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides extends ExtendedTypographyPropsVariantOverrides1, ExtendedTypographyPropsVariantOverrides2 {}
@@ -21,16 +22,18 @@ declare module '@mui/material/Typography' {
 
 declare module '@mui/material/styles' {
   interface Theme {
-    utilis: {
+    utils: {
       isMobile: () => boolean
       fluidFont: (min: number, max: number) => string
+      fluidSize: ({ minSize, maxSize, increase, maxBp, minBp }: IFluidSize) => string
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-shadow
   interface ThemeOptions {
-    utilis?: {
+    utils?: {
       isMobile: () => boolean
       fluidFont: (min: number, max: number) => string
+      fluidSize: ({ minSize, maxSize, increase, maxBp, minBp }: IFluidSize) => string
     }
   }
 }
@@ -38,8 +41,9 @@ declare module '@mui/material/styles' {
 const spacing = 8
 
 export const algaeTheme = createTheme({
-  utilis: {
+  utils: {
     isMobile,
+    fluidSize,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
@@ -54,8 +58,9 @@ export const algaeTheme = createTheme({
 } as ThemeOptions)
 
 export const themeDark = createTheme({
-  utilis: {
+  utils: {
     isMobile,
+    fluidSize,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
@@ -88,8 +93,9 @@ export const themeDark = createTheme({
 } as ThemeOptions)
 
 export const themeNavy = createTheme({
-  utilis: {
+  utils: {
     isMobile,
+    fluidSize,
     fluidFont,
   },
   typography: { ...typography, ...typography2 },
