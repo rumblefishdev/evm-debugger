@@ -38,9 +38,6 @@ export const localDebugTransaction = async ({ txHash, chainId, hardhatForkingUrl
         },
       }
     })
-
-    console.log('Hardhat config extended', JSON.stringify(hardhat.config.networks.hardhat.forking, null, 2))
-
     const hardhatProvider = await hardhat.run(TASK_NODE_GET_PROVIDER, {
       chainId,
     })
