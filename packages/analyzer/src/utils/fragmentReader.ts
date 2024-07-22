@@ -62,11 +62,12 @@ export class FragmentReader {
 
     abiInterface.forEachEvent((fragment) => {
       try {
-        const eventFragment = abiInterface.getEvent(fragment.name, [...fragment.inputs])
+        const eventFragment = abiInterface.getEvent(fragment.topicHash, [...fragment.inputs])
         this.storeFragment(eventFragment.topicHash.slice(0, 10), eventFragment, 'event')
       } catch (error) {
         console.log('getEvent', {
           fragment,
+          format: fragment.format('minimal'),
           error,
           abiDefinition,
         })
