@@ -48,13 +48,30 @@ export class FragmentReader {
     const abiInterface = new Interface(abiDefinition)
 
     abiInterface.forEachFunction((fragment) => {
-      const functionFragment = abiInterface.getFunction(fragment.selector, [...fragment.inputs])
-      this.storeFragment(functionFragment.selector, functionFragment, 'function')
+      try {
+        const functionFragment = abiInterface.getFunction(fragment.selector, [...fragment.inputs])
+        this.storeFragment(functionFragment.selector, functionFragment, 'function')
+      } catch (error) {
+        console.log('getFunction', {
+          fragment,
+          error,
+          abiDefinition,
+        })
+      }
     })
 
     abiInterface.forEachEvent((fragment) => {
-      const eventFragment = abiInterface.getEvent(fragment.name, [...fragment.inputs])
-      this.storeFragment(eventFragment.topicHash.slice(0, 10), eventFragment, 'event')
+      try {
+        const eventFragment = abiInterface.getEvent(fragment.topicHash, [...fragment.inputs])
+        this.storeFragment(eventFragment.topicHash.slice(0, 10), eventFragment, 'event')
+      } catch (error) {
+        console.log('getEvent', {
+          fragment,
+          format: fragment.format('minimal'),
+          error,
+          abiDefinition,
+        })
+      }
     })
 
     abiInterface.forEachError((fragment) => {

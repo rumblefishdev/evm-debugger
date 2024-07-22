@@ -29,6 +29,11 @@ export const config: HardhatUserConfig = {
             cancun: 3_100_000,
           },
         },
+        [ChainId.amoy]: {
+          hardforkHistory: {
+            cancun: 0,
+          },
+        },
         [ChainId.arbitrum]: {
           hardforkHistory: {
             cancun: 70_000_000,
