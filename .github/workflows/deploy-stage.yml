@@ -55,6 +55,7 @@ jobs:
       - name: ls frontend modules
         run: |
           ls -ls packages/frontend/node_modules
+          echo '#########'
           ls -ls packages/frontend/node_modules/@rumblefishdev
 
       - name: 'Build'
