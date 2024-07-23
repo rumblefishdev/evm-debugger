@@ -56,6 +56,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
         }
         break
       }
+      case 'KECCAK256':
       case 'CREATE':
       case 'CREATE2':
       case 'REVERT':
