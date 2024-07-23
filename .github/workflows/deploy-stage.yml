@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm i
-          npm install @rumblefish/ui
+          npm install @rumblefishdev/ui
           node_modules/.bin/lerna bootstrap
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
