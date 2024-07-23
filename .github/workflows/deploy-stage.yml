@@ -52,6 +52,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: ls frontend modules
+        run: |
+          ls -ls packages/frontend/node_modules
+          ls -ls packages/frontend/node_modules/@rumblefishdev
+
       - name: 'Build'
         run: |
           npm run types:build
