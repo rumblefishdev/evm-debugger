@@ -42,7 +42,7 @@ export const MemoryInfoCard = ({ ...props }: MemoryInfoCardProps) => {
     }
     const highLightCss: React.CSSProperties = {
       color: theme.palette.colorWhite,
-      background: theme.palette.colorBrand.secondary,
+      background: theme.palette.colorBrand?.secondary || theme.palette.secondary.main,
     }
 
     switch (activeStructlog.op) {
