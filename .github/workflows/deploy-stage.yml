@@ -60,12 +60,6 @@ jobs:
             exit 1
           fi
 
-      - name: ls frontend modules
-        run: |
-          ls -ls packages/frontend/node_modules
-          echo '#########'
-          ls -ls packages/frontend/node_modules/@rumblefishdev
-
       - name: 'Build'
         run: |
           npm run types:build

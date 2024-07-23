@@ -52,6 +52,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Check if @rumblefishdev/ui installed
+        run: |
+          if [[ ! -d packages/frontend/node_modules/@rumblefishdev/ui ]]; then
+            echo "Error: @rumblefishdev/ui not installed"
+            exit 1
+          fi
+
       - name: 'Build'
         run: |
           npm run types:build
