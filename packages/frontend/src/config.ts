@@ -49,7 +49,7 @@ export const chainNames = {
 export const showChainOnStartScreen = {
   [ChainId.mainnet]: true,
   [ChainId.amoy]: true,
-  [ChainId.polygon]: false,
+  [ChainId.polygon]: true,
   [ChainId.sepolia]: true,
   [ChainId.arbitrum]: false,
   [ChainId.arbitrumGoerli]: false,

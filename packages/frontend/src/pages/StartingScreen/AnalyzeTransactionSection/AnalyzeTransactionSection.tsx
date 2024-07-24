@@ -53,8 +53,7 @@ export const AnalyzeTransactionSection: React.FC<StackProps> = ({ ...props }: St
             <NetworkName>Ethereum</NetworkName>
             <NetworkName>Sepolia</NetworkName>
             <NetworkName>Amoy</NetworkName>
-            {/* TODO: REVERT WHEN SUPPORT IMPLEMENTED */}
-            {/* <NetworkName>Polygon</NetworkName>= */}
+            <NetworkName>Polygon</NetworkName>
           </CurrentsNetworksStyledStack>
           <NetworksHeading>
             And more on the way.
