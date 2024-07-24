@@ -298,11 +298,10 @@ export class FunctionManager {
 
   private convertTraceLogToFunction(traceLog: TTraceLog, contractFunctions: TContractFunction[]): TContractFunction {
     const baseContractInfo = this.dataLoader.analyzerContractData.get(traceLog.address, 'contractBaseData')
-
     const inputs: TContractFunctionInputParameter[] =
       traceLog.callTypeData?.functionFragment?.inputs?.map((input, index) => {
         return {
-          value: traceLog.callTypeData.decodedInput.getValue(input.name),
+          value: traceLog.callTypeData?.decodedInput?.getValue(input.name),
           type: input.type,
           stackInitialIndex: index,
           name: input.name,

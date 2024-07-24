@@ -19,11 +19,12 @@ export const config: HardhatUserConfig = {
         // CAUTION:
         // we shouldn't fork from too old blocks, because of getting errors of
         // too many requests per second
-        // [ChainId.polygon]: {
-        //   hardforkHistory: {
-        //     cancun: 0,
-        //   },
-        // },
+        [ChainId.polygon]: {
+          hardforkHistory: {
+            cancun: 1,
+            london: 1
+          },
+        },
         [ChainId.sepolia]: {
           hardforkHistory: {
             cancun: 3_100_000,
@@ -31,7 +32,8 @@ export const config: HardhatUserConfig = {
         },
         [ChainId.amoy]: {
           hardforkHistory: {
-            cancun: 0,
+            cancun: 1,
+            london: 1
           },
         },
         [ChainId.arbitrum]: {
