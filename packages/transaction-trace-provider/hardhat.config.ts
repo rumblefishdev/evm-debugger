@@ -46,6 +46,18 @@ export const config: HardhatUserConfig = {
             cancun: 11_500_000,
           },
         },
+        [ChainId.base]: {
+          hardforkHistory: {
+            cancun: 1,
+            london: 1
+          },
+        },
+        [ChainId.baseSepolia]: {
+          hardforkHistory: {
+            cancun: 1,
+            london: 1
+          },
+        },
       },
     },
   },
