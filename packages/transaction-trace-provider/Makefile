@@ -21,3 +21,13 @@ build-TransactionTraceSqsHandlerFunctionSepolia:
 	npm run build
 	cp package.json $(ARTIFACTS_DIR) # required by hardhat
 	cp -r dist/* $(ARTIFACTS_DIR)
+
+build-TransactionTraceSqsHandlerFunctionBase:
+	npm run build
+	cp package.json $(ARTIFACTS_DIR) # required by hardhat
+	cp -r dist/* $(ARTIFACTS_DIR)
+
+build-TransactionTraceSqsHandlerFunctionBaseSepolia:
+	npm run build
+	cp package.json $(ARTIFACTS_DIR) # required by hardhat
+	cp -r dist/* $(ARTIFACTS_DIR)

@@ -6,6 +6,8 @@ export enum ChainId {
   sepolia = 11155111,
   arbitrum = 42161,
   arbitrumGoerli = 421613,
+  base = 8453,
+  baseSepolia = 84532,
 }
 
 export const forkingUrlMap = {
@@ -15,6 +17,8 @@ export const forkingUrlMap = {
   [ChainId.sepolia]: `https://eth-sepolia.g.alchemy.com/v2/`,
   [ChainId.arbitrum]: `https://arb-mainnet.g.alchemy.com/v2`,
   [ChainId.arbitrumGoerli]: `https://arb-goerli.g.alchemy.com/v2`,
+  [ChainId.base]: `https://base-mainnet.g.alchemy.com/v2/`,
+  [ChainId.baseSepolia]: `https://base-sepolia.g.alchemy.com/v2/`,
 }
 
 export const etherscanUrls = {
@@ -41,5 +45,13 @@ export const etherscanUrls = {
   [ChainId.arbitrumGoerli]: {
     url: 'https://api-goerli.arbiscan.io',
     key: process.env.REACT_APP_ARBITRUMSCAN_KEY,
+  },
+  [ChainId.base]: {
+    url: 'https://api.basescan.org',
+    key: process.env.REACT_APP_BASESCAN_KEY,
+  },
+  [ChainId.baseSepolia]: {
+    url: 'https://api-sepolia.basescan.org',
+    key: process.env.REACT_APP_BASESCAN_KEY,
   },
 }

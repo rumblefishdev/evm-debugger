@@ -34,6 +34,12 @@ export const jsonRpcProvider: Record<ChainId, JsonRpcProvider> = {
   [ChainId.arbitrumGoerli]: new JsonRpcProvider(process.env.REACT_APP_ARBITRUM_GOERLI_JSONRPC, 'arbitrum-goerli', {
     staticNetwork: new Network('arbitrum-goerli', ChainId.arbitrumGoerli),
   }),
+  [ChainId.base]: new JsonRpcProvider(process.env.REACT_APP_BASE_JSONRPC, 'base', {
+    staticNetwork: new Network('base', ChainId.base),
+  }),
+  [ChainId.baseSepolia]: new JsonRpcProvider(process.env.REACT_APP_BASE_SEPOLIA_JSONRPC, 'base-sepolia', {
+    staticNetwork: new Network('base-sepolia', ChainId.baseSepolia),
+  }),
 }
 
 export const chainNames = {
@@ -43,6 +49,8 @@ export const chainNames = {
   [ChainId.sepolia]: 'Sepolia',
   [ChainId.arbitrum]: 'Arbitrum One',
   [ChainId.arbitrumGoerli]: 'Arbitrum Goerli',
+  [ChainId.base]: 'Base',
+  [ChainId.baseSepolia]: 'Base Sepolia',
 }
 
 // TODO: Revert when support is added
@@ -53,6 +61,8 @@ export const showChainOnStartScreen = {
   [ChainId.sepolia]: true,
   [ChainId.arbitrum]: false,
   [ChainId.arbitrumGoerli]: false,
+  [ChainId.base]: true,
+  [ChainId.baseSepolia]: true,
 }
 
 export const supportedChainsIdList = Object.values(ChainId).filter((item) => typeof item === 'number')
