@@ -18,7 +18,11 @@ export const appRouter = createBrowserRouter(
       children: [
         {
           path: ROUTES.TRANSACTION_SCREEN,
-          element: <TransactionScreen />,
+          element: <TransactionExplorer />,
+        },
+        {
+          path: ROUTES.REDIRECT_OLD,
+          element: <TransactionExplorer />,
         },
         {
           path: ROUTES.DATA_MANAGER,
@@ -26,7 +30,7 @@ export const appRouter = createBrowserRouter(
         },
         {
           path: ROUTES.TRANSACTION_EXPLORER,
-          element: <TransactionExplorer />,
+          element: <TransactionScreen />,
         },
       ],
     },

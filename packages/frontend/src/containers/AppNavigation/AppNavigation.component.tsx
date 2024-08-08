@@ -30,18 +30,18 @@ export const AppNavigationComponent: React.FC<TAppNavigationComponentProps> = ({
             },
           }}
         >
-          <StyledTab
+          {/* <StyledTab
             label="Data Manager"
             value={convertNavigationTabName(ROUTES.DATA_MANAGER)}
             onClick={() => handleTabChange(ROUTES.DATA_MANAGER)}
-          />
+          /> */}
           <StyledTab
-            label="Transaction screen"
+            label="Transaction Explorer"
             value={convertNavigationTabName(ROUTES.TRANSACTION_SCREEN)}
             onClick={() => handleTabChange(ROUTES.TRANSACTION_SCREEN)}
           />
           <StyledTab
-            label="Transaction Explorer"
+            label="Gas Usage Map"
             value={convertNavigationTabName(ROUTES.TRANSACTION_EXPLORER)}
             onClick={() => handleTabChange(ROUTES.TRANSACTION_EXPLORER)}
           />
