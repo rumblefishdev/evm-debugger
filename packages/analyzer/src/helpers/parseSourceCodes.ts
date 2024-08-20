@@ -14,19 +14,6 @@ export const parseSourceCode = (sourceName: string, sourceCode: string, yulSourc
 
       return { ...mainFile, ...(yulSource ? utilityFile : {}) }
     }
-    case isMultiFile(sourceCode): {
-      const contractsInfo = JSON.parse(sourceCode) as TInputSources
-      contractsInfo['utility.yul'] = { content: yulSource }
-
-      return Object.entries(contractsInfo.sources).reduce<Record<string, TSourceFile>>((accumulator, [contractPath, contractContent]) => {
-        accumulator[contractPath] = {
-          path: contractPath,
-          name: contractPath.split('/').pop().split('.').shift(),
-          content: contractContent,
-        }
-        return accumulator
-      }, {})
-    }
     case isMultiFileExtended(sourceCode): {
       const contractsInfo = JSON.parse(sourceCode.slice(1, -1)) as TSourceCodeObject
       contractsInfo['sources']['utility.yul'] = { content: yulSource }
@@ -36,6 +23,18 @@ export const parseSourceCode = (sourceName: string, sourceCode: string, yulSourc
           path: contractPath,
           name: contractPath.split('/').pop().split('.').shift(),
           content: contractDetails.content,
+        }
+        return accumulator
+      }, {})
+    }
+    case isMultiFile(sourceCode): {
+      const contractsInfo = JSON.parse(sourceCode) as TInputSources
+      contractsInfo['utility.yul'] = { content: yulSource }
+      return Object.entries(contractsInfo).reduce<Record<string, TSourceFile>>((accumulator, [contractPath, contractContent]) => {
+        accumulator[contractPath] = {
+          path: contractPath,
+          name: contractPath.split('/').pop().split('.').shift(),
+          content: contractContent.content,
         }
         return accumulator
       }, {})
