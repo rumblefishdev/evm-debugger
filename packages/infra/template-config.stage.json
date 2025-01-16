@@ -10,7 +10,7 @@
     "CertificateArn": "arn:aws:acm:us-east-1:428196107266:certificate/204dfe35-3ff2-4f90-b06a-a6c06b857d46",
     "TraceBucketName": "transaction-trace-storage-stage.evmdebugger.rumblefish.dev",
     "ApiGatewayAllowOrigin": "*",
-    "AlchemyKey": "AvNAkauAeKIYGvoi0TM68IJ647RwEN52",
+    "AlchemyKey": "HGasHEwQs0yiHfxhdpD1y75kDfHlBlvz",
     "SentryDsn": "https://7cdf7302bff6da74fda9c81b1d73835b@o4505804639895552.ingest.sentry.io/4505804718538752",
     "FrontendExternalCloudFrontOriginAccessIdentity": "E3M3L42A2POEPA",
     "FrontendBucketName": "www-staging-aldnr.rumblefish.dev.evm-debugger",
