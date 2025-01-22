@@ -29,7 +29,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm i --legacy-peer-deps
+          npm config set legacy-peer-deps true
+          npm i
           node_modules/.bin/lerna bootstrap
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
