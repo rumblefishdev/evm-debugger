@@ -47,14 +47,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm i
+          npm i --legacy-peer-deps
           node_modules/.bin/lerna bootstrap
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Check if @rumblefishdev/ui installed
         run: |
-          if [[ ! -d packages/frontend/node_modules/@rumblefishdev/ui ]]; then
+          if [[ ! -d node_modules/@rumblefishdev/ui ]]; then
             echo "Error: @rumblefishdev/ui not installed"
             exit 1
           fi
