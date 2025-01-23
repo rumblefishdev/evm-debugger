@@ -49,7 +49,9 @@ jobs:
         run: |
           npm i
           npm i @rumblefishdev/ui --legacy-peer-deps
-          node_modules/.bin/lerna bootstrap
+          cd packages/frontend
+          npm config set legacy-peer-deps=true
+          ../../node_modules/.bin/lerna bootstrap
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
