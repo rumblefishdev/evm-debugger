@@ -6,7 +6,7 @@ on:
       - created
 
 env:
-  NODE_VERSION: 18.16.0
+  NODE_VERSION: 20
   ENV: stage
   AWS_EC2_METADATA_DISABLED: true
 
