@@ -118,7 +118,7 @@
     "webpack-dev-server": "^4.3.1"
   },
   "optionalDependencies": {
-    "@rumblefishdev/ui": "0.1.24"
+    "@rumblefishdev/ui": "0.1.26"
   },
   "jest": {
     "verbose": true,

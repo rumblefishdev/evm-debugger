@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-node@master
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 20
           registry-url: 'https://npm.pkg.github.com'
           scope: "@rumblefishdev"
 
@@ -27,11 +27,24 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: |
           npm i
+          npm i @rumblefishdev/ui --legacy-peer-deps
           node_modules/.bin/lerna bootstrap
+        env:  
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install @rumblefishdev/ui
+        run: |
+          npm i @rumblefishdev/ui --legacy-peer-deps
         env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install monorepo dependencies
+        run: |
+          node_modules/.bin/lerna bootstrap
+        env:  
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build types
